@@ -36,6 +36,9 @@ const $noJumpUrl = (host,url) => {
     else if (host == "zhuanlan.zhihu.com"){
         return "https://zhuanlan.zhihu.com/R_E_D_I_R_E_C_T/?url="+encodeURIComponent(url);
     }
+    else if (host == "www.zhihu.com"){
+        return "https://www.zhihu.com/R_E_D_I_R_E_C_T/?url="+encodeURIComponent(url);
+    }
     else if (host == "m.xiaohongshu.com"){
         return "https://m.xiaohongshu.com/R_E_D_I_R_E_C_T/?url="+encodeURIComponent(url);
     }
@@ -45,6 +48,8 @@ const $noJumpUrl = (host,url) => {
     
     return null;
 }
+
+
 
 const R_E_D_I_R_E_C_T_TEST = /R_E_D_I_R_E_C_T/
 const ZHIHU_REG = /^(http|https):\/\/(.*\.){0,1}zhihu.com\/.*$/;
@@ -208,4 +213,8 @@ class AppContainer{
     }
 }
 
+if (R_E_D_I_R_E_C_T_TEST.test(location.href)) {
+    let url = decodeURIComponent($getQueryVariable("url")).replace("http:","https:");
+    location.replace(url);
+}
 

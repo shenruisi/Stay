@@ -10,4 +10,9 @@
 settings.rateApp="Rate app";
 settings.openSource="Open Source";
 settings.joinTelegram="Join Telegram";
-settings.enableStay="Turn on 'Stay' in Safari extensions";
+settings.enableStay="Turn on Stay in Safari extensions";
+
+
+settings.section.otherApps="Other applications";
+
+settings.section.otherApps.fastclip="FastClip - Copy paste enhancer";

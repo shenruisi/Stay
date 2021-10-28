@@ -32,6 +32,7 @@
 		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
 		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
 		5881343127294C0E0055E1CE /* iframe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5881342F27294C0E0055E1CE /* iframe.js */; };
+		58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58813436272AACEC0055E1CE /* fastclip-icon@3x.png */; };
 		5889731A27213C8300BE123E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5889731C27213C8300BE123E /* Localizable.strings */; };
 		58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5889731F272156C900BE123E /* LaunchScreen.storyboard */; };
 		58897323272170CC00BE123E /* xhs-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 58897322272170CC00BE123E /* xhs-content.js */; };
@@ -119,6 +120,7 @@
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
 		5881342F27294C0E0055E1CE /* iframe.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iframe.js; sourceTree = "<group>"; };
+		58813436272AACEC0055E1CE /* fastclip-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fastclip-icon@3x.png"; sourceTree = "<group>"; };
 		5889731427213BC200BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = ../en.lproj/Main.html; sourceTree = "<group>"; };
 		5889731B27213C8300BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5889731E27213CB100BE123E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				58813436272AACEC0055E1CE /* fastclip-icon@3x.png */,
 				5889733D2723033600BE123E /* icon@3x.png */,
 			);
 			path = Images;
@@ -483,6 +486,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				587688DD2719237E00F834A4 /* Main.html in Resources */,
@@ -737,7 +741,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -751,7 +755,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -768,7 +772,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -782,7 +786,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -801,7 +805,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
@@ -819,7 +823,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -834,7 +838,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
@@ -852,7 +856,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";

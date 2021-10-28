@@ -47,6 +47,8 @@ function unfold(){
     return CONTINUE;
 }
 
+
+
 window.onload = function() {
     let tasks = [removeTopBanner,removeAppJump,unfold];
     Inject.run(tasks,100,30,false).then((data) => {

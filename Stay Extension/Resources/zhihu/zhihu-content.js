@@ -1,19 +1,21 @@
 function removeChoosePanel(){
-    console.log("removeChoosePanel");
-    let pannel = document.querySelectorAll('.ModalWrap');
-    if(pannel.length > 1){
-        return COMPLETE;
-    }
-    
-    let btns = document.querySelectorAll('.ModalWrap-itemBtn');
-    
-    for (var i=0; i < btns.length; i++){
-        let button = btns[i];
-        if (button.innerText == "继续"){
-            button.click();
-            return COMPLETE;
+    let pannels = document.querySelectorAll('.ModalWrap');
+    for (var i = 0; i < pannels.length; i++){
+        let pannel = pannels[i];
+        let div = pannel.querySelector('.ModalExp-modalShow');
+        if (div){
+            let btns = div.querySelectorAll('.ModalWrap-itemBtn');
+            
+            for (var i=0; i < btns.length; i++){
+                let button = btns[i];
+                if (button.innerText == "继续"){
+                    button.click();
+                    return COMPLETE;
+                }
+            }
         }
     }
+    
     return CONTINUE;
 }
 
@@ -33,30 +35,34 @@ function removeAppJump(){
 }
 
 function unfold(){
-    let button = document.querySelector('.ContentItem-expandButton');
-    if (button){
-        button.remove();
-        let content = document.querySelector('.RichContent');
-        if (content){
-            content.className = "RichContent RichContent--unescapable";
-            let contentinner = document.querySelector('.RichContent-inner');
-            if (contentinner){
-                contentinner.style.maxHeight = "none";
+    let btns = document.querySelectorAll('.ContentItem-expandButton');
+    for (var i = 0; i < btns.length; i++){
+        let btn = btns[i];
+        if (/展开阅读全文/.test(btn.innerText)){
+            let content = btn.parentNode;
+            if (content){
+                content.className = "RichContent RichContent--unescapable";
+                let contentinner = content.querySelector('.RichContent-inner');
+                if (contentinner){
+                    contentinner.style.maxHeight = "none";
+                }
             }
+            btn.remove();
+            
+            
+            return COMPLETE;
         }
-        return COMPLETE;
     }
     
     return CONTINUE;
 }
 
-
-document.addEventListener("DOMContentLoaded", function(event) {
+window.onload = function(){
     let tasks = [removeChoosePanel,removeAppJump,unfold];
     Inject.run(tasks,100,30,false).then((data) => {
         browser.runtime.sendMessage({from:"content",operate:"saveAppList",data:data})
     });
-});
+}
 
 
 
