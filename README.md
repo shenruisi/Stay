@@ -1,5 +1,5 @@
 <p align="center">
-  <span><img src="./material/icon.png" width="128"/></span>
+  <span><img src="./Material/icon.png" width="128"/></span>
 </p>
 
 <p align="right">中文 | <a href="README-EN.md">EN</a></p>
@@ -27,14 +27,14 @@ Stay需要运行在iOS 15及以上。
 
 
 ## 已适配的网站
-- 知乎
-- 今日头条
-- 百度搜索
-- 百度贴吧
-- 搜狐
-- 小红书
-- 简书
-- CSDN
+- [知乎 zhihu-content.js](/Stay%20Extension/Resources/zhihu/zhihu-content.js)
+- [今日头条 toutiao-content.js](/Stay%20Extension/Resources/toutiao/toutiao-content.js)
+- [百度搜索 baidu-content.js](/Stay%20Extension/Resources/baidu/baidu-content.js)
+- [百度贴吧 tieba-content.js](/Stay%20Extension/Resources/baidu/tieba-content.js)
+- [搜狐 sohu-content.js](/Stay%20Extension/Resources/sohu/sohu-content.js)
+- [小红书 xhs-content.js](/Stay%20Extension/Resources/xhs/xhs-content.js)
+- [简书 jianshu-content.js](/Stay%20Extension/Resources/jianshu/jianshu-content.js)
+- [CSDN csdn-content.js](/Stay%20Extension/Resources/csdn/csdn-content.js)
 
 
 ## 许可证
