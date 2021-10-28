@@ -1,0 +1,75 @@
+:root {
+    color-scheme: light dark;
+}
+
+body {
+    padding: 15px;
+
+    font-family: system-ui;
+    text-align: center;
+    background-color:#F2F2F6;
+}
+
+.placeholder{
+    font-size:16px;
+}
+
+.tableview{
+}
+
+.tableview .cell{
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    border-radius:10px;
+    font-size:16px;
+    border: 1px solid #FFFFFF;
+    background-color:#FFFFFF;
+    height:45px;
+}
+
+.tableview .cell .icon{
+    border-radius:8px;
+    width: 28px;
+    height: 28px;
+    margin-left:10px;
+}
+
+.tableview .cell .title{
+    max-width:70%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    margin-left:10px;
+}
+
+.tableview .cell .accessor{
+    margin-left:auto;
+    margin-right:10px;
+    background-image: url("safari-web-extension://__MSG_@@extension_id__/images/accessor.png");
+    background-size:18px;
+    width: 18px;
+    height: 18px;
+}
+
+@media (prefers-color-scheme: dark) {
+    /* Dark Mode styles go here. */
+    body {
+        padding: 15px;
+
+        font-family: system-ui;
+        text-align: center;
+        background-color:#000000;
+    }
+    
+    .tableview .cell{
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        border-radius:10px;
+        font-size:16px;
+        border: 1px solid #1C1C27;
+        background-color:#1C1C27;
+        height:45px;
+    }
+}

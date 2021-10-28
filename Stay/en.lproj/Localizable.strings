@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  Stay
+
+  Created by ris on 2021/10/21.
+  
+*/
+
+//settings
+settings.rateApp="Rate app";
+settings.openSource="Open Source";
+settings.joinTelegram="Join Telegram";
+settings.enableStay="Turn on 'Stay' in Safari extensions";

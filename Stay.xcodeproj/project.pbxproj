@@ -1,0 +1,1003 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
+		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
+		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
+		587688E12719237E00F834A4 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 587688E02719237E00F834A4 /* Style.css */; };
+		587688E42719237E00F834A4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688E32719237E00F834A4 /* SceneDelegate.m */; };
+		587688E72719237E00F834A4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688E62719237E00F834A4 /* ViewController.m */; };
+		587688F12719238000F834A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688F02719238000F834A4 /* main.m */; };
+		587688FB2719238000F834A4 /* StayTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688FA2719238000F834A4 /* StayTests.m */; };
+		587689052719238000F834A4 /* StayUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 587689042719238000F834A4 /* StayUITests.m */; };
+		587689072719238000F834A4 /* StayUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 587689062719238000F834A4 /* StayUITestsLaunchTests.m */; };
+		5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5876890C2719238000F834A4 /* Stay Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 587689122719238000F834A4 /* SafariWebExtensionHandler.m */; };
+		587689162719238000F834A4 /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = 587689152719238000F834A4 /* _locales */; };
+		587689182719238000F834A4 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 587689172719238000F834A4 /* images */; };
+		5876891A2719238000F834A4 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 587689192719238000F834A4 /* manifest.json */; };
+		5876891C2719238000F834A4 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 5876891B2719238000F834A4 /* background.js */; };
+		5876891E2719238000F834A4 /* baidu-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 5876891D2719238000F834A4 /* baidu-content.js */; };
+		587689202719238000F834A4 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 5876891F2719238000F834A4 /* popup.html */; };
+		587689222719238000F834A4 /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = 587689212719238000F834A4 /* popup.css */; };
+		587689242719238000F834A4 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = 587689232719238000F834A4 /* popup.js */; };
+		587689262719238000F834A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 587688EE2719238000F834A4 /* Assets.xcassets */; };
+		58768939271E64EB00F834A4 /* common.js in Resources */ = {isa = PBXBuildFile; fileRef = 58768938271E64EB00F834A4 /* common.js */; };
+		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
+		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
+		5881343127294C0E0055E1CE /* iframe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5881342F27294C0E0055E1CE /* iframe.js */; };
+		5889731A27213C8300BE123E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5889731C27213C8300BE123E /* Localizable.strings */; };
+		58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5889731F272156C900BE123E /* LaunchScreen.storyboard */; };
+		58897323272170CC00BE123E /* xhs-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 58897322272170CC00BE123E /* xhs-content.js */; };
+		588973262721715F00BE123E /* zhihu-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973252721715F00BE123E /* zhihu-content.js */; };
+		5889732B272180F700BE123E /* sohu-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 5889732A272180F700BE123E /* sohu-content.js */; };
+		5889732E2722A94F00BE123E /* google-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 5889732D2722A94F00BE123E /* google-content.js */; };
+		588973312722AB4600BE123E /* csdn-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973302722AB4600BE123E /* csdn-content.js */; };
+		588973342722BFA400BE123E /* jianshu-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973332722BFA400BE123E /* jianshu-content.js */; };
+		588973372722C5EF00BE123E /* toutiao-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973362722C5EF00BE123E /* toutiao-content.js */; };
+		588973392722D74A00BE123E /* tieba-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973382722D74A00BE123E /* tieba-content.js */; };
+		5889733E2723033600BE123E /* icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5889733D2723033600BE123E /* icon@3x.png */; };
+		588973482728144000BE123E /* redirect.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973472728144000BE123E /* redirect.js */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		587688F72719238000F834A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 587688D32719237E00F834A4;
+			remoteInfo = Stay;
+		};
+		587689012719238000F834A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 587688D32719237E00F834A4;
+			remoteInfo = Stay;
+		};
+		5876890E2719238000F834A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5876890B2719238000F834A4;
+			remoteInfo = "Stay Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5876892C2719238000F834A4 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		587688DE2719237E00F834A4 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		587688E02719237E00F834A4 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		587688E22719237E00F834A4 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		587688E32719237E00F834A4 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		587688E52719237E00F834A4 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		587688E62719237E00F834A4 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		587688EE2719238000F834A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		587688EF2719238000F834A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		587688F02719238000F834A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		587688F62719238000F834A4 /* StayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		587688FA2719238000F834A4 /* StayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StayTests.m; sourceTree = "<group>"; };
+		587689002719238000F834A4 /* StayUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StayUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		587689042719238000F834A4 /* StayUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StayUITests.m; sourceTree = "<group>"; };
+		587689062719238000F834A4 /* StayUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StayUITestsLaunchTests.m; sourceTree = "<group>"; };
+		5876890C2719238000F834A4 /* Stay Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		587689112719238000F834A4 /* SafariWebExtensionHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafariWebExtensionHandler.h; sourceTree = "<group>"; };
+		587689122719238000F834A4 /* SafariWebExtensionHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafariWebExtensionHandler.m; sourceTree = "<group>"; };
+		587689152719238000F834A4 /* _locales */ = {isa = PBXFileReference; lastKnownFileType = folder; path = _locales; sourceTree = "<group>"; };
+		587689172719238000F834A4 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		587689192719238000F834A4 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		5876891B2719238000F834A4 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
+		5876891D2719238000F834A4 /* baidu-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "baidu-content.js"; sourceTree = "<group>"; };
+		5876891F2719238000F834A4 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
+		587689212719238000F834A4 /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = popup.css; sourceTree = "<group>"; };
+		587689232719238000F834A4 /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = popup.js; sourceTree = "<group>"; };
+		587689252719238000F834A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58768938271E64EB00F834A4 /* common.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = common.js; sourceTree = "<group>"; };
+		5876893E2720064D00F834A4 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
+		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
+		5881342F27294C0E0055E1CE /* iframe.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iframe.js; sourceTree = "<group>"; };
+		5889731427213BC200BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = ../en.lproj/Main.html; sourceTree = "<group>"; };
+		5889731B27213C8300BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5889731E27213CB100BE123E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		5889731F272156C900BE123E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		58897322272170CC00BE123E /* xhs-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "xhs-content.js"; sourceTree = "<group>"; };
+		588973252721715F00BE123E /* zhihu-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "zhihu-content.js"; sourceTree = "<group>"; };
+		5889732A272180F700BE123E /* sohu-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "sohu-content.js"; sourceTree = "<group>"; };
+		5889732D2722A94F00BE123E /* google-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "google-content.js"; sourceTree = "<group>"; };
+		588973302722AB4600BE123E /* csdn-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "csdn-content.js"; sourceTree = "<group>"; };
+		588973332722BFA400BE123E /* jianshu-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "jianshu-content.js"; sourceTree = "<group>"; };
+		588973362722C5EF00BE123E /* toutiao-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "toutiao-content.js"; sourceTree = "<group>"; };
+		588973382722D74A00BE123E /* tieba-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "tieba-content.js"; sourceTree = "<group>"; };
+		5889733D2723033600BE123E /* icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@3x.png"; sourceTree = "<group>"; };
+		588973472728144000BE123E /* redirect.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = redirect.js; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		587688D12719237E00F834A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587688F32719238000F834A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587688FD2719238000F834A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587689092719238000F834A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		587688CB2719237E00F834A4 = {
+			isa = PBXGroup;
+			children = (
+				587688D62719237E00F834A4 /* Stay */,
+				587688F92719238000F834A4 /* StayTests */,
+				587689032719238000F834A4 /* StayUITests */,
+				587689102719238000F834A4 /* Stay Extension */,
+				587688D52719237E00F834A4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		587688D52719237E00F834A4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				587688D42719237E00F834A4 /* Stay.app */,
+				587688F62719238000F834A4 /* StayTests.xctest */,
+				587689002719238000F834A4 /* StayUITests.xctest */,
+				5876890C2719238000F834A4 /* Stay Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		587688D62719237E00F834A4 /* Stay */ = {
+			isa = PBXGroup;
+			children = (
+				5889733A2722FF7600BE123E /* Images */,
+				5889731F272156C900BE123E /* LaunchScreen.storyboard */,
+				587688D72719237E00F834A4 /* AppDelegate.h */,
+				587688D82719237E00F834A4 /* AppDelegate.m */,
+				587688E22719237E00F834A4 /* SceneDelegate.h */,
+				587688E32719237E00F834A4 /* SceneDelegate.m */,
+				587688E52719237E00F834A4 /* ViewController.h */,
+				587688E62719237E00F834A4 /* ViewController.m */,
+				5876893E2720064D00F834A4 /* NavigationController.h */,
+				5876893F2720064D00F834A4 /* NavigationController.m */,
+				587688EE2719238000F834A4 /* Assets.xcassets */,
+				587688EF2719238000F834A4 /* Info.plist */,
+				587688F02719238000F834A4 /* main.m */,
+				587688DA2719237E00F834A4 /* Resources */,
+				5889731C27213C8300BE123E /* Localizable.strings */,
+			);
+			path = Stay;
+			sourceTree = "<group>";
+		};
+		587688DA2719237E00F834A4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				587688DB2719237E00F834A4 /* Main.html */,
+				587688DE2719237E00F834A4 /* Icon.png */,
+				587688E02719237E00F834A4 /* Style.css */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		587688F92719238000F834A4 /* StayTests */ = {
+			isa = PBXGroup;
+			children = (
+				587688FA2719238000F834A4 /* StayTests.m */,
+			);
+			path = StayTests;
+			sourceTree = "<group>";
+		};
+		587689032719238000F834A4 /* StayUITests */ = {
+			isa = PBXGroup;
+			children = (
+				587689042719238000F834A4 /* StayUITests.m */,
+				587689062719238000F834A4 /* StayUITestsLaunchTests.m */,
+			);
+			path = StayUITests;
+			sourceTree = "<group>";
+		};
+		587689102719238000F834A4 /* Stay Extension */ = {
+			isa = PBXGroup;
+			children = (
+				587689112719238000F834A4 /* SafariWebExtensionHandler.h */,
+				587689122719238000F834A4 /* SafariWebExtensionHandler.m */,
+				587689252719238000F834A4 /* Info.plist */,
+				587689142719238000F834A4 /* Resources */,
+			);
+			path = "Stay Extension";
+			sourceTree = "<group>";
+		};
+		587689142719238000F834A4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				588973352722C5D800BE123E /* toutiao */,
+				588973322722BF7000BE123E /* jianshu */,
+				5889732F2722AB2E00BE123E /* csdn */,
+				5889732C2722A93A00BE123E /* google */,
+				5889732727217F3A00BE123E /* sohu */,
+				588973242721714600BE123E /* zhihu */,
+				58897321272170AF00BE123E /* xhs */,
+				5876893B271EBD1500F834A4 /* baidu */,
+				5876893A271E911600F834A4 /* lib */,
+				587689152719238000F834A4 /* _locales */,
+				587689172719238000F834A4 /* images */,
+				587689192719238000F834A4 /* manifest.json */,
+				5876891B2719238000F834A4 /* background.js */,
+				5881342E27294C0E0055E1CE /* iframe.html */,
+				5881342F27294C0E0055E1CE /* iframe.js */,
+				5876891F2719238000F834A4 /* popup.html */,
+				587689212719238000F834A4 /* popup.css */,
+				587689232719238000F834A4 /* popup.js */,
+				588973472728144000BE123E /* redirect.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5876893A271E911600F834A4 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				58768938271E64EB00F834A4 /* common.js */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		5876893B271EBD1500F834A4 /* baidu */ = {
+			isa = PBXGroup;
+			children = (
+				5876891D2719238000F834A4 /* baidu-content.js */,
+				588973382722D74A00BE123E /* tieba-content.js */,
+			);
+			path = baidu;
+			sourceTree = "<group>";
+		};
+		58897321272170AF00BE123E /* xhs */ = {
+			isa = PBXGroup;
+			children = (
+				58897322272170CC00BE123E /* xhs-content.js */,
+			);
+			path = xhs;
+			sourceTree = "<group>";
+		};
+		588973242721714600BE123E /* zhihu */ = {
+			isa = PBXGroup;
+			children = (
+				588973252721715F00BE123E /* zhihu-content.js */,
+			);
+			path = zhihu;
+			sourceTree = "<group>";
+		};
+		5889732727217F3A00BE123E /* sohu */ = {
+			isa = PBXGroup;
+			children = (
+				5889732A272180F700BE123E /* sohu-content.js */,
+			);
+			path = sohu;
+			sourceTree = "<group>";
+		};
+		5889732C2722A93A00BE123E /* google */ = {
+			isa = PBXGroup;
+			children = (
+				5889732D2722A94F00BE123E /* google-content.js */,
+			);
+			path = google;
+			sourceTree = "<group>";
+		};
+		5889732F2722AB2E00BE123E /* csdn */ = {
+			isa = PBXGroup;
+			children = (
+				588973302722AB4600BE123E /* csdn-content.js */,
+			);
+			path = csdn;
+			sourceTree = "<group>";
+		};
+		588973322722BF7000BE123E /* jianshu */ = {
+			isa = PBXGroup;
+			children = (
+				588973332722BFA400BE123E /* jianshu-content.js */,
+			);
+			path = jianshu;
+			sourceTree = "<group>";
+		};
+		588973352722C5D800BE123E /* toutiao */ = {
+			isa = PBXGroup;
+			children = (
+				588973362722C5EF00BE123E /* toutiao-content.js */,
+			);
+			path = toutiao;
+			sourceTree = "<group>";
+		};
+		5889733A2722FF7600BE123E /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				5889733D2723033600BE123E /* icon@3x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		587688D32719237E00F834A4 /* Stay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5876892D2719238000F834A4 /* Build configuration list for PBXNativeTarget "Stay" */;
+			buildPhases = (
+				587688D02719237E00F834A4 /* Sources */,
+				587688D12719237E00F834A4 /* Frameworks */,
+				587688D22719237E00F834A4 /* Resources */,
+				5876892C2719238000F834A4 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5876890F2719238000F834A4 /* PBXTargetDependency */,
+			);
+			name = Stay;
+			productName = Stay;
+			productReference = 587688D42719237E00F834A4 /* Stay.app */;
+			productType = "com.apple.product-type.application";
+		};
+		587688F52719238000F834A4 /* StayTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 587689302719238000F834A4 /* Build configuration list for PBXNativeTarget "StayTests" */;
+			buildPhases = (
+				587688F22719238000F834A4 /* Sources */,
+				587688F32719238000F834A4 /* Frameworks */,
+				587688F42719238000F834A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				587688F82719238000F834A4 /* PBXTargetDependency */,
+			);
+			name = StayTests;
+			productName = StayTests;
+			productReference = 587688F62719238000F834A4 /* StayTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		587688FF2719238000F834A4 /* StayUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 587689332719238000F834A4 /* Build configuration list for PBXNativeTarget "StayUITests" */;
+			buildPhases = (
+				587688FC2719238000F834A4 /* Sources */,
+				587688FD2719238000F834A4 /* Frameworks */,
+				587688FE2719238000F834A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				587689022719238000F834A4 /* PBXTargetDependency */,
+			);
+			name = StayUITests;
+			productName = StayUITests;
+			productReference = 587689002719238000F834A4 /* StayUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		5876890B2719238000F834A4 /* Stay Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 587689292719238000F834A4 /* Build configuration list for PBXNativeTarget "Stay Extension" */;
+			buildPhases = (
+				587689082719238000F834A4 /* Sources */,
+				587689092719238000F834A4 /* Frameworks */,
+				5876890A2719238000F834A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Extension";
+			productName = "Stay Extension";
+			productReference = 5876890C2719238000F834A4 /* Stay Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		587688CC2719237E00F834A4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1300;
+				TargetAttributes = {
+					587688D32719237E00F834A4 = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					587688F52719238000F834A4 = {
+						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 587688D32719237E00F834A4;
+					};
+					587688FF2719238000F834A4 = {
+						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 587688D32719237E00F834A4;
+					};
+					5876890B2719238000F834A4 = {
+						CreatedOnToolsVersion = 13.0;
+					};
+				};
+			};
+			buildConfigurationList = 587688CF2719237E00F834A4 /* Build configuration list for PBXProject "Stay" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = 587688CB2719237E00F834A4;
+			productRefGroup = 587688D52719237E00F834A4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				587688D32719237E00F834A4 /* Stay */,
+				587688F52719238000F834A4 /* StayTests */,
+				587688FF2719238000F834A4 /* StayUITests */,
+				5876890B2719238000F834A4 /* Stay Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		587688D22719237E00F834A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				587688DF2719237E00F834A4 /* Icon.png in Resources */,
+				5889733E2723033600BE123E /* icon@3x.png in Resources */,
+				587688DD2719237E00F834A4 /* Main.html in Resources */,
+				5889731A27213C8300BE123E /* Localizable.strings in Resources */,
+				58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */,
+				587689262719238000F834A4 /* Assets.xcassets in Resources */,
+				587688E12719237E00F834A4 /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587688F42719238000F834A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587688FE2719238000F834A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5876890A2719238000F834A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58768939271E64EB00F834A4 /* common.js in Resources */,
+				5881343027294C0E0055E1CE /* iframe.html in Resources */,
+				5889732B272180F700BE123E /* sohu-content.js in Resources */,
+				5876891C2719238000F834A4 /* background.js in Resources */,
+				587689222719238000F834A4 /* popup.css in Resources */,
+				588973342722BFA400BE123E /* jianshu-content.js in Resources */,
+				587689202719238000F834A4 /* popup.html in Resources */,
+				588973482728144000BE123E /* redirect.js in Resources */,
+				5881343127294C0E0055E1CE /* iframe.js in Resources */,
+				58897323272170CC00BE123E /* xhs-content.js in Resources */,
+				588973312722AB4600BE123E /* csdn-content.js in Resources */,
+				587689182719238000F834A4 /* images in Resources */,
+				5889732E2722A94F00BE123E /* google-content.js in Resources */,
+				588973372722C5EF00BE123E /* toutiao-content.js in Resources */,
+				588973392722D74A00BE123E /* tieba-content.js in Resources */,
+				5876891A2719238000F834A4 /* manifest.json in Resources */,
+				587689162719238000F834A4 /* _locales in Resources */,
+				5876891E2719238000F834A4 /* baidu-content.js in Resources */,
+				587689242719238000F834A4 /* popup.js in Resources */,
+				588973262721715F00BE123E /* zhihu-content.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		587688D02719237E00F834A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				587688E72719237E00F834A4 /* ViewController.m in Sources */,
+				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
+				587689402720064D00F834A4 /* NavigationController.m in Sources */,
+				587688F12719238000F834A4 /* main.m in Sources */,
+				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587688F22719238000F834A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				587688FB2719238000F834A4 /* StayTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587688FC2719238000F834A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				587689052719238000F834A4 /* StayUITests.m in Sources */,
+				587689072719238000F834A4 /* StayUITestsLaunchTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587689082719238000F834A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		587688F82719238000F834A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 587688D32719237E00F834A4 /* Stay */;
+			targetProxy = 587688F72719238000F834A4 /* PBXContainerItemProxy */;
+		};
+		587689022719238000F834A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 587688D32719237E00F834A4 /* Stay */;
+			targetProxy = 587689012719238000F834A4 /* PBXContainerItemProxy */;
+		};
+		5876890F2719238000F834A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5876890B2719238000F834A4 /* Stay Extension */;
+			targetProxy = 5876890E2719238000F834A4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		587688DB2719237E00F834A4 /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5889731427213BC200BE123E /* en */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		5889731C27213C8300BE123E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5889731B27213C8300BE123E /* en */,
+				5889731E27213CB100BE123E /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		587689272719238000F834A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		587689282719238000F834A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5876892A2719238000F834A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5876892B2719238000F834A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro.Extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		5876892E2719238000F834A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Stay/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Stay;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5876892F2719238000F834A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 8;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Stay/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Stay;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		587689312719238000F834A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.StayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stay.app/Stay";
+			};
+			name = Debug;
+		};
+		587689322719238000F834A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.StayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stay.app/Stay";
+			};
+			name = Release;
+		};
+		587689342719238000F834A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.StayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Stay;
+			};
+			name = Debug;
+		};
+		587689352719238000F834A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.StayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Stay;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		587688CF2719237E00F834A4 /* Build configuration list for PBXProject "Stay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				587689272719238000F834A4 /* Debug */,
+				587689282719238000F834A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		587689292719238000F834A4 /* Build configuration list for PBXNativeTarget "Stay Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5876892A2719238000F834A4 /* Debug */,
+				5876892B2719238000F834A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5876892D2719238000F834A4 /* Build configuration list for PBXNativeTarget "Stay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5876892E2719238000F834A4 /* Debug */,
+				5876892F2719238000F834A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		587689302719238000F834A4 /* Build configuration list for PBXNativeTarget "StayTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				587689312719238000F834A4 /* Debug */,
+				587689322719238000F834A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		587689332719238000F834A4 /* Build configuration list for PBXNativeTarget "StayUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				587689342719238000F834A4 /* Debug */,
+				587689352719238000F834A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 587688CC2719237E00F834A4 /* Project object */;
+}

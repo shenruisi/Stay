@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "Stay",
+        "description": "Stay - 网页纯浏览"
+    },
+    "extension_description": {
+        "message": "Stay可以让您留在 Safari 中，防止应用程序跳转、阻止广告和自动展开文本。",
+        "description": "让您留在 Safari 中，防止应用程序跳转、阻止广告和自动展开文本。"
+    }
+}

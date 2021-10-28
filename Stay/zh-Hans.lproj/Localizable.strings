@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  Stay
+
+  Created by ris on 2021/10/21.
+  
+*/
+
+//settings
+settings.rateApp="评价应用";
+settings.openSource="开源代码";
+settings.joinTelegram="加入Telegram";
+settings.enableStay="在Safari浏览器扩展中激活‘Stay’";
