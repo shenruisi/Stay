@@ -5,7 +5,7 @@
 <p align="right">中文 | <a href="README-EN.md">EN</a></p>
 
 # Stay
-Stay是一个开源的iOS Safari浏览器插件，做为一个浏览器插件示例的同时也已经上线AppStore，并且保证免费。
+Stay是一个开源的iOS Safari浏览器插件，做为一个浏览器插件示例的同时也已经上线AppStore [Stay - 网页纯浏览](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)，并且保证免费。
 
 Stay需要运行在iOS 15及以上。
 
