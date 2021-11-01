@@ -174,3 +174,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         browser.runtime.sendMessage({from:"content",operate:"saveAppList",data:data})
     });
 });
+
+
+

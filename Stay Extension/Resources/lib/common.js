@@ -213,6 +213,7 @@ class AppContainer{
     }
 }
 
+
 if (R_E_D_I_R_E_C_T_TEST.test(location.href)) {
     let url = decodeURIComponent($getQueryVariable("url")).replace("http:","https:");
     location.replace(url);

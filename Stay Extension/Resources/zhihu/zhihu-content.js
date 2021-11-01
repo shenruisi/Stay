@@ -48,7 +48,20 @@ function unfold(){
                 }
             }
             btn.remove();
-            
+            let main = document.querySelector(".Question-main");
+            if (main){
+                main.onclick = function(event){
+                    let target = event.target;
+                    while(!/RichContent/.test(target.className) && target.tagName != "BODY"){
+                        target = target.parentNode;
+                    }
+                    if (/RichContent/.test(target.className)){
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    
+                }
+            }
             
             return COMPLETE;
         }
