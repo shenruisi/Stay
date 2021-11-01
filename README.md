@@ -48,5 +48,6 @@ Stay需要运行在iOS 15及以上。
 - [Content scripts](https://developer.chrome.com/docs/extensions/mv3/content_scripts/)
 - [Safari web extensions](https://developer.apple.com/documentation/safariservices/safari_web_extensions)
 - [crxviewer](https://robwu.nl/crxviewer/)
+- [Browser support for JavaScript APIs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs)
 
 
