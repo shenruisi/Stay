@@ -67,6 +67,11 @@
             "js": [ "common.js","zhihu-content.js"],
             "matches": [ "*://*.zhihu.com/*" ],
             "run_at": "document_start"
+        },
+        {
+            "js": [ "news_sina-content.js"],
+            "matches": [ "*://news.sina.cn/*" ],
+            "run_at": "document_start"
         }
     ],
 
