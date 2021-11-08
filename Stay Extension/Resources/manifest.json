@@ -23,13 +23,18 @@
         {
             "js": [ "common.js","baidu-content.js"],
             "matches": [ "*://*.baidu.com/*" ],
-            "exclude_globs":[ "*://tieba.baidu.com/*" ],
+            "exclude_matches":[ "*://tieba.baidu.com/*" ],
             "all_frames": true,
             "run_at": "document_start"
         },
         {
             "js": [ "common.js","tieba-content.js"],
             "matches": [ "*://tieba.baidu.com/*" ],
+            "run_at": "document_start"
+        },
+        {
+            "js": [ "common.js","google-content.js"],
+            "matches": [ "*://*.google.com/*","*://*.google.com.hk/*" ],
             "run_at": "document_start"
         },
         {
@@ -81,5 +86,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>"]
+    "permissions": ["<all_urls>","tabs"]
 }

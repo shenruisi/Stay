@@ -70,12 +70,31 @@ function unfold(){
     return CONTINUE;
 }
 
+function replaceDirectUrl(){
+    let items = document.querySelectorAll('.Feed');
+    if (items){
+        for (var i = 0; i < items.length; i++){
+            let item = items[i];
+            let a = item.querySelector('a');
+            item.onclick = function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                location.href = a.href;
+            }
+        }
+        return COMPLETE;
+    }
+    
+    return CONTINUE_TIL(10);
+}
+
 window.onload = function(){
-    let tasks = [removeChoosePanel,removeAppJump,unfold];
+    let tasks = [removeChoosePanel,removeAppJump,replaceDirectUrl,unfold];
     Inject.run(tasks,100,30,false).then((data) => {
         browser.runtime.sendMessage({from:"content",operate:"saveAppList",data:data})
     });
 }
+
 
 
 
