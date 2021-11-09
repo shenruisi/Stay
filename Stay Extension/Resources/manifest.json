@@ -67,6 +67,11 @@
             "js": [ "common.js","zhihu-content.js"],
             "matches": [ "*://*.zhihu.com/*" ],
             "run_at": "document_start"
+        },
+        {
+            "js": [ "common.js","xw_qq-content.js"],
+            "matches": [ "*://xw.qq.com/*" ],
+            "run_at": "document_start"
         }
     ],
 
