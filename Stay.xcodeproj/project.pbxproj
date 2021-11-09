@@ -45,6 +45,7 @@
 		588973392722D74A00BE123E /* tieba-content.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973382722D74A00BE123E /* tieba-content.js */; };
 		5889733E2723033600BE123E /* icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5889733D2723033600BE123E /* icon@3x.png */; };
 		588973482728144000BE123E /* redirect.js in Resources */ = {isa = PBXBuildFile; fileRef = 588973472728144000BE123E /* redirect.js */; };
+		CD56236727315A8F00D32806 /* news_sina-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD56236627315A8F00D32806 /* news_sina-content.js */; };
 		CD06870F272E8063006EEA1E /* xw_qq-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD06870E272E8063006EEA1E /* xw_qq-content.js */; };
 /* End PBXBuildFile section */
 
@@ -136,6 +137,7 @@
 		588973382722D74A00BE123E /* tieba-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "tieba-content.js"; sourceTree = "<group>"; };
 		5889733D2723033600BE123E /* icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@3x.png"; sourceTree = "<group>"; };
 		588973472728144000BE123E /* redirect.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = redirect.js; sourceTree = "<group>"; };
+		CD56236627315A8F00D32806 /* news_sina-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "news_sina-content.js"; sourceTree = "<group>"; };
 		CD06870E272E8063006EEA1E /* xw_qq-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "xw_qq-content.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -256,6 +258,7 @@
 		587689142719238000F834A4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CD56236527315A6B00D32806 /* sina */,
 				CD06870D272E8020006EEA1E /* qq */,
 				588973352722C5D800BE123E /* toutiao */,
 				588973322722BF7000BE123E /* jianshu */,
@@ -362,6 +365,12 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		CD56236527315A6B00D32806 /* sina */ = {
+			isa = PBXGroup;
+			children = (
+				CD56236627315A8F00D32806 /* news_sina-content.js */,
+			);
+			path = sina;
 		CD06870D272E8020006EEA1E /* qq */ = {
 			isa = PBXGroup;
 			children = (
@@ -527,6 +536,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58768939271E64EB00F834A4 /* common.js in Resources */,
+				CD56236727315A8F00D32806 /* news_sina-content.js in Resources */,
 				CD06870F272E8063006EEA1E /* xw_qq-content.js in Resources */,
 				5881343027294C0E0055E1CE /* iframe.html in Resources */,
 				5889732B272180F700BE123E /* sohu-content.js in Resources */,
