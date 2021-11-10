@@ -50,4 +50,7 @@ Stay需要运行在iOS 15及以上。
 - [crxviewer](https://robwu.nl/crxviewer/)
 - [Browser support for JavaScript APIs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs)
 
+## 用户交流
+请关注公众号`效率先生`，并回复`微信群` 进群沟通。
 
+<img src="./Material/qrcode.jpg" width="256"/>
