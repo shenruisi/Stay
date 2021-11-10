@@ -35,7 +35,9 @@ Stay需要运行在iOS 15及以上。
 - [小红书 xhs-content.js](/Stay%20Extension/Resources/xhs/xhs-content.js)
 - [简书 jianshu-content.js](/Stay%20Extension/Resources/jianshu/jianshu-content.js)
 - [CSDN csdn-content.js](/Stay%20Extension/Resources/csdn/csdn-content.js)
-
+- [Google google-content.js](/Stay%20Extension/Resources/google/google-content.js)
+- [新浪新闻 news_sina-content.js](/Stay%20Extension/Resources/sina/news_sina-content.js)
+- [腾讯新闻 xw_qq-content.js](/Stay%20Extension/Resources/qq/xw_qq-content.js)
 
 ## 许可证
 [MPL](./LICENSE)
