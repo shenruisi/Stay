@@ -1,12 +1,20 @@
 function removeChoosePanel(){
     let pannel = document.querySelector('nav.tb-backflow-defensive');
     if (pannel){
-        pannel.remove();
+        let btns = pannel.querySelectorAll('.tb-share__btn');
+        for (var i=0; i < btns.length; i++){
+            let button = btns[i];
+            if (button.innerText == "继续"){
+                button.click();
+                return COMPLETE;
+            }
+        }
         return COMPLETE;
     }
     
     return CONTINUE;
 }
+
 
 
 document.addEventListener("DOMContentLoaded", function(event) {

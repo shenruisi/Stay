@@ -50,14 +50,15 @@ function unfold(){
     if (pageWrapper){
         let fullText = pageWrapper.querySelector('.unfoldFullText') || pageWrapper.querySelector('.wxUnfoldText');
         if (fullText){
-            fullText.style.display = "none";
-            let mainContent = pageWrapper.querySelector('.mainContent');
-            if (mainContent){
-                mainContent.style.height = null;
-                return COMPLETE;
-            }
+            fullText.click();
+            setTimeout(function(){
+                document.querySelector('.popup-lead-cancel')?.click();
+            },50);
+            return COMPLETE;
         }
+       
     }
+
     return CONTINUE;
 }
 
@@ -88,11 +89,21 @@ function banBall(){
 }
 
 function removeChoosePanel(){
-    let layerMain = document.querySelector('.layer-main');
-    if (layerMain){
-        console.log(layerMain);
-        layerMain.remove();
-        return COMPLETE;
+    let pannels = document.querySelectorAll('.layer-wrap');
+    for (var i = 0; i < pannels.length; i++){
+        let pannel = pannels[i];
+        let div = pannel.querySelector('.layer-content-shown');
+        if (div){
+            let btns = div.querySelectorAll('.layer-itemBtn');
+            
+            for (var i=0; i < btns.length; i++){
+                let button = btns[i];
+                if (button.innerText == "继续"){
+                    button.click();
+                    return COMPLETE;
+                }
+            }
+        }
     }
     
     return CONTINUE;
@@ -146,6 +157,7 @@ function replaceDirectUrl(){
                     event.preventDefault();
                     event.stopPropagation();
                     location.href = newUrl;
+                    console.log(newUrl);
                 }
             }
         }
@@ -169,7 +181,7 @@ function popLead(){
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-    let tasks = [banAds,banBottomBanner,banBall,removeAppJump,unfold,removeChoosePanel,moreResult,replaceDirectUrl,popLead];
+    let tasks = [banAds,banBottomBanner,banBall,removeAppJump,unfold,removeChoosePanel,replaceDirectUrl,moreResult,popLead];
     Inject.run(tasks,100,30,false).then((data) => {
         browser.runtime.sendMessage({from:"content",operate:"saveAppList",data:data})
     });
