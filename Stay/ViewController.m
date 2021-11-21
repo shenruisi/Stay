@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "tampermonkey/Tampermonkey.h"
 
 
 @interface ViewController ()<
@@ -20,7 +21,18 @@
 
 @implementation ViewController
 
+- (void)testParseUserScript{
+    UserScript *userScript =  [[Tampermonkey shared] parseScript:@"stay-zhihu.user"];
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    [groupUserDefaults setObject:@[[userScript toDictionary]] forKey:@"ACTIVE_SCRIPTS"];
+    [groupUserDefaults synchronize];
+//    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+//    NSLog([userScript toDictionary]);
+    
+}
+
 - (void)viewDidLoad {
+    [self testParseUserScript];
     [super viewDidLoad];
     self.title = @"Stay";
     self.navigationItem.leftBarButtonItem = [self leftIcon];

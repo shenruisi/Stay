@@ -21,67 +21,10 @@
 
     "content_scripts": [
         {
-            "js": [ "common.js","baidu-content.js"],
-            "matches": [ "*://*.baidu.com/*" ],
-            "exclude_matches":[ "*://tieba.baidu.com/*" ],
+            "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
+            "matches": [ "*://*/*" ],
             "all_frames": true,
             "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","tieba-content.js"],
-            "matches": [ "*://tieba.baidu.com/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","google-content.js"],
-            "matches": [ "*://*.google.com/*","*://*.google.com.hk/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","xhs-content.js"],
-            "matches": [ "*://*.xiaohongshu.com/*" ],
-            "all_frames": true,
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","sohu-content.js"],
-            "matches": [ "*://*.sohu.com/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","google-content.js"],
-            "matches": [ "*://*.google.com/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","csdn-content.js"],
-            "matches": [ "*://*.csdn.net/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","jianshu-content.js"],
-            "matches": [ "*://*.jianshu.com/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","toutiao-content.js"],
-            "matches": [ "*://*.toutiao.com/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","zhihu-content.js"],
-            "matches": [ "*://*.zhihu.com/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "news_sina-content.js"],
-            "matches": [ "*://news.sina.cn/*" ],
-            "run_at": "document_start"
-        },
-        {
-            "js": [ "common.js","xw_qq-content.js"],
-            "matches": [ "*://xw.qq.com/*" ],
-            "run_at": "document_start"    
         }
     ],
 
@@ -96,5 +39,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>","tabs"]
+    "permissions": ["<all_urls>","tabs","nativeMessaging"]
 }
