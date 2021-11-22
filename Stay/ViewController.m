@@ -22,7 +22,7 @@
 @implementation ViewController
 
 - (void)testParseUserScript{
-    UserScript *userScript =  [[Tampermonkey shared] parseScript:@"stay-zhihu.user"];
+    UserScript *userScript =  [[Tampermonkey shared] parseScript:@"newuserscript.user"];
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     [groupUserDefaults setObject:@[[userScript toDictionary]] forKey:@"ACTIVE_SCRIPTS"];
     [groupUserDefaults synchronize];

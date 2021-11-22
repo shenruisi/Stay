@@ -11,51 +11,6 @@ const $_uri = (url) => {
     return a;
 }
 
-var __stay = {};
-
-//function GM_listValues(){
-//    return new Promise((resolve,reject) => {
-//        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid:"123" }, (response) => {
-//            resolve(response.body);
-//        });
-//    });
-//}
-//
-//function GM_deleteValue(key){
-//    return new Promise((resolve,reject) => {
-//        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid:"123" }, (response) => {
-//            resolve(response.body);
-//        });
-//    });
-//}
-//
-//function GM_setValue(key,value){
-//    return new Promise((resolve,reject) => {
-//        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid:"123" }, (response) => {
-//            resolve(response.body);
-//        });
-//    });
-//}
-//
-//function GM_getValue(key,defaultValue){
-//    return new Promise((resolve,reject) => {
-//        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid:"123" }, (response) => {
-//            resolve(response.body);
-//        });
-//    });
-//}
-//async function f1() {
-//    await GM_setValue("foo",{a:1,b:2});
-//    await GM_getValue("foo","1");
-//    await GM_listValues();
-//    await GM_deleteValue("foo");
-//    var a = await GM_getValue("foo");
-//    console.log(a);
-////    console.log(b);
-//}
-//
-//f1();
-
 async function start(){
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
         let injectedVendor = new Set();

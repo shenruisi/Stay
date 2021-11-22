@@ -64,6 +64,7 @@
 		58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4E5274754B900270873 /* gm-apis-gen.js */; };
 		58F7F4E9274776AB00270873 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4E8274776AB00270873 /* Stroge.m */; };
 		58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EC2747A9FE00270873 /* gm-api-create.js */; };
+		58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EE274B7C7700270873 /* newuserscript.user.js */; };
 		CD06870F272E8063006EEA1E /* xw_qq-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD06870E272E8063006EEA1E /* xw_qq-content.js */; };
 		CD56236727315A8F00D32806 /* news_sina-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD56236627315A8F00D32806 /* news_sina-content.js */; };
 /* End PBXBuildFile section */
@@ -180,6 +181,7 @@
 		58F7F4E7274776AB00270873 /* Stroge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stroge.h; sourceTree = "<group>"; };
 		58F7F4E8274776AB00270873 /* Stroge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stroge.m; sourceTree = "<group>"; };
 		58F7F4EC2747A9FE00270873 /* gm-api-create.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "gm-api-create.js"; sourceTree = "<group>"; };
+		58F7F4EE274B7C7700270873 /* newuserscript.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = newuserscript.user.js; sourceTree = "<group>"; };
 		CD06870E272E8063006EEA1E /* xw_qq-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "xw_qq-content.js"; sourceTree = "<group>"; };
 		CD56236627315A8F00D32806 /* news_sina-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "news_sina-content.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -484,6 +486,7 @@
 			isa = PBXGroup;
 			children = (
 				58F7F4D8274629AF00270873 /* stay-zhihu.user.js */,
+				58F7F4EE274B7C7700270873 /* newuserscript.user.js */,
 			);
 			path = userscript;
 			sourceTree = "<group>";
@@ -652,6 +655,7 @@
 				58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */,
 				58F7F4D9274629AF00270873 /* stay-zhihu.user.js in Resources */,
 				5889731A27213C8300BE123E /* Localizable.strings in Resources */,
+				58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */,
 				58F7F4C12743C00600270873 /* leetcode-cn-submission-share.user.js in Resources */,
 				58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
