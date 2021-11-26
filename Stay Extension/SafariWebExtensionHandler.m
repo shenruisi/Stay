@@ -17,9 +17,10 @@
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
     
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+    
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
         body = [[NSString alloc] initWithData:
                 [NSJSONSerialization dataWithJSONObject:datas
                                                 options:0
@@ -54,6 +55,8 @@
         if (uuid.length > 0){
             body = [Stroge listValues:uuid];
         }
+    }else if ([message[@"type"] isEqualToString:@"setScriptActive"]){
+        
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
