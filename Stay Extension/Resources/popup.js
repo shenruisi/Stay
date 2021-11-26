@@ -12,6 +12,33 @@ const $setText = (selector,value) => {
     document.querySelector(selector).textContent = value;
 };
 
+window.onload=function(){
+    browser.runtime.sendMessage({from:"popup", operate: "fetchMatchScriptList"},(response)=>{
+//        document.querySelector(".placeholder").style.display = "block";
+//        document.querySelector(".placeholder").innerHTML = JSON.stringify(response)
+        
+        
+        
+        console.log(response.body)
+    })
+    
+    
+}
+
+
+const handleScriptActive = (uuid, active) => {
+    browser.runtime.sendMessage({
+        from:"popup",
+        operate: "setScriptActive",
+        uuid: uuid,
+        active: active
+    },(response)=>{
+        console.log(response.body)
+    })
+}
+
+
+
 //var browser = __b;
 //var chrome = __b;
 window.addEventListener('DOMContentLoaded', () => {
@@ -35,6 +62,9 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+    
+    
+    
 //    browser.runtime.sendMessage({ from: "popup", operate: "fetchAppList" }).then((response) => {
 //        if (response.body.length > 0){
 //            document.querySelector(".placeholder").style.display = "none";
@@ -50,4 +80,6 @@ window.addEventListener('DOMContentLoaded', () => {
 //            }
 //        }
 //    });
+    
+    
 });

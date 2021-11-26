@@ -1,7 +1,7 @@
 //var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 //var browser = __b;
 
-//let appJumpList;
+let matchAppScriptList=[];
 let gm_console = {};
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //    if ("popup" == request.from && "fetchAppList" == request.operate){
@@ -29,6 +29,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames, runAt: request.runAt })
             });
+            return true;
+        }
+        else if ("setMatchScripts" == request.operate){
+            matchAppScriptList = request.matchScripts;
             return true;
         }
     }
@@ -71,7 +75,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("cleanLog" == request.operate){
             gm_console = [];
+        }else if ("fetchMatchScriptList" == request.operate){
+            sendResponse({ body: matchAppScriptList });
+        }else if ("setScriptActive" == request.operate){
+            browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
+                sendResponse(response);
+            });
+            
         }
+        return true;
     }
     
 });

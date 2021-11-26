@@ -48,11 +48,18 @@ async function start(){
                 allFrames:!script.noFrames,
                 runAt:"document_"+script.runAt
             });
+            
         });
         
         console.log(injectScripts);
-        
+        browser.runtime.sendMessage({
+            from: "bootstrap",
+            operate: "setMatchScripts",
+            matchScripts: injectScripts
+        });
     });
+    
+    
 }
 
 start();
