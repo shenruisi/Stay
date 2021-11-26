@@ -7,10 +7,10 @@
 
 #import "AppDelegate.h"
 #import "NavigationController.h"
-#import "ViewController.h"
 #import "SceneDelegate.h"
 
 @implementation AppDelegate
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

@@ -5,11 +5,15 @@
 //  Created by ris on 2021/10/15.
 //
 
+<<<<<<< HEAD:Stay/ViewController.m
 #import "ViewController.h"
 #import "tampermonkey/Tampermonkey.h"
+=======
+#import "SYMoreViewController.h"
+>>>>>>> 2.0:Stay/Main/SYMore/Controller/SYMoreViewController.m
 
 
-@interface ViewController ()<
+@interface SYMoreViewController ()<
  UITableViewDelegate,
  UITableViewDataSource
 >
@@ -19,7 +23,7 @@
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @end
 
-@implementation ViewController
+@implementation SYMoreViewController
 
 - (void)testParseUserScript{
     UserScript *userScript =  [[Tampermonkey shared] parseScript:@"newuserscript.user"];
@@ -34,8 +38,6 @@
 - (void)viewDidLoad {
     [self testParseUserScript];
     [super viewDidLoad];
-    self.title = @"Stay";
-    self.navigationItem.leftBarButtonItem = [self leftIcon];
     [self tableView];
 }
 
@@ -117,16 +119,6 @@
     
     return _tableView;
 }
-
-- (UIBarButtonItem *)leftIcon{
-    if (nil == _leftIcon){
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon"]];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _leftIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
-    }
-    return _leftIcon;
-}
-
 
 
 @end
