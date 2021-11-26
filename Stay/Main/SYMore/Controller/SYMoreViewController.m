@@ -5,13 +5,8 @@
 //  Created by ris on 2021/10/15.
 //
 
-<<<<<<< HEAD:Stay/ViewController.m
-#import "ViewController.h"
-#import "tampermonkey/Tampermonkey.h"
-=======
+#import "Tampermonkey.h"
 #import "SYMoreViewController.h"
->>>>>>> 2.0:Stay/Main/SYMore/Controller/SYMoreViewController.m
-
 
 @interface SYMoreViewController ()<
  UITableViewDelegate,
@@ -36,7 +31,7 @@
 }
 
 - (void)viewDidLoad {
-    [self testParseUserScript];
+//    [self testParseUserScript];
     [super viewDidLoad];
     [self tableView];
 }

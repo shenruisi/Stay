@@ -6,13 +6,12 @@
 'use strict';
 
 (function() {
-    function createGMApisWithUserScript(userScript,uuid){
+    function createGMApisWithUserScript(grants,uuid){
         if (userScript.grants.length == 0) return;
         
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'let GM = {};\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
-        let grants = userScript.grants;
         if (grants.includes('GM_listValues')) {
             source += GM_listValues.toString() + ';\n\n';
         }

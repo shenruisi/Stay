@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ScriptDetailModel.h"
+//#import "ScriptDetailModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *descLabel;
 
 
-- (void)loadDetail:(ScriptDetailModel *)jsDetail;
+//- (void)loadDetail:(ScriptDetailModel *)jsDetail;
 
 
 @end

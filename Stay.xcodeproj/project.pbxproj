@@ -568,6 +568,8 @@
 				CD56236627315A8F00D32806 /* news_sina-content.js */,
 			);
 			path = sina;
+            sourceTree = "<group>";
+        };
 		84BDC83F274BB7FB005367C6 /* Data */ = {
 			isa = PBXGroup;
 			children = (

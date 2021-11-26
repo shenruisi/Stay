@@ -47,7 +47,7 @@
         @"grants":self.grants,
         @"noFrames":@(self.noFrames),
         @"requireUrls":self.requireUrls,
-        @"content":self.content ? self.content : @"",
+        @"content":self.parsedContent ? self.parsedContent : @"",
         @"active":@(self.active)
     };
 }

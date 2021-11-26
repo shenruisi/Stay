@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UserScript.h"
+
 
 @interface DataManager : NSObject
 
@@ -14,6 +16,6 @@
 
 - (NSArray *)findScript:(int)condition;
 
-- (void)updateScrpitStatus:(int)status numberId:(int)numberId;
+- (void)updateScrpitStatus:(int)status numberId:(NSString *)uuid;
 
 @end

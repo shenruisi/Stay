@@ -55,6 +55,14 @@
             body = [Stroge listValues:uuid];
         }
     }
+    else if ([message[@"type"] isEqualToString:@"setScriptActive"]){
+            NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+            NSString *uuid = message[@"uuid"];
+            // N activeVal = message[@"active"];
+            if (uuid.length > 0){
+                body = [Stroge listValues:uuid];
+            }
+        }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,

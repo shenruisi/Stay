@@ -40,8 +40,22 @@
    
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
-    [_datas addObjectsFromArray:[[DataManager shareManager] findScript:0]];
+    [self initScrpitContent];
     // Do any additional setup after loading the view.
+}
+
+- (void)initScrpitContent{
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    
+    NSMutableArray *array =  [[NSMutableArray alloc] init];
+    
+    for(int i = 0; i < self.datas.count; i++) {
+        UserScript *scrpit = self.datas[i];
+        [array addObject: [scrpit toDictionary]];
+    }
+    [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
+    [groupUserDefaults synchronize];
+    
 }
 
 /*
@@ -118,8 +132,8 @@
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 21)];
         titleLabel.font = [UIFont systemFontOfSize:21];
         titleLabel.textAlignment = NSTextAlignmentLeft;
-        ScriptDetailModel *model = _datas[indexPath.row];
-        titleLabel.text = model.title;
+        UserScript *model = _datas[indexPath.row];
+        titleLabel.text = model.name;
         [cell.contentView addSubview:titleLabel];
         
         UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 19)];
@@ -132,7 +146,7 @@
         UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 19)];
         descLabel.font = [UIFont systemFontOfSize:15];
         descLabel.textAlignment = NSTextAlignmentLeft;
-        descLabel.text = model.script_desc;
+        descLabel.text = model.desc;
         descLabel.top = authorLabel.bottom + 5;
         descLabel.textColor = [UIColor grayColor];
         [cell.contentView addSubview:descLabel];
@@ -142,7 +156,7 @@
         statusLabel.textAlignment = NSTextAlignmentCenter;
         statusLabel.textColor = [UIColor whiteColor];
 
-        if(model.status == 1) {
+        if(model.active == 1) {
             statusLabel.backgroundColor = [UIColor redColor];
             statusLabel.layer.cornerRadius = 2;
             statusLabel.text = @"Stopped";
@@ -182,9 +196,9 @@
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        ScriptDetailModel *model = _datas[indexPath.row];
+        UserScript *model = _datas[indexPath.row];
 
-        [[DataManager shareManager] updateScrpitStatus:2 numberId:model.id_number];
+        [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
         [tableView setEditing:NO animated:YES];
         [self reloadTableView];
         [tableView reloadData];
@@ -195,11 +209,11 @@
 
     
     UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        ScriptDetailModel *model = _datas[indexPath.row];
-        if (model.status == 1) {
-            [[DataManager shareManager] updateScrpitStatus:0 numberId:model.id_number];
-        } else if (model.status == 0) {
-            [[DataManager shareManager] updateScrpitStatus:1 numberId:model.id_number];
+        UserScript *model = _datas[indexPath.row];
+        if (model.active == 1) {
+            [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+        } else if (model.active == 0) {
+            [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
         }
           [tableView setEditing:NO animated:YES];
           [self reloadTableView];
@@ -207,8 +221,8 @@
             [tableView reloadData];
         });
     }];
-    ScriptDetailModel *model = _datas[indexPath.row];
-    if (model.status == 0) {
+    UserScript *model = _datas[indexPath.row];
+    if (model.active == 0) {
         stopAction.image = [UIImage imageNamed:@"stop"];
         stopAction.backgroundColor = RGB(208, 86, 81);
     } else {
@@ -228,7 +242,6 @@
 - (void) reloadTableView {
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
-    [_datas addObjectsFromArray:[[DataManager shareManager] findScript:0]];
 }
 
 - (UITableView *)tableView {

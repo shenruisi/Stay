@@ -38,11 +38,11 @@ static Tampermonkey *kInstance = nil;
     
     UserScript *userScript = [UserScript ofDictionary:[userScriptHeader toDictionary]];
     userScript.uuid = [[NSUUID UUID] UUIDString];
-    
+    userScript.content = script;
     NSString *scriptWithoutComment = [self _removeComment:script];
     if (userScript.grants.count > 0){ //repleace gm apis
         JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
-        JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[[userScriptHeader toDictionary],userScript.uuid]];
+        JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
         scriptWithoutComment = [NSString stringWithFormat:@"async function gm_init(){\n%@%@\n}\ngm_init();\n",gmApisSource,scriptWithoutComment];
         userScript.content = scriptWithoutComment;
     }
@@ -52,6 +52,19 @@ static Tampermonkey *kInstance = nil;
    
     return userScript;
 }
+
+
+- (void)conventScriptContent:(UserScript *)userScript{
+    NSString *scriptWithoutComment = [self _removeComment:userScript.content];
+    if (userScript.grants.count > 0){ //repleace gm apis
+        JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
+        JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
+        scriptWithoutComment = [NSString stringWithFormat:@"async function gm_init(){\n%@%@\n}\ngm_init();\n",gmApisSource,scriptWithoutComment];
+    }
+    userScript.parsedContent = scriptWithoutComment;
+}
+
+
 
 - (NSString *)_removeComment:(NSString *)script{
     NSString *process = [script copy];
