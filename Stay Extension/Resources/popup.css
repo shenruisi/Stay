@@ -108,6 +108,11 @@ body {
 }
 
 .content-box{
+    background:#fff;
+    border: 1px solid rgba(151,151,151,0.6);
+    border-radius: 7px;
+    width: 100%;
+    padding: 10px;
     
 }
 .content-item{
