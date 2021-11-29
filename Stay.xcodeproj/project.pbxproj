@@ -65,8 +65,6 @@
 		58F7F4E9274776AB00270873 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4E8274776AB00270873 /* Stroge.m */; };
 		58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EC2747A9FE00270873 /* gm-api-create.js */; };
 		58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EE274B7C7700270873 /* newuserscript.user.js */; };
-		CD06870F272E8063006EEA1E /* xw_qq-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD06870E272E8063006EEA1E /* xw_qq-content.js */; };
-		CD56236727315A8F00D32806 /* news_sina-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD56236627315A8F00D32806 /* news_sina-content.js */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
 		84BDC845274BBEEC005367C6 /* scriptManager.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC844274BBEEC005367C6 /* scriptManager.sqlite */; };
@@ -84,6 +82,8 @@
 		84F48334273ADA5000217BB3 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F48333273ADA5000217BB3 /* more@3x.png */; };
 		84F48337273B709500217BB3 /* JSDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48336273B709500217BB3 /* JSDetailCell.m */; };
 		84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48339273B964900217BB3 /* JSDetailEntity.m */; };
+		CD06870F272E8063006EEA1E /* xw_qq-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD06870E272E8063006EEA1E /* xw_qq-content.js */; };
+		CD56236727315A8F00D32806 /* news_sina-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD56236627315A8F00D32806 /* news_sina-content.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,8 +199,6 @@
 		58F7F4E8274776AB00270873 /* Stroge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stroge.m; sourceTree = "<group>"; };
 		58F7F4EC2747A9FE00270873 /* gm-api-create.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "gm-api-create.js"; sourceTree = "<group>"; };
 		58F7F4EE274B7C7700270873 /* newuserscript.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = newuserscript.user.js; sourceTree = "<group>"; };
-		CD06870E272E8063006EEA1E /* xw_qq-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "xw_qq-content.js"; sourceTree = "<group>"; };
-		CD56236627315A8F00D32806 /* news_sina-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "news_sina-content.js"; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
 		84BDC83B2745575E005367C6 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
 		84BDC83D27455CA2005367C6 /* SYDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDefines.h; sourceTree = "<group>"; };
@@ -228,6 +226,8 @@
 		84F48336273B709500217BB3 /* JSDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailCell.m; sourceTree = "<group>"; };
 		84F48339273B964900217BB3 /* JSDetailEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailEntity.m; sourceTree = "<group>"; };
 		84F4833B273B96F400217BB3 /* JSDetailEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSDetailEntity.h; sourceTree = "<group>"; };
+		CD06870E272E8063006EEA1E /* xw_qq-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "xw_qq-content.js"; sourceTree = "<group>"; };
+		CD56236627315A8F00D32806 /* news_sina-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "news_sina-content.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -554,22 +554,6 @@
 			path = vendor;
 			sourceTree = "<group>";
 		};
-		CD06870D272E8020006EEA1E /* qq */ = {
-			isa = PBXGroup;
-			children = (
-				CD06870E272E8063006EEA1E /* xw_qq-content.js */,
-			);
-			path = qq;
-			sourceTree = "<group>";
-		};
-		CD56236527315A6B00D32806 /* sina */ = {
-			isa = PBXGroup;
-			children = (
-				CD56236627315A8F00D32806 /* news_sina-content.js */,
-			);
-			path = sina;
-            sourceTree = "<group>";
-        };
 		84BDC83F274BB7FB005367C6 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -721,6 +705,22 @@
 				587688E62719237E00F834A4 /* SYMoreViewController.m */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		CD06870D272E8020006EEA1E /* qq */ = {
+			isa = PBXGroup;
+			children = (
+				CD06870E272E8063006EEA1E /* xw_qq-content.js */,
+			);
+			path = qq;
+			sourceTree = "<group>";
+		};
+		CD56236527315A6B00D32806 /* sina */ = {
+			isa = PBXGroup;
+			children = (
+				CD56236627315A8F00D32806 /* news_sina-content.js */,
+			);
+			path = sina;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1210,11 +1210,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/Turbe/myDoc/stay_space/Stay/Stay/PrefixHeader.pch;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
@@ -1248,11 +1247,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/Turbe/myDoc/stay_space/Stay/Stay/PrefixHeader.pch;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
