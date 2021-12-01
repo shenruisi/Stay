@@ -2,6 +2,7 @@
 //var browser = __b;
 
 let matchAppScriptList=[];
+let matchAppScriptConsole = [];
 let gm_console = {};
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //    if ("popup" == request.from && "fetchAppList" == request.operate){
@@ -31,7 +32,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
-        else if ("setMatchScripts" == request.operate){
+        else if ("setMatchedScripts" == request.operate){
             matchAppScriptList = request.matchScripts;
             return true;
         }
@@ -75,12 +76,29 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("cleanLog" == request.operate){
             gm_console = [];
-        }else if ("fetchMatchScriptList" == request.operate){
+        }else if ("fetchMatchedScriptList" == request.operate){
             sendResponse({ body: matchAppScriptList });
         }else if ("setScriptActive" == request.operate){
             browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
                 sendResponse(response);
             });
+            
+        }else if ("fetchMatchedScriptLog" == request.operate){
+            if(matchAppScriptList && matchAppScriptList.length>0){
+                if(matchAppScriptConsole.length>0){
+                    matchAppScriptConsole = [];
+                }
+                matchAppScriptList.forEach(item=>{
+                    let matchLog = {};
+                    matchLog["name"] = item.name;
+                    matchLog["uuid"] = item.uuid;
+                    matchLog["logList"] = gm_console[item.uuid]
+                    matchAppScriptConsole.push(matchLog);
+                })
+                sendResponse({ body: matchAppScriptConsole });
+            }else{
+                sendResponse({ body: [] });
+            }
             
         }
         return true;

@@ -16,6 +16,10 @@ html,
 body {
   height: 100%;
   font-family: 'PingFangSC-Light', sans-serif;
+  -moz-user-select:none;		/* 火狐 */
+  -webkit-user-select:none;	/* 谷歌 */
+  -ms-user-select:none;		/* IE */
+  user-select:none;
 }
 body,
 div,
@@ -66,14 +70,20 @@ body {
     font-family: system-ui;
     text-align: center;
     background-color:#F6F6F6;
+    overflow-y:scroll;
 }
 .header-box{
     width: 100%;
     margin: 0 auto;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background-color: #F6F6F6;
 }
 .main-icon{
-    padding: 6px 0 0 6px;
+    display: block;
+    padding: 10px 0 0 10px;
     text-align:left;
 }
 .main-icon img{
@@ -116,14 +126,18 @@ body {
     border-left: 1px solid #D8D8D8;
     color: rgba(0,0,0,0.5);
 }
-
+.content-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 68px;
+}
 .content-box{
     background:#fff;
     border: 1px solid rgba(151,151,151,0.2);
-    border-radius: 7px;
+    border-radius: 10px;
     width: 100%;
-    padding: 0 10px;
-    
+    padding-left: 10px;
 }
 .content-box .content-item:last-child{
     border-bottom: none;
@@ -175,9 +189,10 @@ body {
     position: absolute;
     right: 0;
     top: 0;
-    
 }
 .start .active-case .active-icon{
+    /* transform: scale(0.5, 0.5); */
+    /* transition: transform 0.5s linear, opacity 0.5s linear; */
     background-image:url(./images/start-icon.png);
     background-repeat: no-repeat;
     width: 14px;
@@ -185,13 +200,54 @@ body {
     background-size: 100%;
 }
 .stop .active-case .active-icon{
+    /* transform: scale(0.5, 0.5); */
+    /* transition: transform 0.5s linear, opacity 0.5s linear; */
     background-image:url(./images/stop-icon.png);
     background-repeat: no-repeat;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     background-size: 100%;
 }
+.content-none{
+    width: 100%;
+    padding-top: 40px;
+    text-align: center;
+}
+.console-item{
+    width: 100%;
+    /* display: flex; */
+    /* flex-direction: row; */
+    padding: 10px 0;
+    /* justify-content: space-between; */
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px solid #E0E0E0;
+}
+.console-con{
+    /* display: flex; */
+    text-align: left;
+    color: #000000;
+    font-size: 13px;
+    line-height: 17px;
+}
+.console-name{
+    /* display: flex; */
+    /* flex: auto 1; */
+    text-align: right;
+    white-space: nowrap;
+    color: rgba(0,0,0,0.5);
+    font-size: 13px;
+    padding-bottom: 4px;
+}
 
+.content-box .console-item:last-child{
+    border-bottom: none;
+}
+
+/*
+ 21,21,22
+ rgb(28,28,30)
+    38,38,40
+ */
 
 
 .placeholder{
@@ -199,61 +255,59 @@ body {
 }
 
 .tableview{
-}
-
-.tableview .cell{
-    display: -webkit-flex;
-    display: flex;
-    align-items: center;
-    border-radius:10px;
-    font-size:16px;
-    border: 1px solid #FFFFFF;
-    background-color:#FFFFFF;
-    height:45px;
-}
-
-.tableview .cell .icon{
-    border-radius:8px;
-    width: 28px;
-    height: 28px;
-    margin-left:10px;
-}
-
-.tableview .cell .title{
-    max-width:70%;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    margin-left:10px;
-}
-
-.tableview .cell .accessor{
-    margin-left:auto;
-    margin-right:10px;
-    background-image: url("safari-web-extension://__MSG_@@extension_id__/images/accessor.png");
-    background-size:18px;
-    width: 18px;
-    height: 18px;
+    width:100%;
+    
 }
 
 @media (prefers-color-scheme: dark) {
     /* Dark Mode styles go here. */
     body {
-        padding: 15px;
-
         font-family: system-ui;
-        text-align: center;
         background-color:#000000;
     }
     
-    .tableview .cell{
-        display: -webkit-flex;
-        display: flex;
-        align-items: center;
-        border-radius:10px;
-        font-size:16px;
-        border: 1px solid #1C1C27;
-        background-color:#1C1C27;
-        height:45px;
+    .header-box{
+        background-color: #000000;
+    }
+
+    .content-box{
+        background:rgb(28,28,30);
+    }
+    .content-item{
+        border-bottom:1px solid #565656;
+    }
+    .info-case .name{
+        color: #FFFFFF;
+    }
+    .info-case .title{
+        color: #FFFFFF;
+    }
+    .info-case .desc{
+        color: #c5c5c5;
+    }
+    .match-tab {
+        color: #c5c5c5;
+    }
+    .console-tab{
+        border-left: 1px solid #565656;
+        color: #c5c5c5;
+    }
+    .header-tab{
+        background:rgb(28,28,30);
+    }
+    .console-name{
+        color: #c5c5c5;
+    }
+    .console-con{
+        color: #ffffff;
+    }
+    .console-item{
+        border-bottom:1px solid #565656;
+    }
+    .stop .active-case .active-icon{
+        width: 14px;
+        height: 18px;
+        background-image:url(./images/stop-dark.png);
     }
 }
+

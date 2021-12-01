@@ -54,7 +54,7 @@ async function start(){
         console.log(injectScripts);
         browser.runtime.sendMessage({
             from: "bootstrap",
-            operate: "setMatchScripts",
+            operate: "setMatchedScripts",
             matchScripts: injectScripts
         });
     });
