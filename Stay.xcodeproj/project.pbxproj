@@ -1255,7 +1255,7 @@
 				COPY_HEADERS_RUN_UNIFDEF = NO;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/Turbe/myDoc/stay_space/Stay/Stay/PrefixHeader.pch;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
@@ -1292,7 +1292,7 @@
 				COPY_HEADERS_RUN_UNIFDEF = NO;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/Turbe/myDoc/stay_space/Stay/Stay/PrefixHeader.pch;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;

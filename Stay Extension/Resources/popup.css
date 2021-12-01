@@ -61,7 +61,7 @@ section {
 }
 body {
     margin:0;
-    width：100%;
+    width:100%;
     padding: 10px;
     font-family: system-ui;
     text-align: center;
@@ -90,12 +90,22 @@ body {
     width: 188px;
     border: 1px solid rgba(151,151,151,0.14);
     border-radius: 7px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
 }
 .match-tab{
     width: 94px;
     font-size:15px;
     text-align: center;
-    line-height:26px;
+    color: rgba(0,0,0,0.5);
+}
+
+.main-color{
+    color:#B620E0;
+}
+
+.header-tab .active-tab{
     color:#B620E0;
 }
 
@@ -103,31 +113,86 @@ body {
     font-size:15px;
     width: 94px;
     text-align: center;
-    line-height:26px;
-    border-left: 1px solid #D8D8D8
+    border-left: 1px solid #D8D8D8;
+    color: rgba(0,0,0,0.5);
 }
 
 .content-box{
     background:#fff;
-    border: 1px solid rgba(151,151,151,0.6);
+    border: 1px solid rgba(151,151,151,0.2);
     border-radius: 7px;
     width: 100%;
-    padding: 10px;
+    padding: 0 10px;
     
+}
+.content-box .content-item:last-child{
+    border-bottom: none;
 }
 .content-item{
     display: flex;
-    
+    padding: 10px 50px 10px 0;
+    border-bottom: 1px solid #E0E0E0;
+    position: relative;
 }
 .info-case{
+    width: 100%;
     display: flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    text-align: left;
+    justify-items: left;
+    align-content: flex-start;
 }
-.info-case title{}
-.info-case name{}
-.info-case desc{}
+.info-case .title{
+    display: flex;
+    font-size: 18px;
+    color: #000000;
+    font-weight:500;
+}
+.info-case .name{
+    display: flex;
+    font-size: 16px;
+    color: #000000;
+    padding: 5px 0;
+}
+.info-case .desc{
+    font-size: 15px;
+    color: #8A8A8A;
+    padding: 5px 0;
+    text-align: left;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
 .active-case{
     display: flex;
+    width:50px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 50px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    
 }
+.start .active-case .active-icon{
+    background-image:url(./images/start-icon.png);
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 18px;
+    background-size: 100%;
+}
+.stop .active-case .active-icon{
+    background-image:url(./images/stop-icon.png);
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    background-size: 100%;
+}
+
+
 
 .placeholder{
     font-size:16px;

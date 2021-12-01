@@ -3,39 +3,49 @@
 <head>
     <title>跳转到</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="popup.css">
-    <script type="module" src="popup.js"></script>
+    <link rel="stylesheet" href="./popup.css">
+    <script type="module" src="./popup.js"></script>
 </head>
 <body>
     <div class="header-box">
-        <div class="main-icon"><img src="./images/icon-64.png"></div>
+        <div class="main-icon"><img src="./images/icon-96.png"></div>
         <div class="header-tab">
-            <div class="match-tab">已匹配脚本</div>
-            <div class="split-line"></div>
-            <div class="console-tab">控制台</div>
+            <div class="match-tab active-tab" tab="1" >已匹配脚本</div>
+            <div class="console-tab" tab="2">控制台</div>
         </div>
     </div>
     
-    <div class="content-box">
-        <div class="content-item">
+    <div class="content-box" id="scriptSateList">
+        <div class="content-none" id="scriptNull" style="display:none">未匹配到可用脚本</div>
+        
+    </div>
+    
+    <div class="content-box" id="scriptConsole" style="display:none">
+        <div class="content-item start">
             <div class="info-case">
-                <div class="title"><div>
-                <div class="name"><div>
-                <div class="desc"><div>
+                <div class="title">scriptContent.js</div>
+                <div class="name">Stay offical</div>
+                <div class="desc">防止跳转知乎App，自动展开知乎回答</div>
             </div>
-            <div class="active-case"></div>
+            <div class="active-case" active="true" uuid="C53F2EA1-1D72-4269-BDBB-582B1577FAB0">
+                <div class="active-icon"></div>
+            </div>
         </div>
     </div>
-    
     
     <div class="placeholder" style="display:block;width:100%">未找到可跳转应用</div>
     <div class="tableview" style="display:none;">
         <div class="cell">
             <img class="icon" />
             <div class="title"></div>
-            <div class="accessor"/>
+            <div class="accessor"></div>
         </div>
     </div>
     
+    
 </body>
+<script type="text/javascript">
+
+
+</script>
 </html>
