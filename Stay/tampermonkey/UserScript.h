@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *errorMessage;
 @property (nonatomic, copy) NSString *content;
 @property (nonatomic, copy) NSString *parsedContent;
+@property (nonatomic, copy) NSString *sourcePage;
+
 @property (nonatomic, assign) BOOL active;
 
 @property (nonatomic, copy) NSArray<NSString *> *requireUrls;

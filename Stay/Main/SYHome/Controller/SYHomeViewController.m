@@ -8,6 +8,7 @@
 #import "SYHomeViewController.h"
 #import "JSDetailCell.h"
 #import "DataManager.h"
+#import "SYDetailViewController.h"
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -32,12 +33,11 @@
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
     search.searchResultsUpdater = self;
-    search.searchBar.placeholder = @"Added user scripts";
+    search.searchBar.placeholder = @"Search Added user scripts";
     self.searchController = search;
     self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
+//    self.searchController.searchBar.delegate = self;
     self.tableView.tableHeaderView = search.searchBar;
-   
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
@@ -55,7 +55,6 @@
     }
     [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
     [groupUserDefaults synchronize];
-    
 }
 
 /*
@@ -90,19 +89,35 @@
 #pragma mark -searchBarDelegate
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    [searchBar resignFirstResponder];
+    self.searchController.searchBar.showsScopeBar = false;
+//    [searchBar resignFirstResponder];
     [self.searchController setActive:NO];
     [self.tableView reloadData];
+
 }
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     [self.searchController setActive:YES];
     [self.tableView reloadData];
-   return YES;
+//    self.searchController.searchBar.showsCancelButton = true;
+    for (UIView *view in [[ self.searchController.searchBar.subviews lastObject] subviews]) {
+          if ([view isKindOfClass:[UIButton class]]) {
+              UIButton *cancelBtn = (UIButton *)view;
+              [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+              [cancelBtn setTitleColor:RGB(182, 32, 224) forState:UIControlStateNormal];
+          }
+
+      }
+    return YES;
 }
 
-- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    
-    return YES;
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [_results removeAllObjects];
+    if(searchText.length > 0) {
+        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
+    }
+    [self.tableView reloadData];
+
 }
 
 
@@ -122,28 +137,29 @@
     if (cell == nil) {
         cell = [[JSDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
     }
     // 这里通过searchController的active属性来区分展示数据源是哪个
     if (self.searchController.active ) {
-    } else {
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 21)];
-        titleLabel.font = [UIFont systemFontOfSize:21];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textAlignment = NSTextAlignmentLeft;
-        UserScript *model = _datas[indexPath.row];
+        UserScript *model = _results[indexPath.row];
         titleLabel.text = model.name;
         [cell.contentView addSubview:titleLabel];
         
-        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 19)];
-        authorLabel.font = [UIFont systemFontOfSize:19];
+        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+        authorLabel.font = [UIFont systemFontOfSize:16];
         authorLabel.textAlignment = NSTextAlignmentLeft;
         authorLabel.text = model.author;
-        authorLabel.top = titleLabel.bottom + 15;
+        authorLabel.top = titleLabel.bottom + 10;
+        [authorLabel sizeToFit];
         [cell.contentView addSubview:authorLabel];
         
-        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 19)];
+        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
         descLabel.font = [UIFont systemFontOfSize:15];
         descLabel.textAlignment = NSTextAlignmentLeft;
         descLabel.text = model.desc;
@@ -151,28 +167,61 @@
         descLabel.textColor = [UIColor grayColor];
         [cell.contentView addSubview:descLabel];
         
-        UILabel *statusLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, kScreenWidth, 24)];
-        statusLabel.font = [UIFont systemFontOfSize:13];
-        statusLabel.textAlignment = NSTextAlignmentCenter;
-        statusLabel.textColor = [UIColor whiteColor];
-
-        if(model.active == 1) {
-            statusLabel.backgroundColor = [UIColor redColor];
-            statusLabel.layer.cornerRadius = 2;
-            statusLabel.text = @"Stopped";
-            statusLabel.width = 72;
-//            [statusLabel sizeToFit];
+        UILabel *actLabel = [[UILabel alloc]init];
+        actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
+        actLabel.textColor = RGB(138, 138, 138);
+        if(model.active == 0) {
+            actLabel.text = @"Stopped";
         } else {
-            statusLabel.backgroundColor = [UIColor colorWithRed:92.0/255 green:179.0/255 blue:0 alpha:1];
-            statusLabel.layer.cornerRadius = 2;
-            statusLabel.text = @"Activice";
-            statusLabel.width = 66;
+            actLabel.text = @"Actived";
         }
-        statusLabel.top = 0;
-        statusLabel.right = kScreenWidth - 10;
-        [cell.contentView addSubview:statusLabel];
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(10,99,kScreenWidth-20,1)];
-        [line setBackgroundColor:RGB(138, 138, 138)];
+        [actLabel sizeToFit];
+        actLabel.right = kScreenWidth - 35;
+        actLabel.centerY = 47.5f;
+
+        [cell.contentView addSubview:actLabel];
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth-10,1)];
+        [line setBackgroundColor:RGB(216, 216, 216)];
+        [cell.contentView addSubview:line];
+    } else {
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        titleLabel.textAlignment = NSTextAlignmentLeft;
+        UserScript *model = _datas[indexPath.row];
+        titleLabel.text = model.name;
+        [cell.contentView addSubview:titleLabel];
+        
+        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+        authorLabel.font = [UIFont systemFontOfSize:16];
+        authorLabel.textAlignment = NSTextAlignmentLeft;
+        authorLabel.text = model.author;
+        authorLabel.top = titleLabel.bottom + 10;
+        [authorLabel sizeToFit];
+        [cell.contentView addSubview:authorLabel];
+        
+        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+        descLabel.font = [UIFont systemFontOfSize:15];
+        descLabel.textAlignment = NSTextAlignmentLeft;
+        descLabel.text = model.desc;
+        descLabel.top = authorLabel.bottom + 5;
+        descLabel.textColor = [UIColor grayColor];
+        [cell.contentView addSubview:descLabel];
+        
+        UILabel *actLabel = [[UILabel alloc]init];
+        actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
+        actLabel.textColor = RGB(138, 138, 138);
+        if(model.active == 0) {
+            actLabel.text = @"Stopped";
+        } else {
+            actLabel.text = @"Actived";
+        }
+        [actLabel sizeToFit];
+        actLabel.right = kScreenWidth - 35;
+        actLabel.centerY = 47.5f;
+
+        [cell.contentView addSubview:actLabel];
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
+        [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
         [cell.contentView addSubview:line];
     }
     
@@ -181,56 +230,76 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-//    if (self.searchController.active) {
-//        NSLog(@"选择了搜索结果中的%@", [self.results objectAtIndex:indexPath.row]);
-//    } else {
-//
-//        NSLog(@"选择了列表中的%@", [self.datas objectAtIndex:indexPath.row]);
-//    }
-    
+    if (self.searchController.active) {
+        UserScript *model = _results[indexPath.row];
+        SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+        cer.script = model;
+        self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
+        [self.navigationController pushViewController:cer animated:true];
+    } else {
+        UserScript *model = _datas[indexPath.row];
+        SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+        cer.script = model;
+        self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
+        [self.navigationController pushViewController:cer animated:true];
+    }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 100.0f;
+    return 95.0f;
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        UserScript *model = _datas[indexPath.row];
+    if (self.searchController.active) {
+        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            UserScript *model = _results[indexPath.row];
 
-        [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
-        [tableView setEditing:NO animated:YES];
-        [self reloadTableView];
-        [tableView reloadData];
-    }];
-    deleteAction.image = [UIImage imageNamed:@"delete"];
-    deleteAction.backgroundColor = RGB(206, 55, 46);
-
-
-    
-    UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        UserScript *model = _datas[indexPath.row];
-        if (model.active == 1) {
-            [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
-        } else if (model.active == 0) {
-            [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
-        }
-          [tableView setEditing:NO animated:YES];
-          [self reloadTableView];
-        dispatch_async(dispatch_get_main_queue(), ^{
+            [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
+            [tableView setEditing:NO animated:YES];
+            [self reloadTableView];
             [tableView reloadData];
-        });
-    }];
-    UserScript *model = _datas[indexPath.row];
-    if (model.active == 0) {
-        stopAction.image = [UIImage imageNamed:@"stop"];
-        stopAction.backgroundColor = RGB(208, 86, 81);
+        }];
+        deleteAction.image = [UIImage imageNamed:@"delete"];
+        deleteAction.backgroundColor = RGB(224, 32, 32);
+        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+
     } else {
-        stopAction.image = [UIImage imageNamed:@"play"];
-        stopAction.backgroundColor = RGB(92,179,0);
+        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            UserScript *model = _datas[indexPath.row];
+
+            [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
+            [tableView setEditing:NO animated:YES];
+            [self reloadTableView];
+            [tableView reloadData];
+        }];
+        deleteAction.image = [UIImage imageNamed:@"delete"];
+        deleteAction.backgroundColor = RGB(224, 32, 32);
+
+        UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            UserScript *model = _datas[indexPath.row];
+            if (model.active == 1) {
+                [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+            } else if (model.active == 0) {
+                [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+            }
+              [tableView setEditing:NO animated:YES];
+              [self reloadTableView];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [tableView reloadData];
+            });
+        }];
+        UserScript *model = _datas[indexPath.row];
+        if (model.active) {
+            stopAction.image = [UIImage imageNamed:@"stop"];
+            stopAction.backgroundColor = RGB(182, 32, 224);
+        } else {
+            stopAction.image = [UIImage imageNamed:@"play"];
+            stopAction.backgroundColor = RGB(182, 32, 224);;
+        }
+        
+        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,stopAction]];
     }
-    
-    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,stopAction]];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

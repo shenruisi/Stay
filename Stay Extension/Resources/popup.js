@@ -14,11 +14,11 @@ const $setText = (selector,value) => {
 
 window.onload=function(){
     browser.runtime.sendMessage({from:"popup", operate: "fetchMatchScriptList"},(response)=>{
-//        document.querySelector(".placeholder").style.display = "block";
-//        document.querySelector(".placeholder").innerHTML = JSON.stringify(response)
+        document.querySelector(".placeholder").style.display = "block";
+        document.querySelector(".placeholder").innerHTML = JSON.stringify(response)
         
         
-        
+        handleScriptActive(response.body.uuid, true)
         console.log(response.body)
     })
     

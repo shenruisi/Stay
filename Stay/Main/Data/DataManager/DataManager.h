@@ -18,4 +18,12 @@
 
 - (void)updateScrpitStatus:(int)status numberId:(NSString *)uuid;
 
+- (NSArray *)selectScriptByKeywordByAdded:(NSString *)keyword;
+
+- (NSArray *)selectScriptByKeywordByLib:(NSString *)keyword;
+
+
+- (void)insertToUserScriptnumberId:(NSString *)uuid;
+
+
 @end
