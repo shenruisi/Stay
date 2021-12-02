@@ -65,6 +65,10 @@
 		58F7F4E9274776AB00270873 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4E8274776AB00270873 /* Stroge.m */; };
 		58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EC2747A9FE00270873 /* gm-api-create.js */; };
 		58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EE274B7C7700270873 /* newuserscript.user.js */; };
+		8496DFB4275929BE0075ABD5 /* homePage-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB3275929BD0075ABD5 /* homePage-selected@3x.png */; };
+		8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB527592B850075ABD5 /* more-selected@3x.png */; };
+		8496DFB827592C260075ABD5 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB727592C260075ABD5 /* more@3x.png */; };
+		8496DFBA275935B30075ABD5 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB9275935B30075ABD5 /* add@3x.png */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
 		84BDC845274BBEEC005367C6 /* scriptManager.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC844274BBEEC005367C6 /* scriptManager.sqlite */; };
@@ -81,7 +85,6 @@
 		84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48320273ACAC000217BB3 /* SYHomeViewController.m */; };
 		84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48323273ACAD400217BB3 /* SYSearchViewController.m */; };
 		84F4832C273AD7BC00217BB3 /* search@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4832B273AD7BC00217BB3 /* search@3x.png */; };
-		84F48334273ADA5000217BB3 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F48333273ADA5000217BB3 /* more@3x.png */; };
 		84F48337273B709500217BB3 /* JSDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48336273B709500217BB3 /* JSDetailCell.m */; };
 		84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48339273B964900217BB3 /* JSDetailEntity.m */; };
 		CD06870F272E8063006EEA1E /* xw_qq-content.js in Resources */ = {isa = PBXBuildFile; fileRef = CD06870E272E8063006EEA1E /* xw_qq-content.js */; };
@@ -201,6 +204,10 @@
 		58F7F4E8274776AB00270873 /* Stroge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stroge.m; sourceTree = "<group>"; };
 		58F7F4EC2747A9FE00270873 /* gm-api-create.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "gm-api-create.js"; sourceTree = "<group>"; };
 		58F7F4EE274B7C7700270873 /* newuserscript.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = newuserscript.user.js; sourceTree = "<group>"; };
+		8496DFB3275929BD0075ABD5 /* homePage-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "homePage-selected@3x.png"; sourceTree = "<group>"; };
+		8496DFB527592B850075ABD5 /* more-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-selected@3x.png"; sourceTree = "<group>"; };
+		8496DFB727592C260075ABD5 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
+		8496DFB9275935B30075ABD5 /* add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@3x.png"; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
 		84BDC83B2745575E005367C6 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
 		84BDC83D27455CA2005367C6 /* SYDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDefines.h; sourceTree = "<group>"; };
@@ -226,7 +233,6 @@
 		84F48322273ACAD400217BB3 /* SYSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSearchViewController.h; sourceTree = "<group>"; };
 		84F48323273ACAD400217BB3 /* SYSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSearchViewController.m; sourceTree = "<group>"; };
 		84F4832B273AD7BC00217BB3 /* search@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@3x.png"; sourceTree = "<group>"; };
-		84F48333273ADA5000217BB3 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
 		84F48335273B709500217BB3 /* JSDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSDetailCell.h; sourceTree = "<group>"; };
 		84F48336273B709500217BB3 /* JSDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailCell.m; sourceTree = "<group>"; };
 		84F48339273B964900217BB3 /* JSDetailEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailEntity.m; sourceTree = "<group>"; };
@@ -467,12 +473,15 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8496DFB9275935B30075ABD5 /* add@3x.png */,
+				8496DFB3275929BD0075ABD5 /* homePage-selected@3x.png */,
 				84BDC852274CA4A5005367C6 /* stop@3x.png */,
 				84BDC854274CAB0F005367C6 /* play@3x.png */,
+				8496DFB527592B850075ABD5 /* more-selected@3x.png */,
 				84BDC850274C9AC3005367C6 /* delete@3x.png */,
 				84BDC84D274C941F005367C6 /* search-selected@3x.png */,
 				84BDC84C274C941F005367C6 /* search1@3x.png */,
-				84F48333273ADA5000217BB3 /* more@3x.png */,
+				8496DFB727592C260075ABD5 /* more@3x.png */,
 				84F4832B273AD7BC00217BB3 /* search@3x.png */,
 				84C54CFD275754BA00A9F14C /* arrow@3x.png */,
 				84F4831D273AC51800217BB3 /* js-lib@3x.png */,
@@ -894,10 +903,11 @@
 				84BDC851274C9AC3005367C6 /* delete@3x.png in Resources */,
 				84BDC855274CAB0F005367C6 /* play@3x.png in Resources */,
 				84C54CFE275754FE00A9F14C /* arrow@3x.png in Resources */,
-				84F48334273ADA5000217BB3 /* more@3x.png in Resources */,
+				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
 				58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
+				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
 				84BDC84F274C941F005367C6 /* search-selected@3x.png in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
@@ -906,6 +916,8 @@
 				58F7F4CF2745EAAA00270873 /* supported-apis.js in Resources */,
 				58F7F4D627461F9A00270873 /* stay-taskloop.js in Resources */,
 				58F7F4CD27454E7300270873 /* stay-bootstrap.js in Resources */,
+				8496DFBA275935B30075ABD5 /* add@3x.png in Resources */,
+				8496DFB4275929BE0075ABD5 /* homePage-selected@3x.png in Resources */,
 				58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */,
 				58F7F4D9274629AF00270873 /* stay-zhihu.user.js in Resources */,
 				5889731A27213C8300BE123E /* Localizable.strings in Resources */,
@@ -1255,7 +1267,7 @@
 				COPY_HEADERS_RUN_UNIFDEF = NO;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/Turbe/myDoc/stay_space/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
@@ -1292,7 +1304,7 @@
 				COPY_HEADERS_RUN_UNIFDEF = NO;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/Turbe/myDoc/stay_space/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;

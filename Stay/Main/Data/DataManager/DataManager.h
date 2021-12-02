@@ -16,14 +16,18 @@
 
 - (NSArray *)findScript:(int)condition;
 
+- (NSArray *)findScriptInLib;
+
 - (void)updateScrpitStatus:(int)status numberId:(NSString *)uuid;
 
 - (NSArray *)selectScriptByKeywordByAdded:(NSString *)keyword;
 
 - (NSArray *)selectScriptByKeywordByLib:(NSString *)keyword;
 
-
 - (void)insertToUserScriptnumberId:(NSString *)uuid;
 
+- (void)updateLibScrpitStatus:(int)status numberId:(NSString *)uuid;
+
+- (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid;
 
 @end

@@ -13,6 +13,8 @@
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
+@property (nonatomic, strong) UIBarButtonItem *rightIcon;
+
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) UITableView *tableView;
 // 数据源数组
@@ -29,14 +31,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
+    self.navigationItem.rightBarButtonItem = [self rightIcon];
     self.view.backgroundColor = [UIColor whiteColor];
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
-    search.searchResultsUpdater = self;
+//    search.searchResultsUpdater = self;
     search.searchBar.placeholder = @"Search Added user scripts";
     self.searchController = search;
     self.searchController.delegate = self;
-//    self.searchController.searchBar.delegate = self;
+    self.searchController.searchBar.delegate = self;
     self.tableView.tableHeaderView = search.searchBar;
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
@@ -46,9 +49,7 @@
 
 - (void)initScrpitContent{
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    
     NSMutableArray *array =  [[NSMutableArray alloc] init];
-    
     for(int i = 0; i < self.datas.count; i++) {
         UserScript *scrpit = self.datas[i];
         [array addObject: [scrpit toDictionary]];
@@ -57,56 +58,26 @@
     [groupUserDefaults synchronize];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (UIBarButtonItem *)leftIcon{
-    if (nil == _leftIcon){
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon"]];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _leftIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
-    }
-    return _leftIcon;
-}
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
-//    NSString *inputStr = searchController.searchBar.text;
-//    searchController.searchBar.showsCancelButton = YES;
-        
-
+    NSString *inputStr = searchController.searchBar.text;
     return;
 }
-
-
 
 #pragma mark -searchBarDelegate
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    self.searchController.searchBar.showsScopeBar = false;
 //    [searchBar resignFirstResponder];
     [self.searchController setActive:NO];
+    [_results removeAllObjects];
+    [self reloadTableView];
     [self.tableView reloadData];
 
 }
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     [self.searchController setActive:YES];
+    [_results removeAllObjects];
     [self.tableView reloadData];
-//    self.searchController.searchBar.showsCancelButton = true;
-    for (UIView *view in [[ self.searchController.searchBar.subviews lastObject] subviews]) {
-          if ([view isKindOfClass:[UIButton class]]) {
-              UIButton *cancelBtn = (UIButton *)view;
-              [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
-              [cancelBtn setTitleColor:RGB(182, 32, 224) forState:UIControlStateNormal];
-          }
-
-      }
     return YES;
 }
 
@@ -143,7 +114,7 @@
         [subView removeFromSuperview];
     }
     // 这里通过searchController的active属性来区分展示数据源是哪个
-    if (self.searchController.active ) {
+    if (self.searchController.active) {
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
         titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textAlignment = NSTextAlignmentLeft;
@@ -233,6 +204,7 @@
     if (self.searchController.active) {
         UserScript *model = _results[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+        cer.isSearch = false;
         cer.script = model;
         self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
@@ -241,6 +213,7 @@
         UserScript *model = _datas[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.script = model;
+        cer.isSearch = false;
         self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
@@ -255,10 +228,12 @@
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _results[indexPath.row];
 
-            [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
+            [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
+            [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:model.uuid];
             [tableView setEditing:NO animated:YES];
             [self reloadTableView];
             [tableView reloadData];
+            [self initScrpitContent];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
@@ -267,27 +242,30 @@
     } else {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _datas[indexPath.row];
+            [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
+            [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:model.uuid];
 
-            [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
             [tableView setEditing:NO animated:YES];
             [self reloadTableView];
             [tableView reloadData];
+            [self initScrpitContent];
+
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
 
         UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _datas[indexPath.row];
-            if (model.active == 1) {
-                [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
-            } else if (model.active == 0) {
-                [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
-            }
-              [tableView setEditing:NO animated:YES];
-              [self reloadTableView];
-            dispatch_async(dispatch_get_main_queue(), ^{
+                if (model.active == 1) {
+                    [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+                } else if (model.active == 0) {
+                    [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+                }
+                [tableView setEditing:NO animated:YES];
+                [self reloadTableView];
+                [self initScrpitContent];
                 [tableView reloadData];
-            });
+                [[DataManager shareManager]  updateLibScrpitStatus:1 numberId:model.uuid];
         }];
         UserScript *model = _datas[indexPath.row];
         if (model.active) {
@@ -306,6 +284,11 @@
     return YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
 
 
 - (void) reloadTableView {
@@ -339,6 +322,26 @@
     }
     
     return _results;
+}
+
+- (UIBarButtonItem *)leftIcon{
+    if (nil == _leftIcon){
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon"]];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        _leftIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
+    }
+    return _leftIcon;
+}
+
+- (UIBarButtonItem *)rightIcon {
+    if (nil == _rightIcon){
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add"]];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        _rightIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
+        _rightIcon setTarget:<#(id _Nullable)#>
+    }
+    return _rightIcon;
+    
 }
 
 @end

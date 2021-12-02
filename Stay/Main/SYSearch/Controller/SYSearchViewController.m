@@ -35,8 +35,9 @@
     self.searchController.delegate = self;
     self.searchController.searchBar.delegate = self;
     search.searchBar.placeholder = @"ALL user scripts";
-    
     self.tableView.tableHeaderView = search.searchBar;
+    [_datas removeAllObjects];
+    [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
 }
 
 
@@ -92,8 +93,6 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-
     JSDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
         cell = [[JSDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -103,88 +102,53 @@
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
     }
-    // 这里通过searchController的active属性来区分展示数据源是哪个
+    
+    UserScript *model = nil;
+    
     if (self.searchController.active ) {
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textAlignment = NSTextAlignmentLeft;
-        UserScript *model = _results[indexPath.row];
-        titleLabel.text = model.name;
-        [cell.contentView addSubview:titleLabel];
-        
-        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        authorLabel.font = [UIFont systemFontOfSize:16];
-        authorLabel.textAlignment = NSTextAlignmentLeft;
-        authorLabel.text = model.author;
-        authorLabel.top = titleLabel.bottom + 10;
-        [authorLabel sizeToFit];
-        [cell.contentView addSubview:authorLabel];
-        
-        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        descLabel.font = [UIFont systemFontOfSize:15];
-        descLabel.textAlignment = NSTextAlignmentLeft;
-        descLabel.text = model.desc;
-        descLabel.top = authorLabel.bottom + 5;
-        descLabel.textColor = [UIColor grayColor];
-        [cell.contentView addSubview:descLabel];
-        
-        UILabel *actLabel = [[UILabel alloc]init];
-        actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
-        actLabel.textColor = RGB(138, 138, 138);
-        if(model.active == 0) {
-            actLabel.text = @"";
-        } else {
-            actLabel.text = @"Added";
-        }
-        [actLabel sizeToFit];
-        actLabel.right = kScreenWidth - 35;
-        actLabel.centerY = 47.5f;
-
-        [cell.contentView addSubview:actLabel];
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth-10,1)];
-        [line setBackgroundColor:RGB(216, 216, 216)];
-        [cell.contentView addSubview:line];
+        model = _results[indexPath.row];
     } else {
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textAlignment = NSTextAlignmentLeft;
-        UserScript *model = _datas[indexPath.row];
-        titleLabel.text = model.name;
-        [cell.contentView addSubview:titleLabel];
-        
-        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        authorLabel.font = [UIFont systemFontOfSize:16];
-        authorLabel.textAlignment = NSTextAlignmentLeft;
-        authorLabel.text = model.author;
-        authorLabel.top = titleLabel.bottom + 10;
-        [authorLabel sizeToFit];
-        [cell.contentView addSubview:authorLabel];
-        
-        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        descLabel.font = [UIFont systemFontOfSize:15];
-        descLabel.textAlignment = NSTextAlignmentLeft;
-        descLabel.text = model.desc;
-        descLabel.top = authorLabel.bottom + 5;
-        descLabel.textColor = [UIColor grayColor];
-        [cell.contentView addSubview:descLabel];
-        
-        UILabel *actLabel = [[UILabel alloc]init];
-        actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
-        actLabel.textColor = RGB(138, 138, 138);
-        if(model.active == 0) {
-            actLabel.text = @"";
-        } else {
-            actLabel.text = @"Added";
-        }
-        [actLabel sizeToFit];
-        actLabel.right = kScreenWidth - 35;
-        actLabel.centerY = 47.5f;
-
-        [cell.contentView addSubview:actLabel];
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
-        [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
-        [cell.contentView addSubview:line];
+        model = _datas[indexPath.row];
     }
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
+    titleLabel.font = [UIFont boldSystemFontOfSize:18];
+    titleLabel.textAlignment = NSTextAlignmentLeft;
+    titleLabel.text = model.name;
+    [cell.contentView addSubview:titleLabel];
+    
+    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+    authorLabel.font = [UIFont systemFontOfSize:16];
+    authorLabel.textAlignment = NSTextAlignmentLeft;
+    authorLabel.text = model.author;
+    authorLabel.top = titleLabel.bottom + 10;
+    [authorLabel sizeToFit];
+    [cell.contentView addSubview:authorLabel];
+    
+    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+    descLabel.font = [UIFont systemFontOfSize:15];
+    descLabel.textAlignment = NSTextAlignmentLeft;
+    descLabel.text = model.desc;
+    descLabel.top = authorLabel.bottom + 5;
+    descLabel.textColor = [UIColor grayColor];
+    [cell.contentView addSubview:descLabel];
+    
+    UILabel *actLabel = [[UILabel alloc]init];
+    actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
+    actLabel.textColor = RGB(138, 138, 138);
+    if(model.active == 0) {
+        actLabel.text = @"";
+    } else {
+        actLabel.text = @"Added";
+    }
+    [actLabel sizeToFit];
+    actLabel.right = kScreenWidth - 35;
+    actLabel.centerY = 47.5f;
+
+    [cell.contentView addSubview:actLabel];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
+    [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
+    [cell.contentView addSubview:line];
     
     return cell;
 }
@@ -199,6 +163,7 @@
         UserScript *model = _results[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.script = model;
+        cer.isSearch = true;
         self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
@@ -206,6 +171,7 @@
         UserScript *model = _datas[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.script = model;
+        cer.isSearch = true;
         self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
         [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
@@ -221,10 +187,11 @@
         }
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _results[indexPath.row];
-
-            [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
+            [[DataManager shareManager] insertToUserScriptnumberId:model.uuid];
+            [[DataManager shareManager] updateLibScrpitStatus:1 numberId:model.uuid];
             [tableView setEditing:NO animated:YES];
-            [tableView reloadData];
+            [self.tableView reloadData];
+            [self initScrpitContent];
         }];
         [deleteAction setTitle:@"Add"];
         deleteAction.backgroundColor = RGB(182, 32, 224);
@@ -237,37 +204,16 @@
         }
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _datas[indexPath.row];
-
-            [[DataManager shareManager] updateScrpitStatus:2 numberId:model.uuid];
+            [[DataManager shareManager] insertToUserScriptnumberId:model.uuid];
+            [[DataManager shareManager] updateLibScrpitStatus:1 numberId:model.uuid];
             [tableView setEditing:NO animated:YES];
             [self reloadTableView];
-            [tableView reloadData];
+            [self initScrpitContent];
+            [self.tableView reloadData];
+        
         }];
         [deleteAction setTitle:@"Add"];
         deleteAction.backgroundColor = RGB(182, 32, 224);
-
-        //    UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        //        UserScript *model = _datas[indexPath.row];
-        //        if (model.active == 1) {
-        //            [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
-        //        } else if (model.active == 0) {
-        //            [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
-        //        }
-        //          [tableView setEditing:NO animated:YES];
-        //          [self reloadTableView];
-        //        dispatch_async(dispatch_get_main_queue(), ^{
-        //            [tableView reloadData];
-        //        });
-        //    }];
-        //    UserScript *model = _datas[indexPath.row];
-        //    if (model.active == 0) {
-        //        stopAction.image = [UIImage imageNamed:@"stop"];
-        //        stopAction.backgroundColor = RGB(208, 86, 81);
-        //    } else {
-        //        stopAction.image = [UIImage imageNamed:@"play"];
-        //        stopAction.backgroundColor = RGB(92,179,0);
-        //    }
-        //
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
     }
 }
@@ -276,9 +222,28 @@
     return YES;
 }
 
+- (void)initScrpitContent{
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    
+    NSMutableArray *array =  [[NSMutableArray alloc] init];
+    
+    for(int i = 0; i < self.datas.count; i++) {
+        UserScript *scrpit = self.datas[i];
+        [array addObject: [scrpit toDictionary]];
+    }
+    [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
+    [groupUserDefaults synchronize];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
 - (void) reloadTableView {
     [_datas removeAllObjects];
-    [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+    [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
 }
 
 - (UITableView *)tableView {

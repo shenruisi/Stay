@@ -53,14 +53,14 @@
     line.top = nameLabel.bottom + 13;
     [detailView addSubview:line];
     
-    UISwitch *scriptSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
-    scriptSwitch.centerY = nameLabel.centerY;
-    scriptSwitch.right = kScreenWidth - 48;
-    [scriptSwitch setOn: self.script.active];
-    [detailView addSubview:scriptSwitch];
-    
-    [scriptSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
-    
+    if(!self.isSearch) {
+        UISwitch *scriptSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
+        scriptSwitch.centerY = nameLabel.centerY;
+        scriptSwitch.right = kScreenWidth - 48;
+        [scriptSwitch setOn: self.script.active];
+        [detailView addSubview:scriptSwitch];
+        [scriptSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    }
     
     UILabel *authorLabel = [[UILabel alloc] init];
     authorLabel.font = [UIFont systemFontOfSize:17];
@@ -130,9 +130,6 @@
     pageLabel.top = line3.bottom +13;
     pageLabel.left = 17;
     [detailView addSubview:pageLabel];
-    
-    
-    
     
     
     UIView *line4 = [self createLine];
@@ -298,8 +295,36 @@
     [configView addSubview:grantsDetailLabel];
     configView.height =  grantsDetailLabel.bottom + 13;
     scrollView.scrollEnabled = true;
-    [scrollView setContentSize:CGSizeMake(kScreenWidth, configView.bottom + 15)];
     
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, configView.bottom  + 37, 357, 45);
+    btn.backgroundColor = RGB(185,101,223);
+    if(self.isSearch){
+        if(!self.script.active) {
+            [btn setTitle:@"Add" forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            btn.titleLabel.font = [UIFont systemFontOfSize:17];
+            btn.userInteractionEnabled = NO;
+            btn.layer.cornerRadius = 8;
+            btn.centerX = scrollView.centerX;
+            [scrollView addSubview:btn];
+            [scrollView setContentSize:CGSizeMake(kScreenWidth, btn.bottom + 15)];
+        } else {
+            [scrollView setContentSize:CGSizeMake(kScreenWidth, configView.bottom + 15)];
+
+        }
+    } else {
+        [btn setTitle:@"Delete" forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont systemFontOfSize:17];
+        btn.userInteractionEnabled = NO;
+        btn.layer.cornerRadius = 8;
+        btn.centerX = scrollView.centerX;
+        [scrollView addSubview:btn];
+        [scrollView setContentSize:CGSizeMake(kScreenWidth, btn.bottom + 15)];
+    }
+
+
 }
 
 - (void) switchAction:(UISwitch *) scriptSwitch {

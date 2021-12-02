@@ -32,7 +32,7 @@
 -(void)createTabbar
 {
     NSArray *imgArray = @[@"js-lib.png",@"search1.png",@"more.png"];
-    NSArray *imgSelectArray = @[@"js-lib.png",@"search-selected.png",@"more.png"];
+    NSArray *imgSelectArray = @[@"homePage-selected.png",@"search-selected.png",@"more-selected.png"];
 
     NSArray *titleArray = @[@"Library",@"Search",@"More"];
     
