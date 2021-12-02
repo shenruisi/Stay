@@ -5,47 +5,34 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./popup.css">
     <script type="module" src="./popup.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
     <div class="header-box">
-        <div class="main-icon"><img src="./images/icon-96.png"></div>
+        <a class="main-icon" href="stay://"><img src="./images/page-icon.png"></a>
         <div class="header-tab">
-            <div class="match-tab active-tab" tab="1" >已匹配脚本</div>
-            <div class="console-tab" tab="2">控制台</div>
+            <div class="match-tab active-tab" tab=1 >已匹配脚本</div>
+            <div class="console-tab" tab=2>控制台</div>
         </div>
     </div>
-    
-    <div class="content-box" id="scriptSateList">
-        <div class="content-none" id="scriptNull" style="display:none">未匹配到可用脚本</div>
+    <div class="content-container">
+        <div class="content-box" id="scriptSateList">
         
-    </div>
-    
-    <div class="content-box" id="scriptConsole" style="display:none">
-        <div class="content-item start">
-            <div class="info-case">
-                <div class="title">scriptContent.js</div>
-                <div class="name">Stay offical</div>
-                <div class="desc">防止跳转知乎App，自动展开知乎回答</div>
-            </div>
-            <div class="active-case" active="true" uuid="C53F2EA1-1D72-4269-BDBB-582B1577FAB0">
-                <div class="active-icon"></div>
+        
+        </div>
+        
+        <div class="content-box" id="scriptConsole" style="display:none">
+            <div class="console-item">
+                <div class="console-name">Zhihu-content.js</div>
+                <div class="console-con">zxnt-> NOT GDPR ->start ads zxnt-> NOT GDPR ->start ads zxnt-> NOT GDPR ->start ads
+                    zxnt-> NOT GDPR ->start ads idfs 方见附件fg gfd</div>
             </div>
         </div>
-    </div>
-    
-    <div class="placeholder" style="display:block;width:100%">未找到可跳转应用</div>
-    <div class="tableview" style="display:none;">
-        <div class="cell">
-            <img class="icon" />
-            <div class="title"></div>
-            <div class="accessor"></div>
+        <div id="dataNull" class="content-none" style="display:none;"></div>
+        <div class="placeholder" style="display:block;width:100%"></div>
+        <div class="tableview" style="display:block;">
+        
         </div>
     </div>
-    
-    
 </body>
-<script type="text/javascript">
-
-
-</script>
 </html>
