@@ -41,6 +41,7 @@
     search.searchBar.placeholder = @"ALL user scripts";
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
+    [self.tableView reloadData];
 }
 
 
@@ -167,16 +168,12 @@
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.script = model;
         cer.isSearch = true;
-        self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
     } else {
         UserScript *model = _datas[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.script = model;
         cer.isSearch = true;
-        self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
     }
 }

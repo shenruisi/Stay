@@ -214,16 +214,12 @@
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.isSearch = false;
         cer.script = model;
-        self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
     } else {
         UserScript *model = _datas[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
         cer.script = model;
         cer.isSearch = false;
-        self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
-        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
         [self.navigationController pushViewController:cer animated:true];
     }
 }

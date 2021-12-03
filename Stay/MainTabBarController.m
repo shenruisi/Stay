@@ -58,6 +58,8 @@
     viewController.navigationItem.title = title;
     NSDictionary *dictHome = [NSDictionary dictionaryWithObject:UIColorWithRGBA(185,101,223,1)  forKey:NSForegroundColorAttributeName];
     [navC.tabBarItem setTitleTextAttributes:dictHome forState:UIControlStateSelected];
+    navC.navigationBar.tintColor = RGB(182, 32, 224);
+    [navC.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
     [self addChildViewController:navC];
 }
 

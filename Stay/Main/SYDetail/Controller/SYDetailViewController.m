@@ -33,7 +33,7 @@
 - (void)createDetailView{
     
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0,self.view.width ,self.view.height)];
-
+    
     [self.view addSubview:scrollView];
     
     UIView *detailView = [[UIView alloc] initWithFrame:CGRectMake(20, 0, kScreenWidth - 40, 271)];
@@ -303,10 +303,9 @@
             [btn setTitle:@"Add" forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             btn.titleLabel.font = [UIFont systemFontOfSize:17];
-            btn.userInteractionEnabled = NO;
             btn.layer.cornerRadius = 8;
             btn.centerX = scrollView.centerX;
-            [btn addTarget:self action:@selector(addScript) forControlEvents:UIControlEventTouchDown];
+            [btn addTarget:self action:@selector(addScript:) forControlEvents:UIControlEventTouchUpInside];
             [scrollView addSubview:btn];
             [scrollView setContentSize:CGSizeMake(kScreenWidth, btn.bottom + 15)];
         } else {
@@ -316,16 +315,15 @@
         [btn setTitle:@"Delete" forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:17];
-        btn.userInteractionEnabled = NO;
         btn.layer.cornerRadius = 8;
         btn.centerX = scrollView.centerX;
-        [btn addTarget:self action:@selector(deleteScript) forControlEvents:UIControlEventTouchDown];
+        [btn addTarget:self action:@selector(deleteScript:) forControlEvents:UIControlEventTouchUpInside];
         [scrollView addSubview:btn];
         [scrollView setContentSize:CGSizeMake(kScreenWidth, btn.bottom + 15)];
     }
 }
 
-- (void)deleteScript {
+- (void)deleteScript:(id)sender {
     self.isSearch = true;
     [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
     [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:self.script.uuid];
@@ -335,7 +333,7 @@
     [self createDetailView];
 }
 
-- (void)addScript {
+- (void)addScript:(id)sender {
     self.isSearch = false;
     [[DataManager shareManager] insertToUserScriptnumberId: self.script.uuid];
     [[DataManager shareManager] updateLibScrpitStatus:1 numberId: self.script.uuid];
