@@ -15,3 +15,5 @@ settings.enableStay="在Safari浏览器扩展中激活Stay";
 settings.section.otherApps="旗下应用";
 
 settings.section.otherApps.fastclip="FastClip - 复制粘贴增强器";
+
+cancel="取消";

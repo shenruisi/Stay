@@ -31,11 +31,14 @@
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
+    self.navigationItem.searchController = search;
+    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
+    self.navigationItem.hidesSearchBarWhenScrolling = false;
     self.searchController = search;
     self.searchController.delegate = self;
     self.searchController.searchBar.delegate = self;
+    [self.searchController.searchBar setTintColor:RGB(182, 32, 224)];
     search.searchBar.placeholder = @"ALL user scripts";
-    self.tableView.tableHeaderView = search.searchBar;
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
 }

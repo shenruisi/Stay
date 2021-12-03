@@ -9,6 +9,7 @@
 #import "JSDetailCell.h"
 #import "DataManager.h"
 #import "SYDetailViewController.h"
+#import "SYEditViewController.h"
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -37,10 +38,17 @@
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
     search.searchBar.placeholder = @"Search Added user scripts";
+    self.navigationItem.searchController = search;
+    self.navigationItem.searchController.delegate = self;
+    self.navigationItem.searchController.searchBar.delegate = self;
+    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
     self.searchController = search;
     self.searchController.delegate = self;
     self.searchController.searchBar.delegate = self;
-    self.tableView.tableHeaderView = search.searchBar;
+    [self.searchController.searchBar setTintColor:RGB(182, 32, 224)];
+    
+    self.navigationItem.hidesSearchBarWhenScrolling = false;
+
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
@@ -285,7 +293,8 @@
 }
 
 - (void)addBtnClick:(id)sender {
-    
+    SYEditViewController *cer = [[SYEditViewController alloc] init];
+    [self.navigationController pushViewController:cer animated:true];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -339,9 +348,8 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add"]];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _rightIcon = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"add"] style:UIBarButtonItemStyleDone target:self action:@selector(addBtnClick:)];
+    
+        _rightIcon = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"add"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
     

@@ -295,7 +295,6 @@
     [configView addSubview:grantsDetailLabel];
     configView.height =  grantsDetailLabel.bottom + 13;
     scrollView.scrollEnabled = true;
-    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, configView.bottom  + 37, 357, 45);
     btn.backgroundColor = RGB(185,101,223);
@@ -307,11 +306,11 @@
             btn.userInteractionEnabled = NO;
             btn.layer.cornerRadius = 8;
             btn.centerX = scrollView.centerX;
+            [btn addTarget:self action:@selector(addScript) forControlEvents:UIControlEventTouchDown];
             [scrollView addSubview:btn];
             [scrollView setContentSize:CGSizeMake(kScreenWidth, btn.bottom + 15)];
         } else {
             [scrollView setContentSize:CGSizeMake(kScreenWidth, configView.bottom + 15)];
-
         }
     } else {
         [btn setTitle:@"Delete" forState:UIControlStateNormal];
@@ -320,11 +319,30 @@
         btn.userInteractionEnabled = NO;
         btn.layer.cornerRadius = 8;
         btn.centerX = scrollView.centerX;
+        [btn addTarget:self action:@selector(deleteScript) forControlEvents:UIControlEventTouchDown];
         [scrollView addSubview:btn];
         [scrollView setContentSize:CGSizeMake(kScreenWidth, btn.bottom + 15)];
     }
+}
 
+- (void)deleteScript {
+    self.isSearch = true;
+    [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
+    [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:self.script.uuid];
+    for (UIView *subView in self.view.subviews) {
+        [subView removeFromSuperview];
+    }
+    [self createDetailView];
+}
 
+- (void)addScript {
+    self.isSearch = false;
+    [[DataManager shareManager] insertToUserScriptnumberId: self.script.uuid];
+    [[DataManager shareManager] updateLibScrpitStatus:1 numberId: self.script.uuid];
+    for (UIView *subView in self.view.subviews) {
+        [subView removeFromSuperview];
+    }
+    [self createDetailView];
 }
 
 - (void) switchAction:(UISwitch *) scriptSwitch {
