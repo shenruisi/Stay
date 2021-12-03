@@ -284,6 +284,10 @@
     return YES;
 }
 
+- (void)addBtnClick:(id)sender {
+    
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadTableView];
@@ -337,8 +341,7 @@
     if (nil == _rightIcon){
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add"]];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _rightIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
-        _rightIcon setTarget:<#(id _Nullable)#>
+        _rightIcon = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"add"] style:UIBarButtonItemStyleDone target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
     
