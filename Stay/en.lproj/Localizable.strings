@@ -16,3 +16,7 @@ settings.enableStay="Turn on Stay in Safari extensions";
 settings.section.otherApps="Other applications";
 
 settings.section.otherApps.fastclip="FastClip - Copy paste enhancer";
+
+settings.save="Save";
+
+settings.library="资料库";

@@ -10,6 +10,7 @@
 #import "DataManager.h"
 #import "SYDetailViewController.h"
 #import "SYEditViewController.h"
+#import "SYCodeMirrorView.h"
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -31,6 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -297,6 +299,7 @@
     [super viewWillAppear:animated];
     [self reloadTableView];
     [self.tableView reloadData];
+    [self initScrpitContent];
 }
 
 
@@ -348,7 +351,6 @@
         _rightIcon = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"add"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
-    
 }
 
 @end

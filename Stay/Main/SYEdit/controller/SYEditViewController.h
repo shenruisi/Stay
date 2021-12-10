@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYEditViewController : UIViewController
 
+@property (nonatomic, strong) NSString *content;
+@property (nonatomic, strong) NSString *uuid;
+
+@property (nonatomic, assign) bool isEdit;
 @end
 
 NS_ASSUME_NONNULL_END

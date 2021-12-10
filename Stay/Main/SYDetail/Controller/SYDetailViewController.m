@@ -7,6 +7,7 @@
 
 #import "SYDetailViewController.h"
 #import "DataManager.h"
+#import "SYEditViewController.h"
 
 @interface SYDetailViewController ()
 
@@ -113,10 +114,17 @@
     scriptLabel.left = 17;
     [detailView addSubview:scriptLabel];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
-    imageView.centerY = scriptLabel.centerY;
-    imageView.right = kScreenWidth - 48;
-    [detailView addSubview:imageView];
+    UIButton *scriptBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    scriptBtn.frame = CGRectMake(0, 0, 40, 40);
+    [scriptBtn setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
+    scriptBtn.centerY = scriptLabel.centerY;
+    scriptBtn.right = kScreenWidth - 48;
+
+    [scriptBtn addTarget:self action:@selector(showScript:) forControlEvents:UIControlEventTouchUpInside];
+//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
+//    imageView.centerY = scriptLabel.centerY;
+//    imageView.right = kScreenWidth - 48;
+    [detailView addSubview:scriptBtn];
   
     
     UIView *line3 = [self createLine];
@@ -341,6 +349,14 @@
         [subView removeFromSuperview];
     }
     [self createDetailView];
+}
+
+- (void)showScript:(id)sender {
+    SYEditViewController *cer = [[SYEditViewController alloc] init];
+    cer.content = self.script.content;
+    cer.uuid = self.script.uuid;
+    [self.navigationController pushViewController:cer animated:true];
+    
 }
 
 - (void) switchAction:(UISwitch *) scriptSwitch {

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="codemirror.css">
     <script src="codemirror.js"></script>
     <script src="javascript.js"></script>
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <style>
         body{
             height: 100%;
@@ -38,7 +38,13 @@
 
     myCodeMirror.setSize(innerWidth, innerHeight)
     myCodeMirror.refresh()
-    window.webkit.messageHandlers.contentComplete.postMessage(null)
+    function setCode(code) {
+        myCodeMirror.setValue(code);
+    }
+    function getCode() {
+        window.webkit.messageHandlers.contentGet.postMessage(myCodeMirror.getValue());
+    }
+<!--    window.webkit.messageHandlers.contentComplete.postMessage(null)-->
         // var myTextArea = document.getElementById('myText');
         // var myCodeMirror = CodeMirror.fromTextArea(myTextArea,{
         //     value: "function myScript(){return 100;}\n",

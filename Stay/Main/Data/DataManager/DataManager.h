@@ -30,4 +30,8 @@
 
 - (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid;
 
+- (void)insertUserConfigByUserScript:(UserScript *)scrpitDetail;
+
+- (void)updateUserScript:(UserScript *)scrpitDetail;
+
 @end

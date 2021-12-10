@@ -17,3 +17,4 @@ settings.section.otherApps="旗下应用";
 settings.section.otherApps.fastclip="FastClip - 复制粘贴增强器";
 
 cancel="取消";
+settings.save="保存";

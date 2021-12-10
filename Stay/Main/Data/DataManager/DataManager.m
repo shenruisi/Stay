@@ -719,7 +719,7 @@
     sqlite3_stmt *statement;
     
     if (sqlite3_prepare_v2(sqliteHandle, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        sqlite3_bind_text(statement, 1,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 1,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 2,scrpitDetail.name != NULL? [scrpitDetail.name UTF8String]:NULL, -1,NULL);
         sqlite3_bind_text(statement, 3,scrpitDetail.namespace !=NULL? [scrpitDetail.namespace UTF8String]:NULL, -1,NULL);
         sqlite3_bind_text(statement, 4,scrpitDetail.author != NULL? [scrpitDetail.author UTF8String]:NULL, -1,NULL);
@@ -767,7 +767,6 @@
         sqlite3_finalize(statement);
     }
     sqlite3_close(sqliteHandle);
-
 }
 
 
@@ -856,6 +855,81 @@
     //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateUserScript:(UserScript *)scrpitDetail {
+    
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open_v2([destPath UTF8String], &sqliteHandle, SQLITE_OPEN_READWRITE, NULL);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        return;
+    }
+    
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ? where uuid = ?";
+    
+    sqlite3_stmt *statement;
+    
+    if (sqlite3_prepare_v2(sqliteHandle, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        sqlite3_bind_text(statement, 1,scrpitDetail.name != NULL? [scrpitDetail.name UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 2,scrpitDetail.namespace !=NULL? [scrpitDetail.namespace UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 3,scrpitDetail.author != NULL? [scrpitDetail.author UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 4,scrpitDetail.version != NULL? [scrpitDetail.version UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 5, [scrpitDetail.desc UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 6, [scrpitDetail.homepage UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 7, [scrpitDetail.icon UTF8String], -1,NULL);
+        if(scrpitDetail.includes.count > 0) {
+        sqlite3_bind_text(statement, 8, [[scrpitDetail.includes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 8, NULL, -1,NULL);
+        }
+        
+        if(scrpitDetail.mathes.count > 0) {
+            sqlite3_bind_text(statement, 9, [[scrpitDetail.mathes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 9, NULL, -1,NULL);
+        }
+        if(scrpitDetail.excludes.count > 0) {
+            sqlite3_bind_text(statement, 10, [[scrpitDetail.excludes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 10,  NULL, -1,NULL);
+        }
+  
+        sqlite3_bind_text(statement, 11, [scrpitDetail.runAt UTF8String], -1,NULL);
+        
+        if(scrpitDetail.grants.count > 0) {
+            sqlite3_bind_text(statement, 12, [[scrpitDetail.grants componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 12, NULL, -1,NULL);
+        }
+        sqlite3_bind_int(statement, 13, scrpitDetail.noFrames?1:0);
+        sqlite3_bind_text(statement, 14, [scrpitDetail.content UTF8String], -1,NULL);
+        sqlite3_bind_int(statement, 15, scrpitDetail.active?1:0);
+        if(scrpitDetail.requireUrls.count > 0) {
+            sqlite3_bind_text(statement, 16, [[scrpitDetail.requireUrls componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 16, NULL, -1,NULL);
+        }
+        sqlite3_bind_text(statement, 17, [scrpitDetail.sourcePage UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 18,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+    }
+    
+    NSInteger resultCode = sqlite3_step(statement);
+    if (resultCode != SQLITE_DONE) {
+        sqlite3_finalize(statement);
     }
     sqlite3_close(sqliteHandle);
 }

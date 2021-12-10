@@ -6,11 +6,13 @@
 //
 
 #import "SYEditViewController.h"
-#import <WebKit/WebKit.h>
+#import "SYCodeMirrorView.h"
+#import "Tampermonkey.h"
+#import "DataManager.h"
 
-@interface SYEditViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
-
+@interface SYEditViewController ()
 @property (nonatomic, strong) WKWebView *wkwebView;
+@property (nonatomic, strong) UIBarButtonItem *rightIcon;
 
 @end
 
@@ -27,58 +29,50 @@
     [label setText:@"content"];
     label.font = [UIFont boldSystemFontOfSize:17];
     self.navigationItem.titleView = label;
+    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    self.navigationItem.rightBarButtonItem = [self rightIcon];
+
     [self createView];
+ 
     // Do any additional setup after loading the view.
 }
 
 - (void)createView{
-    [self.view addSubview:self.wkwebView];
-}
-
-- (WKWebView *)wkwebView {
-    if(_wkwebView == nil) {
-        
-        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-        WKPreferences *preferences = [[WKPreferences alloc] init];
-        preferences.javaScriptEnabled = true;
-        [config setPreferences:preferences];
-
-        WKUserContentController * wkUController = [[WKUserContentController alloc] init];
-
-        config.userContentController = wkUController;
-
-        
-        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,500) configuration:config];
-        _wkwebView.UIDelegate = self;
-        _wkwebView.navigationDelegate = self;
-        _wkwebView.allowsBackForwardNavigationGestures = YES;
-        
-        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"codeMirrorDidReady"];
-  
-        NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"newTab" ofType:@"html"];
-
-        NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:htmlString]];
-        [_wkwebView loadData:data MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:[NSBundle mainBundle].resourceURL];
-        
+//    [self.view addSubview:self.wkwebView];
+    [self.view addSubview:[SYCodeMirrorView shareCodeView]];
+    if(self.isEditing == NO) {
+        [[SYCodeMirrorView shareCodeView] changeContent:@""];
 
     }
-
-    return _wkwebView;
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
+    if(self.content != nil && self.content.length > 0) {
+        [[SYCodeMirrorView shareCodeView] changeContent:self.content];
+    }
     
 }
 
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-    if([message.name isEqualToString:@"codeMirrorDidReady"]){
-//        [_wkwebView evaluateJavaScript:@"SetContent(\"222ddsd\")" completionHandler:^(id _Nullable, NSError * _Nullable error) {
-//        }];
-        NSLog(@"2222");
+- (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = YES;
+}
+ 
+- (void)viewWillDisappear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = NO;
+}
 
+- (void)saveBtnClick:(id)sender{
+    if(self.uuid != nil && self.uuid.length > 0) {
+        [SYCodeMirrorView shareCodeView].uuid = self.uuid;
+        [[SYCodeMirrorView shareCodeView] updateContent];
+    } else {
+        [[SYCodeMirrorView shareCodeView] insertContent];
     }
 }
 
+- (UIBarButtonItem *)rightIcon {
+    if (nil == _rightIcon){
+        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.save","") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+    }
+    return _rightIcon;
+}
 /*
 #pragma mark - Navigation
 
