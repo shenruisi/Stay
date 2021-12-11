@@ -31,7 +31,8 @@
     self.navigationItem.titleView = label;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.navigationItem.rightBarButtonItem = [self rightIcon];
-
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveSuccess:) name:@"saveSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveError:) name:@"saveError" object:nil];
     [self createView];
  
     // Do any additional setup after loading the view.
@@ -48,6 +49,26 @@
         [[SYCodeMirrorView shareCodeView] changeContent:self.content];
     }
     
+}
+
+- (void)saveSuccess:(id)sender{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"保存成功" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.navigationController popViewControllerAnimated:YES];
+        }];
+    [alert addAction:conform];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)saveError:(id)sender{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"保存失败" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSLog(@"点击了确认按钮");
+        }];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{
