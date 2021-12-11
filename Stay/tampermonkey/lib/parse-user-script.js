@@ -132,7 +132,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               // TODO: Assert/normalize to supported value.
               break;
           case 'grant':
-              if (data.value == 'none' || GM_APIS.has(data.value)) {
+              if (GM_APIS.has(data.value)) {
                   details.grants.push(data.value);
               }
               else{

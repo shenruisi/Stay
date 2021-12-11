@@ -32,45 +32,17 @@ static Tampermonkey *kInstance = nil;
 }
 
 - (UserScript *)parseScript:(NSString *)scriptName{
-    NSString *script = [self _getScript:scriptName];
-    JSValue *parseUserScript = [self.jsContext evaluateScript:@"window.parseUserScript"];
-    JSValue *userScriptHeader = [parseUserScript callWithArguments:@[script,@""]];
-    
-    UserScript *userScript = [UserScript ofDictionary:[userScriptHeader toDictionary]];
-    userScript.uuid = [[NSUUID UUID] UUIDString];
-    userScript.content = script;
-    NSString *scriptWithoutComment = [self _removeComment:script];
-    if (userScript.grants.count > 0){ //repleace gm apis
-        JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
-        JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
-        scriptWithoutComment = [NSString stringWithFormat:@"async function gm_init(){\n%@%@\n}\ngm_init();\n",gmApisSource,scriptWithoutComment];
-        userScript.content = scriptWithoutComment;
-    }
-    else{
-        userScript.content = scriptWithoutComment;
-    }
-   
-    return userScript;
+    NSString *scriptContent = [self _getScript:scriptName];
+    return [self parseWithScriptContent:scriptContent];
 }
 
-- (UserScript *)parseNormalScript:(NSString *)script{
+- (UserScript *)parseWithScriptContent:(NSString *)scriptContent{
     JSValue *parseUserScript = [self.jsContext evaluateScript:@"window.parseUserScript"];
-    JSValue *userScriptHeader = [parseUserScript callWithArguments:@[script,@""]];
+    JSValue *userScriptHeader = [parseUserScript callWithArguments:@[scriptContent,@""]];
     
     UserScript *userScript = [UserScript ofDictionary:[userScriptHeader toDictionary]];
     userScript.uuid = [[NSUUID UUID] UUIDString];
-    userScript.content = script;
-    NSString *scriptWithoutComment = [self _removeComment:script];
-    if (userScript.grants.count > 0){ //repleace gm apis
-        JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
-        JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
-        scriptWithoutComment = [NSString stringWithFormat:@"async function gm_init(){\n%@%@\n}\ngm_init();\n",gmApisSource,scriptWithoutComment];
-        userScript.parsedContent = scriptWithoutComment;
-    }
-    else{
-        userScript.parsedContent = scriptWithoutComment;
-    }
-    userScript.content = script;
+    userScript.content = scriptContent;
    
     return userScript;
 }

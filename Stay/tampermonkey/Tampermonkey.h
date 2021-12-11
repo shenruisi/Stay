@@ -21,7 +21,7 @@ JSExportAs(nslog, - (void)nslog:(id)object);
 + (instancetype)shared;
 - (UserScript *)parseScript:(NSString *)scriptName;
 - (void)conventScriptContent:(UserScript *)userScript;
-- (UserScript *)parseNormalScript:(NSString *)script;
+- (UserScript *)parseWithScriptContent:(NSString *)scriptContent;
 @end
 
 NS_ASSUME_NONNULL_END

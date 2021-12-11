@@ -41,14 +41,16 @@ async function start(){
                     
                 });
             }
-            browser.runtime.sendMessage({
-                from: "bootstrap",
-                operate: "injectScript",
-                code:script.content,
-                allFrames:!script.noFrames,
-                runAt:"document_"+script.runAt
-            });
             
+            if (script.active){ //inject active script
+                browser.runtime.sendMessage({
+                    from: "bootstrap",
+                    operate: "injectScript",
+                    code:script.content,
+                    allFrames:!script.noFrames,
+                    runAt:"document_"+script.runAt
+                });
+            }
         });
         
         console.log(injectScripts);
