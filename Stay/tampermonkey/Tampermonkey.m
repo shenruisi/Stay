@@ -50,11 +50,11 @@ static Tampermonkey *kInstance = nil;
 
 - (void)conventScriptContent:(UserScript *)userScript{
     NSString *scriptWithoutComment = [self _removeComment:userScript.content];
-    if (userScript.grants.count > 0){ //repleace gm apis
-        JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
-        JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
-        scriptWithoutComment = [NSString stringWithFormat:@"async function gm_init(){\n%@%@\n}\ngm_init();\n",gmApisSource,scriptWithoutComment];
-    }
+    JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
+    JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
+    scriptWithoutComment = [NSString stringWithFormat:
+                            @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_log', message: e.message, uuid:'%@'}));\n"
+                            ,gmApisSource,scriptWithoutComment,userScript.uuid];
     userScript.parsedContent = scriptWithoutComment;
 }
 
@@ -74,16 +74,6 @@ static Tampermonkey *kInstance = nil;
     
     return process;
 }
-
-//- (NSString *)_gmApisReplaced:(NSString *)scriptWithoutComment{
-//    NSString *ret;
-//    ret = [scriptWithoutComment stringByReplacingOccurrencesOfString:@"GM_log" withString:[NSString stringWithFormat:@"await GM_log"]];
-//    ret = [ret stringByReplacingOccurrencesOfString:@"GM_setValue" withString:[NSString stringWithFormat:@"await GM_setValue"]];
-//    ret = [ret stringByReplacingOccurrencesOfString:@"GM_getValue" withString:[NSString stringWithFormat:@"await GM_getValue"]];
-//    ret = [ret stringByReplacingOccurrencesOfString:@"GM_deleteValue" withString:[NSString stringWithFormat:@"await GM_deleteValue"]];
-//    ret = [ret stringByReplacingOccurrencesOfString:@"GM_listValues" withString:[NSString stringWithFormat:@"await GM_deleteValue"]];
-//    return ret;
-//}
 
 - (JSContext *)jsContext{
     if (nil == _jsContext){

@@ -7,7 +7,7 @@
 
 (function() {
     function createGMApisWithUserScript(grants,uuid){
-        if (grants.length == 0) return;
+       
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'let GM = {};\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
@@ -42,10 +42,8 @@
         if (grants.includes('GM.getValue')) {
             source += 'GM.getValue = ' + GM_getValue_p.toString() + ';\n\n';
         }
-        
-        if (grants.includes('GM_log')) {
-            source +=  GM_log.toString() + ';\n\n';
-        }
+        //add GM_log by default
+        source +=  GM_log.toString() + ';\n\n';
         
         source += _fillStroge.toString() + ';\n\n';
         return source;
