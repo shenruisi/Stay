@@ -1,0 +1,20 @@
+name: Embed Script Request
+description: Submit an embed iOS Safari extension script
+title: "[Embed Script Request]: "
+assignees:
+  - shenruisi
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting the script to us, please complete the few steps as below.
+  - type: dropdown
+    id: role
+    attributes:
+      label: Role
+      description: You are the creator of this script or not?
+      options:
+        - Creator (Default)
+        - Collector
+    validations:
+      required: true
