@@ -67,7 +67,7 @@
             NSLog(error.description);
           
         } else {
-           UserScript *userScript =  [[Tampermonkey shared] parseNormalScript:self.content];
+           UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            if(userScript != nil) {
                [[DataManager shareManager] insertUserConfigByUserScript:userScript];
            }
@@ -81,7 +81,7 @@
         if(error != nil) {
             NSLog(error.description);
         } else {
-           UserScript *userScript =  [[Tampermonkey shared] parseNormalScript:self.content];
+           UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            userScript.uuid = self.uuid;
            if(userScript != nil) {
                [[DataManager shareManager] updateUserScript:userScript];

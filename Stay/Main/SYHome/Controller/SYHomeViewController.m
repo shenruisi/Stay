@@ -230,9 +230,11 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    //Fixed retains self
+    __weak SYHomeViewController *weakSelf = self;
     if (self.searchController.active) {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            UserScript *model = _results[indexPath.row];
+            UserScript *model = weakSelf.results[indexPath.row];
 
             [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
             [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:model.uuid];
@@ -247,7 +249,7 @@
 
     } else {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            UserScript *model = _datas[indexPath.row];
+            UserScript *model = weakSelf.datas[indexPath.row];
             [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
             [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:model.uuid];
 
@@ -259,17 +261,17 @@
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
-
+        
         UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            UserScript *model = _datas[indexPath.row];
+            UserScript *model = weakSelf.datas[indexPath.row];
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
                 }
                 [tableView setEditing:NO animated:YES];
-                [self reloadTableView];
-                [self initScrpitContent];
+                [weakSelf reloadTableView];
+                [weakSelf initScrpitContent];
                 [tableView reloadData];
                 [[DataManager shareManager]  updateLibScrpitStatus:1 numberId:model.uuid];
         }];

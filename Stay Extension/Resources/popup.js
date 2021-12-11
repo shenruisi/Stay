@@ -147,8 +147,10 @@ function renderScriptConsole(datas) {
                     let data = {
                         uuid: item.uuid,
                         name: item.name,
-                        logMsg:logMsg
+                        //Fixed wrong variable logMsg.
+                        message:logMsg
                     };
+                    console.log(data.logMsg);
                     var _dom = document.createElement('div');
                     _dom.setAttribute('class', 'console-item');
                     _dom.setAttribute('uuid', data["uuid"]);

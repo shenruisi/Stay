@@ -39,6 +39,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if ("gm-apis" == request.from){
         if ("GM_log" == request.operate){
+            console.log("gm-apis GM_log");
             if (gm_console[request.uuid] == null){
                 gm_console[request.uuid] = [];
             }
@@ -95,6 +96,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     matchLog["logList"] = gm_console[item.uuid]
                     matchAppScriptConsole.push(matchLog);
                 })
+                console.log("fetchMatchedScriptLog");
+                console.log(matchAppScriptConsole);
                 sendResponse({ body: matchAppScriptConsole });
             }else{
                 sendResponse({ body: [] });

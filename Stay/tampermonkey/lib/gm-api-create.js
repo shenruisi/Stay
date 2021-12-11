@@ -7,8 +7,7 @@
 
 (function() {
     function createGMApisWithUserScript(grants,uuid){
-        if (userScript.grants.length == 0) return;
-        
+        if (grants.length == 0) return;
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'let GM = {};\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';

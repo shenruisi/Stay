@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD32764837F00AB334B /* gmlogtest.user.js */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -140,6 +141,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		58410FD32764837F00AB334B /* gmlogtest.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gmlogtest.user.js; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -579,6 +581,7 @@
 			children = (
 				58F7F4D8274629AF00270873 /* stay-zhihu.user.js */,
 				58F7F4EE274B7C7700270873 /* newuserscript.user.js */,
+				58410FD32764837F00AB334B /* gmlogtest.user.js */,
 			);
 			path = userscript;
 			sourceTree = "<group>";
@@ -1024,6 +1027,7 @@
 				58F7F4CD27454E7300270873 /* stay-bootstrap.js in Resources */,
 				8496DFBA275935B30075ABD5 /* add@3x.png in Resources */,
 				8496DFBC2759C39B0075ABD5 /* homepage-selected@3x.png in Resources */,
+				58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */,
 				8410C845275E028A005531EC /* json-ld.html in Resources */,
 				58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */,
 				58F7F4D9274629AF00270873 /* stay-zhihu.user.js in Resources */,
@@ -1380,7 +1384,7 @@
 				CURRENT_PROJECT_VERSION = 10;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
@@ -1423,7 +1427,7 @@
 				CURRENT_PROJECT_VERSION = 10;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GCC_PREFIX_HEADER = /Users/admin/Stay/Stay/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
