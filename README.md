@@ -4,37 +4,22 @@
 
 <p align="right">中文 | <a href="README-EN.md">EN</a></p>
 
-# Stay
-Stay是一个开源的iOS Safari浏览器插件，做为一个浏览器插件示例的同时也已经上线AppStore [Stay - 网页纯浏览](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)，并且保证免费。
+# Stay²
+Stay²是一个开源的**本地**iOS Safari扩展脚本管理器，Stay²有着自己的API提供给开发者，并且也支持部分油猴脚本。
 
-Stay需要运行在iOS 15及以上。
+[跳转到AppStore下载](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)。
+
+Stay²需要运行在iOS 15及以上。
 
 
 ## 主要功能
-- 广告拦截
-- 阻止应用跳转
-- 自动展开文本
+- 内置脚本库
+- 本地脚本管理
 
+## 申请提交到内置脚本库
+如果您是一名开发者或者是浏览器扩展脚本的资深用户，欢迎通过来申请提交到内置脚本库，这样您的脚本就可以在Stay²的新版本中被更多的用户看到。
 
-## 贡献脚本
-#### 苹果开发者
-你可以下载源代码并且改造相关的功能部署在你的手机设备上。
-
-#### 非苹果开发者
-如果你有前端开发经验，你也可以选择贡献脚本，当PR被合并后，你也会在更新的Stay应用中体验到你更新的功能。
-
-关于如何贡献脚本来适配新的网站可以查看[good first issue](https://github.com/shenruisi/Stay/issues/2)。
-
-
-## 已适配的网站
-- [知乎 zhihu-content.js](/Stay%20Extension/Resources/zhihu/zhihu-content.js)
-- [今日头条 toutiao-content.js](/Stay%20Extension/Resources/toutiao/toutiao-content.js)
-- [百度搜索 baidu-content.js](/Stay%20Extension/Resources/baidu/baidu-content.js)
-- [百度贴吧 tieba-content.js](/Stay%20Extension/Resources/baidu/tieba-content.js)
-- [搜狐 sohu-content.js](/Stay%20Extension/Resources/sohu/sohu-content.js)
-- [小红书 xhs-content.js](/Stay%20Extension/Resources/xhs/xhs-content.js)
-- [简书 jianshu-content.js](/Stay%20Extension/Resources/jianshu/jianshu-content.js)
-- [CSDN csdn-content.js](/Stay%20Extension/Resources/csdn/csdn-content.js)
+## Stay² API
 
 
 ## 许可证
@@ -51,6 +36,8 @@ Stay需要运行在iOS 15及以上。
 - [Browser support for JavaScript APIs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs)
 
 ## 用户交流
-请关注公众号`效率先生`，并回复`微信群` 进群沟通。
+Twitter:[@shenruisi](https://twitter.com/shenruisi)
+
+或者关注公众号`效率先生`，并回复`微信群` 进群沟通。
 
 <img src="./Material/qrcode.jpg" width="256"/>
