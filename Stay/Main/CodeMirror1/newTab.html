@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>跳转到</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="codemirror.css">
+    <script src="codemirror.js"></script>
+    <script src="javascript.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <style>
+        body{
+            height: 100%;
+            width: 100%;
+        }
+        .CodeMirror {
+            height: auto!important;
+        }
+    </style>
+</head>
+<body>
+
+    
+    <!-- <textarea id="myText" rows="4" cols="10"></textarea> -->
+
+    
+</body>
+<script type="text/javascript">
+    let innerHeight = window.innerHeight;
+    let innerWidth = window.innerWidth;
+    console.log("innerHeight,", innerHeight,",innerWidth=", innerWidth)
+    // document.querySelector(".CodeMirror").style.height=innerHeight;
+    let myCodeMirror = CodeMirror(document.body, {
+            value: "function myScript(){return 100;}\n",
+            mode: "javascript",
+            lineNumbers: true,
+            fullScreen: true,
+        });
+
+    myCodeMirror.setSize(innerWidth, innerHeight)
+    myCodeMirror.refresh()
+    function setCode(code) {
+        myCodeMirror.setValue(code);
+    }
+    function getCode() {
+        window.webkit.messageHandlers.contentGet.postMessage(myCodeMirror.getValue());
+    }
+<!--    window.webkit.messageHandlers.contentComplete.postMessage(null)-->
+        // var myTextArea = document.getElementById('myText');
+        // var myCodeMirror = CodeMirror.fromTextArea(myTextArea,{
+        //     value: "function myScript(){return 100;}\n",
+        //     mode: "javascript",
+        //     lineNumbers: true,
+        //     fullScreen: true
+        // });
+        // myCodeMirror.setSize(innerWidth, innerHeight)
+        // myCodeMirror.refresh()
+
+</script>
+
+</html>

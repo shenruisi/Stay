@@ -3,16 +3,35 @@
 <head>
     <title>跳转到</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="popup.css">
-    <script type="module" src="popup.js"></script>
+    <link rel="stylesheet" href="./popup.css">
+    <script type="module" src="./popup.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
-    <div class="placeholder" style="display:block;">未找到可跳转应用</div>
-    <div class="tableview" style="display:none;">
-        <div class="cell">
-            <img class="icon" />
-            <div class="title"></div>
-            <div class="accessor"/>
+    <div class="header-box">
+        <a class="main-icon" href="stay://"><img src="./images/page-icon.png"></a>
+        <div class="header-tab">
+            <div class="tab match-tab active-tab" tab=1 >已匹配脚本</div>
+            <div class="tab console-tab" tab=2>控制台</div>
+        </div>
+    </div>
+    <div class="content-container">
+        <div class="content-box" id="scriptSateList">
+        
+        
+        </div>
+        
+        <div class="content-box" id="scriptConsole" style="display:none">
+            <div class="console-item">
+                <div class="console-name">Zhihu-content.js</div>
+                <div class="console-con">zxnt-> NOT GDPR ->start ads zxnt-> NOT GDPR ->start ads zxnt-> NOT GDPR ->start ads
+                    zxnt-> NOT GDPR ->start ads idfs 方见附件fg gfd</div>
+            </div>
+        </div>
+        <div id="dataNull" class="content-none" style="display:none;"></div>
+        <div class="placeholder" style="display:block;width:100%"></div>
+        <div class="tableview" style="display:block;">
+        
         </div>
     </div>
 </body>

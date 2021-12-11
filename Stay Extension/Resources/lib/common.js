@@ -1,3 +1,9 @@
+//bootstrap
+var browser = browser || chrome;
+var chrome = browser || chrome;
+console.log(browser);
+
+
 const COMPLETE = {status:"complete"};
 const CONTINUE = {status:"continue"};
 const CONTINUE_TIL = (count) => {

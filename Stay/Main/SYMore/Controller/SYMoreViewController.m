@@ -5,10 +5,10 @@
 //  Created by ris on 2021/10/15.
 //
 
-#import "ViewController.h"
+#import "Tampermonkey.h"
+#import "SYMoreViewController.h"
 
-
-@interface ViewController ()<
+@interface SYMoreViewController ()<
  UITableViewDelegate,
  UITableViewDataSource
 >
@@ -18,12 +18,21 @@
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @end
 
-@implementation ViewController
+@implementation SYMoreViewController
+
+- (void)testParseUserScript{
+    UserScript *userScript =  [[Tampermonkey shared] parseScript:@"newuserscript.user"];
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    [groupUserDefaults setObject:@[[userScript toDictionary]] forKey:@"ACTIVE_SCRIPTS"];
+    [groupUserDefaults synchronize];
+//    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+//    NSLog([userScript toDictionary]);
+    
+}
 
 - (void)viewDidLoad {
+//    [self testParseUserScript];
     [super viewDidLoad];
-    self.title = @"Stay";
-    self.navigationItem.leftBarButtonItem = [self leftIcon];
     [self tableView];
 }
 
@@ -105,16 +114,6 @@
     
     return _tableView;
 }
-
-- (UIBarButtonItem *)leftIcon{
-    if (nil == _leftIcon){
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon"]];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        _leftIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
-    }
-    return _leftIcon;
-}
-
 
 
 @end
