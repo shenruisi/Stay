@@ -59,11 +59,27 @@
     else if ([message[@"type"] isEqualToString:@"setScriptActive"]){
             NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
             NSString *uuid = message[@"uuid"];
-            BOOL activeVal = message[@"active"];
+            bool activeVal = message[@"active"];
             if (uuid.length > 0){
                 body = [Stroge listValues:uuid];
             }
+        
+        if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
+            NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"]];
+            NSDictionary *dic = @{@"uuid":uuid,@"active":activeVal?@"1":@"0"};
+            [datas addObject:dic];
+            NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+            [groupUserDefaults setObject:datas forKey:@"ACTIVE_CHANGE"];
+            [groupUserDefaults synchronize];
+        } else {
+            NSMutableArray<NSDictionary *> *datas = [[NSMutableArray alloc] init];
+            NSDictionary *dic = @{@"uuid":uuid,@"active":activeVal?@"1":@"0"};
+            [datas addObject:dic];
+            NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+            [groupUserDefaults setObject:datas forKey:@"ACTIVE_CHANGE"];
+            [groupUserDefaults synchronize];
         }
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
