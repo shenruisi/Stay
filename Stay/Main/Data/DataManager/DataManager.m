@@ -58,12 +58,12 @@
         if ([fileManager fileExistsAtPath:sourcePath]){
             [fileManager copyItemAtPath:sourcePath toPath:destPath error:&error];
         }
+    } else {
+        NSArray *scriptArray = [self findScriptInLib];
+        
     }
     return destPath;
-    
-
 }
-
 
 
 

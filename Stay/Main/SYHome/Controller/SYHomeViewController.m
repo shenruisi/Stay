@@ -349,8 +349,7 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-    
-        _rightIcon = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"add"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(addBtnClick:)];
+        _rightIcon = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
 }

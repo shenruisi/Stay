@@ -26,5 +26,8 @@ settings.version="版本";
 settings.scriptContent="脚本详情";
 settings.sourcePage="来源";
 settings.descDetail="描述";
+settings.add="新增";
+settings.delete="删除";
+
 
 

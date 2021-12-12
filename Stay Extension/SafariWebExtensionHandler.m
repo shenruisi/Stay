@@ -57,12 +57,25 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"setScriptActive"]){
-            NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
             NSString *uuid = message[@"uuid"];
-            bool activeVal = message[@"active"];
-            if (uuid.length > 0){
-                body = [Stroge listValues:uuid];
+            Boolean activeVal = message[@"active"];
+            
+        if (datas != NULL && datas.count > 0) {
+            for(int i = 0; i < datas.count;i++) {
+                NSDictionary *dic = datas[i];
+                if([dic[@"uuid"] isEqualToString:uuid]) {
+                    NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+                    [datas removeObject:dic];
+                    [mdic setValue:@(activeVal) forKey:@"active"];
+                    [datas addObject:mdic];
+                    [groupUserDefaults setObject:datas forKey:@"ACTIVE_SCRIPTS"];
+                    [groupUserDefaults synchronize];
+                    break;
+                }
             }
+        }
+        
         
         if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
             NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"]];

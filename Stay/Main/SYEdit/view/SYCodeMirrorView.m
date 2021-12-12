@@ -8,6 +8,7 @@
 #import "SYCodeMirrorView.h"
 #import "Tampermonkey.h"
 #import "DataManager.h"
+#import "NSString+Urlencode.h"
 
 @implementation SYCodeMirrorView
 
@@ -23,7 +24,6 @@
     return instance;
     
 }
-
 
 - (WKWebView *)wkwebView {
     if(_wkwebView == nil) {
@@ -45,7 +45,7 @@
   
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
 
-        NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"newTab" ofType:@"html"];
+        NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
 
         NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:htmlString]];
         [_wkwebView loadData:data MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:[NSBundle mainBundle].resourceURL];
@@ -95,18 +95,17 @@
 }
 
 - (void)changeContent:(NSString *) jsContent {
-    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
-    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n\\\n"];
-    NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",jsContent];
+//    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+//    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
+//    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n\\\n"];
+    
+    NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",[jsContent encodeString]];
     [_wkwebView evaluateJavaScript:script completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             NSLog(error.description);
         }
     }];
 }
-
-
 - (void)initScrpitContent:(BOOL)success{
 //    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
 //    NSMutableArray *array =  [[NSMutableArray alloc] init];

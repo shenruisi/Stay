@@ -26,6 +26,7 @@
     [label setText:self.script.name];
     label.font = [UIFont boldSystemFontOfSize:17];
     self.navigationItem.titleView = label;
+    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self createDetailView];
     // Do any additional setup after loading the view.
 }
@@ -153,7 +154,7 @@
     [scrollView addSubview:configLabel];
     
     
-    UIView *configView = [[UIView alloc] initWithFrame:CGRectMake(16, 120, kScreenWidth - 32, 238)];
+    UIView *configView = [[UIView alloc] initWithFrame:CGRectMake(16, 120, kScreenWidth - 40, 238)];
     configView.backgroundColor = [UIColor whiteColor];
     configView.layer.cornerRadius = 8;
     configView.top = configLabel.bottom + 16;
@@ -266,11 +267,11 @@
     configView.height =  grantsDetailLabel.bottom + 13;
     scrollView.scrollEnabled = true;
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, configView.bottom  + 37, 357, 45);
+    btn.frame = CGRectMake(0, configView.bottom  + 37, kScreenWidth - 40, 45);
     btn.backgroundColor = RGB(185,101,223);
     if(self.isSearch){
         if(!self.script.active) {
-            [btn setTitle:@"Add" forState:UIControlStateNormal];
+            [btn setTitle:NSLocalizedString(@"settings.add","Add") forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             btn.titleLabel.font = [UIFont systemFontOfSize:17];
             btn.layer.cornerRadius = 8;
@@ -282,7 +283,7 @@
             [scrollView setContentSize:CGSizeMake(kScreenWidth, configView.bottom + 15)];
         }
     } else {
-        [btn setTitle:@"Delete" forState:UIControlStateNormal];
+        [btn setTitle:NSLocalizedString(@"settings.delete","Delete") forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:17];
         btn.layer.cornerRadius = 8;

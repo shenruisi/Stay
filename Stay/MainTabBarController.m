@@ -31,7 +31,7 @@
 
 -(void)createTabbar
 {
-    NSArray *imgArray = @[@"js-lib.png",@"search1.png",@"more.png"];
+    NSArray *imgArray = @[@"js-lib.png",@"search.png",@"more.png"];
     NSArray *imgSelectArray = @[@"homepage-selected",@"search-selected.png",@"more-selected.png"];
 
     NSArray *titleArray = @[NSLocalizedString(@"settings.library","Library"),NSLocalizedString(@"settings.search","search"),NSLocalizedString(@"settings.more","more")];
@@ -62,6 +62,7 @@
     [navC.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
     [self addChildViewController:navC];
 }
+
 
 
 /*
