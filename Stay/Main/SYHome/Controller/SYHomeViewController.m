@@ -141,88 +141,52 @@
         [subView removeFromSuperview];
     }
     // 这里通过searchController的active属性来区分展示数据源是哪个
-    if (self.searchController.active) {
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textAlignment = NSTextAlignmentLeft;
-        UserScript *model = _results[indexPath.row];
-        titleLabel.text = model.name;
-        [cell.contentView addSubview:titleLabel];
-        
-        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        authorLabel.font = [UIFont systemFontOfSize:16];
-        authorLabel.textAlignment = NSTextAlignmentLeft;
-        authorLabel.text = model.author;
-        authorLabel.top = titleLabel.bottom + 10;
-        [authorLabel sizeToFit];
-        [cell.contentView addSubview:authorLabel];
-        
-        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        descLabel.font = [UIFont systemFontOfSize:15];
-        descLabel.textAlignment = NSTextAlignmentLeft;
-        descLabel.text = model.desc;
-        descLabel.top = authorLabel.bottom + 5;
-        descLabel.textColor = [UIColor grayColor];
-        [cell.contentView addSubview:descLabel];
-        
-        UILabel *actLabel = [[UILabel alloc]init];
-        actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
-        actLabel.textColor = RGB(138, 138, 138);
-        if(model.active == 0) {
-            actLabel.text = @"Stopped";
-        } else {
-            actLabel.text = @"Actived";
-        }
-        [actLabel sizeToFit];
-        actLabel.right = kScreenWidth - 35;
-        actLabel.centerY = 47.5f;
-
-        [cell.contentView addSubview:actLabel];
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth-10,1)];
-        [line setBackgroundColor:RGB(216, 216, 216)];
-        [cell.contentView addSubview:line];
+    UserScript *model = nil;
+    if (self.searchController.active ) {
+        model = _results[indexPath.row];
     } else {
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textAlignment = NSTextAlignmentLeft;
-        UserScript *model = _datas[indexPath.row];
-        titleLabel.text = model.name;
-        [cell.contentView addSubview:titleLabel];
-        
-        UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        authorLabel.font = [UIFont systemFontOfSize:16];
-        authorLabel.textAlignment = NSTextAlignmentLeft;
-        authorLabel.text = model.author;
-        authorLabel.top = titleLabel.bottom + 10;
-        [authorLabel sizeToFit];
-        [cell.contentView addSubview:authorLabel];
-        
-        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
-        descLabel.font = [UIFont systemFontOfSize:15];
-        descLabel.textAlignment = NSTextAlignmentLeft;
-        descLabel.text = model.desc;
-        descLabel.top = authorLabel.bottom + 5;
-        descLabel.textColor = [UIColor grayColor];
-        [cell.contentView addSubview:descLabel];
-        
-        UILabel *actLabel = [[UILabel alloc]init];
-        actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
-        actLabel.textColor = RGB(138, 138, 138);
-        if(model.active == 0) {
-            actLabel.text = @"Stopped";
-        } else {
-            actLabel.text = @"Actived";
-        }
-        [actLabel sizeToFit];
-        actLabel.right = kScreenWidth - 35;
-        actLabel.centerY = 47.5f;
-
-        [cell.contentView addSubview:actLabel];
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
-        [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
-        [cell.contentView addSubview:line];
+        model = _datas[indexPath.row];
     }
     
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
+    titleLabel.font = [UIFont boldSystemFontOfSize:18];
+    titleLabel.textAlignment = NSTextAlignmentLeft;
+    titleLabel.text = model.name;
+    [cell.contentView addSubview:titleLabel];
+    
+    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+    authorLabel.font = [UIFont systemFontOfSize:16];
+    authorLabel.textAlignment = NSTextAlignmentLeft;
+    authorLabel.text = model.author;
+    authorLabel.top = titleLabel.bottom + 10;
+    [authorLabel sizeToFit];
+    [cell.contentView addSubview:authorLabel];
+    
+    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+    descLabel.font = [UIFont systemFontOfSize:15];
+    descLabel.textAlignment = NSTextAlignmentLeft;
+    descLabel.text = model.desc;
+    descLabel.top = authorLabel.bottom + 5;
+    descLabel.textColor = [UIColor grayColor];
+    [cell.contentView addSubview:descLabel];
+    
+    UILabel *actLabel = [[UILabel alloc]init];
+    actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
+    actLabel.textColor = RGB(138, 138, 138);
+    if(model.active == 0) {
+        actLabel.text = @"Stopped";
+    } else {
+        actLabel.text = @"Actived";
+    }
+    [actLabel sizeToFit];
+    actLabel.right = kScreenWidth - 35;
+    actLabel.centerY = 47.5f;
+
+    [cell.contentView addSubview:actLabel];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
+    [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
+    [cell.contentView addSubview:line];
+
     return cell;
 }
 
