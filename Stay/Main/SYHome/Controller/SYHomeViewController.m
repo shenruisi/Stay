@@ -67,6 +67,11 @@
             [[DataManager shareManager] updateScrpitStatus:[dic[@"active"] intValue] numberId:dic[@"uuid"]];
         }
     }
+    [groupUserDefaults setObject:nil forKey:@"ACTIVE_SCRIPTS"];
+    [groupUserDefaults synchronize];
+    [self reloadTableView];
+    [self.tableView reloadData];
+    [self initScrpitContent];
 }
 
 - (void)initScrpitContent{
