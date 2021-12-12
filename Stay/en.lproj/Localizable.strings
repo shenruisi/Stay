@@ -29,6 +29,8 @@ settings.sourcePage="Source Page";
 settings.descDetail="Description";
 settings.add="Add";
 settings.delete="Delete";
+settings.create="Create";
+
 
 
 

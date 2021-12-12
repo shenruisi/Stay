@@ -319,6 +319,7 @@
     cer.content = self.script.content;
     cer.uuid = self.script.uuid;
     cer.userScript = self.script;
+    cer.isEdit = true;
     [self.navigationController pushViewController:cer animated:true];
 }
 

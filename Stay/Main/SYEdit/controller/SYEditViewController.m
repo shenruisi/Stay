@@ -56,7 +56,8 @@
 }
 
 - (void)saveSuccess:(id)sender{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"保存成功" preferredStyle:UIAlertControllerStyleAlert];
+    NSString *content = _isEdit?@"保存成功":@"创建成功";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self.navigationController popViewControllerAnimated:YES];
         }];
@@ -66,7 +67,8 @@
 }
 
 - (void)saveError:(id)sender{
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"保存失败" preferredStyle:UIAlertControllerStyleAlert];
+    NSString *content = _isEdit?@"保存失败":@"创建失败";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSLog(@"点击了确认按钮");
         }];
@@ -95,7 +97,11 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.save","save") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+        if(self.isEdit) {
+            _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.save","save") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+        } else {
+            _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.create","Create") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+        }
     }
     return _rightIcon;
 }
@@ -108,5 +114,20 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)initScrpitContent{
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    NSMutableArray *array =  [[NSMutableArray alloc] init];
+    NSArray *datas =  [[DataManager shareManager] findScript:1];
+    if(datas != NULL && datas.count > 0) {
+        for(int i = 0; i < datas.count; i++) {
+            UserScript *scrpit = datas[i];
+            [array addObject: [scrpit toDictionary]];
+        }
+        [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
+        [groupUserDefaults synchronize];
+    }
+}
+
 
 @end
