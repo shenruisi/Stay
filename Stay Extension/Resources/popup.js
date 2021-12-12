@@ -37,11 +37,12 @@ let scriptStateList = [],
             '<div class="active-case" active={active} uuid={uuid} >',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
             '</div>'].join(''),
+    scriptState = ['start', 'stop'],
     scriptLogDomTmp = [
             '<div class="console-name">{name}</div>',
             '<div class="console-con">{message}</div>'
             ].join(''),
-    state = ['start', 'stop'];
+    logState = {error:"error-log", log:""};
 
 
 (function(){
@@ -141,18 +142,21 @@ function renderScriptConsole(datas) {
     const scriptLogList = datas;
     scriptConsoleDom.cleanInnerHTML();
     if(scriptLogList && scriptLogList.length>0){
+        scriptConsoleDom.show()
         scriptLogList.forEach(item=> {
             if(item.logList && item.logList.length>0){
                 item.logList.forEach(logMsg=>{
+                    let logType = logMsg.msgType ? logMsg.msgType:"log"
                     let data = {
                         uuid: item.uuid,
                         name: item.name,
                         //Fixed wrong variable logMsg.
-                        message:logMsg
+                        msgType: logType,
+                        message: logMsg.msg
                     };
-                    console.log(data.logMsg);
+                    
                     var _dom = document.createElement('div');
-                    _dom.setAttribute('class', 'console-item');
+                    _dom.setAttribute('class', 'console-item ' + logState[logType]);
                     _dom.setAttribute('uuid', data["uuid"]);
                     _dom.innerHTML = scriptLogDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
                     scriptConsoleDom.appendChild(_dom);
@@ -180,7 +184,7 @@ function renderScriptContent(datas) {
             var data = item; 
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
-            _dom.setAttribute('class', 'content-item ' + state[index]);
+            _dom.setAttribute('class', 'content-item ' + scriptState[index]);
             _dom.setAttribute('uuid', data["uuid"]);
             _dom.setAttribute('author', data["author"]);
             _dom.innerHTML = scriptDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
@@ -193,8 +197,8 @@ function renderScriptContent(datas) {
 
 /**
  * 控制脚本是否运行
- * @param {string}  uuid         脚本id
- * @param {string}  active       脚本当前可执行状态
+ * @param {string}   uuid        脚本id
+ * @param {boolean}  active      脚本当前可执行状态
  */
 function handleScriptActive(uuid, active) {
     if (uuid && uuid != "" && typeof uuid == "string") {
@@ -204,14 +208,15 @@ function handleScriptActive(uuid, active) {
             uuid: uuid,
             active: !active
         }, (response) => {
-            // todo 改变数据active状态
-            scriptStateList.forEach(function (item, index) {
-                if(uuid == item.uuid){
-                    item.active = !active
-                }
-            })
-            renderScriptContent(scriptStateList)
+            console.log("setScriptActive response,",response)
         })
+        // todo 改变数据active状态
+        scriptStateList.forEach(function (item, index) {
+            if(uuid == item.uuid){
+                item.active = !active
+            }
+        })
+        renderScriptContent(scriptStateList)
     }
 }
 

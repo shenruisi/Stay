@@ -38,13 +38,21 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
     else if ("gm-apis" == request.from){
+        if ("GM_error" == request.operate){
+            console.log("gm-apis GM_error, from exect catch, ",request);
+            if (gm_console[request.uuid] == null){
+                gm_console[request.uuid] = [];
+            }
+            gm_console[request.uuid].push({ msg: request.message, msgType: "error"});
+            console.log("GM_error=",gm_console);
+        }
         if ("GM_log" == request.operate){
             console.log("gm-apis GM_log");
             if (gm_console[request.uuid] == null){
                 gm_console[request.uuid] = [];
             }
-            gm_console[request.uuid].push(request.message);
-            console.log(gm_console);
+            gm_console[request.uuid].push({ msg: request.message, msgType: "log" });
+            console.log("GM_log=",gm_console);
         }
         else if ("GM_getValue" == request.operate){
             browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, defaultValue:request.defaultValue, uuid:request.uuid}, function(response) {
@@ -80,7 +88,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }else if ("fetchMatchedScriptList" == request.operate){
             sendResponse({ body: matchAppScriptList });
         }else if ("setScriptActive" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
+            browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid,active: request.active }, function(response) {
                 sendResponse(response);
             });
             
@@ -96,8 +104,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     matchLog["logList"] = gm_console[item.uuid]
                     matchAppScriptConsole.push(matchLog);
                 })
-                console.log("fetchMatchedScriptLog");
-                console.log(matchAppScriptConsole);
+                console.log("fetchMatchedScriptLog=", matchAppScriptConsole);
                 sendResponse({ body: matchAppScriptConsole });
             }else{
                 sendResponse({ body: [] });

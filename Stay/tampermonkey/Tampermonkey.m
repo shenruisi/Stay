@@ -53,7 +53,7 @@ static Tampermonkey *kInstance = nil;
     JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
     JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.grants,userScript.uuid]];
     scriptWithoutComment = [NSString stringWithFormat:
-                            @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_log', message: e.message, uuid:'%@'}));\n"
+                            @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
                             ,gmApisSource,scriptWithoutComment,userScript.uuid];
     userScript.parsedContent = scriptWithoutComment;
 }
