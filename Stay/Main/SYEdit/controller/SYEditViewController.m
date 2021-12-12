@@ -26,7 +26,11 @@
     [label setNumberOfLines:0];
     [label setTextColor:[UIColor blackColor]];
     [label setTextAlignment:NSTextAlignmentCenter];
-    [label setText:@"content"];
+    if (self.userScript != nil && self.userScript.name != NULL) {
+        [label setText:self.userScript.name];
+    } else {
+        [label setText:@"new script"];
+    }
     label.font = [UIFont boldSystemFontOfSize:17];
     self.navigationItem.titleView = label;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
@@ -82,6 +86,7 @@
 - (void)saveBtnClick:(id)sender{
     if(self.uuid != nil && self.uuid.length > 0) {
         [SYCodeMirrorView shareCodeView].uuid = self.uuid;
+        [SYCodeMirrorView shareCodeView].active = self.userScript.active;
         [[SYCodeMirrorView shareCodeView] updateContent];
     } else {
         [[SYCodeMirrorView shareCodeView] insertContent];
@@ -90,7 +95,7 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.save","") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.save","save") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
     }
     return _rightIcon;
 }

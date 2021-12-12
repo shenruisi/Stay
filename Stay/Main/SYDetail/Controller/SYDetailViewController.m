@@ -42,10 +42,7 @@
     detailView.layer.cornerRadius = 8;
     [scrollView addSubview:detailView];
     
-    UILabel *nameLabel = [[UILabel alloc] init];
-    nameLabel.font = [UIFont systemFontOfSize:17];
-    nameLabel.text = self.script.name;
-    [nameLabel sizeToFit];
+    UILabel *nameLabel = [self createDefaultLabelWithText:self.script.name];
     nameLabel.top = 13;
     nameLabel.left = 17;
     [detailView addSubview:nameLabel];
@@ -63,18 +60,12 @@
         [scriptSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     }
     
-    UILabel *authorLabel = [[UILabel alloc] init];
-    authorLabel.font = [UIFont systemFontOfSize:17];
-    authorLabel.text = @"Author";
-    [authorLabel sizeToFit];
+    UILabel *authorLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.author","author")];
     authorLabel.top = line.bottom +13;
     authorLabel.left = 17;
     [detailView addSubview:authorLabel];
     
-    UILabel *authorNameLabel = [[UILabel alloc] init];
-    authorNameLabel.font = [UIFont systemFontOfSize:17];
-    authorNameLabel.text = self.script.author;
-    [authorNameLabel sizeToFit];
+    UILabel *authorNameLabel = [self createDefaultLabelWithText:self.script.author];
     authorNameLabel.top = line.bottom + 13;
     authorNameLabel.right = kScreenWidth - 48;
     authorNameLabel.textColor = RGB(138, 138, 138);
@@ -84,18 +75,12 @@
     line2.top = authorLabel.bottom + 13;
     [detailView addSubview:line2];
     
-    UILabel *versionLabel = [[UILabel alloc] init];
-    versionLabel.font = [UIFont systemFontOfSize:17];
-    versionLabel.text = @"Version";
-    [versionLabel sizeToFit];
+    UILabel *versionLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.version","Version")];
     versionLabel.top = line2.bottom +13;
     versionLabel.left = 17;
     [detailView addSubview:versionLabel];
     
-    UILabel *versionNameLabel = [[UILabel alloc] init];
-    versionNameLabel.font = [UIFont systemFontOfSize:17];
-    versionNameLabel.text = self.script.version;
-    [versionNameLabel sizeToFit];
+    UILabel *versionNameLabel = [self createDefaultLabelWithText:self.script.version];
     versionNameLabel.top = line2.bottom + 13;
     versionNameLabel.right = kScreenWidth - 48;
     versionNameLabel.textColor = RGB(138, 138, 138);
@@ -106,24 +91,22 @@
     [detailView addSubview:line7];
     
     
-    UILabel *scriptLabel = [[UILabel alloc] init];
-    scriptLabel.font = [UIFont systemFontOfSize:17];
-    scriptLabel.text = @"Script Content";
-    [scriptLabel sizeToFit];
+    UILabel *scriptLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.scriptContent","Script Content")];
     scriptLabel.top = line7.bottom +13;
     scriptLabel.left = 17;
     [detailView addSubview:scriptLabel];
     
+    UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
+    scriptIconLabel.right = kScreenWidth - 48;
+    scriptIconLabel.centerY = scriptLabel.centerY;
+    [detailView addSubview:scriptIconLabel];
+    
     UIButton *scriptBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    scriptBtn.frame = CGRectMake(0, 0, 40, 40);
-    [scriptBtn setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
+    scriptBtn.frame = CGRectMake(0, 0, kScreenWidth, 40);
     scriptBtn.centerY = scriptLabel.centerY;
     scriptBtn.right = kScreenWidth - 48;
 
     [scriptBtn addTarget:self action:@selector(showScript:) forControlEvents:UIControlEventTouchUpInside];
-//    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
-//    imageView.centerY = scriptLabel.centerY;
-//    imageView.right = kScreenWidth - 48;
     [detailView addSubview:scriptBtn];
   
     
@@ -131,10 +114,7 @@
     line3.top = scriptLabel.bottom + 13;
     [detailView addSubview:line3];
     
-    UILabel *pageLabel = [[UILabel alloc] init];
-    pageLabel.font = [UIFont systemFontOfSize:17];
-    pageLabel.text = @"Source page";
-    [pageLabel sizeToFit];
+    UILabel *pageLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.sourcePage","Source Page")];
     pageLabel.top = line3.bottom +13;
     pageLabel.left = 17;
     [detailView addSubview:pageLabel];
@@ -144,10 +124,7 @@
     line4.top = pageLabel.bottom + 13;
     [detailView addSubview:line4];
     
-    UILabel *descLabel = [[UILabel alloc] init];
-    descLabel.font = [UIFont systemFontOfSize:17];
-    descLabel.text = @"Description";
-    [descLabel sizeToFit];
+    UILabel *descLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.descDetail","Description")];
     descLabel.top = line4.bottom +13;
     descLabel.left = 17;
     [detailView addSubview:descLabel];
@@ -182,10 +159,7 @@
     configView.top = configLabel.bottom + 16;
     [scrollView addSubview:configView];
     
-    UILabel *matchLabel = [[UILabel alloc] init];
-    matchLabel.font = [UIFont systemFontOfSize:17];
-    matchLabel.text = @"Matches";
-    [matchLabel sizeToFit];
+    UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
     matchLabel.top = 13;
     matchLabel.left = 17;
     [configView addSubview:matchLabel];
@@ -207,10 +181,7 @@
     line5.top = matchDetailLabel.bottom + 9;
     [configView addSubview:line5];
     
-    UILabel *includesLabel = [[UILabel alloc] init];
-    includesLabel.font = [UIFont systemFontOfSize:17];
-    includesLabel.text = @"includes";
-    [includesLabel sizeToFit];
+    UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
     includesLabel.top = line5.bottom + 13;
     includesLabel.left = 17;
     [configView addSubview:includesLabel];
@@ -232,10 +203,7 @@
     line8.top = includesDetailLabel.bottom + 9;
     [configView addSubview:line8];
     
-    UILabel *excludesLabel = [[UILabel alloc] init];
-    excludesLabel.font = [UIFont systemFontOfSize:17];
-    excludesLabel.text = @"excludes";
-    [excludesLabel sizeToFit];
+    UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
     excludesLabel.top = line8.bottom + 13;
     excludesLabel.left = 17;
     [configView addSubview:excludesLabel];
@@ -257,10 +225,7 @@
     line9.top = excludesDetailLabel.bottom + 9;
     [configView addSubview:line9];
     
-    UILabel *runAtLabel = [[UILabel alloc] init];
-    runAtLabel.font = [UIFont systemFontOfSize:17];
-    runAtLabel.text = @"Run at";
-    [runAtLabel sizeToFit];
+    UILabel *runAtLabel = [self createDefaultLabelWithText:@"Run at"];
     runAtLabel.top = line9.bottom + 13;
     runAtLabel.left = 17;
     [configView addSubview:runAtLabel];
@@ -279,10 +244,7 @@
     line6.top = runAtDetailLabel.bottom + 9;
     [configView addSubview:line6];
     
-    UILabel *grantsLabel = [[UILabel alloc] init];
-    grantsLabel.font = [UIFont systemFontOfSize:17];
-    grantsLabel.text = @"Grants";
-    [grantsLabel sizeToFit];
+    UILabel *grantsLabel = [self createDefaultLabelWithText:@"Grants"];
     grantsLabel.top = line6.bottom + 13;
     grantsLabel.left = 17;
     [configView addSubview:grantsLabel];
@@ -355,8 +317,8 @@
     SYEditViewController *cer = [[SYEditViewController alloc] init];
     cer.content = self.script.content;
     cer.uuid = self.script.uuid;
+    cer.userScript = self.script;
     [self.navigationController pushViewController:cer animated:true];
-    
 }
 
 - (void) switchAction:(UISwitch *) scriptSwitch {
@@ -372,6 +334,14 @@
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 57 ,1)];
     [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
     return line;
+}
+
+- (UILabel *)createDefaultLabelWithText:(NSString *)text {
+    UILabel *label = [[UILabel alloc] init];
+    label.font = [UIFont systemFontOfSize:17];
+    label.text = text;
+    [label sizeToFit];
+    return  label;
 }
 
 

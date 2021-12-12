@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UserScript.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
-
+@property (nonatomic, strong) UserScript *userScript;
 @property (nonatomic, assign) bool isEdit;
 @end
 

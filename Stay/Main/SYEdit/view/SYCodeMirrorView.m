@@ -85,6 +85,7 @@
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            userScript.uuid = self.uuid;
+           userScript.active = self.active;
            if(userScript != nil) {
                [[DataManager shareManager] updateUserScript:userScript];
                [self initScrpitContent:true];

@@ -89,8 +89,8 @@
 		84BDC853274CA4A5005367C6 /* stop@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC852274CA4A5005367C6 /* stop@3x.png */; };
 		84BDC855274CAB0F005367C6 /* play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC854274CAB0F005367C6 /* play@3x.png */; };
 		84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C1ED1C27631AE200651DF9 /* SYCodeMirrorView.m */; };
+		84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED2227659F7600651DF9 /* arrow@3x.png */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
-		84C54CFE275754FE00A9F14C /* arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C54CFD275754BA00A9F14C /* arrow@3x.png */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
 		84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4831D273AC51800217BB3 /* js-lib@3x.png */; };
 		84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48320273ACAC000217BB3 /* SYHomeViewController.m */; };
@@ -247,9 +247,9 @@
 		84BDC854274CAB0F005367C6 /* play@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@3x.png"; sourceTree = "<group>"; };
 		84C1ED1B27631AE200651DF9 /* SYCodeMirrorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYCodeMirrorView.h; sourceTree = "<group>"; };
 		84C1ED1C27631AE200651DF9 /* SYCodeMirrorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYCodeMirrorView.m; sourceTree = "<group>"; };
+		84C1ED2227659F7600651DF9 /* arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@3x.png"; sourceTree = "<group>"; };
 		84C54CFA2753BDAF00A9F14C /* SYDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDetailViewController.h; sourceTree = "<group>"; };
 		84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDetailViewController.m; sourceTree = "<group>"; };
-		84C54CFD275754BA00A9F14C /* arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@3x.png"; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		84F48317273A739800217BB3 /* MainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		84F4831D273AC51800217BB3 /* js-lib@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "js-lib@3x.png"; sourceTree = "<group>"; };
@@ -498,6 +498,7 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				84C1ED2227659F7600651DF9 /* arrow@3x.png */,
 				8496DFBB2759C39A0075ABD5 /* homepage-selected@3x.png */,
 				8496DFB9275935B30075ABD5 /* add@3x.png */,
 				84BDC852274CA4A5005367C6 /* stop@3x.png */,
@@ -508,7 +509,6 @@
 				84BDC84C274C941F005367C6 /* search1@3x.png */,
 				8496DFB727592C260075ABD5 /* more@3x.png */,
 				84F4832B273AD7BC00217BB3 /* search@3x.png */,
-				84C54CFD275754BA00A9F14C /* arrow@3x.png */,
 				84F4831D273AC51800217BB3 /* js-lib@3x.png */,
 				58813436272AACEC0055E1CE /* fastclip-icon@3x.png */,
 				5889733D2723033600BE123E /* icon@3x.png */,
@@ -1007,7 +1007,6 @@
 				84BDC845274BBEEC005367C6 /* scriptManager.sqlite in Resources */,
 				84BDC851274C9AC3005367C6 /* delete@3x.png in Resources */,
 				84BDC855274CAB0F005367C6 /* play@3x.png in Resources */,
-				84C54CFE275754FE00A9F14C /* arrow@3x.png in Resources */,
 				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
 				58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
@@ -1035,6 +1034,7 @@
 				58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */,
 				58F7F4C12743C00600270873 /* leetcode-cn-submission-share.user.js in Resources */,
 				58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */,
+				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,

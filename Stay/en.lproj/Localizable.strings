@@ -19,4 +19,14 @@ settings.section.otherApps.fastclip="FastClip - Copy paste enhancer";
 
 settings.save="Save";
 
-settings.library="资料库";
+settings.library="Library";
+settings.search="Search";
+settings.more="More";
+settings.author="Author";
+settings.version="Version";
+settings.scriptContent="Script Content";
+settings.sourcePage="Source Page";
+settings.descDetail="Description";
+
+
+
