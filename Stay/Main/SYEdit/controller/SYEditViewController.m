@@ -29,7 +29,7 @@
     if (self.userScript != nil && self.userScript.name != NULL) {
         [label setText:self.userScript.name];
     } else {
-        [label setText:@"new script"];
+        [label setText:NSLocalizedString(@"settings.newScript","New Script")];
     }
     label.font = [UIFont boldSystemFontOfSize:17];
     self.navigationItem.titleView = label;
@@ -74,7 +74,6 @@
         }];
     [alert addAction:conform];
     [self presentViewController:alert animated:YES completion:nil];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated{

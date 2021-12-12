@@ -30,6 +30,8 @@ settings.descDetail="Description";
 settings.add="Add";
 settings.delete="Delete";
 settings.create="Create";
+settings.newScript="New Script";
+
 
 
 

@@ -29,6 +29,7 @@ settings.descDetail="描述";
 settings.add="新增";
 settings.delete="删除";
 settings.create="创建";
+settings.newScript="新建脚本";
 
 
 

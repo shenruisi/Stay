@@ -38,7 +38,7 @@
     
     [self.view addSubview:scrollView];
     
-    UIView *detailView = [[UIView alloc] initWithFrame:CGRectMake(20, 0, kScreenWidth - 40, 271)];
+    UIView *detailView = [[UIView alloc] initWithFrame:CGRectMake(20, 15, kScreenWidth - 40, 271)];
     detailView.backgroundColor = [UIColor whiteColor];
     detailView.layer.cornerRadius = 8;
     [scrollView addSubview:detailView];
