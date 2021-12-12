@@ -329,7 +329,7 @@
     } else {
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
-    
+    [self initScrpitContent];
 }
 
 - (UIView *)createLine{
@@ -346,6 +346,20 @@
     return  label;
 }
 
+
+- (void)initScrpitContent{
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    NSMutableArray *array =  [[NSMutableArray alloc] init];
+    NSArray *datas =  [[DataManager shareManager] findScript:1];
+    if(datas != NULL && datas.count > 0) {
+        for(int i = 0; i < datas.count; i++) {
+            UserScript *scrpit = datas[i];
+            [array addObject: [scrpit toDictionary]];
+        }
+        [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
+        [groupUserDefaults synchronize];
+    }
+}
 
 /*
 #pragma mark - Navigation
