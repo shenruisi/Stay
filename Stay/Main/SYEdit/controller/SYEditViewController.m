@@ -62,7 +62,7 @@
         [self.navigationController popViewControllerAnimated:YES];
         }];
     [alert addAction:conform];
-
+    [self initScrpitContent];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -73,6 +73,7 @@
             NSLog(@"点击了确认按钮");
         }];
     [alert addAction:conform];
+    [self initScrpitContent];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
