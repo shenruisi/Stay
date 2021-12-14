@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD32764837F00AB334B /* gmlogtest.user.js */; };
+		58410FD62766005400AB334B /* stay-google.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD52766005400AB334B /* stay-google.user.js */; };
+		58410FD82766015000AB334B /* stay-baidu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD72766015000AB334B /* stay-baidu.user.js */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -142,6 +144,8 @@
 
 /* Begin PBXFileReference section */
 		58410FD32764837F00AB334B /* gmlogtest.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gmlogtest.user.js; sourceTree = "<group>"; };
+		58410FD52766005400AB334B /* stay-google.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-google.user.js"; sourceTree = "<group>"; };
+		58410FD72766015000AB334B /* stay-baidu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-baidu.user.js"; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -582,6 +586,8 @@
 				58F7F4D8274629AF00270873 /* stay-zhihu.user.js */,
 				58F7F4EE274B7C7700270873 /* newuserscript.user.js */,
 				58410FD32764837F00AB334B /* gmlogtest.user.js */,
+				58410FD52766005400AB334B /* stay-google.user.js */,
+				58410FD72766015000AB334B /* stay-baidu.user.js */,
 			);
 			path = userscript;
 			sourceTree = "<group>";
@@ -1034,11 +1040,13 @@
 				5889731A27213C8300BE123E /* Localizable.strings in Resources */,
 				58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */,
 				58F7F4C12743C00600270873 /* leetcode-cn-submission-share.user.js in Resources */,
+				58410FD82766015000AB334B /* stay-baidu.user.js in Resources */,
 				58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
+				58410FD62766005400AB334B /* stay-google.user.js in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,
 				587689262719238000F834A4 /* Assets.xcassets in Resources */,
 				8410C844275E028A005531EC /* javascript.js in Resources */,

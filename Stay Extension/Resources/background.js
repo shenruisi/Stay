@@ -22,13 +22,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("injectScript" == request.operate){
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                console.log("request.allFrames",request.allFrames);
                 browser.tabs.executeScript(tabs[0].id, { code: request.code, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
         else if ("injectFile" == request.operate){
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames, runAt: request.runAt })
+                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames , runAt: request.runAt})
             });
             return true;
         }

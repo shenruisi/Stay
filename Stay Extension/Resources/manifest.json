@@ -23,7 +23,7 @@
         {
             "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
             "matches": [ "*://*/*" ],
-            "all_frames": true,
+            "all_frames": false,
             "run_at": "document_start"
         }
     ],
@@ -39,5 +39,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>","tabs","nativeMessaging"]
+    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging"]
 }
