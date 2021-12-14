@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Baidu@PreventAppJump
+// @name         百度@PreventAppJump
 // @namespace    http://stay.app/
 // @version      0.0.1
 // @description  防止从Baidu结果页跳转到其他App
@@ -29,6 +29,7 @@ const $res = (name) => {
 
 const $noJumpUrl = (host,url) => {
     if (host == "tieba.baidu.com"){
+        console.log($res('iframe.html')+"?url="+encodeURIComponent(url));
         return $res('iframe.html')+"?url="+encodeURIComponent(url);
     }
     else if (host == "zhuanlan.zhihu.com"){

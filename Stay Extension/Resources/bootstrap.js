@@ -1,5 +1,8 @@
+console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
+
+
 
 const $_res = (name) => {
     return browser.runtime.getURL(name);

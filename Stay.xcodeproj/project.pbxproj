@@ -10,6 +10,14 @@
 		58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD32764837F00AB334B /* gmlogtest.user.js */; };
 		58410FD62766005400AB334B /* stay-google.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD52766005400AB334B /* stay-google.user.js */; };
 		58410FD82766015000AB334B /* stay-baidu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD72766015000AB334B /* stay-baidu.user.js */; };
+		58410FDA276875F000AB334B /* stay-toutiao.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD9276875F000AB334B /* stay-toutiao.user.js */; };
+		58410FDC276878C700AB334B /* stay-csdn.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FDB276878C700AB334B /* stay-csdn.user.js */; };
+		58410FDE27687AB400AB334B /* stay-jianshu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FDD27687AB400AB334B /* stay-jianshu.user.js */; };
+		58410FE027687D0F00AB334B /* stay-sohu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FDF27687D0F00AB334B /* stay-sohu.user.js */; };
+		58410FE227687DE200AB334B /* stay-xhs.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE127687DE200AB334B /* stay-xhs.user.js */; };
+		58410FE427687F7100AB334B /* stay-sina.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE327687F7100AB334B /* stay-sina.user.js */; };
+		58410FE62768805F00AB334B /* stay-newsqq.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE52768805F00AB334B /* stay-newsqq.user.js */; };
+		58410FE8276881DE00AB334B /* stay-tieba.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE7276881DE00AB334B /* stay-tieba.user.js */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -146,6 +154,14 @@
 		58410FD32764837F00AB334B /* gmlogtest.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gmlogtest.user.js; sourceTree = "<group>"; };
 		58410FD52766005400AB334B /* stay-google.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-google.user.js"; sourceTree = "<group>"; };
 		58410FD72766015000AB334B /* stay-baidu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-baidu.user.js"; sourceTree = "<group>"; };
+		58410FD9276875F000AB334B /* stay-toutiao.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-toutiao.user.js"; sourceTree = "<group>"; };
+		58410FDB276878C700AB334B /* stay-csdn.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-csdn.user.js"; sourceTree = "<group>"; };
+		58410FDD27687AB400AB334B /* stay-jianshu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-jianshu.user.js"; sourceTree = "<group>"; };
+		58410FDF27687D0F00AB334B /* stay-sohu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-sohu.user.js"; sourceTree = "<group>"; };
+		58410FE127687DE200AB334B /* stay-xhs.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-xhs.user.js"; sourceTree = "<group>"; };
+		58410FE327687F7100AB334B /* stay-sina.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-sina.user.js"; sourceTree = "<group>"; };
+		58410FE52768805F00AB334B /* stay-newsqq.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-newsqq.user.js"; sourceTree = "<group>"; };
+		58410FE7276881DE00AB334B /* stay-tieba.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-tieba.user.js"; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -588,6 +604,14 @@
 				58410FD32764837F00AB334B /* gmlogtest.user.js */,
 				58410FD52766005400AB334B /* stay-google.user.js */,
 				58410FD72766015000AB334B /* stay-baidu.user.js */,
+				58410FD9276875F000AB334B /* stay-toutiao.user.js */,
+				58410FDB276878C700AB334B /* stay-csdn.user.js */,
+				58410FDD27687AB400AB334B /* stay-jianshu.user.js */,
+				58410FDF27687D0F00AB334B /* stay-sohu.user.js */,
+				58410FE127687DE200AB334B /* stay-xhs.user.js */,
+				58410FE327687F7100AB334B /* stay-sina.user.js */,
+				58410FE52768805F00AB334B /* stay-newsqq.user.js */,
+				58410FE7276881DE00AB334B /* stay-tieba.user.js */,
 			);
 			path = userscript;
 			sourceTree = "<group>";
@@ -1013,17 +1037,20 @@
 			files = (
 				8410C842275E028A005531EC /* index.html in Resources */,
 				84BDC845274BBEEC005367C6 /* scriptManager.sqlite in Resources */,
+				58410FE427687F7100AB334B /* stay-sina.user.js in Resources */,
 				84BDC851274C9AC3005367C6 /* delete@3x.png in Resources */,
 				84BDC855274CAB0F005367C6 /* play@3x.png in Resources */,
 				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
 				84C1ED3F2765FC8600651DF9 /* search-selected@3x.png in Resources */,
 				58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
+				58410FDE27687AB400AB334B /* stay-jianshu.user.js in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
+				58410FE62768805F00AB334B /* stay-newsqq.user.js in Resources */,
 				587688DD2719237E00F834A4 /* Main.html in Resources */,
 				8410C848275E028D005531EC /* editor.html in Resources */,
 				8410C846275E028A005531EC /* codemirror.css in Resources */,
@@ -1034,23 +1061,28 @@
 				8496DFBA275935B30075ABD5 /* add@3x.png in Resources */,
 				8496DFBC2759C39B0075ABD5 /* homepage-selected@3x.png in Resources */,
 				58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */,
+				58410FE227687DE200AB334B /* stay-xhs.user.js in Resources */,
 				8410C845275E028A005531EC /* json-ld.html in Resources */,
 				58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */,
 				58F7F4D9274629AF00270873 /* stay-zhihu.user.js in Resources */,
 				5889731A27213C8300BE123E /* Localizable.strings in Resources */,
 				58F7F4EF274B7C7800270873 /* newuserscript.user.js in Resources */,
 				58F7F4C12743C00600270873 /* leetcode-cn-submission-share.user.js in Resources */,
+				58410FE027687D0F00AB334B /* stay-sohu.user.js in Resources */,
 				58410FD82766015000AB334B /* stay-baidu.user.js in Resources */,
 				58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
+				58410FDA276875F000AB334B /* stay-toutiao.user.js in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
 				58410FD62766005400AB334B /* stay-google.user.js in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,
 				587689262719238000F834A4 /* Assets.xcassets in Resources */,
+				58410FDC276878C700AB334B /* stay-csdn.user.js in Resources */,
 				8410C844275E028A005531EC /* javascript.js in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
+				58410FE8276881DE00AB334B /* stay-tieba.user.js in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
 				84BDC853274CA4A5005367C6 /* stop@3x.png in Resources */,
 			);

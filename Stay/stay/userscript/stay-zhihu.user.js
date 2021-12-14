@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Zhihu@AutoExpend
+// @name         知乎@AutoExpend
 // @namespace    http://stay.app/
 // @version      0.0.1
 // @description  自动展开回答，支持知乎桌面版
@@ -127,9 +127,7 @@ window.onload = function(){
     if (!/Macintosh/.test(window.navigator.userAgent)){
         
         let tasks = [removeChoosePanel,removeAppJump,replaceDirectUrl,unfold];
-        Stay_Inject.run(tasks,100,30,false).then((data) => {
-            browser.runtime.sendMessage({from:"content",operate:"saveAppList",data:data})
-        });
+        Stay_Inject.run(tasks,100,30,false).then((data) => {});
     }
     
 }

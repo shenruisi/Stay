@@ -23,7 +23,7 @@
         {
             "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
             "matches": [ "*://*/*" ],
-            "all_frames": false,
+            "all_frames": true,
             "run_at": "document_start"
         }
     ],
