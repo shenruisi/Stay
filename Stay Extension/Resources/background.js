@@ -35,22 +35,26 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //        console.log("appJumpList",appJumpList);
 //    }
     
-    if ("bootstrap" == request.from){
+    if ("bootstrap" == request.from || "iframe" == request.from){
         if ("fetchScripts" == request.operate){
+            console.log("background","fetchScripts");
             browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
+                console.log("background","fetchScripts",response);
                 sendResponse(response);
             });
             return true;
         }
         else if ("injectScript" == request.operate){
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                console.log("request.allFrames",request.allFrames);
                 browser.tabs.executeScript(tabs[0].id, { code: request.code, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
         else if ("injectFile" == request.operate){
+            console.log("background","injectFile",request.file);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames, runAt: request.runAt })
+                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames , runAt: request.runAt})
             });
             return true;
         }

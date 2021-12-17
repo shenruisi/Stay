@@ -55,6 +55,10 @@ static Tampermonkey *kInstance = nil;
     scriptWithoutComment = [NSString stringWithFormat:
                             @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
                             ,gmApisSource,scriptWithoutComment,userScript.uuid];
+    
+//    scriptWithoutComment = [NSString stringWithFormat:
+//                            @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init();\n"
+//                            ,gmApisSource,scriptWithoutComment];
     userScript.parsedContent = scriptWithoutComment;
 }
 

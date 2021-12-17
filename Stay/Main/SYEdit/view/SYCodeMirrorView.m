@@ -64,13 +64,14 @@
 - (void)insertContent{
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
-            NSLog(error.description);
             [self initScrpitContent:false];
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
-           if(userScript != nil) {
+           if(userScript != nil && userScript.name != nil) {
                [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                [self initScrpitContent:true];
+           } else {
+               [self initScrpitContent:false];
            }
 
         }
@@ -80,25 +81,22 @@
 - (void)updateContent{
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
-            NSLog(error.description);
             [self initScrpitContent:false];
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            userScript.uuid = self.uuid;
            userScript.active = self.active;
-           if(userScript != nil) {
+           if(userScript != nil && userScript.name != nil) {
                [[DataManager shareManager] updateUserScript:userScript];
                [self initScrpitContent:true];
+           } else {
+               [self initScrpitContent:false];
            }
         }
     }];
 }
 
 - (void)changeContent:(NSString *) jsContent {
-//    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-//    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
-//    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n\\\n"];
-    
     NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",[jsContent encodeString]];
     [_wkwebView evaluateJavaScript:script completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
@@ -107,14 +105,6 @@
     }];
 }
 - (void)initScrpitContent:(BOOL)success{
-//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-//    NSMutableArray *array =  [[NSMutableArray alloc] init];
-//    for(int i = 0; i < self.datas.count; i++) {
-//        UserScript *scrpit = self.datas[i];
-//        [array addObject: [scrpit toDictionary]];
-//    }
-//    [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
-//    [groupUserDefaults synchronize];
     if(success) {
         NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Stroge : NSObject
 + (id)valueForKey:(NSString *)key uuid:(NSString *)uuid defaultValue:(id)defaultValue;
-+ (void)setValue:(NSString *)value forKey:(NSString *)key uuid:(NSString *)uuid;
++ (void)setValue:(id)value forKey:(NSString *)key uuid:(NSString *)uuid;
 + (NSDictionary *)listValues:(NSString *)uuid;
 + (void)deleteValueForKey:(NSString *)key uuid:(NSString *)uuid;
 + (void)removeByUUID:(NSString *)uuid;
