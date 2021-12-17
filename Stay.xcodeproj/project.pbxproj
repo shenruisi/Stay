@@ -91,6 +91,8 @@
 		84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C1ED252765E29D00651DF9 /* NSString+Urlencode.m */; };
 		84C1ED3F2765FC8600651DF9 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED3D2765FC8600651DF9 /* search-selected@3x.png */; };
 		84C1ED402765FC8600651DF9 /* search@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED3E2765FC8600651DF9 /* search@3x.png */; };
+		84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED41276C31AE00651DF9 /* on@3x.png */; };
+		84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED42276C31AE00651DF9 /* back@3x.png */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
 		84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4831D273AC51800217BB3 /* js-lib@3x.png */; };
@@ -250,6 +252,8 @@
 		84C1ED252765E29D00651DF9 /* NSString+Urlencode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Urlencode.m"; sourceTree = "<group>"; };
 		84C1ED3D2765FC8600651DF9 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search-selected@3x.png"; sourceTree = "<group>"; };
 		84C1ED3E2765FC8600651DF9 /* search@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@3x.png"; sourceTree = "<group>"; };
+		84C1ED41276C31AE00651DF9 /* on@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "on@3x.png"; sourceTree = "<group>"; };
+		84C1ED42276C31AE00651DF9 /* back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@3x.png"; sourceTree = "<group>"; };
 		84C54CFA2753BDAF00A9F14C /* SYDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDetailViewController.h; sourceTree = "<group>"; };
 		84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDetailViewController.m; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
@@ -499,6 +503,8 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				84C1ED42276C31AE00651DF9 /* back@3x.png */,
+				84C1ED41276C31AE00651DF9 /* on@3x.png */,
 				84C1ED3D2765FC8600651DF9 /* search-selected@3x.png */,
 				84C1ED3E2765FC8600651DF9 /* search@3x.png */,
 				84C1ED2227659F7600651DF9 /* arrow@3x.png */,
@@ -1037,6 +1043,8 @@
 				58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
+				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
+				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,

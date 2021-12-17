@@ -28,9 +28,17 @@
     self.navigationItem.titleView = label;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self createDetailView];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
+
     // Do any additional setup after loading the view.
 }
 
+
+- (void)scriptSaveSuccess:(id)sender{
+    self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self createDetailView];
+}
 
 - (void)createDetailView{
     

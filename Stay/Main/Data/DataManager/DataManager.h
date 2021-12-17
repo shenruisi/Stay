@@ -20,6 +20,8 @@
 
 - (void)updateScrpitStatus:(int)status numberId:(NSString *)uuid;
 
+- (UserScript *)selectScriptByUuid:(NSString *)uuid;
+
 - (NSArray *)selectScriptByKeywordByAdded:(NSString *)keyword;
 
 - (NSArray *)selectScriptByKeywordByLib:(NSString *)keyword;
