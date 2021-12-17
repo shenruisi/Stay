@@ -34,6 +34,16 @@
 }
 
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+ 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.tabBarController.tabBar.hidden = NO;
+}
+
 - (void)scriptSaveSuccess:(id)sender{
     self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
