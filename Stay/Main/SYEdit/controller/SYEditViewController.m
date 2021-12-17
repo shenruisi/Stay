@@ -35,15 +35,19 @@
     label.font = [UIFont boldSystemFontOfSize:17];
     self.navigationItem.titleView = label;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    self.navigationItem.rightBarButtonItem = [self rightIcon];
+
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveSuccess:) name:@"saveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveError:) name:@"saveError" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShowAction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHideAction:) name:UIKeyboardWillHideNotification object:nil];
     [self createView];
     [self.view addSubview:self.componetView];
-    self.componetView.bottom = kScreenHeight - 20;
-    [[SYCodeMirrorView shareCodeView] clearAll];
+    self.componetView.bottom = kScreenHeight - 45;
+    if(!self.isSearch) {
+        [[SYCodeMirrorView shareCodeView] clearAll];
+        self.navigationItem.rightBarButtonItem = [self rightIcon];
+    }
+
     // Do any additional setup after loading the view.
 }
 
@@ -59,7 +63,6 @@
     
 }
 
-
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -70,11 +73,11 @@
 - (void)keyboardShowAction:(NSNotification*)sender{
     NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
     CGRect endFrame = [endFrameValue CGRectValue];
-    self.componetView.bottom = endFrame.origin.y;
+    self.componetView.bottom = endFrame.origin.y - 10;
 
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
-    self.componetView.bottom = kScreenHeight - 20;
+    self.componetView.bottom = kScreenHeight - 45;
 }
 
 - (void)saveSuccess:(id)sender{
@@ -109,6 +112,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
+    [self.wkwebView endEditing:YES];
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
@@ -139,7 +143,7 @@
         _componetView.backgroundColor = [UIColor whiteColor];
         _componetView.layer.cornerRadius = 12;
         _componetView.layer.borderWidth = 0.5;
-        _componetView.layer.borderColor = [RGB(151, 151, 151) CGColor];
+        _componetView.layer.borderColor = [RGB(216, 216, 216) CGColor];
         UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         backBtn.frame = CGRectMake(0, 0, 31, 23);
         [backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
