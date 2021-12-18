@@ -6,7 +6,7 @@
 // @author       Turbe
 // @include      http://*
 // @include      https://*
-// @match        http://*/*
+// @match        *://*/*
 // @grant        none
 // ==/UserScript==
 
