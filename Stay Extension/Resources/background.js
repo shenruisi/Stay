@@ -39,7 +39,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("fetchScripts" == request.operate){
             console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
-                console.log("sendNativeMessage==", response.body);
                 sendResponse(response);
             });
             return true;
@@ -60,8 +59,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("setMatchedScripts" == request.operate){
             matchAppScriptList = request.matchScripts;
-            
             console.log("setMatchedScripts request.matchScripts=",request.matchScripts)
+//            browser.runtime.sendMessage({ from: "background", operate: "setMatchedScripts",matchAppScriptList:matchAppScriptList }, (response) => {
+//                            console.log("fetchMatchedScriptList---setMatchedScripts--",request,"-res--", response.body)
+//                        })
+            
             return true;
         }
     }
@@ -117,12 +119,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             gm_console = [];
         }else if ("fetchMatchedScriptList" == request.operate){
             console.log("fetchMatchedScriptList--",request,matchAppScriptList)
-//            browser.runtime.sendMessage({ from: "background", operate: "fetchMatchedScripts" }, (response) => {
-//                            matchAppScriptList = response.body;
-//                            console.log("fetchMatchedScriptList---fetchMatchedScripts--",response,"-res--", response.body)
-//                            sendResponse({ body: matchAppScriptList });
-//                        })
-            sendResponse({ body: matchAppScriptList });
+            browser.runtime.sendMessage({ from: "background", operate: "fetchMatchedScripts" }, (response) => {
+                            matchAppScriptList = response.body;
+                            console.log("fetchMatchedScriptList---fetchMatchedScripts--",response,"-res--", response.body)
+                            sendResponse({ body: matchAppScriptList });
+                        })
+//            sendResponse({ body: matchAppScriptList });
         }else if ("setScriptActive" == request.operate){
             browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid,active: request.active }, function(response) {
                 sendResponse(response);
