@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		58232D49276C37AC0015C914 /* stay-darkmode.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58232D48276C37AC0015C914 /* stay-darkmode.user.js */; };
 		58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD32764837F00AB334B /* gmlogtest.user.js */; };
 		58410FD62766005400AB334B /* stay-google.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD52766005400AB334B /* stay-google.user.js */; };
 		58410FD82766015000AB334B /* stay-baidu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD72766015000AB334B /* stay-baidu.user.js */; };
@@ -154,7 +153,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		58232D48276C37AC0015C914 /* stay-darkmode.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "stay-darkmode.user.js"; sourceTree = "<group>"; };
 		58410FD32764837F00AB334B /* gmlogtest.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gmlogtest.user.js; sourceTree = "<group>"; };
 		58410FD52766005400AB334B /* stay-google.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-google.user.js"; sourceTree = "<group>"; };
 		58410FD72766015000AB334B /* stay-baidu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-baidu.user.js"; sourceTree = "<group>"; };
@@ -607,7 +605,6 @@
 		58F7F4D72746281300270873 /* userscript */ = {
 			isa = PBXGroup;
 			children = (
-				58232D48276C37AC0015C914 /* stay-darkmode.user.js */,
 				58F7F4D8274629AF00270873 /* stay-zhihu.user.js */,
 				58F7F4EE274B7C7700270873 /* newuserscript.user.js */,
 				58410FD32764837F00AB334B /* gmlogtest.user.js */,
@@ -1092,7 +1089,6 @@
 				58410FDC276878C700AB334B /* stay-csdn.user.js in Resources */,
 				8410C844275E028A005531EC /* javascript.js in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
-				58232D49276C37AC0015C914 /* stay-darkmode.user.js in Resources */,
 				58410FE8276881DE00AB334B /* stay-tieba.user.js in Resources */,
 				84C1ED48276C637200651DF9 /* scriptManager.sqlite in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
