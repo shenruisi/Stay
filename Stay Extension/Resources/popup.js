@@ -23,7 +23,8 @@ Object.prototype.setInnerHtml = function (value) {
     this.innerHTML = value
 }
 
-let scriptStateList = [],
+let browserRunUrl = "",
+    scriptStateList = [],
     scriptStateListDom,
     scriptConsole = [],
     logIsFetched = false,
@@ -48,78 +49,71 @@ let scriptStateList = [],
     logState = {error:"error-log", log:""};
 
 
-//const $_matchesCheck = (userLibraryScript, url) => {
-//    let matched = false;
-//    userLibraryScript.matches.forEach((match) => { //check matches
-//        let matchPattern = new window.MatchPattern(match);
-//        if (matchPattern.doMatch(url)) {
-//            matched = true;
-//        }
-//    });
-//    if (matched) {
-//        if (userLibraryScript.includes.length > 0) {
-//            matched = false;
-//            userLibraryScript.includes.forEach((include) => {
-//                let matchPattern = new window.MatchPattern(include);
-//                if (matchPattern.doMatch(url)) {
-//                    matched = true;
-//                }
-//            });
-//        }
-//
-//
-//        userLibraryScript.excludes.forEach((exclude) => {
-//            let matchPattern = new window.MatchPattern(exclude);
-//            if (matchPattern.doMatch(url)) {
-//                matched = false;
-//            }
-//        });
-//    }
-//
-//    return matched;
-//}
-
-(function(){
-    
-    
-})
-
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if ("background" == request.from){
-        if ("setMatchedScripts" == request.operate) {
-            console.log("background --- setMatchedScripts====",request);
-            sendResponse({ body: "ok" });
+const matchesCheck = (userLibraryScript, url) => {
+    let matched = false;
+    userLibraryScript.matches.forEach((match) => { //check matches
+        let matchPattern = new window.MatchPattern(match);
+        if (matchPattern.doMatch(url)) {
+            matched = true;
         }
-        return true;
+    });
+    if (matched) {
+        if (userLibraryScript.includes.length > 0) {
+            matched = false;
+            userLibraryScript.includes.forEach((include) => {
+                let matchPattern = new window.MatchPattern(include);
+                if (matchPattern.doMatch(url)) {
+                    matched = true;
+                }
+            });
+        }
+
+
+        userLibraryScript.excludes.forEach((exclude) => {
+            let matchPattern = new window.MatchPattern(exclude);
+            if (matchPattern.doMatch(url)) {
+                matched = false;
+            }
+        });
     }
-    
-})
+
+    return matched;
+}
 
 /**
  * 获取当前网页可匹配的脚本
  */
 function fetchMatchedScriptList(){
-     browser.runtime.sendMessage({from:"popup", operate: "fetchMatchedScriptList"},(response)=>{
-         if(response && response.body && response.body.length > 0){
-             scriptStateList = response.body;
-             // scriptStateList.push({ uuid: "324353423354", version: "1.0.0", active: true, name: "scriptContent.js", author: "Stay offical", description:"防止跳转知乎App，自动展开知乎回答"})
- //             document.querySelector(".placeholder").innerHTML = JSON.stringify(scriptStateList);
-         }else{
- //             document.querySelector(".placeholder").innerHTML = "null"
-         }
-         renderScriptContent(scriptStateList);
-     })
-
-//    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
-//        let userLibraryScripts = JSON.parse(response.body);
-//        userLibraryScripts.forEach((userLibraryScript) => {
-//            console.log(userLibraryScript, "-----location.href===", location.href);
-//            if ($_matchesCheck(userLibraryScript, new URL(location.href))) {
-//                scriptStateList.push(userLibraryScript);
-//            }
-//        });
-//        renderScriptContent(scriptStateList);
-//    });
+//     browser.runtime.sendMessage({from:"popup", operate: "fetchMatchedScriptList"},(response)=>{
+//         if(response && response.body && response.body.length > 0){
+//             scriptStateList = response.body;
+//             // scriptStateList.push({ uuid: "324353423354", version: "1.0.0", active: true, name: "scriptContent.js", author: "Stay offical", description:"防止跳转知乎App，自动展开知乎回答"})
+// //             document.querySelector(".placeholder").innerHTML = JSON.stringify(scriptStateList);
+//         }else{
+// //             document.querySelector(".placeholder").innerHTML = "null"
+//         }
+//         renderScriptContent(scriptStateList);
+//     })
+//
+    browser.tabs.query({
+        active: true,
+        currentWindow: true
+    }, function(tabs) {
+        var tab = tabs[0];
+        browserRunUrl = tab.url;
+        console.log("browserRunUrl-start---",browserRunUrl)
+        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
+            let userLibraryScripts = JSON.parse(response.body);
+            console.log(userLibraryScripts)
+            userLibraryScripts.forEach((userLibraryScript) => {
+                let urlParse = new URL(browserRunUrl)
+                if (matchesCheck(userLibraryScript, urlParse)) {
+                    scriptStateList.push(userLibraryScript);
+                }
+            });
+            renderScriptContent(scriptStateList);
+        });
+    });
 }
 
 /**
