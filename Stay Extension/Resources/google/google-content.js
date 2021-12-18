@@ -12,7 +12,8 @@ function banBottomBanner(){
 }
 
 function replaceDirectUrl(){
-    let divs = document.querySelectorAll('div[data-hveid]');
+    let divs = document.querySelectorAll('div[data-sokoban-grid]');
+//    console.log(divs);
     for (var i = 0; i < divs.length; i++){
         let div = divs[i];
         let a = div.querySelector('a');
@@ -20,9 +21,9 @@ function replaceDirectUrl(){
         if (a
             &&a.href
             &&(ZHIHU_REG.test(a.href) || TIEBA_REG.test(a.href) || BILIBILI_REG.test(a.href))){
-            console.log(a.href);
+//            console.log(a.href);
             let newUrl = $noJumpUrl($uri(a.href).host,a.href);
-            console.log(newUrl);
+//            console.log(newUrl);
             div.onclick = function(){
                 event.preventDefault();
                 event.stopPropagation();
