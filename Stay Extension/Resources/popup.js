@@ -39,30 +39,76 @@ let scriptStateList = [],
             '</div>'].join(''),
     scriptState = ['start', 'stop'],
     scriptLogDomTmp = [
+            '<div class="console-header">',
+            '<div class="console-time">{time}</div>',
             '<div class="console-name">{name}</div>',
+            '</div>',
             '<div class="console-con">{message}</div>'
             ].join(''),
     logState = {error:"error-log", log:""};
 
 
+//const $_matchesCheck = (userLibraryScript, url) => {
+//    let matched = false;
+//    userLibraryScript.matches.forEach((match) => { //check matches
+//        let matchPattern = new window.MatchPattern(match);
+//        if (matchPattern.doMatch(url)) {
+//            matched = true;
+//        }
+//    });
+//    if (matched) {
+//        if (userLibraryScript.includes.length > 0) {
+//            matched = false;
+//            userLibraryScript.includes.forEach((include) => {
+//                let matchPattern = new window.MatchPattern(include);
+//                if (matchPattern.doMatch(url)) {
+//                    matched = true;
+//                }
+//            });
+//        }
+//
+//
+//        userLibraryScript.excludes.forEach((exclude) => {
+//            let matchPattern = new window.MatchPattern(exclude);
+//            if (matchPattern.doMatch(url)) {
+//                matched = false;
+//            }
+//        });
+//    }
+//
+//    return matched;
+//}
+
 (function(){
 
+    
 })
 
 /**
  * 获取当前网页可匹配的脚本
  */
 function fetchMatchedScriptList(){
-    browser.runtime.sendMessage({from:"popup", operate: "fetchMatchedScriptList"},(response)=>{
-        if(response && response.body && response.body.length > 0){
-            scriptStateList = response.body;
-            // scriptStateList.push({ uuid: "324353423354", version: "1.0.0", active: true, name: "scriptContent.js", author: "Stay offical", description:"防止跳转知乎App，自动展开知乎回答"})
-//             document.querySelector(".placeholder").innerHTML = JSON.stringify(scriptStateList);
-        }else{
-//             document.querySelector(".placeholder").innerHTML = "null"
-        }
-        renderScriptContent(scriptStateList);
-    })
+     browser.runtime.sendMessage({from:"popup", operate: "fetchMatchedScriptList"},(response)=>{
+         if(response && response.body && response.body.length > 0){
+             scriptStateList = response.body;
+             // scriptStateList.push({ uuid: "324353423354", version: "1.0.0", active: true, name: "scriptContent.js", author: "Stay offical", description:"防止跳转知乎App，自动展开知乎回答"})
+ //             document.querySelector(".placeholder").innerHTML = JSON.stringify(scriptStateList);
+         }else{
+ //             document.querySelector(".placeholder").innerHTML = "null"
+         }
+         renderScriptContent(scriptStateList);
+     })
+
+//    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
+//        let userLibraryScripts = JSON.parse(response.body);
+//        userLibraryScripts.forEach((userLibraryScript) => {
+//            console.log(userLibraryScript, "-----location.href===", location.href);
+//            if ($_matchesCheck(userLibraryScript, new URL(location.href))) {
+//                scriptStateList.push(userLibraryScript);
+//            }
+//        });
+//        renderScriptContent(scriptStateList);
+//    });
 }
 
 /**
@@ -147,9 +193,11 @@ function renderScriptConsole(datas) {
             if(item.logList && item.logList.length>0){
                 item.logList.forEach(logMsg=>{
                     let logType = logMsg.msgType ? logMsg.msgType:"log"
+                    let dateTime = logMsg && logMsg.time ? logMsg.time:""
                     let data = {
                         uuid: item.uuid,
                         name: item.name,
+                        time: dateTime,
                         //Fixed wrong variable logMsg.
                         msgType: logType,
                         message: logMsg.msg

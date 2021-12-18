@@ -232,6 +232,18 @@ body {
     font-size: 13px;
     line-height: 17px;
 }
+.console-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.console-time{
+    text-align: left;
+    white-space: nowrap;
+    color: rgba(0,0,0,0.5);
+    font-size: 13px;
+    padding-bottom: 4px;
+}
 .console-name{
     /* display: flex; */
     /* flex: auto 1; */
@@ -299,6 +311,9 @@ body {
         background:rgb(28,28,30);
     }
     .console-name{
+        color: #c5c5c5;
+    }
+    .console-time{
         color: #c5c5c5;
     }
     .console-con{
