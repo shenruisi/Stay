@@ -1,10 +1,12 @@
 // ==UserScript==
-// @name         暗黑模式
+// @name         暗黑模式test
 // @namespace    http://stay.app/
 // @version      1.0
 // @description  支持浏览器网页暗黑模式
 // @author       Stay²
 // @match        *://*/*
+// @include      http://*
+// @include      https://*
 // @grant        GM_log
 // ==/UserScript==
 

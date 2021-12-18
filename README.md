@@ -17,10 +17,10 @@ Stay²需要运行在iOS 15及以上。
 - 本地脚本管理
 
 ## 申请提交到内置脚本库
-如果您是一名开发者或者是浏览器扩展脚本的资深用户，欢迎通过来申请提交到内置脚本库，这样您的脚本就可以在Stay²的新版本中被更多的用户看到。
+如果您是一名开发者或者是浏览器扩展脚本的资深用户，欢迎通过[Embed Script Request](https://github.com/shenruisi/Stay/issues/new?assignees=shenruisi&labels=embed+script+request&template=Embed-Script-Request.yml&title=%5BEmbed+Script+Request%5D%3A+)来申请提交到内置脚本库，这样您的脚本就可以在Stay²的新版本中被更多的用户看到。
 
-## Stay² API
-
+## Stay API
+[API Wiki](https://github.com/shenruisi/Stay/wiki/Stay-API-Reference)
 
 ## 许可证
 [MPL](./LICENSE)

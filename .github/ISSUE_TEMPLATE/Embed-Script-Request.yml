@@ -1,6 +1,7 @@
 name: Embed Script Request
 description: Submit an embed iOS Safari extension script
 title: "[Embed Script Request]: "
+labels: ["embed script request"]
 assignees:
   - shenruisi
 body:
@@ -14,7 +15,33 @@ body:
       label: Role
       description: You are the creator of this script or not?
       options:
-        - Creator (Default)
+        - Creator
         - Collector
     validations:
       required: true
+  - type: input
+    id: description
+    attributes:
+      label: Description
+      description: What is the main function of this script?
+      placeholder: ex. Dark mode for the website on iOS Safari.
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Script content
+      description: Fill the script here.
+      placeholder: Stay script, Tampermonkey script or Native javascript.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source page
+      description: If you are not the creator of the script, please tell us where did you collect it?
+      placeholder: ex. https://openuserjs.org
+    validations:
+      required: false   
+      
+   
