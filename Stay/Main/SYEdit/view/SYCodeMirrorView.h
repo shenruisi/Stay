@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)insertContent;
 - (void)updateContent;
+- (void)undo;
+- (void)redo;
+- (void)clearAll;
+
 
 
 @end

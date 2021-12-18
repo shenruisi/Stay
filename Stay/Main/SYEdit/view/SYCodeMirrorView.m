@@ -42,9 +42,10 @@
         _wkwebView.allowsBackForwardNavigationGestures = YES;
         
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentGet"];
-  
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
-
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"revocationAction"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"forwardAction"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"clearAction"];
         NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
 
         NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:htmlString]];
@@ -93,6 +94,23 @@
                [self initScrpitContent:false];
            }
         }
+    }];
+}
+
+- (void)undo {
+    [_wkwebView evaluateJavaScript:@"revocationAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+      
+    }];
+}
+- (void)redo {
+    [_wkwebView evaluateJavaScript:@"forwardAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+    
+    }];
+}
+
+- (void)clearAll {
+    [_wkwebView evaluateJavaScript:@"clearAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+
     }];
 }
 

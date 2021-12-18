@@ -28,9 +28,27 @@
     self.navigationItem.titleView = label;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self createDetailView];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
+
     // Do any additional setup after loading the view.
 }
 
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+ 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.tabBarController.tabBar.hidden = NO;
+}
+
+- (void)scriptSaveSuccess:(id)sender{
+    self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self createDetailView];
+}
 
 - (void)createDetailView{
     
@@ -320,6 +338,7 @@
     cer.uuid = self.script.uuid;
     cer.userScript = self.script;
     cer.isEdit = true;
+    cer.isSearch = self.isSearch;
     [self.navigationController pushViewController:cer animated:true];
 }
 

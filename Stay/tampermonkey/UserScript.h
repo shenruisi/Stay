@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *parsedContent;
 @property (nonatomic, copy) NSString *sourcePage;
 
+@property (nonatomic, copy) NSDate *updateTime;
 @property (nonatomic, assign) BOOL active;
 
 @property (nonatomic, copy) NSArray<NSString *> *requireUrls;
