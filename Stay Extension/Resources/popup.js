@@ -80,7 +80,18 @@ let scriptStateList = [],
 //}
 
 (function(){
+    
+    
+})
 
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if ("background" == request.from){
+        if ("setMatchedScripts" == request.operate) {
+            console.log("background --- setMatchedScripts====",request);
+            sendResponse({ body: "ok" });
+        }
+        return true;
+    }
     
 })
 

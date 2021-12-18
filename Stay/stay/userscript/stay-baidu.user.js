@@ -7,7 +7,7 @@
 // @match        *://*.baidu.com/*
 // @match        *://*.zhihu.com/R_E_D_I_R_E_C_T/*
 // @match        *://*.xiaohongshu.com/R_E_D_I_R_E_C_T/*
-// @exclude      *://tieba.baidu.com/*
+// @exclude      (http|https)://tieba.baidu.com/*
 // @run-at       document-start
 // @require      stay://vendor/stay-taskloop.js
 // ==/UserScript==
