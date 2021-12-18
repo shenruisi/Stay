@@ -9,8 +9,8 @@
     function createGMApisWithUserScript(grants,uuid){
        
         let source = 'const _uuid = "' + uuid + '";\n\n';
-        source += 'let GM = {};\n\n';
-        source += 'let __stroge = await _fillStroge();\n\n';
+//        source += 'let GM = {};\n\n';
+//        source += 'let __stroge = await _fillStroge();\n\n';
         if (grants.includes('GM_listValues')) {
             source += GM_listValues.toString() + ';\n\n';
         }

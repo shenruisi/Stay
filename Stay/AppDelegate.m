@@ -24,15 +24,6 @@
 }
 
 
+//- applicationDidBecomeActive:
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
-        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"]];
-        for(int i = 0; i < datas.count; i++) {
-            NSDictionary *dic = datas[i];
-            [[DataManager shareManager] updateScrpitStatus:[dic[@"active"] intValue] numberId:dic[@"uuid"]];
-        }
-    }
-}
 @end

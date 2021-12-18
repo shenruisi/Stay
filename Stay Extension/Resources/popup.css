@@ -213,6 +213,9 @@ body {
     padding-top: 40px;
     text-align: center;
 }
+.error-log .console-con{
+    color: #f81948;
+}
 .console-item{
     width: 100%;
     /* display: flex; */
@@ -228,6 +231,18 @@ body {
     color: #000000;
     font-size: 13px;
     line-height: 17px;
+}
+.console-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.console-time{
+    text-align: left;
+    white-space: nowrap;
+    color: rgba(0,0,0,0.5);
+    font-size: 13px;
+    padding-bottom: 4px;
 }
 .console-name{
     /* display: flex; */
@@ -296,6 +311,9 @@ body {
         background:rgb(28,28,30);
     }
     .console-name{
+        color: #c5c5c5;
+    }
+    .console-time{
         color: #c5c5c5;
     }
     .console-con{

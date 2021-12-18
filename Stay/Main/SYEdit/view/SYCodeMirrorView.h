@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) WKWebView *wkwebView;
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
+@property (nonatomic, assign) BOOL active;
 
 
 + (instancetype)shareCodeView;
@@ -23,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)insertContent;
 - (void)updateContent;
+- (void)undo;
+- (void)redo;
+- (void)clearAll;
+
 
 
 @end

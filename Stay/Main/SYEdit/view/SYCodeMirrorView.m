@@ -8,6 +8,7 @@
 #import "SYCodeMirrorView.h"
 #import "Tampermonkey.h"
 #import "DataManager.h"
+#import "NSString+Urlencode.h"
 
 @implementation SYCodeMirrorView
 
@@ -23,7 +24,6 @@
     return instance;
     
 }
-
 
 - (WKWebView *)wkwebView {
     if(_wkwebView == nil) {
@@ -42,10 +42,11 @@
         _wkwebView.allowsBackForwardNavigationGestures = YES;
         
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentGet"];
-  
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
-
-        NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"newTab" ofType:@"html"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"revocationAction"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"forwardAction"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"clearAction"];
+        NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
 
         NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:htmlString]];
         [_wkwebView loadData:data MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:[NSBundle mainBundle].resourceURL];
@@ -64,13 +65,14 @@
 - (void)insertContent{
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
-            NSLog(error.description);
             [self initScrpitContent:false];
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
-           if(userScript != nil) {
+           if(userScript != nil && userScript.name != nil) {
                [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                [self initScrpitContent:true];
+           } else {
+               [self initScrpitContent:false];
            }
 
         }
@@ -80,41 +82,47 @@
 - (void)updateContent{
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
-            NSLog(error.description);
             [self initScrpitContent:false];
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            userScript.uuid = self.uuid;
-           if(userScript != nil) {
+           userScript.active = self.active;
+           if(userScript != nil && userScript.name != nil) {
                [[DataManager shareManager] updateUserScript:userScript];
                [self initScrpitContent:true];
+           } else {
+               [self initScrpitContent:false];
            }
         }
     }];
 }
 
+- (void)undo {
+    [_wkwebView evaluateJavaScript:@"revocationAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+      
+    }];
+}
+- (void)redo {
+    [_wkwebView evaluateJavaScript:@"forwardAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+    
+    }];
+}
+
+- (void)clearAll {
+    [_wkwebView evaluateJavaScript:@"clearAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+
+    }];
+}
+
 - (void)changeContent:(NSString *) jsContent {
-    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
-    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n\\\n"];
-    NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",jsContent];
+    NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",[jsContent encodeString]];
     [_wkwebView evaluateJavaScript:script completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             NSLog(error.description);
         }
     }];
 }
-
-
 - (void)initScrpitContent:(BOOL)success{
-//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-//    NSMutableArray *array =  [[NSMutableArray alloc] init];
-//    for(int i = 0; i < self.datas.count; i++) {
-//        UserScript *scrpit = self.datas[i];
-//        [array addObject: [scrpit toDictionary]];
-//    }
-//    [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
-//    [groupUserDefaults synchronize];
     if(success) {
         NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];

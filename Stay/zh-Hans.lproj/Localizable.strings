@@ -18,3 +18,18 @@ settings.section.otherApps.fastclip="FastClip - 复制粘贴增强器";
 
 cancel="取消";
 settings.save="保存";
+settings.library="资料库";
+settings.search="搜索";
+settings.more="更多";
+settings.author="作者";
+settings.version="版本";
+settings.scriptContent="脚本详情";
+settings.sourcePage="来源";
+settings.descDetail="描述";
+settings.add="新增";
+settings.delete="删除";
+settings.create="创建";
+settings.newScript="新建脚本";
+
+
+

@@ -39,5 +39,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>","tabs","nativeMessaging"]
+    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging"]
 }

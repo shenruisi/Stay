@@ -185,24 +185,25 @@
         if (model.active) {
             return nil;
         }
-        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        UIContextualAction *addAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _results[indexPath.row];
             [[DataManager shareManager] insertToUserScriptnumberId:model.uuid];
             [[DataManager shareManager] updateLibScrpitStatus:1 numberId:model.uuid];
             [tableView setEditing:NO animated:YES];
             [self.tableView reloadData];
             [self initScrpitContent];
+            [self addScriptTips];
         }];
-        [deleteAction setTitle:@"Add"];
-        deleteAction.backgroundColor = RGB(182, 32, 224);
-        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+        [addAction setTitle:@"Add"];
+        addAction.backgroundColor = RGB(182, 32, 224);
+        return [UISwipeActionsConfiguration configurationWithActions:@[addAction]];
 
     } else {
         UserScript *model = _datas[indexPath.row];
         if (model.active) {
             return nil;
         }
-        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        UIContextualAction *addAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = _datas[indexPath.row];
             [[DataManager shareManager] insertToUserScriptnumberId:model.uuid];
             [[DataManager shareManager] updateLibScrpitStatus:1 numberId:model.uuid];
@@ -210,16 +211,27 @@
             [self reloadTableView];
             [self initScrpitContent];
             [self.tableView reloadData];
-        
+            [self addScriptTips];
+            
         }];
-        [deleteAction setTitle:@"Add"];
-        deleteAction.backgroundColor = RGB(182, 32, 224);
-        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+        [addAction setTitle:@"Add"];
+        addAction.backgroundColor = RGB(182, 32, 224);
+        return [UISwipeActionsConfiguration configurationWithActions:@[addAction]];
     }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
+}
+
+- (void)addScriptTips{
+    NSString *content = @"添加到资料库成功";
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSLog(@"点击了确认按钮");
+        }];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)initScrpitContent{

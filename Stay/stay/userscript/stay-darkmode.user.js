@@ -1,17 +1,17 @@
 // ==UserScript==
-// @name         Dark mode
-// @namespace    http://tampermonkey.net/
+// @name         暗黑模式
+// @namespace    http://stay.app/
 // @version      1.0
-// @description  use CSS filter Invert the whold website to dark mode
-// @author       Turbe
-// @include      http://*
-// @include      https://*
-// @match        http://*/*
-// @grant        none
+// @description  支持浏览器网页暗黑模式
+// @author       Stay²
+// @match        *://*/*
+// @grant        GM_log
 // ==/UserScript==
 
 (function () {
     'use strict';
+    // check in ifream at the website
+    var isInIframe = window.top !== window.self
     let root = document.querySelector(':root')
     let body = document.querySelector('body')
     let rootStyle = window.getComputedStyle(root)
@@ -19,11 +19,12 @@
     let bodyBg = bodyStyle.backgroundColor;
     let htmlBg = rootStyle.backgroundColor;
     let background = null
-    // html or body backgroundColor is white
-    if (htmlBg === 'rgba(0, 0, 0, 0)' || bodyBg === 'rgba(0, 0, 0, 0)'
-        || htmlBg === 'rgb(255, 255, 255)' || bodyBg === 'rgb(255, 255, 255)') {
+    GM_log("start")
+    console.log("start console->")
+    if (htmlBg === 'rgba(0, 0, 0, 0)' && bodyBg === 'rgba(0, 0, 0, 0)') {
+        // html or body backgroundColor is set, so to invertBgColor
         background = invertBgColor('rgba(0,0,0,1)');
-    } else if (htmlBg !== 'rgba(0, 0, 0, 0)' && htmlBg !== 'rgb(255, 255, 255)') {
+    } else if (htmlBg !== 'rgba(0, 0, 0, 0)') {
         // html backgroundColor is not white
         background = invertBgColor(htmlBg)
     } else {
@@ -44,23 +45,33 @@
         let invertedR = ~~(rNum ** (1 / gamma))
         let invertedG = ~~(gNum ** (1 / gamma))
         let invertedB = ~~(bNum ** (1 / gamma))
-        let newColor = `rgba(${invertedR},${invertedG},${invertedB},${a || opacity})`
+        let newColor = `rgba(${ invertedR }, ${ invertedG }, ${ invertedB }, ${ a || opacity})`
         return newColor
     }
 
-    let style = 
-    `
-    :root {
-        filter: invert(90%) hue-rotate(180deg);
-        background-color: ${background} !important;
+    let style = ""
+    if (isInIframe) {
+        style =
+        `
+            svg, img, video, canvas {
+                filter: hue-rotate(180deg) invert(100%);
+            }
+        `
+    } else {
+        style =
+        `
+            :root {
+                filter: invert(90%) hue-rotate(180deg);
+                background-color: ${background} !important;
+            }
+            svg, img, video, canvas {
+                filter: hue-rotate(180deg) invert(100%);
+            }
+        `
     }
-    svg, img, video, canvas {
-        filter: hue-rotate(180deg) invert(100%);
-    }
-    `
+
     let styleEle = document.createElement('style');
     styleEle.setAttribute("class","dark-mode")
     styleEle.textContent = style
     document.head.appendChild(styleEle)
 })();
-

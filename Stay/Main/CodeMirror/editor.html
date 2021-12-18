@@ -39,21 +39,20 @@
     myCodeMirror.setSize(innerWidth, innerHeight)
     myCodeMirror.refresh()
     function setCode(code) {
-        myCodeMirror.setValue(code);
+        myCodeMirror.setValue(decodeURIComponent(code));
     }
     function getCode() {
         window.webkit.messageHandlers.contentGet.postMessage(myCodeMirror.getValue());
     }
-<!--    window.webkit.messageHandlers.contentComplete.postMessage(null)-->
-        // var myTextArea = document.getElementById('myText');
-        // var myCodeMirror = CodeMirror.fromTextArea(myTextArea,{
-        //     value: "function myScript(){return 100;}\n",
-        //     mode: "javascript",
-        //     lineNumbers: true,
-        //     fullScreen: true
-        // });
-        // myCodeMirror.setSize(innerWidth, innerHeight)
-        // myCodeMirror.refresh()
+    function revocationAction() {
+        myCodeMirror.undo()
+    }
+    function forwardAction() {
+        myCodeMirror.redo()
+    }
+    function clearAction() {
+        myCodeMirror.setHistory({ undone: [], done: []});
+    }
 
 </script>
 
