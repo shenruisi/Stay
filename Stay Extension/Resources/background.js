@@ -37,9 +37,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     
     if ("bootstrap" == request.from || "iframe" == request.from){
         if ("fetchScripts" == request.operate){
-            console.log("background","fetchScripts");
+            console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
-                console.log("background","fetchScripts",response);
+                console.log("sendNativeMessage==", response.body);
                 sendResponse(response);
             });
             return true;
@@ -60,6 +60,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("setMatchedScripts" == request.operate){
             matchAppScriptList = request.matchScripts;
+            
+            console.log("setMatchedScripts request.matchScripts=",request.matchScripts)
             return true;
         }
     }
@@ -114,6 +116,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("cleanLog" == request.operate){
             gm_console = [];
         }else if ("fetchMatchedScriptList" == request.operate){
+            console.log("fetchMatchedScriptList--",request,matchAppScriptList)
+//            browser.runtime.sendMessage({ from: "background", operate: "fetchMatchedScripts" }, (response) => {
+//                            matchAppScriptList = response.body;
+//                            console.log("fetchMatchedScriptList---fetchMatchedScripts--",response,"-res--", response.body)
+//                            sendResponse({ body: matchAppScriptList });
+//                        })
             sendResponse({ body: matchAppScriptList });
         }else if ("setScriptActive" == request.operate){
             browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid,active: request.active }, function(response) {
