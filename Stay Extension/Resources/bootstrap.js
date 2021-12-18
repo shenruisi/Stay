@@ -26,8 +26,8 @@ const $_matchesCheck = (userLibraryScript,url) => {
         if (userLibraryScript.includes.length > 0){
             matched = false;
             userLibraryScript.includes.forEach((include)=>{
-                let matchPattern = new window.MatchPattern(include);
-                if (matchPattern.doMatch(url)){
+                let matchPattern = new RegExp(include);
+                if (matchPattern.test(url)){
                     matched = true;
                 }
             });
@@ -35,8 +35,8 @@ const $_matchesCheck = (userLibraryScript,url) => {
         
         
         userLibraryScript.excludes.forEach((exclude)=>{
-            let matchPattern = new window.MatchPattern(exclude);
-            if (matchPattern.doMatch(url)){
+            let matchPattern = new RegExp(exclude);
+            if (matchPattern.test(url)){
                 matched = false;
             }
         });
