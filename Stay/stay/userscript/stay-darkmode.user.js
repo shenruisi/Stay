@@ -1,11 +1,9 @@
 // ==UserScript==
-// @name         Dark mode
-// @namespace    http://tampermonkey.net/
+// @name         暗黑模式
+// @namespace    http://stay.app/
 // @version      1.0
-// @description  use CSS filter Invert the whold website to dark mode
-// @author       Turbe
-// @include      http://*
-// @include      https://*
+// @description  支持浏览器网页暗黑模式
+// @author       Stay²
 // @match        *://*/*
 // @grant        GM_log
 // ==/UserScript==
