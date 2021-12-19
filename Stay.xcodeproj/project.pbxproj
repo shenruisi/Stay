@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */; };
+		582F9DE4276F32B900C88135 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE3276F32B900C88135 /* base64.min.js */; };
 		58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD32764837F00AB334B /* gmlogtest.user.js */; };
 		58410FD62766005400AB334B /* stay-google.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD52766005400AB334B /* stay-google.user.js */; };
 		58410FD82766015000AB334B /* stay-baidu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD72766015000AB334B /* stay-baidu.user.js */; };
@@ -153,6 +155,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
+		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		58410FD32764837F00AB334B /* gmlogtest.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gmlogtest.user.js; sourceTree = "<group>"; };
 		58410FD52766005400AB334B /* stay-google.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-google.user.js"; sourceTree = "<group>"; };
 		58410FD72766015000AB334B /* stay-baidu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-baidu.user.js"; sourceTree = "<group>"; };
@@ -625,6 +629,8 @@
 		58F7F4E02746588600270873 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				582F9DE3276F32B900C88135 /* base64.min.js */,
+				582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */,
 				58F7F4E12746589C00270873 /* stay-taskloop.js */,
 				58F7F4E5274754B900270873 /* gm-apis-gen.js */,
 			);
@@ -1136,7 +1142,9 @@
 				58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */,
 				588973392722D74A00BE123E /* tieba-content.js in Resources */,
 				5876891A2719238000F834A4 /* manifest.json in Resources */,
+				582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */,
 				587689162719238000F834A4 /* _locales in Resources */,
+				582F9DE4276F32B900C88135 /* base64.min.js in Resources */,
 				5876891E2719238000F834A4 /* baidu-content.js in Resources */,
 				58F7F4DF27464E5100270873 /* convert2RegExp.js in Resources */,
 				587689242719238000F834A4 /* popup.js in Resources */,

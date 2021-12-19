@@ -100,15 +100,21 @@ function fetchMatchedScriptList(){
         browserRunUrl = tab.url;
         console.log("browserRunUrl-start---",browserRunUrl)
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
-            let userLibraryScripts = JSON.parse(response.body);
-            console.log(userLibraryScripts)
-            userLibraryScripts.forEach((userLibraryScript) => {
-                let urlParse = new URL(browserRunUrl)
-                if (matchesCheck(userLibraryScript, urlParse)) {
-                    scriptStateList.push(userLibraryScript);
-                }
-            });
-            renderScriptContent(scriptStateList);
+            try{
+                let userLibraryScripts = JSON.parse(response.body);
+                console.log(userLibraryScripts)
+                userLibraryScripts.forEach((userLibraryScript) => {
+                    let urlParse = new URL(browserRunUrl)
+                    console.log(userLibraryScript);
+                    if (matchesCheck(userLibraryScript, urlParse)) {
+                        scriptStateList.push(userLibraryScript);
+                    }
+                });
+                renderScriptContent(scriptStateList);
+            }catch(e){
+                console.log(e);
+            }
+            
         });
     });
 }
