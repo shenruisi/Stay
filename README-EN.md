@@ -5,7 +5,7 @@
 <p align="right"><a href="README-EN.md">中文</a> | EN</p>
 
 # Stay²
-Stay² is an open source iOS Safari extension. You can use Stay² to manage your local user script. Now Stay² support part of Tampermonkey script.  
+Stay² is an open source iOS Safari extension. You can use Stay² to manage your local user script. Now Stay² support part of Greasemonkey script.  
 
 [Jump to AppStore](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171).
 
