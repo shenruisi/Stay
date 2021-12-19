@@ -95,11 +95,8 @@ function fetchMatchedScriptList(){
 //         renderScriptContent(scriptStateList);
 //     })
 //
-    browser.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function(tabs) {
-        var tab = tabs[0];
+    browser.tabs.getSelected(null, (tab) => {
+//        var tab = tabs[0];
         browserRunUrl = tab.url;
         console.log("browserRunUrl-start---",browserRunUrl)
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
