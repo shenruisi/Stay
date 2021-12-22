@@ -49,6 +49,14 @@ let browserRunUrl = "",
     logState = {error:"error-log", log:""};
 
 
+//https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
+//Short code
+function matchRule(str, rule) {
+  var escapeRegex = (str) => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  return new RegExp("^" + rule.split("*").map(escapeRegex).join(".*") + "$").test(str);
+}
+
+
 const matchesCheck = (userLibraryScript, url) => {
     let matched = false;
     userLibraryScript.matches.forEach((match) => { //check matches
@@ -61,8 +69,7 @@ const matchesCheck = (userLibraryScript, url) => {
         if (userLibraryScript.includes.length > 0) {
             matched = false;
             userLibraryScript.includes.forEach((include) => {
-                let matchPattern = new RegExp(include);
-                if (matchPattern.test(url)) {
+                if (matchRule(url.href,include)) {
                     matched = true;
                 }
             });
@@ -70,8 +77,7 @@ const matchesCheck = (userLibraryScript, url) => {
 
 
         userLibraryScript.excludes.forEach((exclude) => {
-            let matchPattern = new RegExp(exclude);
-            if (matchPattern.test(url)) {
+            if (matchRule(url.href,exclude)) {
                 matched = false;
             }
         });
