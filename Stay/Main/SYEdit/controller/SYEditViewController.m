@@ -11,9 +11,10 @@
 #import "DataManager.h"
 
 @interface SYEditViewController ()
-@property (nonatomic, strong) WKWebView *wkwebView;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @property (nonatomic, strong) UIView *componetView;
+@property (nonatomic, strong) UIButton *backBtn;
+@property (nonatomic, strong) UIButton *onBtn;
 
 @end
 
@@ -38,15 +39,18 @@
 
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveSuccess:) name:@"saveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveError:) name:@"saveError" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reDoHistoryChange:) name:@"reDoHistoryChange" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDoHistoryChange:) name:@"onDoHistoryChange" object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShowAction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHideAction:) name:UIKeyboardWillHideNotification object:nil];
     [self createView];
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 45;
     if(!self.isSearch) {
-        [[SYCodeMirrorView shareCodeView] clearAll];
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
+    [[SYCodeMirrorView shareCodeView] clearAll];
 
     // Do any additional setup after loading the view.
 }
@@ -68,13 +72,25 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"saveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"saveError" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reDoHistoryChange" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onDoHistoryChange" object:nil];
+
+
+}
+
+- (void)reDoHistoryChange:(NSNotification*) notification{
+    NSString *haveHistory =  [notification object];
+    self.backBtn.enabled = [haveHistory isEqual:@"true"];
+}
+- (void)onDoHistoryChange:(NSNotification*) notification{
+    NSString *haveHistory =  [notification object];
+    self.onBtn.enabled = [haveHistory isEqual:@"true"];
 }
 
 - (void)keyboardShowAction:(NSNotification*)sender{
     NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
     CGRect endFrame = [endFrameValue CGRectValue];
     self.componetView.bottom = endFrame.origin.y - 10;
-
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
     self.componetView.bottom = kScreenHeight - 45;
@@ -112,7 +128,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    [self.wkwebView endEditing:YES];
+    self.componetView.bottom = kScreenHeight - 45;
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
@@ -144,20 +160,22 @@
         _componetView.layer.cornerRadius = 12;
         _componetView.layer.borderWidth = 0.5;
         _componetView.layer.borderColor = [RGB(216, 216, 216) CGColor];
-        UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        backBtn.frame = CGRectMake(0, 0, 31, 23);
-        [backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
-        [backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
-        backBtn.centerY = 22.5;
-        backBtn.left = 31;
-        [_componetView addSubview:backBtn];
-        UIButton *onBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        onBtn.frame = CGRectMake(0, 0, 31, 23);
-        [onBtn setImage:[UIImage imageNamed:@"on"] forState:UIControlStateNormal];
-        [onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
-        onBtn.centerY = 22.5;
-        onBtn.left = 83;
-        [_componetView addSubview:onBtn];
+        _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _backBtn.frame = CGRectMake(0, 0, 31, 23);
+        _backBtn.enabled = false;
+        [_backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+        [_backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
+        _backBtn.centerY = 22.5;
+        _backBtn.left = 31;
+        [_componetView addSubview:_backBtn];
+        _onBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _onBtn.frame = CGRectMake(0, 0, 31, 23);
+        _onBtn.enabled = false;
+        [_onBtn setImage:[UIImage imageNamed:@"on"] forState:UIControlStateNormal];
+        [_onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
+        _onBtn.centerY = 22.5;
+        _onBtn.left = 83;
+        [_componetView addSubview:_onBtn];
         
         UIButton *pasteLabelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         pasteLabelBtn.frame = CGRectMake(0, 0, 120, 24);

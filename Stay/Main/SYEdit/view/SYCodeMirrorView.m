@@ -41,12 +41,13 @@
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;
         _wkwebView.allowsBackForwardNavigationGestures = YES;
-    
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentGet"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"revocationAction"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"forwardAction"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"clearAction"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"reDoHistoryChange"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"onDoHistoryChange"];
         NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
 
         NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:htmlString]];
@@ -60,6 +61,10 @@
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
     if([message.name isEqualToString:@"contentGet"]){
         self.content = message.body;
+    } else if([message.name isEqualToString:@"reDoHistoryChange"]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"reDoHistoryChange" object:message.body];
+    } else if([message.name isEqualToString:@"onDoHistoryChange"]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"onDoHistoryChange" object:message.body];
     }
 }
 
@@ -105,7 +110,7 @@
 }
 - (void)redo {
     [_wkwebView evaluateJavaScript:@"forwardAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
-    
+        
     }];
 }
 
@@ -114,6 +119,13 @@
 
     }];
 }
+
+- (void)blur {
+    [_wkwebView evaluateJavaScript:@"blur()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+
+    }];
+}
+
 
 - (void)changeContent:(NSString *) jsContent {
     NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",[jsContent encodeString]];
