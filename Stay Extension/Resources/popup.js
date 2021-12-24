@@ -10,11 +10,9 @@ String.prototype.bool = function () {
 }
 Object.prototype.hide = function () {
     this.style.display = "none"
-    // this.style.transition = "background 3s ease-in"
 }
 Object.prototype.show = function () {
     this.style.display = "block"
-    // this.style.transition = "background 3s ease-in"
 }
 Object.prototype.cleanInnerHTML = function () {
     this.innerHTML = "";
@@ -31,7 +29,7 @@ let browserRunUrl = "",
     scriptConsoleDom,
     scriptDomTmp = [
             '<div class="info-case">',
-            '<div class="title">{name}</div>',
+            '<div class="title">{name}<span>{status}</span></div>',
             '<div class="name">{author}</div>',
             '<div class="desc">{description}</div>',
             '</div>',
@@ -74,8 +72,6 @@ const matchesCheck = (userLibraryScript, url) => {
                 }
             });
         }
-
-
         userLibraryScript.excludes.forEach((exclude) => {
             if (matchRule(url.href,exclude)) {
                 matched = false;
@@ -90,28 +86,13 @@ const matchesCheck = (userLibraryScript, url) => {
  * 获取当前网页可匹配的脚本
  */
 function fetchMatchedScriptList(){
-//     browser.runtime.sendMessage({from:"popup", operate: "fetchMatchedScriptList"},(response)=>{
-//         if(response && response.body && response.body.length > 0){
-//             scriptStateList = response.body;
-//             // scriptStateList.push({ uuid: "324353423354", version: "1.0.0", active: true, name: "scriptContent.js", author: "Stay offical", description:"防止跳转知乎App，自动展开知乎回答"})
-// //             document.querySelector(".placeholder").innerHTML = JSON.stringify(scriptStateList);
-//         }else{
-// //             document.querySelector(".placeholder").innerHTML = "null"
-//         }
-//         renderScriptContent(scriptStateList);
-//     })
-//
     browser.tabs.getSelected(null, (tab) => {
-//        var tab = tabs[0];
         browserRunUrl = tab.url;
-        console.log("browserRunUrl-start---",browserRunUrl)
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
             try{
                 let userLibraryScripts = JSON.parse(response.body);
-                console.log(userLibraryScripts)
                 userLibraryScripts.forEach((userLibraryScript) => {
                     let urlParse = new URL(browserRunUrl)
-                    console.log(userLibraryScript);
                     if (matchesCheck(userLibraryScript, urlParse)) {
                         scriptStateList.push(userLibraryScript);
                     }
@@ -178,7 +159,6 @@ window.onload=function(){
             let active = target.getAttribute("active");
             let uuid = target.getAttribute("uuid");
             console.log("active= ", active, ", uuid=", uuid, ", was clicked!");
-//            document.querySelector(".placeholder").innerHTML ="active= "+active +", uuid="+ uuid+ ", was clicked!";
             handleScriptActive(uuid, active.bool());
             return;
         }
@@ -244,6 +224,7 @@ function renderScriptContent(datas) {
         document.getElementById("dataNull").style.display = "none";
         scriptList.forEach(function (item, idnex, array) {
             var data = item; 
+            data.status = item.active ? "运行中" : "已停止"
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
@@ -272,7 +253,7 @@ function handleScriptActive(uuid, active) {
         }, (response) => {
             console.log("setScriptActive response,",response)
         })
-        // todo 改变数据active状态
+        // 改变数据active状态
         scriptStateList.forEach(function (item, index) {
             if(uuid == item.uuid){
                 item.active = !active
@@ -293,12 +274,9 @@ function handleTabAction(target, type) {
         document.getElementsByClassName("active-tab")[0].classList.remove("active-tab"); // 删除之前已选中tab的样式
         target.classList.add('active-tab'); // 给当前选中tab添加样式
         if(type == 1){
-            // document.querySelector(".content-container .placeholder").innerHTML = "match tab8888888";
             scriptStateListDom.show();
             scriptConsoleDom.hide();
         }else{
-            
-            // document.querySelector(".content-container .placeholder").innerHTML = "console tab8888888";
             scriptStateListDom.hide();
             scriptConsoleDom.show();
             fetchMatchedScriptConsole()
