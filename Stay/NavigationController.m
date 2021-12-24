@@ -16,8 +16,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
+//    self.navigationController.navigationBar.tintColor = RGB(182, 32, 224);
+//    self.navigationController.navigationItem.titleView.tintColor =
+//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : RGB(182, 32, 224)}];
 
 //    self.navigationBar.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view.

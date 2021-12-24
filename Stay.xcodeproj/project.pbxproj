@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		58232D49276C37AC0015C914 /* stay-darkmode.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58232D48276C37AC0015C914 /* stay-darkmode.user.js */; };
+		582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */; };
+		582F9DE4276F32B900C88135 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE3276F32B900C88135 /* base64.min.js */; };
 		58410FD42764837F00AB334B /* gmlogtest.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD32764837F00AB334B /* gmlogtest.user.js */; };
 		58410FD62766005400AB334B /* stay-google.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD52766005400AB334B /* stay-google.user.js */; };
 		58410FD82766015000AB334B /* stay-baidu.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FD72766015000AB334B /* stay-baidu.user.js */; };
@@ -154,7 +155,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		58232D48276C37AC0015C914 /* stay-darkmode.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "stay-darkmode.user.js"; sourceTree = "<group>"; };
+		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
+		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		58410FD32764837F00AB334B /* gmlogtest.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gmlogtest.user.js; sourceTree = "<group>"; };
 		58410FD52766005400AB334B /* stay-google.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-google.user.js"; sourceTree = "<group>"; };
 		58410FD72766015000AB334B /* stay-baidu.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-baidu.user.js"; sourceTree = "<group>"; };
@@ -607,7 +609,6 @@
 		58F7F4D72746281300270873 /* userscript */ = {
 			isa = PBXGroup;
 			children = (
-				58232D48276C37AC0015C914 /* stay-darkmode.user.js */,
 				58F7F4D8274629AF00270873 /* stay-zhihu.user.js */,
 				58F7F4EE274B7C7700270873 /* newuserscript.user.js */,
 				58410FD32764837F00AB334B /* gmlogtest.user.js */,
@@ -628,6 +629,8 @@
 		58F7F4E02746588600270873 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				582F9DE3276F32B900C88135 /* base64.min.js */,
+				582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */,
 				58F7F4E12746589C00270873 /* stay-taskloop.js */,
 				58F7F4E5274754B900270873 /* gm-apis-gen.js */,
 			);
@@ -1092,7 +1095,6 @@
 				58410FDC276878C700AB334B /* stay-csdn.user.js in Resources */,
 				8410C844275E028A005531EC /* javascript.js in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
-				58232D49276C37AC0015C914 /* stay-darkmode.user.js in Resources */,
 				58410FE8276881DE00AB334B /* stay-tieba.user.js in Resources */,
 				84C1ED48276C637200651DF9 /* scriptManager.sqlite in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
@@ -1140,7 +1142,9 @@
 				58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */,
 				588973392722D74A00BE123E /* tieba-content.js in Resources */,
 				5876891A2719238000F834A4 /* manifest.json in Resources */,
+				582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */,
 				587689162719238000F834A4 /* _locales in Resources */,
+				582F9DE4276F32B900C88135 /* base64.min.js in Resources */,
 				5876891E2719238000F834A4 /* baidu-content.js in Resources */,
 				58F7F4DF27464E5100270873 /* convert2RegExp.js in Resources */,
 				587689242719238000F834A4 /* popup.js in Resources */,
@@ -1367,7 +1371,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -1381,7 +1385,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1399,7 +1403,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -1413,7 +1417,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1434,15 +1438,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
+				CURRENT_PROJECT_VERSION = 13;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Stay;
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay²";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
@@ -1456,7 +1460,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1477,15 +1481,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
+				CURRENT_PROJECT_VERSION = 13;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Stay;
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay²";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
@@ -1499,7 +1503,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
