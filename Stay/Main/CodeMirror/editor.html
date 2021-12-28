@@ -38,6 +38,7 @@
 
     myCodeMirror.setSize(innerWidth, innerHeight)
     myCodeMirror.refresh()
+    window.webkit.messageHandlers.loadSuccess.postMessage("loadViewSuccess");
     function setCode(code) {
         myCodeMirror.setValue(decodeURIComponent(code));
     }

@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL active;
 
 
-+ (instancetype)shareCodeView;
+//+ (instancetype)shareCodeView;
 
 - (void)changeContent:(NSString *) jsContent;
 
