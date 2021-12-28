@@ -1,3 +1,6 @@
+/**
+ Extension internal iframe, prevent from app jumping.
+ */
 const $_res = (name) => {
     return browser.runtime.getURL(name);
 }
