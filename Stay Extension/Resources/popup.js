@@ -24,7 +24,9 @@ Object.prototype.setInnerHtml = function (value) {
 let browserRunUrl = "",
     scriptStateList = [],
     scriptStateListDom,
+    logNotifyDom,
     scriptConsole = [],
+    showLogNotify = false,
     logIsFetched = false,
     scriptConsoleDom,
     scriptDomTmp = [
@@ -98,6 +100,8 @@ function fetchMatchedScriptList(){
                     }
                 });
                 renderScriptContent(scriptStateList);
+                fetchMatchedScriptConsole();
+
             }catch(e){
                 console.log(e);
             }
@@ -107,20 +111,47 @@ function fetchMatchedScriptList(){
 }
 
 /**
- * 获取控制台日志
+ * 获取控制台日志并渲染
  */
-function fetchMatchedScriptConsole(){
-    if (logIsFetched){
-        renderScriptConsole(scriptConsole);
-        return;
+function fetchAndRenderConsoleLog(){
+    if (!logIsFetched){
+        fetchMatchedScriptConsole()
     }
-    browser.runtime.sendMessage({from: "popup", operate: "fetchMatchedScriptLog"},(response)=>{
+    renderScriptConsole(scriptConsole);
+}
+
+
+function fetchMatchedScriptConsole(){
+    browser.runtime.sendMessage({ from: "popup", operate: "fetchMatchedScriptLog" }, (response) => {
         logIsFetched = true;
-        if(response && response.body && response.body.length > 0){
-            scriptConsole = response.body
-            renderScriptConsole(response.body);
-        }else{
-            scriptConsoleDom.cleanInnerHTML();
+        if (response && response.body && response.body.length > 0) {
+            response.body.forEach(item => {
+                if (item.logList && item.logList.length > 0) {
+                    item.logList.forEach(logMsg => {
+                        let logType = logMsg.msgType ? logMsg.msgType : "log"
+                        let dateTime = logMsg && logMsg.time ? logMsg.time : ""
+                        let data = {
+                            uuid: item.uuid,
+                            name: item.name,
+                            time: dateTime,
+                            //Fixed wrong variable logMsg.
+                            msgType: logType,
+                            message: logMsg.msg
+                        };
+                        scriptConsole.push(data)
+                    })
+                }
+            })
+            if (!showLogNotify && scriptConsole.length>0) {
+                showLogNotify = true
+                logNotifyDom.show()
+                let count = scriptConsole.length
+                count = count>99?"99+":count
+                logNotifyDom.setInnerHtml(count)
+            }
+
+        } else {
+            scriptConsole = [];
         }
     })
 }
@@ -136,6 +167,7 @@ function showNullData(message){
 
 window.onload=function(){
     let self = this;
+    logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
     fetchMatchedScriptList()
@@ -180,30 +212,18 @@ String.prototype.bool = function () {
  */
 function renderScriptConsole(datas) {
     const scriptLogList = datas;
+    console.log("datas===", datas)
     scriptConsoleDom.cleanInnerHTML();
     if(scriptLogList && scriptLogList.length>0){
         scriptConsoleDom.show()
         scriptLogList.forEach(item=> {
-            if(item.logList && item.logList.length>0){
-                item.logList.forEach(logMsg=>{
-                    let logType = logMsg.msgType ? logMsg.msgType:"log"
-                    let dateTime = logMsg && logMsg.time ? logMsg.time:""
-                    let data = {
-                        uuid: item.uuid,
-                        name: item.name,
-                        time: dateTime,
-                        //Fixed wrong variable logMsg.
-                        msgType: logType,
-                        message: logMsg.msg
-                    };
-                    
-                    var _dom = document.createElement('div');
-                    _dom.setAttribute('class', 'console-item ' + logState[logType]);
-                    _dom.setAttribute('uuid', data["uuid"]);
-                    _dom.innerHTML = scriptLogDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
-                    scriptConsoleDom.appendChild(_dom);
-                })
-            }
+            let data = item
+            let logType = data.msgType ? data.msgType : "log"
+            var _dom = document.createElement('div');
+            _dom.setAttribute('class', 'console-item ' + logState[logType]);
+            _dom.setAttribute('uuid', data["uuid"]);
+            _dom.innerHTML = scriptLogDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
+            scriptConsoleDom.appendChild(_dom);
         })
         if (scriptConsoleDom.children.length == 0){
             scriptConsoleDom.hide();
@@ -277,9 +297,11 @@ function handleTabAction(target, type) {
             scriptStateListDom.show();
             scriptConsoleDom.hide();
         }else{
+            showLogNotify = false;
+            logNotifyDom.hide()
             scriptStateListDom.hide();
             scriptConsoleDom.show();
-            fetchMatchedScriptConsole()
+            fetchAndRenderConsoleLog()
         }
     }
 }

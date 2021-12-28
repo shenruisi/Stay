@@ -103,6 +103,22 @@ body {
     justify-content: center;
     justify-items: center;
     align-items: center;
+    position: relative;
+}
+.header-tab .notify{
+    display: none;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 50%;
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    background: #B620E0;
+    color: #fff;
+    font-size: 14px;
+    transform: scale(.5);
+    -webkit-transform: scale(.5);
 }
 .match-tab{
     width: 94px;
