@@ -4,6 +4,7 @@
     <title>跳转到</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="codemirror.css">
+    <link rel="stylesheet" href="base16-dark.css">
     <script src="codemirror.js"></script>
     <script src="javascript.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -29,11 +30,13 @@
     let innerWidth = window.innerWidth;
     console.log("innerHeight,", innerHeight,",innerWidth=", innerWidth)
     // document.querySelector(".CodeMirror").style.height=innerHeight;
+    let isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     let myCodeMirror = CodeMirror(document.body, {
             value: "function myScript(){return 100;}\n",
             mode: "javascript",
             lineNumbers: true,
             fullScreen: true,
+            theme: isDark?'base16-dark':"default",
         });
 
     myCodeMirror.setSize(innerWidth, innerHeight)

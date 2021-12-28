@@ -132,7 +132,9 @@
     scriptLabel.left = 17;
     [detailView addSubview:scriptLabel];
     
-    UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
+    
+    NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+    UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
     scriptIconLabel.right = kScreenWidth - 48;
     scriptIconLabel.centerY = scriptLabel.centerY;
     [detailView addSubview:scriptIconLabel];

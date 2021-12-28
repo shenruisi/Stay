@@ -28,15 +28,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self addSubview:self.wkwebView];
-        UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-                if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-                    return RGB(242, 242, 246);
-                }
-                else {
-                    return [UIColor blackColor];
-                }
-            }];
-        self.backgroundColor = viewBgColor;
+        self.backgroundColor = [self createBgColor];
     }
     return self;
 }
@@ -54,8 +46,10 @@
         config.userContentController = wkUController;
         
         _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.height) configuration:config];
+        _wkwebView.backgroundColor = [self createBgColor];
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;
+        [_wkwebView setOpaque:false];
         _wkwebView.allowsBackForwardNavigationGestures = YES;
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentGet"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
@@ -165,6 +159,18 @@
 - (void)saveError:(NSString *)errorMessage{
     NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:errorMessage];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
+}
+
+- (UIColor *)createBgColor {
+    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return RGB(242, 242, 246);
+            }
+            else {
+                return RGB(21, 21, 21);
+            }
+        }];
+    return viewBgColor;
 }
 
 @end
