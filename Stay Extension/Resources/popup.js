@@ -10,11 +10,9 @@ String.prototype.bool = function () {
 }
 Object.prototype.hide = function () {
     this.style.display = "none"
-    // this.style.transition = "background 3s ease-in"
 }
 Object.prototype.show = function () {
     this.style.display = "block"
-    // this.style.transition = "background 3s ease-in"
 }
 Object.prototype.cleanInnerHTML = function () {
     this.innerHTML = "";
@@ -26,12 +24,14 @@ Object.prototype.setInnerHtml = function (value) {
 let browserRunUrl = "",
     scriptStateList = [],
     scriptStateListDom,
+    logNotifyDom,
     scriptConsole = [],
+    showLogNotify = false,
     logIsFetched = false,
     scriptConsoleDom,
     scriptDomTmp = [
             '<div class="info-case">',
-            '<div class="title">{name}</div>',
+            '<div class="title">{name}<span>{status}</span></div>',
             '<div class="name">{author}</div>',
             '<div class="desc">{description}</div>',
             '</div>',
@@ -74,8 +74,6 @@ const matchesCheck = (userLibraryScript, url) => {
                 }
             });
         }
-
-
         userLibraryScript.excludes.forEach((exclude) => {
             if (matchRule(url.href,exclude)) {
                 matched = false;
@@ -90,33 +88,20 @@ const matchesCheck = (userLibraryScript, url) => {
  * 获取当前网页可匹配的脚本
  */
 function fetchMatchedScriptList(){
-//     browser.runtime.sendMessage({from:"popup", operate: "fetchMatchedScriptList"},(response)=>{
-//         if(response && response.body && response.body.length > 0){
-//             scriptStateList = response.body;
-//             // scriptStateList.push({ uuid: "324353423354", version: "1.0.0", active: true, name: "scriptContent.js", author: "Stay offical", description:"防止跳转知乎App，自动展开知乎回答"})
-// //             document.querySelector(".placeholder").innerHTML = JSON.stringify(scriptStateList);
-//         }else{
-// //             document.querySelector(".placeholder").innerHTML = "null"
-//         }
-//         renderScriptContent(scriptStateList);
-//     })
-//
     browser.tabs.getSelected(null, (tab) => {
-//        var tab = tabs[0];
         browserRunUrl = tab.url;
-        console.log("browserRunUrl-start---",browserRunUrl)
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
             try{
                 let userLibraryScripts = JSON.parse(response.body);
-                console.log(userLibraryScripts)
                 userLibraryScripts.forEach((userLibraryScript) => {
                     let urlParse = new URL(browserRunUrl)
-                    console.log(userLibraryScript);
                     if (matchesCheck(userLibraryScript, urlParse)) {
                         scriptStateList.push(userLibraryScript);
                     }
                 });
                 renderScriptContent(scriptStateList);
+                fetchMatchedScriptConsole();
+
             }catch(e){
                 console.log(e);
             }
@@ -126,20 +111,47 @@ function fetchMatchedScriptList(){
 }
 
 /**
- * 获取控制台日志
+ * 获取控制台日志并渲染
  */
-function fetchMatchedScriptConsole(){
-    if (logIsFetched){
-        renderScriptConsole(scriptConsole);
-        return;
+function fetchAndRenderConsoleLog(){
+    if (!logIsFetched){
+        fetchMatchedScriptConsole()
     }
-    browser.runtime.sendMessage({from: "popup", operate: "fetchMatchedScriptLog"},(response)=>{
+    renderScriptConsole(scriptConsole);
+}
+
+
+function fetchMatchedScriptConsole(){
+    browser.runtime.sendMessage({ from: "popup", operate: "fetchMatchedScriptLog" }, (response) => {
         logIsFetched = true;
-        if(response && response.body && response.body.length > 0){
-            scriptConsole = response.body
-            renderScriptConsole(response.body);
-        }else{
-            scriptConsoleDom.cleanInnerHTML();
+        if (response && response.body && response.body.length > 0) {
+            response.body.forEach(item => {
+                if (item.logList && item.logList.length > 0) {
+                    item.logList.forEach(logMsg => {
+                        let logType = logMsg.msgType ? logMsg.msgType : "log"
+                        let dateTime = logMsg && logMsg.time ? logMsg.time : ""
+                        let data = {
+                            uuid: item.uuid,
+                            name: item.name,
+                            time: dateTime,
+                            //Fixed wrong variable logMsg.
+                            msgType: logType,
+                            message: logMsg.msg
+                        };
+                        scriptConsole.push(data)
+                    })
+                }
+            })
+            if (!showLogNotify && scriptConsole.length>0) {
+                showLogNotify = true
+                logNotifyDom.show()
+                let count = scriptConsole.length
+                count = count>99?"99+":count
+                logNotifyDom.setInnerHtml(count)
+            }
+
+        } else {
+            scriptConsole = [];
         }
     })
 }
@@ -155,6 +167,7 @@ function showNullData(message){
 
 window.onload=function(){
     let self = this;
+    logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
     fetchMatchedScriptList()
@@ -178,7 +191,6 @@ window.onload=function(){
             let active = target.getAttribute("active");
             let uuid = target.getAttribute("uuid");
             console.log("active= ", active, ", uuid=", uuid, ", was clicked!");
-//            document.querySelector(".placeholder").innerHTML ="active= "+active +", uuid="+ uuid+ ", was clicked!";
             handleScriptActive(uuid, active.bool());
             return;
         }
@@ -200,30 +212,18 @@ String.prototype.bool = function () {
  */
 function renderScriptConsole(datas) {
     const scriptLogList = datas;
+    console.log("datas===", datas)
     scriptConsoleDom.cleanInnerHTML();
     if(scriptLogList && scriptLogList.length>0){
         scriptConsoleDom.show()
         scriptLogList.forEach(item=> {
-            if(item.logList && item.logList.length>0){
-                item.logList.forEach(logMsg=>{
-                    let logType = logMsg.msgType ? logMsg.msgType:"log"
-                    let dateTime = logMsg && logMsg.time ? logMsg.time:""
-                    let data = {
-                        uuid: item.uuid,
-                        name: item.name,
-                        time: dateTime,
-                        //Fixed wrong variable logMsg.
-                        msgType: logType,
-                        message: logMsg.msg
-                    };
-                    
-                    var _dom = document.createElement('div');
-                    _dom.setAttribute('class', 'console-item ' + logState[logType]);
-                    _dom.setAttribute('uuid', data["uuid"]);
-                    _dom.innerHTML = scriptLogDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
-                    scriptConsoleDom.appendChild(_dom);
-                })
-            }
+            let data = item
+            let logType = data.msgType ? data.msgType : "log"
+            var _dom = document.createElement('div');
+            _dom.setAttribute('class', 'console-item ' + logState[logType]);
+            _dom.setAttribute('uuid', data["uuid"]);
+            _dom.innerHTML = scriptLogDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
+            scriptConsoleDom.appendChild(_dom);
         })
         if (scriptConsoleDom.children.length == 0){
             scriptConsoleDom.hide();
@@ -244,6 +244,7 @@ function renderScriptContent(datas) {
         document.getElementById("dataNull").style.display = "none";
         scriptList.forEach(function (item, idnex, array) {
             var data = item; 
+            data.status = item.active ? "运行中" : "已停止"
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
@@ -272,7 +273,7 @@ function handleScriptActive(uuid, active) {
         }, (response) => {
             console.log("setScriptActive response,",response)
         })
-        // todo 改变数据active状态
+        // 改变数据active状态
         scriptStateList.forEach(function (item, index) {
             if(uuid == item.uuid){
                 item.active = !active
@@ -293,15 +294,14 @@ function handleTabAction(target, type) {
         document.getElementsByClassName("active-tab")[0].classList.remove("active-tab"); // 删除之前已选中tab的样式
         target.classList.add('active-tab'); // 给当前选中tab添加样式
         if(type == 1){
-            // document.querySelector(".content-container .placeholder").innerHTML = "match tab8888888";
             scriptStateListDom.show();
             scriptConsoleDom.hide();
         }else{
-            
-            // document.querySelector(".content-container .placeholder").innerHTML = "console tab8888888";
+            showLogNotify = false;
+            logNotifyDom.hide()
             scriptStateListDom.hide();
             scriptConsoleDom.show();
-            fetchMatchedScriptConsole()
+            fetchAndRenderConsoleLog()
         }
     }
 }
