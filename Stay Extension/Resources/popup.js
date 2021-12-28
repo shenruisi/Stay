@@ -160,6 +160,7 @@ function fetchMatchedScriptConsole(){
  * 匹配脚本为空的样式状态
  */
 function showNullData(message){
+    scriptStateListDom.hide()
     var _dom = document.getElementById("dataNull");
     _dom.setInnerHtml(message || "未匹配到可用脚本");
     _dom.show();
@@ -212,7 +213,6 @@ String.prototype.bool = function () {
  */
 function renderScriptConsole(datas) {
     const scriptLogList = datas;
-    console.log("datas===", datas)
     scriptConsoleDom.cleanInnerHTML();
     if(scriptLogList && scriptLogList.length>0){
         scriptConsoleDom.show()
