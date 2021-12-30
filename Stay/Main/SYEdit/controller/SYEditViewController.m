@@ -165,7 +165,15 @@
         _componetView.backgroundColor = [self createBgColor];
         _componetView.layer.cornerRadius = 12;
         _componetView.layer.borderWidth = 0.5;
-        _componetView.layer.borderColor = [RGB(216, 216, 216) CGColor];
+        UIColor *borderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+                if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                    return RGB(216, 216, 216);
+                }
+                else {
+                    return RGB(37, 37, 40);
+                }
+            }];
+        _componetView.layer.borderColor = [borderColor CGColor];
         _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _backBtn.frame = CGRectMake(0, 0, 31, 23);
         _backBtn.enabled = false;
