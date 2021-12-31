@@ -576,16 +576,8 @@
 			children = (
 				8496DFC02759CAB90075ABD5 /* controller */,
 				8496DFBF2759CA980075ABD5 /* view */,
-				8496DFBE2759CA920075ABD5 /* model */,
 			);
 			path = SYEdit;
-			sourceTree = "<group>";
-		};
-		8496DFBE2759CA920075ABD5 /* model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = model;
 			sourceTree = "<group>";
 		};
 		8496DFBF2759CA980075ABD5 /* view */ = {
@@ -638,8 +630,6 @@
 		84C54CF62753BD4B00A9F14C /* SYDetail */ = {
 			isa = PBXGroup;
 			children = (
-				84C54CF92753BD7500A9F14C /* Model */,
-				84C54CF82753BD6C00A9F14C /* View */,
 				84C54CF72753BD5C00A9F14C /* Controller */,
 			);
 			path = SYDetail;
@@ -652,20 +642,6 @@
 				84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		84C54CF82753BD6C00A9F14C /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		84C54CF92753BD7500A9F14C /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		84F4830D273A69AA00217BB3 /* Main */ = {
@@ -723,8 +699,6 @@
 		84F48312273A6A2100217BB3 /* SYSearch */ = {
 			isa = PBXGroup;
 			children = (
-				84F48315273A6C5900217BB3 /* View */,
-				84F48314273A6C5400217BB3 /* Model */,
 				84F48313273A6C4C00217BB3 /* Controller */,
 			);
 			path = SYSearch;
@@ -737,20 +711,6 @@
 				84F48323273ACAD400217BB3 /* SYSearchViewController.m */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		84F48314273A6C5400217BB3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		84F48315273A6C5900217BB3 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		84F48319273A75D300217BB3 /* Common */ = {
@@ -769,24 +729,8 @@
 			isa = PBXGroup;
 			children = (
 				84F48332273AD8AA00217BB3 /* Controller */,
-				84F48331273AD8A400217BB3 /* View */,
-				84F48330273AD89E00217BB3 /* Model */,
 			);
 			path = SYMore;
-			sourceTree = "<group>";
-		};
-		84F48330273AD89E00217BB3 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		84F48331273AD8A400217BB3 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		84F48332273AD8AA00217BB3 /* Controller */ = {
