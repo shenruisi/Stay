@@ -18,4 +18,7 @@
 #define SINGLE_LINE_WIDTH (1 /[UIScreen mainScreen].scale)
 #define SINGLE_LINE_ADJUST_OFFSET ((1 / [UIScreen mainScreen].scale) / 2)
 
+#define StatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+
+
 #endif /* SYDefines */

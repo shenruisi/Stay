@@ -272,7 +272,7 @@
 
 - (SYCodeMirrorView *)syCodeMirrorView {
     if (_syCodeMirrorView == nil) {
-        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, 94, kScreenWidth, kScreenHeight - 94)];
+        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, kScreenWidth, kScreenHeight - StatusBarHeight)];
     }
     return _syCodeMirrorView;
 }
