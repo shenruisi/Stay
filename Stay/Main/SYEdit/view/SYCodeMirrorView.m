@@ -12,19 +12,6 @@
 
 @implementation SYCodeMirrorView
 
-//+ (instancetype)shareCodeView {
-//
-//    static SYCodeMirrorView *instance = nil;
-//    static dispatch_once_t onceToken;
-//    
-//    dispatch_once(&onceToken, ^{
-//        instance = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-//        [instance addSubview:instance.wkwebView];
-//    });
-//    return instance;
-//
-//}
-
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self addSubview:self.wkwebView];

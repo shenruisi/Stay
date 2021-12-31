@@ -17,11 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, assign) BOOL active;
 
-
-//+ (instancetype)shareCodeView;
-
 - (void)changeContent:(NSString *) jsContent;
-
 - (void)insertContent;
 - (void)updateContent;
 - (void)undo;
