@@ -241,7 +241,8 @@ function renderScriptContent(datas) {
     const scriptList = datas;
     scriptStateListDom.cleanInnerHTML();
     if (scriptList && scriptList.length>0){
-        document.getElementById("dataNull").style.display = "none";
+        scriptStateListDom.show()
+        document.getElementById("dataNull").hide()
         scriptList.forEach(function (item, idnex, array) {
             var data = item; 
             data.status = item.active ? "运行中" : "已停止"
