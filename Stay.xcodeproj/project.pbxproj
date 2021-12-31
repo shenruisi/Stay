@@ -20,6 +20,7 @@
 		58410FE427687F7100AB334B /* stay-sina.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE327687F7100AB334B /* stay-sina.user.js */; };
 		58410FE62768805F00AB334B /* stay-newsqq.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE52768805F00AB334B /* stay-newsqq.user.js */; };
 		58410FE8276881DE00AB334B /* stay-tieba.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58410FE7276881DE00AB334B /* stay-tieba.user.js */; };
+		5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -157,6 +158,7 @@
 		58410FE327687F7100AB334B /* stay-sina.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-sina.user.js"; sourceTree = "<group>"; };
 		58410FE52768805F00AB334B /* stay-newsqq.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-newsqq.user.js"; sourceTree = "<group>"; };
 		58410FE7276881DE00AB334B /* stay-tieba.user.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "stay-tieba.user.js"; sourceTree = "<group>"; };
+		5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -523,9 +525,10 @@
 		58F7F4E02746588600270873 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
+				58F7F4E12746589C00270873 /* stay-taskloop.js */,
 				582F9DE3276F32B900C88135 /* base64.min.js */,
 				582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */,
-				58F7F4E12746589C00270873 /* stay-taskloop.js */,
+				5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */,
 				58F7F4E5274754B900270873 /* gm-apis-gen.js */,
 			);
 			path = vendor;
@@ -946,6 +949,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F7F4B827438CB000270873 /* bootstrap.js in Resources */,
+				5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */,
 				58F7F4E22746589D00270873 /* stay-taskloop.js in Resources */,
 				5881343027294C0E0055E1CE /* iframe.html in Resources */,
 				5876891C2719238000F834A4 /* background.js in Resources */,
