@@ -11,6 +11,8 @@
 #import "SYDetailViewController.h"
 #import "SYEditViewController.h"
 #import "SYCodeMirrorView.h"
+#import <StoreKit/StoreKit.h>
+
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -56,8 +58,26 @@
     [self initScrpitContent];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [self checkShowTips];
 }
 
+//检测评分
+- (void)checkShowTips{
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    if([groupUserDefaults objectForKey:@"tips"] != NULL){
+        int count = [[groupUserDefaults objectForKey:@"tips"] intValue];
+        if(count == 10) {
+          [SKStoreReviewController requestReview];
+        }
+        count += 1;
+        [groupUserDefaults setObject:@(count)  forKey:@"tips"];
+    } else {
+        [groupUserDefaults setObject:@(1) forKey:@"tips"];
+        [groupUserDefaults synchronize];
+    }
+}
+
+//后台唤起时处理与插件交互
 - (void)onBecomeActive{
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
