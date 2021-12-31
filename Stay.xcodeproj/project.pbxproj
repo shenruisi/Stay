@@ -577,7 +577,6 @@
 		8496DFBD2759CA750075ABD5 /* SYEdit */ = {
 			isa = PBXGroup;
 			children = (
-				84C1ED53277EE8A900651DF9 /* model */,
 				8496DFC02759CAB90075ABD5 /* controller */,
 				8496DFBF2759CA980075ABD5 /* view */,
 			);
@@ -629,13 +628,6 @@
 				84BDC848274BC5AD005367C6 /* ScriptDetailModel.m */,
 			);
 			path = DataModel;
-			sourceTree = "<group>";
-		};
-		84C1ED53277EE8A900651DF9 /* model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = model;
 			sourceTree = "<group>";
 		};
 		84C54CF62753BD4B00A9F14C /* SYDetail */ = {
