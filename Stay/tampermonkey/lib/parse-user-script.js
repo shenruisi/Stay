@@ -161,7 +161,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
                   new window.MatchPattern(data.value);
                   details.matches.push(data.value);
               } catch (e) {
-                  throw new Error(_('ignoring_MATCH_because_REASON', data.value, e));
+                  details.errorMessage += 'Unsupport match pattern' + data.value;
               }
               break;
           case 'icon':

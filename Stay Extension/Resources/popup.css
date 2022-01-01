@@ -103,6 +103,22 @@ body {
     justify-content: center;
     justify-items: center;
     align-items: center;
+    position: relative;
+}
+.header-tab .notify{
+    display: none;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 50%;
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    background: #B620E0;
+    color: #fff;
+    font-size: 14px;
+    transform: scale(.5);
+    -webkit-transform: scale(.5);
 }
 .match-tab{
     width: 94px;
@@ -162,6 +178,17 @@ body {
     font-size: 18px;
     color: #000000;
     font-weight:500;
+    align-items:center;
+}
+.stop .info-case .title span{
+    color: #B620E0;
+    font-size: 15px;
+    padding-left:5px;
+}
+.start .info-case .title span{
+    color: #8A8A8A;
+    font-size: 15px;
+    padding-left:5px;
 }
 .info-case .name{
     display: flex;
@@ -298,6 +325,9 @@ body {
         color: #FFFFFF;
     }
     .info-case .desc{
+        color: #c5c5c5;
+    }
+    .start .info-case .title span{
         color: #c5c5c5;
     }
     .match-tab {

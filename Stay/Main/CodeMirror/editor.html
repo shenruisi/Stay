@@ -4,6 +4,7 @@
     <title>跳转到</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="codemirror.css">
+    <link rel="stylesheet" href="base16-dark.css">
     <script src="codemirror.js"></script>
     <script src="javascript.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -29,15 +30,18 @@
     let innerWidth = window.innerWidth;
     console.log("innerHeight,", innerHeight,",innerWidth=", innerWidth)
     // document.querySelector(".CodeMirror").style.height=innerHeight;
+    let isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     let myCodeMirror = CodeMirror(document.body, {
             value: "function myScript(){return 100;}\n",
             mode: "javascript",
             lineNumbers: true,
             fullScreen: true,
+            theme: isDark?'base16-dark':"default",
         });
 
     myCodeMirror.setSize(innerWidth, innerHeight)
     myCodeMirror.refresh()
+    window.webkit.messageHandlers.loadSuccess.postMessage("loadViewSuccess");
     function setCode(code) {
         myCodeMirror.setValue(decodeURIComponent(code));
     }
@@ -46,14 +50,49 @@
     }
     function revocationAction() {
         myCodeMirror.undo()
+        checkHasUndone();
+        checkHasDone();
+        
     }
     function forwardAction() {
         myCodeMirror.redo()
+        checkHasUndone();
+        checkHasDone();
     }
     function clearAction() {
-        myCodeMirror.setHistory({ undone: [], done: []});
+        myCodeMirror.clearHistory();
+        window.webkit.messageHandlers.reDoHistoryChange.postMessage("false");
+        window.webkit.messageHandlers.reDoHistoryChange.postMessage("false");
+    }
+    
+    function blur() {
+        myCodeMirror.blur();
+    }
+    
+    myCodeMirror.on("change", ()=>{
+        checkHasUndone();
+        checkHasDone();
+    })
+    
+    function checkHasUndone() {
+          let historyArr =  myCodeMirror.getHistory()
+          if(!historyArr || JSON.stringify(historyArr) == "" ||  JSON.stringify(historyArr) == "{}" || !historyArr.done || historyArr.done.length<=1){
+              window.webkit.messageHandlers.clearAction.postMessage(JSON.stringify(historyArr) );
+              window.webkit.messageHandlers.reDoHistoryChange.postMessage("false");
+          } else {
+              window.webkit.messageHandlers.clearAction.postMessage(JSON.stringify(historyArr) );
+              window.webkit.messageHandlers.reDoHistoryChange.postMessage("true");
+          }
     }
 
+    function checkHasDone() {
+          let historyArr = myCodeMirror.getHistory()
+          if (!historyArr || JSON.stringify(historyArr) == "" || JSON.stringify(historyArr) == "{}" || !historyArr.undone || historyArr.undone.length <= 1) {
+              window.webkit.messageHandlers.onDoHistoryChange.postMessage("false");
+          } else {
+              window.webkit.messageHandlers.onDoHistoryChange.postMessage("true");
+          }
+    }
 </script>
 
 </html>

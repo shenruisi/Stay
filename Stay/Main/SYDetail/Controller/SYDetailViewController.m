@@ -17,11 +17,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = RGB(242, 242, 246);
+    UIColor *textColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return [UIColor blackColor];
+            }
+            else {
+                return [UIColor whiteColor];
+            }
+        }];
+
+    self.view.backgroundColor = [self createBgColor];
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setNumberOfLines:0];
-    [label setTextColor:[UIColor blackColor]];
+    [label setTextColor:textColor];
     [label setTextAlignment:NSTextAlignmentCenter];
     [label setText:self.script.name];
     label.font = [UIFont boldSystemFontOfSize:17];
@@ -51,13 +60,21 @@
 }
 
 - (void)createDetailView{
+    UIColor *bgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return [UIColor whiteColor];
+            }
+            else {
+                return RGB(28, 28, 28);
+            }
+        }];
     
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0,self.view.width ,self.view.height)];
     
     [self.view addSubview:scrollView];
     
     UIView *detailView = [[UIView alloc] initWithFrame:CGRectMake(20, 15, kScreenWidth - 40, 271)];
-    detailView.backgroundColor = [UIColor whiteColor];
+    detailView.backgroundColor = bgColor;
     detailView.layer.cornerRadius = 8;
     [scrollView addSubview:detailView];
     
@@ -115,7 +132,9 @@
     scriptLabel.left = 17;
     [detailView addSubview:scriptLabel];
     
-    UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow"]];
+    
+    NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+    UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
     scriptIconLabel.right = kScreenWidth - 48;
     scriptIconLabel.centerY = scriptLabel.centerY;
     [detailView addSubview:scriptIconLabel];
@@ -173,7 +192,7 @@
     
     
     UIView *configView = [[UIView alloc] initWithFrame:CGRectMake(16, 120, kScreenWidth - 40, 238)];
-    configView.backgroundColor = [UIColor whiteColor];
+    configView.backgroundColor = bgColor;
     configView.layer.cornerRadius = 8;
     configView.top = configLabel.bottom + 16;
     [scrollView addSubview:configView];
@@ -353,7 +372,16 @@
 
 - (UIView *)createLine{
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 57 ,1)];
-    [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
+    UIColor *bgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return RGBA(216, 216, 216, 0.3);
+            }
+            else {
+                return RGBA(37, 37, 40, 1);
+            }
+        }];
+
+    [line setBackgroundColor:bgcolor];
     return line;
 }
 
@@ -389,5 +417,17 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (UIColor *)createBgColor {
+    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return RGB(242, 242, 246);
+            }
+            else {
+                return [UIColor blackColor];
+            }
+        }];
+    return viewBgColor;
+}
 
 @end

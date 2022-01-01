@@ -67,7 +67,9 @@ static Tampermonkey *kInstance = nil;
 - (NSString *)_removeComment:(NSString *)script{
     NSString *process = [script copy];
     
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!:)\\/\\/.*|\\/\\*(\\s|.)*?\\*\\/)" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+//    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!:)\\/\\/.*|\\/\\*(\\s|.)*?\\*\\/)" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\/\\*[\\s\\S]*?\\*\\/|([^\\\\:]|^)\\/\\/.*$" options:NSRegularExpressionAnchorsMatchLines error:NULL];
     
     process = [regex stringByReplacingMatchesInString:process
                                               options:0

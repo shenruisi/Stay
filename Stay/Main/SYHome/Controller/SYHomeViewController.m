@@ -11,6 +11,8 @@
 #import "SYDetailViewController.h"
 #import "SYEditViewController.h"
 #import "SYCodeMirrorView.h"
+#import <StoreKit/StoreKit.h>
+
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -32,7 +34,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [SYCodeMirrorView shareCodeView];
+//    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -58,7 +60,25 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
+//检测评分
+- (void)checkShowTips{
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    if([groupUserDefaults objectForKey:@"tips"] != NULL){
+        int count = [[groupUserDefaults objectForKey:@"tips"] intValue];
+        if(count == 10) {
+          [SKStoreReviewController requestReview];
+        }
+        count += 1;
+        [groupUserDefaults setObject:@(count)  forKey:@"tips"];
+    } else {
+        [groupUserDefaults setObject:@(1) forKey:@"tips"];
+        [groupUserDefaults synchronize];
+    }
+}
+
+//后台唤起时处理与插件交互
 - (void)onBecomeActive{
+    [self checkShowTips];
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"]];
@@ -131,9 +151,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    JSDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
-        cell = [[JSDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     }
@@ -147,6 +167,17 @@
     } else {
         model = _datas[indexPath.row];
     }
+    
+    UIColor *bgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return [UIColor whiteColor];
+            }
+            else {
+                return [UIColor blackColor];
+            }
+        }];
+    
+    cell.contentView.backgroundColor = bgColor;
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
     titleLabel.font = [UIFont boldSystemFontOfSize:18];
@@ -184,7 +215,15 @@
 
     [cell.contentView addSubview:actLabel];
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
-    [line setBackgroundColor:RGBA(216, 216, 216, 0.3)];
+    UIColor *lineBgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return RGBA(216, 216, 216, 0.3);
+            }
+            else {
+                return RGBA(37, 37, 40, 1);
+            }
+        }];
+    [line setBackgroundColor:lineBgcolor];
     [cell.contentView addSubview:line];
 
     return cell;

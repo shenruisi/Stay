@@ -1,3 +1,8 @@
+/**
+ Main entrance of Stay
+ 1. Fetch inject scripts from SafariWebExtensionHandler
+ 2. Use @match, @include, @exclude to match the correct script with the url.
+ */
 console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
@@ -103,14 +108,3 @@ async function start(){
 }
 
 start();
-
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if ("background" == request.from){
-        if ("fetchMatchedScripts" == request.operate) {
-            console.log("background --- fetchMatchedScripts====",injectScripts);
-            sendResponse({ body: injectScripts });
-        }
-        return true;
-    }
-    
-})
