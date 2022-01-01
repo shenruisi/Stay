@@ -1,16 +1,20 @@
 <p align="center">
-  <span><img src="./Material/icon.png" width="128"/></span>
+<img width="128px" src="./Material/icon.png" alt="Logo" />
+
+  <p align="center">
+  <a href="">
+    <img src="https://img.shields.io/badge/iOS-15%2B-brightgreen" alt=""/>
+  </a>
+  <a href="https://app.airport.community/app/recICnNcHuUDSCL2b">
+    <img src="https://img.shields.io/badge/TestFlight-2.0.0-4391E1" alt=""/>
+  </a>
+  <br>
 </p>
 
 <p align="right"><a href="README-EN.md">中文</a> | EN</p>
 
-# Stay²
+# [Stay²](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)
 Stay² is an open source iOS Safari extension. You can use Stay² to manage your local user script. Now Stay² support part of Greasemonkey script.  
-
-[Jump to AppStore](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171).
-
-Stay is required running on iOS15.
-
 
 ## Features
 - Embed user scripts.
