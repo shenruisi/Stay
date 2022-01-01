@@ -30,6 +30,7 @@
         WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
         WKPreferences *preferences = [[WKPreferences alloc] init];
         preferences.javaScriptEnabled = true;
+        [preferences setValue:@YES forKey:@"allowFileAccessFromFileURLs"];
         [config setPreferences:preferences];
 
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
@@ -40,7 +41,7 @@
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;
         _wkwebView.allowsBackForwardNavigationGestures = YES;
-        
+    
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentGet"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"revocationAction"];

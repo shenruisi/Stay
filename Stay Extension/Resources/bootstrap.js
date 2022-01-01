@@ -14,6 +14,14 @@ const $_uri = (url) => {
     return a;
 }
 
+//https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
+//Short code
+function matchRule(str, rule) {
+  var escapeRegex = (str) => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  return new RegExp("^" + rule.split("*").map(escapeRegex).join(".*") + "$").test(str);
+}
+
+
 const $_matchesCheck = (userLibraryScript,url) => {
     let matched = false;
     userLibraryScript.matches.forEach((match)=>{ //check matches
@@ -26,8 +34,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
         if (userLibraryScript.includes.length > 0){
             matched = false;
             userLibraryScript.includes.forEach((include)=>{
-                let matchPattern = new window.MatchPattern(include);
-                if (matchPattern.doMatch(url)){
+                if (matchRule(url.href,include)){
                     matched = true;
                 }
             });
@@ -35,8 +42,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
         
         
         userLibraryScript.excludes.forEach((exclude)=>{
-            let matchPattern = new window.MatchPattern(exclude);
-            if (matchPattern.doMatch(url)){
+            if (matchRule(url.href,exclude)){
                 matched = false;
             }
         });
@@ -44,12 +50,12 @@ const $_matchesCheck = (userLibraryScript,url) => {
     
     return matched;
 }
-
+let injectScripts = []
 async function start(){
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
         let injectedVendor = new Set();
         let userLibraryScripts = JSON.parse(response.body);
-        let injectScripts = [];
+        injectScripts = [];
         userLibraryScripts.forEach((userLibraryScript)=>{
             console.log(userLibraryScript);
             
@@ -97,3 +103,14 @@ async function start(){
 }
 
 start();
+
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if ("background" == request.from){
+        if ("fetchMatchedScripts" == request.operate) {
+            console.log("background --- fetchMatchedScripts====",injectScripts);
+            sendResponse({ body: injectScripts });
+        }
+        return true;
+    }
+    
+})
