@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google@PreventAppJump
 // @namespace    http://stay.app/
-// @version      0.0.1
+// @version      0.0.2
 // @description  防止从Google结果页跳转到其他App
 // @author       Stay²
 // @match        *://*.google.com/*
@@ -72,7 +72,7 @@ function banBottomBanner(){
 }
 
 function replaceDirectUrl(){
-    let divs = document.querySelectorAll('div[data-hveid]');
+    let divs = document.querySelectorAll('div[data-sokoban-grid]');
     for (var i = 0; i < divs.length; i++){
         let div = divs[i];
         let a = div.querySelector('a');
