@@ -59,7 +59,7 @@
     else if ([message[@"type"] isEqualToString:@"setScriptActive"]){
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
         NSString *uuid = message[@"uuid"];
-        bool activeVal = message[@"active"] == 1?true:false;
+        bool activeVal = [message[@"active"] boolValue];
         if (datas != NULL && datas.count > 0) {
             for(int i = 0; i < datas.count;i++) {
                 NSDictionary *dic = datas[i];

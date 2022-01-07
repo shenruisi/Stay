@@ -11,9 +11,11 @@
 #import "DataManager.h"
 
 @interface SYEditViewController ()
-@property (nonatomic, strong) WKWebView *wkwebView;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @property (nonatomic, strong) UIView *componetView;
+@property (nonatomic, strong) UIButton *backBtn;
+@property (nonatomic, strong) UIButton *onBtn;
+@property (nonatomic, strong) SYCodeMirrorView *syCodeMirrorView;
 
 @end
 
@@ -21,11 +23,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = RGB(242, 242, 246);
+    UIColor *textColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return [UIColor blackColor];
+            }
+            else {
+                return [UIColor whiteColor];
+            }
+        }];
+    self.view.backgroundColor = [self createBgColor];
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setNumberOfLines:0];
-    [label setTextColor:[UIColor blackColor]];
+    [label setTextColor:textColor];
     [label setTextAlignment:NSTextAlignmentCenter];
     if (self.userScript != nil && self.userScript.name != NULL) {
         [label setText:self.userScript.name];
@@ -38,29 +48,19 @@
 
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveSuccess:) name:@"saveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(saveError:) name:@"saveError" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reDoHistoryChange:) name:@"reDoHistoryChange" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDoHistoryChange:) name:@"onDoHistoryChange" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(htmlLoadSuccess:) name:@"htmlLoadSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShowAction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHideAction:) name:UIKeyboardWillHideNotification object:nil];
-    [self createView];
+    
+    [self.view addSubview:self.syCodeMirrorView];
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 45;
     if(!self.isSearch) {
-        [[SYCodeMirrorView shareCodeView] clearAll];
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
-
     // Do any additional setup after loading the view.
-}
-
-- (void)createView{
-//    [self.view addSubview:self.wkwebView];
-    [self.view addSubview:[SYCodeMirrorView shareCodeView]];
-    if(self.isEditing == NO) {
-        [[SYCodeMirrorView shareCodeView] changeContent:@""];
-    }
-    if(self.content != nil && self.content.length > 0) {
-        [[SYCodeMirrorView shareCodeView] changeContent:self.content];
-    }
-    
 }
 
 - (void)dealloc {
@@ -68,13 +68,34 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"saveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"saveError" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reDoHistoryChange" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onDoHistoryChange" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"htmlLoadSuccess" object:nil];
+}
+
+- (void)reDoHistoryChange:(NSNotification*) notification{
+    NSString *haveHistory =  [notification object];
+    self.backBtn.enabled = [haveHistory isEqual:@"true"];
+}
+- (void)onDoHistoryChange:(NSNotification*) notification{
+    NSString *haveHistory =  [notification object];
+    self.onBtn.enabled = [haveHistory isEqual:@"true"];
+}
+
+- (void)htmlLoadSuccess:(NSNotification*) notification{
+    if(self.isEditing == NO) {
+        [self.syCodeMirrorView changeContent:@""];
+    }
+    if(self.content != nil && self.content.length > 0) {
+        [self.syCodeMirrorView changeContent:self.content];
+    }
+    [self.syCodeMirrorView clearAll];
 }
 
 - (void)keyboardShowAction:(NSNotification*)sender{
     NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
     CGRect endFrame = [endFrameValue CGRectValue];
     self.componetView.bottom = endFrame.origin.y - 10;
-
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
     self.componetView.bottom = kScreenHeight - 45;
@@ -93,8 +114,9 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)saveError:(id)sender{
-    NSString *content = _isEdit?@"保存失败":@"创建失败";
+- (void)saveError:(NSNotification*) notification{
+    NSString *errorMessage =  [notification object];
+    NSString *content = errorMessage;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSLog(@"点击了确认按钮");
@@ -112,17 +134,17 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    [self.wkwebView endEditing:YES];
+    self.componetView.bottom = kScreenHeight - 45;
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
 - (void)saveBtnClick:(id)sender{
     if(self.uuid != nil && self.uuid.length > 0) {
-        [SYCodeMirrorView shareCodeView].uuid = self.uuid;
-        [SYCodeMirrorView shareCodeView].active = self.userScript.active;
-        [[SYCodeMirrorView shareCodeView] updateContent];
+        self.syCodeMirrorView.uuid = self.uuid;
+        self.syCodeMirrorView.active = self.userScript.active;
+        [self.syCodeMirrorView updateContent];
     } else {
-        [[SYCodeMirrorView shareCodeView] insertContent];
+        [self.syCodeMirrorView insertContent];
     }
 }
 
@@ -140,24 +162,34 @@
 - (UIView *)componetView {
     if (nil == _componetView){
         _componetView = [[UIView alloc] initWithFrame:CGRectMake(10,0.0,kScreenWidth - 20,45)];
-        _componetView.backgroundColor = [UIColor whiteColor];
+        _componetView.backgroundColor = [self createBgColor];
         _componetView.layer.cornerRadius = 12;
         _componetView.layer.borderWidth = 0.5;
-        _componetView.layer.borderColor = [RGB(216, 216, 216) CGColor];
-        UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        backBtn.frame = CGRectMake(0, 0, 31, 23);
-        [backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
-        [backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
-        backBtn.centerY = 22.5;
-        backBtn.left = 31;
-        [_componetView addSubview:backBtn];
-        UIButton *onBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        onBtn.frame = CGRectMake(0, 0, 31, 23);
-        [onBtn setImage:[UIImage imageNamed:@"on"] forState:UIControlStateNormal];
-        [onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
-        onBtn.centerY = 22.5;
-        onBtn.left = 83;
-        [_componetView addSubview:onBtn];
+        UIColor *borderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+                if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                    return RGB(216, 216, 216);
+                }
+                else {
+                    return RGB(37, 37, 40);
+                }
+            }];
+        _componetView.layer.borderColor = [borderColor CGColor];
+        _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _backBtn.frame = CGRectMake(0, 0, 31, 23);
+        _backBtn.enabled = false;
+        [_backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+        [_backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
+        _backBtn.centerY = 22.5;
+        _backBtn.left = 31;
+        [_componetView addSubview:_backBtn];
+        _onBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _onBtn.frame = CGRectMake(0, 0, 31, 23);
+        _onBtn.enabled = false;
+        [_onBtn setImage:[UIImage imageNamed:@"on"] forState:UIControlStateNormal];
+        [_onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
+        _onBtn.centerY = 22.5;
+        _onBtn.left = 83;
+        [_componetView addSubview:_onBtn];
         
         UIButton *pasteLabelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         pasteLabelBtn.frame = CGRectMake(0, 0, 120, 24);
@@ -185,21 +217,21 @@
 
 
 - (void)editerCancel:(id)sender {
-    [[SYCodeMirrorView shareCodeView] undo];
+    [self.syCodeMirrorView undo];
 }
 
 - (void)editerOn:(id)sender {
-    [[SYCodeMirrorView shareCodeView] redo];
+    [self.syCodeMirrorView redo];
 }
 
 - (void)copyPasteBoard:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    [[SYCodeMirrorView shareCodeView] changeContent:pasteboard.string];
+    [self.syCodeMirrorView changeContent:pasteboard.string];
 
 }
 
 - (void)clearContext:(id)sender {
-    [[SYCodeMirrorView shareCodeView] changeContent:@""];
+    [self.syCodeMirrorView changeContent:@""];
 }
 
 /*
@@ -224,6 +256,25 @@
         [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
         [groupUserDefaults synchronize];
     }
+}
+
+- (UIColor *)createBgColor {
+    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return RGB(242, 242, 246);
+            }
+            else {
+                return [UIColor blackColor];
+            }
+        }];
+    return viewBgColor;
+}
+
+- (SYCodeMirrorView *)syCodeMirrorView {
+    if (_syCodeMirrorView == nil) {
+        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, kScreenWidth, kScreenHeight - StatusBarHeight)];
+    }
+    return _syCodeMirrorView;
 }
 
 

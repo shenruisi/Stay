@@ -12,17 +12,12 @@
 
 @implementation SYCodeMirrorView
 
-+ (instancetype)shareCodeView {
-    
-    static SYCodeMirrorView *instance = nil;
-    static dispatch_once_t onceToken;
-    
-    dispatch_once(&onceToken, ^{
-        instance = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-        [instance addSubview:instance.wkwebView];
-    });
-    return instance;
-    
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self addSubview:self.wkwebView];
+        self.backgroundColor = [self createBgColor];
+    }
+    return self;
 }
 
 - (WKWebView *)wkwebView {
@@ -38,15 +33,20 @@
         config.userContentController = wkUController;
         
         _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.height) configuration:config];
+        _wkwebView.backgroundColor = [self createBgColor];
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;
+        [_wkwebView setOpaque:false];
         _wkwebView.allowsBackForwardNavigationGestures = YES;
-    
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentGet"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"contentComplete"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"revocationAction"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"forwardAction"];
         [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"clearAction"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"reDoHistoryChange"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"onDoHistoryChange"];
+        [_wkwebView.configuration.userContentController addScriptMessageHandler:self  name:@"loadSuccess"];
+
         NSString *htmlString = [[NSBundle mainBundle] pathForResource:@"editor" ofType:@"html"];
 
         NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:htmlString]];
@@ -60,6 +60,12 @@
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
     if([message.name isEqualToString:@"contentGet"]){
         self.content = message.body;
+    } else if([message.name isEqualToString:@"reDoHistoryChange"]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"reDoHistoryChange" object:message.body];
+    } else if([message.name isEqualToString:@"onDoHistoryChange"]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"onDoHistoryChange" object:message.body];
+    } else if([message.name isEqualToString:@"loadSuccess"]) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"htmlLoadSuccess" object:nil];
     }
 }
 
@@ -69,11 +75,11 @@
             [self initScrpitContent:false];
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
-           if(userScript != nil && userScript.name != nil) {
+           if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                [self initScrpitContent:true];
            } else {
-               [self initScrpitContent:false];
+               [self saveError:userScript.errorMessage];
            }
 
         }
@@ -88,11 +94,11 @@
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            userScript.uuid = self.uuid;
            userScript.active = self.active;
-           if(userScript != nil && userScript.name != nil) {
+           if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                [[DataManager shareManager] updateUserScript:userScript];
                [self initScrpitContent:true];
            } else {
-               [self initScrpitContent:false];
+               [self saveError:userScript.errorMessage];
            }
         }
     }];
@@ -105,7 +111,7 @@
 }
 - (void)redo {
     [_wkwebView evaluateJavaScript:@"forwardAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
-    
+        
     }];
 }
 
@@ -114,6 +120,13 @@
 
     }];
 }
+
+- (void)blur {
+    [_wkwebView evaluateJavaScript:@"blur()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
+
+    }];
+}
+
 
 - (void)changeContent:(NSString *) jsContent {
     NSString *script = [NSString stringWithFormat:@"setCode(\"%@\")",[jsContent encodeString]];
@@ -127,10 +140,24 @@
     if(success) {
         NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
-    } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:nil];
-        [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
+}
+
+- (void)saveError:(NSString *)errorMessage{
+    NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:errorMessage];
+    [[NSNotificationCenter defaultCenter]postNotification:notification];
+}
+
+- (UIColor *)createBgColor {
+    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return RGB(242, 242, 246);
+            }
+            else {
+                return RGB(21, 21, 21);
+            }
+        }];
+    return viewBgColor;
 }
 
 @end
