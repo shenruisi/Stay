@@ -72,7 +72,7 @@ function banBottomBanner(){
 }
 
 function replaceDirectUrl(){
-    let divs = document.querySelectorAll('div[data-sokoban-grid]');
+    let divs = document.querySelectorAll("a[href*='zhihu'],a[href*='tieba.baidu'],a[href*='xiaohongshu'],a[href*='bilibili']");
     for (var i = 0; i < divs.length; i++){
         let div = divs[i];
         let a = div.querySelector('a');
