@@ -14,12 +14,22 @@ html * {
 }
 html,
 body {
-  height: 100%;
-  font-family: 'PingFangSC-Light', sans-serif;
-  -moz-user-select:none;		/* 火狐 */
-  -webkit-user-select:none;	/* 谷歌 */
-  -ms-user-select:none;		/* IE */
-  user-select:none;
+    height: 100%;
+    font-family: 'PingFangSC-Light', sans-serif;
+    -moz-user-select:none;		/* 火狐 */
+    -webkit-user-select:none;	/* 谷歌 */
+    -ms-user-select:none;		/* IE */
+    user-select:none;
+    margin:0;
+    width:100%;
+    text-align: center;
+    background-color:#F6F6F6;
+    overflow-y:scroll;
+}
+body{
+    padding: 10px;
+    max-width: 768px;
+    min-height: 480px;
 }
 body,
 div,
@@ -62,15 +72,6 @@ section {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-body {
-    margin:0;
-    width:100%;
-    padding: 10px;
-    font-family: system-ui;
-    text-align: center;
-    background-color:#F6F6F6;
-    overflow-y:scroll;
 }
 .header-box{
     width: 100%;
@@ -146,6 +147,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding: 10px;
     margin-top: 68px;
 }
 .content-box{
