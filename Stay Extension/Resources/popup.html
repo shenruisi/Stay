@@ -3,18 +3,19 @@
 <head>
     <title>跳转到</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="./popup.css">
     <script type="text/javascript" src="./convert2RegExp.js"></script>
     <script type="text/javascript" src="./MatchPattern.js"></script>
+    <script type="text/javascript" src="./message.js"></script>
     <script type="module" src="./popup.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
     <div class="header-box">
         <a class="main-icon" href="stay://"><img src="./images/page-icon.png"></a>
         <div class="header-tab">
-            <div class="tab match-tab active-tab" tab=1 >已匹配脚本</div>
-            <div class="tab console-tab" tab=2>控制台</div>
+            <div class="tab match-tab active-tab" tab=1 data-i18n="matched_scripts_tab">已匹配脚本</div>
+            <div class="tab console-tab" tab=2 data-i18n="console_tab">控制台</div>
             <div id="logNotify" class="notify"></div>
         </div>
     </div>

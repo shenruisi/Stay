@@ -20,8 +20,13 @@ Object.prototype.cleanInnerHTML = function () {
 Object.prototype.setInnerHtml = function (value) {
     this.innerHTML = value
 }
+Object.prototype.html = function () {
+    return this.innerHTML
+}
 
-let browserRunUrl = "",
+let browserLangurage = "",
+    i18nProp = null,
+    browserRunUrl = "",
     scriptStateList = [],
     scriptStateListDom,
     logNotifyDom,
@@ -48,14 +53,12 @@ let browserRunUrl = "",
             ].join(''),
     logState = {error:"error-log", log:""};
 
-
 //https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
 //Short code
 function matchRule(str, rule) {
   var escapeRegex = (str) => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   return new RegExp("^" + rule.split("*").map(escapeRegex).join(".*") + "$").test(str);
 }
-
 
 const matchesCheck = (userLibraryScript, url) => {
     let matched = false;
@@ -80,7 +83,6 @@ const matchesCheck = (userLibraryScript, url) => {
             }
         });
     }
-
     return matched;
 }
 
@@ -101,11 +103,9 @@ function fetchMatchedScriptList(){
                 });
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
-
             }catch(e){
                 console.log(e);
             }
-            
         });
     });
 }
@@ -119,7 +119,6 @@ function fetchAndRenderConsoleLog(){
     }
     renderScriptConsole(scriptConsole);
 }
-
 
 function fetchMatchedScriptConsole(){
     browser.runtime.sendMessage({ from: "popup", operate: "fetchMatchedScriptLog" }, (response) => {
@@ -149,7 +148,6 @@ function fetchMatchedScriptConsole(){
                 count = count>99?"99+":count
                 logNotifyDom.setInnerHtml(count)
             }
-
         } else {
             scriptConsole = [];
         }
@@ -162,40 +160,70 @@ function fetchMatchedScriptConsole(){
 function showNullData(message){
     scriptStateListDom.hide()
     var _dom = document.getElementById("dataNull");
-    _dom.setInnerHtml(message || "未匹配到可用脚本");
+    _dom.setInnerHtml(message || i18nProp["null_scripts"]);
     _dom.show();
 }
 
+function languageCode() {
+    let lang = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0]
+        : (navigator.language || navigator.userLanguage /* IE */ || 'en');
+    lang = lang.toLowerCase();
+    lang = lang.replace(/-/, "_"); // some browsers report language as en-US instead of en_US
+    if (lang.length > 3) {
+        lang = lang.substring(0, 3) + lang.substring(3).toUpperCase();
+    }
+    if (lang == "zh_TW" || lang == "zh_MO"){
+        lang = "zh_HK"
+    }
+    return lang;
+}
+
 window.onload=function(){
-    let self = this;
+    browserLangurage = languageCode()
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
-    fetchMatchedScriptList()
-    
-    // 给header tab绑定事件
-    document.querySelector(".header-box .header-tab").addEventListener("click", function(e){
-        let target = e.target;
-        if(target){
-            let type = target.getAttribute("tab");
-            handleTabAction(target, type);
-        }
-    })
-    
-    // 给scriptStateListDom添加监听器
-    scriptStateListDom.addEventListener("click", function (e) {
-        let target = e.target;
-        // e.target是被点击的元素!
-        // 筛选触发事件的子元素如果是active-case执行的事件
-        if (target && target.nodeName.toLowerCase() == "div" && (target.className.toLowerCase() == "active-case" || target.className.toLowerCase() == "active-icon")) {
-            // 获取到具体事件触发的active-case，进行active
-            let active = target.getAttribute("active");
-            let uuid = target.getAttribute("uuid");
-            console.log("active= ", active, ", uuid=", uuid, ", was clicked!");
-            handleScriptActive(uuid, active.bool());
-            return;
-        }
-    });
+    // load i18n properties
+    i18nProp = langMessage[browserLangurage] || langMessage["en_US"]
+    try {
+        let i18nDataAttrs = document.querySelectorAll("[data-i18n]");
+        i18nDataAttrs.forEach(item => {
+            var htmlContent = item.html();
+            var reg = /<(.*)>/;
+            if (reg.test(htmlContent)) {
+                var htmlValue = reg.exec(htmlContent)[0];
+                item.setInnerHtml(htmlValue + i18nProp[item.dataset.i18n]);
+            }
+            else {
+                item.setInnerHtml(i18nProp[item.dataset.i18n]);
+            }
+        })
+        fetchMatchedScriptList()
+        // 给header tab绑定事件
+        document.querySelector(".header-box .header-tab").addEventListener("click", function (e) {
+            let target = e.target;
+            if (target) {
+                let type = target.getAttribute("tab");
+                handleTabAction(target, type);
+            }
+        })
+        // 给scriptStateListDom添加监听器
+        scriptStateListDom.addEventListener("click", function (e) {
+            let target = e.target;
+            // e.target是被点击的元素!
+            // 筛选触发事件的子元素如果是active-case执行的事件
+            if (target && target.nodeName.toLowerCase() == "div" && (target.className.toLowerCase() == "active-case" || target.className.toLowerCase() == "active-icon")) {
+                // 获取到具体事件触发的active-case，进行active
+                let active = target.getAttribute("active");
+                let uuid = target.getAttribute("uuid");
+                handleScriptActive(uuid, active.bool());
+                return;
+            }
+        });
+    }
+    catch (err) {
+        console.log("loadI18nProperties", err);
+    }
 };
 
 /**
@@ -245,7 +273,7 @@ function renderScriptContent(datas) {
         document.getElementById("dataNull").hide()
         scriptList.forEach(function (item, idnex, array) {
             var data = item; 
-            data.status = item.active ? "运行中" : "已停止"
+            data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
@@ -255,7 +283,7 @@ function renderScriptContent(datas) {
             scriptStateListDom.appendChild(_dom);
         })
     }else{
-        showNullData("未匹配到可用脚本");
+        showNullData(i18nProp["null_scripts"]);
     }
 }
 

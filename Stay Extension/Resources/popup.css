@@ -92,12 +92,12 @@ body {
 }
 .header-tab{
     margin: 0 auto 10px auto;
-    padding: 3px 0;
+    /* padding: 3px 0; */
     display:flex;
     flex:1;
     background: #fff;
-/*    height: 28px;*/
-    width: 188px;
+    height: 28px;
+    width: 70%;
     border: 1px solid rgba(151,151,151,0.14);
     border-radius: 7px;
     justify-content: center;
@@ -121,7 +121,7 @@ body {
     -webkit-transform: scale(.5);
 }
 .match-tab{
-    width: 94px;
+    width: 50%;
     font-size:15px;
     text-align: center;
     color: rgba(0,0,0,0.5);
@@ -137,7 +137,7 @@ body {
 
 .console-tab{
     font-size:15px;
-    width: 94px;
+    width: 50%;
     text-align: center;
     border-left: 1px solid #D8D8D8;
     color: rgba(0,0,0,0.5);
