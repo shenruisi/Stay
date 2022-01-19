@@ -66,7 +66,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
   
   // Populate with defaults in case the script specifies no value.
   const details = {
-      'downloadUrl': url,
+      'downloadUrl': '',
+      'updateUrl': '',
       'excludes': [],
       'grants': [],
       'homePageUrl': '',
@@ -116,6 +117,12 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
           case 'homepageURL':
               details.homePageUrl = data.value;
+              break;
+          case 'updateURL':
+              details.updateUrl = data.value;
+              break;
+          case 'downloadURL':
+              details.downloadUrl = data.value;
               break;
           case 'namespace':
           case 'version':

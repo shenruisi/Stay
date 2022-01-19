@@ -27,6 +27,8 @@
     userScript.pass = [dict[@"pass"] boolValue];
     userScript.errorMessage = dict[@"errorMessage"];
     userScript.requireUrls = dict[@"requireUrls"];
+    userScript.updateUrl = dict[@"updateUrl"];
+    userScript.downloadUrl = dict[@"downloadUrl"];
     return userScript;
 }
 
