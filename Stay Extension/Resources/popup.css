@@ -29,7 +29,10 @@ body {
 body{
     padding: 10px;
     max-width: 768px;
+    min-width: 375px;
+    width: 100%;
     min-height: 480px;
+    max-height: 480px;
 }
 body,
 div,
