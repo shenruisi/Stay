@@ -182,7 +182,7 @@ window.onload=function(){
     //test popup to content
     browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand"});
     
-//    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id:0});
+//    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id:0, uuid:xxxx});
     
     browserLangurage = languageCode()
     logNotifyDom = document.getElementById("logNotify")

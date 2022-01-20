@@ -14,7 +14,6 @@
         source += 'let __RMC_CONTEXT = [];\n\n';
         
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
-        source += 'console.log("789");\n';
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
         source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
         source += '\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid){\n';
