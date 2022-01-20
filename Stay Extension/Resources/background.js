@@ -134,15 +134,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("fetchRegisterMenuCommand" == request.operate){
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "fetchRegisterMenuCommand"})
-                .then(response => {
-                    sendResponse(response);
-                });
+                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "fetchRegisterMenuCommand"});
             });
         }
         else if ("execRegisterMenuCommand" == request.operate){
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "execRegisterMenuCommand", id:request.id});
+                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "execRegisterMenuCommand", id:request.id, uuid:request.uuid});
             });
         }
         return true;

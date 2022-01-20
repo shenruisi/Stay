@@ -180,11 +180,9 @@ function languageCode() {
 
 window.onload=function(){
     //test popup to content
-//    browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand"}, (response) => {
-//        console.log(response);
-//    });
+    browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand"});
     
-    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id:0});
+//    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id:0});
     
     browserLangurage = languageCode()
     logNotifyDom = document.getElementById("logNotify")
@@ -342,10 +340,9 @@ function handleTabAction(target, type) {
     }
 }
 
-//browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//    console.log("here1"+request.data);
-//    if (request.from == "background" && request.operate == "giveRegisterMenuCommand"){
-//        console.log("here1"+request.data);
-//    }
-//    return true;
-//});
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.from == "content" && request.operate == "giveRegisterMenuCommand"){
+        console.log(request.uuid,request.data);
+    }
+    return true;
+});
