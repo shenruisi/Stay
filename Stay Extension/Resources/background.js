@@ -26,7 +26,9 @@ Date.prototype.dateFormat = function(fmt) {
 let matchAppScriptList=[];
 let matchAppScriptConsole = [];
 let gm_console = {};
+
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    
     if ("bootstrap" == request.from || "iframe" == request.from){
         if ("fetchScripts" == request.operate){
             console.log("background---fetchScripts request==", request);
@@ -94,6 +96,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
     else if ("popup" == request.from){
+        console.log(request.from + " " + request.operate);
         if ("fetchLog" == request.operate){
             sendResponse({ body: gm_console });
         }
@@ -128,9 +131,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }else{
                 sendResponse({ body: [] });
             }
-            
+        }
+        else if ("fetchRegisterMenuCommand" == request.operate){
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "fetchRegisterMenuCommand"})
+                .then(response => {
+                    sendResponse(response);
+                });
+            });
+        }
+        else if ("execRegisterMenuCommand" == request.operate){
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "execRegisterMenuCommand", id:request.id});
+            });
         }
         return true;
     }
-    
 });
