@@ -25,10 +25,13 @@ Object.prototype.html = function () {
 }
 
 let browserLangurage = "",
+    registerMenuMap = {},
     i18nProp = null,
     browserRunUrl = "",
     scriptStateList = [],
     scriptStateListDom,
+    registerMenuConDom,
+    noneMenuDom,
     logNotifyDom,
     scriptConsole = [],
     showLogNotify = false,
@@ -41,8 +44,12 @@ let browserLangurage = "",
             '<div class="desc">{description}</div>',
             '</div>',
             '<div class="active-case" active={active} uuid={uuid} >',
+            '<div class="active-setting" active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
             '</div>'].join(''),
+    registerMenuItemTemp = [
+        '<div class="menu-item" uuid={uuid} menu-id={id}>{caption}</div>'
+    ].join(''),
     scriptState = ['start', 'stop'],
     scriptLogDomTmp = [
             '<div class="console-header">',
@@ -181,9 +188,6 @@ function languageCode() {
 window.onload=function(){
     //test popup to content
     browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand"});
-    
-//    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id:0, uuid:xxxx});
-    
     browserLangurage = languageCode()
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
@@ -217,14 +221,27 @@ window.onload=function(){
             let target = e.target;
             // e.target是被点击的元素!
             // 筛选触发事件的子元素如果是active-case执行的事件
-            if (target && target.nodeName.toLowerCase() == "div" && (target.className.toLowerCase() == "active-case" || target.className.toLowerCase() == "active-icon")) {
+            if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-icon") {
                 // 获取到具体事件触发的active-case，进行active
                 let active = target.getAttribute("active");
                 let uuid = target.getAttribute("uuid");
                 handleScriptActive(uuid, active.bool());
                 return;
             }
+            // register menu click
+            if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-setting") {
+                // 获取到具体事件触发的active-case，进行active
+                let active = target.getAttribute("active");
+                let uuid = target.getAttribute("uuid");
+                handleScriptRegisterMenu(uuid);
+                return;
+            }
         });
+       
+        document.querySelector("#registerMenuPopup .close").addEventListener("click", function (e) {
+            closeMenuPopup(e)
+        })
+       
     }
     catch (err) {
         console.log("loadI18nProperties", err);
@@ -293,6 +310,84 @@ function renderScriptContent(datas) {
 }
 
 /**
+ * open register menu
+ * @param {string} uuid 
+ */
+function handleScriptRegisterMenu(uuid) {
+    let registerMenuPopupDom = document.getElementById("registerMenuPopup");
+    registerMenuPopupDom.style.display = "block";
+    document.getElementById("registerMenuWarpper").className = "register-menu-warpper filter-form-show";
+    registerMenuConDom = document.getElementById("registerMenuCon");
+    noneMenuDom = document.getElementById("noneMenu");
+    noneMenuDom.addEventListener("click", function (e) {
+        closeMenuPopup(e)
+    })
+    if (!uuid){
+        registerMenuConDom.hide()
+        noneMenuDom.show();
+        return;
+    }
+    let registerMenu = registerMenuMap[uuid]
+    renderRegisterMenuContent(uuid, registerMenu)
+}
+
+/**
+ * render register menu content when click current script
+ * @param {Array}  datas   register menu datas
+ * @param {string} uuid    script uuid
+ */
+function renderRegisterMenuContent(uuid, datas) {
+    const menuItemList = datas;
+    registerMenuConDom.cleanInnerHTML();
+    if (menuItemList && menuItemList.length > 0) {
+        noneMenuDom.hide()
+        registerMenuConDom.show()
+        menuItemList.forEach(function (item, idnex, array) {
+            var data = item;
+            data.uuid = uuid;
+            var _dom = document.createElement('div');
+            _dom.innerHTML = registerMenuItemTemp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
+            registerMenuConDom.appendChild(_dom.childNodes[0]);
+        })
+        registerMenuConDom.addEventListener("click", function (e) {
+            let target = e.target;
+            if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "menu-item"){
+                let menuId = target.getAttribute("menu-id");
+                let uuid = target.getAttribute("uuid");
+                handleRegisterMenuClickAction(menuId, uuid)
+            }
+        })
+    } else {
+        noneMenuDom.show();
+        registerMenuConDom.hide()
+    }
+}
+
+/**
+ * close popup of register menu
+ * @param {object} e 
+ */
+function closeMenuPopup(e) {
+    document.getElementById("registerMenuWarpper").className = "register-menu-warpper filter-form-hide";
+    let registerMenuPopupDom = document.getElementById("registerMenuPopup");
+    registerMenuPopupDom.style.display = "none";
+
+    noneMenuDom.removeEventListener("click", function (params) { })
+    registerMenuConDom.removeEventListener("click", function (params) {})
+}
+
+/**
+ * click for register menu item
+ * @param {string}     menuId
+ * @param {string}     uuid
+ */
+function handleRegisterMenuClickAction(menuId, uuid) {
+    console.log(menuId, uuid);
+    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id: menuId, uuid: uuid });
+    closeMenuPopup();
+}
+
+/**
  * 控制脚本是否运行
  * @param {string}   uuid        脚本id
  * @param {boolean}  active      脚本当前可执行状态
@@ -343,6 +438,7 @@ function handleTabAction(target, type) {
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand"){
         console.log(request.uuid,request.data);
+        registerMenuMap[request.uuid] = request.data
     }
     return true;
 });
