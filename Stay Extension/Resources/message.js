@@ -2,7 +2,7 @@ const langMessage = {
     "en_US": {
         "matched_scripts_tab": "Matched Scripts",
         "console_tab": "Console",
-        "state_actived": "Actived",
+        "state_actived": "Activated",
         "state_stopped": "Stopped",
         "null_scripts": "no available scripts were matched",
         "null_register_menu": "Do not apply to this web site",

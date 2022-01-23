@@ -230,8 +230,6 @@ window.onload=function(){
             }
             // register menu click
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-setting") {
-                // 获取到具体事件触发的active-case，进行active
-                let active = target.getAttribute("active");
                 let uuid = target.getAttribute("uuid");
                 handleScriptRegisterMenu(uuid);
                 return;
