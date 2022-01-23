@@ -463,7 +463,7 @@ section {
     .content-item, .menu-item{
         border-bottom:1px solid #565656;
     }
-    .info-case .name, .menu-content, .menu-close .close{
+    .info-case .name, .menu-content, .menu-close .close, .menu-item{
         color: #FFFFFF;
     }
     .info-case .title{
