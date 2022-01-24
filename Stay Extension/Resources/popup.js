@@ -44,7 +44,7 @@ let browserLangurage = "",
             '<div class="desc">{description}</div>',
             '</div>',
             '<div class="active-case" active={active} uuid={uuid} >',
-            '<div class="active-setting" active={active} uuid={uuid}></div>',
+            '<div class="active-setting" style="display:{showMenu}" active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
             '</div>'].join(''),
     registerMenuItemTemp = [
@@ -93,6 +93,13 @@ const matchesCheck = (userLibraryScript, url) => {
     return matched;
 }
 
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
+        console.log("giveRegisterMenuCommand====",request.uuid, request.data);
+        registerMenuMap[request.uuid] = request.data
+    }
+    return true;
+});
 /**
  * 获取当前网页可匹配的脚本
  */
@@ -108,6 +115,8 @@ function fetchMatchedScriptList(){
                         scriptStateList.push(userLibraryScript);
                     }
                 });
+                //fetch register menu from popup to content
+                browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
             }catch(e){
@@ -186,8 +195,6 @@ function languageCode() {
 }
 
 window.onload=function(){
-    //test popup to content
-    browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand"});
     browserLangurage = languageCode()
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
@@ -293,11 +300,15 @@ function renderScriptContent(datas) {
         document.getElementById("dataNull").hide()
         scriptList.forEach(function (item, idnex, array) {
             var data = item; 
+            let uuid = data["uuid"];
+            let grants = data.grants
+            let showMenu = grants && grants.length > 0 && grants.includes("GM.registerMenuCommand")? "block":"none"
+            data.showMenu = showMenu
             data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
-            _dom.setAttribute('uuid', data["uuid"]);
+            _dom.setAttribute('uuid', uuid);
             _dom.setAttribute('author', data["author"]);
             _dom.innerHTML = scriptDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
             scriptStateListDom.appendChild(_dom);
@@ -432,11 +443,3 @@ function handleTabAction(target, type) {
         }
     }
 }
-
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.from == "content" && request.operate == "giveRegisterMenuCommand"){
-        console.log(request.uuid,request.data);
-        registerMenuMap[request.uuid] = request.data
-    }
-    return true;
-});

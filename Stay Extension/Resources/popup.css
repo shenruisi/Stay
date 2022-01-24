@@ -33,7 +33,7 @@ body{
     min-width: 375px;
     width: 100%;
     min-height: 480px;
-    max-height: 480px;
+    /* max-height: 480px; */
 }
 body,
 div,
@@ -501,7 +501,7 @@ section {
         background-image:url(./images/stop-dark.png);
     }
     .active-setting{
-        background-image: url(./images/settings.png);
+        background-image: url(./images/settings-white.png);
     }
 }
 
