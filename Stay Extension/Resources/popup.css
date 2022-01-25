@@ -410,6 +410,21 @@ section {
     animation-iteration-count:1;
 }
 
+.toast-warpper{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 40000;
+    width: 200px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #000000;
+    font-size: 16px;
+    display: none;
+}
+
 /* 自下而上 */
 @keyframes bottom2Top {
     from{height: 0px;}

@@ -6,7 +6,8 @@ const langMessage = {
         "state_stopped": "Stopped",
         "null_scripts": "no available scripts were matched",
         "null_register_menu": "Do not apply to this web site",
-        "menu_close": "Close"
+        "menu_close": "Close",
+        "toast_keep_active": "Please keep the script activated",
     },
     "zh_CN": {
         "matched_scripts_tab": "已匹配脚本",
@@ -15,7 +16,8 @@ const langMessage = {
         "state_stopped": "已停止",
         "null_scripts": "未匹配到可用脚本",
         "null_register_menu": "不应用于该网站",
-        "menu_close": "关闭"
+        "menu_close": "关闭",
+        "toast_keep_active": "请保持脚本处于激活状态",
     },
     "zh_HK": {
         "matched_scripts_tab": "已匹配腳本",
@@ -24,6 +26,7 @@ const langMessage = {
         "state_stopped": "已停止",
         "null_scripts": "未匹配到可用腳本",
         "null_register_menu": "不應用於該網站",
-        "menu_close": "關閉"
+        "menu_close": "關閉",
+        "toast_keep_active": "請保持腳本處於激活狀態",
     },
 }

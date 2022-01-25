@@ -31,6 +31,7 @@ let browserLangurage = "",
     scriptStateList = [],
     scriptStateListDom,
     registerMenuConDom,
+    toastDom,
     noneMenuDom,
     logNotifyDom,
     scriptConsole = [],
@@ -196,6 +197,7 @@ function languageCode() {
 
 window.onload=function(){
     browserLangurage = languageCode()
+    toastDom = document.getElementById("toastWarpper")
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
@@ -238,7 +240,16 @@ window.onload=function(){
             // register menu click
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-setting") {
                 let uuid = target.getAttribute("uuid");
-                handleScriptRegisterMenu(uuid);
+                let active = target.getAttribute("active");
+                if (active.bool()){
+                    handleScriptRegisterMenu(uuid);
+                }else{
+                    toastDom.setInnerHtml(i18nProp["toast_keep_active"])
+                    toastDom.show();
+                    setTimeout(() => {
+                        toastDom.hide()
+                    }, 1500);
+                }
                 return;
             }
         });
