@@ -468,7 +468,7 @@ section {
         background-color:#000000;
     }
     
-    .header-box,.register-menu-warpper{
+    .header-box,.register-menu-warpper, .toast-warpper{
         background-color: #000000;
     }
 
@@ -478,7 +478,7 @@ section {
     .content-item, .menu-item{
         border-bottom:1px solid #565656;
     }
-    .info-case .name, .menu-content, .menu-close .close, .menu-item{
+    .info-case .name, .menu-content, .menu-close .close, .menu-item, .toast-warpper{
         color: #FFFFFF;
     }
     .info-case .title{
