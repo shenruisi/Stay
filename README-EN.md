@@ -28,6 +28,9 @@ If you are a developer or a senior user of browser extension scripts, you are we
 ## Stay API
 [API Wiki](https://github.com/shenruisi/Stay/wiki/Stay-API-Reference)
 
+## Userscript repository
+[Stay offical userscript](https://github.com/shenruisi/Stay-Offical-Userscript)
+
 ## LICENSE
 [MPL](./LICENSE)
 
