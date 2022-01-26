@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度@PreventAppJump
 // @namespace    http://stay.app/
-// @version      0.0.1
+// @version      0.0.2
 // @description  防止从Baidu结果页跳转到其他App
 // @author       Stay²
 // @match        *://*.baidu.com/*
@@ -10,6 +10,8 @@
 // @exclude      (http|https)://tieba.baidu.com/*
 // @run-at       document-start
 // @require      stay://vendor/stay-taskloop.js
+// @updateURL    https://raw.githubusercontent.com/shenruisi/Stay-Offical-Userscript/main/baidu/stay-baidu.update.js
+// @downloadURL    https://raw.githubusercontent.com/shenruisi/Stay-Offical-Userscript/main/baidu/stay-baidu.user.js
 // ==/UserScript==
 
 const ZHIHU_REG = /^(http|https):\/\/(.*\.){0,1}zhihu.com\/.*$/;
