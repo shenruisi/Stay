@@ -186,7 +186,7 @@
         line13.top = descDetailLabel.bottom + 13;
         [detailView addSubview:line13];
         
-        UILabel *autoUpdateLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.descDetail","Description")];
+        UILabel *autoUpdateLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.autoUpdate","autoUpdate")];
         autoUpdateLabel.top = line13.bottom +13;
         autoUpdateLabel.left = 17;
         [detailView addSubview:autoUpdateLabel];
