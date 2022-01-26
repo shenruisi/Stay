@@ -121,6 +121,8 @@
                                     userScript.active = scrpit.active;
                                     if(isSearch) {
                                         [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
                                     } else {
                                         [[DataManager shareManager] updateUserScript:userScript];
                                         [self refreshScript];
@@ -135,6 +137,8 @@
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                             if(isSearch) {
                                                 [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
                                             } else {
                                                 [[DataManager shareManager] updateUserScript:userScript];
                                                 [self refreshScript];
