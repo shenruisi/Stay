@@ -54,9 +54,9 @@
 
 - (void)recoverBadData{
     if(![self isExitedColumn:@"switch"]){
-        [self addIntegerColumn:@"user_config_script" column:@"switch"];
         [self addColumn:@"user_config_script" column:@"updateUrl"];
         [self addColumn:@"user_config_script" column:@"downloadUrl"];
+        [self addIntegerColumn:@"user_config_script" column:@"switch"];
         [self addColumn:@"script_config" column:@"updateUrl"];
         [self addColumn:@"script_config" column:@"downloadUrl"];
     }
