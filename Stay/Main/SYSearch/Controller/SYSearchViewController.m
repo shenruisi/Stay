@@ -135,7 +135,7 @@
     [cell.contentView addSubview:titleLabel];
     
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
-    versionLabel.font = [UIFont boldSystemFontOfSize:18];
+    versionLabel.font = [UIFont boldSystemFontOfSize:15];
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
     versionLabel.textColor = RGB(182, 32, 224);

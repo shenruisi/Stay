@@ -101,7 +101,7 @@
     [self updateScriptWhen:searchArray type:true];
 }
 
-- (void)updateScriptWhen:(NSArray *)array type:(Boolean)isSearch {
+- (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
     for(int i = 0; i < array.count; i++) {
         UserScript *scrpit = array[i];
         if(!isSearch && !scrpit.updateSwitch) {
@@ -258,7 +258,7 @@
     [cell.contentView addSubview:titleLabel];
     
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
-    versionLabel.font = [UIFont boldSystemFontOfSize:18];
+    versionLabel.font = [UIFont boldSystemFontOfSize:15];
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
     versionLabel.textColor = RGB(182, 32, 224);
