@@ -10,6 +10,7 @@
 #import <sqlite3.h>
 #import "ScriptDetailModel.h"
 #import "Tampermonkey.h"
+#import "SYVersionUtils.h"
 
 @implementation DataManager
 
@@ -52,6 +53,12 @@
 }
 
 - (void)recoverBadData{
+    if(![self isExitedColumn]){
+        [self addColumn:@"user_config_script" column:@"updateUrl"];
+        [self addColumn:@"user_config_script" column:@"downloadUrl"];
+        [self addColumn:@"script_config" column:@"updateUrl"];
+        [self addColumn:@"script_config" column:@"downloadUrl"];
+    }
     NSArray *list =  [self findProjectSearchLib];
     for(int i = 0; i < list.count; i++) {
         UserScript *scrpitDetail = list[i];
@@ -59,14 +66,84 @@
         if(old == nil) {
             [self insertScriptConfigByUserScript:scrpitDetail];
         } else {
-            if(![old.version isEqual:scrpitDetail.version]) {
+            NSInteger status =  [SYVersionUtils compareVersion:scrpitDetail.version toVersion:old.version];
+            if(status == 1) {
                 [self updateScriptConfigByUserScript:scrpitDetail];
             }
+         
         }
     }
-    
-    return ;
+    return;
+}
 
+- (void)addColumn:(NSString *)tableName column:(NSString *)columnName{
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return;
+    }
+    NSString *sql = [NSString stringWithFormat:@"alter table '%@' add '%@' text ",tableName,columnName];
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return ;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return ;
+    
+}
+
+- (BOOL)isExitedColumn {
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return true;
+    }
+    
+    NSString *sql = @"select count(*) from sqlite_master where name='user_config_script' and sql like '%updateUrl%'";
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return true;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    int activite = 0;
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        activite = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return activite == 0? false:true;
 }
 
 //根据条件查询一组用户，模糊查询 DQL
@@ -167,13 +244,11 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//         [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
-//        NSDate* myDate=[dateFormatter dateFromString:@"2021-12-16 00:00:00"];
-//        NSTimeInterval tInterval = [myDate timeIntervalSince1970];
-            
         
-        
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -292,12 +367,11 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//         [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
-//        NSDate* myDate=[dateFormatter dateFromString:@"2021-12-16 00:00:00"];
-//        NSTimeInterval tInterval = [myDate timeIntervalSince1970];
-            
-        
+
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -414,7 +488,10 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-        
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -583,7 +660,11 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-        
+
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -703,7 +784,11 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-        
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
+
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -809,6 +894,10 @@
         
         
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
         
         scrpitDetail.sourcePage = sourcePage;
         
@@ -840,7 +929,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -886,6 +975,10 @@
             sqlite3_bind_text(statement, 17, NULL, -1,NULL);
         }
         sqlite3_bind_text(statement, 18, [scrpitDetail.sourcePage UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 19, [scrpitDetail.updateUrl UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 20, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1005,7 +1098,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ? where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ? where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -1050,7 +1143,10 @@
             sqlite3_bind_text(statement, 16, NULL, -1,NULL);
         }
         sqlite3_bind_text(statement, 17, [scrpitDetail.sourcePage UTF8String], -1,NULL);
-        sqlite3_bind_text(statement, 18,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 20,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 18, [scrpitDetail.updateUrl UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 19, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1155,8 +1251,11 @@
         
         scrpitDetail.sourcePage = sourcePage;
         
-        
-        
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
+
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
     sqlite3_finalize(stmt);
@@ -1255,6 +1354,11 @@
         
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        scrpitDetail.updateUrl = updateUrl;
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        scrpitDetail.downloadUrl = downloadUrl;
+
         scrpitDetail.sourcePage = sourcePage;
     }
     sqlite3_finalize(stmt);
@@ -1281,12 +1385,12 @@
         return;
     }
     
-    NSString *sql = @"UPDATE script_config set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes = ? ,maches= ?,excludes = ?,runAt = ?,grants = ?,noFrames = ?,content = ?,active = ?,requireUrls = ?,sourcePage = ? WHERE uuid = ?";
+    NSString *sql = @"UPDATE script_config set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes = ? ,maches= ?,excludes = ?,runAt = ?,grants = ?,noFrames = ?,content = ?,active = ?,requireUrls = ?,sourcePage = ?,updateUrl= ?,downloadUrl = ? WHERE uuid = ?";
     
     sqlite3_stmt *statement;
     
     if (sqlite3_prepare_v2(sqliteHandle, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
-        sqlite3_bind_text(statement, 18,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 20,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 1,scrpitDetail.name != NULL? [scrpitDetail.name UTF8String]:NULL, -1,NULL);
         sqlite3_bind_text(statement, 2,scrpitDetail.namespace !=NULL? [scrpitDetail.namespace UTF8String]:NULL, -1,NULL);
         sqlite3_bind_text(statement, 3,scrpitDetail.author != NULL? [scrpitDetail.author UTF8String]:NULL, -1,NULL);
@@ -1327,6 +1431,10 @@
             sqlite3_bind_text(statement, 16, NULL, -1,NULL);
         }
         sqlite3_bind_text(statement, 17, [scrpitDetail.sourcePage UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 18, [scrpitDetail.updateUrl UTF8String], -1,NULL);
+                
+        sqlite3_bind_text(statement, 19, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1357,7 +1465,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO script_config (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO script_config (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -1403,6 +1511,10 @@
             sqlite3_bind_text(statement, 17, NULL, -1,NULL);
         }
         sqlite3_bind_text(statement, 18, [scrpitDetail.sourcePage UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 19, [scrpitDetail.updateUrl UTF8String], -1,NULL);
+                
+        sqlite3_bind_text(statement, 20, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);

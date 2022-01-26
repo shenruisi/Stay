@@ -38,7 +38,7 @@
     self.searchController.delegate = self;
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar setTintColor:RGB(182, 32, 224)];
-    search.searchBar.placeholder = @"ALL user scripts";
+    search.searchBar.placeholder = @"All userscripts";
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
     [self.tableView reloadData];
@@ -126,11 +126,22 @@
     
     cell.contentView.backgroundColor = bgColor;
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth, 21)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth / 3 * 2, 21)];
     titleLabel.font = [UIFont boldSystemFontOfSize:18];
     titleLabel.textAlignment = NSTextAlignmentLeft;
+    titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.text = model.name;
+    [titleLabel sizeToFit];
     [cell.contentView addSubview:titleLabel];
+    
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
+    versionLabel.font = [UIFont boldSystemFontOfSize:18];
+    versionLabel.textAlignment = NSTextAlignmentLeft;
+    versionLabel.text = model.version;
+    versionLabel.textColor = RGB(182, 32, 224);
+    versionLabel.left = titleLabel.right + 5;
+    versionLabel.centerY = titleLabel.centerY;
+    [cell.contentView addSubview:versionLabel];
     
     UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
     authorLabel.font = [UIFont systemFontOfSize:16];

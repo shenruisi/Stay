@@ -36,4 +36,5 @@
 
 - (void)updateUserScript:(UserScript *)scrpitDetail;
 
+- (void)updateScriptConfigByUserScript:(UserScript *)scrpitDetail;
 @end

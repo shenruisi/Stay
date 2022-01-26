@@ -77,6 +77,8 @@
 		8410C845275E028A005531EC /* json-ld.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83E275E028A005531EC /* json-ld.html */; };
 		8410C846275E028A005531EC /* codemirror.css in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83F275E028A005531EC /* codemirror.css */; };
 		8410C848275E028D005531EC /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C847275E028D005531EC /* editor.html */; };
+		848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */; };
+		848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B8279A5BA000D55FFD /* SYVersionUtils.m */; };
 		8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB527592B850075ABD5 /* more-selected@3x.png */; };
 		8496DFB827592C260075ABD5 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB727592C260075ABD5 /* more@3x.png */; };
 		8496DFBA275935B30075ABD5 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB9275935B30075ABD5 /* add@3x.png */; };
@@ -232,6 +234,10 @@
 		8410C83E275E028A005531EC /* json-ld.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "json-ld.html"; sourceTree = "<group>"; };
 		8410C83F275E028A005531EC /* codemirror.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = codemirror.css; sourceTree = "<group>"; };
 		8410C847275E028D005531EC /* editor.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = editor.html; sourceTree = "<group>"; };
+		848A48B4279A4C7800D55FFD /* SYNetworkUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNetworkUtils.h; sourceTree = "<group>"; };
+		848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNetworkUtils.m; sourceTree = "<group>"; };
+		848A48B7279A5BA000D55FFD /* SYVersionUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVersionUtils.h; sourceTree = "<group>"; };
+		848A48B8279A5BA000D55FFD /* SYVersionUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYVersionUtils.m; sourceTree = "<group>"; };
 		8496DFB527592B850075ABD5 /* more-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-selected@3x.png"; sourceTree = "<group>"; };
 		8496DFB727592C260075ABD5 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
 		8496DFB9275935B30075ABD5 /* add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@3x.png"; sourceTree = "<group>"; };
@@ -727,6 +733,10 @@
 				84C1ED252765E29D00651DF9 /* NSString+Urlencode.m */,
 				84BDC83A2745575E005367C6 /* UIViewExt.h */,
 				84BDC83B2745575E005367C6 /* UIViewExt.m */,
+				848A48B4279A4C7800D55FFD /* SYNetworkUtils.h */,
+				848A48B7279A5BA000D55FFD /* SYVersionUtils.h */,
+				848A48B8279A5BA000D55FFD /* SYVersionUtils.m */,
+				848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -985,6 +995,7 @@
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
@@ -992,6 +1003,7 @@
 				84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */,
 				587689402720064D00F834A4 /* NavigationController.m in Sources */,
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
+				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
