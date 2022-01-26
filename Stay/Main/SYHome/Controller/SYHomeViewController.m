@@ -95,13 +95,19 @@
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
-    [self updateScriptWhen];
+    NSArray *array = [[DataManager shareManager] findScript:1];
+    [self updateScriptWhen:array type:false];
+    NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
+    [self updateScriptWhen:searchArray type:true];
 }
 
-- (void)updateScriptWhen {
-    NSArray *array = [[DataManager shareManager] findScript:1];
+- (void)updateScriptWhen:(NSArray *)array type:(Boolean)isSearch {
     for(int i = 0; i < array.count; i++) {
         UserScript *scrpit = array[i];
+        if(!isSearch && !scrpit.updateSwitch) {
+            continue;
+        }
+        
         if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
                 if(responseObject != nil) {
@@ -113,9 +119,12 @@
                                 if(userScript.content != nil && userScript.content.length > 0) {
                                     userScript.uuid = scrpit.uuid;
                                     userScript.active = scrpit.active;
-                                    [[DataManager shareManager] updateUserScript:userScript];
-                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                    [self refreshScript];
+                                    if(isSearch) {
+                                        [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                    } else {
+                                        [[DataManager shareManager] updateUserScript:userScript];
+                                        [self refreshScript];
+                                    }
                                 }
                             } else {
                                 [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
@@ -124,9 +133,12 @@
                                         userScript.uuid = scrpit.uuid;
                                         userScript.active = scrpit.active;
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-                                            [[DataManager shareManager] updateUserScript:userScript];
-                                            [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                            [self refreshScript];
+                                            if(isSearch) {
+                                                [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                            } else {
+                                                [[DataManager shareManager] updateUserScript:userScript];
+                                                [self refreshScript];
+                                            }
                                         }
                                     }
                                 } failBlock:^(NSError * _Nonnull error) {

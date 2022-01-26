@@ -53,7 +53,8 @@
 }
 
 - (void)recoverBadData{
-    if(![self isExitedColumn]){
+    if(![self isExitedColumn:@"switch"]){
+        [self addIntegerColumn:@"user_config_script" column:@"switch"];
         [self addColumn:@"user_config_script" column:@"updateUrl"];
         [self addColumn:@"user_config_script" column:@"downloadUrl"];
         [self addColumn:@"script_config" column:@"updateUrl"];
@@ -74,6 +75,41 @@
         }
     }
     return;
+}
+
+
+- (void)addIntegerColumn:(NSString *)tableName column:(NSString *)columnName{
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return;
+    }
+    NSString *sql = [NSString stringWithFormat:@"alter table '%@' add '%@' INTEGER DEFAULT 1",tableName,columnName];
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return ;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return ;
+    
 }
 
 - (void)addColumn:(NSString *)tableName column:(NSString *)columnName{
@@ -110,7 +146,7 @@
     
 }
 
-- (BOOL)isExitedColumn {
+- (BOOL)isExitedColumn:(NSString *)column {
     //打开数据库
     sqlite3 *sqliteHandle = NULL;
     int result = 0;
@@ -127,7 +163,8 @@
         return true;
     }
     
-    NSString *sql = @"select count(*) from sqlite_master where name='user_config_script' and sql like '%updateUrl%'";
+    NSString *sql = @"select count(*) from sqlite_master where name='user_config_script' and sql like '%%@%'";
+    sql = [NSString stringWithFormat:sql,column];
     sqlite3_stmt *stmt = NULL;
     result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
     if (result != SQLITE_OK) {
@@ -373,6 +410,9 @@
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
         scrpitDetail.downloadUrl = downloadUrl;
         
+        int updateSwitch = sqlite3_column_int(stmt, 22);
+        scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -665,6 +705,9 @@
         scrpitDetail.updateUrl = updateUrl;
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
         scrpitDetail.downloadUrl = downloadUrl;
+        int updateSwitch = sqlite3_column_int(stmt, 22);
+        scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -1255,7 +1298,8 @@
         scrpitDetail.updateUrl = updateUrl;
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
         scrpitDetail.downloadUrl = downloadUrl;
-
+        int updateSwitch = sqlite3_column_int(stmt, 22);
+        scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
     sqlite3_finalize(stmt);
@@ -1520,6 +1564,48 @@
     NSInteger resultCode = sqlite3_step(statement);
     if (resultCode != SQLITE_DONE) {
         sqlite3_finalize(statement);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateScriptConfigAutoupdate:(int)status numberId:(NSString *)uuid {
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE user_config_script SET switch = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_int(stmt, 1, status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
     }
     sqlite3_close(sqliteHandle);
 }

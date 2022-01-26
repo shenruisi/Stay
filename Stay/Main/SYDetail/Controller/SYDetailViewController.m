@@ -178,9 +178,28 @@
     descDetailLabel.numberOfLines = 2;
     [descDetailLabel sizeToFit];
     [detailView addSubview:descDetailLabel];
-    
-    detailView.height = descDetailLabel.bottom + 13;
-    
+        
+    if(self.isSearch){
+        detailView.height = descDetailLabel.bottom + 13;
+    } else {
+        UIView *line13 = [self createLine];
+        line13.top = descDetailLabel.bottom + 13;
+        [detailView addSubview:line13];
+        
+        UILabel *autoUpdateLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.descDetail","Description")];
+        autoUpdateLabel.top = line13.bottom +13;
+        autoUpdateLabel.left = 17;
+        [detailView addSubview:autoUpdateLabel];
+       
+        UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
+        autoUpdateSwitch.centerY = autoUpdateLabel.centerY;
+        autoUpdateSwitch.right = kScreenWidth - 48;
+        [autoUpdateSwitch setOn: self.script.updateSwitch];
+        [detailView addSubview:autoUpdateSwitch];
+        [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
+        detailView.height = autoUpdateLabel.bottom + 13;
+    }
+     
     UILabel *configLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
     configLabel.font = [UIFont systemFontOfSize:17];
     configLabel.text = [NSString stringWithFormat:@"%@\"%@\"",@"CONIFGURATION FOR",self.script.name];
@@ -416,6 +435,14 @@
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
     [self initScrpitContent];
+}
+
+- (void) updateSwitchAction:(UISwitch *) scriptSwitch {
+    if (scriptSwitch.on == YES) {
+        [[DataManager shareManager] updateScriptConfigAutoupdate:1 numberId:self.script.uuid];
+    } else {
+        [[DataManager shareManager] updateScriptConfigAutoupdate:0 numberId:self.script.uuid];
+    }
 }
 
 - (UIView *)createLine{
