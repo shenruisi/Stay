@@ -10,7 +10,9 @@ const GM_APIS = new Set([
     "GM_setValue",
     "GM.setValue",
     "GM_registerMenuCommand",
-    "GM.registerMenuCommand"
+    "GM.registerMenuCommand",
+    "GM_addStyle",
+    "GM.addStyle"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect","resource"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);
