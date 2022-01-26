@@ -101,7 +101,7 @@
     [self updateScriptWhen:searchArray type:true];
 }
 
-- (void)updateScriptWhen:(NSArray *)array type:(Boolean)isSearch {
+- (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
     for(int i = 0; i < array.count; i++) {
         UserScript *scrpit = array[i];
         if(!isSearch && !scrpit.updateSwitch) {
@@ -121,6 +121,8 @@
                                     userScript.active = scrpit.active;
                                     if(isSearch) {
                                         [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
                                     } else {
                                         [[DataManager shareManager] updateUserScript:userScript];
                                         [self refreshScript];
@@ -135,6 +137,8 @@
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                             if(isSearch) {
                                                 [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
                                             } else {
                                                 [[DataManager shareManager] updateUserScript:userScript];
                                                 [self refreshScript];
@@ -258,7 +262,7 @@
     [cell.contentView addSubview:titleLabel];
     
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
-    versionLabel.font = [UIFont boldSystemFontOfSize:18];
+    versionLabel.font = [UIFont boldSystemFontOfSize:15];
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
     versionLabel.textColor = RGB(182, 32, 224);

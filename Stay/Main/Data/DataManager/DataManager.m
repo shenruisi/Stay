@@ -163,7 +163,7 @@
         return true;
     }
     
-    NSString *sql = @"select count(*) from sqlite_master where name='user_config_script' and sql like '%%@%'";
+    NSString *sql = @"select count(*) from sqlite_master where name='user_config_script' and sql like '%%%@%%'";
     sql = [NSString stringWithFormat:sql,column];
     sqlite3_stmt *stmt = NULL;
     result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -282,9 +282,9 @@
         
         scrpitDetail.sourcePage = sourcePage;
         
-        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         scrpitDetail.updateUrl = updateUrl;
-        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.downloadUrl = downloadUrl;
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -528,9 +528,9 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         scrpitDetail.updateUrl = updateUrl;
-        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.downloadUrl = downloadUrl;
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -827,9 +827,9 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
-        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         scrpitDetail.updateUrl = updateUrl;
-        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.downloadUrl = downloadUrl;
 
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
@@ -937,9 +937,9 @@
         
         
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
-        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         scrpitDetail.updateUrl = updateUrl;
-        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.downloadUrl = downloadUrl;
         
         scrpitDetail.sourcePage = sourcePage;
@@ -1398,9 +1398,9 @@
         
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
-        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         scrpitDetail.updateUrl = updateUrl;
-        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
+        NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.downloadUrl = downloadUrl;
 
         scrpitDetail.sourcePage = sourcePage;

@@ -41,9 +41,16 @@
     search.searchBar.placeholder = @"All userscripts";
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadScriptSuccess:) name:@"uploadScriptSuccess" object:nil];
+
     [self.tableView reloadData];
 }
 
+- (void)uploadScriptSuccess:(id)sender{
+    [_datas removeAllObjects];
+    [_datas addObjectsFromArray:[[DataManager shareManager] findScriptInLib]];
+    [self.tableView reloadData];
+}
 
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
@@ -135,7 +142,7 @@
     [cell.contentView addSubview:titleLabel];
     
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
-    versionLabel.font = [UIFont boldSystemFontOfSize:18];
+    versionLabel.font = [UIFont boldSystemFontOfSize:15];
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
     versionLabel.textColor = RGB(182, 32, 224);
