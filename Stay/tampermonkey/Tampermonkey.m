@@ -69,7 +69,9 @@ static Tampermonkey *kInstance = nil;
     
 //    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"((?<!:)\\/\\/.*|\\/\\*(\\s|.)*?\\*\\/)" options:NSRegularExpressionAnchorsMatchLines error:NULL];
     
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\/\\*[\\s\\S]*?\\*\\/|([^\\\\:]|^)\\/\\/.*$" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+//    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\/\\*[\\s\\S]*?\\*\\/|([^\\\\:]|^)\\/\\/.*$" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^\"\\{:]\\/\\/.*" options:NSRegularExpressionAnchorsMatchLines error:NULL];
     
     process = [regex stringByReplacingMatchesInString:process
                                               options:0

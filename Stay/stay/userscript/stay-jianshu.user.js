@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         简书@AutoExpend
+// @name         简书@AutoExpand
 // @namespace    http://stay.app/
-// @version      0.0.1
+// @version      0.0.2
 // @description  自动展开简书文章
 // @author       Stay²
 // @match        *://*.jianshu.com/*
@@ -30,22 +30,30 @@ function removeAppJump(){
 }
 
 function unfold(){
+    
+    
     let closebtn = document.querySelector('button.close-collapse-btn');
     if (closebtn){
-        closebtn.remove();
+        closebtn.click();
         
-        let content = document.querySelector('div.collapse-free-content')
-        if (content){
-            content.className = null;
+        let openAppModal = document.querySelector('div.open-app-modal');
+        if (openAppModal){
+            let cancelbtn = openAppModal.querySelector('button.cancel');
+            cancelbtn.click();
         }
         
+//        let content = document.querySelector('div.collapse-free-content')
+//        if (content){
+//            content.className = null;
+//        }
+//
         return COMPLETE;
     }
     
     return CONTINUE;
 }
 
-if (document.readyState !== "loading"){
+if (document.readyState != "loading"){
     let tasks = [removeChoosePanel,removeAppJump,unfold];
     Stay_Inject.run(tasks,100,30,false).then((data) => {});
 }
