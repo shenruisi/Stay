@@ -202,7 +202,7 @@
     matchLabel.left = 17;
     [configView addSubview:matchLabel];
     
-    UILabel *matchDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
+    UILabel *matchDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,500)];
     matchDetailLabel.font = [UIFont systemFontOfSize:17];
     if (self.script.mathes.count > 0) {
         matchDetailLabel.text = [NSString stringWithFormat:@"[%@]", [self.script.mathes componentsJoinedByString:@","]];
@@ -213,6 +213,8 @@
     matchDetailLabel.left = 17;
     matchDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     matchDetailLabel.textColor = RGB(138, 138, 138);
+    matchDetailLabel.numberOfLines = 0;
+    [matchDetailLabel sizeToFit];
     [configView addSubview:matchDetailLabel];
     
     UIView *line5 = [self createLine];;
@@ -224,7 +226,7 @@
     includesLabel.left = 17;
     [configView addSubview:includesLabel];
     
-    UILabel *includesDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
+    UILabel *includesDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,500)];
     includesDetailLabel.font = [UIFont systemFontOfSize:17];
     if (self.script.includes.count > 0) {
         includesDetailLabel.text = [NSString stringWithFormat:@"[%@]", [self.script.includes componentsJoinedByString:@","]];
@@ -235,6 +237,8 @@
     includesDetailLabel.left = 17;
     includesDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     includesDetailLabel.textColor = RGB(138, 138, 138);
+    includesDetailLabel.numberOfLines = 0;
+    [includesDetailLabel sizeToFit];
     [configView addSubview:includesDetailLabel];
     
     UIView *line8 = [self createLine];
@@ -246,7 +250,7 @@
     excludesLabel.left = 17;
     [configView addSubview:excludesLabel];
     
-    UILabel *excludesDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
+    UILabel *excludesDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,500)];
     excludesDetailLabel.font = [UIFont systemFontOfSize:17];
     if (self.script.excludes.count > 0) {
         excludesDetailLabel.text = [NSString stringWithFormat:@"[%@]", [self.script.excludes componentsJoinedByString:@","]];
@@ -257,6 +261,8 @@
     excludesDetailLabel.left = 17;
     excludesDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     excludesDetailLabel.textColor = RGB(138, 138, 138);
+    excludesDetailLabel.numberOfLines = 0;
+    [excludesDetailLabel sizeToFit];
     [configView addSubview:excludesDetailLabel];
     
     UIView *line9 = [self createLine];
@@ -282,8 +288,50 @@
     line6.top = runAtDetailLabel.bottom + 9;
     [configView addSubview:line6];
     
+    
+    UILabel *updateLabel = [self createDefaultLabelWithText:@"Updateurl"];
+    updateLabel.top = line6.bottom + 13;
+    updateLabel.left = 17;
+    [configView addSubview:updateLabel];
+    
+    UILabel *updateUrlLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
+    updateUrlLabel.font = [UIFont systemFontOfSize:17];
+    updateUrlLabel.text = self.script.updateUrl;
+    updateUrlLabel.top = updateLabel.bottom +13;
+    updateUrlLabel.left = 17;
+    updateUrlLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+    updateUrlLabel.textColor = RGB(138, 138, 138);
+    updateUrlLabel.numberOfLines = 0;
+    [updateUrlLabel sizeToFit];
+    [configView addSubview:updateUrlLabel];
+    
+    UIView *line11 = [self createLine];
+    line11.top = updateUrlLabel.bottom + 9;
+    [configView addSubview:line11];
+    
+    UILabel *downloadLabel = [self createDefaultLabelWithText:@"Downloadurl"];
+    downloadLabel.top = line11.bottom + 13;
+    downloadLabel.left = 17;
+    [configView addSubview:downloadLabel];
+    
+    UILabel *downLoadUrlLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
+    downLoadUrlLabel.font = [UIFont systemFontOfSize:17];
+    downLoadUrlLabel.text = self.script.downloadUrl;
+    downLoadUrlLabel.top = downloadLabel.bottom +13;
+    downLoadUrlLabel.left = 17;
+    downLoadUrlLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+    downLoadUrlLabel.textColor = RGB(138, 138, 138);
+    downLoadUrlLabel.numberOfLines = 0;
+    [downLoadUrlLabel sizeToFit];
+    [configView addSubview:downLoadUrlLabel];
+    
+    UIView *line12 = [self createLine];
+    line12.top = downLoadUrlLabel.bottom + 9;
+    [configView addSubview:line12];
+    
+    
     UILabel *grantsLabel = [self createDefaultLabelWithText:@"Grants"];
-    grantsLabel.top = line6.bottom + 13;
+    grantsLabel.top = line12.bottom + 13;
     grantsLabel.left = 17;
     [configView addSubview:grantsLabel];
     
