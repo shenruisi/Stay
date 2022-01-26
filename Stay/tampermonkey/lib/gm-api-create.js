@@ -62,6 +62,14 @@
             source += GM_registerMenuCommand.toString() + ';\n\n';
         }
         
+        if (grants.includes('GM_addStyle')) {
+            source += GM_addStyle.toString() + ';\n\n';
+        }
+
+        if (grants.includes('GM.addStyle')) {
+            source += 'GM.addStyle = ' + GM_addStyle.toString() + ';\n\n';
+        }
+
         //add GM_log by default
         source +=  GM_log.toString() + ';\n\n';
         
@@ -143,6 +151,25 @@
         userInfo["accessKey"] = accessKey;
         userInfo["id"] = __RMC_CONTEXT.length;
         __RMC_CONTEXT.push(userInfo);
+    }
+
+    function GM_addStyle(css) {
+        var head, style;
+        head = document.getElementsByTagName('head')[0];
+        if (!head) { return; }
+        style = document.createElement('style');
+        style.type = 'text/css';
+        try {
+            style.appendChild(document.createTextNode(css));
+        } catch (ex) {
+            style.styleSheet.cssText = css;//针对IE
+
+        }
+        head.appendChild(style);
+        // var styleEl = document.createElement('style'),
+        //     styleSheet = styleEl.sheet;
+        // styleSheet.insertRule(css, 0);
+        // document.head.appendChild(styleEl);      
     }
     
 //    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
