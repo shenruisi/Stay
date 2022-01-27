@@ -40,7 +40,7 @@ let browserLangurage = "",
     scriptConsoleDom,
     scriptDomTmp = [
             '<div class="info-case">',
-            '<div class="title">{name}<span>{status}</span></div>',
+            '<div class="title">{name}<span class="version">{version}</span><span>{status}</span></div>',
             '<div class="name">{author}</div>',
             '<div class="desc">{description}</div>',
             '</div>',
@@ -97,7 +97,6 @@ const matchesCheck = (userLibraryScript, url) => {
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
-        console.log("giveRegisterMenuCommand====",request.uuid, request.data);
         registerMenuMap[request.uuid] = request.data
     }
     return true;

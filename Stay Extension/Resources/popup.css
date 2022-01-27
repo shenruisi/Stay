@@ -181,11 +181,17 @@ section {
     align-content: flex-start;
 }
 .info-case .title{
-    display: flex;
+    /* display: flex; */
     font-size: 18px;
     color: #000000;
     font-weight:500;
     align-items:center;
+    padding-bottom: 5px;
+}
+.content-container .content-box .info-case .title span.version{
+    color: #B620E0;
+    font-size: 15px;
+    padding: 0 5px;
 }
 .stop .info-case .title span{
     color: #B620E0;
