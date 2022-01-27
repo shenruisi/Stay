@@ -179,9 +179,7 @@
     [descDetailLabel sizeToFit];
     [detailView addSubview:descDetailLabel];
         
-    if(self.isSearch){
-        detailView.height = descDetailLabel.bottom + 13;
-    } else {
+     if(!self.isSearch && self.script.downloadUrl != nil && self.script.downloadUrl.length > 0){
         UIView *line13 = [self createLine];
         line13.top = descDetailLabel.bottom + 13;
         [detailView addSubview:line13];
@@ -198,6 +196,8 @@
         [detailView addSubview:autoUpdateSwitch];
         [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
         detailView.height = autoUpdateLabel.bottom + 13;
+    } else {
+        detailView.height = descDetailLabel.bottom + 13;
     }
      
     UILabel *configLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];

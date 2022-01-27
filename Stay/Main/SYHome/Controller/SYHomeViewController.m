@@ -156,6 +156,31 @@
             } failBlock:^(NSError * _Nonnull error) {
                         
             }];
+        } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
+            [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                if(responseObject != nil) {
+                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+                    if(userScript.version != NULL) {
+                        NSInteger status = [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
+                        if(status == 1) {
+                            userScript.uuid = scrpit.uuid;
+                            userScript.active = scrpit.active;
+                            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+                                if(isSearch) {
+                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                    NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
+                                } else {
+                                    [[DataManager shareManager] updateUserScript:userScript];
+                                    [self refreshScript];
+                                }
+                            }
+                        }
+                    }
+                }
+            } failBlock:^(NSError * _Nonnull error) {
+                
+            }];
         }
     }
 }
