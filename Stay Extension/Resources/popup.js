@@ -160,11 +160,17 @@ function fetchMatchedScriptConsole(){
                 }
             })
             if (!showLogNotify && scriptConsole.length>0) {
-                showLogNotify = true
-                logNotifyDom.show()
                 let count = scriptConsole.length
-                count = count>99?"99+":count
-                logNotifyDom.setInnerHtml(count)
+                let readCount = window.localStorage.getItem("console_count");
+                readCount = readCount ? Number(readCount) : 0
+                console.log("readCount===", readCount)
+                if (count - readCount > 0){
+                    window.localStorage.setItem("console_count", count);
+                    showLogNotify = true
+                    logNotifyDom.show()
+                    count = count>99?"99+":count
+                    logNotifyDom.setInnerHtml(count)
+                }
             }
         } else {
             scriptConsole = [];
