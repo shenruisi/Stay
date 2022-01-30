@@ -7,11 +7,15 @@
 
 (function() {
     function createGMApisWithUserScript(grants,uuid){
+
+        
        
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'let GM = {};\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
+
+        source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n\n';
         
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
@@ -68,6 +72,10 @@
 
         if (grants.includes('GM.addStyle')) {
             source += 'GM.addStyle = ' + GM_addStyle.toString() + ';\n\n';
+        }
+
+        if (grants.includes('unsafeWindow')) {
+            source += 'unsafeWindow = ' + unsafeWindow.toString() + ';\n\n';
         }
 
         //add GM_log by default
@@ -165,16 +173,17 @@
             style.styleSheet.cssText = css;//针对IE
 
         }
-        head.appendChild(style);
-        // var styleEl = document.createElement('style'),
-        //     styleSheet = styleEl.sheet;
-        // styleSheet.insertRule(css, 0);
-        // document.head.appendChild(styleEl);      
+        head.appendChild(style);  
+    }
+
+    function unsafeWindow() {
+        return window;
     }
     
 //    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //        console.log("abc");
 //    });
-    
+
     window.createGMApisWithUserScript = createGMApisWithUserScript;
+
 })();
