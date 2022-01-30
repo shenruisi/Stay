@@ -60,13 +60,17 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     else if ("gm-apis" == request.from){
         if ("GM_error" == request.operate){
             console.log("gm-apis GM_error, from exect catch, ",request);
-            gm_console[request.uuid] = [];
+            if (!gm_console[request.uuid]) {
+                gm_console[request.uuid] = [];
+            }
             gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat()});
             console.log("GM_error=",gm_console);
         }
         if ("GM_log" == request.operate){
             console.log("gm-apis GM_log");
-            gm_console[request.uuid] = [];
+            if (!gm_console[request.uuid]){
+                gm_console[request.uuid] = [];
+            }
             gm_console[request.uuid].push({ msg: request.message, msgType: "log", time: new Date().dateFormat() });
             console.log("GM_log=",gm_console);
         }

@@ -139,6 +139,9 @@ function fetchAndRenderConsoleLog(){
 }
 
 function fetchMatchedScriptConsole(){
+    browser.runtime.sendMessage({ from: "popup", operate: "fetchLog" }, (response) => {
+        console.log("fetchLog response----", response)
+    })
     browser.runtime.sendMessage({ from: "popup", operate: "fetchMatchedScriptLog" }, (response) => {
         logIsFetched = true;
         if (response && response.body && response.body.length > 0) {
@@ -159,17 +162,18 @@ function fetchMatchedScriptConsole(){
                     })
                 }
             })
+            console.log("scriptConsole----", scriptConsole)
             if (!showLogNotify && scriptConsole.length>0) {
                 let count = scriptConsole.length
                 let readCount = window.localStorage.getItem("console_count");
                 readCount = readCount ? Number(readCount) : 0
-                console.log("readCount===", readCount)
                 if (count - readCount > 0){
                     window.localStorage.setItem("console_count", count);
                     showLogNotify = true
                     logNotifyDom.show()
-                    count = count>99?"99+":count
-                    logNotifyDom.setInnerHtml(count)
+                    let showCount = count - readCount;
+                    showCount = showCount > 99 ? "99+" : showCount
+                    logNotifyDom.setInnerHtml(showCount)
                 }
             }
         } else {
