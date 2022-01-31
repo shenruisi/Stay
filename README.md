@@ -9,6 +9,7 @@
 
 
 <p align="right">中文 | <a href="README-EN.md">EN</a></p>     
+
 Stay²是一个开源的**本地**iOS Safari扩展脚本管理器，Stay²有着自己的API提供给开发者，并且也支持部分油猴脚本。
 
 
