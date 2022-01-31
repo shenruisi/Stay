@@ -2,6 +2,11 @@
  Main entrance of Stay
  1. Fetch inject scripts from SafariWebExtensionHandler
  2. Use @match, @include, @exclude to match the correct script with the url.
+ 
+ content.js passing message to background.js or popup.js using browser.runtime.sendMessage.
+ popup.js passing message to background.js using browser.runtime.sendMessage.
+ background.js passing message to content.js using browser.tabs.sendMessage.
+ popup.js passing message to content.js should sendMessage to background.js first.
  */
 console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
@@ -29,26 +34,26 @@ function matchRule(str, rule) {
 
 const $_matchesCheck = (userLibraryScript,url) => {
     let matched = false;
+    let matchPatternInBlock;
     userLibraryScript.matches.forEach((match)=>{ //check matches
         let matchPattern = new window.MatchPattern(match);
         if (matchPattern.doMatch(url)){
             matched = true;
+            matchPatternInBlock = matchPattern;
         }
     });
     if (matched){
         if (userLibraryScript.includes.length > 0){
-            matched = false;
             userLibraryScript.includes.forEach((include)=>{
-                if (matchRule(url.href,include)){
-                    matched = true;
+                if (matchPatternInBlock.doMatch(include)) {
+                    matched = matchRule(url.href, include);
                 }
             });
         }
         
-        
         userLibraryScript.excludes.forEach((exclude)=>{
-            if (matchRule(url.href,exclude)){
-                matched = false;
+            if (matchPatternInBlock.doMatch(exclude)) {
+                matched = !matchRule(url.href, exclude);
             }
         });
     }
@@ -86,7 +91,7 @@ async function start(){
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript",script);
+                console.log("injectScript",script.content);
                 browser.runtime.sendMessage({
                     from: "bootstrap",
                     operate: "injectScript",

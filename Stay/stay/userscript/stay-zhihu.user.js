@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         知乎@AutoExpend
+// @name         知乎@AutoExpand
 // @namespace    http://stay.app/
 // @version      0.0.2
 // @description  自动展开回答，支持知乎桌面版

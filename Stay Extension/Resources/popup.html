@@ -3,19 +3,42 @@
 <head>
     <title>跳转到</title>
     <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
     <link rel="stylesheet" href="./popup.css">
     <script type="text/javascript" src="./convert2RegExp.js"></script>
     <script type="text/javascript" src="./MatchPattern.js"></script>
+    <script type="text/javascript" src="./message.js"></script>
     <script type="module" src="./popup.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
     <div class="header-box">
         <a class="main-icon" href="stay://"><img src="./images/page-icon.png"></a>
         <div class="header-tab">
-            <div class="tab match-tab active-tab" tab=1 >已匹配脚本</div>
-            <div class="tab console-tab" tab=2>控制台</div>
+            <div class="tab match-tab active-tab" tab=1 data-i18n="matched_scripts_tab">已匹配脚本</div>
+            <div class="tab console-tab" tab=2 data-i18n="console_tab">控制台</div>
             <div id="logNotify" class="notify"></div>
+        </div>
+    </div>
+    <div class="toast-warpper" id="toastWarpper"></div>
+    <div class="register-menu-popup" style="display: none;" id="registerMenuPopup">
+        <div class="register-menu-warpper" id="registerMenuWarpper">
+            <div class="register-menu">
+                <div class="menu-close">
+                    <div class="close" data-i18n="menu_close">关闭</div>
+                </div>
+                <div class="menu-item-box" >
+                    <div class="menu-content" id="registerMenuCon">
+                        <div class="menu-item"></div>
+                    </div>
+                    <div class="menu-content none-menu" id="noneMenu" data-i18n="null_register_menu">
+                        不应用于该网站
+                    </div>
+                </div>
+            </div>
+    
         </div>
     </div>
     <div class="content-container">
@@ -35,10 +58,6 @@
             </div>
         </div>
         <div id="dataNull" class="content-none" style="display:none;"></div>
-        <div class="placeholder" style="display:block;width:100%"></div>
-        <div class="tableview" style="display:block;">
-        
-        </div>
     </div>
 </body>
 </html>

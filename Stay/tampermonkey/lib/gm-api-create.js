@@ -9,8 +9,19 @@
     function createGMApisWithUserScript(grants,uuid){
        
         let source = 'const _uuid = "' + uuid + '";\n\n';
-//        source += 'let GM = {};\n\n';
-//        source += 'let __stroge = await _fillStroge();\n\n';
+        source += 'let GM = {};\n\n';
+        source += 'let __stroge = await _fillStroge();\n\n';
+        source += 'let __RMC_CONTEXT = [];\n\n';
+        
+        source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
+        source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
+        source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
+        source += '\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid){\n';
+        source += '\t\tconsole.log(__RMC_CONTEXT[request.id]);\n';
+        source += '\t\t__RMC_CONTEXT[request.id]["commandFunc"]();}\n';
+        source += '\treturn true;\n'
+        source += '});\n\n';
+        
         if (grants.includes('GM_listValues')) {
             source += GM_listValues.toString() + ';\n\n';
         }
@@ -42,6 +53,23 @@
         if (grants.includes('GM.getValue')) {
             source += 'GM.getValue = ' + GM_getValue_p.toString() + ';\n\n';
         }
+        
+        if (grants.includes('GM.registerMenuCommand')) {
+            source += 'GM.registerMenuCommand = ' + GM_registerMenuCommand.toString() + ';\n\n';
+        }
+        
+        if (grants.includes('GM_registerMenuCommand')) {
+            source += GM_registerMenuCommand.toString() + ';\n\n';
+        }
+        
+        if (grants.includes('GM_addStyle')) {
+            source += GM_addStyle.toString() + ';\n\n';
+        }
+
+        if (grants.includes('GM.addStyle')) {
+            source += 'GM.addStyle = ' + GM_addStyle.toString() + ';\n\n';
+        }
+
         //add GM_log by default
         source +=  GM_log.toString() + ';\n\n';
         
@@ -115,6 +143,38 @@
             });
         });
     }
+    
+    function GM_registerMenuCommand(caption, commandFunc, accessKey){
+        let userInfo = {};
+        userInfo["caption"] = caption;
+        userInfo["commandFunc"] = commandFunc;
+        userInfo["accessKey"] = accessKey;
+        userInfo["id"] = __RMC_CONTEXT.length;
+        __RMC_CONTEXT.push(userInfo);
+    }
+
+    function GM_addStyle(css) {
+        var head, style;
+        head = document.getElementsByTagName('head')[0];
+        if (!head) { return; }
+        style = document.createElement('style');
+        style.type = 'text/css';
+        try {
+            style.appendChild(document.createTextNode(css));
+        } catch (ex) {
+            style.styleSheet.cssText = css;//针对IE
+
+        }
+        head.appendChild(style);
+        // var styleEl = document.createElement('style'),
+        //     styleSheet = styleEl.sheet;
+        // styleSheet.insertRule(css, 0);
+        // document.head.appendChild(styleEl);      
+    }
+    
+//    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//        console.log("abc");
+//    });
     
     window.createGMApisWithUserScript = createGMApisWithUserScript;
 })();

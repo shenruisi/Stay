@@ -27,6 +27,7 @@ settings.version="Version";
 settings.scriptContent="Script Content";
 settings.sourcePage="Source Page";
 settings.descDetail="Description";
+settings.autoUpdate="Auto update";
 settings.add="Add";
 settings.delete="Delete";
 settings.create="Create";

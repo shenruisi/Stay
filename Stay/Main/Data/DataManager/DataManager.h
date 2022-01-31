@@ -36,4 +36,7 @@
 
 - (void)updateUserScript:(UserScript *)scrpitDetail;
 
+- (void)updateScriptConfigByUserScript:(UserScript *)scrpitDetail;
+
+- (void)updateScriptConfigAutoupdate:(int)status numberId:(NSString *)uuid;
 @end
