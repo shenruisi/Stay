@@ -6,6 +6,7 @@
 [![iOS System](https://img.shields.io/badge/iOS-15%2B-brightgreen)]()
 [![TestFlight](https://img.shields.io/badge/TestFlight-2.0.2-4391E1)](https://app.airport.community/app/recICnNcHuUDSCL2b)
 [![HelloGithub](https://img.shields.io/badge/HelloGithub-vol.70-white)](https://hellogithub.com/periodical/volume/70/)
+[![Dev](https://img.shields.io/badge/Dev%20Branch-2.0.3-blueviolet)]()
 
 
 <p align="right">中文 | <a href="README-EN.md">EN</a></p>     
