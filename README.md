@@ -1,24 +1,14 @@
-<p align="center">
-<img width="128px" src="./Material/icon.png" alt="Logo" />
-
-  <p align="center">
-  <a href="">
-    <img src="https://img.shields.io/badge/iOS-15%2B-brightgreen" alt=""/>
-  </a>
-  <a href="https://app.airport.community/app/recICnNcHuUDSCL2b">
-    <img src="https://img.shields.io/badge/TestFlight-2.0.0-4391E1" alt=""/>
-  </a>
-  <br>
-  
-<!-- [![iOS System](https://img.shields.io/badge/iOS-15%2B-brightgreen)]()
-[![TestFlight](https://img.shields.io/badge/TestFlight-2.0.0-4391E1)](https://app.airport.community/app/recICnNcHuUDSCL2b) -->
-</p>
-
-<p align="right">中文 | <a href="README-EN.md">EN</a></p>
+<img width="128px" src="./Material/icon.png" alt="Logo" align="left"/>
 
 # [Stay²](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)
 
+[![Views](https://views.whatilearened.today/views/github/shenruisi/Stay.svg)]()
+[![iOS System](https://img.shields.io/badge/iOS-15%2B-brightgreen)]()
+[![TestFlight](https://img.shields.io/badge/TestFlight-2.0.2-4391E1)](https://app.airport.community/app/recICnNcHuUDSCL2b)
+[![HelloGithub](https://img.shields.io/badge/HelloGithub-vol.70-white)](https://hellogithub.com/periodical/volume/70/)
 
+
+<p align="right">中文 | <a href="README-EN.md">EN</a></p>     
 Stay²是一个开源的**本地**iOS Safari扩展脚本管理器，Stay²有着自己的API提供给开发者，并且也支持部分油猴脚本。
 
 
