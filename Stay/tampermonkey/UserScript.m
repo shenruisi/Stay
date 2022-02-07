@@ -9,26 +9,34 @@
 
 @implementation UserScript
 
-+ (instancetype)ofDictionary:(NSDictionary *)dict{
++ (instancetype)ofDictionary:(NSDictionary *)dic{
     UserScript *userScript = [[UserScript alloc] init];
-    userScript.name = dict[@"name"];
-    userScript.namespace = dict[@"namespace"];
-    userScript.author = dict[@"author"];
-    userScript.version = dict[@"version"];
-    userScript.desc = dict[@"description"];
-    userScript.homepage = dict[@"homepage"];
-    userScript.icon = dict[@"icon"];
-    userScript.includes = dict[@"includes"];
-    userScript.mathes = dict[@"matches"];
-    userScript.excludes = dict[@"excludes"];
-    userScript.runAt = dict[@"runAt"];
-    userScript.grants = dict[@"grants"];
-    userScript.noFrames = [dict[@"noFrames"] boolValue];
-    userScript.pass = [dict[@"pass"] boolValue];
-    userScript.errorMessage = dict[@"errorMessage"];
-    userScript.requireUrls = dict[@"requireUrls"];
-    userScript.updateUrl = dict[@"updateUrl"];
-    userScript.downloadUrl = dict[@"downloadUrl"];
+    userScript.name = dic[@"name"];
+    userScript.namespace = dic[@"namespace"];
+    userScript.author = dic[@"author"];
+    userScript.version = dic[@"version"];
+    userScript.desc = dic[@"description"];
+    userScript.homepage = dic[@"homepage"];
+    userScript.icon = dic[@"icon"];
+    userScript.includes = dic[@"includes"];
+    NSArray *matches = dic[@"matches"];
+    if (matches.count == 0){
+        matches = @[@"*://*/*"];
+    }
+    userScript.mathes = matches;
+    userScript.excludes = dic[@"excludes"];
+    userScript.runAt = dic[@"runAt"];
+    userScript.grants = dic[@"grants"];
+    userScript.noFrames = [dic[@"noFrames"] boolValue];
+    userScript.pass = [dic[@"pass"] boolValue];
+    userScript.errorMessage = dic[@"errorMessage"];
+    userScript.requireUrls = dic[@"requireUrls"];
+    userScript.updateUrl = dic[@"updateUrl"];
+    userScript.downloadUrl = dic[@"downloadUrl"];
+    userScript.requireCodes = dic[@"requireCodes"];
+    userScript.resourceUrls = dic[@"resourceUrls"];
+    userScript.notes = dic[@"notes"];
+    userScript.locales = dic[@"locales"];
     return userScript;
 }
 
@@ -52,7 +60,11 @@
         @"content":self.parsedContent ? self.parsedContent : @"",
         @"active":@(self.active),
         @"updateUrl":self.updateUrl ? self.updateUrl: @"",
-        @"downloadUrl":self.downloadUrl ? self.downloadUrl: @""
+        @"downloadUrl":self.downloadUrl ? self.downloadUrl: @"",
+        @"requireCodes":self.requireCodes ? self.requireCodes: @[],
+        @"resourceUrls":self.resourceUrls ? self.resourceUrls: @[],
+        @"notes":self.notes ? self.notes: @[],
+        @"locales":self.locales ? self.locales : @{}
     };
 }
 

@@ -16,5 +16,5 @@ const GM_APIS = new Set([
     "none",
     "None"
 ]);
-const UserScriptUnsupport_TAGS = new Set(["source","connect","resource"]);
+const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);
