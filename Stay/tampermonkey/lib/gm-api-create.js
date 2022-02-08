@@ -5,14 +5,15 @@
 
 'use strict';
 
-(function() {
+(function() {    
     function createGMApisWithUserScript(grants,uuid){
-       
+
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'let GM = {};\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
-        
+
+        source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
         source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
@@ -68,6 +69,11 @@
 
         if (grants.includes('GM.addStyle')) {
             source += 'GM.addStyle = ' + GM_addStyle.toString() + ';\n\n';
+        }
+
+        if (grants.includes('unsafeWindow')) {
+            // source += 'let unsafeWindow = (function() {var dummyElem = document.createElement("div");dummyElem.setAttribute("id", "windowDiv"); dummyElem.setAttribute("onclick", "return window;"); let win = dummyElem.onclick();console.log("__INITIAL_SSR_STATE__--------",win);return win;})()' + ';\n\n';
+            source += 'let unsafeWindow = (function(){return document.defaultView;})();\n\n';
         }
 
         //add GM_log by default
@@ -165,16 +171,37 @@
             style.styleSheet.cssText = css;//针对IE
 
         }
-        head.appendChild(style);
-        // var styleEl = document.createElement('style'),
-        //     styleSheet = styleEl.sheet;
-        // styleSheet.insertRule(css, 0);
-        // document.head.appendChild(styleEl);      
+        head.appendChild(style);  
+    }
+
+    function unsafeWindowInit() {
+        var div = document.createElement('div');
+        div.setAttribute('id', 'windowDiv');
+        // div.setAttribute('onclick', 'return window;');
+        document.body.appendChild(div);
+        console.log("createGMApisWithUserScript---------unsafeWindow------------", window.__INITIAL_SSR_STATE__)
+        // let win = div.onclick();
+        // setTimeout(function () {
+        //     // var div = document.createElement('div');
+        //     // div.setAttribute('id', 'windowDiv');
+        //     // div.setAttribute('onclick', 'return window;');
+        //     // unsafeWindow = div.onclick();
+        //     // console.log(unsafeWindow);
+        //     win = div.onclick();
+        //     console.log(win);
+        //     console.log("createGMApisWithUserScript-----------setTimeout-----unsafeWindow-----")
+        // }, 1000);
+        // return win;
+        // console.log("window=----", window.__INITIAL_SSR_STATE__)
+        // return window.top.getBrowser().selectedBrowser.contentWindow; 
+        return window;
     }
     
 //    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //        console.log("abc");
 //    });
-    
+
+    console.log("createGMApisWithUserScript---------------------")
     window.createGMApisWithUserScript = createGMApisWithUserScript;
+
 })();

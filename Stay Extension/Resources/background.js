@@ -58,6 +58,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
     else if ("gm-apis" == request.from){
+        if ("clear_GM_log" == request.operate){
+            console.log("clear_GM_log, ", request);
+            gm_console[request.uuid] = [];
+        }
         if ("GM_error" == request.operate){
             console.log("gm-apis GM_error, from exect catch, ",request);
             if (!gm_console[request.uuid]) {
