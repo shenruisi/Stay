@@ -60,6 +60,12 @@
         [self addColumn:@"script_config" column:@"updateUrl"];
         [self addColumn:@"script_config" column:@"downloadUrl"];
     }
+    
+    if(![self isExitedColumn:@"resourceUrl"]) {
+        [self addColumn:@"user_config_script" column:@"resourceUrl"];
+        [self addColumn:@"script_config" column:@"resourceUrl"];
+    }
+    
     NSArray *list =  [self findProjectSearchLib];
     for(int i = 0; i < list.count; i++) {
         UserScript *scrpitDetail = list[i];

@@ -17,7 +17,6 @@
 #import "SYVersionUtils.h"
 #import "UserscriptUpdateManager.h"
 
-
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;

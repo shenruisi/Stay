@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UserScript.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shareManager;
 
 - (void)updateResouse;
+
+- (NSArray *)getUserScriptRequireListByUserScript:(UserScript *)scrpit;
 
 @end
 

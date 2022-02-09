@@ -21,6 +21,17 @@
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        
+        for(int i = 0;i < datas.count; i++) {
+            NSDictionary *data = datas[i];
+            NSArray *requireCodes = [self getUserScriptRequireListByUserScript:data];
+            if (requireCodes != nil) {
+                NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
+                mulDic[@"requireCodes"] = requireCodes;
+                [datas removeObject:data];
+                [datas addObject:mulDic];
+            }
+        }
         body = [[NSString alloc] initWithData:
                 [NSJSONSerialization dataWithJSONObject:datas
                                                 options:0
@@ -98,6 +109,31 @@
                                                     }
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
+}
+
+
+- (NSArray *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {
+    if(scrpit != nil && scrpit[@"requireUrls"] != nil){
+        NSArray *array = scrpit[@"requireUrls"];
+        NSString *groupPath = [[[NSFileManager defaultManager]
+                     containerURLForSecurityApplicationGroupIdentifier:
+                         @"group.com.dajiu.stay.pro"] path];
+        NSMutableArray *requireList = [[NSMutableArray alloc] init];
+        for(int j = 0; j < array.count; j++) {
+            NSString *requireUrl = array[j];
+            NSString *fileName = requireUrl.lastPathComponent;
+            NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/require/%@",groupPath,scrpit[@"uuid"],fileName];
+            if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+                return nil;
+            }
+            NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
+            NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+
+            [requireList addObject:responData];
+        }
+        return requireList;
+    }
+    return nil;
 }
 
 @end
