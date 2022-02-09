@@ -103,6 +103,20 @@
             [groupUserDefaults synchronize];
         }
     }
+    else if ([message[@"type"] isEqualToString:@"GM_getResourceText"]){
+        NSString *uuid = message[@"uuid"];
+        NSString *key = message[@"key"];
+        
+        NSString *value = [self getResourceByKey:uuid fileName:key];
+        if(value != nil && value.length > 0) {
+            body = [[NSString alloc] initWithData:
+                   [NSJSONSerialization dataWithJSONObject: value
+                                                options:0
+                                                  error:nil]
+                                     encoding:NSUTF8StringEncoding];
+        }
+        
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
@@ -133,6 +147,25 @@
         }
         return requireList;
     }
+    return nil;
+}
+
+- (NSString *)getResourceByKey:(NSString *)uuid fileName:(NSString *)key   {
+  
+    NSString *groupPath = [[[NSFileManager defaultManager]
+                 containerURLForSecurityApplicationGroupIdentifier:
+                     @"group.com.dajiu.stay.pro"] path];
+
+    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/%@",groupPath,uuid,key];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+        return nil;
+    }
+    NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
+    NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    if(responData != nil) {
+        return responData;
+    }
+    
     return nil;
 }
 

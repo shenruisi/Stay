@@ -77,20 +77,23 @@
                 NSArray *reouseKey = resouseDic.allKeys;
                 for(int k = 0; k < reouseKey.count; k++) {
                     NSString *key = reouseKey[k];
-                    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/%@-url",groupPath,scrpit.uuid,key];
-                    NSString *strogeTextUrl = [NSString stringWithFormat:@"%@/%@/resource/%@-text",groupPath,scrpit.uuid,key];
-                    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
-                        [key writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                    NSString *dirName = [NSString stringWithFormat:@"%@/%@/resource",groupPath,scrpit.uuid];
+                    if(![[NSFileManager defaultManager] fileExistsAtPath:dirName]){
+                        [[NSFileManager defaultManager] createDirectoryAtPath:dirName
+                                                  withIntermediateDirectories:YES
+                                                                   attributes:nil
+                                                                        error:nil];
                     }
-                    
-                    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeTextUrl]) {
+                    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/%@",groupPath,scrpit.uuid,key];
+                    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
                         NSURL *url = [NSURL URLWithString:key];
                         if([url.scheme containsString:@"stay"]) {
                             continue;
                         } else {
                             [[SYNetworkUtils shareInstance] requestGET:key params:nil successBlock:^(NSString * _Nonnull responseObject) {
                                 if(responseObject != nil) {
-                                    BOOL isSuccess = [responseObject writeToFile:strogeTextUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                                    [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
+                                    BOOL isSuccess = [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
                                 }
                             } failBlock:^(NSError * _Nonnull error) {
                             
