@@ -15,7 +15,14 @@ const GM_APIS = new Set([
     "GM.addStyle",
     "none",
     "None",
-    "unsafeWindow"
+    "unsafeWindow",
+    "GM_getResourceURL",
+    "GM.getResourceURL",
+    "GM_xmlhttpRequest",
+    "GM.xmlHttpRequest",
+    "GM_openInTab",
+    "GM.openInTab",
+    "GM_info"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);
