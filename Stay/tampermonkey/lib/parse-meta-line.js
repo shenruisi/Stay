@@ -100,7 +100,10 @@ window.parseMetaLine = function(input) {
       peg$c53 = { type: "class", value: "[a-zA-Z-]", description: "[a-zA-Z-]" },
       peg$c54 = function(keyword, localeValue) { return localeValue },
       peg$c55 = function(keyword, locale, value) { return {keyword:keyword, locale:locale, value:value}; },
-
+    
+      peg$c56 = "note",
+      peg$c57 = { type: "literal", value: "note", description: "\"note\"" },
+      
       peg$currPos          = 0,
       peg$savedPos         = 0,
       peg$posDetailsCache  = [{ line: 1, column: 1, seenCR: false }],
@@ -572,6 +575,15 @@ window.parseMetaLine = function(input) {
                               } else {
                                 s1 = peg$FAILED;
                                 if (peg$silentFails === 0) { peg$fail(peg$c41); }
+                              }
+                              if (s1 === peg$FAILED) {
+                                if (input.substr(peg$currPos, 4) === peg$c56) {
+                                  s1 = peg$c56;
+                                  peg$currPos += 4;
+                                } else {
+                                  s1 = peg$FAILED;
+                                  if (peg$silentFails === 0) { peg$fail(peg$c57); }
+                                }
                               }
                             }
                           }

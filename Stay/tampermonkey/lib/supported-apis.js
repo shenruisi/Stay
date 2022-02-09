@@ -14,7 +14,8 @@ const GM_APIS = new Set([
     "GM_addStyle",
     "GM.addStyle",
     "none",
-    "None"
+    "None",
+    "unsafeWindow"
 ]);
-const UserScriptUnsupport_TAGS = new Set(["source","connect","resource"]);
+const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);
