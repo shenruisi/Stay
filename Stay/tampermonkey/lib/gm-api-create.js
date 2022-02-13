@@ -7,9 +7,9 @@
 
 (function() {    
     function createGMApisWithUserScript(grants,uuid){
-
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'let GM = {};\n\n';
+        source += 'let retries = 3;\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
 
@@ -77,19 +77,19 @@
         }
 
         if (grants.includes('GM_openInTab')) {
-            source += GM_openInTab.toString()+' \n\n';
+            source += GM_openInTab.toString()+';\n\n';
         }
 
         if (grants.includes('GM_info')) {
-            source += GM_info.toString()+' \n\n';
+            source += GM_info.toString()+';\n\n';
         }
 
         if (grants.includes('GM_getResourceURL')){
-            source += ' \n\n';
+            // source += ' \n\n';
         }
 
         if (grants.includes('GM_xmlhttpRequest')) {
-            source += GM_xmlhttpRequest,toString() + ' \n\n';
+            source += GM_xmlhttpRequest.toString() + ';\n\n';
         }
 
         if (grants.includes('GM.xmlHttpRequest')) {
@@ -102,7 +102,7 @@
         source += _fillStroge.toString() + ';\n\n';
         return source;
     }
-    
+
     function _fillStroge(){
         return new Promise((resolve,reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid:_uuid }, (response) => {
@@ -223,7 +223,6 @@
 
     function GM_xmlhttpRequest(params) {
         let xhr = new XMLHttpRequest();
-      
         var createState = function () {
             var rh = '';
             var fu = params.url;
@@ -266,78 +265,124 @@
             if (responseState.readyState == 4 &&
                 responseState.status != 200 &&
                 responseState.status != 0 &&
-                params.retries > 0) {
-                params.retries--;
-                // console.log("bg: error at onload, should not happen! -> retry :)")
+                retries > 0) {
+                retries--;
+                console.log("api_create: error at onload, should not happen! -> retry :)")
                 GM_xmlhttpRequest(params);
                 return;
             }
-            if (params.callback) callback(responseState);
-            if (params.done) params.done();
+            console.log("responseState------", responseState)
+            if (params.onload) {
+                params.onload(responseState);
+            } 
         };
         var onerror = function() {
             var responseState = createState();
             if (responseState.readyState == 4 &&
                 responseState.status != 200 &&
                 responseState.status != 0 &&
-                params.retries > 0) {
-                params.retries--;
+                retries > 0) {
+                retries--;
+                console.log("api_create: error at onerror, should not happen! -> retry :)")
                 GM_xmlhttpRequest(params);
                 return;
             }
             if (params.onerror) {
-                onerr(responseState);
-            } else if (params.callback) {
-                params.callback(responseState);
+                params.onerror(responseState);
+            } 
+        };
+
+        let onreadychange = params.onreadystatechange
+
+        var onreadystatechange = function (c) {
+            var responseState = createState();
+            if (onreadychange) {
+                try {
+                    if (c.lengthComputable || c.totalSize > 0) {
+                        responseState.progress = { total: c.total, totalSize: c.totalSize };
+                    } else {
+                        var t = Number(Helper.getStringBetweenTags(responseState.responseHeaders, 'Content-Length:', '\n').trim());
+                        var l = xhr.responseText ? xhr.responseText.length : 0;
+                        if (t > 0) {
+                            responseState.progress = { total: l, totalSize: t };
+                        }
+                    }
+                } catch (e) { }
+                onreadychange(responseState);
             }
-            if (params.done) params.done();
-            delete xhr;
         };
 
         xhr.onload = onload;
         xhr.onerror = onerror;
+        xhr.onreadystatechange = onreadystatechange;
 
-        // method：HTTP 请求方法，必须参数，值包括 POST、GET 和 HEAD，大小写不敏感。
-        // url：请求的 URL 字符串，必须参数，大部分浏览器仅支持同源请求。
-        // async：指定请求是否为异步方式，默认为 true。如果为 false，当状态改变时会立即调用 onreadystatechange 属性指定的回调函数。
-        let method = params.method ? params.method : "GET";
-        // username：可选参数，如果服务器需要验证，该参数指定用户名，如果未指定，当服务器需要验证时，会弹出验证窗口。
-        let username = params.user ? params.user:"";
-        let username = params.password ? params.password : "";
-        xhr.open(method, params.url, params.async, username, password); // 建立连接
-        // 超时时间，单位是毫秒
-        let timeout = params.timeout ? params.timeout : 0;
-        xhr.timeout = timeout; 
-        // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用
-        // 'Content-type', 'application/x-www-form-urlencoded'
-        if (params.headers && JSON.stringify(params.headers) != "{}"){
-            Object.keys(params.headers).forEach((key) => {
-                xhr.setRequestHeader(key, params.headers[params.headers]);
-            });
-        }
-        // 设置cookie
-        // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
-        // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
-        if(params.cookie){
-            xhr.withCredentials = true;
-            xhr.setRequestHeader('Cookie', params.cookie);
-        }
-       
-        
-        xhr.ontimeout = function (e) {
-            console.error("Timeout!!")
-            if (params.ontimeout){
-                params.ontimeout(e)
+        try {
+            // method：HTTP 请求方法，必须参数，值包括 POST、GET 和 HEAD，大小写不敏感。
+            // url：请求的 URL 字符串，必须参数，大部分浏览器仅支持同源请求。
+            // async：指定请求是否为异步方式，默认为 true。如果为 false，当状态改变时会立即调用 onreadystatechange 属性指定的回调函数。
+            let method = params.method ? params.method : "GET";
+            // username：可选参数，如果服务器需要验证，该参数指定用户名，如果未指定，当服务器需要验证时，会弹出验证窗口。
+            let username = params.user ? params.user:"";
+            let username = params.password ? params.password : "";
+            xhr.open(method, params.url, params.async, username, password); // 建立连接
+            // 超时时间，单位是毫秒
+            let timeout = params.timeout ? params.timeout : 0;
+            xhr.timeout = timeout; 
+            // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用
+            // 'Content-type', 'application/x-www-form-urlencoded'
+            if (params.headers && JSON.stringify(params.headers) != "{}") {
+                Object.keys(params.headers).forEach((key) => {
+                    var p = key;
+                    if (key.toLowerCase() == "user-agent" || key.toLowerCase() == "referer") {
+                        p = "https" + key;
+                    }
+                    xhr.setRequestHeader(key, params.headers[key]);
+                });
             }
+            if (typeof (params.overrideMimeType) !== 'undefined') {
+                xhr.overrideMimeType(params.overrideMimeType);
+            }
+            if (typeof (params.responseType) !== 'undefined') {
+                xhr.responseType = params.responseType;
+            }
+            if (params.nocache){
+                xhr.setRequestHeader('Cache-Control', 'no-cache');
+            }
+            // 设置cookie
+            // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
+            // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
+            if(params.cookie){
+                xhr.withCredentials = true;
+                xhr.setRequestHeader('Cookie', params.cookie);
+            }
+            xhr.ontimeout = function (e) {
+                console.error("Timeout!!")
+                if (params.ontimeout){
+                    params.ontimeout(e)
+                }
+            }
+            // 可以使用 send() 方法发送请求
+            let body = params.data ? params.data : null;
+            if (!body && params.binary) {
+                xhr.send(params.binary.getBlob('text/plain'));
+            }else{
+                xhr.send(body);
+            }
+        } catch (error) {
+            console.log("xhr: error: " + error.message);
+            if (params.onerror) {
+                var resp = {
+                    responseXML: '',
+                    responseText: '',
+                    response: null,
+                    readyState: 4,
+                    responseHeaders: '',
+                    status: 403,
+                    statusText: 'Forbidden'
+                };
+                params.onerror(resp);
+            } 
         }
-        // 可以使用 send() 方法发送请求
-        let body = params.data ? params.data : null;
-        if (!body && params.binary) {
-            xhr.send(params.binary.getBlob('text/plain'));
-        }else{
-            xhr.send(body);
-        }
-
     }
 
     function GM_info() {
