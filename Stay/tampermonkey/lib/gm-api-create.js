@@ -230,9 +230,9 @@
             if (xhr.readyState > 2) {
                 rh = xhr.getAllResponseHeaders();
                 if (xhr.readyState == 4) {
-                    // if (rh) {
-                    //     rh = rh.replace(/TM-finalURL\: .*[\r\n]{1,2}/, '');
-                    // }
+                    if (rh) {
+                        rh = rh.replace(/TM-finalURL\: .*[\r\n]{1,2}/, '');
+                    }
                     var fi = xhr.getResponseHeader('TM-finalURL');
                     if (fi) fu = fi;
                 }
@@ -363,15 +363,18 @@
            
             
             // 超时时间，单位是毫秒
-            let timeout = params.timeout ? params.timeout : 0;
-            xhr.timeout = timeout; 
+            // let timeout = 200;
+            // if (typeof params.timeout != undefined) {
+            //     timeout = params.timeout;
+            // }
+            // xhr.timeout = timeout; 
             // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用
             // 'Content-type', 'application/x-www-form-urlencoded'
             if (params.headers && JSON.stringify(params.headers) != '{}') {
                 Object.keys(params.headers).forEach((key) => {
                     var p = key;
                     if (key.toLowerCase() == 'user-agent' || key.toLowerCase() == 'referer') {
-                        p = 'https' + key;
+                        p = key;
                     }
                     xhr.setRequestHeader(p, params.headers[key]);
                 });
@@ -382,7 +385,7 @@
             if (typeof (params.responseType) !== 'undefined') {
                 xhr.responseType = params.responseType;
             }
-            if (params.nocache){
+            if (typeof (params.nocache) !== 'undefined'){
                 xhr.setRequestHeader('Cache-Control', 'no-cache');
             }
             // 设置cookie
@@ -400,7 +403,7 @@
             }
             // 可以使用 send() 方法发送请求
             if (typeof (params.data) !== 'undefined') {
-                xhr.send(details.data);
+                xhr.send(params.data);
             } else {
                 xhr.send();
             }
@@ -410,7 +413,7 @@
             //     xhr.send(body);
             // }
         } catch (error) {
-            console.log('xhr: error: ' + error);
+            console.log('xhr: error: ', error);
             if (params.onerror) {
                 var resp = {
                     responseXML: '',
