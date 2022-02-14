@@ -199,7 +199,7 @@
         div.setAttribute('id', 'windowDiv');
         // div.setAttribute('onclick', 'return window;');
         document.body.appendChild(div);
-        console.log("createGMApisWithUserScript---------unsafeWindow------------", window.__INITIAL_SSR_STATE__)
+        // console.log("createGMApisWithUserScript---------unsafeWindow------------", window.__INITIAL_SSR_STATE__)
         // let win = div.onclick();
         // setTimeout(function () {
         //     // var div = document.createElement('div');
@@ -222,6 +222,7 @@
 //    });
 
     function GM_xmlhttpRequest(params) {
+       
         let xhr = new XMLHttpRequest();
         var createState = function () {
             var rh = '';
@@ -229,9 +230,9 @@
             if (xhr.readyState > 2) {
                 rh = xhr.getAllResponseHeaders();
                 if (xhr.readyState == 4) {
-                    if (rh) {
-                        rh = rh.replace(/TM-finalURL\: .*[\r\n]{1,2}/, '');
-                    }
+                    // if (rh) {
+                    //     rh = rh.replace(/TM-finalURL\: .*[\r\n]{1,2}/, '');
+                    // }
                     var fi = xhr.getResponseHeader('TM-finalURL');
                     if (fi) fu = fi;
                 }
@@ -267,11 +268,11 @@
                 responseState.status != 0 &&
                 retries > 0) {
                 retries--;
-                console.log("api_create: error at onload, should not happen! -> retry :)")
+                console.log('api_create: error at onload, should not happen! -> retry :)')
                 GM_xmlhttpRequest(params);
                 return;
             }
-            console.log("responseState------", responseState)
+            console.log('responseState------', responseState)
             if (params.onload) {
                 params.onload(responseState);
             } 
@@ -283,7 +284,7 @@
                 responseState.status != 0 &&
                 retries > 0) {
                 retries--;
-                console.log("api_create: error at onerror, should not happen! -> retry :)")
+                console.log('api_create: error at onerror, should not happen! -> retry')
                 GM_xmlhttpRequest(params);
                 return;
             }
@@ -292,16 +293,16 @@
             } 
         };
 
-        let onreadychange = params.onreadystatechange
-
         var onreadystatechange = function (c) {
             var responseState = createState();
+            let onreadychange = params.onreadystatechange;
             if (onreadychange) {
                 try {
                     if (c.lengthComputable || c.totalSize > 0) {
                         responseState.progress = { total: c.total, totalSize: c.totalSize };
                     } else {
-                        var t = Number(Helper.getStringBetweenTags(responseState.responseHeaders, 'Content-Length:', '\n').trim());
+                        var t = Number(getStringBetweenTags(responseState.responseHeaders, 'Content-Length:', '\n').trim());
+                        // var t = 2;
                         var l = xhr.responseText ? xhr.responseText.length : 0;
                         if (t > 0) {
                             responseState.progress = { total: l, totalSize: t };
@@ -312,6 +313,30 @@
             }
         };
 
+        var getStringBetweenTags = function (source, tag1, tag2) {
+            var b = source.search(escapeForRegExp(tag1));
+            if (b == -1) {
+                return '';
+            }
+            if (!tag2) {
+                return source.substr(b + tag1.length);
+            }
+            var e = source.substr(b + tag1.length).search(escapeForRegExp(tag2));
+
+            if (e == -1) {
+                return '';
+            }
+            return source.substr(b + tag1.length, e);
+        };
+        var escapeForRegExpURL = function (str, more) {
+            if (more == undefined) more = [];
+            var re = new RegExp('(\\' + ['/', '.', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].concat(more).join('|\\') + ')', 'g');
+            return str.replace(re, '\\$1');
+        };
+
+        var escapeForRegExp = function (str, more) {
+            return escapeForRegExpURL(str, ['*']);
+        };
         xhr.onload = onload;
         xhr.onerror = onerror;
         xhr.onreadystatechange = onreadystatechange;
@@ -320,23 +345,35 @@
             // method：HTTP 请求方法，必须参数，值包括 POST、GET 和 HEAD，大小写不敏感。
             // url：请求的 URL 字符串，必须参数，大部分浏览器仅支持同源请求。
             // async：指定请求是否为异步方式，默认为 true。如果为 false，当状态改变时会立即调用 onreadystatechange 属性指定的回调函数。
-            let method = params.method ? params.method : "GET";
+            let asyncT = true;
+            if (typeof params.async != undefined){
+                asyncT = params.async;
+            }
+            let method = "GET";
+            if (typeof params.method != undefined){
+                method = params.method;
+            }
             // username：可选参数，如果服务器需要验证，该参数指定用户名，如果未指定，当服务器需要验证时，会弹出验证窗口。
-            let username = params.user ? params.user:"";
-            let username = params.password ? params.password : "";
-            xhr.open(method, params.url, params.async, username, password); // 建立连接
+            
+            if (typeof params.user != undefined && typeof params.password != undefined){
+                xhr.open(method, params.url, params.user, params.password); // 建立连接
+            }else{
+                xhr.open(method, params.url); // 建立连接
+            }
+           
+            
             // 超时时间，单位是毫秒
             let timeout = params.timeout ? params.timeout : 0;
             xhr.timeout = timeout; 
             // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用
             // 'Content-type', 'application/x-www-form-urlencoded'
-            if (params.headers && JSON.stringify(params.headers) != "{}") {
+            if (params.headers && JSON.stringify(params.headers) != '{}') {
                 Object.keys(params.headers).forEach((key) => {
                     var p = key;
-                    if (key.toLowerCase() == "user-agent" || key.toLowerCase() == "referer") {
-                        p = "https" + key;
+                    if (key.toLowerCase() == 'user-agent' || key.toLowerCase() == 'referer') {
+                        p = 'https' + key;
                     }
-                    xhr.setRequestHeader(key, params.headers[key]);
+                    xhr.setRequestHeader(p, params.headers[key]);
                 });
             }
             if (typeof (params.overrideMimeType) !== 'undefined') {
@@ -356,20 +393,24 @@
                 xhr.setRequestHeader('Cookie', params.cookie);
             }
             xhr.ontimeout = function (e) {
-                console.error("Timeout!!")
+                console.error('Timeout!!')
                 if (params.ontimeout){
                     params.ontimeout(e)
                 }
             }
             // 可以使用 send() 方法发送请求
-            let body = params.data ? params.data : null;
-            if (!body && params.binary) {
-                xhr.send(params.binary.getBlob('text/plain'));
-            }else{
-                xhr.send(body);
+            if (typeof (params.data) !== 'undefined') {
+                xhr.send(details.data);
+            } else {
+                xhr.send();
             }
+            // if (!body && params.binary) {
+            //     xhr.send(params.binary.getBlob('text/plain'));
+            // }else{
+            //     xhr.send(body);
+            // }
         } catch (error) {
-            console.log("xhr: error: " + error.message);
+            console.log('xhr: error: ' + error);
             if (params.onerror) {
                 var resp = {
                     responseXML: '',
