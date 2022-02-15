@@ -222,7 +222,6 @@
 //    });
 
     function GM_xmlhttpRequest(params) {
-       
         let xhr = new XMLHttpRequest();
         var createState = function () {
             var rh = '';
@@ -334,47 +333,43 @@
             return str.replace(re, '\\$1');
         };
 
-        var escapeForRegExp = function (str, more) {
+        var escapeForRegExp = function (str) {
             return escapeForRegExpURL(str, ['*']);
         };
-        xhr.onload = onload;
-        xhr.onerror = onerror;
-        xhr.onreadystatechange = onreadystatechange;
+
 
         try {
             // method：HTTP 请求方法，必须参数，值包括 POST、GET 和 HEAD，大小写不敏感。
             // url：请求的 URL 字符串，必须参数，大部分浏览器仅支持同源请求。
             // async：指定请求是否为异步方式，默认为 true。如果为 false，当状态改变时会立即调用 onreadystatechange 属性指定的回调函数。
             let asyncT = true;
-            if (typeof params.async != undefined){
+            if (typeof params.async !== "undefined"){
                 asyncT = params.async;
             }
             let method = "GET";
-            if (typeof params.method != undefined){
+            if (typeof params.method !== "undefined"){
                 method = params.method;
             }
             // username：可选参数，如果服务器需要验证，该参数指定用户名，如果未指定，当服务器需要验证时，会弹出验证窗口。
             
-            if (typeof params.user != undefined && typeof params.password != undefined){
-                xhr.open(method, params.url, params.user, params.password); // 建立连接
+            if (typeof params.user !== "undefined" && typeof params.password !== "undefined"){
+                xhr.open(method, params.url, asyncT, params.user, params.password); // 建立连接
             }else{
-                xhr.open(method, params.url); // 建立连接
+                xhr.open(method, params.url, asyncT); // 建立连接
             }
            
-            
             // 超时时间，单位是毫秒
-            // let timeout = 200;
-            // if (typeof params.timeout != undefined) {
-            //     timeout = params.timeout;
-            // }
-            // xhr.timeout = timeout; 
+            if (typeof params.timeout !== "undefined") {
+                xhr.timeout = params.timeout; 
+            }
+            
             // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用
             // 'Content-type', 'application/x-www-form-urlencoded'
             if (params.headers && JSON.stringify(params.headers) != '{}') {
                 Object.keys(params.headers).forEach((key) => {
                     var p = key;
                     if (key.toLowerCase() == 'user-agent' || key.toLowerCase() == 'referer') {
-                        p = key;
+                        p = "https" + key;
                     }
                     xhr.setRequestHeader(p, params.headers[key]);
                 });
@@ -391,9 +386,9 @@
             // 设置cookie
             // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
             // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
-            if(params.cookie){
+            if (typeof (params.cookie) !== 'undefined'){
                 xhr.withCredentials = true;
-                xhr.setRequestHeader('Cookie', params.cookie);
+                // xhr.setRequestHeader('Cookie', params.cookie);
             }
             xhr.ontimeout = function (e) {
                 console.error('Timeout!!')
@@ -401,6 +396,9 @@
                     params.ontimeout(e)
                 }
             }
+            xhr.onload = onload;
+            xhr.onerror = onerror;
+            xhr.onreadystatechange = onreadystatechange;
             // 可以使用 send() 方法发送请求
             if (typeof (params.data) !== 'undefined') {
                 xhr.send(params.data);
