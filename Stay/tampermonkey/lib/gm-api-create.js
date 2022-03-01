@@ -12,7 +12,7 @@
         source += 'let retries = 3;\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
-        source += 'let __resourceUrlStroge = await GM_getAllResourceUrl();\n\n';
+        source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
 
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
@@ -516,6 +516,7 @@
             }
         };
         var resp = function (response) {
+            console.log("GM_openInTab response---", response)
             tabId = response.tabId;
         };
         if (url && url.search(/^\/\//) == 0) {
