@@ -502,6 +502,7 @@
      * 若只有一个参数则新标签页不会聚焦，该函数返回一个对象，有close()、监听器onclosed和closed的标记
      */
     function GM_openInTab(url, options) {
+        console.log("start GM_openInTab");
         // retrieve tabId to have a chance of closing this window lateron
         var tabId = null;
         var close = function () {
