@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray *)getUserScriptRequireListByUserScript:(UserScript *)scrpit;
 
+- (BOOL)saveRequireUrl:(UserScript *)scrpit;
+
+- (BOOL)saveResourceUrl:(UserScript *)scrpit;
+
 @end
 
 NS_ASSUME_NONNULL_END

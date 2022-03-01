@@ -117,6 +117,18 @@
         }
         
     }
+    else if ([message[@"type"] isEqualToString:@"GM_getAllResourceText"]){
+        NSString *uuid = message[@"uuid"];
+        NSDictionary *dic = [self getResourceByUuid:uuid];
+        if(dic != nil && dic.allKeys.count > 0) {
+            body = [[NSString alloc] initWithData:
+                   [NSJSONSerialization dataWithJSONObject: dic
+                                                options:0
+                                                  error:nil]
+                                     encoding:NSUTF8StringEncoding];
+        }
+        
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
@@ -167,6 +179,33 @@
     }
     
     return nil;
+}
+
+- (NSMutableDictionary *)getResourceByUuid:(NSString *)uuid{
+
+    NSString *groupPath = [[[NSFileManager defaultManager]
+                 containerURLForSecurityApplicationGroupIdentifier:
+                     @"group.com.dajiu.stay.pro"] path];
+
+    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/",groupPath,uuid];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+        return nil;
+    }
+
+    NSMutableDictionary *dic = [NSMutableArray mutableCopy];
+    NSFileManager *fileManger = [NSFileManager defaultManager];
+    NSArray * dirArray = [fileManger contentsOfDirectoryAtPath:strogeUrl error:nil];
+
+    NSString * subPath = nil;
+    for (NSString * str in dirArray) {
+        subPath  = [strogeUrl stringByAppendingPathComponent:str];
+        BOOL issubDir = NO;
+        [fileManger fileExistsAtPath:subPath isDirectory:&issubDir];
+        NSData *data=[NSData dataWithContentsOfFile:subPath];
+        NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        dic[str] = responData;
+    }
+    return dic;
 }
 
 @end

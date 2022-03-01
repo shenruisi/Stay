@@ -9,6 +9,10 @@
 #import "Tampermonkey.h"
 #import "DataManager.h"
 #import "NSString+Urlencode.h"
+#import "UserscriptUpdateManager.h"
+#import <CommonCrypto/CommonDigest.h>
+
+
 
 @implementation SYCodeMirrorView
 
@@ -76,8 +80,17 @@
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-               [[DataManager shareManager] insertUserConfigByUserScript:userScript];
-               [self initScrpitContent:true];
+               NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+               NSString *uuid = [self md5HexDigest:uuidName];
+               userScript.uuid = uuid;
+               BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+               if(saveSuccess) {
+                   [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+                   [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+                   [self initScrpitContent:true];
+               } else {
+                   [self saveError:@"requireurl下载失败"];
+               }
            } else {
                [self saveError:userScript.errorMessage];
            }
@@ -158,6 +171,17 @@
             }
         }];
     return viewBgColor;
+}
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char* str =[input UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, strlen(str), result);
+    NSMutableString* ret = [NSMutableString stringWithCapacity: CC_MD5_DIGEST_LENGTH];
+    for(int i=0; i< CC_MD5_DIGEST_LENGTH; i++){
+        [ret appendFormat:@"%02X", result];
+    }
+    return ret;
 }
 
 @end

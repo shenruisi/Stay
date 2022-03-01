@@ -8,6 +8,8 @@
 #import "SYDetailViewController.h"
 #import "DataManager.h"
 #import "SYEditViewController.h"
+#import "UserscriptUpdateManager.h"
+
 
 @interface SYDetailViewController ()
 

@@ -9,6 +9,8 @@
 #import "SYCodeMirrorView.h"
 #import "Tampermonkey.h"
 #import "DataManager.h"
+#import "UserscriptUpdateManager.h"
+
 
 @interface SYEditViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
