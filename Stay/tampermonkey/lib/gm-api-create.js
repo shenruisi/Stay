@@ -11,6 +11,8 @@
         source += 'let GM = {};\n\n';
         source += 'let retries = 3;\n\n';
         source += 'let __stroge = await _fillStroge();\n\n';
+        source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
+        source += 'let __resourceUrlStroge = await GM_getAllResourceUrl();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
 
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
@@ -84,8 +86,21 @@
             source += GM_info.toString()+';\n\n';
         }
 
-        if (grants.includes('GM_getResourceURL')){
-            // source += ' \n\n';
+        if (grants.includes('GM_getResourceURL') || grants.includes('GM_getResourceUrl')){
+            source += GM_getResourceURL.toString()+'; \n\n';
+        }
+
+        if (grants.includes('GM.getResourceURL') || grants.includes('GM.getResourceUrl')) {
+            source += 'GM.getResourceURL = ' + GM_getResourceURL_p.toString() + '; \n\n';
+            source += 'GM.getResourceUrl = ' + GM_getResourceURL_p.toString() + '; \n\n';
+        }
+        
+        if (grants.includes('GM.getResourceText')) {
+            source += 'GM.getResourceText = ' + GM_getResourceText_p.toString() + '; \n\n';
+        }
+
+        if (grants.includes('GM_getResourceText')) {
+            source += GM_getResourceText.toString()+'; \n\n';
         }
 
         if (grants.includes('GM_xmlhttpRequest')) {
@@ -100,12 +115,35 @@
         source +=  GM_log.toString() + ';\n\n';
         
         source += _fillStroge.toString() + ';\n\n';
+
+        source += _fillAllResourceTextStroge.toString() + ';\n\n';
+
+        source += _fillAllResourceUrlStroge.toString() + ';\n\n';
+
         return source;
     }
 
     function _fillStroge(){
         return new Promise((resolve,reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid:_uuid }, (response) => {
+                resolve(response.body);
+            });
+        });
+    }
+
+    function _fillAllResourceTextStroge() {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getAllResourceText", uuid: _uuid }, (response) => {
+                console.log("_fillAllResourceTextStroge", response);
+                resolve(response.body);
+            });
+        });
+    }
+
+    function _fillAllResourceUrlStroge() {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getAllResourceUrl", uuid: _uuid }, (response) => {
+                console.log("_fillAllResourceUrlStroge", response);
                 resolve(response.body);
             });
         });
@@ -197,29 +235,44 @@
     function unsafeWindowInit() {
         var div = document.createElement('div');
         div.setAttribute('id', 'windowDiv');
-        // div.setAttribute('onclick', 'return window;');
+        div.setAttribute('onclick', 'return window;');
         document.body.appendChild(div);
-        // console.log("createGMApisWithUserScript---------unsafeWindow------------", window.__INITIAL_SSR_STATE__)
-        // let win = div.onclick();
-        // setTimeout(function () {
-        //     // var div = document.createElement('div');
-        //     // div.setAttribute('id', 'windowDiv');
-        //     // div.setAttribute('onclick', 'return window;');
-        //     // unsafeWindow = div.onclick();
-        //     // console.log(unsafeWindow);
-        //     win = div.onclick();
-        //     console.log(win);
-        //     console.log("createGMApisWithUserScript-----------setTimeout-----unsafeWindow-----")
-        // }, 1000);
-        // return win;
-        // console.log("window=----", window.__INITIAL_SSR_STATE__)
-        // return window.top.getBrowser().selectedBrowser.contentWindow; 
-        return window;
+        console.log("createGMApisWithUserScript-----------setTimeout-----unsafeWindow-----")
+        return div.onclick();
     }
     
-//    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//        console.log("abc");
-//    });
+    function GM_getResourceText(name) {
+        let resourceText = __resourceTextStroge[name];
+        if (!resourceText || typeof resourceText === undefined) {
+            // 通过name获取resource
+        }
+        return resourceText
+    }
+
+
+    function GM_getResourceText_p(name) {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, uuid: _uuid }, () => {
+                resolve(response.body);
+            });
+        });
+    }
+
+    function GM_getResourceURL(name) {
+        let resourceUrl = __resourceUrlStroge[name];
+        if (!resourceUrl || typeof resourceUrl === undefined){
+            // 通过url获取resources
+        }
+        return resourceUrl;
+    }
+
+    function GM_getResourceURL_p(name) {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceUrl", key: name, uuid: _uuid }, () => {
+                resolve(response.body);
+            });
+        });
+    }
 
     function GM_xmlhttpRequest(params) {
         let xhr = new XMLHttpRequest();
@@ -363,22 +416,28 @@
                 xhr.timeout = params.timeout; 
             }
             
-            // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用
+            // 设置HTTP请求头部的方法。此方法必须在  open() 方法和 send()   之间调用 
             // 'Content-type', 'application/x-www-form-urlencoded'
             if (params.headers && JSON.stringify(params.headers) != '{}') {
                 Object.keys(params.headers).forEach((key) => {
                     var p = key;
                     if (key.toLowerCase() == 'user-agent' || key.toLowerCase() == 'referer') {
-                        p = "https" + key;
+                        let id = ((new Date()).getTime() + Math.floor(Math.random() * 6121983 + 1)).toString();
+                        let prefix = "TM_" + id + '_';
+                        p = prefix + key;
+                        return;
                     }
                     xhr.setRequestHeader(p, params.headers[key]);
                 });
             }
+            xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
             if (typeof (params.overrideMimeType) !== 'undefined') {
                 xhr.overrideMimeType(params.overrideMimeType);
             }
             if (typeof (params.responseType) !== 'undefined') {
                 xhr.responseType = params.responseType;
+            }else{
+                xhr.responseType = "json";
             }
             if (typeof (params.nocache) !== 'undefined'){
                 xhr.setRequestHeader('Cache-Control', 'no-cache');
@@ -431,8 +490,39 @@
         return "hello"
     }
 
-    function GM_openInTab(url, bg) {
-        
+    /**
+     * 打开标签页
+     * @param {string} url 
+     * @param {boolean} options 可以是 Boolean 类型，如果是 true，则当前 tab 不变；如果是 false，则当前 tab 变为新打开的 tab
+     * options对象有以下属性:
+     * active：新标签页获得焦点
+     * insert：新标签页在当前页面之后添加
+     * setParent：当新标签页关闭后，焦点给回当前页面
+     * incognito: 新标签页在隐身模式或私有模式窗口打开
+     * 若只有一个参数则新标签页不会聚焦，该函数返回一个对象，有close()、监听器onclosed和closed的标记
+     */
+    function GM_openInTab(url, options) {
+        // retrieve tabId to have a chance of closing this window lateron
+        var tabId = null;
+        var close = function () {
+            if (tabId === null) {
+                // re-schedule, cause tabId is null
+                window.setTimeout(close, 500);
+            } else if (tabId > 0) {
+                browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, id: _uuid }, resp);
+                tabId = undefined;
+            } else {
+                console.log("env: attempt to close already closed tab!");
+            }
+        };
+        var resp = function (response) {
+            tabId = response.tabId;
+        };
+        if (url && url.search(/^\/\//) == 0) {
+            url = location.protocol + url;
+        }
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "openInTab", url: url, id: _uuid, uuid: _uuid, options: options }, resp);
+        return { close: close };
     }
 
     window.createGMApisWithUserScript = createGMApisWithUserScript;
