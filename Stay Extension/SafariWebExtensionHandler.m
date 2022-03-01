@@ -121,14 +121,28 @@
         NSString *uuid = message[@"uuid"];
         NSMutableDictionary *dic = [self getResourceByUuid:uuid];
         if(dic != nil && dic.count > 0) {
-            body = [[NSString alloc] initWithData:
-                   [NSJSONSerialization dataWithJSONObject: dic
-                                                options:0
-                                                  error:nil]
-                                     encoding:NSUTF8StringEncoding];
+            body = dic;
         }
         
     }
+    else if ([message[@"type"] isEqualToString:@"GM_getResourceUrl"]){
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSString *uuid = message[@"uuid"];
+        NSString *key = message[@"key"];
+        if (datas != NULL && datas.count > 0) {
+            for(int i = 0; i < datas.count;i++) {
+                NSDictionary *dic = datas[i];
+                if([dic[@"uuid"] isEqualToString:uuid]) {
+                    NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+                    NSDictionary *resourceDic = dic[@"resourceUrls"];
+                    NSString *str = resourceDic[key];
+                    body = str;
+                    break;
+                }
+            }
+        }
+    }
+    
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
