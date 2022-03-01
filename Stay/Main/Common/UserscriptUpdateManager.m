@@ -89,7 +89,7 @@
                     if([url.scheme containsString:@"stay"]) {
                         continue;
                     } else {
-                        [[SYNetworkUtils shareInstance] requestGET:key params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                        [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
                             if(responseObject != nil) {
                                 [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
                                 BOOL isSuccess = [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
@@ -159,10 +159,15 @@
                     if([url.scheme containsString:@"stay"]) {
                         continue;
                     } else {
-                        [[SYNetworkUtils shareInstance] requestGET:key params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                        [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
                             if(responseObject != nil) {
                                 [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
                                 BOOL isSuccess = [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                            
+                                if(isSuccess) {
+                                    NSLog(@"成功");
+                                }
+        
                             }
                         } failBlock:^(NSError * _Nonnull error) {
                         

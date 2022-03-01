@@ -119,8 +119,8 @@
     }
     else if ([message[@"type"] isEqualToString:@"GM_getAllResourceText"]){
         NSString *uuid = message[@"uuid"];
-        NSDictionary *dic = [self getResourceByUuid:uuid];
-        if(dic != nil && dic.allKeys.count > 0) {
+        NSMutableDictionary *dic = [self getResourceByUuid:uuid];
+        if(dic != nil && dic.count > 0) {
             body = [[NSString alloc] initWithData:
                    [NSJSONSerialization dataWithJSONObject: dic
                                                 options:0
@@ -192,7 +192,7 @@
         return nil;
     }
 
-    NSMutableDictionary *dic = [NSMutableArray mutableCopy];
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     NSFileManager *fileManger = [NSFileManager defaultManager];
     NSArray * dirArray = [fileManger contentsOfDirectoryAtPath:strogeUrl error:nil];
 
