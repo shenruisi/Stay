@@ -72,36 +72,35 @@
 //        }
         
         if(scrpit != nil && scrpit.resourceUrls != nil) {
-            for(int j = 0; j < scrpit.resourceUrls.count; j++) {
-                NSDictionary *resouseDic = scrpit.resourceUrls[j];
-                NSArray *reouseKey = resouseDic.allKeys;
-                for(int k = 0; k < reouseKey.count; k++) {
-                    NSString *key = reouseKey[k];
-                    NSString *dirName = [NSString stringWithFormat:@"%@/%@/resource",groupPath,scrpit.uuid];
-                    if(![[NSFileManager defaultManager] fileExistsAtPath:dirName]){
-                        [[NSFileManager defaultManager] createDirectoryAtPath:dirName
-                                                  withIntermediateDirectories:YES
-                                                                   attributes:nil
-                                                                        error:nil];
-                    }
-                    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/%@",groupPath,scrpit.uuid,key];
-                    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
-                        NSURL *url = [NSURL URLWithString:resouseDic[key]];
-                        if([url.scheme containsString:@"stay"]) {
-                            continue;
-                        } else {
-                            [[SYNetworkUtils shareInstance] requestGET:key params:nil successBlock:^(NSString * _Nonnull responseObject) {
-                                if(responseObject != nil) {
-                                    [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
-                                    BOOL isSuccess = [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
-                                }
-                            } failBlock:^(NSError * _Nonnull error) {
-                            
-                            }];
-                        }
+            NSDictionary *resouseDic = scrpit.resourceUrls;
+            NSArray *reouseKey = resouseDic.allKeys;
+            for(int k = 0; k < reouseKey.count; k++) {
+                NSString *key = reouseKey[k];
+                NSString *dirName = [NSString stringWithFormat:@"%@/%@/resource",groupPath,scrpit.uuid];
+                if(![[NSFileManager defaultManager] fileExistsAtPath:dirName]){
+                    [[NSFileManager defaultManager] createDirectoryAtPath:dirName
+                                              withIntermediateDirectories:YES
+                                                               attributes:nil
+                                                                    error:nil];
+                }
+                NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/%@",groupPath,scrpit.uuid,key];
+                if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+                    NSURL *url = [NSURL URLWithString:resouseDic[key]];
+                    if([url.scheme containsString:@"stay"]) {
+                        continue;
+                    } else {
+                        [[SYNetworkUtils shareInstance] requestGET:key params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                            if(responseObject != nil) {
+                                [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
+                                BOOL isSuccess = [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                            }
+                        } failBlock:^(NSError * _Nonnull error) {
+                        
+                        }];
                     }
                 }
             }
+            
         }
         
     }
@@ -143,8 +142,7 @@
                  containerURLForSecurityApplicationGroupIdentifier:
                      @"group.com.dajiu.stay.pro"] path];
     if(scrpit != nil && scrpit.resourceUrls != nil) {
-        for(int j = 0; j < scrpit.resourceUrls.count; j++) {
-            NSDictionary *resouseDic = scrpit.resourceUrls[j];
+            NSDictionary *resouseDic = scrpit.resourceUrls;
             NSArray *reouseKey = resouseDic.allKeys;
             for(int k = 0; k < reouseKey.count; k++) {
                 NSString *key = reouseKey[k];
@@ -171,7 +169,6 @@
                         }];
                     }
                 }
-            }
         }
     }
     
