@@ -70,6 +70,7 @@
 		8496DFB827592C260075ABD5 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB727592C260075ABD5 /* more@3x.png */; };
 		8496DFBA275935B30075ABD5 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB9275935B30075ABD5 /* add@3x.png */; };
 		8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8496DFC22759CADC0075ABD5 /* SYEditViewController.m */; };
+		849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 849E203427B0AF7C000E5C02 /* UserscriptUpdateManager.m */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
 		84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC848274BC5AD005367C6 /* ScriptDetailModel.m */; };
@@ -218,6 +219,8 @@
 		8496DFC12759CADC0075ABD5 /* SYEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYEditViewController.h; sourceTree = "<group>"; };
 		8496DFC22759CADC0075ABD5 /* SYEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYEditViewController.m; sourceTree = "<group>"; };
 		8496DFC4275A6D7E0075ABD5 /* Stay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stay-Bridging-Header.h"; sourceTree = "<group>"; };
+		849E203327B0AF7C000E5C02 /* UserscriptUpdateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserscriptUpdateManager.h; sourceTree = "<group>"; };
+		849E203427B0AF7C000E5C02 /* UserscriptUpdateManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserscriptUpdateManager.m; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
 		84BDC83B2745575E005367C6 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
 		84BDC83D27455CA2005367C6 /* SYDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDefines.h; sourceTree = "<group>"; };
@@ -690,6 +693,8 @@
 				848A48B7279A5BA000D55FFD /* SYVersionUtils.h */,
 				848A48B8279A5BA000D55FFD /* SYVersionUtils.m */,
 				848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */,
+				849E203327B0AF7C000E5C02 /* UserscriptUpdateManager.h */,
+				849E203427B0AF7C000E5C02 /* UserscriptUpdateManager.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -949,6 +954,7 @@
 				587688F12719238000F834A4 /* main.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
+				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

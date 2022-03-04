@@ -9,12 +9,20 @@
 #import "Tampermonkey.h"
 #import "DataManager.h"
 #import "NSString+Urlencode.h"
+#import "UserscriptUpdateManager.h"
+#import <CommonCrypto/CommonDigest.h>
+
+
 
 @implementation SYCodeMirrorView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self addSubview:self.wkwebView];
+        _activityIndicator =  [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0,0,100,100)];
+        _activityIndicator.center = self.center;
+        _activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+        [self addSubview:_activityIndicator];
         self.backgroundColor = [self createBgColor];
     }
     return self;
@@ -70,23 +78,40 @@
 }
 
 - (void)insertContent{
+    [_activityIndicator startAnimating];
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             [self initScrpitContent:false];
         } else {
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+               NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+               NSString *uuid = [self md5HexDigest:uuidName];
+               userScript.uuid = uuid;
+               BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+               BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+
+               if(!saveSuccess) {
+                   [self saveError:@"requireUrl下载失败,请检查后重试"];
+                   return;
+               }
+               if(!saveResourceSuccess) {
+                   [self saveError:@"resourceUrl下载失败,请检查后重试"];
+                   return;
+               }
+               
                [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                [self initScrpitContent:true];
+         
            } else {
                [self saveError:userScript.errorMessage];
            }
-
         }
     }];
 }
 
 - (void)updateContent{
+    [_activityIndicator startAnimating];
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             [self initScrpitContent:false];
@@ -94,6 +119,19 @@
            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
            userScript.uuid = self.uuid;
            userScript.active = self.active;
+           BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+           BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+           
+            if(!saveSuccess) {
+                [self saveError:@"requireUrl下载失败,请检查后重试"];
+                return;
+            }
+            if(!saveResourceSuccess) {
+                [self saveError:@"resourceUrl下载失败,请检查后重试"];
+                return;
+            }
+            
+            
            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                [[DataManager shareManager] updateUserScript:userScript];
                [self initScrpitContent:true];
@@ -137,6 +175,7 @@
     }];
 }
 - (void)initScrpitContent:(BOOL)success{
+    [_activityIndicator stopAnimating];
     if(success) {
         NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
@@ -144,6 +183,7 @@
 }
 
 - (void)saveError:(NSString *)errorMessage{
+    [_activityIndicator stopAnimating];
     NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:errorMessage];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
@@ -158,6 +198,17 @@
             }
         }];
     return viewBgColor;
+}
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char* str =[input UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, strlen(str), result);
+    NSMutableString* ret = [NSMutableString stringWithCapacity: CC_MD5_DIGEST_LENGTH];
+    for(int i=0; i< CC_MD5_DIGEST_LENGTH; i++){
+        [ret appendFormat:@"%02X", result];
+    }
+    return ret;
 }
 
 @end

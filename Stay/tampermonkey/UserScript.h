@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<NSString *> *requireUrls;
 
 @property (nonatomic, copy) NSArray<NSString *> *requireCodes;
-@property (nonatomic, copy) NSArray<NSDictionary *> *resourceUrls;
+@property (nonatomic, copy) NSDictionary *resourceUrls;
 @property (nonatomic, copy) NSArray<NSString *> *notes;
 @property (nonatomic, copy) NSDictionary<NSString *,NSDictionary *> *locales;
 

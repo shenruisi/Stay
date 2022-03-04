@@ -15,7 +15,7 @@
 #import "SYNetworkUtils.h"
 #import "Tampermonkey.h"
 #import "SYVersionUtils.h"
-
+#import "UserscriptUpdateManager.h"
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -99,6 +99,8 @@
     [self updateScriptWhen:array type:false];
     NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
     [self updateScriptWhen:searchArray type:true];
+    
+    [[UserscriptUpdateManager shareManager] updateResouse];
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {

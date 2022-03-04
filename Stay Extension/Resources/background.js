@@ -26,6 +26,7 @@ Date.prototype.dateFormat = function(fmt) {
 let matchAppScriptList=[];
 let matchAppScriptConsole = [];
 let gm_console = {};
+let closeableTabs = {};
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     
@@ -58,6 +59,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
     else if ("gm-apis" == request.from){
+        if ("clear_GM_log" == request.operate){
+            console.log("clear_GM_log, ", request);
+            gm_console[request.uuid] = [];
+        }
         if ("GM_error" == request.operate){
             console.log("gm-apis GM_error, from exect catch, ",request);
             if (!gm_console[request.uuid]) {
@@ -96,6 +101,53 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid}, function(response) {
                 sendResponse(response);
             });
+            return true;
+        }
+        else if ("GM_getResourceText" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
+                console.log("GM_getResourceText----", response);
+                sendResponse(response);
+            });
+            return true;
+        }
+        else if ("GM_getAllResourceText" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
+                console.log("GM_getAllResourceText----", response);
+                sendResponse(response);
+            });
+            return true;
+        }
+        else if ("GM_getAllResourceUrl" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
+                console.log("GM_getAllResourceUrl----", response);
+                sendResponse(response);
+            });
+            return true;
+        }
+        else if ("closeTab" == request.operate){
+            console.log("bg closeTab ------");
+
+            return true;
+        }
+        else if ("openInTab" == request.operate){
+            console.log("bg openInTab ------")
+            var done = function (tab) {
+                closeableTabs[tab.id] = true;
+                sendResponse({ tabId: tab.id });
+            }
+            var s = ['active'];
+            var o = { url: request.url };
+            if (request.options) {
+                for (var n = 0; n < s.length; n++) {
+                    if (request.options[s[n]] !== undefined) {
+                        o[s[n]] = request.options[s[n]];
+                    }
+                }
+                if (request.options.insert) {
+                    o.index = sender.tab.index + 1;
+                }
+            }
+            browser.tabs.create(o, done);
             return true;
         }
     }

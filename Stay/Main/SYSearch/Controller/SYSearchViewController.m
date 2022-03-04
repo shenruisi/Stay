@@ -9,6 +9,7 @@
 #import "DataManager.h"
 #import "SYDetailViewController.h"
 #import "JSDetailCell.h"
+#import "UserscriptUpdateManager.h"
 
 
 @interface SYSearchViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating, UISearchBarDelegate,UISearchControllerDelegate>

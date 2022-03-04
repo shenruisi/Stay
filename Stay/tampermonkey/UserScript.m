@@ -62,7 +62,7 @@
         @"updateUrl":self.updateUrl ? self.updateUrl: @"",
         @"downloadUrl":self.downloadUrl ? self.downloadUrl: @"",
         @"requireCodes":self.requireCodes ? self.requireCodes: @[],
-        @"resourceUrls":self.resourceUrls ? self.resourceUrls: @[],
+        @"resourceUrls":self.resourceUrls ? self.resourceUrls: @{},
         @"notes":self.notes ? self.notes: @[],
         @"locales":self.locales ? self.locales : @{}
     };
