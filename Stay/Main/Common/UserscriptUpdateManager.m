@@ -108,22 +108,23 @@
 
 
 - (BOOL)saveRequireUrl:(UserScript *)scrpit {
-    
     BOOL downloadSuccess = true;
-    
     if(scrpit != nil && scrpit.requireUrls != nil){
         NSString *groupPath = [[[NSFileManager defaultManager]
                      containerURLForSecurityApplicationGroupIdentifier:
                          @"group.com.dajiu.stay.pro"] path];
         for(int j = 0; j < scrpit.requireUrls.count; j++) {
             NSString *requireUrl = scrpit.requireUrls[j];
-            NSURLRequest *request = [[NSURLRequest alloc]initWithURL:requireUrl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+            NSString *fileName = requireUrl.lastPathComponent;
+            NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/require/%@",groupPath,scrpit.uuid,fileName];
+            if([[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+                continue;
+            }
+            NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:requireUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
             NSError *error;
             NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-            NSString *fileName = requireUrl.lastPathComponent;
             if(error == nil && received != nil) {
                 NSString *str = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
-                NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/require/%@",groupPath,scrpit.uuid,fileName];
                 if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
                     [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
                     [str writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
@@ -136,7 +137,6 @@
 }
 
 - (BOOL)saveResourceUrl:(UserScript *)scrpit {
-    
     BOOL downloadSuccess = true;
     NSString *groupPath = [[[NSFileManager defaultManager]
                  containerURLForSecurityApplicationGroupIdentifier:

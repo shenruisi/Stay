@@ -142,6 +142,22 @@
             }
         }
     }
+    else if ([message[@"type"] isEqualToString:@"GM_getAllResourceUrl"]){
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSString *uuid = message[@"uuid"];
+        NSString *key = message[@"key"];
+        if (datas != NULL && datas.count > 0) {
+            for(int i = 0; i < datas.count;i++) {
+                NSDictionary *dic = datas[i];
+                if([dic[@"uuid"] isEqualToString:uuid]) {
+                    NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+                    NSDictionary *resourceDic = dic[@"resourceUrls"];
+                    body = resourceDic;
+                    break;
+                }
+            }
+        }
+    }
     
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

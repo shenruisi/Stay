@@ -19,6 +19,10 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self addSubview:self.wkwebView];
+        _activityIndicator =  [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0,0,100,100)];
+        _activityIndicator.center = self.center;
+        _activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+        [self addSubview:_activityIndicator];
         self.backgroundColor = [self createBgColor];
     }
     return self;
@@ -74,6 +78,7 @@
 }
 
 - (void)insertContent{
+    [_activityIndicator startAnimating];
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             [self initScrpitContent:false];
@@ -94,12 +99,13 @@
            } else {
                [self saveError:userScript.errorMessage];
            }
-
+            [_activityIndicator stopAnimating];
         }
     }];
 }
 
 - (void)updateContent{
+    [_activityIndicator startAnimating];
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             [self initScrpitContent:false];
@@ -109,10 +115,12 @@
            userScript.active = self.active;
            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                [[DataManager shareManager] updateUserScript:userScript];
+               [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
                [self initScrpitContent:true];
            } else {
                [self saveError:userScript.errorMessage];
            }
+            [_activityIndicator startAnimating];
         }
     }];
 }
