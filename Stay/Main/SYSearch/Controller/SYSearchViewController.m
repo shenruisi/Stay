@@ -45,6 +45,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadScriptSuccess:) name:@"uploadScriptSuccess" object:nil];
 
     [self.tableView reloadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)uploadScriptSuccess:(id)sender{
@@ -53,6 +54,14 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
+}
+
+- (void)statusBarChange{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tableView.frame = self.view.bounds;
+        [self.tableView reloadData];
+    });
+
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -290,7 +299,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadTableView];
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tableView.frame = self.view.bounds;
+        [self.tableView reloadData];
+    });
 }
 
 - (void) reloadTableView {
