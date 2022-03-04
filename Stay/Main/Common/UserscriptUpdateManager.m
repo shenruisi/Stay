@@ -129,6 +129,9 @@
                     [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
                     [str writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
                 }
+            } else {
+                downloadSuccess = false;
+                break;
             }
         }
     }
@@ -159,19 +162,20 @@
                     if([url.scheme containsString:@"stay"]) {
                         continue;
                     } else {
-                        [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
-                            if(responseObject != nil) {
-                                [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
-                                BOOL isSuccess = [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
-                            
-                                if(isSuccess) {
-                                    NSLog(@"成功");
-                                }
-        
-                            }
-                        } failBlock:^(NSError * _Nonnull error) {
                         
-                        }];
+                        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+                        NSError *error;
+                        NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+                        if(error == nil && received != nil) {
+                            NSString *str = [[NSString alloc]initWithData:received encoding:NSUTF8StringEncoding];
+                            if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+                                [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
+                                [str writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                            }
+                        } else {
+                            downloadSuccess = false;
+                            break;
+                        }
                     }
                 }
         }
