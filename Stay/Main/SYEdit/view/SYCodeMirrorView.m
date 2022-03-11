@@ -88,6 +88,7 @@
                NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
                NSString *uuid = [self md5HexDigest:uuidName];
                userScript.uuid = uuid;
+                       
                BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
                BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
 
@@ -100,7 +101,12 @@
                    return;
                }
                
-               [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+               UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:uuid];
+               if(tmpScript != nil && tmpScript.uuid != nil) {
+                   [[DataManager shareManager] updateUserScript:userScript];
+               } else {
+                   [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+               }
                [self initScrpitContent:true];
          
            } else {
