@@ -28,6 +28,8 @@ Stay²是一个开源的**本地**iOS Safari扩展脚本管理器，Stay²有着
 ## 脚本仓库
 [Stay官方脚本](https://github.com/shenruisi/Stay-Offical-Userscript)
 
+[第三方tg频道 Act Channel D](https://t.me/ACTCD)
+
 ## 许可证
 [MPL](./LICENSE)
 
