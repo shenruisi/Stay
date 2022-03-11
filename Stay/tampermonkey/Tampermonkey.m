@@ -54,7 +54,7 @@ static Tampermonkey *kInstance = nil;
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-    JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript,userScript.uuid,appVersion]];
+    JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion]];
     scriptWithoutComment = [NSString stringWithFormat:
                             @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
                             ,gmApisSource,scriptWithoutComment,userScript.uuid];
