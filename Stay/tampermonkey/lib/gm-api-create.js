@@ -6,13 +6,14 @@
 'use strict';
 
 (function() {    
-    function createGMApisWithUserScript(userscirpt, uuid, version){
+    function createGMApisWithUserScript(userscript, uuid, version){
         try {
+            
             native.nslog("native-uuid--" + uuid);
-            native.nslog("native-userscript--" + typeof userscirpt);
-            let grants = userscirpt.grants;
+            native.nslog("native-userscript--" + userscript);
+            let grants = userscript.grants;
+            native.nslog("native-userscript-grants-" + grants);
             let source = 'const _uuid = "' + uuid + '";\n\n';
-            source += 'const _userscirpt = ' + userscirpt + ';\n\n';
             source += 'const _version = "' + version + '";\n\n';
             source += 'let GM = {};\n\n';
             source += 'let GM_info = {};\n\n';
@@ -125,15 +126,18 @@
             source += _fillAllResourceTextStroge.toString() + ';\n\n';
 
             source += _fillAllResourceUrlStroge.toString() + ';\n\n';
+            native.nslog("native-source" + source);
 
-            source += 'GM_info={version: _version,script: _userscirpt,scriptHandler: "Stay"};\n\n';
+            source += 'GM_info={version: _version, scriptHandler: "Stay"};\n\n';
+            source += 'GM_info.script={version: "'+userscript.version+'", };\n\n';
 
             source += 'GM.info = GM_info;\n\n'; 
+            return source;
         } catch (error) {
             native.nslog("native-error"+error);
         }
         
-        return source;
+        return "null";
     }
 
     function _fillStroge(){
