@@ -28,6 +28,8 @@ If you are a developer or a senior user of browser extension scripts, you are we
 ## Userscript repository
 [Stay offical userscript](https://github.com/shenruisi/Stay-Offical-Userscript)
 
+[Third party tg channel - Act Channel D](https://t.me/ACTCD)
+
 ## LICENSE
 [MPL](./LICENSE)
 
