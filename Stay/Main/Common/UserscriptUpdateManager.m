@@ -163,7 +163,7 @@
                         continue;
                     } else {
                         
-                        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+                        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
                         NSError *error;
                         NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
                         if(error == nil && received != nil) {

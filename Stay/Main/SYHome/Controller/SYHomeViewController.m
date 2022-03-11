@@ -107,8 +107,6 @@
     [self updateScriptWhen:array type:false];
     NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
     [self updateScriptWhen:searchArray type:true];
-    
-    [[UserscriptUpdateManager shareManager] updateResouse];
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
