@@ -19,7 +19,7 @@
         source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
         source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
-        source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "unsafeWindow" }, (response)=>{unsafeWindow = response.unsafeWindow;});\n';
+        // source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "unsafeWindow" }, (response)=>{unsafeWindow = response.unsafeWindow;});\n';
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';

@@ -106,6 +106,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("unsafeWindow" == request.operate){
             console.log("unsafeWindow bg-----", window.__restart_confirm_timeout, ",----", window._WWW_SRV_T);
             sendResponse({ unsafeWindow: window });
+            return true;
         }
         else if ("GM_xmlhttpRequest" == request.operate){
             let params = request.params
