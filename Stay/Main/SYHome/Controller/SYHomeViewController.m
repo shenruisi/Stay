@@ -292,6 +292,10 @@
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.text = model.name;
     [titleLabel sizeToFit];
+    if(titleLabel.width > kScreenWidth / 3 * 2) {
+        titleLabel.width = kScreenWidth / 3 * 2;
+    }
+    
     [cell.contentView addSubview:titleLabel];
     
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];

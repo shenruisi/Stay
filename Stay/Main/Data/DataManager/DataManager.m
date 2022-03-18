@@ -66,6 +66,11 @@
         [self addColumn:@"script_config" column:@"resourceUrl"];
     }
     
+    if(![self isExitedColumn:@"notes"]) {
+        [self addColumn:@"user_config_script" column:@"notes"];
+        [self addColumn:@"script_config" column:@"notes"];
+    }
+
     NSArray *list =  [self findProjectSearchLib];
     for(int i = 0; i < list.count; i++) {
         UserScript *scrpitDetail = list[i];
@@ -419,6 +424,12 @@
         int updateSwitch = sqlite3_column_int(stmt, 22);
         scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
 
+        NSString * notesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 24)== NULL?"":(const char *)sqlite3_column_text(stmt, 24)];
+                if (notesStr != NULL && notesStr.length > 0) {
+                    scrpitDetail.notes = [notesStr componentsSeparatedByString:@","];
+                } else {
+                    scrpitDetail.notes = @[];
+                }
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -978,7 +989,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -1028,6 +1039,13 @@
         sqlite3_bind_text(statement, 19, [scrpitDetail.updateUrl UTF8String], -1,NULL);
         
         sqlite3_bind_text(statement, 20, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
+        
+        if(scrpitDetail.notes.count > 0) {
+            sqlite3_bind_text(statement, 21, [[scrpitDetail.notes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 21,  NULL, -1,NULL);
+        }
+
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1147,7 +1165,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ? where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ? where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -1192,10 +1210,15 @@
             sqlite3_bind_text(statement, 16, NULL, -1,NULL);
         }
         sqlite3_bind_text(statement, 17, [scrpitDetail.sourcePage UTF8String], -1,NULL);
-        sqlite3_bind_text(statement, 20,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 21,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 18, [scrpitDetail.updateUrl UTF8String], -1,NULL);
         
         sqlite3_bind_text(statement, 19, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
+        if(scrpitDetail.notes.count > 0) {
+            sqlite3_bind_text(statement, 20, [[scrpitDetail.notes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 20, NULL, -1,NULL);
+        }
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1306,6 +1329,14 @@
         scrpitDetail.downloadUrl = downloadUrl;
         int updateSwitch = sqlite3_column_int(stmt, 22);
         scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+        
+        NSString * notesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 24)== NULL?"":(const char *)sqlite3_column_text(stmt, 24)];
+        if (notesStr != NULL && notesStr.length > 0) {
+            scrpitDetail.notes = [notesStr componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.notes = @[];
+        }
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
     sqlite3_finalize(stmt);
