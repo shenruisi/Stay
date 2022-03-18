@@ -103,8 +103,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
+        else if ("unsafeWindow" == request.operate){
+            console.log("unsafeWindow bg-----", window.__restart_confirm_timeout, ",----", window._WWW_SRV_T);
+            sendResponse({ unsafeWindow: window });
+            return true;
+        }
         else if ("GM_xmlhttpRequest" == request.operate){
-            console.log("GM_xmlhttpRequest--background-------", request);
             let params = request.params
             let xhr = new XMLHttpRequest();
             var createState = function () {
@@ -342,7 +346,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("closeTab" == request.operate){
             console.log("bg closeTab ------");
-
+            if (request.tabId && closeableTabs[request.tabId]) {
+                browser.tabs.remove(request.tabId);
+            }
+            sendResponse({});
             return true;
         }
         else if ("openInTab" == request.operate){
