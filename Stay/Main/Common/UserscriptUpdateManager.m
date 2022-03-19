@@ -207,7 +207,34 @@
     return nil;
 }
 
+- (void)saveIcon:(UserScript *)scrpit {
+    if(scrpit != nil && scrpit.icon != nil){
+        NSString *groupPath = [[[NSFileManager defaultManager]
+                     containerURLForSecurityApplicationGroupIdentifier:
+                         @"group.com.dajiu.stay.pro"] path];
+        
+       NSString *dirName = [NSString stringWithFormat:@"%@/%@/icon",groupPath,scrpit.uuid];
 
+        if(![[NSFileManager defaultManager] fileExistsAtPath:dirName]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:dirName
+                                      withIntermediateDirectories:YES
+                                                       attributes:nil
+                                                            error:nil];
+        }
+    
+        NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/icon/%@",groupPath,scrpit.uuid,scrpit.icon];
+        [[SYNetworkUtils shareInstance] requestGET:scrpit.icon params:nil successBlock:^(NSString * _Nonnull responseObject) {
+           if(responseObject != nil) {
+               [[NSFileManager defaultManager] createFileAtPath:strogeUrl contents:nil attributes:nil];
+               [responseObject writeToFile:strogeUrl atomically:YES encoding:NSUTF8StringEncoding error:nil];
+           }
+       } failBlock:^(NSError * _Nonnull error) {
+
+       }];
+        
+    }
+    
+}
 
 
 @end

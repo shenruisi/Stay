@@ -91,7 +91,7 @@
                        
                BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
                BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
-
+               
                if(!saveSuccess) {
                    [self saveError:@"requireUrl下载失败,请检查后重试"];
                    return;
@@ -101,7 +101,11 @@
                    return;
                }
                
+               [[UserscriptUpdateManager shareManager] saveIcon:userScript];                
+               
                UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:uuid];
+               
+            
                if(tmpScript != nil && tmpScript.uuid != nil) {
                    [[DataManager shareManager] updateUserScript:userScript];
                } else {
@@ -147,6 +151,7 @@
         }
     }];
 }
+
 
 - (void)undo {
     [_wkwebView evaluateJavaScript:@"revocationAction()" completionHandler:^(id _Nullable, NSError * _Nullable error) {

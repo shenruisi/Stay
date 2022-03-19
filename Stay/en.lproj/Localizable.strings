@@ -32,6 +32,8 @@ settings.add="Add";
 settings.delete="Delete";
 settings.create="Create";
 settings.newScript="New Script";
+settings.notes="notes";
+
 
 
 

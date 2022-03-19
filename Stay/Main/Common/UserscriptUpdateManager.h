@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)saveResourceUrl:(UserScript *)scrpit;
 
+- (void)saveIcon:(UserScript *)scrpit;
+
 @end
 
 NS_ASSUME_NONNULL_END
