@@ -85,6 +85,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reDoHistoryChange" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onDoHistoryChange" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"htmlLoadSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startSave" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startSaveRequire" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startSaveResource" object:nil];
 }
 
 - (void)startSave:(NSNotification*) notification{
@@ -332,7 +335,7 @@
         _uploadView.layer.masksToBounds = 10;
         
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = @"处理脚本资源";
+        titleLabel.text = NSLocalizedString(@"settings.uploadTips","Handling script resources");
         titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textColor = [UIColor blackColor];
         [titleLabel sizeToFit];

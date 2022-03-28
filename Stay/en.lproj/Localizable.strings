@@ -33,6 +33,8 @@ settings.delete="Delete";
 settings.create="Create";
 settings.newScript="New Script";
 settings.notes="notes";
+settings.uploadTips="Handling script resources";
+
 
 
 

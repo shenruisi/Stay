@@ -32,7 +32,7 @@ settings.delete="删除";
 settings.create="创建";
 settings.newScript="新建脚本";
 settings.notes="版本记录";
-
+settings.uploadTips="处理脚本资源";
 
 
 
