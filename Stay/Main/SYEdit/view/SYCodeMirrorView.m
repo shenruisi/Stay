@@ -19,11 +19,8 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self addSubview:self.wkwebView];
-        _activityIndicator =  [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0,0,100,100)];
-        _activityIndicator.center = self.center;
-        _activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-        [self addSubview:_activityIndicator];
         self.backgroundColor = [self createBgColor];
+
     }
     return self;
 }
@@ -78,7 +75,6 @@
 }
 
 - (void)insertContent{
-    [_activityIndicator startAnimating];
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             [self initScrpitContent:false];
@@ -89,6 +85,20 @@
                NSString *uuid = [self md5HexDigest:uuidName];
                userScript.uuid = uuid;
                        
+               int count = 0;
+
+               if(userScript != nil && userScript.requireUrls != nil) {
+                   count += userScript.requireUrls.count;
+               }
+
+               if(userScript != nil && userScript.resourceUrls != nil) {
+                   count += userScript.resourceUrls.count;
+               }
+               if(count > 0) {
+                   NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
+                   [[NSNotificationCenter defaultCenter]postNotification:notification];
+               }
+               
                BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
                BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
                
@@ -121,17 +131,30 @@
 }
 
 - (void)updateContent{
-    [_activityIndicator startAnimating];
     [_wkwebView evaluateJavaScript:@"getCode()" completionHandler:^(id _Nullable, NSError * _Nullable error) {
         if(error != nil) {
             [self initScrpitContent:false];
         } else {
-           UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
-           userScript.uuid = self.uuid;
-           userScript.active = self.active;
-           BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
-           BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
-           
+            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
+            userScript.uuid = self.uuid;
+            userScript.active = self.active;
+
+            int count = 0;
+
+            if(userScript != nil && userScript.requireUrls != nil) {
+                count += userScript.requireUrls.count;
+            }
+
+            if(userScript != nil && userScript.resourceUrls != nil) {
+                count += userScript.resourceUrls.count;
+            }
+            if(count > 0) {
+                NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+            }
+            BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+            BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+
             if(!saveSuccess) {
                 [self saveError:@"requireUrl下载失败,请检查后重试"];
                 return;
@@ -186,7 +209,6 @@
     }];
 }
 - (void)initScrpitContent:(BOOL)success{
-    [_activityIndicator stopAnimating];
     if(success) {
         NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
@@ -194,7 +216,6 @@
 }
 
 - (void)saveError:(NSString *)errorMessage{
-    [_activityIndicator stopAnimating];
     NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:errorMessage];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
 }

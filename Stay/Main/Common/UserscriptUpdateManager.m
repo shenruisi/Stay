@@ -114,8 +114,18 @@
                      containerURLForSecurityApplicationGroupIdentifier:
                          @"group.com.dajiu.stay.pro"] path];
         for(int j = 0; j < scrpit.requireUrls.count; j++) {
+            int count = 1 + j;
+            NSNotification *notification = [NSNotification notificationWithName:@"startSaveRequire" object:[NSString stringWithFormat:@"%d",count]];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
             NSString *requireUrl = scrpit.requireUrls[j];
             NSString *fileName = requireUrl.lastPathComponent;
+            NSString *dirName = [NSString stringWithFormat:@"%@/%@/require",groupPath,scrpit.uuid];
+            if(![[NSFileManager defaultManager] fileExistsAtPath:dirName]){
+                [[NSFileManager defaultManager] createDirectoryAtPath:dirName
+                                          withIntermediateDirectories:YES
+                                                           attributes:nil
+                                                                error:nil];
+            }
             NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/require/%@",groupPath,scrpit.uuid,fileName];
             if([[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
                 continue;
@@ -133,6 +143,7 @@
                 downloadSuccess = false;
                 break;
             }
+            
         }
     }
     
@@ -148,6 +159,9 @@
             NSDictionary *resouseDic = scrpit.resourceUrls;
             NSArray *reouseKey = resouseDic.allKeys;
             for(int k = 0; k < reouseKey.count; k++) {
+                int count = 1 + k;
+                NSNotification *notification = [NSNotification notificationWithName:@"startSaveResource" object:[NSString stringWithFormat:@"%d",count]];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
                 NSString *key = reouseKey[k];
                 NSString *dirName = [NSString stringWithFormat:@"%@/%@/resource",groupPath,scrpit.uuid];
                 if(![[NSFileManager defaultManager] fileExistsAtPath:dirName]){
@@ -177,6 +191,7 @@
                             break;
                         }
                     }
+                    
                 }
         }
     }

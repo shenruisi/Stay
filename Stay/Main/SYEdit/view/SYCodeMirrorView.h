@@ -13,11 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYCodeMirrorView : UIView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 
 @property (nonatomic, strong) WKWebView *wkwebView;
-@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator ;
-
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, assign) BOOL active;
+
 
 - (void)changeContent:(NSString *) jsContent;
 - (void)insertContent;
