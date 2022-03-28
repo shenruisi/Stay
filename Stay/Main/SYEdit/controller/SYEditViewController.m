@@ -18,6 +18,11 @@
 @property (nonatomic, strong) UIButton *backBtn;
 @property (nonatomic, strong) UIButton *onBtn;
 @property (nonatomic, strong) SYCodeMirrorView *syCodeMirrorView;
+@property (nonatomic, strong) UIView *uploadView;
+@property (nonatomic, strong) UILabel *countLabel;
+@property (nonatomic, assign) int requireCount;
+@property (nonatomic, assign) int resourceCount;
+@property (nonatomic, assign) int sumCount;
 
 @end
 
@@ -53,6 +58,9 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(reDoHistoryChange:) name:@"reDoHistoryChange" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onDoHistoryChange:) name:@"onDoHistoryChange" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(htmlLoadSuccess:) name:@"htmlLoadSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startSave:) name:@"startSave" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startSaveRequire:) name:@"startSaveRequire" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(startSaveResource:) name:@"startSaveResource" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShowAction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHideAction:) name:UIKeyboardWillHideNotification object:nil];
     
@@ -62,6 +70,10 @@
     if(!self.isSearch) {
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
+    
+    self.uploadView.center = self.view.center;
+    [self.view addSubview:self.uploadView];
+    self.uploadView.hidden = true;
     // Do any additional setup after loading the view.
 }
 
@@ -73,6 +85,39 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reDoHistoryChange" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onDoHistoryChange" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"htmlLoadSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startSave" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startSaveRequire" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startSaveResource" object:nil];
+}
+
+- (void)startSave:(NSNotification*) notification{
+    NSString *sumCount = [notification object];
+    self.sumCount = sumCount.intValue;
+    self.requireCount = 0;
+    self.resourceCount = 0;
+    self.uploadView.hidden = false;
+    [self reloadCount];
+}
+
+- (void)startSaveRequire:(NSNotification*) notification{
+    NSString *requireCount = [notification object];
+    self.requireCount = requireCount.intValue;
+    [self reloadCount];
+}
+- (void)startSaveResource:(NSNotification*) notification{
+    NSString *resourceCount = [notification object];
+    self.resourceCount = resourceCount.intValue;
+    [self reloadCount];
+}
+
+- (void)reloadCount {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.uploadView.hidden = false;
+        int downloadCount = self.resourceCount + self.requireCount;
+        self.countLabel.text = [NSString stringWithFormat:@"(%d/%d)",downloadCount,self.sumCount];
+        [self.countLabel sizeToFit];
+        self.countLabel.centerX = (kScreenWidth - 100) / 2;
+    });
 }
 
 - (void)reDoHistoryChange:(NSNotification*) notification{
@@ -104,6 +149,7 @@
 }
 
 - (void)saveSuccess:(id)sender{
+    self.uploadView.hidden = true;
     NSString *content = _isEdit?@"保存成功":@"创建成功";
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -117,6 +163,7 @@
 }
 
 - (void)saveError:(NSNotification*) notification{
+    self.uploadView.hidden = true;
     NSString *errorMessage =  [notification object];
     NSString *content = errorMessage;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
@@ -279,5 +326,38 @@
     return _syCodeMirrorView;
 }
 
+
+- (UIView *)uploadView {
+    if(_uploadView == NULL) {
+        _uploadView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 100)];
+        [_uploadView setBackgroundColor:RGB(230, 230, 230)];
+        _uploadView.layer.cornerRadius = 10;
+        _uploadView.layer.masksToBounds = 10;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text = NSLocalizedString(@"settings.uploadTips","Handling script resources");
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        titleLabel.textColor = [UIColor blackColor];
+        [titleLabel sizeToFit];
+        
+        titleLabel.top = 30;
+        titleLabel.centerX = (kScreenWidth - 100) / 2;
+        [_uploadView addSubview:titleLabel];
+        
+        self.countLabel.top = titleLabel.bottom + 5;
+        self.countLabel.centerX = (kScreenWidth - 100) / 2;
+        [_uploadView addSubview:self.countLabel];
+    }
+    return _uploadView;
+}
+
+- (UILabel *)countLabel {
+    if(_countLabel == NULL) {
+        _countLabel = [[UILabel alloc] init];
+        _countLabel.textColor = [UIColor blackColor];
+        _countLabel.font = [UIFont systemFontOfSize:18];
+    }
+    return _countLabel;
+}
 
 @end
