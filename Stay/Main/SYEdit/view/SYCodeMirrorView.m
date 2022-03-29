@@ -242,14 +242,14 @@
 }
 
 - (NSString* )md5HexDigest:(NSString* )input {
-    const char* str =[input UTF8String];
-    unsigned char result[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(str, strlen(str), result);
-    NSMutableString* ret = [NSMutableString stringWithCapacity: CC_MD5_DIGEST_LENGTH];
-    for(int i=0; i< CC_MD5_DIGEST_LENGTH; i++){
-        [ret appendFormat:@"%02X", result];
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
     }
-    return ret;
+    return result;
 }
 
 @end
