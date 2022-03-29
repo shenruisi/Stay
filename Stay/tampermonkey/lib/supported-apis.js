@@ -15,7 +15,6 @@ const GM_APIS = new Set([
     "GM.addStyle",
     "none",
     "None",
-    "unsafeWindow",
     "GM_getResourceURL",
     "GM.getResourceURL",
     "GM_getResourceUrl",
