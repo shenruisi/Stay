@@ -95,29 +95,36 @@
     self.sumCount = sumCount.intValue;
     self.requireCount = 0;
     self.resourceCount = 0;
-    self.uploadView.hidden = false;
-    [self reloadCount];
+    dispatch_async(dispatch_get_main_queue(),^{
+        self.uploadView.hidden = NO;
+        [self reloadCount];
+    });
+    
 }
 
 - (void)startSaveRequire:(NSNotification*) notification{
     NSString *requireCount = [notification object];
     self.requireCount = requireCount.intValue;
-    [self reloadCount];
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self reloadCount];
+    });
 }
 - (void)startSaveResource:(NSNotification*) notification{
     NSString *resourceCount = [notification object];
     self.resourceCount = resourceCount.intValue;
-    [self reloadCount];
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self reloadCount];
+    });
 }
 
 - (void)reloadCount {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.uploadView.hidden = false;
-        int downloadCount = self.resourceCount + self.requireCount;
+    int downloadCount = self.resourceCount + self.requireCount;
+
+//    dispatch_async(dispatch_get_main_queue(),^{
         self.countLabel.text = [NSString stringWithFormat:@"(%d/%d)",downloadCount,self.sumCount];
         [self.countLabel sizeToFit];
         self.countLabel.centerX = (kScreenWidth - 100) / 2;
-    });
+//    });
 }
 
 - (void)reDoHistoryChange:(NSNotification*) notification{
@@ -163,7 +170,9 @@
 }
 
 - (void)saveError:(NSNotification*) notification{
-    self.uploadView.hidden = true;
+    dispatch_async(dispatch_get_main_queue(),^{
+            self.uploadView.hidden = true;
+    });
     NSString *errorMessage =  [notification object];
     NSString *content = errorMessage;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];

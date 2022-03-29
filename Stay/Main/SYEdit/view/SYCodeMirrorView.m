@@ -79,53 +79,56 @@
         if(error != nil) {
             [self initScrpitContent:false];
         } else {
-           UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
-           if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-               NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
-               NSString *uuid = [self md5HexDigest:uuidName];
-               userScript.uuid = uuid;
-                       
-               int count = 0;
+           
+            dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
+                if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+                   NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+                   NSString *uuid = [self md5HexDigest:uuidName];
+                   userScript.uuid = uuid;
+                           
+                   int count = 0;
 
-               if(userScript != nil && userScript.requireUrls != nil) {
-                   count += userScript.requireUrls.count;
-               }
+                   if(userScript != nil && userScript.requireUrls != nil) {
+                       count += userScript.requireUrls.count;
+                   }
 
-               if(userScript != nil && userScript.resourceUrls != nil) {
-                   count += userScript.resourceUrls.count;
-               }
-               if(count > 0) {
-                   NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
-                   [[NSNotificationCenter defaultCenter]postNotification:notification];
-               }
-               
-               BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
-               BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
-               
-               if(!saveSuccess) {
-                   [self saveError:@"requireUrl下载失败,请检查后重试"];
-                   return;
-               }
-               if(!saveResourceSuccess) {
-                   [self saveError:@"resourceUrl下载失败,请检查后重试"];
-                   return;
-               }
-               
-               [[UserscriptUpdateManager shareManager] saveIcon:userScript];                
-               
-               UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:uuid];
-               
-            
-               if(tmpScript != nil && tmpScript.uuid != nil) {
-                   [[DataManager shareManager] updateUserScript:userScript];
-               } else {
-                   [[DataManager shareManager] insertUserConfigByUserScript:userScript];
-               }
-               [self initScrpitContent:true];
-         
-           } else {
-               [self saveError:userScript.errorMessage];
-           }
+                   if(userScript != nil && userScript.resourceUrls != nil) {
+                       count += userScript.resourceUrls.count;
+                   }
+                   if(count > 0) {
+                       NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
+                       [[NSNotificationCenter defaultCenter]postNotification:notification];
+                   }
+                   
+                   BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+                   BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+                   
+                   if(!saveSuccess) {
+                       [self saveError:@"requireUrl下载失败,请检查后重试"];
+                       return;
+                   }
+                   if(!saveResourceSuccess) {
+                       [self saveError:@"resourceUrl下载失败,请检查后重试"];
+                       return;
+                   }
+                   
+                   [[UserscriptUpdateManager shareManager] saveIcon:userScript];
+                   
+                   UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:uuid];
+                   
+
+                   if(tmpScript != nil && tmpScript.uuid != nil) {
+                       [[DataManager shareManager] updateUserScript:userScript];
+                   } else {
+                       [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+                   }
+                   [self initScrpitContent:true];
+
+                } else {
+                   [self saveError:userScript.errorMessage];
+                }
+            });
         }
     }];
 }
@@ -135,42 +138,44 @@
         if(error != nil) {
             [self initScrpitContent:false];
         } else {
-            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
-            userScript.uuid = self.uuid;
-            userScript.active = self.active;
+            dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
+                userScript.uuid = self.uuid;
+                userScript.active = self.active;
 
-            int count = 0;
+                int count = 0;
 
-            if(userScript != nil && userScript.requireUrls != nil) {
-                count += userScript.requireUrls.count;
-            }
+                if(userScript != nil && userScript.requireUrls != nil) {
+                    count += userScript.requireUrls.count;
+                }
 
-            if(userScript != nil && userScript.resourceUrls != nil) {
-                count += userScript.resourceUrls.count;
-            }
-            if(count > 0) {
-                NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
-                [[NSNotificationCenter defaultCenter]postNotification:notification];
-            }
-            BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
-            BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+                if(userScript != nil && userScript.resourceUrls != nil) {
+                    count += userScript.resourceUrls.count;
+                }
+                if(count > 0) {
+                    NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
+                }
+                BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+                BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
 
-            if(!saveSuccess) {
-                [self saveError:@"requireUrl下载失败,请检查后重试"];
-                return;
-            }
-            if(!saveResourceSuccess) {
-                [self saveError:@"resourceUrl下载失败,请检查后重试"];
-                return;
-            }
-            
-            
-           if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-               [[DataManager shareManager] updateUserScript:userScript];
-               [self initScrpitContent:true];
-           } else {
-               [self saveError:userScript.errorMessage];
-           }
+                if(!saveSuccess) {
+                    [self saveError:@"requireUrl下载失败,请检查后重试"];
+                    return;
+                }
+                if(!saveResourceSuccess) {
+                    [self saveError:@"resourceUrl下载失败,请检查后重试"];
+                    return;
+                }
+                
+                
+               if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+                   [[DataManager shareManager] updateUserScript:userScript];
+                   [self initScrpitContent:true];
+               } else {
+                   [self saveError:userScript.errorMessage];
+               }
+            });
         }
     }];
 }
@@ -210,14 +215,18 @@
 }
 - (void)initScrpitContent:(BOOL)success{
     if(success) {
-        NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
-        [[NSNotificationCenter defaultCenter]postNotification:notification];
+        dispatch_async(dispatch_get_main_queue(),^{
+            NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
+        });
     }
 }
 
 - (void)saveError:(NSString *)errorMessage{
-    NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:errorMessage];
-    [[NSNotificationCenter defaultCenter]postNotification:notification];
+    dispatch_async(dispatch_get_main_queue(),^{
+        NSNotification *notification = [NSNotification notificationWithName:@"saveError" object:errorMessage];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
+    });
 }
 
 - (UIColor *)createBgColor {
