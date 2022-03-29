@@ -9,6 +9,7 @@
 
 @implementation SYNetworkUtils
 
+
 + (instancetype)shareInstance
 {
     static SYNetworkUtils *_sharedInstance = nil;
@@ -77,5 +78,6 @@
         }
     }];
 }
+
 
 @end

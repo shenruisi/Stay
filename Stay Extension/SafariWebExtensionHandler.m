@@ -21,6 +21,17 @@
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        
+        for(int i = 0;i < datas.count; i++) {
+            NSDictionary *data = datas[i];
+            NSArray *requireCodes = [self getUserScriptRequireListByUserScript:data];
+            if (requireCodes != nil) {
+                NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
+                mulDic[@"requireCodes"] = requireCodes;
+                [datas removeObject:data];
+                [datas addObject:mulDic];
+            }
+        }
         body = [[NSString alloc] initWithData:
                 [NSJSONSerialization dataWithJSONObject:datas
                                                 options:0
@@ -92,12 +103,139 @@
             [groupUserDefaults synchronize];
         }
     }
+    else if ([message[@"type"] isEqualToString:@"GM_getResourceText"]){
+        NSString *uuid = message[@"uuid"];
+        NSString *key = message[@"key"];
+        
+        NSString *value = [self getResourceByKey:uuid fileName:key];
+        if(value != nil && value.length > 0) {
+            body = [[NSString alloc] initWithData:
+                   [NSJSONSerialization dataWithJSONObject: value
+                                                options:0
+                                                  error:nil]
+                                     encoding:NSUTF8StringEncoding];
+        }
+        
+    }
+    else if ([message[@"type"] isEqualToString:@"GM_getAllResourceText"]){
+        NSString *uuid = message[@"uuid"];
+        NSMutableDictionary *dic = [self getResourceByUuid:uuid];
+        if(dic != nil && dic.count > 0) {
+            body = dic;
+        }
+        
+    }
+    else if ([message[@"type"] isEqualToString:@"GM_getResourceUrl"]){
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSString *uuid = message[@"uuid"];
+        NSString *key = message[@"key"];
+        if (datas != NULL && datas.count > 0) {
+            for(int i = 0; i < datas.count;i++) {
+                NSDictionary *dic = datas[i];
+                if([dic[@"uuid"] isEqualToString:uuid]) {
+                    NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+                    NSDictionary *resourceDic = dic[@"resourceUrls"];
+                    NSString *str = resourceDic[key];
+                    body = str;
+                    break;
+                }
+            }
+        }
+    }
+    else if ([message[@"type"] isEqualToString:@"GM_getAllResourceUrl"]){
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSString *uuid = message[@"uuid"];
+        NSString *key = message[@"key"];
+        if (datas != NULL && datas.count > 0) {
+            for(int i = 0; i < datas.count;i++) {
+                NSDictionary *dic = datas[i];
+                if([dic[@"uuid"] isEqualToString:uuid]) {
+                    NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+                    NSDictionary *resourceDic = dic[@"resourceUrls"];
+                    body = resourceDic;
+                    break;
+                }
+            }
+        }
+    }
+    
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
                                                     }
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
+}
+
+
+- (NSArray *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {
+    if(scrpit != nil && scrpit[@"requireUrls"] != nil){
+        NSArray *array = scrpit[@"requireUrls"];
+        NSString *groupPath = [[[NSFileManager defaultManager]
+                     containerURLForSecurityApplicationGroupIdentifier:
+                         @"group.com.dajiu.stay.pro"] path];
+        NSMutableArray *requireList = [[NSMutableArray alloc] init];
+        for(int j = 0; j < array.count; j++) {
+            NSString *requireUrl = array[j];
+            NSString *fileName = requireUrl.lastPathComponent;
+            NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/require/%@",groupPath,scrpit[@"uuid"],fileName];
+            if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+                return nil;
+            }
+            NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
+            NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+
+            [requireList addObject:responData];
+        }
+        return requireList;
+    }
+    return nil;
+}
+
+- (NSString *)getResourceByKey:(NSString *)uuid fileName:(NSString *)key   {
+  
+    NSString *groupPath = [[[NSFileManager defaultManager]
+                 containerURLForSecurityApplicationGroupIdentifier:
+                     @"group.com.dajiu.stay.pro"] path];
+
+    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/%@",groupPath,uuid,key];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+        return nil;
+    }
+    NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
+    NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    if(responData != nil) {
+        return responData;
+    }
+    
+    return nil;
+}
+
+- (NSMutableDictionary *)getResourceByUuid:(NSString *)uuid{
+
+    NSString *groupPath = [[[NSFileManager defaultManager]
+                 containerURLForSecurityApplicationGroupIdentifier:
+                     @"group.com.dajiu.stay.pro"] path];
+
+    NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/resource/",groupPath,uuid];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
+        return nil;
+    }
+
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    NSFileManager *fileManger = [NSFileManager defaultManager];
+    NSArray * dirArray = [fileManger contentsOfDirectoryAtPath:strogeUrl error:nil];
+
+    NSString * subPath = nil;
+    for (NSString * str in dirArray) {
+        subPath  = [strogeUrl stringByAppendingPathComponent:str];
+        BOOL issubDir = NO;
+        [fileManger fileExistsAtPath:subPath isDirectory:&issubDir];
+        NSData *data=[NSData dataWithContentsOfFile:subPath];
+        NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        dic[str] = responData;
+    }
+    return dic;
 }
 
 @end

@@ -36,11 +36,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSDate *updateTime;
 @property (nonatomic, assign) BOOL active;
 @property (nonatomic, assign) BOOL updateSwitch;
-
-
 @property (nonatomic, copy) NSArray<NSString *> *requireUrls;
 
-+ (instancetype)ofDictionary:(NSDictionary *)dict;
+@property (nonatomic, copy) NSArray<NSString *> *requireCodes;
+@property (nonatomic, copy) NSDictionary *resourceUrls;
+@property (nonatomic, copy) NSArray<NSString *> *notes;
+@property (nonatomic, copy) NSDictionary<NSString *,NSDictionary *> *locales;
+
++ (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
 @end
 

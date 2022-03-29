@@ -80,6 +80,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'noFrames': false,
       'requireUrls': [],
       'resourceUrls': {},
+      'notes':[],
       'runAt': 'end',
       'pass':true,
       'errorMessage':''
@@ -110,7 +111,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           continue;
       }
       
-//      native.nslog(data.keyword);
+      native.nslog(data.keyword);
       switch (data.keyword) {
           case 'noframes':
               details.noFrames = true;
@@ -163,6 +164,9 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           case 'include':
               details.includes.push(data.value);
               break;
+          case 'note':
+              details.notes.push(data.value);
+              break;
           case 'match':
               try {
                   new window.MatchPattern(data.value);
@@ -176,13 +180,15 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
           case 'require':
               //hard code cuz only support stay:// now.
-              if (data.value.startsWith('stay://')){
-                  details.requireUrls.push(safeUrl(data.value, url).toString());
-              }
-              else{
-                  details.pass = false;
-                  details.errorMessage += 'Unsupport require protocol: '+data.value;
-              }
+//              if (data.value.startsWith('stay://')){
+//                  details.requireUrls.push(safeUrl(data.value, url).toString());
+//              }
+//              else{
+//                  details.pass = false;
+//                  details.errorMessage += 'Unsupport require protocol: '+data.value;
+//              }
+              
+              details.requireUrls.push(safeUrl(data.value, url).toString());
               
               break;
           case 'resource':

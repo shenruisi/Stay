@@ -15,7 +15,7 @@
 #import "SYNetworkUtils.h"
 #import "Tampermonkey.h"
 #import "SYVersionUtils.h"
-
+#import "UserscriptUpdateManager.h"
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
 
@@ -61,6 +61,7 @@
     [self initScrpitContent];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 //检测评分
@@ -77,6 +78,13 @@
         [groupUserDefaults setObject:@(1) forKey:@"tips"];
         [groupUserDefaults synchronize];
     }
+}
+- (void)statusBarChange{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tableView.frame = self.view.bounds;
+        [self.tableView reloadData];
+    });
+
 }
 
 //后台唤起时处理与插件交互
@@ -284,6 +292,10 @@
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.text = model.name;
     [titleLabel sizeToFit];
+    if(titleLabel.width > kScreenWidth / 3 * 2) {
+        titleLabel.width = kScreenWidth / 3 * 2;
+    }
+    
     [cell.contentView addSubview:titleLabel];
     
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
@@ -431,8 +443,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadTableView];
-    [self.tableView reloadData];
     [self initScrpitContent];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tableView.frame = self.view.bounds;
+        [self.tableView reloadData];
+    });
 }
 
 

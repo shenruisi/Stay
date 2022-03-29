@@ -60,12 +60,12 @@ const $_matchesCheck = (userLibraryScript,url) => {
     
     return matched;
 }
-let injectScripts = []
-async function start(){
+//let injectScripts = []
+(function(){
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
         let injectedVendor = new Set();
         let userLibraryScripts = JSON.parse(response.body);
-        injectScripts = [];
+        let injectScripts = [];
         userLibraryScripts.forEach((userLibraryScript)=>{
             console.log(userLibraryScript);
             
@@ -110,6 +110,6 @@ async function start(){
     });
     
     
-}
+})();
 
-start();
+//start();

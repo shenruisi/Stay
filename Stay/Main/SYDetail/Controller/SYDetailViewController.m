@@ -8,6 +8,9 @@
 #import "SYDetailViewController.h"
 #import "DataManager.h"
 #import "SYEditViewController.h"
+#import "UserscriptUpdateManager.h"
+#import "SYNotesViewController.h"
+
 
 @interface SYDetailViewController ()
 
@@ -178,10 +181,40 @@
     descDetailLabel.numberOfLines = 2;
     [descDetailLabel sizeToFit];
     [detailView addSubview:descDetailLabel];
+    CGFloat height = descDetailLabel.bottom;
+    
+    
+    if(_script.notes != nil && _script.notes.count > 0) {
+
+        UIView *lineNotes = [self createLine];
+        lineNotes.top = descDetailLabel.bottom + 13;
+        [detailView addSubview:line4];
+        UILabel *notesLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.notes","Notes")];
+        notesLabel.top = lineNotes.bottom + 13;
+        notesLabel.left = 17;
+        [detailView addSubview:notesLabel];
         
+        NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+        UIImageView *noteIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+        noteIconLabel.right = kScreenWidth - 48;
+        noteIconLabel.centerY = notesLabel.centerY;
+        [detailView addSubview:noteIconLabel];
+
+        UIButton *notesBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        notesBtn.frame = CGRectMake(0, 0, kScreenWidth, 40);
+        notesBtn.centerY = notesLabel.centerY;
+        notesBtn.right = kScreenWidth - 48;
+        [detailView addSubview:notesBtn];
+            
+        [notesBtn addTarget:self action:@selector(showNotes:) forControlEvents:UIControlEventTouchUpInside];
+
+        height = notesLabel.bottom;
+    }
+    
+    
      if(!self.isSearch && self.script.downloadUrl != nil && self.script.downloadUrl.length > 0){
         UIView *line13 = [self createLine];
-        line13.top = descDetailLabel.bottom + 13;
+        line13.top = height + 13;
         [detailView addSubview:line13];
         
         UILabel *autoUpdateLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.autoUpdate","autoUpdate")];
@@ -197,7 +230,7 @@
         [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
         detailView.height = autoUpdateLabel.bottom + 13;
     } else {
-        detailView.height = descDetailLabel.bottom + 13;
+        detailView.height = height + 13;
     }
      
     UILabel *configLabel = [[UILabel alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 62 ,22)];
@@ -428,6 +461,12 @@
     [self.navigationController pushViewController:cer animated:true];
 }
 
+- (void)showNotes:(id)sender {
+    SYNotesViewController *cer = [[SYNotesViewController alloc] init];
+    cer.notes = self.script.notes;
+    [self.navigationController pushViewController:cer animated:true];
+}
+
 - (void) switchAction:(UISwitch *) scriptSwitch {
     if (scriptSwitch.on == YES) {
         [[DataManager shareManager] updateScrpitStatus:1 numberId:self.script.uuid];
@@ -504,5 +543,6 @@
         }];
     return viewBgColor;
 }
+
 
 @end

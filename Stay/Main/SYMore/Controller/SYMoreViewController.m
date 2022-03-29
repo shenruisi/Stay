@@ -27,13 +27,30 @@
     [groupUserDefaults synchronize];
 //    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
 //    NSLog([userScript toDictionary]);
+
     
+}
+
+- (void)statusBarChange{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tableView.frame = self.view.bounds;
+        [self.tableView reloadData];
+    });
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tableView.frame = self.view.bounds;
+        [self.tableView reloadData];
+    });
 }
 
 - (void)viewDidLoad {
 //    [self testParseUserScript];
     [super viewDidLoad];
     [self tableView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 
