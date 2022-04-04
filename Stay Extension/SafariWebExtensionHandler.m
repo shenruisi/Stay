@@ -28,8 +28,7 @@
             if (requireCodes != nil) {
                 NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
                 mulDic[@"requireCodes"] = requireCodes;
-                [datas removeObject:data];
-                [datas addObject:mulDic];
+                [datas replaceObjectAtIndex:i withObject:mulDic];
             }
         }
         body = [[NSString alloc] initWithData:
