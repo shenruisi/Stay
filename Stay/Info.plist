@@ -5,10 +5,10 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key>
-			<string>com.stay</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.stay</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>prefs</string>

@@ -24,12 +24,11 @@
         
         for(int i = 0;i < datas.count; i++) {
             NSDictionary *data = datas[i];
-            NSArray *requireCodes = [self getUserScriptRequireListByUserScript:data];
-            if (requireCodes != nil) {
+            NSArray<NSDictionary *> *requireUrlsAndCodes = [self getUserScriptRequireListByUserScript:data];
+            if (requireUrlsAndCodes != nil) {
                 NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
-                mulDic[@"requireCodes"] = requireCodes;
-                [datas removeObject:data];
-                [datas addObject:mulDic];
+                mulDic[@"requireCodes"] = requireUrlsAndCodes;
+                [datas replaceObjectAtIndex:i withObject:mulDic];
             }
         }
         body = [[NSString alloc] initWithData:
@@ -168,7 +167,7 @@
 }
 
 
-- (NSArray *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {
+- (NSArray<NSDictionary *> *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {
     if(scrpit != nil && scrpit[@"requireUrls"] != nil){
         NSArray *array = scrpit[@"requireUrls"];
         NSString *groupPath = [[[NSFileManager defaultManager]
@@ -185,7 +184,7 @@
             NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
             NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
 
-            [requireList addObject:responData];
+            [requireList addObject:@{@"url":requireUrl,@"code":responData}];
         }
         return requireList;
     }

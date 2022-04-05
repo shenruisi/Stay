@@ -1,6 +1,6 @@
 <img width="128px" src="./Material/icon.png" alt="Logo" align="left"/>
 
-# [Stay²](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)
+# [Stay](https://apps.apple.com/cn/app/stay-%E7%BD%91%E9%A1%B5%E7%BA%AF%E6%B5%8F%E8%A7%88/id1591620171)
 
 [![Views](https://views.whatilearened.today/views/github/shenruisi/Stay.svg)]()
 [![iOS System](https://img.shields.io/badge/iOS-15%2B-brightgreen)]()
@@ -11,7 +11,7 @@
 
 <p align="right"><a href="README-EN.md">中文</a> | EN</p>
 
-Stay² is an open source iOS Safari extension. You can use Stay² to manage your local user script. Now Stay² support part of Greasemonkey script.  
+Stay is an open source iOS Safari extension. You can use Stay² to manage your local user script. Now Stay support part of Greasemonkey script.  
 
 ## Features
 - Embed user scripts.
@@ -19,7 +19,7 @@ Stay² is an open source iOS Safari extension. You can use Stay² to manage your
 
 
 ## Submit user script to embed library
-If you are a developer or a senior user of browser extension scripts, you are welcome to apply and submit to the embed script library through [Embed Script Request](https://github.com/shenruisi/Stay/issues/new?assignees=shenruisi&labels=embed+script+request&template=Embed-Script-Request.yml&title=%5BEmbed+Script+Request%5D%3A+), so that your script can be seen by more users in the new version of Stay².
+If you are a developer or a senior user of browser extension scripts, you are welcome to apply and submit to the embed script library through [Embed Script Request](https://github.com/shenruisi/Stay/issues/new?assignees=shenruisi&labels=embed+script+request&template=Embed-Script-Request.yml&title=%5BEmbed+Script+Request%5D%3A+), so that your script can be seen by more users in the new version of Stay.
 
 
 ## Stay API

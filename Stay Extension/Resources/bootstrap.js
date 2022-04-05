@@ -75,18 +75,32 @@ const $_matchesCheck = (userLibraryScript,url) => {
         });
         
         injectScripts.forEach((script) => {
-            if (script.requireUrls.length > 0){
+            if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
                     if (injectedVendor.has(url)) return;
                     injectedVendor.add(url);
-                    browser.runtime.sendMessage({
-                        from: "bootstrap",
-                        operate: "injectFile",
-                        file:$_res($_uri(url).pathname.substring(1)),
-                        allFrames:true,
-                        runAt:"document_start"
-                    });
-                    
+                    if (url.startsWith('stay://')){
+                        browser.runtime.sendMessage({
+                            from: "bootstrap",
+                            operate: "injectFile",
+                            file:$_res($_uri(url).pathname.substring(1)),
+                            allFrames:true,
+                            runAt:"document_start"
+                        });
+                    }
+                    else{
+                        script.requireCodes.forEach((urlCodeDic)=>{
+                            if (urlCodeDic.url == url){
+                                browser.runtime.sendMessage({
+                                    from: "bootstrap",
+                                    operate: "injectScript",
+                                    code:urlCodeDic.code,
+                                    allFrames:true,
+                                    runAt:"document_start"
+                                });
+                            }
+                        });
+                    }
                 });
             }
             

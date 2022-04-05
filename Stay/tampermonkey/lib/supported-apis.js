@@ -24,7 +24,8 @@ const GM_APIS = new Set([
     "GM_xmlhttpRequest",
     "GM.xmlHttpRequest",
     "GM_openInTab",
-    "GM.openInTab"
+    "GM.openInTab",
+    "GM_notification"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);

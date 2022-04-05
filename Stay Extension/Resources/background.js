@@ -310,6 +310,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             //     console.log("GM_getResourceText----", response);
             //     sendResponse(response);
             // });
+<<<<<<< HEAD
             var url = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
             var url = request.url
             var reqXHR = new XMLHttpRequest();
@@ -321,6 +322,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (reqXHR.status == 200) {/*返回状态为200，即为数据获取成功*/
                     console.log("BG-----GM_getResourceText---", reqXHR.responseText);
                     sendResponse({ body: reqXHR.responseText});
+=======
+            var url1 = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
+            var reqXhr = new XMLHttpRequest();
+            var url = request.url;
+            console.log("BG----url==",url);
+            reqXhr.open("get", url, true);/*设置请求方法与路径*/
+            reqXhr.responseType = "text";
+            reqXhr.setRequestHeader("Content-Type", "text/plain; charset=x-user-defined");
+            reqXhr.send();/*不发送数据到服务器*/
+            reqXhr.onload = function () {/*XHR对象获取到返回信息后执行*/
+                if (reqXhr.status == 200) {/*返回状态为200，即为数据获取成功*/
+                    console.log("BG-----GM_getResourceText---", reqXhr.responseText);
+                    sendResponse({ body: reqXhr.responseText });
+>>>>>>> main
                 }
             }
             return true;

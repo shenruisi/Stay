@@ -424,12 +424,21 @@
         int updateSwitch = sqlite3_column_int(stmt, 22);
         scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
 
+        NSString * resourceUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 23)== NULL?"":(const char *)sqlite3_column_text(stmt, 23)];
+        if (resourceUrl != NULL && resourceUrl.length > 0) {
+            NSData *jsonData = [resourceUrl dataUsingEncoding:NSUTF8StringEncoding];
+            scrpitDetail.resourceUrls =  [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+        } else {
+            scrpitDetail.resourceUrls = @{};
+        }
+        
+        
         NSString * notesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 24)== NULL?"":(const char *)sqlite3_column_text(stmt, 24)];
-                if (notesStr != NULL && notesStr.length > 0) {
-                    scrpitDetail.notes = [notesStr componentsSeparatedByString:@","];
-                } else {
-                    scrpitDetail.notes = @[];
-                }
+        if (notesStr != NULL && notesStr.length > 0) {
+            scrpitDetail.notes = [notesStr componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.notes = @[];
+        }
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -989,7 +998,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -1044,6 +1053,13 @@
             sqlite3_bind_text(statement, 21, [[scrpitDetail.notes componentsJoinedByString:@","] UTF8String], -1,NULL);
         } else {
             sqlite3_bind_text(statement, 21,  NULL, -1,NULL);
+        }
+        
+        if(scrpitDetail.resourceUrls != NULL && scrpitDetail.resourceUrls.count > 0) {
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:scrpitDetail.resourceUrls options:NSJSONWritingPrettyPrinted error:nil];
+            sqlite3_bind_text(statement, 22, [[[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 22,  NULL, -1,NULL);
         }
 
     }
@@ -1165,7 +1181,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ? where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ? where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -1218,6 +1234,13 @@
             sqlite3_bind_text(statement, 20, [[scrpitDetail.notes componentsJoinedByString:@","] UTF8String], -1,NULL);
         } else {
             sqlite3_bind_text(statement, 20, NULL, -1,NULL);
+        }
+        
+        if(scrpitDetail.resourceUrls != nil && scrpitDetail.resourceUrls.count > 0) {
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:scrpitDetail.resourceUrls options:NSJSONWritingPrettyPrinted error:nil];
+            sqlite3_bind_text(statement, 21, [ [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 21, NULL, -1,NULL);
         }
     }
     
@@ -1329,6 +1352,15 @@
         scrpitDetail.downloadUrl = downloadUrl;
         int updateSwitch = sqlite3_column_int(stmt, 22);
         scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+        
+        NSString * resourceUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 23)== NULL?"":(const char *)sqlite3_column_text(stmt, 23)];
+        if (resourceUrl != NULL && resourceUrl.length > 0) {
+            NSData *jsonData = [resourceUrl dataUsingEncoding:NSUTF8StringEncoding];
+            scrpitDetail.resourceUrls =  [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+        } else {
+            scrpitDetail.resourceUrls = @{};
+        }
+        
         
         NSString * notesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 24)== NULL?"":(const char *)sqlite3_column_text(stmt, 24)];
         if (notesStr != NULL && notesStr.length > 0) {
