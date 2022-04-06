@@ -1,6 +1,6 @@
 //var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 //var browser = __b;
-Date.prototype.dateFormat = function(fmt) {
+Date.prototype.dateFormat = function (fmt) {
     fmt = fmt ? fmt : "YYYY-mm-dd HH:MM:SS"
     if (!this || typeof this == "undefined") {
         return ""
@@ -23,92 +23,92 @@ Date.prototype.dateFormat = function(fmt) {
     };
     return fmt;
 }
-let matchAppScriptList=[];
+let matchAppScriptList = [];
 let matchAppScriptConsole = [];
 let gm_console = {};
 let closeableTabs = {};
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    
-    if ("bootstrap" == request.from || "iframe" == request.from){
-        if ("fetchScripts" == request.operate){
+
+    if ("bootstrap" == request.from || "iframe" == request.from) {
+        if ("fetchScripts" == request.operate) {
             console.log("background---fetchScripts request==", request);
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("injectScript" == request.operate){
+        else if ("injectScript" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                console.log("request.allFrames",request.allFrames);
+                console.log("request.allFrames", request.allFrames);
                 browser.tabs.executeScript(tabs[0].id, { code: request.code, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
-        else if ("injectFile" == request.operate){
-            console.log("background","injectFile",request.file);
+        else if ("injectFile" == request.operate) {
+            console.log("background", "injectFile", request.file);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames , runAt: request.runAt})
+                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
-        else if ("setMatchedScripts" == request.operate){
+        else if ("setMatchedScripts" == request.operate) {
             matchAppScriptList = request.matchScripts;
-            console.log("setMatchedScripts request.matchScripts=",request.matchScripts)
+            console.log("setMatchedScripts request.matchScripts=", request.matchScripts)
             return true;
         }
     }
-    else if ("gm-apis" == request.from){
-        if ("clear_GM_log" == request.operate){
+    else if ("gm-apis" == request.from) {
+        if ("clear_GM_log" == request.operate) {
             console.log("clear_GM_log, ", request);
             gm_console[request.uuid] = [];
         }
-        if ("GM_error" == request.operate){
-            console.log("gm-apis GM_error, from exect catch, ",request);
+        if ("GM_error" == request.operate) {
+            console.log("gm-apis GM_error, from exect catch, ", request);
             if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
             }
-            gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat()});
-            console.log("GM_error=",gm_console);
+            gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat() });
+            console.log("GM_error=", gm_console);
         }
-        if ("GM_log" == request.operate){
+        if ("GM_log" == request.operate) {
             console.log("gm-apis GM_log");
-            if (!gm_console[request.uuid]){
+            if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
             }
             gm_console[request.uuid].push({ msg: request.message, msgType: "log", time: new Date().dateFormat() });
-            console.log("GM_log=",gm_console);
+            console.log("GM_log=", gm_console);
         }
-        else if ("GM_getValue" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, defaultValue:request.defaultValue, uuid:request.uuid}, function(response) {
+        else if ("GM_getValue" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, defaultValue: request.defaultValue, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("GM_setValue" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, value:request.value, uuid:request.uuid}, function(response) {
+        else if ("GM_setValue" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, value: request.value, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("GM_deleteValue" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, uuid:request.uuid}, function(response) {
+        else if ("GM_deleteValue" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("GM_listValues" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid}, function(response) {
+        else if ("GM_listValues" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("unsafeWindow" == request.operate){
+        else if ("unsafeWindow" == request.operate) {
             console.log("unsafeWindow bg-----", window.__restart_confirm_timeout, ",----", window._WWW_SRV_T);
             sendResponse({ unsafeWindow: window });
             return true;
         }
-        else if ("GM_xmlhttpRequest" == request.operate){
+        else if ("GM_xmlhttpRequest" == request.operate) {
             let params = request.params
             let xhr = new XMLHttpRequest();
             var createState = function () {
@@ -152,7 +152,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 var responseState = createState();
                 if (responseState.readyState == 4 &&
                     responseState.status != 200 &&
-                    responseState.status != 0 ) {
+                    responseState.status != 0) {
                     console.log('api_create: error at onload, should not happen! -> retry :)')
                     return;
                 }
@@ -166,7 +166,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     console.log('api_create: error at onerror, should not happen! -> retry')
                     sendResponse({ onerror: responseState });
                 }
-               
+
             };
 
             var onreadystatechange = function (c) {
@@ -257,7 +257,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
                 if (typeof (params.responseType) !== 'undefined') {
                     xhr.responseType = params.responseType;
-                } 
+                }
                 if (typeof (params.nocache) !== 'undefined') {
                     xhr.setRequestHeader('Cache-Control', 'no-cache');
                 }
@@ -300,7 +300,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     statusText: 'Forbidden'
                 };
                 // params.onerror(resp);
-                sendResponse({ onerror: resp})
+                sendResponse({ onerror: resp })
             }
 
             return true;
@@ -310,9 +310,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             //     console.log("GM_getResourceText----", response);
             //     sendResponse(response);
             // });
-<<<<<<< HEAD
             var url = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
-            var url = request.url
+            url = request.url
             var reqXHR = new XMLHttpRequest();
             reqXHR.open("get", url, true);/*设置请求方法与路径*/
             reqXHR.responseType = "text";
@@ -321,21 +320,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             reqXHR.onload = function () {/*XHR对象获取到返回信息后执行*/
                 if (reqXHR.status == 200) {/*返回状态为200，即为数据获取成功*/
                     console.log("BG-----GM_getResourceText---", reqXHR.responseText);
-                    sendResponse({ body: reqXHR.responseText});
-=======
-            var url1 = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
-            var reqXhr = new XMLHttpRequest();
-            var url = request.url;
-            console.log("BG----url==",url);
-            reqXhr.open("get", url, true);/*设置请求方法与路径*/
-            reqXhr.responseType = "text";
-            reqXhr.setRequestHeader("Content-Type", "text/plain; charset=x-user-defined");
-            reqXhr.send();/*不发送数据到服务器*/
-            reqXhr.onload = function () {/*XHR对象获取到返回信息后执行*/
-                if (reqXhr.status == 200) {/*返回状态为200，即为数据获取成功*/
-                    console.log("BG-----GM_getResourceText---", reqXhr.responseText);
-                    sendResponse({ body: reqXhr.responseText });
->>>>>>> main
+                    sendResponse({ body: reqXHR.responseText });
                 }
             }
             return true;
@@ -361,7 +346,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
-        else if ("closeTab" == request.operate){
+        else if ("closeTab" == request.operate) {
             console.log("bg closeTab ------");
             if (request.tabId && closeableTabs[request.tabId]) {
                 browser.tabs.remove(request.tabId);
@@ -369,7 +354,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({});
             return true;
         }
-        else if ("openInTab" == request.operate){
+        else if ("openInTab" == request.operate) {
             console.log("bg openInTab ------")
             var done = function (tab) {
                 closeableTabs[tab.id] = true;
@@ -390,32 +375,39 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.tabs.create(o, done);
             return true;
         }
+        else if (request.operate === "API_ADD_STYLE" || request.operate === "API_ADD_STYLE_SYNC") {
+            const tabId = sender.tab.id;
+            browser.tabs.insertCSS(tabId, { code: request.css }, () => {
+                if (request.operate === "API_ADD_STYLE") sendResponse(request.css);
+            });
+            return true;
+        }
     }
-    else if ("popup" == request.from){
+    else if ("popup" == request.from) {
         console.log(request.from + " " + request.operate);
-        if ("fetchLog" == request.operate){
+        if ("fetchLog" == request.operate) {
             sendResponse({ body: gm_console });
         }
-        else if ("cleanLog" == request.operate){
+        else if ("cleanLog" == request.operate) {
             gm_console = [];
-        }else if ("fetchMatchedScriptList" == request.operate){
-            console.log("fetchMatchedScriptList--",request,matchAppScriptList)
+        } else if ("fetchMatchedScriptList" == request.operate) {
+            console.log("fetchMatchedScriptList--", request, matchAppScriptList)
             browser.runtime.sendMessage({ from: "background", operate: "fetchMatchedScripts" }, (response) => {
-                            matchAppScriptList = response.body;
-                            console.log("fetchMatchedScriptList---fetchMatchedScripts--",response,"-res--", response.body)
-                            sendResponse({ body: matchAppScriptList });
-                        })
-        }else if ("setScriptActive" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid,active: request.active }, function(response) {
+                matchAppScriptList = response.body;
+                console.log("fetchMatchedScriptList---fetchMatchedScripts--", response, "-res--", response.body)
+                sendResponse({ body: matchAppScriptList });
+            })
+        } else if ("setScriptActive" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, active: request.active }, function (response) {
                 sendResponse(response);
             });
-            
-        }else if ("fetchMatchedScriptLog" == request.operate){
-            if(matchAppScriptList && matchAppScriptList.length>0){
-                if(matchAppScriptConsole.length>0){
+
+        } else if ("fetchMatchedScriptLog" == request.operate) {
+            if (matchAppScriptList && matchAppScriptList.length > 0) {
+                if (matchAppScriptConsole.length > 0) {
                     matchAppScriptConsole = [];
                 }
-                matchAppScriptList.forEach(item=>{
+                matchAppScriptList.forEach(item => {
                     let matchLog = {};
                     matchLog["name"] = item.name;
                     matchLog["uuid"] = item.uuid;
@@ -424,18 +416,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 })
                 console.log("fetchMatchedScriptLog=", matchAppScriptConsole);
                 sendResponse({ body: matchAppScriptConsole });
-            }else{
+            } else {
                 sendResponse({ body: [] });
             }
         }
-        else if ("fetchRegisterMenuCommand" == request.operate){
+        else if ("fetchRegisterMenuCommand" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "fetchRegisterMenuCommand"});
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "fetchRegisterMenuCommand" });
             });
         }
-        else if ("execRegisterMenuCommand" == request.operate){
+        else if ("execRegisterMenuCommand" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "execRegisterMenuCommand", id:request.id, uuid:request.uuid});
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand", id: request.id, uuid: request.uuid });
             });
         }
         return true;
