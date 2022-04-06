@@ -6,7 +6,7 @@
 [![iOS System](https://img.shields.io/badge/iOS-15%2B-brightgreen)]()
 [![TestFlight](https://img.shields.io/badge/TestFlight-2.0.2-4391E1)](https://app.airport.community/app/recICnNcHuUDSCL2b)
 [![HelloGithub](https://img.shields.io/badge/HelloGithub-vol.70-white)](https://hellogithub.com/periodical/volume/70/)
-[![Dev](https://img.shields.io/badge/Develop%20Branch-2.0.4-blueviolet)]()
+[![Dev](https://img.shields.io/badge/Develop%20Branch-2.0.5-blueviolet)]()
 [![Newsletter](https://img.shields.io/badge/Newsletter-Subscribe-important)](https://www.getrevue.co/profile/shenruisi)
 
 
