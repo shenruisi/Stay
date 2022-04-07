@@ -17,6 +17,8 @@
 #import "SYVersionUtils.h"
 #import "UserscriptUpdateManager.h"
 #import "SYAddScriptController.h"
+#import "SYScriptAddViewController.h"
+#import "SYWebScriptViewController.h"
 
 @interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate>
 
@@ -74,6 +76,12 @@
     NSIndexPath *indexpath = (NSIndexPath *)notification.object;
     if(indexpath.row == 0) {
         SYEditViewController *cer = [[SYEditViewController alloc] init];
+        [self.navigationController pushViewController:cer animated:true];
+    } else if(indexpath.row == 1) {
+        SYScriptAddViewController *cer = [[SYScriptAddViewController alloc] init];
+        [self.navigationController pushViewController:cer animated:true];
+    } else if (indexpath.row == 2) {
+        SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
         [self.navigationController pushViewController:cer animated:true];
     }
     

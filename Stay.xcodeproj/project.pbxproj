@@ -66,6 +66,7 @@
 		8410C848275E028D005531EC /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C847275E028D005531EC /* editor.html */; };
 		8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8457A84227FD398C0010A387 /* SYAddScriptController.m */; };
 		8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */; };
+		8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8457A84827FEF0660010A387 /* SYWebScriptViewController.m */; };
 		848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */; };
 		848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B8279A5BA000D55FFD /* SYVersionUtils.m */; };
 		8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB527592B850075ABD5 /* more-selected@3x.png */; };
@@ -216,6 +217,8 @@
 		8457A84227FD398C0010A387 /* SYAddScriptController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAddScriptController.m; sourceTree = "<group>"; };
 		8457A84427FE8CA40010A387 /* SYScriptAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYScriptAddViewController.h; sourceTree = "<group>"; };
 		8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYScriptAddViewController.m; sourceTree = "<group>"; };
+		8457A84727FEF0660010A387 /* SYWebScriptViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYWebScriptViewController.h; sourceTree = "<group>"; };
+		8457A84827FEF0660010A387 /* SYWebScriptViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYWebScriptViewController.m; sourceTree = "<group>"; };
 		848A48B4279A4C7800D55FFD /* SYNetworkUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNetworkUtils.h; sourceTree = "<group>"; };
 		848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNetworkUtils.m; sourceTree = "<group>"; };
 		848A48B7279A5BA000D55FFD /* SYVersionUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVersionUtils.h; sourceTree = "<group>"; };
@@ -675,6 +678,8 @@
 				8457A84227FD398C0010A387 /* SYAddScriptController.m */,
 				8457A84427FE8CA40010A387 /* SYScriptAddViewController.h */,
 				8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */,
+				8457A84727FEF0660010A387 /* SYWebScriptViewController.h */,
+				8457A84827FEF0660010A387 /* SYWebScriptViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -953,6 +958,7 @@
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
+				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
