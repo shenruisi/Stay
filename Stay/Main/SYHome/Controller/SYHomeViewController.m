@@ -16,8 +16,9 @@
 #import "Tampermonkey.h"
 #import "SYVersionUtils.h"
 #import "UserscriptUpdateManager.h"
+#import "SYAddScriptController.h"
 
-@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
+@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -29,6 +30,9 @@
 // 搜索结果数组
 @property (nonatomic, strong) NSMutableArray *results;
 
+@property (strong, nonatomic) SYAddScriptController *itemPopVC;
+
+
 
 
 @end
@@ -37,6 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -62,6 +67,18 @@
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
+}
+
+- (void)tableDidSelected:(NSNotification *)notification {
+    NSIndexPath *indexpath = (NSIndexPath *)notification.object;
+    if(indexpath.row == 0) {
+        SYEditViewController *cer = [[SYEditViewController alloc] init];
+        [self.navigationController pushViewController:cer animated:true];
+    }
+    
+    [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+    self.itemPopVC = nil;
 }
 
 //检测评分
@@ -210,6 +227,14 @@
     }
     [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
     [groupUserDefaults synchronize];
+}
+#pragma mark -popover
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
+    return UIModalPresentationNone;
+}
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
+    return YES;   //点击蒙版popover不消失， 默认yes
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -436,8 +461,15 @@
 }
 
 - (void)addBtnClick:(id)sender {
-    SYEditViewController *cer = [[SYEditViewController alloc] init];
-    [self.navigationController pushViewController:cer animated:true];
+//    SYEditViewController *cer = [[SYEditViewController alloc] init];
+//    [self.navigationController pushViewController:cer animated:true];
+    self.itemPopVC = [[SYAddScriptController alloc] init];
+    self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
+    self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
+    self.itemPopVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  //rect参数是以view的左上角为坐标原点（0，0）
+    self.itemPopVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向,如果是baritem不设置方向，会默认up，up的效果也是最理想的
+    self.itemPopVC.popoverPresentationController.delegate = self;
+    [self presentViewController:self.itemPopVC animated:YES completion:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

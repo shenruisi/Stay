@@ -64,6 +64,8 @@
 		8410C845275E028A005531EC /* json-ld.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83E275E028A005531EC /* json-ld.html */; };
 		8410C846275E028A005531EC /* codemirror.css in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83F275E028A005531EC /* codemirror.css */; };
 		8410C848275E028D005531EC /* editor.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C847275E028D005531EC /* editor.html */; };
+		8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8457A84227FD398C0010A387 /* SYAddScriptController.m */; };
+		8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */; };
 		848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */; };
 		848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B8279A5BA000D55FFD /* SYVersionUtils.m */; };
 		8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB527592B850075ABD5 /* more-selected@3x.png */; };
@@ -210,6 +212,10 @@
 		8410C83E275E028A005531EC /* json-ld.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "json-ld.html"; sourceTree = "<group>"; };
 		8410C83F275E028A005531EC /* codemirror.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = codemirror.css; sourceTree = "<group>"; };
 		8410C847275E028D005531EC /* editor.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = editor.html; sourceTree = "<group>"; };
+		8457A84127FD398C0010A387 /* SYAddScriptController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYAddScriptController.h; sourceTree = "<group>"; };
+		8457A84227FD398C0010A387 /* SYAddScriptController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAddScriptController.m; sourceTree = "<group>"; };
+		8457A84427FE8CA40010A387 /* SYScriptAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYScriptAddViewController.h; sourceTree = "<group>"; };
+		8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYScriptAddViewController.m; sourceTree = "<group>"; };
 		848A48B4279A4C7800D55FFD /* SYNetworkUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNetworkUtils.h; sourceTree = "<group>"; };
 		848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNetworkUtils.m; sourceTree = "<group>"; };
 		848A48B7279A5BA000D55FFD /* SYVersionUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVersionUtils.h; sourceTree = "<group>"; };
@@ -665,6 +671,10 @@
 			children = (
 				84F4831F273ACAC000217BB3 /* SYHomeViewController.h */,
 				84F48320273ACAC000217BB3 /* SYHomeViewController.m */,
+				8457A84127FD398C0010A387 /* SYAddScriptController.h */,
+				8457A84227FD398C0010A387 /* SYAddScriptController.m */,
+				8457A84427FE8CA40010A387 /* SYScriptAddViewController.h */,
+				8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -955,12 +965,14 @@
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
+				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
