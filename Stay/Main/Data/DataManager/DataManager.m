@@ -1242,6 +1242,8 @@
         } else {
             sqlite3_bind_text(statement, 21, NULL, -1,NULL);
         }
+        sqlite3_bind_text(statement, 22,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+
     }
     
     NSInteger resultCode = sqlite3_step(statement);
