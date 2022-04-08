@@ -119,12 +119,12 @@
         [self.view bringSubviewToFront:self.uploadView];
         dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
 
-            NSData *data = [NSData dataWithContentsOfURL:webView.URL];
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
             if(data != nil ) {
                 NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                SYEditViewController *cer = [[SYEditViewController alloc] init];
-                cer.content = str;
                 dispatch_async(dispatch_get_main_queue(),^{
+                    SYEditViewController *cer = [[SYEditViewController alloc] init];
+                    cer.content = str;
                     [self.navigationController pushViewController:cer animated:true];
                 });
             }
