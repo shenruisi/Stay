@@ -17,11 +17,9 @@
 #import "SYVersionUtils.h"
 #import "UserscriptUpdateManager.h"
 #import "SYAddScriptController.h"
-#import "SYScriptAddViewController.h"
 #import "SYWebScriptViewController.h"
 
-@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate
->
+@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -45,6 +43,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.uploadView.center = self.view.center;
+    self.uploadView.hidden = YES;
+//    [self.view addSubview:self.uploadView];
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -68,9 +69,6 @@
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
     
-    self.uploadView.center = self.view.center;
-    self.uploadView.hidden = true;
-    [self.view addSubview:self.uploadView];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -80,14 +78,11 @@
 - (void)tableDidSelected:(NSNotification *)notification {
     NSIndexPath *indexpath = (NSIndexPath *)notification.object;
     if(indexpath.row == 0) {
-        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-        self.itemPopVC = nil;
         SYEditViewController *cer = [[SYEditViewController alloc] init];
         [self.navigationController pushViewController:cer animated:true];
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
     } else if(indexpath.row == 1) {
-//        SYScriptAddViewController *cer = [[SYScriptAddViewController alloc] init];
-//        [self.navigationController pushViewController:cer animated:true];
-//
         [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
         self.itemPopVC = nil;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"从链接新增脚本" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -129,10 +124,10 @@
         [alert addAction:conform];
         [self presentViewController:alert animated:YES completion:nil];
     } else if (indexpath.row == 2) {
-        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-        self.itemPopVC = nil;
         SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
         [self.navigationController pushViewController:cer animated:true];
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
     }
 
     
@@ -533,7 +528,6 @@
     [super viewWillAppear:animated];
     [self reloadTableView];
     [self initScrpitContent];
-    self.tabBarController.tabBar.hidden = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
