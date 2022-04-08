@@ -15,27 +15,33 @@
 @property (nonatomic, strong) WKWebView *wkwebView;
 @property (nonatomic, strong) UIView *uploadView;
 @property (nonatomic, strong) UIProgressView *progressView;
-@property (nonatomic, strong) UIBarButtonItem *rightIcon;
+@property (nonatomic, strong) UIBarButtonItem *backBtn;
+@property (nonatomic, strong) UIBarButtonItem *closeBtn;
 @end
 
 @implementation SYWebScriptViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [self createBgColor];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self.view addSubview:self.uploadView];
     [self.view addSubview:self.wkwebView];
     self.uploadView.center = self.view.center;
     self.uploadView.hidden = true;
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82, [[UIScreen mainScreen] bounds].size.width, 0.5f)];
-    self.progressView.backgroundColor = RGB(185,101,223);
+    self.progressView.backgroundColor = [UIColor whiteColor];
     //设置进度条的高度，下面这句代码表示进度条的宽度变为原来的1倍，高度变为原来的1.5倍.
-    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.5f);
+    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.1f);
+    [self.progressView setProgressViewStyle:UIProgressViewStyleDefault];
+    [self.progressView setProgressTintColor:RGB(185,101,223)];
     [self.view addSubview:self.progressView];
     [self.wkwebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
-    self.navigationItem.rightBarButtonItem = [self rightIcon];
+    
 
-    // Do any additional setup after loading the view.
+    
+    self.navigationItem.leftBarButtonItems = @[self.backBtn,self.closeBtn];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -59,7 +65,7 @@
 
         config.userContentController = wkUController;
         
-        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.view.height) configuration:config];
+        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,82,kScreenWidth,self.view.height) configuration:config];
         _wkwebView.backgroundColor = [self createBgColor];
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;
@@ -72,14 +78,6 @@
 
     return _wkwebView;
 }
-
-- (UIBarButtonItem *)rightIcon {
-    if (nil == _rightIcon){
-        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backItemAction:)];
-    }
-    return _rightIcon;
-}
-
 
 
 
@@ -109,7 +107,7 @@
     //开始加载网页时展示出progressView
     self.progressView.hidden = NO;
     //开始加载网页的时候将progressView的Height恢复为1.5倍
-    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.5f);
+    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.5f);
     //防止progressView被网页挡住
     [self.view bringSubviewToFront:self.progressView];
     NSString *url = [webView.URL absoluteString];
@@ -164,7 +162,7 @@
              */
             __weak typeof (self)weakSelf = self;
             [UIView animateWithDuration:0.25f delay:0.3f options:UIViewAnimationOptionCurveEaseOut animations:^{
-                weakSelf.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.4f);
+                weakSelf.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.4f);
             } completion:^(BOOL finished) {
                 weakSelf.progressView.hidden = YES;
 
@@ -200,6 +198,35 @@
     [self.wkwebView removeObserver:self forKeyPath:@"estimatedProgress"];
 }
 
+- (void)clickBack:(id)sender{
+    if (self.wkwebView.canGoBack==YES) {
+            //返回上级页面
+            [self.wkwebView goBack];
+            
+    }else{
+            //退出控制器
+            [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)clickClose:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (UIBarButtonItem *)backBtn {
+    if(_backBtn == nil) {
+        _backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(clickBack:)];
+        
+    }
+    return _backBtn;
+}
+
+- (UIBarButtonItem *)closeBtn {
+    if(_closeBtn == nil) {
+        _closeBtn = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(clickClose:)];
+    }
+    return _closeBtn;
+}
 /*
 #pragma mark - Navigation
 

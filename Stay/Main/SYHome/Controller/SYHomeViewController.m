@@ -20,7 +20,8 @@
 #import "SYScriptAddViewController.h"
 #import "SYWebScriptViewController.h"
 
-@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate>
+@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate
+>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -34,7 +35,7 @@
 
 @property (strong, nonatomic) SYAddScriptController *itemPopVC;
 
-
+@property (nonatomic, strong) UIView *uploadView;
 
 
 @end
@@ -66,6 +67,10 @@
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
+    
+    self.uploadView.center = self.view.center;
+    self.uploadView.hidden = true;
+    [self.view addSubview:self.uploadView];
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -75,18 +80,58 @@
 - (void)tableDidSelected:(NSNotification *)notification {
     NSIndexPath *indexpath = (NSIndexPath *)notification.object;
     if(indexpath.row == 0) {
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
         SYEditViewController *cer = [[SYEditViewController alloc] init];
         [self.navigationController pushViewController:cer animated:true];
     } else if(indexpath.row == 1) {
-        SYScriptAddViewController *cer = [[SYScriptAddViewController alloc] init];
-        [self.navigationController pushViewController:cer animated:true];
+//        SYScriptAddViewController *cer = [[SYScriptAddViewController alloc] init];
+//        [self.navigationController pushViewController:cer animated:true];
+//
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"从链接新增脚本" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UITextField *titleTextField = alert.textFields.firstObject;
+            NSString *url = titleTextField.text;
+            self.uploadView.hidden = false;
+            [self.view bringSubviewToFront:self.uploadView];
+            if(url != nil && url.length > 0) {
+                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        if(data != nil ) {
+                            NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                            SYEditViewController *cer = [[SYEditViewController alloc] init];
+                            cer.content = str;
+                            [self.navigationController pushViewController:cer animated:true];
+                        }else {
+                            NSString *content = @"下载脚本失败";
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                                    NSLog(@"点击了确认按钮");
+                                }];
+                            [alert addAction:conform];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        }
+                        self.uploadView.hidden = true;
+                    });
+                });
+            }
+        }];
+        [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+              textField.placeholder = @"请输入链接";
+          }];
+        [alert addAction:conform];
+        [self presentViewController:alert animated:YES completion:nil];
     } else if (indexpath.row == 2) {
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
         SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
         [self.navigationController pushViewController:cer animated:true];
     }
+
     
-    [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-    self.itemPopVC = nil;
 }
 
 //检测评分
@@ -484,6 +529,7 @@
     [super viewWillAppear:animated];
     [self reloadTableView];
     [self initScrpitContent];
+    self.tabBarController.tabBar.hidden = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
@@ -538,6 +584,26 @@
         _rightIcon = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
+}
+
+- (UIView *)uploadView {
+    if(_uploadView == NULL) {
+        _uploadView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
+        [_uploadView setBackgroundColor:RGB(230, 230, 230)];
+        _uploadView.layer.cornerRadius = 10;
+        _uploadView.layer.masksToBounds = 10;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text = @"正在下载脚本";
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        titleLabel.textColor = [UIColor blackColor];
+        [titleLabel sizeToFit];
+        
+        titleLabel.top = 30;
+        titleLabel.centerX = (kScreenWidth - 100) / 2;
+        [_uploadView addSubview:titleLabel];
+    }
+    return _uploadView;
 }
 
 @end
