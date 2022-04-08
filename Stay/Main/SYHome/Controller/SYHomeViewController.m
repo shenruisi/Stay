@@ -122,6 +122,10 @@
         [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
               textField.placeholder = @"请输入链接";
           }];
+        UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+
+        [alert addAction:cancle];
         [alert addAction:conform];
         [self presentViewController:alert animated:YES completion:nil];
     } else if (indexpath.row == 2) {
