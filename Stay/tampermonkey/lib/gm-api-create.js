@@ -14,11 +14,12 @@
         // source += 'const __scriptWithoutComment = "' + scriptWithoutComment +'";\n';
         if (grants.includes('unsafeWindow')) {
             source += 'const _userscript = ' + JSON.stringify(userscript) +';\n';
-            source += `${injectJavaScript}\n`;
-            source += ` injectJavaScript(_userscript, _uuid, _version);\n`;
+            // source += `${injectJavaScript}\n`;
+            // source += `injectJavaScript(_userscript, _uuid, _version);\n`;
+            source += injectJavaScript(userscript, uuid, version);
             // injectJavaScript(userscript, uuid, version);
             // source 为 window.addEventListener()
-            source += `window.addEventListener('message', (e)=>{\n${getSourceOfWindowListener}\ngetSourceOfWindowListener(e);\n})\n\n`;
+            // source += `window.addEventListener('message', (e)=>{\n${getSourceOfWindowListener}\ngetSourceOfWindowListener(e);\n})\n\n`;
             return source;
         }
         source += 'let GM = {};\n\n';
@@ -655,7 +656,7 @@
         }
 
         function browserAddListener() {
-            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER" });
+            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER", rmc_context: __RMC_CONTEXT });
         }
 
         /**
@@ -745,15 +746,15 @@
         }
 
         const GM = `const GM = {${gmFunVals.join(",")}};`;
-        // const code = `\n${api}\n${GM}\n`;
-        let code = `async function gmApi_init(){\n${api}\n${GM}\n}\ngmApi_init();`;
-        // let code = "let hello=323123;";
+        return `\n${api}\n${GM}\n`;
+        // let code = `async function gmApi_init(){\n${api}\n${GM}\n}\ngmApi_init();`;
+        // // let code = "let hello=323123;";
 
-        var scriptTag = document.createElement('script');
-        scriptTag.type = 'text/javascript';
-        scriptTag.id = "inject_JS";
-        scriptTag.appendChild(document.createTextNode(code));
-        document.body.appendChild(scriptTag);
+        // var scriptTag = document.createElement('script');
+        // scriptTag.type = 'text/javascript';
+        // scriptTag.id = "inject_JS";
+        // scriptTag.appendChild(document.createTextNode(code));
+        // document.body.appendChild(scriptTag);
     }
 
     function createScriptTag(code) {
