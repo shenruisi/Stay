@@ -88,9 +88,12 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
 
   let meta = extractMeta(content).match(/.+/g);
   if (!meta) {
+    native.nslog("no meta");
     if (failWhenMissing) {
       throw new Error('Could not parse, no meta.');
     } else {
+      details.pass = false;
+      details.errorMessage = "no meta";
       return prepDefaults(details);
     }
   }
