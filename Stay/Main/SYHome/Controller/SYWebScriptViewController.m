@@ -15,22 +15,26 @@
 @property (nonatomic, strong) WKWebView *wkwebView;
 @property (nonatomic, strong) UIView *uploadView;
 @property (nonatomic, strong) UIProgressView *progressView;
+@property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @end
 
 @implementation SYWebScriptViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self.view addSubview:self.uploadView];
     [self.view addSubview:self.wkwebView];
     self.uploadView.center = self.view.center;
     self.uploadView.hidden = true;
-    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82, [[UIScreen mainScreen] bounds].size.width, 1)];
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82, [[UIScreen mainScreen] bounds].size.width, 0.5f)];
     self.progressView.backgroundColor = RGB(185,101,223);
     //设置进度条的高度，下面这句代码表示进度条的宽度变为原来的1倍，高度变为原来的1.5倍.
     self.progressView.transform = CGAffineTransformMakeScale(1.0f, 1.5f);
     [self.view addSubview:self.progressView];
     [self.wkwebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
+    self.navigationItem.rightBarButtonItem = [self rightIcon];
+
     // Do any additional setup after loading the view.
 }
 
@@ -69,6 +73,26 @@
     return _wkwebView;
 }
 
+- (UIBarButtonItem *)rightIcon {
+    if (nil == _rightIcon){
+        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backItemAction:)];
+    }
+    return _rightIcon;
+}
+
+
+
+
+- (void)backItemAction:(UIButton *)sender
+{
+    if ([self.wkwebView canGoBack] == YES) { //如果当前H5可以返回
+        //则返回上一个H5页面
+        [self.wkwebView goBack];
+    }else{
+        //否则回到原生页面
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 - (UIColor *)createBgColor {
     UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
@@ -93,13 +117,18 @@
     if(isScript) {
         self.uploadView.hidden = false;
         [self.view bringSubviewToFront:self.uploadView];
-        NSData *data = [NSData dataWithContentsOfURL:webView.URL];
-        if(data != nil ) {
-            NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-            SYEditViewController *cer = [[SYEditViewController alloc] init];
-            cer.content = str;
-            [self.navigationController pushViewController:cer animated:true];
-        }
+        dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+
+            NSData *data = [NSData dataWithContentsOfURL:webView.URL];
+            if(data != nil ) {
+                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                SYEditViewController *cer = [[SYEditViewController alloc] init];
+                cer.content = str;
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [self.navigationController pushViewController:cer animated:true];
+                });
+            }
+        });
         
     }
 }
@@ -145,6 +174,7 @@
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
+
 
 //加载完成
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
