@@ -25,7 +25,8 @@ const GM_APIS = new Set([
     "GM.xmlHttpRequest",
     "GM_openInTab",
     "GM.openInTab",
-    "GM_notification"
+    "GM_notification",
+    "unsafeWindow"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);
