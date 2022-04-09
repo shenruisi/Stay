@@ -194,7 +194,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
             message.message = e.data.message;
             message.operate = "GM_log";
             browser.runtime.sendMessage(message, (response) => {
-                console.log("API_LOG -- response--", response)
+                response.message = message;
                 window.postMessage({ id: id, pid: pid, name: "RESP_LOG", response: response });
             });
         }
