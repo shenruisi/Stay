@@ -367,8 +367,7 @@
         api += 'let __RMC_CONTEXT = [];\n';
         api += 'let GM_info =' + GM_info(userscript, version) + ';\n';
         api += `${GM_log}\n`;
-        api += `${clear_GM_log}\n`;
-        api += `${browserAddListener}\n`;
+        api += `${clear_GM_log}\nclear_GM_log();`;
         
         gmFunVals.push("info: GM_info");
 
@@ -635,10 +634,11 @@
             userInfo["accessKey"] = accessKey;
             userInfo["id"] = __RMC_CONTEXT.length;
             __RMC_CONTEXT.push(userInfo);
+            window.postMessage({ id: _uuid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
         }
 
         function browserAddListener() {
-            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER", rmc_context: __RMC_CONTEXT });
+            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER"});
         }
 
         /**
@@ -726,6 +726,8 @@
             window.postMessage({ id: _uuid, name: "API_XHR_INJ", details: detailsParsed, xhrId: xhrId });
             return { abort: abort };
         }
+
+        api += `${browserAddListener}\nbrowserAddListener();`;
 
         const GM = `const GM = {${gmFunVals.join(",")}};`;
         return `\n${api}\n${GM}\n`;
