@@ -64,7 +64,8 @@
         @"requireCodes":self.requireCodes ? self.requireCodes: @[],
         @"resourceUrls":self.resourceUrls ? self.resourceUrls: @{},
         @"notes":self.notes ? self.notes: @[],
-        @"locales":self.locales ? self.locales : @{}
+        @"locales":self.locales ? self.locales : @{},
+        @"installType":self.installType ? self.installType : @"content"
     };
 }
 

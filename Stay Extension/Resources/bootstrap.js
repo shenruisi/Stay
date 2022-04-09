@@ -60,6 +60,48 @@ const $_matchesCheck = (userLibraryScript,url) => {
     
     return matched;
 }
+
+const $_injectInPage = (script) => {
+    console.log("inject page");
+    var scriptTag = document.createElement('script');
+    scriptTag.type = 'text/javascript';
+    scriptTag.id = "Stay_Inject_JS_"+script.uuid;
+    scriptTag.appendChild(document.createTextNode(script.content));
+    document.body.appendChild(scriptTag);
+}
+
+const $_injectInPageWithTiming = (script, runAt) => {
+    if (runAt === "document_start") {
+        if (document.readyState === "loading") {
+            document.addEventListener("readystatechange", function() {
+                if (document.readyState === "interactive") {
+                    $_injectInPage(script);
+                }
+            });
+        } else {
+            $_injectInPage(script);
+        }
+    } else if (runAt === "document_end") {
+        if (document.readyState !== "loading") {
+            $_injectInPage(script);
+        } else {
+            document.addEventListener("DOMContentLoaded", function() {
+                $_injectInPage(script);
+            });
+        }
+    } else if (runAt === "document_idle") {
+        if (document.readyState === "complete") {
+            $_injectInPage(script);
+        } else {
+            document.addEventListener("readystatechange", function(e) {
+                if (document.readyState === "complete") {
+                    $_injectInPage(script);
+                }
+            });
+        }
+    }
+}
+
 //let injectScripts = []
 (function(){
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
@@ -106,13 +148,19 @@ const $_matchesCheck = (userLibraryScript,url) => {
             
             if (script.active){ //inject active script
                 console.log("injectScript",script.content);
-                browser.runtime.sendMessage({
-                    from: "bootstrap",
-                    operate: "injectScript",
-                    code:script.content,
-                    allFrames:!script.noFrames,
-                    runAt:"document_"+script.runAt
-                });
+                if (script.installType === "page"){
+                    $_injectInPageWithTiming(script,"document_"+script.runAt);
+                }
+                else{
+                    browser.runtime.sendMessage({
+                        from: "bootstrap",
+                        operate: "injectScript",
+                        code:script.content,
+                        allFrames:!script.noFrames,
+                        runAt:"document_"+script.runAt
+                    });
+                }
+                
             }
         });
                 

@@ -372,9 +372,10 @@
         let gmFunVals = [];
         let grants = userscript.grants;
         let resourceUrls = userscript.resourceUrls||{};
-        let api = 'const _uuid = "' + uuid+'";\n';
-        api += 'const _version = "' + version +'";\n';
-        api += `${GM_listValues}\n`;
+        //Remove because of already added.
+//        let api = 'const _uuid = "' + uuid+'";\n';
+//        api += 'const _version = "' + version +'";\n';
+        let api = `${GM_listValues}\n`;
         api += `${GM_getAllResourceText}\n`;
         // api += 'let __listValuesStroge = await GM_listValues();\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
