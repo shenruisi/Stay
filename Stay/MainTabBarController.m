@@ -58,6 +58,16 @@
     NSDictionary *dictHome = [NSDictionary dictionaryWithObject:UIColorWithRGBA(185,101,223,1)  forKey:NSForegroundColorAttributeName];
     [navC.tabBarItem setTitleTextAttributes:dictHome forState:UIControlStateSelected];
     navC.navigationBar.tintColor = RGB(182, 32, 224);
+
+    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+    [appearance configureWithOpaqueBackground];
+    navC.navigationBar.standardAppearance = appearance;
+    navC.navigationBar.scrollEdgeAppearance = appearance;
+    UITabBarAppearance *tabbarAppearance = [[UITabBarAppearance alloc] init];
+    
+    tabbarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = @{NSForegroundColorAttributeName: RGB(182, 32, 224)};
+    self.tabBar.scrollEdgeAppearance = tabbarAppearance;
+    
     [self addChildViewController:navC];
 }
 

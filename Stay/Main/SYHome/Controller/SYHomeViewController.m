@@ -33,7 +33,7 @@
 
 @property (strong, nonatomic) SYAddScriptController *itemPopVC;
 
-@property (nonatomic, strong) UIView *uploadView;
+@property (nonatomic, strong) UIView *loadingView;
 
 
 @end
@@ -42,10 +42,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.uploadView.center = self.view.center;
-    self.uploadView.hidden = YES;
-//    [self.view addSubview:self.uploadView];
+    self.loadingView.center = self.view.center;
+    self.loadingView.hidden = YES;
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -69,6 +67,8 @@
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
     
+    [self.view addSubview:self.loadingView];
+    
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -89,8 +89,8 @@
         UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             UITextField *titleTextField = alert.textFields.firstObject;
             NSString *url = titleTextField.text;
-            self.uploadView.hidden = false;
-            [self.view bringSubviewToFront:self.uploadView];
+            self.loadingView.hidden = false;
+            [self.view bringSubviewToFront:self.loadingView];
             if(url != nil && url.length > 0) {
                 dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
                         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
@@ -109,7 +109,7 @@
                             [alert addAction:conform];
                             [self presentViewController:alert animated:YES completion:nil];
                         }
-                        self.uploadView.hidden = true;
+                        self.loadingView.hidden = true;
                     });
                 });
             }
@@ -532,6 +532,7 @@
         self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
     });
+    
 }
 
 
@@ -584,24 +585,24 @@
     return _rightIcon;
 }
 
-- (UIView *)uploadView {
-    if(_uploadView == NULL) {
-        _uploadView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
-        [_uploadView setBackgroundColor:RGB(230, 230, 230)];
-        _uploadView.layer.cornerRadius = 10;
-        _uploadView.layer.masksToBounds = 10;
+- (UIView *)loadingView {
+    if(_loadingView == nil) {
+        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
+        [_loadingView setBackgroundColor:RGB(230, 230, 230)];
+        _loadingView.layer.cornerRadius = 10;
+        _loadingView.layer.masksToBounds = 10;
         
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = @"正在下载脚本";
         titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textColor = [UIColor blackColor];
         [titleLabel sizeToFit];
-        
+
         titleLabel.top = 30;
         titleLabel.centerX = (kScreenWidth - 100) / 2;
-        [_uploadView addSubview:titleLabel];
+        [_loadingView addSubview:titleLabel];
     }
-    return _uploadView;
+    return _loadingView;
 }
 
 @end

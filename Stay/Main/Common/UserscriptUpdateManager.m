@@ -130,7 +130,12 @@
             if([[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
                 continue;
             }
-            NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:requireUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+            
+            NSURL *url = [NSURL URLWithString:requireUrl];
+            if([url.scheme containsString:@"stay"]) {
+                continue;
+            }
+            NSURLRequest *request = [[NSURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
             NSError *error;
             NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
             if(error == nil && received != nil) {
