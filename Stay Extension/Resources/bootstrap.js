@@ -12,7 +12,8 @@ console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
 
-
+let RMC_CONTEXT = [];
+let id = "";
 
 const $_res = (name) => {
     return browser.runtime.getURL(name);
@@ -60,8 +61,86 @@ const $_matchesCheck = (userLibraryScript,url) => {
     
     return matched;
 }
+
+const $_injectInPage = (script) => {
+    console.log("inject page");
+    var scriptTag = document.createElement('script');
+    scriptTag.type = 'text/javascript';
+    scriptTag.id = "Stay_Inject_JS_"+script.uuid;
+    scriptTag.appendChild(document.createTextNode(script.content));
+    document.body.appendChild(scriptTag);
+}
+
+const $_injectInPageWithTiming = (script, runAt) => {
+    if (runAt === "document_start") {
+        if (document.readyState === "loading") {
+            document.addEventListener("readystatechange", function() {
+                if (document.readyState === "interactive") {
+                    $_injectInPage(script);
+                }
+            });
+        } else {
+            $_injectInPage(script);
+        }
+    } else if (runAt === "document_end") {
+        if (document.readyState !== "loading") {
+            $_injectInPage(script);
+        } else {
+            document.addEventListener("DOMContentLoaded", function() {
+                $_injectInPage(script);
+            });
+        }
+    } else if (runAt === "document_idle") {
+        if (document.readyState === "complete") {
+            $_injectInPage(script);
+        } else {
+            document.addEventListener("readystatechange", function(e) {
+                if (document.readyState === "complete") {
+                    $_injectInPage(script);
+                }
+            });
+        }
+    }
+}
+
 //let injectScripts = []
 (function(){
+    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.from == "background" && request.operate == "fetchRegisterMenuCommand") {
+            browser.runtime.sendMessage({ from: "content", data: RMC_CONTEXT, uuid: id, operate: "giveRegisterMenuCommand" });
+        }
+        else if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == id) {
+            RMC_CONTEXT[request.id]["commandFunc"]();
+        }
+        else if (request.operate.startsWith("RESP_API_XHR_BG_")) {
+            // only respond to messages on the correct content script
+            if (request.id !== id) return;
+            const resp = request.response;
+            const n = name.replace("_BG_", "_CS_");
+            // arraybuffer responses had their data converted, convert it back to arraybuffer
+            if (request.response.responseType === "arraybuffer" && resp.response) {
+                try {
+                    const r = new Uint8Array(resp.response).buffer;
+                    resp.response = r;
+                } catch (error) {
+                    console.error("error parsing xhr arraybuffer response", error);
+                }
+                // blob responses had their data converted, convert it back to blob
+            } else if (request.response.responseType === "blob" && resp.response && resp.response.data) {
+                fetch(request.response.response.data)
+                    .then(res => res.blob())
+                    .then(b => {
+                        resp.response = b;
+                        window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
+                    });
+            }
+            // blob response will execute its own postMessage call
+            if (request.response.responseType !== "blob") {
+                window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
+            }
+        }
+        return true;
+    });
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
         let injectedVendor = new Set();
         let userLibraryScripts = JSON.parse(response.body);
@@ -106,13 +185,19 @@ const $_matchesCheck = (userLibraryScript,url) => {
             
             if (script.active){ //inject active script
                 console.log("injectScript",script.content);
-                browser.runtime.sendMessage({
-                    from: "bootstrap",
-                    operate: "injectScript",
-                    code:script.content,
-                    allFrames:!script.noFrames,
-                    runAt:"document_"+script.runAt
-                });
+                if (script.installType === "page"){
+                    $_injectInPageWithTiming(script,"document_"+script.runAt);
+                }
+                else{
+                    browser.runtime.sendMessage({
+                        from: "bootstrap",
+                        operate: "injectScript",
+                        code:script.content,
+                        allFrames:!script.noFrames,
+                        runAt:"document_"+script.runAt
+                    });
+                }
+                
             }
         });
                 
@@ -124,7 +209,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
     });
     window.addEventListener('message', (e) => {
         if (!e || !e.data || !e.data.name) return;
-        const id = e.data.id;
+        id = e.data.id;
         const name = e.data.name;
         const pid = e.data.pid;
         let message = { from: "gm-apis", uuid: id };
@@ -146,7 +231,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
             message.message = e.data.message;
             message.operate = "GM_log";
             browser.runtime.sendMessage(message, (response) => {
-                console.log("API_LOG -- response--", response)
+                response.message = message;
                 window.postMessage({ id: id, pid: pid, name: "RESP_LOG", response: response });
             });
         }
@@ -154,45 +239,14 @@ const $_matchesCheck = (userLibraryScript,url) => {
             message.operate = "clear_GM_log";
             browser.runtime.sendMessage(message);
         }
+        else if ("REGISTER_MENU_COMMAND_CONTEXT" === name){
+            let RMC_CONTEXT_STR = e.data.rmc_context;
+            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]"){
+                RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
+            }
+        }
         else if ("BROWSER_ADD_LISTENER" === name) {
-            let __RMC_CONTEXT = e.data.rmc_context;
-            browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-                if (request.from == "background" && request.operate == "fetchRegisterMenuCommand") {
-                    browser.runtime.sendMessage({ from: "content", data: __RMC_CONTEXT, uuid: _uuid, operate: "giveRegisterMenuCommand" });
-                }
-                else if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid) {
-                    console.log(__RMC_CONTEXT[request.id]);
-                    __RMC_CONTEXT[request.id]["commandFunc"]();
-                }
-                else if (request.operate.startsWith("RESP_API_XHR_BG_")) {
-                    // only respond to messages on the correct content script
-                    if (request.id !== uid) return;
-                    const resp = request.response;
-                    const n = name.replace("_BG_", "_CS_");
-                    // arraybuffer responses had their data converted, convert it back to arraybuffer
-                    if (request.response.responseType === "arraybuffer" && resp.response) {
-                        try {
-                            const r = new Uint8Array(resp.response).buffer;
-                            resp.response = r;
-                        } catch (error) {
-                            console.error("error parsing xhr arraybuffer response", error);
-                        }
-                        // blob responses had their data converted, convert it back to blob
-                    } else if (request.response.responseType === "blob" && resp.response && resp.response.data) {
-                        fetch(request.response.response.data)
-                            .then(res => res.blob())
-                            .then(b => {
-                                resp.response = b;
-                                window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
-                            });
-                    }
-                    // blob response will execute its own postMessage call
-                    if (request.response.responseType !== "blob") {
-                        window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
-                    }
-                }
-                return true;
-            });
+            
         }
         else if (name === "API_ADD_STYLE") {
             try {

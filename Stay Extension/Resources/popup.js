@@ -162,7 +162,6 @@ function fetchMatchedScriptConsole(){
                     })
                 }
             })
-            console.log("scriptConsole----", scriptConsole)
             if (!showLogNotify && scriptConsole.length>0) {
                 let count = scriptConsole.length
                 let readCount = window.localStorage.getItem("console_count");
