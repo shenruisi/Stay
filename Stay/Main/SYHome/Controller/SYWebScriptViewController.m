@@ -215,8 +215,7 @@
 
 - (UIBarButtonItem *)backBtn {
     if(_backBtn == nil) {
-        _backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(clickBack:)];
-        
+        _backBtn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"webback@3x"] style:UIBarButtonItemStylePlain target:self action:@selector(clickBack:)];
     }
     return _backBtn;
 }
