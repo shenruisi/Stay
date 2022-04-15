@@ -23,7 +23,7 @@
     self.tableView.scrollEnabled = NO;
     self.tableView.top = 10;
     
-    self.data = [[NSMutableArray alloc] initWithObjects:@"新增脚本",@"从链接添加", @"从网站添加",nil];
+    self.data = [[NSMutableArray alloc] initWithObjects:@"新增脚本",@"从链接添加", @"从GreasyFork添加",nil];
 }
 
 
@@ -56,7 +56,7 @@
 - (CGSize)preferredContentSize {
        if (self.presentingViewController && self.tableView != nil) {
            CGSize tempSize = self.presentingViewController.view.bounds.size;
-           tempSize.width = 130;
+           tempSize.width = 170;
             //sizeThatFits返回的是最合适的尺寸，但不会改变控件的大小
            CGSize size = [self.tableView sizeThatFits:tempSize];
            return size;
