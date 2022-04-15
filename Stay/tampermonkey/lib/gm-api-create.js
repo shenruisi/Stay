@@ -337,7 +337,7 @@
                 // re-schedule, cause tabId is null
                 window.setTimeout(close, 500);
             } else if (tabId > 0) {
-                browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, id: _uuid }, resp);
+                browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, uuid: _uuid }, resp);
                 tabId = undefined;
             } else {
                 console.log("env: attempt to close already closed tab!");
@@ -350,7 +350,7 @@
         if (url && url.search(/^\/\//) == 0) {
             url = location.protocol + url;
         }
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "openInTab", url: url, id: _uuid, uuid: _uuid, options: options }, resp);
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "openInTab", url: url, uuid: _uuid, options: options }, resp);
         return { close: close };
     }
 
@@ -435,9 +435,18 @@
             else if ("GM_getResourceText" === grant) {
                 api += `${GM_getResourceTextSync}\nconst GM_getResourceText = GM_getResourceTextSync;\n`;
             }
-            else if ("GM.openInTab" === grant || "GM_openInTab" === grant) {
-                api += `${GM_openInTab}\n`;
-                gmFunVals.push("openInTab: GM_openInTab");
+            else if ("GM.openInTab" === grant) {
+                api += `${GM_openInTab_async}\n`;
+                api += `${GM_closeTab}\n`;
+                gmFunVals.push("openInTab: GM_openInTab_async");
+                gmFunVals.push("closeTab: GM_closeTab");
+            }
+            else if ("GM_openInTab" === grant) {
+                api += `${GM_openInTab}\n;`;
+            }
+            else if ("GM.closeTab" === grant || "GM_closeTab" === grant) {
+                api += `${GM_closeTab}\n`;
+                gmFunVals.push("closeTab: GM_closeTab");
             }
             else if (grant === "GM_xmlhttpRequest" || grant === "GM.xmlHttpRequest") {
                 api += `${xhr}\n`;
@@ -641,6 +650,49 @@
             window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER"});
         }
 
+        function GM_closeTab(tabId) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_CLOSE_TAB") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_CLOSE_TAB", tabId: tabId });
+            });
+        }
+
+        function GM_openInTab(url, options) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            let tabId = null;
+            var close = function () {
+                if (tabId === null) {
+                    // re-schedule, cause tabId is null
+                    window.setTimeout(close, 500);
+                } else if (tabId > 0) {
+                    window.postMessage({ id: _uuid, pid: pid, name: "API_CLOSE_TAB", tabId: tabId });
+                    // browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, uuid: _uuid }, resp);
+                    tabId = undefined;
+                } else {
+                    console.log("env: attempt to close already closed tab!");
+                }
+            };
+            if (url && url.search(/^\/\//) == 0) {
+                url = location.protocol + url;
+            }
+            window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options ? JSON.stringify(options):"{}" });
+            const callback = e => {
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
+                console.log("GM_openInTab======", e.data)
+                tabId = e.data.tabId;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            return { close: close};
+        } 
+
         /**
          * 打开标签页
          * @param {string} url 
@@ -652,21 +704,29 @@
          * incognito: 新标签页在隐身模式或私有模式窗口打开
          * 若只有一个参数则新标签页不会聚焦，该函数返回一个对象，有close()、监听器onclosed和closed的标记
          */
-
-        function GM_openInTab(url, options) {
+        function GM_openInTab_async(url, options) {
             // console.log("start GM_openInTab-----", url, options);
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
                     // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
-                    resolve(e.data.response);
-                    window.removeEventListener("message", callback);
+                    console.log("GM_openInTab======", e.data)
+                    let tabId = e.data.tabId;
+                    let resp = {
+                        tabId,
+                        close: function () {
+                            GM_closeTab(tabId)
+                        }
+                    }
+                    resolve(resp);
+                    window.removeEventListener("message", ()=>{});
                 };
                 window.addEventListener("message", callback);
                 // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
-                window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options });
+                window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options ? JSON.stringify(options) : "{}" });
             });
+
         }
 
         function xhr(details) {

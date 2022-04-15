@@ -314,33 +314,24 @@ const $_injectInPageWithTiming = (script, runAt) => {
                 }
             });
         }
+        else if ("API_CLOSE_TAB" === name) {
+            var tabId = e.data.tabId;
+            message.tabId = tabId;
+            message.operate = "closeTab";
+            browser.runtime.sendMessage(message, (resp)=>{
+                window.postMessage({ id: id, pid: pid, name: "RESP_CLOSE_TAB", response: resp });
+            });
+        }
         else if ("API_OPEN_IN_TAB" === name) {
             var url = e.data.url;
             var options = e.data.options;
-            var tabId = null;
-            var close = function () {
-                if (tabId === null) {
-                    // re-schedule, cause tabId is null
-                    window.setTimeout(close, 500);
-                } else if (tabId > 0) {
-                    browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, id: _uuid }, resp);
-                    tabId = undefined;
-                } else {
-                    console.log("env: attempt to close already closed tab!");
-                }
-            };
-            var resp = function (response) {
-                // console.log("GM_openInTab response---", response)
-                tabId = response.tabId;
-                response.close = close;
-                window.postMessage({ id: id, pid: pid, name: "RESP_OPEN_IN_TAB", response: response });
-            };
-            if (url && url.search(/^\/\//) == 0) {
-                url = location.protocol + url;
-            }
             message.operate = "openInTab";
-            message.options = options;
-            browser.runtime.sendMessage(message, resp);
+            message.options = options ? JSON.parse(options):{};
+            message.url = url;
+            browser.runtime.sendMessage(message, (response)=>{
+                tabId = response.tabId;
+                window.postMessage({ id: id, pid: pid, name: "RESP_OPEN_IN_TAB", tabId: tabId });
+            });
         }
         else if (name === "API_XHR_INJ") {
             message.operate = "API_XHR_CS";
