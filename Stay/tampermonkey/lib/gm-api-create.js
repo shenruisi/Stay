@@ -355,9 +355,9 @@
         let gmFunVals = [];
         let grants = userscript.grants;
         let resourceUrls = userscript.resourceUrls||{};
-        let api = `${GM_listValues}\n`;
+        let api = `${GM_listValues_Async}\n`;
         api += `${GM_getAllResourceText}\n`;
-        api += 'let __listValuesStroge = await GM_listValues();\n';
+        api += 'let __listValuesStroge = await GM_listValues_Async();\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
         api += `console.log("__resourceTextStroge==",__resourceTextStroge);\n`;
@@ -373,35 +373,35 @@
                 api += `const unsafeWindow = window;\n`;
             } 
             else if (grant === "GM.listValues") {
-                gmFunVals.push("listValues: GM_listValues");
+                gmFunVals.push("listValues: GM_listValues_Async");
             } 
             else if (grant === "GM_listValues"){
                 api += `const GM_listValues = __listValuesStroge;\n`;
             }
             else if (grant === "GM.deleteValue") {
-                api += `${GM_deleteValue}\n`;
-                gmFunVals.push("deleteValue: GM_deleteValue");
+                api += `${GM_deleteValue_Async}\n`;
+                gmFunVals.push("deleteValue: GM_deleteValue_Async");
             }
             else if (grant === "GM_deleteValue"){
-                api += `${GM_deleteValue}\nconst GM_deleteValue = await GM_deleteValue;\n`;
+                api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\n`;
             }
             else if (grant === "GM_addStyle") { //同步
                 api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\n`;
             } 
             else if (grant === "GM.addStyle") {
-                api += `${GM_addStyle}\n`;
-                gmFunVals.push("addStyle: GM_addStyle");
+                api += `${GM_addStyle_Async}\n`;
+                gmFunVals.push("addStyle: GM_addStyle_Async");
             } 
             else if ("GM.setValue" === grant){
-                api += `${GM_setValue}\n`;
-                gmFunVals.push("setValue: GM_setValue");
+                api += `${GM_setValue_Async}\n`;
+                gmFunVals.push("setValue:  GM_setValue_Async");
             }
             else if ("GM_setValue" === grant) {
                 api += `${GM_setValueSync}\nconst GM_setValue = GM_setValueSync;\n`;
             }
             else if ("GM.getValue" === grant) {
-                api += `${GM_getValue}\n`;
-                gmFunVals.push("getValue: GM_getValue");
+                api += `${GM_getValueAsync}\n`;
+                gmFunVals.push("getValue: GM_getValueAsync");
             }
             else if ("GM_getValue" === grant) {
                 api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\n`;
@@ -418,16 +418,16 @@
                 gmFunVals.push("getResourceUrl: GM_getResourceUrl");
             }
             else if ("GM.getResourceURL" === grant){
-                api += `${GM_getResourceURL}\n`;
-                gmFunVals.push("getResourceURL: GM_getResourceURL");
+                api += `${GM_getResourceURL_Async}\n`;
+                gmFunVals.push("getResourceURL: GM_getResourceURL_Async");
             }
             else if ("GM.getResourceUrl" === grant) {
-                api += `${GM_getResourceURL}\n`;
-                gmFunVals.push("getResourceUrl: GM_getResourceURL");
+                api += `${GM_getResourceURL_Async}\n`;
+                gmFunVals.push("getResourceUrl: GM_getResourceURL_Async");
             }
             else if ("GM.getResourceText" === grant) {
-                api += `${GM_getResourceText}\n`;
-                gmFunVals.push("getResourceText: GM_getResourceText");
+                api += `${GM_getResourceText_Async}\n`;
+                gmFunVals.push("getResourceText: GM_getResourceText_Async");
             }
             else if ("GM_getResourceText" === grant) {
                 api += `${GM_getResourceTextSync}\nconst GM_getResourceText = GM_getResourceTextSync;\n`;
@@ -472,7 +472,7 @@
             return JSON.stringify(info);
         }
 
-        function GM_listValues() {
+        function GM_listValues_Async() {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -491,7 +491,7 @@
             window.postMessage({ id: _uuid, name: "API_SET_VALUE_SYNC", key: key, value: value });
         }
 
-        function GM_setValue(key, value) {
+        function GM_setValue_Async(key, value) {
             __listValuesStroge[key] = value;
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
@@ -506,11 +506,12 @@
         }
 
         function GM_getValueSync(key, defaultValue) {
+            const pid = Math.random().toString(36).substring(1, 9);
             window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE_SYNC", key: key, defaultValue: defaultValue });
             return __listValuesStroge[key] == null ? defaultValue : __listValuesStroge[key];
         }
 
-        function GM_getValue(key, defaultValue) {
+        function GM_getValueAsync(key, defaultValue) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -523,19 +524,32 @@
             });
         }
 
-        function GM_deleteValue(key) {
+        function GM_deleteValue_Async(key) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
                     // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_DELETE_VALUE") return;
-                    resolve(e.data.response.body);
+                    resolve(e.data.response);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
                 // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
                 window.postMessage({ id: _uuid, pid: pid, name: "API_DELETE_VALUE", key: key });
             });
+        }
+
+        function GM_deleteValue_sync(key) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_DELETE_VALUE") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+            window.postMessage({ id: _uuid, pid: pid, name: "API_DELETE_VALUE", key: key });
+            return key;
         }
 
         function GM_getResourceURLSync(name) {
@@ -546,7 +560,7 @@
             return resourceUrl;
         }
 
-        function GM_getResourceURL(name) {
+        function GM_getResourceURL_Async(name) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -559,7 +573,7 @@
             });
         }
 
-        function GM_getResourceText(name) {
+        function GM_getResourceText_Async(name) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -599,7 +613,7 @@
             return css;
         }
 
-        function GM_addStyle(css) {
+        function GM_addStyle_Async(css) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
