@@ -37,11 +37,7 @@
     [self.progressView setProgressTintColor:RGB(185,101,223)];
     [self.view addSubview:self.progressView];
     [self.wkwebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
-    
-
-    
     self.navigationItem.leftBarButtonItems = @[self.backBtn,self.closeBtn];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -185,6 +181,8 @@
     if(isScript) {
        [self.wkwebView goBack];
     }
+    NSString *jsString = @"localStorage.setItem('manualOverrideInstallJS', 1)";
+    [self.wkwebView evaluateJavaScript:jsString completionHandler:nil];
 }
 
 //加载失败
