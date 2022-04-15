@@ -106,17 +106,18 @@ const $_injectInPageWithTiming = (script, runAt) => {
 //let injectScripts = []
 (function(){
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        if (request.from == "background" && request.operate == "fetchRegisterMenuCommand") {
+        let operate = request.operate;
+        if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
             browser.runtime.sendMessage({ from: "content", data: RMC_CONTEXT, uuid: id, operate: "giveRegisterMenuCommand" });
         }
-        else if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == id) {
+        else if (request.from == "background" && "execRegisterMenuCommand" === operate && request.uuid == id) {
             RMC_CONTEXT[request.id]["commandFunc"]();
         }
-        else if (request.operate.startsWith("RESP_API_XHR_BG_")) {
+        else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
             if (request.id !== id) return;
             const resp = request.response;
-            const n = name.replace("_BG_", "_CS_");
+            const name = operate.replace("_BG_", "_TO_CREATE_");
             // arraybuffer responses had their data converted, convert it back to arraybuffer
             if (request.response.responseType === "arraybuffer" && resp.response) {
                 try {
@@ -131,12 +132,12 @@ const $_injectInPageWithTiming = (script, runAt) => {
                     .then(res => res.blob())
                     .then(b => {
                         resp.response = b;
-                        window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
+                        window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
                     });
             }
             // blob response will execute its own postMessage call
             if (request.response.responseType !== "blob") {
-                window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
+                window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
             }
         }
         return true;
@@ -184,7 +185,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript",script.content);
+                console.log("injectScript----",script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -282,7 +283,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
             message.defaultValue = e.data.defaultValue;
             message.key = e.data.key;
             browser.runtime.sendMessage(message, response => {
-                const resp = response === `undefined--${pid}` ? undefined : response;
+                const resp = response === `undefined` ? undefined : response;
                 if (name === "API_GET_VALUE") {
                     window.postMessage({ id: id, pid: pid, name: "RESP_GET_VALUE", response: resp });
                 }
@@ -333,46 +334,16 @@ const $_injectInPageWithTiming = (script, runAt) => {
                 window.postMessage({ id: id, pid: pid, name: "RESP_OPEN_IN_TAB", tabId: tabId });
             });
         }
-        else if (name === "API_XHR_INJ") {
-            message.operate = "API_XHR_CS";
-            message.detail = e.data.details
+        else if (name === "API_XHR_FROM_CREATE") {
+            message.operate = "API_XHR_FROM_BOOTSTRAP";
+            message.details = JSON.parse(e.data.details)
             message.xhrId = e.data.xhrId
-            browser.runtime.sendMessage(message, response => {
-                window.postMessage({ id: id, name: "RESP_API_XHR_CS", response: response, xhrId: e.data.xhrId });
-            });
-        } else if (name === "API_XHR_ABORT_INJ") {
-            message.operate = "API_XHR_ABORT_CS";
+            browser.runtime.sendMessage(message);
+        } else if (name === "API_XHR_ABORT_INJ_FROM_CREATE") {
+            message.operate = "API_XHR_ABORT_FROM_BOOTSTRAP";
             message.xhrId = e.data.xhrId
             browser.runtime.sendMessage(message);
         }
-        else if (name.startsWith("RESP_API_XHR_BG_")) {
-            // only respond to messages on the correct content script
-            if (request.id !== uid) return;
-            const resp = request.response;
-            const n = name.replace("_BG_", "_CS_");
-            // arraybuffer responses had their data converted, convert it back to arraybuffer
-            if (request.response.responseType === "arraybuffer" && resp.response) {
-                try {
-                    const r = new Uint8Array(resp.response).buffer;
-                    resp.response = r;
-                } catch (error) {
-                    console.error("error parsing xhr arraybuffer response", error);
-                }
-                // blob responses had their data converted, convert it back to blob
-            } else if (request.response.responseType === "blob" && resp.response && resp.response.data) {
-                fetch(request.response.response.data)
-                    .then(res => res.blob())
-                    .then(b => {
-                        resp.response = b;
-                        window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
-                    });
-            }
-            // blob response will execute its own postMessage call
-            if (request.response.responseType !== "blob") {
-                window.postMessage({ name: n, response: resp, id: request.id, xhrId: request.xhrId });
-            }
-        }
-
     })
     
 })();

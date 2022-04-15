@@ -312,8 +312,6 @@
                 params.onload(onload)
             }
         });
-
-
     }
 
     /**
@@ -329,7 +327,6 @@
      */
 
     function GM_openInTab(url, options) {
-        // console.log("start GM_openInTab-----", url, options);
         // retrieve tabId to have a chance of closing this window lateron
         var tabId = null;
         var close = function () {
@@ -526,8 +523,6 @@
             });
         }
 
-
-
         function GM_deleteValue(key) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
@@ -685,7 +680,6 @@
             const callback = e => {
                 // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
                 if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
-                console.log("GM_openInTab======", e.data)
                 tabId = e.data.tabId;
                 window.removeEventListener("message", callback);
             };
@@ -711,7 +705,6 @@
                 const callback = e => {
                     // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
-                    console.log("GM_openInTab======", e.data)
                     let tabId = e.data.tabId;
                     let resp = {
                         tabId,
@@ -748,7 +741,7 @@
             if (details.ontimeout) detailsParsed.ontimeout = true;
             // abort function gets returned when this function is called
             const abort = () => {
-                window.postMessage({ id: _uuid, name: "API_XHR_ABORT_INJ", xhrId: xhrId });
+                window.postMessage({ id: _uuid, name: "API_XHR_ABORT_INJ_FROM_CREATE", xhrId: xhrId });
             };
             const callback = e => {
                 const name = e.data.name;
@@ -758,15 +751,17 @@
                     e.data.id !== _uuid
                     || e.data.xhrId !== xhrId
                     || !name
-                    || !name.startsWith("RESP_API_XHR_CS")
+                    || !name.startsWith("RESP_API_XHR_TO_CREATE")
                 ) return;
-                if (name === "RESP_API_XHR_CS") {
+                console.log("XHR==response=", response);
+                if (name === "RESP_API_XHR_TO_CREATE") {
+                    console.log("RESP_API_XHR_TO_CREATE----");
                     // ignore
                 } else if (name.includes("ABORT") && details.onabort) {
                     details.onabort(response);
                 } else if (name.includes("ERROR") && details.onerror) {
                     details.onerror(response);
-                } else if (name === "RESP_API_XHR_CS_LOAD" && details.onload) {
+                } else if (name === "RESP_API_XHR_TO_CREATE_LOAD" && details.onload) {
                     details.onload(response);
                 } else if (name.includes("LOADEND") && details.onloadend) {
                     details.onloadend(response);
@@ -783,7 +778,7 @@
                 }
             };
             window.addEventListener("message", callback);
-            window.postMessage({ id: _uuid, name: "API_XHR_INJ", details: detailsParsed, xhrId: xhrId });
+            window.postMessage({ id: _uuid, name: "API_XHR_FROM_CREATE", details: JSON.stringify(detailsParsed), xhrId: xhrId });
             return { abort: abort };
         }
 
@@ -791,26 +786,6 @@
 
         const GM = `const GM = {${gmFunVals.join(",")}};`;
         return `\n${api}\n${GM}\n`;
-        // let code = `async function gmApi_init(){\n${api}\n${GM}\n}\ngmApi_init();`;
-        // // let code = "let hello=323123;";
-
-        // var scriptTag = document.createElement('script');
-        // scriptTag.type = 'text/javascript';
-        // scriptTag.id = "inject_JS";
-        // scriptTag.appendChild(document.createTextNode(code));
-        // document.body.appendChild(scriptTag);
-    }
-
-    function createScriptTag(code) {
-        var head, scriptTag;
-        head = document.getElementsByTagName('head')[0];
-        // if (!head) { return; }
-        scriptTag = document.createElement('script');
-        scriptTag.type = 'text/javascript';
-        scriptTag.id = "inject_JS";
-        scriptTag.appendChild(document.createTextNode(code));
-
-        head.appendChild(scriptTag);
     }
     
     window.createGMApisWithUserScript = createGMApisWithUserScript;
