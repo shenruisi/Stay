@@ -61,7 +61,7 @@ static Tampermonkey *kInstance = nil;
     if ([userScript.installType isEqualToString:@"page"]){
         scriptWithoutComment = [NSString stringWithFormat:
                                 @"async function stay_script_%@(){\n\t%@\n\t%@\n}\nstay_script_%@();\n",
-                                userScript.uuid,gmApisSource,scriptWithoutComment,userScript.uuid];
+                                [userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"],gmApisSource,scriptWithoutComment,[userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"]];
     }
     else{
         scriptWithoutComment = [NSString stringWithFormat:
