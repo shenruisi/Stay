@@ -113,7 +113,7 @@
         [self.view bringSubviewToFront:self.uploadView];
         dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
 
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]]];
             if(data != nil ) {
                 NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 dispatch_async(dispatch_get_main_queue(),^{

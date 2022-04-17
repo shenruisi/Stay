@@ -93,7 +93,7 @@
             [self.view bringSubviewToFront:self.loadingView];
             if(url != nil && url.length > 0) {
                 dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-                        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+                        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]]];
                     dispatch_async(dispatch_get_main_queue(),^{
                         if(data != nil ) {
                             NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
