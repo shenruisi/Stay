@@ -27,6 +27,7 @@ let matchAppScriptList = [];
 let matchAppScriptConsole = [];
 let gm_console = {};
 let closeableTabs = {};
+let xhrs = [];
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
@@ -63,7 +64,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.log("clear_GM_log, ", request);
             gm_console[request.uuid] = [];
         }
-        if ("GM_error" == request.operate) {
+        else if ("GM_error" == request.operate) {
             console.log("gm-apis GM_error, from exect catch, ", request);
             if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
@@ -71,7 +72,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat() });
             console.log("GM_error=", gm_console);
         }
-        if ("GM_log" == request.operate) {
+        else if ("GM_log" == request.operate) {
             console.log("gm-apis GM_log");
             if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
@@ -306,10 +307,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("GM_getResourceText" == request.operate) {
-            // browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-            //     console.log("GM_getResourceText----", response);
-            //     sendResponse(response);
-            // });
             var url = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
             url = request.url
             var reqXHR = new XMLHttpRequest();
@@ -382,11 +379,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
-        else if (request.operate === "API_XHR_CS") {
+        else if (request.operate === "API_XHR_FROM_BOOTSTRAP") {
             // https://jsonplaceholder.typicode.com/posts
             // get tab id and respond only to the content script that sent message
             const tab = sender.tab.id;
             const details = request.details;
+            console.log("background API_XHR_FROM_BOOTSTRAP========", details);
             const method = details.method ? details.method : "GET";
             const user = details.user || null;
             const password = details.password || null;
@@ -418,7 +416,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // remove xhr from global scope when completed
             xhr.onloadend = progressEvent => xhrs = xhrs.filter(x => x.xhrId !== request.xhrId);
             // sendResponse({details: details});
-        } else if (request.operate === "API_XHR_ABORT_CS") {
+            return true;
+        } else if (request.operate === "API_XHR_ABORT_FROM_BOOTSTRAP") {
             // get the xhrId from request
             const xhrId = request.xhrId;
             const match = xhrs.find(x => x.xhrId === xhrId);
@@ -428,6 +427,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             } else {
                 console.log(`abort message recieved for ${xhrId}, but it couldn't be found`);
             }
+            return true;
         } 
     }
     else if ("popup" == request.from) {
