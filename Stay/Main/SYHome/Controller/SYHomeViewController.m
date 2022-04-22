@@ -593,7 +593,7 @@
         _loadingView.layer.masksToBounds = 10;
         
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = @"正在下载脚本";
+        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
         titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textColor = [UIColor blackColor];
         [titleLabel sizeToFit];
