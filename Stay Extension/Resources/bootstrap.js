@@ -111,7 +111,8 @@ const $_injectInPageWithTiming = (script, runAt) => {
             browser.runtime.sendMessage({ from: "content", data: RMC_CONTEXT, uuid: id, operate: "giveRegisterMenuCommand" });
         }
         else if (request.from == "background" && "execRegisterMenuCommand" === operate && request.uuid == id) {
-            RMC_CONTEXT[request.id]["commandFunc"]();
+            let menuId = request.id; 
+            window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, id: id });
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
@@ -243,6 +244,12 @@ const $_injectInPageWithTiming = (script, runAt) => {
         else if ("REGISTER_MENU_COMMAND_CONTEXT" === name){
             let RMC_CONTEXT_STR = e.data.rmc_context;
             if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]"){
+                RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
+            }
+        }
+        else if ("UNREGISTER_MENU_COMMAND_CONTEXT" === name) {
+            let RMC_CONTEXT_STR = e.data.rmc_context;
+            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]") {
                 RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
             }
         }
