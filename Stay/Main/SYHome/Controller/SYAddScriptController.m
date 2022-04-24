@@ -62,7 +62,7 @@
 - (CGSize)preferredContentSize {
        if (self.presentingViewController && self.tableView != nil) {
            CGSize tempSize = self.presentingViewController.view.bounds.size;
-           tempSize.width = 200;
+           tempSize.width = 220;
             //sizeThatFits返回的是最合适的尺寸，但不会改变控件的大小
            CGSize size = [self.tableView sizeThatFits:tempSize];
            return size;
