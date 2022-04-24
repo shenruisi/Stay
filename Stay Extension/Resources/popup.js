@@ -263,7 +263,9 @@ window.onload=function(){
                 return;
             }
         });
-       
+        document.getElementById("mainIcon").addEventListener("click", (e)=>{
+            window.open("stay://");
+        })
         document.querySelector("#registerMenuPopup .close").addEventListener("click", function (e) {
             closeMenuPopup(e)
         })
@@ -323,7 +325,7 @@ function renderScriptContent(datas) {
             var data = item; 
             let uuid = data["uuid"];
             let grants = data.grants
-            let showMenu = grants && grants.length > 0 && grants.includes("GM.registerMenuCommand")? "block":"none"
+            let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
             data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
             var _dom = document.createElement('div');

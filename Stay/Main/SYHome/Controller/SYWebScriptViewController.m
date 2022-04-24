@@ -135,7 +135,7 @@
         _uploadView.layer.masksToBounds = 10;
         
         UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = @"正在下载脚本";
+        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
         titleLabel.font = [UIFont boldSystemFontOfSize:18];
         titleLabel.textColor = [UIColor blackColor];
         [titleLabel sizeToFit];
@@ -220,7 +220,7 @@
 
 - (UIBarButtonItem *)closeBtn {
     if(_closeBtn == nil) {
-        _closeBtn = [[UIBarButtonItem alloc] initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(clickClose:)];
+        _closeBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.close","close") style:UIBarButtonItemStylePlain target:self action:@selector(clickClose:)];
     }
     return _closeBtn;
 }
