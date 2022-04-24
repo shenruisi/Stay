@@ -192,6 +192,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
                     }
                     else{
                         var pageInject = script.installType === "page";
+                        console.log("pageInject---",pageInject)
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
                                 if (pageInject){
@@ -214,7 +215,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.content);
+//                console.log("injectScript---",script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
