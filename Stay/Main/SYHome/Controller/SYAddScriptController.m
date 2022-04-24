@@ -23,7 +23,13 @@
     self.tableView.scrollEnabled = NO;
     self.tableView.top = 10;
     
-    self.data = [[NSMutableArray alloc] initWithObjects:NSLocalizedString(@"settings.addScript","add script"),NSLocalizedString(@"settings.addScriptFromUrl","add from url"), NSLocalizedString(@"settings.addScriptFromWeb","add from GreasyFork"),nil];
+    self.data = @[
+        NSLocalizedString(@"settings.addScript","add script"),
+        NSLocalizedString(@"settings.addScriptFromUrl","add from url"),
+        NSLocalizedString(@"settings.addScriptFromWeb","add from GreasyFork"),
+        NSLocalizedString(@"settings.importFromFile",""),
+    ];
+    
 }
 
 

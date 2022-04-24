@@ -36,7 +36,9 @@ settings.uploadTips="处理脚本资源";
 settings.addScript="新增脚本";
 settings.addScriptFromUrl="从链接添加";
 settings.addScriptFromWeb="从GreasyFork添加";
+settings.importFromFile = "从文件导入";
 settings.downloadScript = "正在下载脚本";
 settings.close = "关闭";
 
-
+unsupportedFileFormat = "不支持的文件格式";
+ok = "OK";

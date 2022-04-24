@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYAddScriptController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) UITableView *tableView;
 
-@property (strong, nonatomic) NSMutableArray *data;
+@property (strong, nonatomic) NSArray *data;
 
 
 @end

@@ -37,8 +37,12 @@ settings.uploadTips="Handling script resources";
 settings.addScript="add script";
 settings.addScriptFromUrl="add from url";
 settings.addScriptFromWeb="add from GreasyFork";
+settings.importFromFile = "Import from file";
 settings.downloadScript = "download script";
 settings.close = "close";
+
+unsupportedFileFormat = "Unsupported file format.";
+ok = "确认";
 
 
 

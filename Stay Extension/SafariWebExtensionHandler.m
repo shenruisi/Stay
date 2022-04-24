@@ -184,7 +184,7 @@
             NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
             NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
 
-            [requireList addObject:@{@"url":requireUrl,@"code":responData}];
+            [requireList addObject:@{@"url":requireUrl,@"code":responData,@"name":fileName}];
         }
         return requireList;
     }
