@@ -26,6 +26,7 @@ const GM_APIS = new Set([
     "GM_openInTab",
     "GM.openInTab",
     "GM_notification",
+    "GM.notification",
     "unsafeWindow"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
