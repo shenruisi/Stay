@@ -46,16 +46,17 @@ const $_matchesCheck = (userLibraryScript,url) => {
     if (matched){
         if (userLibraryScript.includes.length > 0){
             userLibraryScript.includes.forEach((include)=>{
-                if (matchPatternInBlock.doMatch(include)) {
+//                if (matchPatternInBlock.doMatch(include)) {
                     matched = matchRule(url.href, include);
-                }
+//                }
             });
         }
         
         userLibraryScript.excludes.forEach((exclude)=>{
-            if (matchPatternInBlock.doMatch(exclude)) {
+            console.log("exclude---",exclude);
+//            if (matchPatternInBlock.doMatch(exclude)) {
                 matched = !matchRule(url.href, exclude);
-            }
+//            }
         });
     }
     
@@ -215,7 +216,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
             }
             
             if (script.active){ //inject active script
-//                console.log("injectScript---",script.content);
+                console.log("injectScript---",script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
