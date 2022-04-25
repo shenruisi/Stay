@@ -46,20 +46,42 @@ const $_matchesCheck = (userLibraryScript,url) => {
     if (matched){
         if (userLibraryScript.includes.length > 0){
             userLibraryScript.includes.forEach((include)=>{
-                if (matchPatternInBlock.doMatch(include)) {
+//                if (matchPatternInBlock.doMatch(include)) {
                     matched = matchRule(url.href, include);
-                }
+//                }
             });
         }
         
         userLibraryScript.excludes.forEach((exclude)=>{
-            if (matchPatternInBlock.doMatch(exclude)) {
+            console.log("exclude---",exclude);
+//            if (matchPatternInBlock.doMatch(exclude)) {
                 matched = !matchRule(url.href, exclude);
-            }
+//            }
         });
     }
     
     return matched;
+}
+
+const $_injectRequiredInPage = (name,content) =>{
+    console.log("require "+name+" inject page");
+    if (document.readyState === "loading") {
+        document.addEventListener("readystatechange", function() {
+            if (document.readyState === "interactive") {
+                var scriptTag = document.createElement('script');
+                scriptTag.type = 'text/javascript';
+                scriptTag.id = "Stay_Required_Inject_JS_"+name;
+                scriptTag.appendChild(document.createTextNode(content));
+                document.body.appendChild(scriptTag);
+            }
+        });
+    } else {
+        var scriptTag = document.createElement('script');
+        scriptTag.type = 'text/javascript';
+        scriptTag.id = "Stay_Required_Inject_JS_"+name;
+        scriptTag.appendChild(document.createTextNode(content));
+        document.body.appendChild(scriptTag);
+    }
 }
 
 const $_injectInPage = (script) => {
@@ -111,7 +133,8 @@ const $_injectInPageWithTiming = (script, runAt) => {
             browser.runtime.sendMessage({ from: "content", data: RMC_CONTEXT, uuid: id, operate: "giveRegisterMenuCommand" });
         }
         else if (request.from == "background" && "execRegisterMenuCommand" === operate && request.uuid == id) {
-            RMC_CONTEXT[request.id]["commandFunc"]();
+            let menuId = request.id; 
+            window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, id: id });
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
@@ -169,15 +192,23 @@ const $_injectInPageWithTiming = (script, runAt) => {
                         });
                     }
                     else{
+                        var pageInject = script.installType === "page";
+                        console.log("pageInject---",pageInject)
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
-                                browser.runtime.sendMessage({
-                                    from: "bootstrap",
-                                    operate: "injectScript",
-                                    code:urlCodeDic.code,
-                                    allFrames:true,
-                                    runAt:"document_start"
-                                });
+                                if (pageInject){
+                                    $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
+                                }
+                                else{
+                                    browser.runtime.sendMessage({
+                                        from: "bootstrap",
+                                        operate: "injectScript",
+                                        code:urlCodeDic.code,
+                                        allFrames:true,
+                                        runAt:"document_start"
+                                    });
+                                }
+                                
                             }
                         });
                     }
@@ -185,7 +216,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
             }
             
             if (script.active){ //inject active script
-//                console.log("injectScript----",script.content);
+                console.log("injectScript---",script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -243,6 +274,12 @@ const $_injectInPageWithTiming = (script, runAt) => {
         else if ("REGISTER_MENU_COMMAND_CONTEXT" === name){
             let RMC_CONTEXT_STR = e.data.rmc_context;
             if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]"){
+                RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
+            }
+        }
+        else if ("UNREGISTER_MENU_COMMAND_CONTEXT" === name) {
+            let RMC_CONTEXT_STR = e.data.rmc_context;
+            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]") {
                 RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
             }
         }

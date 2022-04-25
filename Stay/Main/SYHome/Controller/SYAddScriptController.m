@@ -23,7 +23,13 @@
     self.tableView.scrollEnabled = NO;
     self.tableView.top = 10;
     
-    self.data = [[NSMutableArray alloc] initWithObjects:NSLocalizedString(@"settings.addScript","add script"),NSLocalizedString(@"settings.addScriptFromUrl","add from url"), NSLocalizedString(@"settings.addScriptFromWeb","add from GreasyFork"),nil];
+    self.data = @[
+        NSLocalizedString(@"settings.addScript","add script"),
+        NSLocalizedString(@"settings.addScriptFromUrl","add from url"),
+        NSLocalizedString(@"settings.addScriptFromWeb","add from GreasyFork"),
+        NSLocalizedString(@"settings.importFromFile",""),
+    ];
+    
 }
 
 
@@ -56,7 +62,7 @@
 - (CGSize)preferredContentSize {
        if (self.presentingViewController && self.tableView != nil) {
            CGSize tempSize = self.presentingViewController.view.bounds.size;
-           tempSize.width = 200;
+           tempSize.width = 220;
             //sizeThatFits返回的是最合适的尺寸，但不会改变控件的大小
            CGSize size = [self.tableView sizeThatFits:tempSize];
            return size;

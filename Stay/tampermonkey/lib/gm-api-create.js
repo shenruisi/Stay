@@ -31,13 +31,14 @@
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
         source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
         source += '\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid){\n';
-        source += '\t\tconsole.log(__RMC_CONTEXT[request.id]);\n';
-        source += '\t\t__RMC_CONTEXT[request.id]["commandFunc"]();}\n';
+        source += '\t\tconsole.log("menuId=",request.id,__RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;';
+        source += '\t\tif(__RMC_CONTEXT.length>0){__RMC_CONTEXT.forEach((item, index)=>{if(item.id == menuId){place = index;\n return false;\n}\n})}';
+        source += '\t\tif(place>=0){\n__RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
         source += '\treturn true;\n'
         source += '});\n\n';
 
         if (grants.includes('GM_listValues')) {
-            source += '__stroge;\n\n';
+            source += 'function GM_listValues (){ return __stroge};\n\n';
         }
 
         if (grants.includes('GM.listValues')) {
@@ -74,6 +75,14 @@
 
         if (grants.includes('GM_registerMenuCommand')) {
             source += GM_registerMenuCommand.toString() + ';\n\n';
+        }
+
+        if (grants.includes('GM.unregisterMenuCommand')) {
+            source += 'GM.unregisterMenuCommand = ' + GM_unregisterMenuCommand.toString() + ';\n\n';
+        }
+
+        if (grants.includes('GM_unregisterMenuCommand')) {
+            source += GM_unregisterMenuCommand.toString() + ';\n\n';
         }
 
         if (grants.includes('GM_addStyle')) {
@@ -117,6 +126,10 @@
 
         if (grants.includes('GM.xmlHttpRequest')) {
             source += 'GM.xmlHttpRequest = ' + GM_xmlhttpRequest.toString() + ';\n\n';
+        }
+
+        if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
+            source += GM_notification.toString() + ';\n\n';
         }
 
         //add GM_log by default
@@ -224,13 +237,37 @@
         });
     }
 
+    function GM_notification(params) {
+        // todo
+        
+    }
+
     function GM_registerMenuCommand(caption, commandFunc, accessKey) {
+        const pid = Math.random().toString(36).substring(1, 9);
         let userInfo = {};
         userInfo["caption"] = caption;
         userInfo["commandFunc"] = commandFunc;
         userInfo["accessKey"] = accessKey;
-        userInfo["id"] = __RMC_CONTEXT.length;
+        userInfo["id"] = pid;
         __RMC_CONTEXT.push(userInfo);
+        return pid;
+    }
+
+    function GM_unregisterMenuCommand(menuId) {
+        if (!menuId || __RMC_CONTEXT.length <= 0) {
+            return;
+        }
+        let place = -1;
+        __RMC_CONTEXT.forEach((item, index) => {
+            if (item.id == menuId) {
+                place = index;
+                return false;
+            }
+            console.log("break-----")
+        });
+        if (place >= 0) {
+            __RMC_CONTEXT.splice(place, 1);
+        }
     }
 
     function GM_addStyle(css) {
@@ -376,7 +413,7 @@
                 gmFunVals.push("listValues: GM_listValues_Async");
             } 
             else if (grant === "GM_listValues"){
-                api += `const GM_listValues = __listValuesStroge;\n`;
+                api += `function GM_listValues(){ return __listValuesStroge;}\n`;
             }
             else if (grant === "GM.deleteValue") {
                 api += `${GM_deleteValue_Async}\n`;
@@ -409,6 +446,10 @@
             else if ("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant){
                 api += `${GM_registerMenuCommand}\n`;
                 gmFunVals.push("registerMenuCommand: GM_registerMenuCommand");
+            }
+            else if ("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) {
+                api += `${GM_unregisterMenuCommand}\n`;
+                gmFunVals.push("unregisterMenuCommand: GM_unregisterMenuCommand");
             }
             else if ("GM_getResourceURL" === grant){
                 api += `${GM_getResourceURLSync}\nconst GM_getResourceURL=GM_getResourceURLSync;\n`;
@@ -444,6 +485,10 @@
             else if ("GM.closeTab" === grant || "GM_closeTab" === grant) {
                 api += `${GM_closeTab}\n`;
                 gmFunVals.push("closeTab: GM_closeTab");
+            }
+            else if ("GM.notification" === grant || "GM_notification" === grant) {
+                api += `${GM_notification}\n`;
+                gmFunVals.push("notification: GM_notification");
             }
             else if (grant === "GM_xmlhttpRequest" || grant === "GM.xmlHttpRequest") {
                 api += `${xhr}\n`;
@@ -647,12 +692,52 @@
 
         function GM_registerMenuCommand(caption, commandFunc, accessKey) {
             let userInfo = {};
+            const pid = Math.random().toString(36).substring(1, 9);
             userInfo["caption"] = caption;
             userInfo["commandFunc"] = commandFunc;
             userInfo["accessKey"] = accessKey;
-            userInfo["id"] = __RMC_CONTEXT.length;
+            userInfo["id"] = pid;
             __RMC_CONTEXT.push(userInfo);
             window.postMessage({ id: _uuid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
+            window.addEventListener('message', (e) => {
+                if (!e || !e.data || !e.data.name) return;
+                let uuid = e.data.id;
+                const name = e.data.name;
+                if ("execRegisterMenuCommand" === name){
+                    let menuId = e.data.menuId;
+                    let place = -1;
+                    if (__RMC_CONTEXT.length > 0) {
+                        __RMC_CONTEXT.forEach((item, index) => {
+                            if (item.id == menuId) {
+                                place = index;
+                                return false;
+                            }
+                        });
+                        if (place >= 0) {
+                            __RMC_CONTEXT[place]["commandFunc"]();
+                        }
+                    }
+                }
+            
+            });
+            return pid;
+        }
+
+        function GM_unregisterMenuCommand(menuId) {
+            if (!menuId || __RMC_CONTEXT.length<=0){
+                return;
+            }
+            let place = -1;
+            __RMC_CONTEXT.forEach((item, index)=>{
+                if (item.id == menuId){
+                    place = index;
+                    return false;
+                }
+            });
+            if (place>=0){
+                __RMC_CONTEXT.splice(place, 1);
+                window.postMessage({ id: _uuid, name: "UNREGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
+            }
         }
 
         function browserAddListener() {

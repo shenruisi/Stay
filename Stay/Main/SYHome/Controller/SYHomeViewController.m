@@ -19,7 +19,17 @@
 #import "SYAddScriptController.h"
 #import "SYWebScriptViewController.h"
 
-@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate,UIPopoverPresentationControllerDelegate>
+#import <UniformTypeIdentifiers/UTCoreTypes.h>
+
+@interface SYHomeViewController ()<
+ UITableViewDelegate,
+ UITableViewDataSource,
+ UISearchResultsUpdating,
+ UISearchBarDelegate,
+ UISearchControllerDelegate,
+ UIPopoverPresentationControllerDelegate,
+ UIDocumentPickerDelegate
+>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -132,8 +142,35 @@
         [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
         self.itemPopVC = nil;
     }
+    else if (indexpath.row == 3) {
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
+        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeItem] asCopy:YES];
+        documentPicker.delegate = self;
+        [self presentViewController:documentPicker animated:YES completion:nil];
+    }
+}
 
-    
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls{
+    if (urls.count > 0){
+        NSURL *url = urls[0];
+        SYEditViewController *cer = [[SYEditViewController alloc] init];
+        NSError *error = nil;
+        cer.content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+        if (!error){
+            [self.navigationController pushViewController:cer animated:true];
+        }
+        else{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@""
+                                                                           message:NSLocalizedString(@"unsupportedFileFormat", @"")
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:confirm];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
 }
 
 //检测评分
