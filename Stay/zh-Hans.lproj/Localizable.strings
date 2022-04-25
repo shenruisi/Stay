@@ -33,6 +33,13 @@ settings.create="创建";
 settings.newScript="新建脚本";
 settings.notes="版本记录";
 settings.uploadTips="处理脚本资源";
+settings.addScript="编写脚本";
+settings.addScriptFromUrl="从链接导入";
+settings.addScriptFromWeb="从GreasyFork导入";
+settings.importFromFile = "从文件导入";
+settings.downloadScript = "正在下载脚本";
+settings.close = "关闭";
+settings.scriptError = "脚本格式错误";
 
-
-
+unsupportedFileFormat = "不支持的文件格式";
+ok = "确认";

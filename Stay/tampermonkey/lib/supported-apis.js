@@ -11,6 +11,8 @@ const GM_APIS = new Set([
     "GM.setValue",
     "GM_registerMenuCommand",
     "GM.registerMenuCommand",
+    "GM_unregisterMenuCommand",
+    "GM.unregisterMenuCommand",
     "GM_addStyle",
     "GM.addStyle",
     "none",
@@ -25,7 +27,12 @@ const GM_APIS = new Set([
     "GM.xmlHttpRequest",
     "GM_openInTab",
     "GM.openInTab",
-    "GM_notification"
+    "unsafeWindow",
+    "GM_info",
+    "GM.info",
+    "window.onurlchange",
+    "GM_notification",
+    "GM.notification"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);

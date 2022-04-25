@@ -34,8 +34,16 @@ settings.create="Create";
 settings.newScript="New Script";
 settings.notes="notes";
 settings.uploadTips="Handling script resources";
+settings.addScript="Write script";
+settings.addScriptFromUrl="Import from link";
+settings.addScriptFromWeb="Import from GreasyFork";
+settings.importFromFile = "Import from file";
+settings.downloadScript = "Download script";
+settings.close = "close";
+settings.scriptError = "script error";
 
-
+unsupportedFileFormat = "Unsupported file format.";
+ok = "OK";
 
 
 

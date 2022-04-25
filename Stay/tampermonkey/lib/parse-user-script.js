@@ -88,9 +88,12 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
 
   let meta = extractMeta(content).match(/.+/g);
   if (!meta) {
+    native.nslog("no meta");
     if (failWhenMissing) {
       throw new Error('Could not parse, no meta.');
     } else {
+      details.pass = false;
+      details.errorMessage = "no meta";
       return prepDefaults(details);
     }
   }
@@ -151,6 +154,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           case 'description':
           case 'name':
               let locale = data.locale;
+              native.nslog("locale");
+              native.nslog(locale);
               if (locale) {
                   if (!details.locales[locale]) details.locales[locale] = {};
                   details.locales[locale][data.keyword] = data.value;

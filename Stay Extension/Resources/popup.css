@@ -187,6 +187,12 @@ section {
     font-weight:500;
     align-items:center;
     padding-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-height: 25px;
 }
 .content-container .content-box .info-case .title span.version{
     color: #B620E0;
@@ -229,12 +235,13 @@ section {
     position: absolute;
     right: 0;
     top: 0;
+    flex-direction: column;
 }
 .active-setting{
-    position: absolute;
+    /* position: absolute; */
     width: 40px;
     height: 40px;
-    right: 50px;
+    /* right: 50px; */
     background-image: url(./images/settings.png);
     background-size: 45%;
     background-repeat: no-repeat;

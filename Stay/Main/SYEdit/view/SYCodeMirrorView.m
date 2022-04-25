@@ -79,14 +79,17 @@
         if(error != nil) {
             [self initScrpitContent:false];
         } else {
-           
             dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
                 UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
+                
+                if( userScript.errorMessage != nil && userScript.errorMessage.length > 0 && [userScript.errorMessage isEqualToString:@"no meta"] ) {
+                    userScript.errorMessage = NSLocalizedString(@"settings.scriptError","script error");
+                }
+                
                 if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                    NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
                    NSString *uuid = [self md5HexDigest:uuidName];
                    userScript.uuid = uuid;
-                           
                    int count = 0;
 
                    if(userScript != nil && userScript.requireUrls != nil) {

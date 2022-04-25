@@ -1,6 +1,6 @@
 //var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 //var browser = __b;
-Date.prototype.dateFormat = function(fmt) {
+Date.prototype.dateFormat = function (fmt) {
     fmt = fmt ? fmt : "YYYY-mm-dd HH:MM:SS"
     if (!this || typeof this == "undefined") {
         return ""
@@ -23,92 +23,93 @@ Date.prototype.dateFormat = function(fmt) {
     };
     return fmt;
 }
-let matchAppScriptList=[];
+let matchAppScriptList = [];
 let matchAppScriptConsole = [];
 let gm_console = {};
 let closeableTabs = {};
+let xhrs = [];
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    
-    if ("bootstrap" == request.from || "iframe" == request.from){
-        if ("fetchScripts" == request.operate){
+
+    if ("bootstrap" == request.from || "iframe" == request.from) {
+        if ("fetchScripts" == request.operate) {
             console.log("background---fetchScripts request==", request);
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate}, function(response) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("injectScript" == request.operate){
+        else if ("injectScript" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                console.log("request.allFrames",request.allFrames);
+                console.log("request.allFrames", request.allFrames);
                 browser.tabs.executeScript(tabs[0].id, { code: request.code, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
-        else if ("injectFile" == request.operate){
-            console.log("background","injectFile",request.file);
+        else if ("injectFile" == request.operate) {
+            console.log("background", "injectFile", request.file);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames , runAt: request.runAt})
+                browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
-        else if ("setMatchedScripts" == request.operate){
+        else if ("setMatchedScripts" == request.operate) {
             matchAppScriptList = request.matchScripts;
-            console.log("setMatchedScripts request.matchScripts=",request.matchScripts)
+            console.log("setMatchedScripts request.matchScripts=", request.matchScripts)
             return true;
         }
     }
-    else if ("gm-apis" == request.from){
-        if ("clear_GM_log" == request.operate){
+    else if ("gm-apis" == request.from) {
+        if ("clear_GM_log" == request.operate) {
             console.log("clear_GM_log, ", request);
             gm_console[request.uuid] = [];
         }
-        if ("GM_error" == request.operate){
-            console.log("gm-apis GM_error, from exect catch, ",request);
+        else if ("GM_error" == request.operate) {
+            console.log("gm-apis GM_error, from exect catch, ", request);
             if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
             }
-            gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat()});
-            console.log("GM_error=",gm_console);
+            gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat() });
+            console.log("GM_error=", gm_console);
         }
-        if ("GM_log" == request.operate){
+        else if ("GM_log" == request.operate) {
             console.log("gm-apis GM_log");
-            if (!gm_console[request.uuid]){
+            if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
             }
             gm_console[request.uuid].push({ msg: request.message, msgType: "log", time: new Date().dateFormat() });
-            console.log("GM_log=",gm_console);
+            console.log("GM_log=", gm_console);
         }
-        else if ("GM_getValue" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, defaultValue:request.defaultValue, uuid:request.uuid}, function(response) {
+        else if ("GM_getValue" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, defaultValue: request.defaultValue, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("GM_setValue" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, value:request.value, uuid:request.uuid}, function(response) {
+        else if ("GM_setValue" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, value: request.value, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("GM_deleteValue" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, key:request.key, uuid:request.uuid}, function(response) {
+        else if ("GM_deleteValue" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("GM_listValues" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid}, function(response) {
+        else if ("GM_listValues" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
-        else if ("unsafeWindow" == request.operate){
+        else if ("unsafeWindow" == request.operate) {
             console.log("unsafeWindow bg-----", window.__restart_confirm_timeout, ",----", window._WWW_SRV_T);
             sendResponse({ unsafeWindow: window });
             return true;
         }
-        else if ("GM_xmlhttpRequest" == request.operate){
+        else if ("GM_xmlhttpRequest" == request.operate) {
             let params = request.params
             let xhr = new XMLHttpRequest();
             var createState = function () {
@@ -152,7 +153,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 var responseState = createState();
                 if (responseState.readyState == 4 &&
                     responseState.status != 200 &&
-                    responseState.status != 0 ) {
+                    responseState.status != 0) {
                     console.log('api_create: error at onload, should not happen! -> retry :)')
                     return;
                 }
@@ -166,7 +167,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     console.log('api_create: error at onerror, should not happen! -> retry')
                     sendResponse({ onerror: responseState });
                 }
-               
+
             };
 
             var onreadystatechange = function (c) {
@@ -257,7 +258,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
                 if (typeof (params.responseType) !== 'undefined') {
                     xhr.responseType = params.responseType;
-                } 
+                }
                 if (typeof (params.nocache) !== 'undefined') {
                     xhr.setRequestHeader('Cache-Control', 'no-cache');
                 }
@@ -300,28 +301,23 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     statusText: 'Forbidden'
                 };
                 // params.onerror(resp);
-                sendResponse({ onerror: resp})
+                sendResponse({ onerror: resp })
             }
 
             return true;
         }
         else if ("GM_getResourceText" == request.operate) {
-            // browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-            //     console.log("GM_getResourceText----", response);
-            //     sendResponse(response);
-            // });
-            var url1 = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
-            var reqXhr = new XMLHttpRequest();
-            var url = request.url;
-            console.log("BG----url==",url);
-            reqXhr.open("get", url, true);/*设置请求方法与路径*/
-            reqXhr.responseType = "text";
-            reqXhr.setRequestHeader("Content-Type", "text/plain; charset=x-user-defined");
-            reqXhr.send();/*不发送数据到服务器*/
-            reqXhr.onload = function () {/*XHR对象获取到返回信息后执行*/
-                if (reqXhr.status == 200) {/*返回状态为200，即为数据获取成功*/
-                    console.log("BG-----GM_getResourceText---", reqXhr.responseText);
-                    sendResponse({ body: reqXhr.responseText });
+            var url = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
+            url = request.url
+            var reqXHR = new XMLHttpRequest();
+            reqXHR.open("get", url, true);/*设置请求方法与路径*/
+            reqXHR.responseType = "text";
+            reqXHR.setRequestHeader("Content-Type", "text/plain; charset=x-user-defined");
+            reqXHR.send();/*不发送数据到服务器*/
+            reqXHR.onload = function () {/*XHR对象获取到返回信息后执行*/
+                if (reqXHR.status == 200) {/*返回状态为200，即为数据获取成功*/
+                    console.log("BG-----GM_getResourceText---", reqXHR.responseText);
+                    sendResponse({ body: reqXHR.responseText });
                 }
             }
             return true;
@@ -347,7 +343,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
-        else if ("closeTab" == request.operate){
+        else if ("closeTab" == request.operate) {
             console.log("bg closeTab ------");
             if (request.tabId && closeableTabs[request.tabId]) {
                 browser.tabs.remove(request.tabId);
@@ -355,7 +351,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({});
             return true;
         }
-        else if ("openInTab" == request.operate){
+        else if ("openInTab" == request.operate) {
             console.log("bg openInTab ------")
             var done = function (tab) {
                 closeableTabs[tab.id] = true;
@@ -376,32 +372,89 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.tabs.create(o, done);
             return true;
         }
+        else if (request.operate === "API_ADD_STYLE" || request.operate === "API_ADD_STYLE_SYNC") {
+            const tabId = sender.tab.id;
+            browser.tabs.insertCSS(tabId, { code: request.css }, () => {
+                if (request.operate === "API_ADD_STYLE") sendResponse(request.css);
+            });
+            return true;
+        }
+        else if (request.operate === "API_XHR_FROM_BOOTSTRAP") {
+            // https://jsonplaceholder.typicode.com/posts
+            // get tab id and respond only to the content script that sent message
+            const tab = sender.tab.id;
+            const details = request.details;
+            console.log("background API_XHR_FROM_BOOTSTRAP========", details);
+            const method = details.method ? details.method : "GET";
+            const user = details.user || null;
+            const password = details.password || null;
+            let body = details.data || null;
+            if (body && details.binary) {
+                const len = body.length;
+                const arr = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    arr[i] = body.charCodeAt(i);
+                }
+                body = new Blob([arr], { type: "text/plain" });
+            }
+            const xhr = new XMLHttpRequest();
+            // push to global scoped array so it can be aborted
+            xhrs.push({ xhr: xhr, xhrId: request.xhrId });
+            xhr.withCredentials = (details.user && details.password);
+            xhr.timeout = details.timeout || 0;
+            if (details.overrideMimeType) xhr.overrideMimeType(details.overrideMimeType);
+            xhrAddListeners(xhr, tab, request.uuid, request.xhrId, details);
+            xhr.open(method, details.url, true, user, password);
+            xhr.responseType = details.responseType || "";
+            if (details.headers) {
+                for (const key in details.headers) {
+                    const val = details.headers[key];
+                    xhr.setRequestHeader(key, val);
+                }
+            }
+            xhr.send(body);
+            // remove xhr from global scope when completed
+            xhr.onloadend = progressEvent => xhrs = xhrs.filter(x => x.xhrId !== request.xhrId);
+            // sendResponse({details: details});
+            return true;
+        } else if (request.operate === "API_XHR_ABORT_FROM_BOOTSTRAP") {
+            // get the xhrId from request
+            const xhrId = request.xhrId;
+            const match = xhrs.find(x => x.xhrId === xhrId);
+            if (match) {
+                match.xhr.abort();
+                // sendResponse(match);
+            } else {
+                console.log(`abort message recieved for ${xhrId}, but it couldn't be found`);
+            }
+            return true;
+        } 
     }
-    else if ("popup" == request.from){
+    else if ("popup" == request.from) {
         console.log(request.from + " " + request.operate);
-        if ("fetchLog" == request.operate){
+        if ("fetchLog" == request.operate) {
             sendResponse({ body: gm_console });
         }
-        else if ("cleanLog" == request.operate){
+        else if ("cleanLog" == request.operate) {
             gm_console = [];
-        }else if ("fetchMatchedScriptList" == request.operate){
-            console.log("fetchMatchedScriptList--",request,matchAppScriptList)
+        } else if ("fetchMatchedScriptList" == request.operate) {
+            console.log("fetchMatchedScriptList--", request, matchAppScriptList)
             browser.runtime.sendMessage({ from: "background", operate: "fetchMatchedScripts" }, (response) => {
-                            matchAppScriptList = response.body;
-                            console.log("fetchMatchedScriptList---fetchMatchedScripts--",response,"-res--", response.body)
-                            sendResponse({ body: matchAppScriptList });
-                        })
-        }else if ("setScriptActive" == request.operate){
-            browser.runtime.sendNativeMessage("application.id", {type:request.operate, uuid:request.uuid,active: request.active }, function(response) {
+                matchAppScriptList = response.body;
+                console.log("fetchMatchedScriptList---fetchMatchedScripts--", response, "-res--", response.body)
+                sendResponse({ body: matchAppScriptList });
+            })
+        } else if ("setScriptActive" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, active: request.active }, function (response) {
                 sendResponse(response);
             });
-            
-        }else if ("fetchMatchedScriptLog" == request.operate){
-            if(matchAppScriptList && matchAppScriptList.length>0){
-                if(matchAppScriptConsole.length>0){
+
+        } else if ("fetchMatchedScriptLog" == request.operate) {
+            if (matchAppScriptList && matchAppScriptList.length > 0) {
+                if (matchAppScriptConsole.length > 0) {
                     matchAppScriptConsole = [];
                 }
-                matchAppScriptList.forEach(item=>{
+                matchAppScriptList.forEach(item => {
                     let matchLog = {};
                     matchLog["name"] = item.name;
                     matchLog["uuid"] = item.uuid;
@@ -410,20 +463,86 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 })
                 console.log("fetchMatchedScriptLog=", matchAppScriptConsole);
                 sendResponse({ body: matchAppScriptConsole });
-            }else{
+            } else {
                 sendResponse({ body: [] });
             }
         }
-        else if ("fetchRegisterMenuCommand" == request.operate){
+        else if ("fetchRegisterMenuCommand" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "fetchRegisterMenuCommand"});
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "fetchRegisterMenuCommand" });
             });
         }
-        else if ("execRegisterMenuCommand" == request.operate){
+        else if ("execRegisterMenuCommand" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from : "background", operate: "execRegisterMenuCommand", id:request.id, uuid:request.uuid});
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand", id: request.id, uuid: request.uuid });
             });
         }
         return true;
     }
 });
+
+function xhrHandleEvent(e, xhr, tab, id, xhrId) {
+    const name = `RESP_API_XHR_BG_${e.type.toUpperCase()}`;
+    const x = {
+        readyState: xhr.readyState,
+        response: xhr.response,
+        responseHeaders: xhr.getAllResponseHeaders(),
+        responseType: xhr.responseType,
+        responseURL: xhr.responseURL,
+        status: xhr.status,
+        statusText: xhr.statusText,
+        timeout: xhr.timeout,
+        withCredentials: xhr.withCredentials
+    };
+    // only include responseText when applicable
+    if (["", "text"].includes(xhr.responseType)) x.responseText = xhr.responseText;
+    // convert data if response is arraybuffer so sendMessage can pass it
+    if (xhr.responseType === "arraybuffer") {
+        const arr = Array.from(new Uint8Array(xhr.response));
+        x.response = arr;
+    }
+    // convert data if response is blob so sendMessage can pass it
+    if (xhr.responseType === "blob") {
+        const reader = new FileReader();
+        reader.readAsDataURL(xhr.response);
+        reader.onloadend = function () {
+            const base64data = reader.result;
+            x.response = {
+                data: base64data,
+                type: xhr.response.type
+            };
+            browser.tabs.sendMessage(tab, { operate: name, id: id, xhrId: xhrId, response: x });
+        };
+    }
+    // blob response will execute its own sendMessage call
+    if (xhr.responseType !== "blob") {
+        browser.tabs.sendMessage(tab, { operate: name, id: id, xhrId: xhrId, response: x });
+    }
+}
+
+function xhrAddListeners(xhr, tab, id, xhrId, details) {
+    if (details.onabort) {
+        xhr.addEventListener("abort", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.onerror) {
+        xhr.addEventListener("error", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.onload) {
+        xhr.addEventListener("load", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.onloadend) {
+        xhr.addEventListener("loadend", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.onloadstart) {
+        xhr.addEventListener("loadstart", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.onprogress) {
+        xhr.addEventListener("progress", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.onreadystatechange) {
+        xhr.addEventListener("readystatechange", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+    if (details.ontimeout) {
+        xhr.addEventListener("timeout", e => xhrHandleEvent(e, xhr, tab, id, xhrId));
+    }
+}

@@ -5,37 +5,44 @@
 
 'use strict';
 
-(function() {    
-    function createGMApisWithUserScript(userscript, uuid, version){
+(function () {
+
+    function createGMApisWithUserScript(userscript, uuid, version) {
         let grants = userscript.grants;
-        native.nslog("native-userscript-grants-" + grants);
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'const _version = "' + version + '";\n\n';
-        source += 'let unsafeWindow = window;\n\n';
+        if (grants.includes('unsafeWindow')) {
+            source += 'const _userscript = ' + JSON.stringify(userscript) +';\n';
+            source += injectJavaScript(userscript, version);
+            // source 为 window.addEventListener(), move to bootstrap
+            // source += `window.addEventListener('message', (e)=>{\n${getSourceOfWindowListener}\ngetSourceOfWindowListener(e);\n})\n\n`;
+            return source;
+        }
         source += 'let GM = {};\n\n';
-        source += 'let GM_info = {};\n\n';
-        source += 'let retries = 3;\n\n';
+        source += 'let GM_info=' + GM_info(userscript, version) + ';\n';
+        source += 'GM.info = GM_info;\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
         source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge();\n\n';
         source += 'let __RMC_CONTEXT = [];\n\n';
-        // source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "unsafeWindow" }, (response)=>{unsafeWindow = response.unsafeWindow;});\n';
+
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
         source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
         source += '\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid){\n';
-        source += '\t\tconsole.log(__RMC_CONTEXT[request.id]);\n';
-        source += '\t\t__RMC_CONTEXT[request.id]["commandFunc"]();}\n';
+        source += '\t\tconsole.log("menuId=",request.id,__RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;';
+        source += '\t\tif(__RMC_CONTEXT.length>0){__RMC_CONTEXT.forEach((item, index)=>{if(item.id == menuId){place = index;\n return false;\n}\n})}';
+        source += '\t\tif(place>=0){\n__RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
         source += '\treturn true;\n'
         source += '});\n\n';
 
         if (grants.includes('GM_listValues')) {
-            source += GM_listValues.toString() + ';\n\n';
+            source += 'function GM_listValues (){ return __stroge};\n\n';
         }
 
         if (grants.includes('GM.listValues')) {
-            source += 'GM.listValues = ' + GM_listValues_p.toString() + ';\n\n';
+            source += 'GM.listValues = ' + _fillStroge.toString() + ';\n\n';
         }
 
         if (grants.includes('GM_deleteValue')) {
@@ -43,7 +50,7 @@
         }
 
         if (grants.includes('GM.deleteValue')) {
-            source += 'GM.deleteValue = ' + GM_deleteValue_p.toString() + ';\n\n';
+            source += 'GM.deleteValue = ' + deleteValue_p.toString() + ';\n\n';
         }
 
         if (grants.includes('GM_setValue')) {
@@ -51,7 +58,7 @@
         }
 
         if (grants.includes('GM.setValue')) {
-            source += 'GM.setValue = ' + GM_setValue_p.toString() + ';\n\n';
+            source += 'GM.setValue = ' + setValue_p.toString() + ';\n\n';
         }
 
         if (grants.includes('GM_getValue')) {
@@ -59,7 +66,7 @@
         }
 
         if (grants.includes('GM.getValue')) {
-            source += 'GM.getValue = ' + GM_getValue_p.toString() + ';\n\n';
+            source += 'GM.getValue = ' + getValue_p.toString() + ';\n\n';
         }
 
         if (grants.includes('GM.registerMenuCommand')) {
@@ -70,6 +77,14 @@
             source += GM_registerMenuCommand.toString() + ';\n\n';
         }
 
+        if (grants.includes('GM.unregisterMenuCommand')) {
+            source += 'GM.unregisterMenuCommand = ' + GM_unregisterMenuCommand.toString() + ';\n\n';
+        }
+
+        if (grants.includes('GM_unregisterMenuCommand')) {
+            source += GM_unregisterMenuCommand.toString() + ';\n\n';
+        }
+
         if (grants.includes('GM_addStyle')) {
             source += GM_addStyle.toString() + ';\n\n';
         }
@@ -78,13 +93,11 @@
             source += 'GM.addStyle = ' + GM_addStyle.toString() + ';\n\n';
         }
 
-        if (grants.includes('unsafeWindow')) {
-            // source += 'let unsafeWindow = (function() {var dummyElem = document.createElement("div");dummyElem.setAttribute("id", "windowDiv"); dummyElem.setAttribute("onclick", "return window;"); let win = dummyElem.onclick();console.log("__INITIAL_SSR_STATE__--------",win);return win;})()' + ';\n\n';
-            // source += 'let unsafeWindow = (function(){return document.defaultView;})();\n\n';
-        }
-
         if (grants.includes('GM_openInTab')) {
             source += GM_openInTab.toString() + ';\n\n';
+        }
+        if (grants.includes('GM.openInTab')) {
+            source += 'GM.openInTab = ' + GM_openInTab.toString() + ';\n\n';
         }
 
         if (grants.includes('GM_getResourceURL')) {
@@ -95,12 +108,12 @@
         }
 
         if (grants.includes('GM.getResourceURL') || grants.includes('GM.getResourceUrl')) {
-            source += 'GM.getResourceURL = ' + GM_getResourceURL_p.toString() + '; \n\n';
-            source += 'GM.getResourceUrl = ' + GM_getResourceURL_p.toString() + '; \n\n';
+            source += 'GM.getResourceURL = ' + getResourceURL_p.toString() + '; \n\n';
+            source += 'GM.getResourceUrl = ' + getResourceURL_p.toString() + '; \n\n';
         }
 
         if (grants.includes('GM.getResourceText')) {
-            source += 'GM.getResourceText = ' + GM_getResourceText_p.toString() + '; \n\n';
+            source += 'GM.getResourceText = ' + getResourceText_p.toString() + '; \n\n';
         }
 
         if (grants.includes('GM_getResourceText')) {
@@ -115,8 +128,14 @@
             source += 'GM.xmlHttpRequest = ' + GM_xmlhttpRequest.toString() + ';\n\n';
         }
 
+        if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
+            source += GM_notification.toString() + ';\n\n';
+        }
+
         //add GM_log by default
         source += GM_log.toString() + ';\n\n';
+
+        // source += injectJavaScript.toString() + ';\n\ninjectJavaScript();\n';
 
         source += _fillStroge.toString() + ';\n\n';
 
@@ -124,20 +143,29 @@
 
         source += _fillAllResourceUrlStroge.toString() + ';\n\n';
         native.nslog("native-source" + source);
-
-        source += 'GM_info={version: _version, scriptHandler: "Stay"};\n\n';
-        source += 'GM_info.script={version: "' + userscript.version + '",description:"' + userscript.description + '",namespace:"' + userscript.namespace + '"};\n\n';
-        source += 'GM_info.script.resources= ' + JSON.stringify(userscript.resourceUrls ? userscript.resourceUrls:[])+ ';\n';
-        source += 'GM_info.script.includes= ' + JSON.stringify(userscript.includes ? userscript.includes:[]) + ';\n';
-        source += 'GM_info.script.excludes= ' + JSON.stringify(userscript.excludes ? userscript.excludes:[]) + ';\n';
-        source += 'GM_info.script.matches= ' + JSON.stringify(userscript.matches ? userscript.matches :[])+ ';\n';
-        source += 'GM.info = GM_info;\n\n'; 
         return source;
     }
 
-    function _fillStroge(){
-        return new Promise((resolve,reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid:_uuid }, (response) => {
+    function GM_info(userscript, version) {
+        let info = {
+            version: version,
+            scriptHandler: "Stay",
+            script: {
+                version: userscript.version,
+                description: userscript.description,
+                namespace: userscript.namespace,
+                resources: userscript.resourceUrls ? userscript.resourceUrls : [],
+                includes: userscript.includes ? userscript.includes : [],
+                excludes: userscript.excludes ? userscript.excludes : [],
+                matches: userscript.matches ? userscript.matches : []
+            }
+        };
+        return JSON.stringify(info);
+    }
+
+    function _fillStroge() {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid: _uuid }, (response) => {
                 resolve(response.body);
             });
         });
@@ -161,73 +189,85 @@
             });
         });
     }
-    
-    function GM_listValues(){
-        return __stroge;
-    }
-    
-    function GM_deleteValue(key){
+
+    function GM_deleteValue(key) {
         __stroge[key] = null;
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid:_uuid });
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid: _uuid });
     }
-    
-    function GM_setValue(key,value){
+
+    function GM_setValue(key, value) {
         __stroge[key] = value;
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid:_uuid });
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid });
     }
-    
-    function GM_getValue(key, defaultValue){
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid:_uuid });
+
+    function GM_getValue(key, defaultValue) {
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid });
         return __stroge[key] == null ? defaultValue : __stroge[key];
     }
-    
-    function GM_listValues_p(){
-        return new Promise((resolve,reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid:_uuid }, (response) => {
+
+    function deleteValue_p(key) {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid: _uuid }, (response) => {
                 resolve(response.body);
             });
         });
     }
-    
-    function GM_deleteValue_p(key){
-        return new Promise((resolve,reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid:_uuid }, (response) => {
+
+    function setValue_p(key, value) {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid }, (response) => {
                 resolve(response.body);
             });
         });
     }
-    
-    function GM_setValue_p(key,value){
-        return new Promise((resolve,reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid:_uuid }, (response) => {
+
+    function getValue_p(key, defaultValue) {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid }, (response) => {
                 resolve(response.body);
             });
         });
     }
-    
-    function GM_getValue_p(key,defaultValue){
-        return new Promise((resolve,reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid:_uuid }, (response) => {
-                resolve(response.body);
+
+    function GM_log(message) {
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_log", message: message, uuid: _uuid }, (response) => {
+                resolve(response);
             });
         });
     }
-    
-    function GM_log(message){
-        return new Promise((resolve,reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_log", message: message, uuid:_uuid }, (response) => {
-                resolve(response.body);
-            });
-        });
+
+    function GM_notification(params) {
+        // todo
+        
     }
-    
-    function GM_registerMenuCommand(caption, commandFunc, accessKey){
+
+    function GM_registerMenuCommand(caption, commandFunc, accessKey) {
+        const pid = Math.random().toString(36).substring(1, 9);
         let userInfo = {};
         userInfo["caption"] = caption;
         userInfo["commandFunc"] = commandFunc;
         userInfo["accessKey"] = accessKey;
-        userInfo["id"] = __RMC_CONTEXT.length;
+        userInfo["id"] = pid;
         __RMC_CONTEXT.push(userInfo);
+        return pid;
+    }
+
+    function GM_unregisterMenuCommand(menuId) {
+        if (!menuId || __RMC_CONTEXT.length <= 0) {
+            return;
+        }
+        let place = -1;
+        __RMC_CONTEXT.forEach((item, index) => {
+            if (item.id == menuId) {
+                place = index;
+                return false;
+            }
+            console.log("break-----")
+        });
+        if (place >= 0) {
+            __RMC_CONTEXT.splice(place, 1);
+        }
     }
 
     function GM_addStyle(css) {
@@ -242,26 +282,17 @@
             style.styleSheet.cssText = css;//针对IE
 
         }
-        head.appendChild(style);  
+        head.appendChild(style);
     }
 
-    function unsafeWindowInit() {
-        var div = document.createElement('div');
-        div.setAttribute('id', 'windowDiv');
-        div.setAttribute('onclick', 'return window;');
-        document.body.appendChild(div);
-        console.log("createGMApisWithUserScript-----------setTimeout-----unsafeWindow-----")
-        return div.onclick();
-    }
-    
     function GM_getResourceText(name) {
         let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
         // let resourceText;
         if (!resourceText || typeof resourceText === undefined) {
             // 通过name获取resource
             // resourceText = await GM_getResourceText_p(name);
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name], uuid: _uuid }, (response) => {
-                // console.log("GM_getResourceText send to background-----", response);
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name],  uuid: _uuid }, (response) => {
+                console.log("GM_getResourceText send to background-----", response);
                 __resourceTextStroge[name] = response.body;
                 resourceText = response.body;
             });
@@ -270,18 +301,18 @@
     }
 
 
-    function GM_getResourceText_p(name) {
+    function getResourceText_p(name) {
         return new Promise((resolve, reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, uuid: _uuid }, (response) => {
-                // console.log("GM_getResourceText_p-----", response);
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name], uuid: _uuid }, (response) => {
+                console.log("GM_getResourceText_p-----", response);
                 resolve(response.body);
             });
         });
     }
 
     function GM_getResourceURL(name) {
-        let resourceUrl = typeof __resourceUrlStroge !== undefined ? __resourceUrlStroge[name]:"";
-        if (!resourceUrl || typeof resourceUrl === undefined){
+        let resourceUrl = typeof __resourceUrlStroge !== undefined ? __resourceUrlStroge[name] : "";
+        if (!resourceUrl || typeof resourceUrl === undefined) {
             // 通过url获取resources
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceUrl", key: name, uuid: _uuid }, (response) => {
                 // console.log("GM_getResourceURL----GM_getResourceURL-----", response);
@@ -292,9 +323,10 @@
         return resourceUrl;
     }
 
-    function GM_getResourceURL_p(name) {
+    function getResourceURL_p(name) {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceUrl", key: name, uuid: _uuid }, (response) => {
+
                 // console.log("GM_getResourceURL_p-----",response);
                 resolve(response.body);
             });
@@ -306,10 +338,10 @@
             var onreadystatechange = response.onreadystatechange;
             var onerror = response.onerror;
             var onload = response.onload;
-            if (params.onreadystatechange && onreadystatechange){
+            if (params.onreadystatechange && onreadystatechange) {
                 params.onreadystatechange(onreadystatechange)
             }
-            
+
             if (params.onerror && onerror) {
                 params.onerror(onerror)
             }
@@ -317,8 +349,6 @@
                 params.onload(onload)
             }
         });
-
-        
     }
 
     /**
@@ -332,8 +362,8 @@
      * incognito: 新标签页在隐身模式或私有模式窗口打开
      * 若只有一个参数则新标签页不会聚焦，该函数返回一个对象，有close()、监听器onclosed和closed的标记
      */
+
     function GM_openInTab(url, options) {
-        // console.log("start GM_openInTab-----", url, options);
         // retrieve tabId to have a chance of closing this window lateron
         var tabId = null;
         var close = function () {
@@ -341,7 +371,7 @@
                 // re-schedule, cause tabId is null
                 window.setTimeout(close, 500);
             } else if (tabId > 0) {
-                browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, id: _uuid }, resp);
+                browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, uuid: _uuid }, resp);
                 tabId = undefined;
             } else {
                 console.log("env: attempt to close already closed tab!");
@@ -354,10 +384,509 @@
         if (url && url.search(/^\/\//) == 0) {
             url = location.protocol + url;
         }
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "openInTab", url: url, id: _uuid, uuid: _uuid, options: options }, resp);
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "openInTab", url: url, uuid: _uuid, options: options }, resp);
         return { close: close };
     }
 
+    function injectJavaScript(userscript, version) {
+        let gmFunVals = [];
+        let grants = userscript.grants;
+        let resourceUrls = userscript.resourceUrls||{};
+        let api = `${GM_listValues_Async}\n`;
+        api += `${GM_getAllResourceText}\n`;
+        api += 'let __listValuesStroge = await GM_listValues_Async();\n';
+        api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
+        api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
+        api += `console.log("__resourceTextStroge==",__resourceTextStroge);\n`;
+        api += 'let __RMC_CONTEXT = [];\n';
+        api += 'let GM_info =' + GM_info(userscript, version) + ';\n';
+        api += `${GM_log}\n`;
+        api += `${clear_GM_log}\nclear_GM_log();`;
+        
+        gmFunVals.push("info: GM_info");
+
+        grants.forEach(grant => {
+            if (grant === "unsafeWindow") {
+                api += `const unsafeWindow = window;\n`;
+            } 
+            else if (grant === "GM.listValues") {
+                gmFunVals.push("listValues: GM_listValues_Async");
+            } 
+            else if (grant === "GM_listValues"){
+                api += `function GM_listValues(){ return __listValuesStroge;}\n`;
+            }
+            else if (grant === "GM.deleteValue") {
+                api += `${GM_deleteValue_Async}\n`;
+                gmFunVals.push("deleteValue: GM_deleteValue_Async");
+            }
+            else if (grant === "GM_deleteValue"){
+                api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\n`;
+            }
+            else if (grant === "GM_addStyle") { //同步
+                api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\n`;
+            } 
+            else if (grant === "GM.addStyle") {
+                api += `${GM_addStyle_Async}\n`;
+                gmFunVals.push("addStyle: GM_addStyle_Async");
+            } 
+            else if ("GM.setValue" === grant){
+                api += `${GM_setValue_Async}\n`;
+                gmFunVals.push("setValue:  GM_setValue_Async");
+            }
+            else if ("GM_setValue" === grant) {
+                api += `${GM_setValueSync}\nconst GM_setValue = GM_setValueSync;\n`;
+            }
+            else if ("GM.getValue" === grant) {
+                api += `${GM_getValueAsync}\n`;
+                gmFunVals.push("getValue: GM_getValueAsync");
+            }
+            else if ("GM_getValue" === grant) {
+                api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\n`;
+            }
+            else if ("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant){
+                api += `${GM_registerMenuCommand}\n`;
+                gmFunVals.push("registerMenuCommand: GM_registerMenuCommand");
+            }
+            else if ("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) {
+                api += `${GM_unregisterMenuCommand}\n`;
+                gmFunVals.push("unregisterMenuCommand: GM_unregisterMenuCommand");
+            }
+            else if ("GM_getResourceURL" === grant){
+                api += `${GM_getResourceURLSync}\nconst GM_getResourceURL=GM_getResourceURLSync;\n`;
+            }
+            else if ("GM_getResourceUrl" === grant) {
+                api += `${GM_getResourceURLSync}\nconst GM_getResourceUrl=GM_getResourceURLSync;\n`;
+                gmFunVals.push("getResourceUrl: GM_getResourceUrl");
+            }
+            else if ("GM.getResourceURL" === grant){
+                api += `${GM_getResourceURL_Async}\n`;
+                gmFunVals.push("getResourceURL: GM_getResourceURL_Async");
+            }
+            else if ("GM.getResourceUrl" === grant) {
+                api += `${GM_getResourceURL_Async}\n`;
+                gmFunVals.push("getResourceUrl: GM_getResourceURL_Async");
+            }
+            else if ("GM.getResourceText" === grant) {
+                api += `${GM_getResourceText_Async}\n`;
+                gmFunVals.push("getResourceText: GM_getResourceText_Async");
+            }
+            else if ("GM_getResourceText" === grant) {
+                api += `${GM_getResourceTextSync}\nconst GM_getResourceText = GM_getResourceTextSync;\n`;
+            }
+            else if ("GM.openInTab" === grant) {
+                api += `${GM_openInTab_async}\n`;
+                api += `${GM_closeTab}\n`;
+                gmFunVals.push("openInTab: GM_openInTab_async");
+                gmFunVals.push("closeTab: GM_closeTab");
+            }
+            else if ("GM_openInTab" === grant) {
+                api += `${GM_openInTab}\n;`;
+            }
+            else if ("GM.closeTab" === grant || "GM_closeTab" === grant) {
+                api += `${GM_closeTab}\n`;
+                gmFunVals.push("closeTab: GM_closeTab");
+            }
+            else if ("GM.notification" === grant || "GM_notification" === grant) {
+                api += `${GM_notification}\n`;
+                gmFunVals.push("notification: GM_notification");
+            }
+            else if (grant === "GM_xmlhttpRequest" || grant === "GM.xmlHttpRequest") {
+                api += `${xhr}\n`;
+                if (grant === "GM_xmlhttpRequest") {
+                    api += "\nconst GM_xmlhttpRequest = xhr;\n";
+                } else if (grant === "GM.xmlHttpRequest") {
+                    gmFunVals.push("xmlHttpRequest: xhr");
+                }
+            }
+        })
+
+        function GM_info(userscript, version) {
+            let info = {
+                version: version,
+                scriptHandler: "Stay",
+                script: {
+                    version: userscript.version,
+                    description: userscript.description,
+                    namespace: userscript.namespace,
+                    resources: userscript.resourceUrls ? userscript.resourceUrls : [],
+                    includes: userscript.includes ? userscript.includes : [],
+                    excludes: userscript.excludes ? userscript.excludes : [],
+                    matches: userscript.matches ? userscript.matches : []
+                }
+            };
+            return JSON.stringify(info);
+        }
+
+        function GM_listValues_Async() {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_LIST_VALUES") return;
+                    resolve(e.data.response.body);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_LIST_VALUES" });
+            });
+        }
+        
+
+        function GM_setValueSync(key, value) {
+            __listValuesStroge[key] = value;
+            window.postMessage({ id: _uuid, name: "API_SET_VALUE_SYNC", key: key, value: value });
+        }
+
+        function GM_setValue_Async(key, value) {
+            __listValuesStroge[key] = value;
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_SET_VALUE") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_SET_VALUE", key: key, value: value });
+            });
+        }
+
+        function GM_getValueSync(key, defaultValue) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE_SYNC", key: key, defaultValue: defaultValue });
+            return __listValuesStroge[key] == null ? defaultValue : __listValuesStroge[key];
+        }
+
+        function GM_getValueAsync(key, defaultValue) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE", key: key, defaultValue: defaultValue });
+            });
+        }
+
+        function GM_deleteValue_Async(key) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_DELETE_VALUE") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                window.postMessage({ id: _uuid, pid: pid, name: "API_DELETE_VALUE", key: key });
+            });
+        }
+
+        function GM_deleteValue_sync(key) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_DELETE_VALUE") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+            window.postMessage({ id: _uuid, pid: pid, name: "API_DELETE_VALUE", key: key });
+            return key;
+        }
+
+        function GM_getResourceURLSync(name) {
+            let resourceUrl = typeof __resourceUrlStroge !== undefined ? __resourceUrlStroge[name] : "";
+            if (!resourceText || resourceText === "" || resourceText === undefined) {
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_URL_SYNC", key: name });
+            }
+            return resourceUrl;
+        }
+
+        function GM_getResourceURL_Async(name) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_URL") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_URL", key: name });
+            });
+        }
+
+        function GM_getResourceText_Async(name) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_TEXT") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: __resourceUrlStroge[name] });
+            });
+        }
+
+        function GM_getResourceTextSync(name) {
+            let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
+            if (!resourceText || resourceText === "" || resourceText === undefined) {
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT_SYNC", key: name, url: __resourceUrlStroge[name] });
+            }
+            return resourceText;
+        }
+
+        function GM_getAllResourceText() {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_ALL_REXOURCE_TEXT") return;
+                    console.log("GM_getAllResourceText----", e);
+                    resolve(e.data.response.body);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_ALL_REXOURCE_TEXT" });
+            });
+        }
+
+        function GM_addStyleSync(css) {
+            window.postMessage({ id: _uuid, name: "API_ADD_STYLE_SYNC", css: css });
+            return css;
+        }
+
+        function GM_addStyle_Async(css) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_ADD_STYLE") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_ADD_STYLE", css: css });
+            });
+        }
+
+        function clear_GM_log() {
+            window.postMessage({ id: _uuid, name: "API_CLEAR_LOG" });
+        }
+
+        function GM_log(message) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_LOG") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                window.postMessage({ id: _uuid, pid: pid, name: "API_LOG", message: message });
+            });
+        }
+
+        function GM_registerMenuCommand(caption, commandFunc, accessKey) {
+            let userInfo = {};
+            const pid = Math.random().toString(36).substring(1, 9);
+            userInfo["caption"] = caption;
+            userInfo["commandFunc"] = commandFunc;
+            userInfo["accessKey"] = accessKey;
+            userInfo["id"] = pid;
+            __RMC_CONTEXT.push(userInfo);
+            window.postMessage({ id: _uuid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
+            window.addEventListener('message', (e) => {
+                if (!e || !e.data || !e.data.name) return;
+                let uuid = e.data.id;
+                const name = e.data.name;
+                if ("execRegisterMenuCommand" === name){
+                    let menuId = e.data.menuId;
+                    let place = -1;
+                    if (__RMC_CONTEXT.length > 0) {
+                        __RMC_CONTEXT.forEach((item, index) => {
+                            if (item.id == menuId) {
+                                place = index;
+                                return false;
+                            }
+                        });
+                        if (place >= 0) {
+                            __RMC_CONTEXT[place]["commandFunc"]();
+                        }
+                    }
+                }
+            
+            });
+            return pid;
+        }
+
+        function GM_unregisterMenuCommand(menuId) {
+            if (!menuId || __RMC_CONTEXT.length<=0){
+                return;
+            }
+            let place = -1;
+            __RMC_CONTEXT.forEach((item, index)=>{
+                if (item.id == menuId){
+                    place = index;
+                    return false;
+                }
+            });
+            if (place>=0){
+                __RMC_CONTEXT.splice(place, 1);
+                window.postMessage({ id: _uuid, name: "UNREGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
+            }
+        }
+
+        function browserAddListener() {
+            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER"});
+        }
+
+        function GM_closeTab(tabId) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_CLOSE_TAB") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_CLOSE_TAB", tabId: tabId });
+            });
+        }
+
+        function GM_openInTab(url, options) {
+            const pid = Math.random().toString(36).substring(1, 9);
+            let tabId = null;
+            var close = function () {
+                if (tabId === null) {
+                    // re-schedule, cause tabId is null
+                    window.setTimeout(close, 500);
+                } else if (tabId > 0) {
+                    window.postMessage({ id: _uuid, pid: pid, name: "API_CLOSE_TAB", tabId: tabId });
+                    // browser.runtime.sendMessage({ from: "gm-apis", operate: "closeTab", tabId: tabId, uuid: _uuid }, resp);
+                    tabId = undefined;
+                } else {
+                    console.log("env: attempt to close already closed tab!");
+                }
+            };
+            if (url && url.search(/^\/\//) == 0) {
+                url = location.protocol + url;
+            }
+            window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options ? JSON.stringify(options):"{}" });
+            const callback = e => {
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
+                tabId = e.data.tabId;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            return { close: close};
+        } 
+
+        /**
+         * 打开标签页
+         * @param {string} url 
+         * @param {boolean} options 可以是 Boolean 类型，如果是 true，则当前 tab 不变；如果是 false，则当前 tab 变为新打开的 tab
+         * options对象有以下属性:
+         * active：新标签页获得焦点
+         * insert：新标签页在当前页面之后添加
+         * setParent：当新标签页关闭后，焦点给回当前页面
+         * incognito: 新标签页在隐身模式或私有模式窗口打开
+         * 若只有一个参数则新标签页不会聚焦，该函数返回一个对象，有close()、监听器onclosed和closed的标记
+         */
+        function GM_openInTab_async(url, options) {
+            // console.log("start GM_openInTab-----", url, options);
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
+                    let tabId = e.data.tabId;
+                    let resp = {
+                        tabId,
+                        close: function () {
+                            GM_closeTab(tabId)
+                        }
+                    }
+                    resolve(resp);
+                    window.removeEventListener("message", ()=>{});
+                };
+                window.addEventListener("message", callback);
+                // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
+                window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options ? JSON.stringify(options) : "{}" });
+            });
+
+        }
+
+        function xhr(details) {
+            // if details didn't include url, do nothing
+            if (!details.url) return;
+            // create unique id for the xhr
+            const xhrId = Math.random().toString(36).substring(1, 9);
+            // strip out functions from details, kind of hacky
+            const detailsParsed = JSON.parse(JSON.stringify(details));
+            // check which functions are included in the original details object
+            // add a bool to indicate if event listeners should be attached
+            if (details.onabort) detailsParsed.onabort = true;
+            if (details.onerror) detailsParsed.onerror = true;
+            if (details.onload) detailsParsed.onload = true;
+            if (details.onloadend) detailsParsed.onloadend = true;
+            if (details.onloadstart) detailsParsed.onloadstart = true;
+            if (details.onprogress) detailsParsed.onprogress = true;
+            if (details.onreadystatechange) detailsParsed.onreadystatechange = true;
+            if (details.ontimeout) detailsParsed.ontimeout = true;
+            // abort function gets returned when this function is called
+            const abort = () => {
+                window.postMessage({ id: _uuid, name: "API_XHR_ABORT_INJ_FROM_CREATE", xhrId: xhrId });
+            };
+            const callback = e => {
+                const name = e.data.name;
+                const response = e.data.response;
+                // ensure callback is responding to the proper message
+                if (
+                    e.data.id !== _uuid
+                    || e.data.xhrId !== xhrId
+                    || !name
+                    || !name.startsWith("RESP_API_XHR_TO_CREATE")
+                ) return;
+                console.log("XHR==response=", response);
+                if (name === "RESP_API_XHR_TO_CREATE") {
+                    console.log("RESP_API_XHR_TO_CREATE----");
+                    // ignore
+                } else if (name.includes("ABORT") && details.onabort) {
+                    details.onabort(response);
+                } else if (name.includes("ERROR") && details.onerror) {
+                    details.onerror(response);
+                } else if (name === "RESP_API_XHR_TO_CREATE_LOAD" && details.onload) {
+                    details.onload(response);
+                } else if (name.includes("LOADEND") && details.onloadend) {
+                    details.onloadend(response);
+                    // remove event listener when xhr is complete
+                    window.removeEventListener("message", callback);
+                } else if (name.includes("LOADSTART") && details.onloadstart) {
+                    details.onloadtstart(response);
+                } else if (name.includes("PROGRESS") && details.onprogress) {
+                    details.onprogress(response);
+                } else if (name.includes("READYSTATECHANGE") && details.onreadystatechange) {
+                    details.onreadystatechange(response);
+                } else if (name.includes("TIMEOUT") && details.ontimeout) {
+                    details.ontimeout(response);
+                }
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ id: _uuid, name: "API_XHR_FROM_CREATE", details: JSON.stringify(detailsParsed), xhrId: xhrId });
+            return { abort: abort };
+        }
+
+        api += `${browserAddListener}\nbrowserAddListener();`;
+
+        const GM = `const GM = {${gmFunVals.join(",")}};`;
+        return `\n${api}\n${GM}\n`;
+    }
+    
     window.createGMApisWithUserScript = createGMApisWithUserScript;
 
 })();

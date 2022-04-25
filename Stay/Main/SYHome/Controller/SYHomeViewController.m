@@ -16,8 +16,20 @@
 #import "Tampermonkey.h"
 #import "SYVersionUtils.h"
 #import "UserscriptUpdateManager.h"
+#import "SYAddScriptController.h"
+#import "SYWebScriptViewController.h"
 
-@interface SYHomeViewController ()<UITableViewDelegate, UITableViewDataSource,UISearchResultsUpdating,UISearchBarDelegate,UISearchControllerDelegate>
+#import <UniformTypeIdentifiers/UTCoreTypes.h>
+
+@interface SYHomeViewController ()<
+ UITableViewDelegate,
+ UITableViewDataSource,
+ UISearchResultsUpdating,
+ UISearchBarDelegate,
+ UISearchControllerDelegate,
+ UIPopoverPresentationControllerDelegate,
+ UIDocumentPickerDelegate
+>
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -29,6 +41,9 @@
 // 搜索结果数组
 @property (nonatomic, strong) NSMutableArray *results;
 
+@property (strong, nonatomic) SYAddScriptController *itemPopVC;
+
+@property (nonatomic, strong) UIView *loadingView;
 
 
 @end
@@ -37,6 +52,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.loadingView.center = self.view.center;
+    self.loadingView.hidden = YES;
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -59,9 +76,101 @@
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
+    
+    [self.view addSubview:self.loadingView];
+    
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
+}
+
+- (void)tableDidSelected:(NSNotification *)notification {
+    NSIndexPath *indexpath = (NSIndexPath *)notification.object;
+    if(indexpath.row == 0) {
+        SYEditViewController *cer = [[SYEditViewController alloc] init];
+        [self.navigationController pushViewController:cer animated:true];
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
+    } else if(indexpath.row == 1) {
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"从链接新增脚本" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UITextField *titleTextField = alert.textFields.firstObject;
+            NSString *url = titleTextField.text;
+            self.loadingView.hidden = false;
+            [self.view bringSubviewToFront:self.loadingView];
+            if(url != nil && url.length > 0) {
+                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                     [set addCharactersInString:@"#"];
+                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+                                        
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        if(data != nil ) {
+                            NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                            SYEditViewController *cer = [[SYEditViewController alloc] init];
+                            cer.content = str;
+                            [self.navigationController pushViewController:cer animated:true];
+                        }else {
+                            NSString *content = @"下载脚本失败";
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                                    NSLog(@"点击了确认按钮");
+                                }];
+                            [alert addAction:conform];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        }
+                        self.loadingView.hidden = true;
+                    });
+                });
+            }
+        }];
+        [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+              textField.placeholder = @"请输入链接";
+          }];
+        UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+
+        [alert addAction:cancle];
+        [alert addAction:conform];
+        [self presentViewController:alert animated:YES completion:nil];
+    } else if (indexpath.row == 2) {
+        SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
+        [self.navigationController pushViewController:cer animated:true];
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
+    }
+    else if (indexpath.row == 3) {
+        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
+        self.itemPopVC = nil;
+        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeItem] asCopy:YES];
+        documentPicker.delegate = self;
+        [self presentViewController:documentPicker animated:YES completion:nil];
+    }
+}
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls{
+    if (urls.count > 0){
+        NSURL *url = urls[0];
+        SYEditViewController *cer = [[SYEditViewController alloc] init];
+        NSError *error = nil;
+        cer.content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+        if (!error){
+            [self.navigationController pushViewController:cer animated:true];
+        }
+        else{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@""
+                                                                           message:NSLocalizedString(@"unsupportedFileFormat", @"")
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:confirm];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
 }
 
 //检测评分
@@ -210,6 +319,14 @@
     }
     [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
     [groupUserDefaults synchronize];
+}
+#pragma mark -popover
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
+    return UIModalPresentationNone;
+}
+
+- (BOOL)popoverPresentationControllerShouldDismissPopover:(UIPopoverPresentationController *)popoverPresentationController{
+    return YES;   //点击蒙版popover不消失， 默认yes
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -436,8 +553,15 @@
 }
 
 - (void)addBtnClick:(id)sender {
-    SYEditViewController *cer = [[SYEditViewController alloc] init];
-    [self.navigationController pushViewController:cer animated:true];
+//    SYEditViewController *cer = [[SYEditViewController alloc] init];
+//    [self.navigationController pushViewController:cer animated:true];
+    self.itemPopVC = [[SYAddScriptController alloc] init];
+    self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
+    self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
+    self.itemPopVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  //rect参数是以view的左上角为坐标原点（0，0）
+    self.itemPopVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向,如果是baritem不设置方向，会默认up，up的效果也是最理想的
+    self.itemPopVC.popoverPresentationController.delegate = self;
+    [self presentViewController:self.itemPopVC animated:YES completion:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -448,6 +572,7 @@
         self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
     });
+    
 }
 
 
@@ -498,6 +623,26 @@
         _rightIcon = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
+}
+
+- (UIView *)loadingView {
+    if(_loadingView == nil) {
+        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
+        [_loadingView setBackgroundColor:RGB(230, 230, 230)];
+        _loadingView.layer.cornerRadius = 10;
+        _loadingView.layer.masksToBounds = 10;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        titleLabel.textColor = [UIColor blackColor];
+        [titleLabel sizeToFit];
+
+        titleLabel.top = 30;
+        titleLabel.centerX = (kScreenWidth - 100) / 2;
+        [_loadingView addSubview:titleLabel];
+    }
+    return _loadingView;
 }
 
 @end
