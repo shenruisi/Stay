@@ -83,7 +83,7 @@
                 UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:self.content];
                 
                 if( userScript.errorMessage != nil && userScript.errorMessage.length > 0 && [userScript.errorMessage isEqualToString:@"no meta"] ) {
-                    userScript.errorMessage = @"脚本格式错误";
+                    userScript.errorMessage = NSLocalizedString(@"settings.scriptError","script error");
                 }
                 
                 if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {

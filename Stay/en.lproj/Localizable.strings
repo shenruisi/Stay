@@ -39,6 +39,7 @@ settings.addScriptFromUrl="add from url";
 settings.addScriptFromWeb="add from GreasyFork";
 settings.downloadScript = "download script";
 settings.close = "close";
+settings.scriptError = "script error";
 
 
 

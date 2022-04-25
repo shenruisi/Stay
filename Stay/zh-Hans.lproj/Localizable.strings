@@ -38,5 +38,6 @@ settings.addScriptFromUrl="从链接添加";
 settings.addScriptFromWeb="从GreasyFork添加";
 settings.downloadScript = "正在下载脚本";
 settings.close = "关闭";
+settings.scriptError = "脚本格式错误";
 
 
