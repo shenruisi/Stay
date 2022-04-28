@@ -11,24 +11,71 @@
 
 <p align="right"><a href="README-EN.md">中文</a> | EN</p>
 
-Stay is an open source iOS Safari extension. You can use Stay² to manage your local user script. Now Stay support part of Greasemonkey script.  
+Stay is an open source iOS Safari extension (Compatible userscript).
 
-## Features
-- Embed user scripts.
-- Local script manage.
+Learn more about tasks and development progress, please checkout [Project of Stay 2](https://github.com/shenruisi/Stay/projects/1).
 
+## Usage
+- Prepare
+  - Go to Settings > Safari > Extensions
+  - Trun on Stay
+  - Allow Stay for All Websites
+- Import js script from (Write script | Link | GreasyFork | Local file)
+- Activate script at `Library` tab
 
-## Submit user script to embed library
-If you are a developer or a senior user of browser extension scripts, you are welcome to apply and submit to the embed script library through [Embed Script Request](https://github.com/shenruisi/Stay/issues/new?assignees=shenruisi&labels=embed+script+request&template=Embed-Script-Request.yml&title=%5BEmbed+Script+Request%5D%3A+), so that your script can be seen by more users in the new version of Stay.
+## Find a script
+Welcome to create a [Embed Script Request](https://github.com/shenruisi/Stay/issues/new?assignees=shenruisi&labels=embed+script+request&template=Embed-Script-Request.yml&title=%5BEmbed+Script+Request%5D%3A+) to promote a great script.
 
+- [Stay offical userscript](https://github.com/shenruisi/Stay-Offical-Userscript)
+- [Third party tg channel - Act Channel D](https://t.me/ACTCD)
 
-## Stay API
-[API Wiki](https://github.com/shenruisi/Stay/wiki/Stay-API-Reference)
+## Contact us
+Twitter:[@shenruisi](https://twitter.com/shenruisi)
 
-## Userscript repository
-[Stay offical userscript](https://github.com/shenruisi/Stay-Offical-Userscript)
+Please follow the public account `效率先生`, and reply `微信群` to join the wechat group.
 
-[Third party tg channel - Act Channel D](https://t.me/ACTCD)
+<img src="./Material/qrcode.jpg" width="256"/>
+
+## Metadata
+Metadata supported by Stay.
+- [@name](https://www.tampermonkey.net/documentation.php#_name)([Localized](https://wiki.greasespot.net/Metadata_Block#@name))
+- [@namespace](https://www.tampermonkey.net/documentation.php#_namespace)
+- [@version](https://www.tampermonkey.net/documentation.php#_version)
+- [@author](https://www.tampermonkey.net/documentation.php#_author)
+- [@description](https://www.tampermonkey.net/documentation.php#_description)([Localized](https://wiki.greasespot.net/Metadata_Block#@description))
+- [@homepage](https://www.tampermonkey.net/documentation.php#_homepage)
+- [@icon](https://www.tampermonkey.net/documentation.php#_icon)(@icon only)
+- [@updateURL](https://www.tampermonkey.net/documentation.php#_updateURL)
+- [@downloadURL](https://www.tampermonkey.net/documentation.php#_downloadURL)
+- [@supportURL](https://www.tampermonkey.net/documentation.php#_supportURL)
+- [@include](https://www.tampermonkey.net/documentation.php#_include)
+- [@match](https://www.tampermonkey.net/documentation.php#_match)
+- [@exclude](https://www.tampermonkey.net/documentation.php#_exclude)
+- [@require](https://www.tampermonkey.net/documentation.php#_require)
+- [@resource](https://www.tampermonkey.net/documentation.php#_resource)(Download resource at script creating/updating)
+- [@run-at](https://www.tampermonkey.net/documentation.php#_run_at)(context-menu not supported)
+- [@grant](https://www.tampermonkey.net/documentation.php#_grant)
+- [@noframes](https://www.tampermonkey.net/documentation.php#_noframes)
+- @notes - Notes of modification history
+
+## API
+API supported by Stay.
+- [unsafeWindow](https://www.tampermonkey.net/documentation.php#unsafeWindow)
+- [GM_addStyle](https://www.tampermonkey.net/documentation.php#GM_addStyle)
+- [GM_setValue](https://www.tampermonkey.net/documentation.php#GM_setValue) / [GM.setValue](https://wiki.greasespot.net/GM.setValue)
+- [GM_getValue](https://www.tampermonkey.net/documentation.php#GM_getValue) / [GM.getValue](https://wiki.greasespot.net/GM.getValue)
+- [GM_deleteValue](https://www.tampermonkey.net/documentation.php#GM_deleteValue) / [GM.deleteValue](https://wiki.greasespot.net/GM.deleteValue)
+- [GM_listValues](https://www.tampermonkey.net/documentation.php#GM_listValues) / [GM.listValues](https://wiki.greasespot.net/GM.listValues)
+- [GM_log](https://www.tampermonkey.net/documentation.php#GM_log)(Show up at popup view)
+- [GM_registerMenuCommand](https://www.tampermonkey.net/documentation.php#GM_registerMenuCommand) / [GM.registerMenuCommand](https://wiki.greasespot.net/GM.registerMenuCommand)
+- [GM_unregisterMenuCommand / GM.unregisterMenuCommand](https://www.tampermonkey.net/documentation.php#GM_unregisterMenuCommand)
+- [GM_getResourceURL](https://www.tampermonkey.net/documentation.php#GM_getResourceURL) / [GM.getResourceUrl](https://wiki.greasespot.net/GM.getResourceUrl)
+- [GM_getResourceText / GM.getResourceText](https://www.tampermonkey.net/documentation.php#GM_getResourceText)
+- [GM_xmlhttpRequest](https://www.tampermonkey.net/documentation.php#GM_xmlhttpRequest) / [GM.xmlHttpRequest](https://wiki.greasespot.net/GM.xmlHttpRequest)
+- [GM_openInTab](https://www.tampermonkey.net/documentation.php#GM_openInTab) / [GM.openInTab](https://wiki.greasespot.net/GM.openInTab)
+- [GM_info](https://www.tampermonkey.net/documentation.php#GM_info) / [GM.info](https://wiki.greasespot.net/GM.info)(scriptHandler is stay)
+- GM_notification / GM.notification(Grant allowed but unimplement)
+- window.onurlchange(Grant allowed but unimplement)
 
 ## LICENSE
 [MPL](./LICENSE)
@@ -43,9 +90,4 @@ If you are a developer or a senior user of browser extension scripts, you are we
 - [crxviewer](https://robwu.nl/crxviewer/)
 - [Browser support for JavaScript APIs](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Browser_support_for_JavaScript_APIs)
 
-## Contact us
-Twitter:[@shenruisi](https://twitter.com/shenruisi)
 
-Please follow the public account `效率先生`, and reply `微信群` to join the wechat group.
-
-<img src="./Material/qrcode.jpg" width="256"/>
