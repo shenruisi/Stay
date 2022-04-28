@@ -44,22 +44,18 @@ const $_matchesCheck = (userLibraryScript,url) => {
         }
     });
     if (matched){
-        if (userLibraryScript.includes.length > 0){
-            userLibraryScript.includes.forEach((include)=>{
-//                if (matchPatternInBlock.doMatch(include)) {
-                    matched = matchRule(url.href, include);
-//                }
-            });
+        for (var i = 0; i < userLibraryScript.includes.length; i++){
+            matched = matchRule(url.href, userLibraryScript.includes[i]);
+            console.log("matchRule",url.href,userLibraryScript.includes[i],matched);
+            if (matched) break;
         }
         
-        userLibraryScript.excludes.forEach((exclude)=>{
-            console.log("exclude---",exclude);
-//            if (matchPatternInBlock.doMatch(exclude)) {
-                matched = !matchRule(url.href, exclude);
-//            }
-        });
+        for (var i = 0; i < userLibraryScript.excludes.length; i++){
+            matched = !matchRule(url.href, userLibraryScript.excludes[i]);
+            if (!matched) break;
+        }
+        
     }
-    
     return matched;
 }
 
