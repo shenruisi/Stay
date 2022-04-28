@@ -29,13 +29,6 @@ Welcome to create a [Embed Script Request](https://github.com/shenruisi/Stay/iss
 - [Stay offical userscript](https://github.com/shenruisi/Stay-Offical-Userscript)
 - [Third party tg channel - Act Channel D](https://t.me/ACTCD)
 
-## Contact us
-Twitter:[@shenruisi](https://twitter.com/shenruisi)
-
-Please follow the public account `效率先生`, and reply `微信群` to join the wechat group.
-
-<img src="./Material/qrcode.jpg" width="256"/>
-
 ## Metadata
 Metadata supported by Stay.
 - [@name](https://www.tampermonkey.net/documentation.php#_name)([Localized](https://wiki.greasespot.net/Metadata_Block#@name))
@@ -76,6 +69,14 @@ API supported by Stay.
 - [GM_info](https://www.tampermonkey.net/documentation.php#GM_info) / [GM.info](https://wiki.greasespot.net/GM.info)(scriptHandler is stay)
 - GM_notification / GM.notification(Grant allowed but unimplement)
 - window.onurlchange(Grant allowed but unimplement)
+
+
+## Contact us
+Twitter:[@shenruisi](https://twitter.com/shenruisi)
+
+Please follow the public account `效率先生`, and reply `微信群` to join the wechat group.
+
+<img src="./Material/qrcode.jpg" width="256"/>
 
 ## LICENSE
 [MPL](./LICENSE)
