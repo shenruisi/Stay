@@ -4,9 +4,9 @@
 
 [![Views](https://views.whatilearened.today/views/github/shenruisi/Stay.svg)]()
 [![iOS System](https://img.shields.io/badge/iOS-15%2B-brightgreen)]()
-[![TestFlight](https://img.shields.io/badge/TestFlight-2.0.2-4391E1)](https://app.airport.community/app/recICnNcHuUDSCL2b)
+[![TestFlight](https://img.shields.io/badge/TestFlight-2.0.6-4391E1)](https://testflight.apple.com/join/v5llhUv5)
 [![HelloGithub](https://img.shields.io/badge/HelloGithub-vol.70-white)](https://hellogithub.com/periodical/volume/70/)
-[![Dev](https://img.shields.io/badge/Develop%20Branch-2.0.5-blueviolet)]()
+[![Dev](https://img.shields.io/badge/Develop%20Branch-2.1.x-blueviolet)]()
 [![Newsletter](https://img.shields.io/badge/Newsletter-Subscribe-important)](https://www.getrevue.co/profile/shenruisi)
 
 
