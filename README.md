@@ -66,7 +66,7 @@ Stay支持的api。
 - [GM_getValue](https://www.tampermonkey.net/documentation.php#GM_getValue) / [GM.getValue](https://wiki.greasespot.net/GM.getValue)
 - [GM_deleteValue](https://www.tampermonkey.net/documentation.php#GM_deleteValue) / [GM.deleteValue](https://wiki.greasespot.net/GM.deleteValue)
 - [GM_listValues](https://www.tampermonkey.net/documentation.php#GM_listValues) / [GM.listValues](https://wiki.greasespot.net/GM.listValues)
-- [GM_log](在Stay的popup面板展示)
+- [GM_log](https://www.tampermonkey.net/documentation.php#GM_log)(在Stay的popup面板展示)
 - [GM_registerMenuCommand](https://www.tampermonkey.net/documentation.php#GM_registerMenuCommand) / [GM.registerMenuCommand](https://wiki.greasespot.net/GM.registerMenuCommand)
 - [GM_unregisterMenuCommand / GM.unregisterMenuCommand](https://www.tampermonkey.net/documentation.php#GM_unregisterMenuCommand)
 - [GM_getResourceURL](https://www.tampermonkey.net/documentation.php#GM_getResourceURL) / [GM.getResourceUrl](https://wiki.greasespot.net/GM.getResourceUrl)
