@@ -29,13 +29,6 @@ Stay是一个开源的本地iOS Safari扩展脚本管理器（兼容userscript�
 - [Stay官方脚本](https://github.com/shenruisi/Stay-Offical-Userscript)
 - [第三方tg频道 - Act Channel D](https://t.me/ACTCD)
 
-## 用户交流
-Twitter:[@shenruisi](https://twitter.com/shenruisi)
-
-或者关注公众号`效率先生`，并回复`微信群` 进群沟通。
-
-<img src="./Material/qrcode.jpg" width="256"/>
-
 ## Metadata
 Stay支持的metadata。
 - [@name](https://www.tampermonkey.net/documentation.php#_name)([支持多语言](https://wiki.greasespot.net/Metadata_Block#@name))
@@ -76,6 +69,13 @@ Stay支持的api。
 - [GM_info](https://www.tampermonkey.net/documentation.php#GM_info) / [GM.info](https://wiki.greasespot.net/GM.info)(scriptHandler值为stay)
 - GM_notification / GM.notification(允许grant但未实现)
 - window.onurlchange(允许grant但未实现)
+
+## 用户交流
+Twitter:[@shenruisi](https://twitter.com/shenruisi)
+
+或者关注公众号`效率先生`，并回复`微信群` 进群沟通。
+
+<img src="./Material/qrcode.jpg" width="256"/>
 
 ## 许可证
 [MPL](./LICENSE)
