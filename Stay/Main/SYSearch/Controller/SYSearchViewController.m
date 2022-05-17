@@ -24,6 +24,8 @@
 
 @property (nonatomic, strong) UIView *loadingView;
 
+@property (nonatomic, strong) UIActivityIndicatorView  *indicatorView;
+
 
 
 @end
@@ -34,16 +36,27 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = RGB(240, 240, 245);
-    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-     [set addCharactersInString:@"#"];
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[@"https://fastclip.app/stay/browser.json" stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
-    if (data.length > 0) {
-        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-        self.datas = dic[@"categories"];
-    }
-    
-    [self.tableView reloadData];
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[@"https://fastclip.app/stay/browser.json" stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+
+        if (data.length > 0) {
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            self.datas = dic[@"categories"];
+        }
+
+        dispatch_async(dispatch_get_main_queue(),^{
+            [self.tableView reloadData];
+            [self.indicatorView stopAnimating];
+        });
+    });
+
+    [self.view addSubview:self.indicatorView];
+    [self.view bringSubviewToFront:self.indicatorView];
+    [self.indicatorView startAnimating];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
 }
@@ -79,6 +92,8 @@
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [header.textLabel setTextColor:[UIColor blackColor]];
+
+    header.backgroundColor = [UIColor clearColor];
     
 }
 
@@ -162,6 +177,15 @@
     return _datas;
 }
 
+- (UIActivityIndicatorView *)indicatorView {
+    if (_indicatorView == nil) {
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _indicatorView.color = [UIColor blackColor];
+        _indicatorView.frame = CGRectMake(200, 200, 50, 50);
+        _indicatorView.backgroundColor = [UIColor blackColor];
+    }
+    return _indicatorView;
+}
 /*
 #pragma mark - Navigation
 
