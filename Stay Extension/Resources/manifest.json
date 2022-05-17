@@ -21,10 +21,16 @@
 
     "content_scripts": [
         {
-            "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
+            "js": [ "convert2RegExp.jrs", "MatchPattern.js","bootstrap.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"
+        },
+        {
+            "js": [ "parse-meta-line.js","parse-user-script.js","checkUserscript.js"],
+            "matches": [ "*://*/*.js" ],
+            "all_frames": false,
+            "run_at": "document_end"
         }
     ],
 

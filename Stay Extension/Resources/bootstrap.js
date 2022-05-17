@@ -46,7 +46,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
     if (matched){
         for (var i = 0; i < userLibraryScript.includes.length; i++){
             matched = matchRule(url.href, userLibraryScript.includes[i]);
-            console.log("matchRule",url.href,userLibraryScript.includes[i],matched);
+            // console.log("matchRule",url.href,userLibraryScript.includes[i],matched);
             if (matched) break;
         }
         
