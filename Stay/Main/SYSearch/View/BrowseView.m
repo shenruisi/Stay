@@ -36,7 +36,7 @@
     self.descLabel.text = dic[@"description"];
     self.authorLabel.top = self.titleLabel.bottom + 5;
     self.descLabel.top = self.authorLabel.bottom + 5;
-    self.addBtn.top = self.rightBtn.top = 5;
+    self.addBtn.top = self.rightBtn.top = 8;
     self.addBtn.right = self.rightBtn.right = 220;
     NSString *uuidName = [NSString stringWithFormat:@"%@%@",dic[@"name"],dic[@"namespace"]];
     NSString *uuid = [self md5HexDigest:uuidName];

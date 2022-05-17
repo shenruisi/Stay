@@ -405,7 +405,7 @@
                 return [UIColor whiteColor];
             }
             else {
-                return [UIColor blackColor];
+                return RGB(29, 29, 29);
             }
         }];
     

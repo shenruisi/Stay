@@ -71,6 +71,10 @@
     return 30;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return self.datas.count;
+}
+
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
@@ -88,7 +92,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+//        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
