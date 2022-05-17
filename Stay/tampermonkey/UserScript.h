@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *updateUrl;
 @property (nonatomic, copy) NSString *downloadUrl;
 
-@property (nonatomic, copy) NSDate *updateTime;
+@property (nonatomic, copy) NSString *updateTime;
 @property (nonatomic, assign) BOOL active;
 @property (nonatomic, assign) BOOL updateSwitch;
 @property (nonatomic, copy) NSArray<NSString *> *requireUrls;

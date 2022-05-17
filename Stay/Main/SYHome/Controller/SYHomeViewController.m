@@ -18,6 +18,11 @@
 #import "UserscriptUpdateManager.h"
 #import "SYAddScriptController.h"
 #import "SYWebScriptViewController.h"
+#import "ScriptMananger.h"
+#import "ScriptEntity.h"
+#import <objc/runtime.h>
+
+
 
 #import <UniformTypeIdentifiers/UTCoreTypes.h>
 
@@ -52,6 +57,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    [ScriptMananger shareManager];
     self.loadingView.center = self.view.center;
     self.loadingView.hidden = YES;
 //    [SYCodeMirrorView shareCodeView];
@@ -83,6 +89,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
 }
 
 - (void)tableDidSelected:(NSNotification *)notification {
@@ -212,95 +219,96 @@
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
-    NSArray *array = [[DataManager shareManager] findScript:1];
-    [self updateScriptWhen:array type:false];
-    NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
-    [self updateScriptWhen:searchArray type:true];
+    //自动更新代码保留先注释
+//    NSArray *array = [[DataManager shareManager] findScript:1];
+//    [self updateScriptWhen:array type:false];
+//    NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
+//    [self updateScriptWhen:searchArray type:true];
 }
 
-- (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
-    for(int i = 0; i < array.count; i++) {
-        UserScript *scrpit = array[i];
-        if(!isSearch && !scrpit.updateSwitch) {
-            continue;
-        }
-        
-        if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
-            [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
-                if(responseObject != nil) {
-                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
-                    if(userScript.version != NULL) {
-                        NSInteger status =  [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
-                        if(status == 1) {
-                            if(userScript.downloadUrl == nil || userScript.downloadUrl.length <= 0){
-                                if(userScript.content != nil && userScript.content.length > 0) {
-                                    userScript.uuid = scrpit.uuid;
-                                    userScript.active = scrpit.active;
-                                    if(isSearch) {
-                                        [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
-                                    } else {
-                                        [[DataManager shareManager] updateUserScript:userScript];
-                                        [self refreshScript];
-                                    }
-                                }
-                            } else {
-                                [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
-                                    if(responseObject != nil) {
-                                        UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
-                                        userScript.uuid = scrpit.uuid;
-                                        userScript.active = scrpit.active;
-                                        if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-                                            if(isSearch) {
-                                                [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
-                                            } else {
-                                                [[DataManager shareManager] updateUserScript:userScript];
-                                                [self refreshScript];
-                                            }
-                                        }
-                                    }
-                                } failBlock:^(NSError * _Nonnull error) {
-                                    
-                                }];
-                            }
-                        }
-                    }
-                    
-                }
-            } failBlock:^(NSError * _Nonnull error) {
-                        
-            }];
-        } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
-            [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
-                if(responseObject != nil) {
-                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
-                    if(userScript.version != NULL) {
-                        NSInteger status = [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
-                        if(status == 1) {
-                            userScript.uuid = scrpit.uuid;
-                            userScript.active = scrpit.active;
-                            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-                                if(isSearch) {
-                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                    NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
-                                } else {
-                                    [[DataManager shareManager] updateUserScript:userScript];
-                                    [self refreshScript];
-                                }
-                            }
-                        }
-                    }
-                }
-            } failBlock:^(NSError * _Nonnull error) {
-                
-            }];
-        }
-    }
-}
+//- (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
+//    for(int i = 0; i < array.count; i++) {
+//        UserScript *scrpit = array[i];
+//        if(!isSearch && !scrpit.updateSwitch) {
+//            continue;
+//        }
+//
+//        if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
+//            [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
+//                if(responseObject != nil) {
+//                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+//                    if(userScript.version != NULL) {
+//                        NSInteger status =  [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
+//                        if(status == 1) {
+//                            if(userScript.downloadUrl == nil || userScript.downloadUrl.length <= 0){
+//                                if(userScript.content != nil && userScript.content.length > 0) {
+//                                    userScript.uuid = scrpit.uuid;
+//                                    userScript.active = scrpit.active;
+//                                    if(isSearch) {
+//                                        [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+//                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+//                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
+//                                    } else {
+//                                        [[DataManager shareManager] updateUserScript:userScript];
+//                                        [self refreshScript];
+//                                    }
+//                                }
+//                            } else {
+//                                [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+//                                    if(responseObject != nil) {
+//                                        UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+//                                        userScript.uuid = scrpit.uuid;
+//                                        userScript.active = scrpit.active;
+//                                        if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+//                                            if(isSearch) {
+//                                                [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+//                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+//                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
+//                                            } else {
+//                                                [[DataManager shareManager] updateUserScript:userScript];
+//                                                [self refreshScript];
+//                                            }
+//                                        }
+//                                    }
+//                                } failBlock:^(NSError * _Nonnull error) {
+//
+//                                }];
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            } failBlock:^(NSError * _Nonnull error) {
+//
+//            }];
+//        } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
+//            [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+//                if(responseObject != nil) {
+//                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+//                    if(userScript.version != NULL) {
+//                        NSInteger status = [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
+//                        if(status == 1) {
+//                            userScript.uuid = scrpit.uuid;
+//                            userScript.active = scrpit.active;
+//                            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+//                                if(isSearch) {
+//                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+//                                    NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+//                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
+//                                } else {
+//                                    [[DataManager shareManager] updateUserScript:userScript];
+//                                    [self refreshScript];
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            } failBlock:^(NSError * _Nonnull error) {
+//
+//            }];
+//        }
+//    }
+//}
 
 - (void)refreshScript{
     [self initScrpitContent];
@@ -403,28 +411,17 @@
     
     cell.contentView.backgroundColor = bgColor;
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth / 3 * 2, 21)];
+    CGFloat leftWidth = kScreenWidth * 0.6 - 15;
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, leftWidth, 24)];
     titleLabel.font = [UIFont boldSystemFontOfSize:18];
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.text = model.name;
-    [titleLabel sizeToFit];
-    if(titleLabel.width > kScreenWidth / 3 * 2) {
-        titleLabel.width = kScreenWidth / 3 * 2;
-    }
     
     [cell.contentView addSubview:titleLabel];
     
-    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
-    versionLabel.font = [UIFont boldSystemFontOfSize:15];
-    versionLabel.textAlignment = NSTextAlignmentLeft;
-    versionLabel.text = model.version;
-    versionLabel.textColor = RGB(182, 32, 224);
-    versionLabel.left = titleLabel.right + 5;
-    versionLabel.centerY = titleLabel.centerY;
-    [cell.contentView addSubview:versionLabel];
-
-    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth, 19)];
+    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
     authorLabel.font = [UIFont systemFontOfSize:16];
     authorLabel.textAlignment = NSTextAlignmentLeft;
     authorLabel.text = model.author;
@@ -432,29 +429,97 @@
     [authorLabel sizeToFit];
     [cell.contentView addSubview:authorLabel];
     
-    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, kScreenWidth - 30, 19)];
+    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 40)];
     descLabel.font = [UIFont systemFontOfSize:15];
     descLabel.textAlignment = NSTextAlignmentLeft;
     descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descLabel.text = model.desc;
+    descLabel.numberOfLines = 2;
     descLabel.top = authorLabel.bottom + 5;
     descLabel.textColor = [UIColor grayColor];
     [cell.contentView addSubview:descLabel];
     
+    UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0.62 * kScreenWidth, 14, 1, 113)];
+    verticalLine.backgroundColor = RGB(216, 216, 216);
+    [cell.contentView addSubview:verticalLine];
+    
+    CGFloat left = 0.65 * kScreenWidth;
+    CGFloat width = 0.3 * kScreenWidth;
+    UILabel *version= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
+    version.text = @"version";
+    version.font = [UIFont systemFontOfSize:12];
+    version.textColor = RGB(138, 138, 138);
+    [cell.contentView addSubview:version];
+
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
+    versionLabel.font = [UIFont boldSystemFontOfSize:15];
+    versionLabel.textAlignment = NSTextAlignmentLeft;
+    versionLabel.text = model.version;
+    versionLabel.left = left;
+    versionLabel.top = version.bottom + 2;
+    [cell.contentView addSubview:versionLabel];
+    
+    UILabel *statusLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
+    statusLab.text = @"status";
+    statusLab.font = [UIFont systemFontOfSize:12];
+    statusLab.textColor = RGB(138, 138, 138);
+    statusLab.top = versionLabel.bottom + 2;
+    statusLab.left = left;
+    [cell.contentView addSubview:statusLab];
+
+
     UILabel *actLabel = [[UILabel alloc]init];
-    actLabel.font = [UIFont systemFontOfSize:16 weight:UIFontWeightLight];
-    actLabel.textColor = RGB(138, 138, 138);
+    actLabel.font = [UIFont boldSystemFontOfSize:15];
     if(model.active == 0) {
         actLabel.text = @"Stopped";
     } else {
         actLabel.text = @"Activated";
     }
     [actLabel sizeToFit];
-    actLabel.right = kScreenWidth - 35;
-    actLabel.centerY = 47.5f;
-
+    actLabel.top = statusLab.bottom + 2;
+    actLabel.left = left;
     [cell.contentView addSubview:actLabel];
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,94,kScreenWidth - 10,1)];
+    
+    
+    UILabel *updateLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
+    updateLab.text = @"Update time";
+    updateLab.font = [UIFont systemFontOfSize:12];
+    updateLab.textColor = RGB(138, 138, 138);
+    updateLab.top = actLabel.bottom + 2;
+    updateLab.left = left;
+    [cell.contentView addSubview:updateLab];
+    
+    ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[model.uuid];
+
+    if(entity != nil && entity.needUpdate){
+
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 60, 20);
+        btn.backgroundColor = RGB(185,101,223);
+        [btn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont systemFontOfSize:12];
+        btn.layer.cornerRadius = 3;
+        btn.top = updateLab.bottom + 2;
+        btn.left = left;
+        [btn addTarget:self action:@selector(updateScript:) forControlEvents:UIControlEventTouchUpInside];
+        
+        objc_setAssociatedObject (btn , @"script", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        [cell.contentView addSubview:btn];
+    } else {
+        UILabel *updateLabel = [[UILabel alloc]init];
+        updateLabel.font = [UIFont boldSystemFontOfSize:15];
+        updateLabel.text = [self timeWithTimeIntervalString:model.updateTime];
+        [updateLabel sizeToFit];
+        updateLabel.top = updateLab.bottom + 2;
+        updateLabel.left = left;
+        [cell.contentView addSubview:updateLabel];
+    }
+    
+    
+    
+    
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,kScreenWidth - 10,1)];
     UIColor *lineBgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
                 return RGBA(216, 216, 216, 0.3);
@@ -486,7 +551,7 @@
     }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 95.0f;
+    return 144.0f;
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -576,6 +641,21 @@
 }
 
 
+- (void)updateScript:(UIButton *)sender {
+    NSString *script = objc_getAssociatedObject(sender,@"script");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            SYEditViewController *cer = [[SYEditViewController alloc] init];
+            cer.content = script;
+            [self.navigationController pushViewController:cer animated:true];
+        }];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
+
+}
+
+
+
 - (void) reloadTableView {
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
@@ -643,6 +723,32 @@
         [_loadingView addSubview:titleLabel];
     }
     return _loadingView;
+}
+
+- (NSString *)timeWithTimeIntervalString:(NSString *)timeString
+{
+    
+    if(timeString == NULL) {
+        timeString = @"0";
+    }
+  // 格式化时间
+  NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+  formatter.timeZone = [NSTimeZone timeZoneWithName:@"shanghai"];
+  [formatter setDateStyle:NSDateFormatterMediumStyle];
+  [formatter setTimeStyle:NSDateFormatterShortStyle];
+  [formatter setDateFormat:@"yyyy.MM.dd"];
+  
+  // 毫秒值转化为秒
+  NSDate* date = [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]/ 1000.0];
+  NSString* dateString = [formatter stringFromDate:date];
+  return dateString;
+}
+
+- (NSString *)getNowDate {
+    NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+    NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+    return timeString;
 }
 
 @end

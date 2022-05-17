@@ -41,7 +41,6 @@
 
     //  如果目标目录也就是(Documents)目录没有数据库文件的时候，才会复制一份，否则不复制
     if(![fileManager fileExistsAtPath:destPath]){
-
         NSString* sourcePath =[[NSBundle mainBundle] pathForResource:@"scriptManager" ofType:@"sqlite"];
         if ([fileManager fileExistsAtPath:sourcePath]){
             [fileManager copyItemAtPath:sourcePath toPath:destPath error:&error];
@@ -80,7 +79,7 @@
         } else {
             NSInteger status =  [SYVersionUtils compareVersion:scrpitDetail.version toVersion:old.version];
             if(status == 1) {
-                [self updateScriptConfigByUserScript:scrpitDetail];
+//                [self updateScriptConfigByUserScript:scrpitDetail];
             }
          
         }
@@ -416,6 +415,9 @@
         
         scrpitDetail.sourcePage = sourcePage;
 
+        double updateTime = sqlite3_column_double(stmt, 19);
+        scrpitDetail.updateTime = [NSString stringWithFormat:@"%f", updateTime];
+        
         NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.updateUrl = updateUrl;
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
@@ -998,7 +1000,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -1061,7 +1063,11 @@
         } else {
             sqlite3_bind_text(statement, 22,  NULL, -1,NULL);
         }
-
+        
+        NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+        NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+        NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+        sqlite3_bind_double(statement, 23, timeString.doubleValue);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1181,7 +1187,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ? where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ? where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -1242,7 +1248,12 @@
         } else {
             sqlite3_bind_text(statement, 21, NULL, -1,NULL);
         }
-        sqlite3_bind_text(statement, 22,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+                        NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+                        NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+        sqlite3_bind_double(statement, 22, timeString.doubleValue);
+        
+        sqlite3_bind_text(statement, 23,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
 
     }
     
@@ -1347,6 +1358,8 @@
         NSString *sourcePage = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         
         scrpitDetail.sourcePage = sourcePage;
+        double updateTime = sqlite3_column_double(stmt, 19);
+        scrpitDetail.updateTime = [NSString stringWithFormat:@"%f", updateTime];
         
         NSString *updateUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
         scrpitDetail.updateUrl = updateUrl;
@@ -1680,6 +1693,7 @@
     }
     sqlite3_close(sqliteHandle);
 }
+
 
 
 @end

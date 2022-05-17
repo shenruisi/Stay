@@ -19,7 +19,7 @@ settings.section.otherApps.fastclip="FastClip - 复制粘贴增强器";
 cancel="取消";
 settings.save="保存";
 settings.library="资料库";
-settings.search="搜索";
+settings.search="浏览";
 settings.more="更多";
 settings.author="作者";
 settings.version="版本";
@@ -43,3 +43,4 @@ settings.scriptError = "脚本格式错误";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "确认";
+settings.update = "更新";
