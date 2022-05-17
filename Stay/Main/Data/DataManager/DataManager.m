@@ -336,7 +336,7 @@
     
     //构造SQL语句
 
-    NSString *sql = @"SELECT * FROM user_config_script";
+    NSString *sql = @"SELECT * FROM user_config_script order by update_time desc";
     
     sqlite3_stmt *stmt = NULL;
     result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
