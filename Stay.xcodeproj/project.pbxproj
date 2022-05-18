@@ -59,6 +59,7 @@
 		58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4E5274754B900270873 /* gm-apis-gen.js */; };
 		58F7F4E9274776AB00270873 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4E8274776AB00270873 /* Stroge.m */; };
 		58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EC2747A9FE00270873 /* gm-api-create.js */; };
+		6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
 		8410C840275E028A005531EC /* codemirror.js in Resources */ = {isa = PBXBuildFile; fileRef = 8410C837275E028A005531EC /* codemirror.js */; };
 		8410C841275E028A005531EC /* typescript.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83A275E028A005531EC /* typescript.html */; };
 		8410C842275E028A005531EC /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83B275E028A005531EC /* index.html */; };
@@ -149,6 +150,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
 		15C79AB227912BC600559EA5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		15F20BD0281BD09300330A56 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkUserscript.js; sourceTree = "<group>"; };
 		15F20BD2281BD24800330A56 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 		58F7F4E7274776AB00270873 /* Stroge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stroge.h; sourceTree = "<group>"; };
 		58F7F4E8274776AB00270873 /* Stroge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stroge.m; sourceTree = "<group>"; };
 		58F7F4EC2747A9FE00270873 /* gm-api-create.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "gm-api-create.js"; sourceTree = "<group>"; };
+		8324085BF6D1637082EC8C6B /* libPods-Stay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8410C837275E028A005531EC /* codemirror.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = codemirror.js; sourceTree = "<group>"; };
 		8410C83A275E028A005531EC /* typescript.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = typescript.html; sourceTree = "<group>"; };
 		8410C83B275E028A005531EC /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -291,6 +294,7 @@
 		84F48336273B709500217BB3 /* JSDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailCell.m; sourceTree = "<group>"; };
 		84F48339273B964900217BB3 /* JSDetailEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailEntity.m; sourceTree = "<group>"; };
 		84F4833B273B96F400217BB3 /* JSDetailEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSDetailEntity.h; sourceTree = "<group>"; };
+		B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.debug.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */,
+				6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +340,7 @@
 				587689102719238000F834A4 /* Stay Extension */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
+				61471BD8CEEC7081650F0787 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -485,6 +491,7 @@
 			isa = PBXGroup;
 			children = (
 				58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */,
+				8324085BF6D1637082EC8C6B /* libPods-Stay.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -536,6 +543,15 @@
 				58F7F4E5274754B900270873 /* gm-apis-gen.js */,
 			);
 			path = vendor;
+			sourceTree = "<group>";
+		};
+		61471BD8CEEC7081650F0787 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */,
+				061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		8410C835275E0278005531EC /* CodeMirror */ = {
@@ -784,6 +800,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5876892D2719238000F834A4 /* Build configuration list for PBXNativeTarget "Stay" */;
 			buildPhases = (
+				0A3ACB5B24D9B9A165231F4F /* [CP] Check Pods Manifest.lock */,
 				587688D02719237E00F834A4 /* Sources */,
 				587688D12719237E00F834A4 /* Frameworks */,
 				587688D22719237E00F834A4 /* Resources */,
@@ -995,6 +1012,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0A3ACB5B24D9B9A165231F4F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Stay-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		587688D02719237E00F834A4 /* Sources */ = {
@@ -1288,6 +1330,7 @@
 		};
 		5876892E2719238000F834A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1333,6 +1376,7 @@
 		};
 		5876892F2719238000F834A4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

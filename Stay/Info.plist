@@ -11,8 +11,17 @@
 			<string>com.stay</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>prefs</string>
 				<string>stay</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.stay2</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>stay2</string>
 			</array>
 		</dict>
 	</array>
