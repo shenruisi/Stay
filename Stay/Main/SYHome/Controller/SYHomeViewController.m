@@ -63,7 +63,7 @@
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
-    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));;
+    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);;
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
@@ -399,8 +399,8 @@
     } else {
         model = _datas[indexPath.row];
     }
-    cell.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
-    cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    cell.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+    cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     
     CGFloat leftWidth = kScreenWidth * 0.6 - 15;
     
@@ -659,7 +659,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
         [self.view addSubview:_tableView];
     }
     
