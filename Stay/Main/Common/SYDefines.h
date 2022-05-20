@@ -1,7 +1,6 @@
 #ifndef SYDefines_h
 #define SYDefines_h
 
-#define DynamicColor(DARK_COLOR,LIGHT_COLOR) ([UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {if (traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {return DARK_COLOR;} else {return LIGHT_COLOR;}}])
 
 #define iPhone3GS    ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(320, 480), [[UIScreen mainScreen] currentMode].size) : NO)
 

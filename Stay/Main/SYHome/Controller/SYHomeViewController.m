@@ -63,7 +63,7 @@
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
-    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));;
+    self.view.backgroundColor = [UIColor whiteColor];
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
@@ -399,21 +399,35 @@
     } else {
         model = _datas[indexPath.row];
     }
-    cell.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
-    cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    
+    UIColor *bgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+                return [UIColor whiteColor];
+            }
+            else {
+                return RGB(29, 29, 29);
+            }
+        }];
+    
+    cell.contentView.backgroundColor = bgColor;
     
     CGFloat leftWidth = kScreenWidth * 0.6 - 15;
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, leftWidth, 45)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, leftWidth, 24)];
     titleLabel.font = [UIFont boldSystemFontOfSize:18];
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-    titleLabel.numberOfLines = 2;
     titleLabel.text = model.name;
-    [titleLabel sizeToFit];
+    
     [cell.contentView addSubview:titleLabel];
     
-
+    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
+    authorLabel.font = [UIFont systemFontOfSize:16];
+    authorLabel.textAlignment = NSTextAlignmentLeft;
+    authorLabel.text = model.author;
+    authorLabel.top = titleLabel.bottom + 10;
+    [authorLabel sizeToFit];
+    [cell.contentView addSubview:authorLabel];
     
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 40)];
     descLabel.font = [UIFont systemFontOfSize:15];
@@ -421,17 +435,9 @@
     descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descLabel.text = model.desc;
     descLabel.numberOfLines = 2;
-    descLabel.bottom = 125;
+    descLabel.top = authorLabel.bottom + 5;
     descLabel.textColor = [UIColor grayColor];
     [cell.contentView addSubview:descLabel];
-    
-    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
-    authorLabel.font = [UIFont systemFontOfSize:16];
-    authorLabel.textAlignment = NSTextAlignmentLeft;
-    authorLabel.text = model.author;
-    authorLabel.bottom = descLabel.top - 5;
-    [authorLabel sizeToFit];
-    [cell.contentView addSubview:authorLabel];
     
     UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0.62 * kScreenWidth, 14, 1, 113)];
     verticalLine.backgroundColor = RGB(216, 216, 216);
@@ -612,6 +618,8 @@
 }
 
 - (void)addBtnClick:(id)sender {
+//    SYEditViewController *cer = [[SYEditViewController alloc] init];
+//    [self.navigationController pushViewController:cer animated:true];
     self.itemPopVC = [[SYAddScriptController alloc] init];
     self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
     self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
@@ -659,7 +667,6 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
         [self.view addSubview:_tableView];
     }
     

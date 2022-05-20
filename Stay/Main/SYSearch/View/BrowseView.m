@@ -52,15 +52,10 @@
 }
 
 - (void)addScript:(id)sender {
-    NSNotification *notification = [NSNotification notificationWithName:@"needShowLoading" object:nil];
-    [[NSNotificationCenter defaultCenter]postNotification:notification];
-
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
      [set addCharactersInString:@"#"];
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
     dispatch_async(dispatch_get_main_queue(),^{
-        NSNotification *notification = [NSNotification notificationWithName:@"needStopLoading" object:nil];
-        [[NSNotificationCenter defaultCenter]postNotification:notification];
         if(data != nil ) {
             NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             SYEditViewController *cer = [[SYEditViewController alloc] init];
