@@ -167,12 +167,17 @@ const $_injectInPageWithTiming = (script, runAt) => {
         let injectScripts = [];
         userLibraryScripts.forEach((userLibraryScript)=>{
             console.log(userLibraryScript);
-            
-            if ($_matchesCheck(userLibraryScript,new URL(location.href))){
-                injectScripts.push(userLibraryScript);
+            try {
+                if ($_matchesCheck(userLibraryScript,new URL(location.href))){
+                    console.log("userLibraryScript-", userLibraryScript)
+                    injectScripts.push(userLibraryScript);
+                }
+                
+            } catch (error) {
+                console.error("￥_matchesCheck-----error", error)
             }
         });
-        
+        console.log("injectScripts-", injectScripts)
         injectScripts.forEach((script) => {
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
