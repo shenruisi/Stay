@@ -35,8 +35,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = RGB(240, 240, 245);
+    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    self.loadingView.center = self.view.center;
+    self.loadingView.hidden = YES;
+    [self.view addSubview:self.loadingView];
 
+    [self queryData];
+    [self.view addSubview:self.indicatorView];
+    [self.view bringSubviewToFront:self.indicatorView];
+    [self.indicatorView startAnimating];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(needShowLoading) name:@"needShowLoading" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(needStopLoading) name:@"needStopLoading" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+
+- (void)queryData{
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -53,12 +69,23 @@
             [self.indicatorView stopAnimating];
         });
     });
+}
 
-    [self.view addSubview:self.indicatorView];
-    [self.view bringSubviewToFront:self.indicatorView];
-    [self.indicatorView startAnimating];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
+- (void)onBecomeActive {
+    [self queryData];
+}
+
+- (void)needShowLoading {
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self.view bringSubviewToFront:self.loadingView];
+        self.loadingView.hidden = NO;
+    });
+}
+- (void)needStopLoading {
+    dispatch_async(dispatch_get_main_queue(),^{
+        
+        self.loadingView.hidden = YES;
+    });
 }
 
 
@@ -76,6 +103,8 @@
 #pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+
     return 1;
 }
 
@@ -91,9 +120,10 @@
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [header.textLabel setTextColor:[UIColor blackColor]];
+    [header.textLabel setTextColor:DynamicColor([UIColor whiteColor],[UIColor blackColor])];
 
     header.backgroundColor = [UIColor clearColor];
+
     
 }
 
@@ -103,12 +133,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
-    cell.backgroundColor = RGB(240, 240, 245);
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     }
+    cell.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
     }
@@ -161,7 +191,7 @@
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor = RGB(240, 240, 245);
+        _tableView.backgroundColor =  DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
 
         [self.view addSubview:_tableView];
     }
@@ -195,5 +225,25 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (UIView *)loadingView {
+    if(_loadingView == nil) {
+        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
+        [_loadingView setBackgroundColor:RGB(230, 230, 230)];
+        _loadingView.layer.cornerRadius = 10;
+        _loadingView.layer.masksToBounds = 10;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        titleLabel.textColor = [UIColor blackColor];
+        [titleLabel sizeToFit];
+
+        titleLabel.top = 30;
+        titleLabel.centerX = (kScreenWidth - 100) / 2;
+        [_loadingView addSubview:titleLabel];
+    }
+    return _loadingView;
+}
 
 @end

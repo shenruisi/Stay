@@ -61,14 +61,14 @@
 //    navC.navigationBar.barTintColor = RGB(138, 138, 138);
     UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
     [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = RGB(246, 246, 246);
+    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     navC.navigationBar.standardAppearance = appearance;
     navC.navigationBar.scrollEdgeAppearance = appearance;
     UITabBarAppearance *tabbarAppearance = [[UITabBarAppearance alloc] init];
     [tabbarAppearance.stackedLayoutAppearance.selected setTitleTextAttributes:@{NSForegroundColorAttributeName: RGB(182, 32, 224)}];
     [tabbarAppearance.inlineLayoutAppearance.selected setTitleTextAttributes:@{NSForegroundColorAttributeName: RGB(182, 32, 224)}];
 //    tabbarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = @{NSForegroundColorAttributeName: RGB(182, 32, 224)};
-    tabbarAppearance.backgroundColor = RGB(246, 246, 246);
+    tabbarAppearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     self.tabBar.scrollEdgeAppearance = tabbarAppearance;
     self.tabBar.standardAppearance = tabbarAppearance;
     [self addChildViewController:navC];
