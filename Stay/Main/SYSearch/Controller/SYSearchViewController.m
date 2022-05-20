@@ -122,7 +122,7 @@
     [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [header.textLabel setTextColor:DynamicColor([UIColor whiteColor],[UIColor blackColor])];
 
-    header.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    header.contentView.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
 
     
 }
@@ -137,8 +137,8 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    cell.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
-    cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    cell.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    cell.contentView.backgroundColor =DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
     }
@@ -194,7 +194,7 @@
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor =  DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+        _tableView.backgroundColor =  DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
         [self.view addSubview:_tableView];
     }
     

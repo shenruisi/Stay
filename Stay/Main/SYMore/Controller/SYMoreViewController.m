@@ -132,6 +132,7 @@
         _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
         _tableView.dataSource = self;
         _tableView.delegate = self;
+        _tableView.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
         [self.view addSubview:_tableView];
     }
     

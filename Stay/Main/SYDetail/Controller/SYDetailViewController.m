@@ -29,7 +29,7 @@
             }
         }];
 
-    self.view.backgroundColor = [self createBgColor];
+    self.view.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setNumberOfLines:0];
@@ -533,14 +533,7 @@
 */
 
 - (UIColor *)createBgColor {
-    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-                return RGB(242, 242, 246);
-            }
-            else {
-                return [UIColor blackColor];
-            }
-        }];
+    UIColor *viewBgColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     return viewBgColor;
 }
 

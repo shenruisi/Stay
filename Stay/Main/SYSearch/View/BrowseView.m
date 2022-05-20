@@ -16,7 +16,7 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     self  = [super initWithFrame:frame];
     if (self){
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
         [self setupSubviews];
     }
     return self;
@@ -89,7 +89,7 @@
         _titleLabel.font = [UIFont boldSystemFontOfSize:17];
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         _titleLabel.numberOfLines = 2;
-        _titleLabel.textColor = [UIColor blackColor];
+        _titleLabel.textColor = DynamicColor([UIColor whiteColor],[UIColor blackColor]);
 
     }
     return _titleLabel;
@@ -101,7 +101,7 @@
         _authorLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 200, 18)];
         _authorLabel.font = [UIFont systemFontOfSize:16];
         _authorLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-        _authorLabel.textColor = [UIColor blackColor];
+        _authorLabel.textColor = DynamicColor([UIColor whiteColor],[UIColor blackColor]);
     }
     return _authorLabel;
 }
@@ -121,6 +121,7 @@
     if(_rightBtn == nil) {
         _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _rightBtn.frame = CGRectMake(0, 0, 26, 24);
+
         [_rightBtn setImage:[UIImage imageNamed:@"addedScript"] forState:UIControlStateNormal];
         
     }
@@ -131,6 +132,7 @@
     if(_addBtn == nil) {
         _addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _addBtn.frame = CGRectMake(0, 0, 26, 24);
+        
         [_addBtn setImage:[UIImage imageNamed:@"addScript"] forState:UIControlStateNormal];
         [_addBtn addTarget:self action:@selector(addScript:) forControlEvents:UIControlEventTouchUpInside];
     }
