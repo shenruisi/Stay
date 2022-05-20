@@ -47,7 +47,7 @@ settings.scriptError = "script error";
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";
 settings.update = "Update";
-
+cancel = "Cancel";
 
 
 
