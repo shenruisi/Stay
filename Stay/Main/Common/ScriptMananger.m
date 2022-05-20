@@ -35,14 +35,12 @@
     if(array != NULL) {
         for(int i = 0; i < array.count; i++) {
             ScriptEntity *scriptEntity = [[ScriptEntity alloc] init];
-            
-            
             UserScript *scrpit = array[i];
-            
             scriptEntity.script = scrpit;
-            
             if(self.scriptDic[scrpit.uuid]  == nil) {
                 self.scriptDic[scrpit.uuid] = scriptEntity;
+            } else {
+                scriptEntity = self.scriptDic[scrpit.uuid];
             }
             
             if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0 && !scrpit.updateSwitch) {
@@ -110,6 +108,29 @@
             
             
     }
+    
+    [self checkScript];
+}
+
+
+- (void)checkScript {
+    
+    NSArray *array = [self scriptDic].allKeys;
+    
+    for(int i = 0; i < array.count; i++) {
+        NSString *uuid = array[i];
+        UserScript *scritp = [[DataManager shareManager] selectScriptByUuid:uuid];
+        if (scritp == NULL) {
+            [[self scriptDic] removeObjectForKey:uuid];
+        } else {
+            ScriptEntity *scriptEntity = self.scriptDic[uuid];
+            scriptEntity.script = scritp;
+            if (scriptEntity.updateScript != NULL && [scritp.version isEqualToString:scriptEntity.updateScript.version]) {
+                scriptEntity.needUpdate = false;
+                scriptEntity.updateScript = NULL;
+            }
+        }
+    }
 }
 
 - (void)updateScript {
@@ -130,7 +151,7 @@
             }
         }
     }
-
+    [self checkScript];
 }
 
 

@@ -403,7 +403,7 @@
     cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     
     CGFloat leftWidth = kScreenWidth * 0.6 - 15;
-    
+        
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, leftWidth, 45)];
     titleLabel.font = [UIFont boldSystemFontOfSize:18];
     titleLabel.textAlignment = NSTextAlignmentLeft;
@@ -434,7 +434,14 @@
     [cell.contentView addSubview:authorLabel];
     
     UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0.62 * kScreenWidth, 14, 1, 113)];
-    verticalLine.backgroundColor = RGB(216, 216, 216);
+    verticalLine.backgroundColor =  [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+        if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+            return RGBA(216, 216, 216, 0.3);
+        }
+        else {
+            return RGBA(37, 37, 40, 1);
+        }
+    }];
     [cell.contentView addSubview:verticalLine];
     
     CGFloat left = 0.65 * kScreenWidth;
@@ -499,6 +506,8 @@
         [btn addTarget:self action:@selector(updateScript:) forControlEvents:UIControlEventTouchUpInside];
         
         objc_setAssociatedObject (btn , @"script", entity.updateScript.description, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject (btn , @"scriptContent", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
         [cell.contentView addSubview:btn];
     } else {
         UILabel *updateLabel = [[UILabel alloc]init];
@@ -514,7 +523,15 @@
     
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,kScreenWidth - 10,1)];
-    UIColor *lineBgcolor = RGB(216, 216, 216);
+    UIColor *lineBgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+        if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+            return RGBA(216, 216, 216, 0.3);
+        }
+        else {
+            return RGBA(37, 37, 40, 1);
+        }
+    }];
+
     [line setBackgroundColor:lineBgcolor];
     [cell.contentView addSubview:line];
 
@@ -618,6 +635,7 @@
     [super viewWillAppear:animated];
     [self reloadTableView];
     [self initScrpitContent];
+    [[ScriptMananger shareManager] buildData];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
@@ -630,14 +648,23 @@
     NSString *script = objc_getAssociatedObject(sender,@"script");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
     
+    NSString *scriptContent = objc_getAssociatedObject(sender,@"scriptContent");
+
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             SYEditViewController *cer = [[SYEditViewController alloc] init];
-            cer.content = script;
+            cer.content = scriptContent;
             [self.navigationController pushViewController:cer animated:true];
         }];
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 
         }];
+    
+    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+       paraStyle.alignment = NSTextAlignmentLeft;
+
+    NSMutableAttributedString *atrStr = [[NSMutableAttributedString alloc] initWithString:script attributes:@{NSParagraphStyleAttributeName:paraStyle}];
+
+    [alert setValue:atrStr forKey:@"attributedMessage"];
     [alert addAction:cancelconform];
     [alert addAction:conform];
     [self presentViewController:alert animated:YES completion:nil];

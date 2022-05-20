@@ -122,7 +122,7 @@
     [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [header.textLabel setTextColor:DynamicColor([UIColor whiteColor],[UIColor blackColor])];
 
-    header.backgroundColor = [UIColor clearColor];
+    header.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
 
     
 }
@@ -191,11 +191,10 @@
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.backgroundColor =  DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
-        _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
         [self.view addSubview:_tableView];
     }
     
