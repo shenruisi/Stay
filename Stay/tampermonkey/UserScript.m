@@ -69,4 +69,50 @@
     };
 }
 
+- (NSString *)description
+{
+    NSMutableString *builder = [[NSMutableString alloc] init];
+    if (self.name.length > 0){
+        [builder appendFormat:@"name: %@\n",self.name];
+    }
+    
+    if (self.namespace.length > 0){
+        [builder appendFormat:@"namespace: %@\n",self.namespace];
+    }
+    
+    if (self.author.length > 0){
+        [builder appendFormat:@"author: %@\n",self.author];
+    }
+    
+    if (self.version.length > 0){
+        [builder appendFormat:@"version: %@\n",self.version];
+    }
+    
+    if (self.desc.length > 0){
+        [builder appendFormat:@"description: %@\n",self.desc];
+    }
+    
+    if (self.runAt.length > 0){
+        [builder appendFormat:@"runAt: %@\n",self.runAt];
+    }
+    
+    for (NSString *match in self.mathes){
+        [builder appendFormat:@"match: %@\n",match];
+    }
+    
+    for (NSString *include in self.includes){
+        [builder appendFormat:@"include: %@\n",include];
+    }
+    
+    for (NSString *exclude in self.excludes){
+        [builder appendFormat:@"exclude: %@\n",exclude];
+    }
+    
+    for (NSString *grant in self.grants){
+        [builder appendFormat:@"grant: %@\n",grant];
+    }
+    
+    return builder;
+}
+
 @end
