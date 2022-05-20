@@ -424,7 +424,7 @@
         scrpitDetail.downloadUrl = downloadUrl;
         
         int updateSwitch = sqlite3_column_int(stmt, 22);
-        scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+        scrpitDetail.updateSwitch = updateSwitch == 1? true:false;
 
         NSString * resourceUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 23)== NULL?"":(const char *)sqlite3_column_text(stmt, 23)];
         if (resourceUrl != NULL && resourceUrl.length > 0) {
@@ -734,7 +734,7 @@
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
         scrpitDetail.downloadUrl = downloadUrl;
         int updateSwitch = sqlite3_column_int(stmt, 22);
-        scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+        scrpitDetail.updateSwitch = updateSwitch == 1? true:false;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -1000,7 +1000,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -1068,6 +1068,8 @@
         NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
         NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
         sqlite3_bind_double(statement, 23, timeString.doubleValue);
+        sqlite3_bind_int(statement, 24, 0);
+
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -1366,7 +1368,7 @@
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
         scrpitDetail.downloadUrl = downloadUrl;
         int updateSwitch = sqlite3_column_int(stmt, 22);
-        scrpitDetail.updateSwitch = updateSwitch == 0? false:true;
+        scrpitDetail.updateSwitch = updateSwitch == 1? true:false;
         
         NSString * resourceUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 23)== NULL?"":(const char *)sqlite3_column_text(stmt, 23)];
         if (resourceUrl != NULL && resourceUrl.length > 0) {

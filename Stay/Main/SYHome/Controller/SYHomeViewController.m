@@ -220,95 +220,95 @@
     [self.tableView reloadData];
     [self initScrpitContent];
     //自动更新代码保留先注释
-//    NSArray *array = [[DataManager shareManager] findScript:1];
-//    [self updateScriptWhen:array type:false];
+    NSArray *array = [[DataManager shareManager] findScript:1];
+    [self updateScriptWhen:array type:false];
 //    NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
 //    [self updateScriptWhen:searchArray type:true];
 }
 
-//- (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
-//    for(int i = 0; i < array.count; i++) {
-//        UserScript *scrpit = array[i];
-//        if(!isSearch && !scrpit.updateSwitch) {
-//            continue;
-//        }
-//
-//        if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
-//            [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
-//                if(responseObject != nil) {
-//                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
-//                    if(userScript.version != NULL) {
-//                        NSInteger status =  [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
-//                        if(status == 1) {
-//                            if(userScript.downloadUrl == nil || userScript.downloadUrl.length <= 0){
-//                                if(userScript.content != nil && userScript.content.length > 0) {
-//                                    userScript.uuid = scrpit.uuid;
-//                                    userScript.active = scrpit.active;
-//                                    if(isSearch) {
-//                                        [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-//                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-//                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
-//                                    } else {
-//                                        [[DataManager shareManager] updateUserScript:userScript];
-//                                        [self refreshScript];
-//                                    }
-//                                }
-//                            } else {
-//                                [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
-//                                    if(responseObject != nil) {
-//                                        UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
-//                                        userScript.uuid = scrpit.uuid;
-//                                        userScript.active = scrpit.active;
-//                                        if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-//                                            if(isSearch) {
-//                                                [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-//                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-//                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
-//                                            } else {
-//                                                [[DataManager shareManager] updateUserScript:userScript];
-//                                                [self refreshScript];
-//                                            }
-//                                        }
-//                                    }
-//                                } failBlock:^(NSError * _Nonnull error) {
-//
-//                                }];
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            } failBlock:^(NSError * _Nonnull error) {
-//
-//            }];
-//        } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
-//            [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
-//                if(responseObject != nil) {
-//                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
-//                    if(userScript.version != NULL) {
-//                        NSInteger status = [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
-//                        if(status == 1) {
-//                            userScript.uuid = scrpit.uuid;
-//                            userScript.active = scrpit.active;
-//                            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-//                                if(isSearch) {
-//                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-//                                    NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-//                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
-//                                } else {
-//                                    [[DataManager shareManager] updateUserScript:userScript];
-//                                    [self refreshScript];
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } failBlock:^(NSError * _Nonnull error) {
-//
-//            }];
-//        }
-//    }
-//}
+- (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
+    for(int i = 0; i < array.count; i++) {
+        UserScript *scrpit = array[i];
+        if(!isSearch && !scrpit.updateSwitch) {
+            continue;
+        }
+
+        if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
+            [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
+                if(responseObject != nil) {
+                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+                    if(userScript.version != NULL) {
+                        NSInteger status =  [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
+                        if(status == 1) {
+                            if(userScript.downloadUrl == nil || userScript.downloadUrl.length <= 0){
+                                if(userScript.content != nil && userScript.content.length > 0) {
+                                    userScript.uuid = scrpit.uuid;
+                                    userScript.active = scrpit.active;
+                                    if(isSearch) {
+                                        [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
+                                    } else {
+                                        [[DataManager shareManager] updateUserScript:userScript];
+                                        [self refreshScript];
+                                    }
+                                }
+                            } else {
+                                [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                                    if(responseObject != nil) {
+                                        UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+                                        userScript.uuid = scrpit.uuid;
+                                        userScript.active = scrpit.active;
+                                        if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+                                            if(isSearch) {
+                                                [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
+                                            } else {
+                                                [[DataManager shareManager] updateUserScript:userScript];
+                                                [self refreshScript];
+                                            }
+                                        }
+                                    }
+                                } failBlock:^(NSError * _Nonnull error) {
+
+                                }];
+                            }
+                        }
+                    }
+
+                }
+            } failBlock:^(NSError * _Nonnull error) {
+
+            }];
+        } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
+            [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                if(responseObject != nil) {
+                    UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
+                    if(userScript.version != NULL) {
+                        NSInteger status = [SYVersionUtils compareVersion:userScript.version toVersion:scrpit.version];
+                        if(status == 1) {
+                            userScript.uuid = scrpit.uuid;
+                            userScript.active = scrpit.active;
+                            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+                                if(isSearch) {
+                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
+                                    NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
+                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
+                                } else {
+                                    [[DataManager shareManager] updateUserScript:userScript];
+                                    [self refreshScript];
+                                }
+                            }
+                        }
+                    }
+                }
+            } failBlock:^(NSError * _Nonnull error) {
+
+            }];
+        }
+    }
+}
 
 - (void)refreshScript{
     [self initScrpitContent];
@@ -489,16 +489,16 @@
 
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 60, 20);
-        btn.backgroundColor = RGB(185,101,223);
+        btn.backgroundColor = RGB(182,32,224);
         [btn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:12];
-        btn.layer.cornerRadius = 3;
+        btn.layer.cornerRadius = 4;
         btn.top = updateLab.bottom + 2;
         btn.left = left;
         [btn addTarget:self action:@selector(updateScript:) forControlEvents:UIControlEventTouchUpInside];
         
-        objc_setAssociatedObject (btn , @"script", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject (btn , @"script", entity.updateScript.description, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [cell.contentView addSubview:btn];
     } else {
         UILabel *updateLabel = [[UILabel alloc]init];
@@ -514,14 +514,7 @@
     
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,kScreenWidth - 10,1)];
-    UIColor *lineBgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-                return RGBA(216, 216, 216, 0.3);
-            }
-            else {
-                return RGBA(37, 37, 40, 1);
-            }
-        }];
+    UIColor *lineBgcolor = RGB(216, 216, 216);
     [line setBackgroundColor:lineBgcolor];
     [cell.contentView addSubview:line];
 
@@ -636,11 +629,16 @@
 - (void)updateScript:(UIButton *)sender {
     NSString *script = objc_getAssociatedObject(sender,@"script");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             SYEditViewController *cer = [[SYEditViewController alloc] init];
             cer.content = script;
             [self.navigationController pushViewController:cer animated:true];
         }];
+    UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+        }];
+    [alert addAction:cancelconform];
     [alert addAction:conform];
     [self presentViewController:alert animated:YES completion:nil];
 

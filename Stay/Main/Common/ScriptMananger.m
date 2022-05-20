@@ -45,7 +45,7 @@
                 self.scriptDic[scrpit.uuid] = scriptEntity;
             }
             
-            if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
+            if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0 && !scrpit.updateSwitch) {
                 [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
                     if(responseObject != nil) {
                         UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
@@ -85,7 +85,7 @@
                 } failBlock:^(NSError * _Nonnull error) {
                             
                 }];
-            } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
+            } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0 && !scrpit.updateSwitch) {
                 [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
                     if(responseObject != nil) {
                         UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];

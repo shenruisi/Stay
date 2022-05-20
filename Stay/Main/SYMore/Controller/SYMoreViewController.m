@@ -86,6 +86,17 @@
     }
 }
 
+
+- (BOOL)joinGroup:(NSString *)groupUin key:(NSString *)key{
+    NSString *urlStr = [NSString stringWithFormat:@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=%@&key=%@&card_type=group&source=external&jump_from=webapi", @"714147685",@"c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217"];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if([[UIApplication sharedApplication] canOpenURL:url]){
+        [[UIApplication sharedApplication] openURL:url];
+    return YES;
+    }
+    else return NO;
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     return self.dataSource[section][@"section"];
 }
@@ -99,13 +110,8 @@
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"settings.rateApp",""),@"url":@"https://apps.apple.com/app/id1591620171?action=write-review"},
                     @{@"title":NSLocalizedString(@"settings.openSource",""),@"url":@"https://github.com/shenruisi/Stay"},
-                    @{@"title":NSLocalizedString(@"settings.joinTelegram",""),@"url":@"https://t.me/fastclipchat"}
-                ]
-            },
-            @{
-                @"section":@"",
-                @"cells":@[
-                    @{@"title":NSLocalizedString(@"settings.enableStay",""),@"url":@"App-prefs:root=SAFARI"}
+                    @{@"title":NSLocalizedString(@"settings.joinTelegram",""),@"url":@"https://t.me/fastclipchat"},
+                    @{@"title":NSLocalizedString(@"settings.joinQQ",""),@"url":@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=714147685&key=c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217&card_type=group&source=external&jump_from=webapi"}
                 ]
             },
             @{

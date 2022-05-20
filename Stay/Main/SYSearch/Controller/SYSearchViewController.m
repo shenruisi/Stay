@@ -181,18 +181,21 @@
     [super viewWillAppear:animated];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
+    
         [self.tableView reloadData];
     });
+    
+    [self queryData];
 }
 
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.backgroundColor =  DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
-
+        _tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
         [self.view addSubview:_tableView];
     }
     

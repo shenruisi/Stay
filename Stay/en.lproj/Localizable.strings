@@ -10,6 +10,8 @@
 settings.rateApp="Rate app";
 settings.openSource="Open Source";
 settings.joinTelegram="Join Telegram";
+settings.joinQQ="Join QQ";
+
 settings.enableStay="Turn on Stay in Safari extensions";
 
 
@@ -44,7 +46,7 @@ settings.scriptError = "script error";
 
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";
-settings.update = "update";
+settings.update = "Update";
 
 
 
