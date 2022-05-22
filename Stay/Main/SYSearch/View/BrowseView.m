@@ -122,7 +122,10 @@
         _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _rightBtn.frame = CGRectMake(0, 0, 26, 24);
 
-        [_rightBtn setImage:[UIImage imageNamed:@"addedScript"] forState:UIControlStateNormal];
+        UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+        image = [image imageWithTintColor: RGB(182,32,224) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_rightBtn setBackgroundImage:image forState:UIControlStateNormal];
         
     }
     return  _rightBtn;
@@ -132,8 +135,10 @@
     if(_addBtn == nil) {
         _addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _addBtn.frame = CGRectMake(0, 0, 26, 24);
-        
-        [_addBtn setImage:[UIImage imageNamed:@"addScript"] forState:UIControlStateNormal];
+        UIImage *image =  [UIImage systemImageNamed:@"plus.circle.fill"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+        image = [image imageWithTintColor: RGB(182,32,224) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_addBtn setBackgroundImage:image forState:UIControlStateNormal];
         [_addBtn addTarget:self action:@selector(addScript:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _addBtn;
