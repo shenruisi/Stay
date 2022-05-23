@@ -82,6 +82,7 @@
     [scrollView addSubview:detailView];
     
     UILabel *nameLabel = [self createDefaultLabelWithText:self.script.name];
+    nameLabel.width = kScreenWidth -  60 - 48 - 42;
     nameLabel.top = 13;
     nameLabel.left = 17;
     [detailView addSubview:nameLabel];

@@ -21,8 +21,7 @@
 #import "ScriptMananger.h"
 #import "ScriptEntity.h"
 #import <objc/runtime.h>
-
-
+#import "UIImageView+WebCache.h"
 
 #import <UniformTypeIdentifiers/UTCoreTypes.h>
 
@@ -414,8 +413,9 @@
             imageview.frame = CGRectMake(15,15,23,23);
             [cell.contentView addSubview:imageview];
         } else {
-            UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:model.icon]]]];
-            imageview.frame = CGRectMake(15,15,23,23);
+        
+            UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
+            [imageview sd_setImageWithURL:[NSURL URLWithString: model.icon] ];
             [cell.contentView addSubview:imageview];
 
         }
