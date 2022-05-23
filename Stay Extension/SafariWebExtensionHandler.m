@@ -8,6 +8,7 @@
 #import "SafariWebExtensionHandler.h"
 #import "Stroge.h"
 #import <SafariServices/SafariServices.h>
+#import <UIKit/UIKit.h>
 
 @implementation SafariWebExtensionHandler
 
@@ -20,6 +21,7 @@
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+        [[UIPasteboard generalPasteboard] setObjects:@[@"fetchScripts"]];
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
         
         for(int i = 0;i < datas.count; i++) {

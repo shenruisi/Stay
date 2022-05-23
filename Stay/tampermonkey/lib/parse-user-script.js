@@ -83,7 +83,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'notes':[],
       'runAt': 'end',
       'pass':true,
-      'errorMessage':''
+      'errorMessage':'',
+      'icon':''
   };
 
   let meta = extractMeta(content).match(/.+/g);
