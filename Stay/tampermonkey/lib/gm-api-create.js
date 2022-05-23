@@ -130,6 +130,12 @@
 
         if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
             source += GM_notification.toString() + '\n\n';
+            source += "GM.notification = " + GM_notification.toString() + '\n\n';
+        }
+
+        if (grants.includes('GM_setClipboard') || grants.includes('GM.setClipboard')) {
+            source += GM_setClipboard.toString() + '\n\n';
+            source += "GM.setClipboard = " + GM_setClipboard.toString() + '\n\n';
         }
 
         //add GM_log by default
@@ -237,6 +243,11 @@
         });
     }
 
+
+    function GM_setClipboard(data, info) {
+        
+    }
+
     /**
      * 1、text, title,  image, onclick
      * 2、details, ondone
@@ -289,7 +300,6 @@
         document.body.appendChild(tempDom);
         let notificationDom = document.getElementById("notificationContainer");
         notificationDom.addEventListener("click", () => {
-            console.log("notificationDom------");
             if (onclick) {
                 onclick();
             }
@@ -572,6 +582,10 @@
             else if ("GM.notification" === grant || "GM_notification" === grant) {
                 api += `${GM_notification}\n`;
                 gmFunVals.push("notification: GM_notification");
+            }
+            else if ("GM.setClipboard" === grant || "GM_setClipboard" === grant) {
+                api += `${GM_setClipboard}\n`;
+                gmFunVals.push("setClipboard: GM_setClipboard");
             }
             else if (grant === "GM_xmlhttpRequest" || grant === "GM.xmlHttpRequest") {
                 api += `${xhr}\n`;

@@ -32,7 +32,9 @@ const GM_APIS = new Set([
     "GM.info",
     "window.onurlchange",
     "GM_notification",
-    "GM.notification"
+    "GM.notification",
+    "GM_setClipboard",
+    "GM.setClipboard",
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);
