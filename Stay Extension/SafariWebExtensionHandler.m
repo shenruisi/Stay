@@ -21,7 +21,7 @@
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
-        [[UIPasteboard generalPasteboard] setObjects:@[@"fetchScripts"]];
+        [[UIPasteboard generalPasteboard] setString:@"fetchScripts"];
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
         
         for(int i = 0;i < datas.count; i++) {

@@ -182,7 +182,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               }
               break;
           case 'icon':
-              details.iconUrl = safeUrl(data.value, url).toString();
+              details.iconUrl = data.value;
               break;
           case 'require':
               //hard code cuz only support stay:// now.
