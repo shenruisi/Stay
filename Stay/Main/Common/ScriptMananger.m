@@ -120,14 +120,14 @@
     for(int i = 0; i < array.count; i++) {
         NSString *uuid = array[i];
         UserScript *scritp = [[DataManager shareManager] selectScriptByUuid:uuid];
-        if (scritp == NULL) {
+        if (scritp == NULL || scritp.uuid == nil) {
             [[self scriptDic] removeObjectForKey:uuid];
         } else {
             ScriptEntity *scriptEntity = self.scriptDic[uuid];
             scriptEntity.script = scritp;
             if (scriptEntity.updateScript != NULL && [scritp.version isEqualToString:scriptEntity.updateScript.version]) {
                 scriptEntity.needUpdate = false;
-                scriptEntity.updateScript = NULL;
+                scriptEntity.updateScript = nil;
             }
         }
     }

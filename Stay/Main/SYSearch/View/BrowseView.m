@@ -57,16 +57,18 @@
 
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
      [set addCharactersInString:@"#"];
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-    dispatch_async(dispatch_get_main_queue(),^{
-        NSNotification *notification = [NSNotification notificationWithName:@"needStopLoading" object:nil];
-        [[NSNotificationCenter defaultCenter]postNotification:notification];
-        if(data != nil ) {
-            NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-            SYEditViewController *cer = [[SYEditViewController alloc] init];
-            cer.content = str;
-            [self.navigationController pushViewController:cer animated:true];
-        }
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        dispatch_async(dispatch_get_main_queue(),^{
+            NSNotification *notification = [NSNotification notificationWithName:@"needStopLoading" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
+            if(data != nil ) {
+                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                SYEditViewController *cer = [[SYEditViewController alloc] init];
+                cer.content = str;
+                [self.navigationController pushViewController:cer animated:true];
+            }
+        });
     });
 }
 

@@ -24,8 +24,6 @@
 
 @property (nonatomic, strong) UIView *loadingView;
 
-@property (nonatomic, strong) UIActivityIndicatorView  *indicatorView;
-
 
 
 @end
@@ -41,9 +39,6 @@
     [self.view addSubview:self.loadingView];
 
     [self queryData];
-    [self.view addSubview:self.indicatorView];
-    [self.view bringSubviewToFront:self.indicatorView];
-    [self.indicatorView startAnimating];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(needShowLoading) name:@"needShowLoading" object:nil];
@@ -66,7 +61,6 @@
 
         dispatch_async(dispatch_get_main_queue(),^{
             [self.tableView reloadData];
-            [self.indicatorView stopAnimating];
         });
     });
 }
@@ -104,32 +98,28 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-
-    return 1;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 30;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.datas.count;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [header.textLabel setTextColor:DynamicColor([UIColor whiteColor],[UIColor blackColor])];
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 30;
+//}
+//
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//    return self.datas.count;
+//}
 
-    header.contentView.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+//- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+//    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+//    [header.textLabel setFont:[UIFont boldSystemFontOfSize:20]];
+//    [header.textLabel setTextColor:DynamicColor([UIColor whiteColor],[UIColor blackColor])];
+//
+//    header.contentView.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+//
+//
+//}
 
-    
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return self.datas[section][@"name"];
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
@@ -143,9 +133,15 @@
         [subView removeFromSuperview];
     }
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 145)];
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, kScreenWidth - 30, 30)];
+    lab.text = self.datas[indexPath.row][@"name"];
+    lab.font = [UIFont boldSystemFontOfSize:20];
+    
+    [cell.contentView addSubview:lab];
+    
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, kScreenWidth, 145)];
     scrollView.showsHorizontalScrollIndicator = FALSE;
-    NSArray *array = self.datas[indexPath.section][@"userscripts"];
+    NSArray *array = self.datas[indexPath.row][@"userscripts"];
 
     if(array != nil && array.count > 0) {
         CGFloat width = 15;
@@ -168,7 +164,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 160.0f;
+    return 190.0f;
 }
 
 
@@ -179,11 +175,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[ScriptMananger shareManager] refreshData];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
     
         [self.tableView reloadData];
     });
+
     
     [self queryData];
 }
@@ -209,15 +207,6 @@
     return _datas;
 }
 
-- (UIActivityIndicatorView *)indicatorView {
-    if (_indicatorView == nil) {
-        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        _indicatorView.color = [UIColor blackColor];
-        _indicatorView.frame = CGRectMake(200, 200, 50, 50);
-        _indicatorView.backgroundColor = [UIColor blackColor];
-    }
-    return _indicatorView;
-}
 /*
 #pragma mark - Navigation
 
