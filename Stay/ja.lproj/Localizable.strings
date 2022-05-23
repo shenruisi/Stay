@@ -1,0 +1,55 @@
+/* 
+  Localizable.strings
+  Stay
+
+  Created by ris on 2021/10/21.
+  
+*/
+
+//settings
+settings.rateApp="アプリに評価を付ける";
+settings.openSource="オープンソース";
+settings.joinTelegram="Telegramに加入する";
+settings.joinQQ="QQに加入する";
+
+settings.enableStay="Turn on Stay in Safari extensions";
+
+
+settings.section.otherApps="Other applications";
+
+settings.section.otherApps.fastclip="FastClip - Copy paste enhancer";
+
+settings.save="保存";
+
+settings.library="ライブラリー";
+settings.search="ブラウズ";
+settings.more="もっと";
+settings.author="作成者";
+settings.version="バージョン";
+settings.scriptContent="内容";
+settings.sourcePage="ソースページ";
+settings.descDetail="詳細";
+settings.autoUpdate="自動更新";
+settings.add="追加";
+settings.delete="削除";
+settings.create="作成";
+settings.newScript="新しいスクリプト";
+settings.notes="ノート";
+settings.uploadTips="ロード中";
+settings.addScript="スクリプトを書く";
+settings.addScriptFromUrl="リンクからインポートする";
+settings.addScriptFromWeb="GreasyForkから導入";
+settings.importFromFile = "ローカルファイルから導入";
+settings.downloadScript = "ダウンロード";
+settings.close = "閉じる";
+settings.scriptError = "エラー";
+
+unsupportedFileFormat = "対応していないファイルタイプ";
+ok = "OK";
+settings.update = "更新";
+cancel = "キャンセル";
+
+
+
+
+

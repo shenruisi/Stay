@@ -10,6 +10,12 @@
 #import "ScriptMananger.h"
 #import "ScriptEntity.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "LoadingSlideController.h"
+
+@interface BrowseView()
+
+@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@end
 
 @implementation BrowseView
 
@@ -52,16 +58,18 @@
 }
 
 - (void)addScript:(id)sender {
-    NSNotification *notification = [NSNotification notificationWithName:@"needShowLoading" object:nil];
-    [[NSNotificationCenter defaultCenter]postNotification:notification];
+    self.loadingSlideController.originSubText = self.titleLabel.text;
+    [self.loadingSlideController show];
 
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
      [set addCharactersInString:@"#"];
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
         dispatch_async(dispatch_get_main_queue(),^{
-            NSNotification *notification = [NSNotification notificationWithName:@"needStopLoading" object:nil];
-            [[NSNotificationCenter defaultCenter]postNotification:notification];
+            if (self.loadingSlideController.isShown){
+                [self.loadingSlideController dismiss];
+                self.loadingSlideController = nil;
+            }
             if(data != nil ) {
                 NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
@@ -144,6 +152,15 @@
         [_addBtn addTarget:self action:@selector(addScript:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _addBtn;
+}
+
+- (LoadingSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[LoadingSlideController alloc] init];
+        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+    }
+    
+    return _loadingSlideController;
 }
 
 @end
