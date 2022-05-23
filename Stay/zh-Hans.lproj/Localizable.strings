@@ -11,7 +11,7 @@ settings.rateApp="评价应用";
 settings.openSource="开源代码";
 settings.joinTelegram="加入Telegram";
 settings.enableStay="在Safari浏览器扩展中激活Stay";
-
+settings.joinQQ="加入QQ群";
 settings.section.otherApps="旗下应用";
 
 settings.section.otherApps.fastclip="FastClip - 复制粘贴增强器";
@@ -37,12 +37,12 @@ settings.addScript="编写脚本";
 settings.addScriptFromUrl="从链接导入";
 settings.addScriptFromWeb="从GreasyFork导入";
 settings.importFromFile = "从文件导入";
-settings.downloadScript = "正在下载脚本";
+settings.downloadScript = "下载脚本";
 settings.close = "关闭";
 settings.scriptError = "脚本格式错误";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "确认";
 settings.update = "更新";
-settings.joinQQ="加入qq群";
+
 
