@@ -59,6 +59,18 @@
 		58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4E5274754B900270873 /* gm-apis-gen.js */; };
 		58F7F4E9274776AB00270873 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4E8274776AB00270873 /* Stroge.m */; };
 		58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4EC2747A9FE00270873 /* gm-api-create.js */; };
+		58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1DD283B55C400BC2A92 /* FCSlideController.m */; };
+		58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1DF283B55C500BC2A92 /* FCBlockView.m */; };
+		58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1E2283B561A00BC2A92 /* FCView.m */; };
+		58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1E6283B563000BC2A92 /* FCRoundedShadowView.m */; };
+		58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1EA283B57BB00BC2A92 /* FCStyle.m */; };
+		58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1ED283B5AE100BC2A92 /* FCApp.m */; };
+		58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1F0283B5B3D00BC2A92 /* ModalNavigationBar.m */; };
+		58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1F1283B5B3D00BC2A92 /* ModalNavigationItem.m */; };
+		58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1F2283B5B3D00BC2A92 /* ModalViewController.m */; };
+		58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1F5283B5B3D00BC2A92 /* ModalNavigationController.m */; };
+		58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1FD283B5BF900BC2A92 /* LoadingSlideController.m */; };
+		58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB201283B5D3F00BC2A92 /* LoadingStatusModalViewController.m */; };
 		6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
 		8410C840275E028A005531EC /* codemirror.js in Resources */ = {isa = PBXBuildFile; fileRef = 8410C837275E028A005531EC /* codemirror.js */; };
 		8410C841275E028A005531EC /* typescript.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83A275E028A005531EC /* typescript.html */; };
@@ -219,6 +231,35 @@
 		58F7F4E7274776AB00270873 /* Stroge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stroge.h; sourceTree = "<group>"; };
 		58F7F4E8274776AB00270873 /* Stroge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stroge.m; sourceTree = "<group>"; };
 		58F7F4EC2747A9FE00270873 /* gm-api-create.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "gm-api-create.js"; sourceTree = "<group>"; };
+		58FEB1DB283B55C400BC2A92 /* FCSlideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCSlideController.h; sourceTree = "<group>"; };
+		58FEB1DC283B55C400BC2A92 /* FCPresenting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCPresenting.h; sourceTree = "<group>"; };
+		58FEB1DD283B55C400BC2A92 /* FCSlideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCSlideController.m; sourceTree = "<group>"; };
+		58FEB1DE283B55C400BC2A92 /* FCBlockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCBlockView.h; sourceTree = "<group>"; };
+		58FEB1DF283B55C500BC2A92 /* FCBlockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCBlockView.m; sourceTree = "<group>"; };
+		58FEB1E2283B561A00BC2A92 /* FCView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCView.m; sourceTree = "<group>"; };
+		58FEB1E3283B561B00BC2A92 /* FCView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCView.h; sourceTree = "<group>"; };
+		58FEB1E5283B563000BC2A92 /* FCRoundedShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCRoundedShadowView.h; sourceTree = "<group>"; };
+		58FEB1E6283B563000BC2A92 /* FCRoundedShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCRoundedShadowView.m; sourceTree = "<group>"; };
+		58FEB1E9283B57BB00BC2A92 /* FCStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCStyle.h; sourceTree = "<group>"; };
+		58FEB1EA283B57BB00BC2A92 /* FCStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCStyle.m; sourceTree = "<group>"; };
+		58FEB1EC283B5AE100BC2A92 /* FCApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCApp.h; sourceTree = "<group>"; };
+		58FEB1ED283B5AE100BC2A92 /* FCApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCApp.m; sourceTree = "<group>"; };
+		58FEB1F0283B5B3D00BC2A92 /* ModalNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalNavigationBar.m; sourceTree = "<group>"; };
+		58FEB1F1283B5B3D00BC2A92 /* ModalNavigationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalNavigationItem.m; sourceTree = "<group>"; };
+		58FEB1F2283B5B3D00BC2A92 /* ModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalViewController.m; sourceTree = "<group>"; };
+		58FEB1F3283B5B3D00BC2A92 /* ModalNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalNavigationController.h; sourceTree = "<group>"; };
+		58FEB1F4283B5B3D00BC2A92 /* ModalNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalNavigationBar.h; sourceTree = "<group>"; };
+		58FEB1F5283B5B3D00BC2A92 /* ModalNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalNavigationController.m; sourceTree = "<group>"; };
+		58FEB1F6283B5B3E00BC2A92 /* ModalNavigationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalNavigationItem.h; sourceTree = "<group>"; };
+		58FEB1F7283B5B3E00BC2A92 /* ModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalViewController.h; sourceTree = "<group>"; };
+		58FEB1FC283B5BF900BC2A92 /* LoadingSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingSlideController.h; sourceTree = "<group>"; };
+		58FEB1FD283B5BF900BC2A92 /* LoadingSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoadingSlideController.m; sourceTree = "<group>"; };
+		58FEB200283B5D3F00BC2A92 /* LoadingStatusModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingStatusModalViewController.h; sourceTree = "<group>"; };
+		58FEB201283B5D3F00BC2A92 /* LoadingStatusModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoadingStatusModalViewController.m; sourceTree = "<group>"; };
+		58FEB203283B636900BC2A92 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = ja; path = ../ja.lproj/Main.html; sourceTree = "<group>"; };
+		58FEB204283B636900BC2A92 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		58FEB205283B647500BC2A92 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "zh-Hant"; path = "../zh-Hant.lproj/Main.html"; sourceTree = "<group>"; };
+		58FEB206283B647500BC2A92 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8324085BF6D1637082EC8C6B /* libPods-Stay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8410C837275E028A005531EC /* codemirror.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = codemirror.js; sourceTree = "<group>"; };
 		8410C83A275E028A005531EC /* typescript.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = typescript.html; sourceTree = "<group>"; };
@@ -545,6 +586,69 @@
 			path = vendor;
 			sourceTree = "<group>";
 		};
+		58FEB1D9283B54C600BC2A92 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				58FEB1FF283B5C1D00BC2A92 /* Loading */,
+				58FEB1EF283B5B2700BC2A92 /* Modal */,
+				58FEB1EC283B5AE100BC2A92 /* FCApp.h */,
+				58FEB1ED283B5AE100BC2A92 /* FCApp.m */,
+				58FEB1E3283B561B00BC2A92 /* FCView.h */,
+				58FEB1E2283B561A00BC2A92 /* FCView.m */,
+				58FEB1DA283B559D00BC2A92 /* SlideController */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		58FEB1DA283B559D00BC2A92 /* SlideController */ = {
+			isa = PBXGroup;
+			children = (
+				58FEB1DE283B55C400BC2A92 /* FCBlockView.h */,
+				58FEB1DF283B55C500BC2A92 /* FCBlockView.m */,
+				58FEB1DC283B55C400BC2A92 /* FCPresenting.h */,
+				58FEB1DB283B55C400BC2A92 /* FCSlideController.h */,
+				58FEB1DD283B55C400BC2A92 /* FCSlideController.m */,
+				58FEB1E5283B563000BC2A92 /* FCRoundedShadowView.h */,
+				58FEB1E6283B563000BC2A92 /* FCRoundedShadowView.m */,
+			);
+			path = SlideController;
+			sourceTree = "<group>";
+		};
+		58FEB1E8283B57A400BC2A92 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				58FEB1E9283B57BB00BC2A92 /* FCStyle.h */,
+				58FEB1EA283B57BB00BC2A92 /* FCStyle.m */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
+		58FEB1EF283B5B2700BC2A92 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				58FEB1F4283B5B3D00BC2A92 /* ModalNavigationBar.h */,
+				58FEB1F0283B5B3D00BC2A92 /* ModalNavigationBar.m */,
+				58FEB1F3283B5B3D00BC2A92 /* ModalNavigationController.h */,
+				58FEB1F5283B5B3D00BC2A92 /* ModalNavigationController.m */,
+				58FEB1F6283B5B3E00BC2A92 /* ModalNavigationItem.h */,
+				58FEB1F1283B5B3D00BC2A92 /* ModalNavigationItem.m */,
+				58FEB1F7283B5B3E00BC2A92 /* ModalViewController.h */,
+				58FEB1F2283B5B3D00BC2A92 /* ModalViewController.m */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		58FEB1FF283B5C1D00BC2A92 /* Loading */ = {
+			isa = PBXGroup;
+			children = (
+				58FEB1FC283B5BF900BC2A92 /* LoadingSlideController.h */,
+				58FEB1FD283B5BF900BC2A92 /* LoadingSlideController.m */,
+				58FEB200283B5D3F00BC2A92 /* LoadingStatusModalViewController.h */,
+				58FEB201283B5D3F00BC2A92 /* LoadingStatusModalViewController.m */,
+			);
+			path = Loading;
+			sourceTree = "<group>";
+		};
 		61471BD8CEEC7081650F0787 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -681,6 +785,8 @@
 		84F4830D273A69AA00217BB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				58FEB1E8283B57A400BC2A92 /* Style */,
+				58FEB1D9283B54C600BC2A92 /* Controls */,
 				8410C835275E0278005531EC /* CodeMirror */,
 				8496DFBD2759CA750075ABD5 /* SYEdit */,
 				84C54CF62753BD4B00A9F14C /* SYDetail */,
@@ -903,6 +1009,8 @@
 				en,
 				Base,
 				"zh-Hans",
+				ja,
+				"zh-Hant",
 			);
 			mainGroup = 587688CB2719237E00F834A4;
 			productRefGroup = 587688D52719237E00F834A4 /* Products */;
@@ -1043,18 +1151,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
+				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
+				58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */,
 				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
+				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
+				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
+				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
+				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
 				84F48318273A739800217BB3 /* MainTabBarController.m in Sources */,
 				84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */,
@@ -1065,12 +1180,17 @@
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
+				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
+				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
+				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
+				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1126,6 +1246,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				5889731427213BC200BE123E /* en */,
+				58FEB203283B636900BC2A92 /* ja */,
+				58FEB205283B647500BC2A92 /* zh-Hant */,
 			);
 			name = Main.html;
 			sourceTree = "<group>";
@@ -1135,6 +1257,8 @@
 			children = (
 				5889731B27213C8300BE123E /* en */,
 				5889731E27213CB100BE123E /* zh-Hans */,
+				58FEB204283B636900BC2A92 /* ja */,
+				58FEB206283B647500BC2A92 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

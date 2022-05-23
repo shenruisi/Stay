@@ -35,6 +35,7 @@ const GM_APIS = new Set([
     "GM.notification",
     "GM_setClipboard",
     "GM.setClipboard",
+    "GM.setClipboard"
 ]);
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);
 const RunAtUnsupport_ATTRS = new Set(["context-menu"]);

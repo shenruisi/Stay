@@ -1,0 +1,46 @@
+/*
+  Localizable.strings
+  Stay
+
+  Created by ris on 2021/10/21.
+  
+*/
+
+//settings
+settings.rateApp="評價應用";
+settings.openSource="開源代碼";
+settings.joinTelegram="加入Telegram";
+settings.enableStay="在Safari瀏覽器擴展中激活Stay";
+settings.joinQQ="加入QQ群";
+settings.section.otherApps="旗下應用";
+
+settings.section.otherApps.fastclip="FastClip - 複製粘貼增強器";
+
+cancel="取消";
+settings.save="保存";
+settings.library="資料庫";
+settings.search="瀏覽";
+settings.more="更多";
+settings.author="作者";
+settings.version="版本";
+settings.scriptContent="腳本詳情";
+settings.sourcePage="來源";
+settings.descDetail="描述";
+settings.autoUpdate="自動更新";
+settings.add="新增";
+settings.delete="刪除";
+settings.create="創建";
+settings.newScript="新建腳本";
+settings.notes="版本記錄";
+settings.uploadTips="處理腳本資源";
+settings.addScript="編寫腳本";
+settings.addScriptFromUrl="從鏈接導入";
+settings.addScriptFromWeb="從GreasyFork導入";
+settings.importFromFile = "從文件導入";
+settings.downloadScript = "下載腳本";
+settings.close = "關閉";
+settings.scriptError = "腳本格式錯誤";
+
+unsupportedFileFormat = "不支持的文件格式";
+ok = "確認";
+settings.update = "更新";

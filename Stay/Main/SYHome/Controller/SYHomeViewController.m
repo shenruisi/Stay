@@ -404,7 +404,27 @@
     
     CGFloat leftWidth = kScreenWidth * 0.6 - 15;
         
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, leftWidth, 45)];
+    CGFloat titleLabelLeftSize = 0;
+    if(model.icon != NULL && model.icon.length > 0) {
+        if([model.icon containsString:@"base64"]) {
+            model.icon = [model.icon stringByReplacingOccurrencesOfString:@"data:image/png;base64," withString:@""];
+            NSData* data = [[NSData alloc] initWithBase64EncodedString:model.icon options:0];
+            UIImage* image = [UIImage imageWithData:data];
+            UIImageView *imageview = [[UIImageView alloc] initWithImage:image];
+            imageview.frame = CGRectMake(15,15,23,23);
+            [cell.contentView addSubview:imageview];
+        } else {
+            UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:model.icon]]]];
+            imageview.frame = CGRectMake(15,15,23,23);
+            [cell.contentView addSubview:imageview];
+
+        }
+        
+        titleLabelLeftSize = 27;
+    }
+    
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15 + titleLabelLeftSize , 15, leftWidth - titleLabelLeftSize, 45)];
     titleLabel.font = [UIFont boldSystemFontOfSize:18];
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -412,7 +432,6 @@
     titleLabel.text = model.name;
     [titleLabel sizeToFit];
     [cell.contentView addSubview:titleLabel];
-    
 
     
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 40)];

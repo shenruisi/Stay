@@ -83,7 +83,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'notes':[],
       'runAt': 'end',
       'pass':true,
-      'errorMessage':''
+      'errorMessage':'',
+      'iconUrl':''
   };
 
   let meta = extractMeta(content).match(/.+/g);
@@ -181,7 +182,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               }
               break;
           case 'icon':
-              details.iconUrl = safeUrl(data.value, url).toString();
+              details.iconUrl = data.value;
               break;
           case 'require':
               //hard code cuz only support stay:// now.

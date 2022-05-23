@@ -17,7 +17,7 @@
     userScript.version = dic[@"version"];
     userScript.desc = dic[@"description"];
     userScript.homepage = dic[@"homepage"];
-    userScript.icon = dic[@"icon"];
+    userScript.icon = dic[@"iconUrl"];
     userScript.includes = dic[@"includes"];
     NSArray *matches = dic[@"matches"];
     if (matches.count == 0){

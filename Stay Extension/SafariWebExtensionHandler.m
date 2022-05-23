@@ -8,6 +8,7 @@
 #import "SafariWebExtensionHandler.h"
 #import "Stroge.h"
 #import <SafariServices/SafariServices.h>
+#import <UIKit/UIKit.h>
 
 @implementation SafariWebExtensionHandler
 
