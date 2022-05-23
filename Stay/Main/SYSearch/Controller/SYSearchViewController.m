@@ -133,13 +133,13 @@
         [subView removeFromSuperview];
     }
     
-    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, kScreenWidth - 30, 30)];
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, kScreenWidth - 30, 30)];
     lab.text = self.datas[indexPath.row][@"name"];
     lab.font = [UIFont boldSystemFontOfSize:20];
     
     [cell.contentView addSubview:lab];
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, kScreenWidth, 145)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 55, kScreenWidth, 145)];
     scrollView.showsHorizontalScrollIndicator = FALSE;
     NSArray *array = self.datas[indexPath.row][@"userscripts"];
 
@@ -164,7 +164,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 190.0f;
+    return 200.0f;
 }
 
 
