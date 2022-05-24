@@ -115,6 +115,10 @@
                        [self saveError:@"resourceUrl下载失败,请检查后重试"];
                        return;
                    }
+                    
+                    if((userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0)&&(self.downloadUrl != NULL && self.downloadUrl.length >= 0)) {
+                        userScript.downloadUrl = self.downloadUrl;
+                    }
                    
                    [[UserscriptUpdateManager shareManager] saveIcon:userScript];
                    
@@ -122,6 +126,10 @@
                    
 
                    if(tmpScript != nil && tmpScript.uuid != nil) {
+                       if((userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0)&&(tmpScript.downloadUrl != NULL && tmpScript.downloadUrl.length >= 0)) {
+                           userScript.downloadUrl = tmpScript.downloadUrl;
+                       }
+                    
                        [[DataManager shareManager] updateUserScript:userScript];
                    } else {
                        [[DataManager shareManager] insertUserConfigByUserScript:userScript];
@@ -171,6 +179,16 @@
                     return;
                 }
                 
+                UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:userScript.uuid ];
+
+                if((userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0)&&(tmpScript.downloadUrl != NULL && tmpScript.downloadUrl.length >= 0)) {
+                    userScript.downloadUrl = tmpScript.downloadUrl;
+                }
+                
+                if((userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0)&&(self.downloadUrl != NULL && self.downloadUrl.length >= 0)) {
+                    userScript.downloadUrl = self.downloadUrl;
+                }
+            
                 
                if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                    [[DataManager shareManager] updateUserScript:userScript];

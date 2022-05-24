@@ -119,6 +119,7 @@
                 dispatch_async(dispatch_get_main_queue(),^{
                     SYEditViewController *cer = [[SYEditViewController alloc] init];
                     cer.content = str;
+                    cer.downloadUrl = url;
                     [self.navigationController pushViewController:cer animated:true];
                 });
             }

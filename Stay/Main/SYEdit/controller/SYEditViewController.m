@@ -65,6 +65,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHideAction:) name:UIKeyboardWillHideNotification object:nil];
     
     [self.view addSubview:self.syCodeMirrorView];
+    self.syCodeMirrorView.downloadUrl = self.downloadUrl;
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 45;
     if(!self.isSearch) {

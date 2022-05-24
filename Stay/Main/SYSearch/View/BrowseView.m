@@ -76,6 +76,7 @@
                 NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
+                cer.downloadUrl = downloadUrl;
                 [self.navigationController pushViewController:cer animated:true];
             }
             else{
