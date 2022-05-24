@@ -8,7 +8,6 @@
 #import "SafariWebExtensionHandler.h"
 #import "Stroge.h"
 #import <SafariServices/SafariServices.h>
-#import <UIKit/UIKit.h>
 
 @implementation SafariWebExtensionHandler
 
@@ -32,11 +31,22 @@
                 [datas replaceObjectAtIndex:i withObject:mulDic];
             }
         }
-        body = [[NSString alloc] initWithData:
-                [NSJSONSerialization dataWithJSONObject:datas
-                                                options:0
-                                                  error:nil]
-                                     encoding:NSUTF8StringEncoding];
+       
+//        @try {
+//            body = [[NSString alloc] initWithData:
+//                    [NSJSONSerialization dataWithJSONObject:datas
+//                                                    options:0
+//                                                      error:nil]
+//                                         encoding:NSUTF8StringEncoding];
+//
+//        } @catch (NSException *exception) {
+//            NSLog(@"exception, %@",[exception description]);
+//        } @finally {
+//
+//        }
+        
+        body = datas;
+        
     }
     else if ([message[@"type"] isEqualToString:@"GM_setValue"]){
         NSString *uuid = message[@"uuid"];

@@ -107,7 +107,7 @@ function fetchMatchedScriptList(){
         browserRunUrl = tab.url;
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
             try{
-                let userLibraryScripts = JSON.parse(response.body);
+                let userLibraryScripts = response.body; //JSON.parse(response.body);
                 userLibraryScripts.forEach((userLibraryScript) => {
                     let urlParse = new URL(browserRunUrl)
 

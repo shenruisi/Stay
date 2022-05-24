@@ -161,12 +161,14 @@ const $_injectInPageWithTiming = (script, runAt) => {
         }
         return true;
     });
+    
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
         let injectedVendor = new Set();
-        let userLibraryScripts = JSON.parse(response.body);
+        let userLibraryScripts = response.body; //JSON.parse(response.body);
+//        console.log("response",response.body);
         let injectScripts = [];
         userLibraryScripts.forEach((userLibraryScript)=>{
-            console.log(userLibraryScript);
+            console.log("script from library",userLibraryScript);
             try {
                 if ($_matchesCheck(userLibraryScript,new URL(location.href))){
                     console.log("userLibraryScript-", userLibraryScript)

@@ -56,7 +56,11 @@ static Tampermonkey *kInstance = nil;
 
     JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment]];
     
-    userScript.installType = [userScript.grants containsObject:@"unsafeWindow"] ? @"page" : @"content";
+    //Modify inject in page condition.
+    BOOL pageMode = userScript.grants.count == 0
+    || [userScript.grants containsObject:@"unsafeWindow"]
+    || (userScript.grants.count == 1 && [userScript.grants.firstObject.lowercaseString isEqualToString:@"none"]);
+    userScript.installType = pageMode ? @"page" : @"content";
     
     if ([userScript.installType isEqualToString:@"page"]){
         scriptWithoutComment = [NSString stringWithFormat:

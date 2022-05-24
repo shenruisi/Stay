@@ -49,6 +49,7 @@ ok = "OK";
 settings.update = "更新";
 cancel = "キャンセル";
 Error="エラー";
+Loading="読み込み中";
 
 
 

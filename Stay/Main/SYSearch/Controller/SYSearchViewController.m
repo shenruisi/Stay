@@ -12,8 +12,81 @@
 #import "UserscriptUpdateManager.h"
 #import "BrowseView.h"
 #import "ScriptMananger.h"
+#import "FCStyle.h"
+
+@interface SimpleLoadingView : UIView
+
+@property (nonatomic, strong) UIActivityIndicatorView *indicator;
+@property (nonatomic, strong) UILabel *label;
+- (void)start;
+- (void)stop;
+@end
+
+@implementation SimpleLoadingView
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]){
+        [self indicator];
+        [self label];
+    }
+    
+    return self;
+}
+
+- (void)start{
+    self.hidden = NO;
+    [self.indicator startAnimating];
+}
+
+- (void)stop{
+    self.hidden = YES;
+    [self.indicator stopAnimating];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    [self.label sizeToFit];
+    CGFloat width = self.indicator.frame.size.width + self.label.frame.size.width;
+    CGFloat left = (self.frame.size.width - width) / 2;
+    [self.indicator setFrame:CGRectMake(left,
+                                        (self.frame.size.height - self.indicator.frame.size.height)/2,
+                                        self.indicator.frame.size.width,
+                                        self.indicator.frame.size.height)];
+    [self.label setFrame:CGRectMake(self.indicator.frame.origin.x + self.indicator.frame.size.width,
+                                    (self.frame.size.height - self.label.frame.size.height)/2,
+                                    self.label.frame.size.width,
+                                    self.label.frame.size.height)];
+    [self.indicator startAnimating];
+}
+
+- (UIActivityIndicatorView *)indicator{
+    if (nil == _indicator){
+        _indicator = [[UIActivityIndicatorView alloc] init];
+        [self addSubview:_indicator];
+    }
+    
+    return _indicator;
+}
+
+- (UILabel *)label{
+    if (nil == _label){
+        _label = [[UILabel alloc] initWithFrame:CGRectZero];
+        _label.font = FCStyle.body;
+        _label.textColor = FCStyle.fcBlack;
+        _label.text = NSLocalizedString(@"Loading", @"");
+        [self addSubview:_label];
+    }
+    
+    return _label;
+}
 
 
+- (void)setHidden:(BOOL)hidden{
+    [super setHidden:hidden];
+    
+}
+
+@end
 
 
 @interface SYSearchViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -21,33 +94,26 @@
 @property (nonatomic, strong) UITableView *tableView;
 // 数据源数组
 @property (nonatomic, strong) NSMutableArray *datas;
-
-@property (nonatomic, strong) UIView *loadingView;
-
-
-
+@property (nonatomic, strong) SimpleLoadingView *simpleLoadingView;
 @end
 
 @implementation SYSearchViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self simpleLoadingView];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
-    self.loadingView.center = self.view.center;
-    self.loadingView.hidden = YES;
-    [self.view addSubview:self.loadingView];
 
     [self queryData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(needShowLoading) name:@"needShowLoading" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(needStopLoading) name:@"needStopLoading" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 
 - (void)queryData{
+    [self.simpleLoadingView start];
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -60,6 +126,7 @@
         }
 
         dispatch_async(dispatch_get_main_queue(),^{
+            [self.simpleLoadingView stop];
             [self.tableView reloadData];
         });
     });
@@ -67,19 +134,6 @@
 
 - (void)onBecomeActive {
     [self queryData];
-}
-
-- (void)needShowLoading {
-    dispatch_async(dispatch_get_main_queue(),^{
-        [self.view bringSubviewToFront:self.loadingView];
-        self.loadingView.hidden = NO;
-    });
-}
-- (void)needStopLoading {
-    dispatch_async(dispatch_get_main_queue(),^{
-        
-        self.loadingView.hidden = YES;
-    });
 }
 
 
@@ -207,34 +261,16 @@
     return _datas;
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (UIView *)loadingView {
-    if(_loadingView == nil) {
-        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
-        [_loadingView setBackgroundColor:RGB(230, 230, 230)];
-        _loadingView.layer.cornerRadius = 10;
-        _loadingView.layer.masksToBounds = 10;
-        
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textColor = [UIColor blackColor];
-        [titleLabel sizeToFit];
-
-        titleLabel.top = 30;
-        titleLabel.centerX = (kScreenWidth - 100) / 2;
-        [_loadingView addSubview:titleLabel];
+- (SimpleLoadingView *)simpleLoadingView{
+    if (nil == _simpleLoadingView){
+        _simpleLoadingView = [[SimpleLoadingView alloc] initWithFrame:CGRectMake(0,
+                                                                                 (self.view.frame.size.height - 50) / 2,
+                                                                                 self.view.frame.size.width, 50)];
+        [self.view addSubview:_simpleLoadingView];
     }
-    return _loadingView;
+    
+    return _simpleLoadingView;
 }
+
 
 @end
