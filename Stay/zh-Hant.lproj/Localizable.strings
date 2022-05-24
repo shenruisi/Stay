@@ -44,3 +44,4 @@ settings.scriptError = "腳本格式錯誤";
 unsupportedFileFormat = "不支持的文件格式";
 ok = "確認";
 settings.update = "更新";
+Error= "出錯了";

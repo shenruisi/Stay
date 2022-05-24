@@ -148,7 +148,7 @@
         source += _fillAllResourceTextStroge.toString() + ';\n\n';
 
         source += _fillAllResourceUrlStroge.toString() + ';\n\n';
-        native.nslog("native-source" + source);
+//        native.nslog("native-source" + source);
         return source;
     }
 
