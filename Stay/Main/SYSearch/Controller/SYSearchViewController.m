@@ -34,11 +34,13 @@
 }
 
 - (void)start{
+    [self.superview bringSubviewToFront:self];
     self.hidden = NO;
     [self.indicator startAnimating];
 }
 
 - (void)stop{
+    [self.superview sendSubviewToBack:self];
     self.hidden = YES;
     [self.indicator stopAnimating];
 }
@@ -52,7 +54,7 @@
                                         (self.frame.size.height - self.indicator.frame.size.height)/2,
                                         self.indicator.frame.size.width,
                                         self.indicator.frame.size.height)];
-    [self.label setFrame:CGRectMake(self.indicator.frame.origin.x + self.indicator.frame.size.width,
+    [self.label setFrame:CGRectMake(self.indicator.frame.origin.x + self.indicator.frame.size.width + 15,
                                     (self.frame.size.height - self.label.frame.size.height)/2,
                                     self.label.frame.size.width,
                                     self.label.frame.size.height)];
@@ -105,7 +107,6 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
 
-    [self queryData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -113,7 +114,9 @@
 
 
 - (void)queryData{
-    [self.simpleLoadingView start];
+    if (self.datas.count == 0){
+        [self.simpleLoadingView start];
+    }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -231,9 +234,11 @@
     [super viewWillAppear:animated];
     [[ScriptMananger shareManager] refreshData];
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.tableView.frame = self.view.bounds;
-    
-        [self.tableView reloadData];
+        if (self.datas.count > 0){
+            self.tableView.frame = self.view.bounds;
+            [self.tableView reloadData];
+        }
+        
     });
 
     
