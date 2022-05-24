@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UserScript *userScript;
 @property (nonatomic, assign) bool isEdit;
 @property (nonatomic, assign) bool isSearch;
+@property (nonatomic, strong) NSString *downloadUrl;
 @end
 
 NS_ASSUME_NONNULL_END

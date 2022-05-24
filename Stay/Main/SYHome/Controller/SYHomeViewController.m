@@ -118,6 +118,7 @@
                             NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                             SYEditViewController *cer = [[SYEditViewController alloc] init];
                             cer.content = str;
+                            cer.downloadUrl = url;
                             [self.navigationController pushViewController:cer animated:true];
                         }else {
                             NSString *content = @"下载脚本失败";
@@ -525,6 +526,7 @@
         
         objc_setAssociatedObject (btn , @"script", entity.updateScript.description, OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"scriptContent", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
         [cell.contentView addSubview:btn];
     } else {
@@ -668,9 +670,12 @@
     
     NSString *scriptContent = objc_getAssociatedObject(sender,@"scriptContent");
 
+    NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
+
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             SYEditViewController *cer = [[SYEditViewController alloc] init];
             cer.content = scriptContent;
+            cer.downloadUrl = downloadUrl;
             [self.navigationController pushViewController:cer animated:true];
         }];
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","Cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

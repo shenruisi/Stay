@@ -31,6 +31,7 @@
                     NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                     SYEditViewController *cer = [[SYEditViewController alloc] init];
                     cer.content = str;
+                    cer.downloadUrl = url;
                     UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
                     [nav pushViewController:cer animated:true];
                 }
