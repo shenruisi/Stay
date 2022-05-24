@@ -108,14 +108,14 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           // Ignore invalid/unsupported meta lines.
           continue;
       }
-      native.nslog(data.keyword);
+//      native.nslog(data.keyword);
       if (UserScriptUnsupport_TAGS.has(data.keyword)){
           details.pass = false;
           details.errorMessage += "Unsupport tag: "+data.keyword+"\n";
           continue;
       }
       
-      native.nslog(data.keyword);
+//      native.nslog(data.keyword);
       switch (data.keyword) {
           case 'noframes':
               details.noFrames = true;
@@ -155,8 +155,6 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           case 'description':
           case 'name':
               let locale = data.locale;
-              native.nslog("locale");
-              native.nslog(locale);
               if (locale) {
                   if (!details.locales[locale]) details.locales[locale] = {};
                   details.locales[locale][data.keyword] = data.value;
@@ -210,7 +208,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
       }
     }
-    native.nslog(details);
+//    native.nslog(details);
     return prepDefaults(details);
 }
 

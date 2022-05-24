@@ -66,16 +66,28 @@
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
         dispatch_async(dispatch_get_main_queue(),^{
-            if (self.loadingSlideController.isShown){
-                [self.loadingSlideController dismiss];
-                self.loadingSlideController = nil;
-            }
             if(data != nil ) {
+                
+                if (self.loadingSlideController.isShown){
+                    [self.loadingSlideController dismiss];
+                    self.loadingSlideController = nil;
+                }
+                
                 NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
                 [self.navigationController pushViewController:cer animated:true];
+            }
+            else{
+                [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                dispatch_get_main_queue(), ^{
+                    if (self.loadingSlideController.isShown){
+                        [self.loadingSlideController dismiss];
+                        self.loadingSlideController = nil;
+                    }
+                });
             }
         });
     });
