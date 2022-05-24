@@ -406,14 +406,13 @@
     CGFloat titleLabelLeftSize = 0;
     if(model.icon != NULL && model.icon.length > 0) {
         if([model.icon containsString:@"base64"]) {
-            model.icon = [model.icon stringByReplacingOccurrencesOfString:@"data:image/png;base64," withString:@""];
-            NSData* data = [[NSData alloc] initWithBase64EncodedString:model.icon options:0];
+            NSString *icon = [model.icon stringByReplacingOccurrencesOfString:@"data:image/png;base64," withString:@""];
+            NSData* data = [[NSData alloc] initWithBase64EncodedString:icon options:0];
             UIImage* image = [UIImage imageWithData:data];
             UIImageView *imageview = [[UIImageView alloc] initWithImage:image];
             imageview.frame = CGRectMake(15,15,23,23);
             [cell.contentView addSubview:imageview];
         } else {
-        
             UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
             [imageview sd_setImageWithURL:[NSURL URLWithString: model.icon] ];
             [cell.contentView addSubview:imageview];
