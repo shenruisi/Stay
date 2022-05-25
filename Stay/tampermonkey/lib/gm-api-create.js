@@ -7,11 +7,13 @@
 
 (function () {
 
-    function createGMApisWithUserScript(userscript, uuid, version) {
+    function createGMApisWithUserScript(userscript, uuid, version, scriptWithoutComment, installType) {
         let grants = userscript.grants;
         let source = 'const _uuid = "' + uuid + '";\n\n';
         source += 'const _version = "' + version + '";\n\n';
-        if (grants.includes('unsafeWindow')) {
+        native.nslog("createGMApisWithUserScripte-- " + installType);
+        if (grants.includes('unsafeWindow') || installType == 'page') {
+            native.nslog("page create");
             source += 'const _userscript = ' + JSON.stringify(userscript) +';\n';
             source += injectJavaScript(userscript, version);
             // source 为 window.addEventListener(), move to bootstrap

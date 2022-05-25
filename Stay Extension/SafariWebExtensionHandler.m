@@ -33,18 +33,18 @@
         }
        
 //        @try {
-//            body = [[NSString alloc] initWithData:
-//                    [NSJSONSerialization dataWithJSONObject:datas
-//                                                    options:0
-//                                                      error:nil]
-//                                         encoding:NSUTF8StringEncoding];
+//
 //
 //        } @catch (NSException *exception) {
 //            NSLog(@"exception, %@",[exception description]);
 //        } @finally {
 //
 //        }
-        
+//        body = [[NSString alloc] initWithData:
+//                           [NSJSONSerialization dataWithJSONObject:datas
+//                                                           options:0
+//                                                             error:nil]
+//                                                encoding:NSUTF8StringEncoding];
         body = datas;
         
     }
