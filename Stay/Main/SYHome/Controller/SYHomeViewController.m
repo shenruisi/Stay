@@ -222,8 +222,6 @@
     //自动更新代码保留先注释
     NSArray *array = [[DataManager shareManager] findScript:1];
     [self updateScriptWhen:array type:false];
-//    NSArray *searchArray = [[DataManager shareManager] findScriptInLib];
-//    [self updateScriptWhen:searchArray type:true];
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
@@ -244,14 +242,9 @@
                                 if(userScript.content != nil && userScript.content.length > 0) {
                                     userScript.uuid = scrpit.uuid;
                                     userScript.active = scrpit.active;
-                                    if(isSearch) {
-                                        [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                        NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
-                                    } else {
-                                        [[DataManager shareManager] updateUserScript:userScript];
-                                        [self refreshScript];
-                                    }
+                                    [[DataManager shareManager] updateUserScript:userScript];
+                                    [self refreshScript];
+                                    
                                 }
                             } else {
                                 [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
@@ -260,14 +253,8 @@
                                         userScript.uuid = scrpit.uuid;
                                         userScript.active = scrpit.active;
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-                                            if(isSearch) {
-                                                [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                                NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-                                                [[NSNotificationCenter defaultCenter]postNotification:notification];
-                                            } else {
-                                                [[DataManager shareManager] updateUserScript:userScript];
-                                                [self refreshScript];
-                                            }
+                                            [[DataManager shareManager] updateUserScript:userScript];
+                                            [self refreshScript];
                                         }
                                     }
                                 } failBlock:^(NSError * _Nonnull error) {
@@ -291,14 +278,8 @@
                             userScript.uuid = scrpit.uuid;
                             userScript.active = scrpit.active;
                             if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
-                                if(isSearch) {
-                                    [[DataManager shareManager] updateScriptConfigByUserScript:userScript];
-                                    NSNotification *notification = [NSNotification notificationWithName:@"uploadScriptSuccess" object:nil];
-                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
-                                } else {
-                                    [[DataManager shareManager] updateUserScript:userScript];
-                                    [self refreshScript];
-                                }
+                                [[DataManager shareManager] updateUserScript:userScript];
+                                [self refreshScript];
                             }
                         }
                     }
@@ -586,7 +567,6 @@
             UserScript *model = weakSelf.results[indexPath.row];
 
             [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
-            [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:model.uuid];
             [tableView setEditing:NO animated:YES];
             [self reloadTableView];
             [tableView reloadData];
@@ -600,8 +580,6 @@
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             UserScript *model = weakSelf.datas[indexPath.row];
             [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
-            [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:model.uuid];
-
             [tableView setEditing:NO animated:YES];
             [self reloadTableView];
             [tableView reloadData];
@@ -622,7 +600,6 @@
                 [weakSelf reloadTableView];
                 [weakSelf initScrpitContent];
                 [tableView reloadData];
-                [[DataManager shareManager]  updateLibScrpitStatus:1 numberId:model.uuid];
         }];
         UserScript *model = _datas[indexPath.row];
         if (model.active) {
@@ -769,8 +746,8 @@
 - (NSString *)timeWithTimeIntervalString:(NSString *)timeString
 {
     
-    if(timeString == NULL) {
-        timeString = @"0";
+    if(timeString == NULL || [timeString doubleValue] < 20) {
+        timeString = [self getNowDate];
     }
   // 格式化时间
   NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
