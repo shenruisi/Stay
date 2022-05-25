@@ -137,7 +137,7 @@
     [detailView addSubview:scriptLabel];
     
     
-    NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+    NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[RGB(20, 20, 20) CGColor])?@"arrow-dark":@"arrow";
     UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
     scriptIconLabel.right = kScreenWidth - 48;
     scriptIconLabel.centerY = scriptLabel.centerY;
@@ -195,7 +195,7 @@
         notesLabel.left = 17;
         [detailView addSubview:notesLabel];
         
-        NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+        NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[RGB(20, 20, 20) CGColor])?@"arrow-dark":@"arrow";
         UIImageView *noteIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
         noteIconLabel.right = kScreenWidth - 48;
         noteIconLabel.centerY = notesLabel.centerY;
