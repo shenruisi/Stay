@@ -435,7 +435,6 @@
 - (void)deleteScript:(id)sender {
     self.isSearch = true;
     [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
-    [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:self.script.uuid];
     for (UIView *subView in self.view.subviews) {
         [subView removeFromSuperview];
     }
@@ -445,7 +444,6 @@
 - (void)addScript:(id)sender {
     self.isSearch = false;
     [[DataManager shareManager] insertToUserScriptnumberId: self.script.uuid];
-    [[DataManager shareManager] updateLibScrpitStatus:1 numberId: self.script.uuid];
     for (UIView *subView in self.view.subviews) {
         [subView removeFromSuperview];
     }
