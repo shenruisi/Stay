@@ -54,9 +54,7 @@ static Tampermonkey *kInstance = nil;
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-    BOOL pageMode = userScript.grants.count == 0
-    || [userScript.grants containsObject:@"unsafeWindow"]
-    || (userScript.grants.count == 1 && [userScript.grants.firstObject.lowercaseString isEqualToString:@"none"]);
+    BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
     userScript.installType = pageMode ? @"page" : @"content";
     
     JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];

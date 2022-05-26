@@ -19,11 +19,7 @@
     userScript.homepage = dic[@"homepage"];
     userScript.icon = dic[@"iconUrl"];
     userScript.includes = dic[@"includes"];
-    NSArray *matches = dic[@"matches"];
-    if (matches.count == 0){
-        matches = @[@"*://*/*"];
-    }
-    userScript.mathes = matches;
+    userScript.mathes = dic[@"matches"];
     userScript.excludes = dic[@"excludes"];
     userScript.runAt = dic[@"runAt"];
     userScript.grants = dic[@"grants"];

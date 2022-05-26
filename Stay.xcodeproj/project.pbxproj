@@ -71,6 +71,7 @@
 		58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1F5283B5B3D00BC2A92 /* ModalNavigationController.m */; };
 		58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1FD283B5BF900BC2A92 /* LoadingSlideController.m */; };
 		58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB201283B5D3F00BC2A92 /* LoadingStatusModalViewController.m */; };
+		58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB208283E072B00BC2A92 /* MatchPattern.m */; };
 		6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
 		8410C840275E028A005531EC /* codemirror.js in Resources */ = {isa = PBXBuildFile; fileRef = 8410C837275E028A005531EC /* codemirror.js */; };
 		8410C841275E028A005531EC /* typescript.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83A275E028A005531EC /* typescript.html */; };
@@ -260,6 +261,8 @@
 		58FEB204283B636900BC2A92 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		58FEB205283B647500BC2A92 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "zh-Hant"; path = "../zh-Hant.lproj/Main.html"; sourceTree = "<group>"; };
 		58FEB206283B647500BC2A92 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		58FEB207283E072B00BC2A92 /* MatchPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatchPattern.h; sourceTree = "<group>"; };
+		58FEB208283E072B00BC2A92 /* MatchPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MatchPattern.m; sourceTree = "<group>"; };
 		8324085BF6D1637082EC8C6B /* libPods-Stay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8410C837275E028A005531EC /* codemirror.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = codemirror.js; sourceTree = "<group>"; };
 		8410C83A275E028A005531EC /* typescript.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = typescript.html; sourceTree = "<group>"; };
@@ -458,6 +461,8 @@
 				58F7F4E8274776AB00270873 /* Stroge.m */,
 				587689112719238000F834A4 /* SafariWebExtensionHandler.h */,
 				587689122719238000F834A4 /* SafariWebExtensionHandler.m */,
+				58FEB207283E072B00BC2A92 /* MatchPattern.h */,
+				58FEB208283E072B00BC2A92 /* MatchPattern.m */,
 				587689252719238000F834A4 /* Info.plist */,
 				587689142719238000F834A4 /* Resources */,
 			);
@@ -1216,6 +1221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				58F7F4E9274776AB00270873 /* Stroge.m in Sources */,
 			);
@@ -1462,7 +1468,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -1508,7 +1514,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
