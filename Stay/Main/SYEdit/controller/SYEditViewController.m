@@ -67,7 +67,7 @@
     [self.view addSubview:self.syCodeMirrorView];
     self.syCodeMirrorView.downloadUrl = self.downloadUrl;
     [self.view addSubview:self.componetView];
-    self.componetView.bottom = kScreenHeight;
+    self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
@@ -148,12 +148,12 @@
 }
 
 - (void)keyboardShowAction:(NSNotification*)sender{
-    NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
-    CGRect endFrame = [endFrameValue CGRectValue];
-    self.componetView.bottom = endFrame.origin.y - 10;
+//    NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
+//    CGRect endFrame = [endFrameValue CGRectValue];
+//    self.componetView.bottom = endFrame.origin.y - 10;
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
-    self.componetView.bottom = kScreenHeight;
+    self.componetView.bottom = kScreenHeight - 20;
 }
 
 - (void)saveSuccess:(id)sender{
@@ -193,7 +193,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    self.componetView.bottom = kScreenHeight;
+    self.componetView.bottom = kScreenHeight - 20;
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
@@ -221,7 +221,7 @@
 - (UIView *)componetView {
     if (nil == _componetView){
         _componetView = [[UIView alloc] initWithFrame:CGRectMake(0,0.0,kScreenWidth,60)];
-        _componetView.backgroundColor = [self createBgColor];
+        _componetView.backgroundColor = DynamicColor([UIColor blackColor],[UIColor whiteColor]);
 //        _componetView.layer.cornerRadius = 12;
         _componetView.layer.borderWidth = 0.5;
         UIColor *borderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
@@ -233,7 +233,6 @@
                 }
             }];
         _componetView.layer.borderColor = [borderColor CGColor];
-        
         CGFloat width = (kScreenWidth - 57 - 56 * 4) / 3;
         
         UIImage *image =  [UIImage systemImageNamed:@"arrow.uturn.backward"
@@ -330,6 +329,8 @@
     UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
                 return RGB(242, 242, 246);
+                
+                return RGB(242, 242, 246);
             }
             else {
                 return [UIColor blackColor];
@@ -340,7 +341,7 @@
 
 - (SYCodeMirrorView *)syCodeMirrorView {
     if (_syCodeMirrorView == nil) {
-        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, kScreenWidth, kScreenHeight - StatusBarHeight)];
+        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, kScreenWidth, kScreenHeight - StatusBarHeight - 70)];
     }
     return _syCodeMirrorView;
 }
@@ -388,6 +389,7 @@
     
     btn.frame = CGRectMake(0, 0, 56, 45);
     [btn setTitleColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) forState:UIControlStateNormal];
+    [btn.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [btn setTitleEdgeInsets:
            UIEdgeInsetsMake(btn.frame.size.height/2,
                            (btn.frame.size.width-btn.titleLabel.intrinsicContentSize.width)/2-btn.imageView.frame.size.width,
