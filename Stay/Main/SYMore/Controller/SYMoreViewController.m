@@ -111,7 +111,8 @@
                     @{@"title":NSLocalizedString(@"settings.rateApp",""),@"url":@"https://apps.apple.com/app/id1591620171?action=write-review"},
                     @{@"title":NSLocalizedString(@"settings.openSource",""),@"url":@"https://github.com/shenruisi/Stay"},
                     @{@"title":NSLocalizedString(@"settings.joinTelegram",""),@"url":@"https://t.me/fastclipchat"},
-                    @{@"title":NSLocalizedString(@"settings.joinQQ",""),@"url":@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=714147685&key=c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217&card_type=group&source=external&jump_from=webapi"}
+                    @{@"title":NSLocalizedString(@"settings.joinQQ",""),@"url":@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=714147685&key=c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217&card_type=group&source=external&jump_from=webapi"},
+                    @{@"title":NSLocalizedString(@"settings.joinTwitter","joinTwitter"),@"url":@"https://twitter.com/fastclip1"}
                 ]
             },
             @{

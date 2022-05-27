@@ -12,6 +12,8 @@ settings.openSource="开源代码";
 settings.joinTelegram="加入Telegram";
 settings.enableStay="在Safari浏览器扩展中激活Stay";
 settings.joinQQ="加入QQ群";
+settings.joinTwitter="加入Twitter";
+
 settings.section.otherApps="旗下应用";
 
 settings.section.otherApps.fastclip="FastClip - 复制粘贴增强器";
