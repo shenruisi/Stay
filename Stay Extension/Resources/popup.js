@@ -105,16 +105,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 function fetchMatchedScriptList(){
     browser.tabs.getSelected(null, (tab) => {
         browserRunUrl = tab.url;
-        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
+        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl }, (response) => {
             try{
-                let userLibraryScripts = response.body; //JSON.parse(response.body);
-                userLibraryScripts.forEach((userLibraryScript) => {
-                    let urlParse = new URL(browserRunUrl)
-
-                    if (matchesCheck(userLibraryScript, urlParse)) {
-                        scriptStateList.push(userLibraryScript);
-                    }
-                });
+//                let userLibraryScripts = response.body; //JSON.parse(response.body);
+//                userLibraryScripts.forEach((userLibraryScript) => {
+//                    let urlParse = new URL(browserRunUrl)
+//
+//                    if (matchesCheck(userLibraryScript, urlParse)) {
+//                        scriptStateList.push(userLibraryScript);
+//                    }
+//                });
+                let scriptStateList = response.body;
+                
                 //fetch register menu from popup to content
                 browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
                 renderScriptContent(scriptStateList);

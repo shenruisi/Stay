@@ -121,7 +121,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
     }
 }
 
-//let injectScripts = []
+let matchedScripts;
 (function(){
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
@@ -162,25 +162,28 @@ const $_injectInPageWithTiming = (script, runAt) => {
         return true;
     });
     
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
+    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
         let injectedVendor = new Set();
-        let userLibraryScripts = response.body; //JSON.parse(response.body);
+//        let userLibraryScripts = response.body; //JSON.parse(response.body);
 //        console.log("response",response.body);
-        let injectScripts = [];
-        userLibraryScripts.forEach((userLibraryScript)=>{
-            console.log("script from library",userLibraryScript);
-            try {
-                if ($_matchesCheck(userLibraryScript,new URL(location.href))){
-                    console.log("userLibraryScript-", userLibraryScript)
-                    injectScripts.push(userLibraryScript);
-                }
-                
-            } catch (error) {
-                console.error("￥_matchesCheck-----error", error)
-            }
-        });
-        console.log("injectScripts-", injectScripts)
-        injectScripts.forEach((script) => {
+//        let injectScripts = [];
+//        userLibraryScripts.forEach((userLibraryScript)=>{
+//            console.log("script from library",userLibraryScript);
+//            try {
+//                if ($_matchesCheck(userLibraryScript,new URL(location.href))){
+//                    console.log("userLibraryScript-", userLibraryScript)
+//                    injectScripts.push(userLibraryScript);
+//                }
+//
+//            } catch (error) {
+//                console.error("￥_matchesCheck-----error", error)
+//            }
+//        });
+        
+        matchedScripts = response.body;
+        
+        console.log("matchedScripts-", matchedScripts)
+        matchedScripts.forEach((script) => {
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
                     if (injectedVendor.has(url)) return;
@@ -234,12 +237,6 @@ const $_injectInPageWithTiming = (script, runAt) => {
                 }
                 
             }
-        });
-                
-        browser.runtime.sendMessage({
-            from: "bootstrap",
-            operate: "setMatchedScripts",
-            matchScripts: injectScripts
         });
     });
     window.addEventListener('message', (e) => {
