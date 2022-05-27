@@ -115,7 +115,7 @@ function fetchMatchedScriptList(){
 //                        scriptStateList.push(userLibraryScript);
 //                    }
 //                });
-                let scriptStateList = response.body;
+                scriptStateList = response.body;
                 
                 //fetch register menu from popup to content
                 browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
