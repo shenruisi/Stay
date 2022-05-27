@@ -250,6 +250,58 @@
         
     }
 
+    function GM_download(url, name) {
+        let downloadStyle = "width: 270px;height: 67px;transform: translateX(-50%);left: 50%;";
+        if (is_iPad()) {
+            downloadStyle = "width: 320px;height: 82px; right: 10px;"
+        }
+        let bg = "background: #fff;";
+        let fontColor = "color: #000000;"
+        if (is_dark()) {
+            bg = "background: #000;";
+            fontColor = "color: #F3F3F3;"
+        }
+        let title = "You have source to download..."
+        let text = "Please click me, " + name;
+        let stayImg = browser.runtime.getURL("images/icon-256.png");
+        let popToastTemp = [
+            '<div id="downloadPop" style="' + downloadStyle + ' top: 10px; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);display: flex;flex-direction: row;padding: 4px;">',
+            '<div id="notifyImg"  style="text-decoration: none;width: 75px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;"><img src=' + stayImg + ' style="width: 46px;height: 46px; border-radius: 4px;"></img></div>',
+            '<div id="notificationCon" style="padding:0 4px;font-family:Helvetica Neue;text-decoration: none;display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items:start;line-height:23px;">',
+            '<div style="font-size: 14px; color: #B620E0;font-weight:700;">' + title + '</div>',
+            '<a id="downloadLink" target="_blank" style="font-size: 12px;' + fontColor + ' line-height: 15px;padding-top:2px;">' + text + '</a>',
+            '</div>',
+            '</div>'
+        ];
+
+        let temp = popToastTemp.join("");
+        let tempDom = document.createElement("div");
+        tempDom.id = "downloadContainer"
+        tempDom.innerHTML = temp;
+        document.body.appendChild(tempDom);
+
+        let downloadLinkDom = document.getElementById("downloadLink");
+        downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+        downloadLinkDom.download = name;
+        
+        
+        
+
+        function is_dark() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        function is_iPad() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/iPad/i) == "ipad") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
     /**
      * 1、text, title,  image, onclick
      * 2、details, ondone
@@ -588,6 +640,10 @@
             else if ("GM.setClipboard" === grant || "GM_setClipboard" === grant) {
                 api += `${GM_setClipboard}\n`;
                 gmFunVals.push("setClipboard: GM_setClipboard");
+            }
+            else if ("GM.download" === grant || "GM_download" === grant) {
+                api += `${GM_download}\n`;
+                gmFunVals.push("download: GM_download");
             }
             else if (grant === "GM_xmlhttpRequest" || grant === "GM.xmlHttpRequest") {
                 api += `${xhr}\n`;

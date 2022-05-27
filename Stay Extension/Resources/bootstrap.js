@@ -132,6 +132,67 @@ let matchedScripts;
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, id: id });
         }
+        else if (request.from == "background" && "exeScriptManually" === operate){
+            let targetScript;
+            matchedScripts.forEach((script) => {
+                if (script.uuid == request.uuid){
+                    targetScript = script;
+                    break;
+                }
+            });
+            
+            if (targetScript){
+                if (targetScript.requireUrls.length > 0){
+                    targetScript.requireUrls.forEach((url)=>{
+                        if (injectedVendor.has(url)) return;
+                        injectedVendor.add(url);
+                        if (url.startsWith('stay://')){
+                            browser.runtime.sendMessage({
+                                from: "bootstrap",
+                                operate: "injectFile",
+                                file:$_res($_uri(url).pathname.substring(1)),
+                                allFrames:true,
+                                runAt:"document_start"
+                            });
+                        }
+                        else{
+                            var pageInject = script.installType === "page";
+                            console.log("pageInject---",pageInject)
+                            targetScript.requireCodes.forEach((urlCodeDic)=>{
+                                if (urlCodeDic.url == url){
+                                    if (pageInject){
+                                        $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
+                                    }
+                                    else{
+                                        browser.runtime.sendMessage({
+                                            from: "bootstrap",
+                                            operate: "injectScript",
+                                            code:urlCodeDic.code,
+                                            allFrames:true,
+                                            runAt:"document_start"
+                                        });
+                                    }
+                                    
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                if (targetScript.installType === "page"){
+                    $_injectInPageWithTiming(targetScript,"document_start");
+                }
+                else{
+                    browser.runtime.sendMessage({
+                        from: "bootstrap",
+                        operate: "injectScript",
+                        code:targetScript.content,
+                        allFrames:!targetScript.noFrames,
+                        runAt:"document_start"
+                    });
+                }
+            }
+        }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
             if (request.id !== id) return;
