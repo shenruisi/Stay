@@ -391,7 +391,7 @@
     [btn setTitleColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) forState:UIControlStateNormal];
     [btn.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [btn setTitleEdgeInsets:
-           UIEdgeInsetsMake(btn.frame.size.height/2,
+           UIEdgeInsetsMake(btn.frame.size.height/2 + 10,
                            (btn.frame.size.width-btn.titleLabel.intrinsicContentSize.width)/2-btn.imageView.frame.size.width,
                             0,
                            (btn.frame.size.width-btn.titleLabel.intrinsicContentSize.width)/2)];
