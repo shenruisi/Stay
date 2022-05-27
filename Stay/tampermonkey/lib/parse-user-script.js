@@ -70,6 +70,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'updateUrl': '',
       'excludes': [],
       'grants': [],
+      'unsupportedGrants': [],
       'homePageUrl': '',
       'author': 'Unnamed Author',
       'includes': [],
@@ -148,8 +149,9 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
                   details.grants.push(data.value);
               }
               else{
-                  details.pass = false;
-                  details.errorMessage += 'Unsupport GM api '+data.value+'\n';
+//                  details.pass = false;
+//                  details.errorMessage += 'Unsupport GM api '+data.value+'\n';
+                  details.unsupportedGrants.push(data.value);
               }
               break;
           case 'description':
@@ -172,26 +174,18 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               details.notes.push(data.value);
               break;
           case 'match':
-              try {
-                  new window.MatchPattern(data.value);
-                  details.matches.push(data.value);
-              } catch (e) {
-                  details.errorMessage += 'Unsupport match pattern' + data.value;
-              }
+              details.matches.push(data.value);
+//              try {
+//                  new window.MatchPattern(data.value);
+//
+//              } catch (e) {
+//                  details.errorMessage += 'Unsupport match pattern' + data.value;
+//              }
               break;
           case 'icon':
               details.iconUrl = data.value;
               break;
           case 'require':
-              //hard code cuz only support stay:// now.
-//              if (data.value.startsWith('stay://')){
-//                  details.requireUrls.push(safeUrl(data.value, url).toString());
-//              }
-//              else{
-//                  details.pass = false;
-//                  details.errorMessage += 'Unsupport require protocol: '+data.value;
-//              }
-              
               details.requireUrls.push(safeUrl(data.value, url).toString());
               
               break;

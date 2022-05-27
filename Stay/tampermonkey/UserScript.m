@@ -33,6 +33,7 @@
     userScript.resourceUrls = dic[@"resourceUrls"];
     userScript.notes = dic[@"notes"];
     userScript.locales = dic[@"locales"];
+    userScript.unsupportedGrants = dic[@"unsupportedGrants"];
     return userScript;
 }
 
@@ -61,7 +62,8 @@
         @"resourceUrls":self.resourceUrls ? self.resourceUrls: @{},
         @"notes":self.notes ? self.notes: @[],
         @"locales":self.locales ? self.locales : @{},
-        @"installType":self.installType ? self.installType : @"content"
+        @"installType":self.installType ? self.installType : @"content",
+        @"unsupportedGrants":self.unsupportedGrants ? self.unsupportedGrants : @[]
     };
 }
 
