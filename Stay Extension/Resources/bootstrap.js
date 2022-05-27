@@ -132,6 +132,9 @@ let matchedScripts;
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, id: id });
         }
+        else if (request.from == "background" && "exeScriptManually" === operate){
+            
+        }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
             if (request.id !== id) return;
