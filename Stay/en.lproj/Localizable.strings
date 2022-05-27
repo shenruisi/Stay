@@ -8,9 +8,10 @@
 
 //settings
 settings.rateApp="Rate app";
-settings.openSource="Open Source";
+settings.openSource="Open source";
 settings.joinTelegram="Join Telegram";
 settings.joinQQ="Join QQ";
+settings.joinTwitter="Follow Twitter";
 
 settings.enableStay="Turn on Stay in Safari extensions";
 
