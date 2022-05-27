@@ -388,7 +388,11 @@
     CGFloat titleLabelLeftSize = 0;
     if(model.icon != NULL && model.icon.length > 0) {
         if([model.icon containsString:@"base64"]) {
-            NSString *icon = [model.icon stringByReplacingOccurrencesOfString:@"data:image/png;base64," withString:@""];
+            NSString *icon = @"";
+            NSArray *array =  [model.icon componentsSeparatedByString:@","];
+            if (array != nil && array.count >= 2) {
+                icon = array[1];
+            }
             NSData* data = [[NSData alloc] initWithBase64EncodedString:icon options:0];
             UIImage* image = [UIImage imageWithData:data];
             UIImageView *imageview = [[UIImageView alloc] initWithImage:image];
