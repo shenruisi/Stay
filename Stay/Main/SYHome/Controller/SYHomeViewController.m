@@ -62,7 +62,7 @@
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
-    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);;
+    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;

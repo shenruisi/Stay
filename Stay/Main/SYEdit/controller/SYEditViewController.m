@@ -67,7 +67,7 @@
     [self.view addSubview:self.syCodeMirrorView];
     self.syCodeMirrorView.downloadUrl = self.downloadUrl;
     [self.view addSubview:self.componetView];
-    self.componetView.bottom = kScreenHeight - 45;
+    self.componetView.bottom = kScreenHeight;
     if(!self.isSearch) {
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
@@ -153,7 +153,7 @@
     self.componetView.bottom = endFrame.origin.y - 10;
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
-    self.componetView.bottom = kScreenHeight - 45;
+    self.componetView.bottom = kScreenHeight;
 }
 
 - (void)saveSuccess:(id)sender{
@@ -193,7 +193,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    self.componetView.bottom = kScreenHeight - 45;
+    self.componetView.bottom = kScreenHeight;
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
@@ -220,9 +220,9 @@
 
 - (UIView *)componetView {
     if (nil == _componetView){
-        _componetView = [[UIView alloc] initWithFrame:CGRectMake(10,0.0,kScreenWidth - 20,45)];
+        _componetView = [[UIView alloc] initWithFrame:CGRectMake(0,0.0,kScreenWidth,60)];
         _componetView.backgroundColor = [self createBgColor];
-        _componetView.layer.cornerRadius = 12;
+//        _componetView.layer.cornerRadius = 12;
         _componetView.layer.borderWidth = 0.5;
         UIColor *borderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
                 if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
@@ -233,42 +233,51 @@
                 }
             }];
         _componetView.layer.borderColor = [borderColor CGColor];
-        _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _backBtn.frame = CGRectMake(0, 0, 31, 23);
+        
+        CGFloat width = (kScreenWidth - 57 - 56 * 4) / 3;
+        
+        UIImage *image =  [UIImage systemImageNamed:@"arrow.uturn.backward"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+        image = [image imageWithTintColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        
+        _backBtn = [self createBtn:image text:@"Undo"];
         _backBtn.enabled = false;
-        [_backBtn setImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
         [_backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
-        _backBtn.centerY = 22.5;
-        _backBtn.left = 31;
+        _backBtn.centerY = 30;
+        _backBtn.left = 28.5;
         [_componetView addSubview:_backBtn];
-        _onBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _onBtn.frame = CGRectMake(0, 0, 31, 23);
+
+        UIImage *onImage =  [UIImage systemImageNamed:@"arrow.uturn.forward"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+        onImage = [onImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        
+        _onBtn = [self createBtn:onImage text:@"Redo"];
         _onBtn.enabled = false;
-        [_onBtn setImage:[UIImage imageNamed:@"on"] forState:UIControlStateNormal];
         [_onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
-        _onBtn.centerY = 22.5;
-        _onBtn.left = 83;
+        _onBtn.centerY = 30;
+        _onBtn.left = 56 + width + 28.5;
         [_componetView addSubview:_onBtn];
         
-        UIButton *pasteLabelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        pasteLabelBtn.frame = CGRectMake(0, 0, 120, 24);
-        [pasteLabelBtn setTitle:@"从剪贴板粘贴" forState:UIControlStateNormal];
-        pasteLabelBtn.titleLabel.font = [UIFont systemFontOfSize:17];
-        [pasteLabelBtn setTitleColor:RGB(182, 32, 224) forState:UIControlStateNormal];
-        [pasteLabelBtn addTarget:self action:@selector(copyPasteBoard:) forControlEvents:UIControlEventTouchUpInside];
-        pasteLabelBtn.centerY = 22.5;
-        pasteLabelBtn.right = kScreenWidth - 31;
-        [_componetView addSubview:pasteLabelBtn];
+        UIImage *clearImage = [UIImage systemImageNamed:@"trash"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+        clearImage = [clearImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
         
-        UIButton *clearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearBtn.frame = CGRectMake(0, 0, 50, 24);
-        [clearBtn setTitle:@"清空" forState:UIControlStateNormal];
-        clearBtn.titleLabel.font = [UIFont systemFontOfSize:17];
-        [clearBtn setTitleColor:RGB(182, 32, 224) forState:UIControlStateNormal];
+        UIButton *clearBtn = [self createBtn:clearImage text:@"Clear"];
         [clearBtn addTarget:self action:@selector(clearContext:) forControlEvents:UIControlEventTouchUpInside];
-        clearBtn.centerY = 22.5;
-        clearBtn.right = pasteLabelBtn.left - 25;
+        clearBtn.centerY = 30;
+        clearBtn.left = 56 * 2  + width * 2 + 28.5;
         [_componetView addSubview:clearBtn];
+
+        UIImage *pasteImage =  [UIImage systemImageNamed:@"arrow.up.doc.on.clipboard"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+        pasteImage = [pasteImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        
+        UIButton *pasteLabelBtn = [self createBtn:pasteImage text:@"Clipboard"];
+    
+        [pasteLabelBtn addTarget:self action:@selector(copyPasteBoard:) forControlEvents:UIControlEventTouchUpInside];
+        pasteLabelBtn.centerY = 30;
+        pasteLabelBtn.left = 56 * 3  + width * 3 + 28.5;
+        [_componetView addSubview:pasteLabelBtn];
         
     }
     return _componetView;
@@ -368,6 +377,29 @@
         _countLabel.font = [UIFont systemFontOfSize:18];
     }
     return _countLabel;
+}
+
+- (UIButton *)createBtn:(UIImage *)image text:(NSString *)text {
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [btn setTitle:text forState:UIControlStateNormal];
+    [btn setImage:image forState:UIControlStateNormal];
+    
+    btn.frame = CGRectMake(0, 0, 56, 45);
+    [btn setTitleColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) forState:UIControlStateNormal];
+    [btn setTitleEdgeInsets:
+           UIEdgeInsetsMake(btn.frame.size.height/2,
+                           (btn.frame.size.width-btn.titleLabel.intrinsicContentSize.width)/2-btn.imageView.frame.size.width,
+                            0,
+                           (btn.frame.size.width-btn.titleLabel.intrinsicContentSize.width)/2)];
+    [btn setImageEdgeInsets:
+               UIEdgeInsetsMake(
+                           0,
+                           (btn.frame.size.width-btn.imageView.frame.size.width)/2,
+                            btn.titleLabel.intrinsicContentSize.height,
+                           (btn.frame.size.width-btn.imageView.frame.size.width)/2)];
+    return  btn;
 }
 
 @end
