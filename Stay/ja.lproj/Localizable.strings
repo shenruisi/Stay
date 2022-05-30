@@ -11,6 +11,7 @@ settings.rateApp="アプリに評価を付ける";
 settings.openSource="オープンソース";
 settings.joinTelegram="Telegramに加入する";
 settings.joinQQ="QQに加入する";
+settings.joinTwitter="Twitterに加入する";
 
 settings.enableStay="Turn on Stay in Safari extensions";
 

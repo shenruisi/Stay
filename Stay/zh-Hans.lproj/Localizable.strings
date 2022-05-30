@@ -12,7 +12,7 @@ settings.openSource="开源代码";
 settings.joinTelegram="加入Telegram";
 settings.enableStay="在Safari浏览器扩展中激活Stay";
 settings.joinQQ="加入QQ群";
-settings.joinTwitter="加入Twitter";
+settings.joinTwitter="追踪推特";
 
 settings.section.otherApps="旗下应用";
 

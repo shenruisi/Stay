@@ -134,7 +134,10 @@
             source += GM_notification.toString() + '\n\n';
             source += "GM.notification = " + GM_notification.toString() + '\n\n';
         }
-
+        if (grants.includes('GM_download') || grants.includes('GM.download')) {
+            source += GM_download.toString() + '\n\n';
+            source += "GM.download = " + GM_download.toString() + '\n\n';
+        }
         if (grants.includes('GM_setClipboard') || grants.includes('GM.setClipboard')) {
             source += GM_setClipboard.toString() + '\n\n';
             source += "GM.setClipboard = " + GM_setClipboard.toString() + '\n\n';

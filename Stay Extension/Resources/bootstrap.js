@@ -134,12 +134,12 @@ let matchedScripts;
         }
         else if (request.from == "background" && "exeScriptManually" === operate){
             let targetScript;
-            matchedScripts.forEach((script) => {
-                if (script.uuid == request.uuid){
-                    targetScript = script;
+            for (var i=0; i < matchedScripts.length; i++){
+                if (matchedScripts[i].uuid == request.uuid){
+                    targetScript = matchedScripts[i];
                     break;
                 }
-            });
+            }
             
             if (targetScript){
                 if (targetScript.requireUrls.length > 0){
