@@ -180,9 +180,11 @@ let matchedScripts;
                 }
                 
                 if (targetScript.installType === "page"){
+                    console.log("Manually page inject");
                     $_injectInPageWithTiming(targetScript,"document_start");
                 }
                 else{
+                    console.log("Manually content inject");
                     browser.runtime.sendMessage({
                         from: "bootstrap",
                         operate: "injectScript",

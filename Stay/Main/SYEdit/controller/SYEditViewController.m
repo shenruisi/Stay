@@ -239,7 +239,7 @@
                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
         image = [image imageWithTintColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
         
-        _backBtn = [self createBtn:image text:@"Undo"];
+        _backBtn = [self createBtn:image text:NSLocalizedString(@"Undo", @"")];
         _backBtn.enabled = false;
         [_backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
         _backBtn.centerY = 30;
@@ -250,7 +250,7 @@
                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
         onImage = [onImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
         
-        _onBtn = [self createBtn:onImage text:@"Redo"];
+        _onBtn = [self createBtn:onImage text:NSLocalizedString(@"Redo", @"")];
         _onBtn.enabled = false;
         [_onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
         _onBtn.centerY = 30;
@@ -261,7 +261,7 @@
                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
         clearImage = [clearImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
         
-        UIButton *clearBtn = [self createBtn:clearImage text:@"Clear"];
+        UIButton *clearBtn = [self createBtn:clearImage text:NSLocalizedString(@"Clear", @"")];
         [clearBtn addTarget:self action:@selector(clearContext:) forControlEvents:UIControlEventTouchUpInside];
         clearBtn.centerY = 30;
         clearBtn.left = 56 * 2  + width * 2 + 28.5;
@@ -271,7 +271,7 @@
                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
         pasteImage = [pasteImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
         
-        UIButton *pasteLabelBtn = [self createBtn:pasteImage text:@"Clipboard"];
+        UIButton *pasteLabelBtn = [self createBtn:pasteImage text:NSLocalizedString(@"Clipboard", @"")];
     
         [pasteLabelBtn addTarget:self action:@selector(copyPasteBoard:) forControlEvents:UIControlEventTouchUpInside];
         pasteLabelBtn.centerY = 30;

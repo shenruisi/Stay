@@ -52,6 +52,12 @@ cancel = "Cancel";
 Error="Error";
 Loading="Loading";
 
+Undo="Undo";
+Redo="Redo";
+Clear="Clear";
+Clipboard="From clipboard";
+
+
 
 
 

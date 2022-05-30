@@ -49,3 +49,7 @@ settings.update = "更新";
 Error="出错了";
 Loading="加载中";
 
+Undo="撤销";
+Redo="重做";
+Clear="清空";
+Clipboard="从剪贴板粘贴";
