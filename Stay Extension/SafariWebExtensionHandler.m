@@ -99,19 +99,6 @@
             }
         }
        
-//        @try {
-//
-//
-//        } @catch (NSException *exception) {
-//            NSLog(@"exception, %@",[exception description]);
-//        } @finally {
-//
-//        }
-//        body = [[NSString alloc] initWithData:
-//                           [NSJSONSerialization dataWithJSONObject:datas
-//                                                           options:0
-//                                                             error:nil]
-//                                                encoding:NSUTF8StringEncoding];
         body = datas;
         
     }
@@ -251,6 +238,8 @@
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
 }
+
+
 
 
 - (NSArray<NSDictionary *> *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {
