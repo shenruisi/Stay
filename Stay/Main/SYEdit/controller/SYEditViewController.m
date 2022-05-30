@@ -319,6 +319,7 @@
     if(datas != NULL && datas.count > 0) {
         for(int i = 0; i < datas.count; i++) {
             UserScript *scrpit = datas[i];
+            [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"ACTIVE_SCRIPTS_%@",scrpit.uuid]];
             scrpit.parsedContent = @"";
             [array addObject: [scrpit toDictionary]];
         }
