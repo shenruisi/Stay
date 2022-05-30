@@ -10,6 +10,7 @@
 #import "Tampermonkey.h"
 #import "DataManager.h"
 #import "UserscriptUpdateManager.h"
+#import "ScriptMananger.h"
 
 
 @interface SYEditViewController ()
@@ -318,10 +319,12 @@
     if(datas != NULL && datas.count > 0) {
         for(int i = 0; i < datas.count; i++) {
             UserScript *scrpit = datas[i];
+            scrpit.parsedContent = @"";
             [array addObject: [scrpit toDictionary]];
         }
         [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
         [groupUserDefaults synchronize];
+        [[ScriptMananger shareManager] buildData];
     }
 }
 

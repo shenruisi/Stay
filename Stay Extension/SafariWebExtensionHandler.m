@@ -234,8 +234,16 @@
                 }
             }
         }
+    } else if ([message[@"type"] isEqualToString:@"GM_getUserscriptByUuid"]){
+        NSString *uuid = message[@"uuid"];
+
+        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+        if([groupUserDefaults dictionaryForKey:@"SCRIPT_INSTANCE"] != NULL && [groupUserDefaults dictionaryForKey:@"SCRIPT_INSTANCE"].allValues.count > 0){
+            NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[groupUserDefaults dictionaryForKey:@"SCRIPT_INSTANCE"]];
+            NSDictionary *scriptEntity = dic[uuid];
+            body = scriptEntity[@"script"];
+        }
     }
-    
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
