@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UserScript *updateScript;
 
+- (NSDictionary *)toDictionary;
+
++ (instancetype)ofDictionary:(NSDictionary *)dic;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -22,8 +22,12 @@
     
     dispatch_once(&onceToken, ^{
         instance = [[ScriptMananger alloc] init];
+        [instance queryScript];
         [instance buildData];
     });
+    
+//    [instance checkScript];
+
     return instance;
     
 }
@@ -106,10 +110,9 @@
             }
         }
             
-            
+        [self checkScript];
     }
-    
-    [self checkScript];
+        
 }
 
 
@@ -131,6 +134,7 @@
             }
         }
     }
+    [self saveScript];
 }
 
 - (void)updateScript {
@@ -154,6 +158,36 @@
     [self checkScript];
 }
 
+
+- (void)saveScript {
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    
+    for(NSString *uuid in self.scriptDic.allKeys) {
+        
+       ScriptEntity *entity = self.scriptDic[uuid];
+        
+        dic[uuid] = [entity toDictionary];
+    }
+    
+    [groupUserDefaults setObject:dic forKey:@"SCRIPT_INSTANCE"];
+    [groupUserDefaults synchronize];
+}
+
+- (void)queryScript {
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    if([groupUserDefaults dictionaryForKey:@"SCRIPT_INSTANCE"] != NULL && [groupUserDefaults dictionaryForKey:@"SCRIPT_INSTANCE"].allValues.count > 0){
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[groupUserDefaults dictionaryForKey:@"SCRIPT_INSTANCE"]];
+        
+        for(NSString *uuid in dic.allKeys) {
+            self.scriptDic[uuid] = [ScriptEntity ofDictionary:dic[uuid]];
+        }
+        
+        
+    }
+
+}
 
 - (NSMutableDictionary *)scriptDic {
     if(_scriptDic == nil) {
