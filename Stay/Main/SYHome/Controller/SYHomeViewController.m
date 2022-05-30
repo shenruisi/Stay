@@ -278,6 +278,9 @@
                         if(status == 1) {
                             userScript.uuid = scrpit.uuid;
                             userScript.active = scrpit.active;
+                            if(userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0) {
+                                userScript.downloadUrl = scrpit.downloadUrl;
+                            }
                             if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                 [[DataManager shareManager] updateUserScript:userScript];
                                 [self refreshScript];
