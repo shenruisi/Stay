@@ -47,7 +47,7 @@ let browserLangurage = "",
             '<div class="active-case" active={active} uuid={uuid} >',
             '<div class="active-setting" style="display:{showMenu}" active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
-            '<div class="active-manually" style="display:{showManually}" active={active} uuid={uuid}></div>',
+            // '<div class="active-manually" style="display:{showManually}" active={active} uuid={uuid}></div>',
             '</div>'].join(''),
     registerMenuItemTemp = [
         '<div class="menu-item" uuid={uuid} menu-id={id}>{caption}</div>'
