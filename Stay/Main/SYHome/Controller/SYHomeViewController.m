@@ -308,6 +308,7 @@
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     for(int i = 0; i < self.datas.count; i++) {
         UserScript *scrpit = self.datas[i];
+        [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"ACTIVE_SCRIPTS_%@",scrpit.uuid]];
         scrpit.parsedContent = @"";
         [array addObject: [scrpit toDictionary]];
     }
