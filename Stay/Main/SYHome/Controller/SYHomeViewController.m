@@ -308,10 +308,14 @@
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     for(int i = 0; i < self.datas.count; i++) {
         UserScript *scrpit = self.datas[i];
+        scrpit.parsedContent = @"";
         [array addObject: [scrpit toDictionary]];
     }
     [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
     [groupUserDefaults synchronize];
+    
+    [[ScriptMananger shareManager] buildData];
+
 }
 #pragma mark -popover
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
@@ -625,7 +629,6 @@
     [super viewWillAppear:animated];
     [self reloadTableView];
     [self initScrpitContent];
-    [[ScriptMananger shareManager] buildData];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];

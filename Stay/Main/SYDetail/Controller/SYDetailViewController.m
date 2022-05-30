@@ -10,6 +10,7 @@
 #import "SYEditViewController.h"
 #import "UserscriptUpdateManager.h"
 #import "SYNotesViewController.h"
+#import "ScriptMananger.h"
 
 
 @interface SYDetailViewController ()
@@ -514,10 +515,13 @@
     if(datas != NULL && datas.count > 0) {
         for(int i = 0; i < datas.count; i++) {
             UserScript *scrpit = datas[i];
+            scrpit.parsedContent = @"";
             [array addObject: [scrpit toDictionary]];
         }
         [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
         [groupUserDefaults synchronize];
+        [[ScriptMananger shareManager] buildData];
+
     }
 }
 
