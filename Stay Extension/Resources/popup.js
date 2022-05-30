@@ -47,6 +47,7 @@ let browserLangurage = "",
             '<div class="active-case" active={active} uuid={uuid} >',
             '<div class="active-setting" style="display:{showMenu}" active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
+            '<div class="active-manually" style="display:{showManually}" active={active} uuid={uuid}></div>',
             '</div>'].join(''),
     registerMenuItemTemp = [
         '<div class="menu-item" uuid={uuid} menu-id={id}>{caption}</div>'
@@ -247,6 +248,12 @@ window.onload=function(){
                 handleScriptActive(uuid, active.bool());
                 return;
             }
+            if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-manually") {
+                // 获取到具体事件触发的active-case，进行active
+                let uuid = target.getAttribute("uuid");
+                handleExecScriptManually(uuid);
+                return;
+            }
             // register menu click
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-setting") {
                 let uuid = target.getAttribute("uuid");
@@ -328,6 +335,8 @@ function renderScriptContent(datas) {
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
             data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
+            let showManually = !item.active ? "block":"none"
+            data.showManually = showManually;
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
@@ -441,6 +450,22 @@ function handleScriptActive(uuid, active) {
             }
         })
         renderScriptContent(scriptStateList)
+    }
+}
+
+/**
+ * 控制脚本是否运行
+ * @param {string}   uuid        脚本id
+ */
+function handleExecScriptManually(uuid) {
+    if (uuid && uuid != "" && typeof uuid == "string") {
+        browser.runtime.sendMessage({
+            from: "popup",
+            operate: "exeScriptManually",
+            uuid: uuid,
+        }, (response) => {
+            console.log("exeScriptManually response,", response)
+        })
     }
 }
 

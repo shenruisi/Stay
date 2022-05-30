@@ -449,7 +449,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(response);
             });
 
-        } else if ("fetchMatchedScriptLog" == request.operate) {
+        } 
+        else if ("exeScriptManually" == request.operate) {
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
+            });
+
+        } 
+        else if ("fetchMatchedScriptLog" == request.operate) {
             if (matchAppScriptList && matchAppScriptList.length > 0) {
                 if (matchAppScriptConsole.length > 0) {
                     matchAppScriptConsole = [];
