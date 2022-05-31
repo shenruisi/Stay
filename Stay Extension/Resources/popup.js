@@ -106,7 +106,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 function fetchMatchedScriptList(){
     browser.tabs.getSelected(null, (tab) => {
         browserRunUrl = tab.url;
-        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl }, (response) => {
+        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
             try{
 //                let userLibraryScripts = response.body; //JSON.parse(response.body);
 //                userLibraryScripts.forEach((userLibraryScript) => {

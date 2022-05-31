@@ -6,11 +6,28 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "UserscriptHeaders.h"
+#import "UserscriptInfo.h"
+#import "ActivateChanged.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+static inline NSString * _Nonnull FCSharedDirectory(void){
+    return [[[NSFileManager defaultManager]
+             containerURLForSecurityApplicationGroupIdentifier:
+                 @"group.com.dajiu.stay.pro"] path];
+}
+
+static inline NSString * _Nonnull FCDataDirectory(void){
+    return [FCSharedDirectory() stringByAppendingPathComponent:@".stay/data"];
+}
+
 @interface SharedStorageManager : NSObject
 
++ (instancetype)shared;
+@property (nonatomic, strong) UserscriptHeaders *userscriptHeaders;
+@property (nonatomic, strong) ActivateChanged *activateChanged;
+- (UserscriptInfo *)getInfoOfUUID:(NSString *)uuid;
 @end
 
 NS_ASSUME_NONNULL_END

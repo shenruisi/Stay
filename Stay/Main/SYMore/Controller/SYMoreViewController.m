@@ -23,9 +23,9 @@
 - (void)testParseUserScript{
     UserScript *userScript =  [[Tampermonkey shared] parseScript:@"newuserscript.user"];
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    [groupUserDefaults setObject:@[[userScript toDictionary]] forKey:@"ACTIVE_SCRIPTS"];
+    [groupUserDefaults setObject:@[[userScript toDictionary]] forKey:@"STAY_SCRIPTS"];
     [groupUserDefaults synchronize];
-//    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+//    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"STAY_SCRIPTS"]];
 //    NSLog([userScript toDictionary]);
 
     

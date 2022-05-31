@@ -225,7 +225,7 @@ let matchedScripts;
         return true;
     });
     
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
+    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         let injectedVendor = new Set();
 //        let userLibraryScripts = response.body; //JSON.parse(response.body);
 //        console.log("response",response.body);

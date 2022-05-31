@@ -34,7 +34,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("bootstrap" == request.from || "iframe" == request.from) {
         if ("fetchScripts" == request.operate) {
             console.log("background---fetchScripts request==", request);
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url }, function (response) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
                 sendResponse(response);
             });
             return true;

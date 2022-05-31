@@ -26,6 +26,8 @@
 
 #import <UniformTypeIdentifiers/UTCoreTypes.h>
 
+#import "SharedStorageManager.h"
+
 @interface SYHomeViewController ()<
  UITableViewDelegate,
  UITableViewDataSource,
@@ -207,16 +209,16 @@
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
     [self checkShowTips];
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
-        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"]];
-        for(int i = 0; i < datas.count; i++) {
-            NSDictionary *dic = datas[i];
-            [[DataManager shareManager] updateScrpitStatus:[dic[@"active"] intValue] numberId:dic[@"uuid"]];
+    
+    NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
+    if (activateChanged.count > 0){
+        NSArray *uuidArrray = activateChanged.allKeys;
+        for (NSString *uuid in uuidArrray){
+            [[DataManager shareManager] updateScrpitStatus:[activateChanged[uuid] boolValue] ? 1:0 numberId:uuid];
         }
     }
-    [groupUserDefaults setObject:nil forKey:@"ACTIVE_CHANGE"];
-    [groupUserDefaults synchronize];
+    [SharedStorageManager shared].activateChanged.content = @{};
+    [[SharedStorageManager shared].activateChanged flush];
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
@@ -304,16 +306,30 @@
 }
 
 - (void)initScrpitContent{
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     for(int i = 0; i < self.datas.count; i++) {
         UserScript *scrpit = self.datas[i];
-        [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"ACTIVE_SCRIPTS_%@",scrpit.uuid]];
+        UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:scrpit.uuid];
+        info.content = [scrpit toDictionary];
+        [info flush];
         scrpit.parsedContent = @"";
         [array addObject: [scrpit toDictionary]];
     }
-    [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
-    [groupUserDefaults synchronize];
+    [SharedStorageManager shared].userscriptHeaders.content = array;
+    [[SharedStorageManager shared].userscriptHeaders flush];
+    
+    
+    
+//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+//    NSMutableArray *array =  [[NSMutableArray alloc] init];
+//    for(int i = 0; i < self.datas.count; i++) {
+//        UserScript *scrpit = self.datas[i];
+//        [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"STAY_SCRIPTS_%@",scrpit.uuid]];
+//        scrpit.parsedContent = @"";
+//        [array addObject: [scrpit toDictionary]];
+//    }
+//    [groupUserDefaults setObject:array forKey:@"STAY_SCRIPTS"];
+//    [groupUserDefaults synchronize];
     
     [[ScriptMananger shareManager] buildData];
 

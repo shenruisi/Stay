@@ -9,6 +9,7 @@
 #import "Stroge.h"
 #import <SafariServices/SafariServices.h>
 #import "MatchPattern.h"
+#import "SharedStorageManager.h"
 
 @implementation SafariWebExtensionHandler
 
@@ -26,11 +27,14 @@
     
     BOOL matched = NO;
     for (NSString *match in matches){
-        MatchPattern *matchPattern = [[MatchPattern alloc] initWithPattern:match];
-        if ([matchPattern doMatch:url]){
-            matched = YES;
-            break;
+        @autoreleasepool {
+            MatchPattern *matchPattern = [[MatchPattern alloc] initWithPattern:match];
+            if ([matchPattern doMatch:url]){
+                matched = YES;
+                break;
+            }
         }
+       
     }
     
     if (!matched){ //Fallback and treat match as globs expr
@@ -76,12 +80,11 @@
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
     
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         NSString *url = message[@"url"];
-        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSString *digest = message[@"digest"];
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         
         for(int i = 0;i < datas.count; i++) {
             NSDictionary *data = datas[i];
@@ -91,16 +94,18 @@
                 continue;
             }
             
-            NSArray<NSDictionary *> *requireUrlsAndCodes = [self getUserScriptRequireListByUserScript:data];
-            if (requireUrlsAndCodes != nil) {
-                NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
-                mulDic[@"requireCodes"] = requireUrlsAndCodes;
-                [datas replaceObjectAtIndex:i withObject:mulDic];
+            if (digest.length == 0 || [digest isEqualToString:@"no"]){
+                NSArray<NSDictionary *> *requireUrlsAndCodes = [self getUserScriptRequireListByUserScript:data];
+                if (requireUrlsAndCodes != nil) {
+                    NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
+                    mulDic[@"requireCodes"] = requireUrlsAndCodes;
+                    mulDic[@"content"] = [self getContentWithUUID:data[@"uuid"]];
+                    [datas replaceObjectAtIndex:i withObject:mulDic];
+                }
             }
         }
        
         body = datas;
-        
     }
     else if ([message[@"type"] isEqualToString:@"GM_setValue"]){
         NSString *uuid = message[@"uuid"];
@@ -132,7 +137,7 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"setScriptActive"]){
-        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         NSString *uuid = message[@"uuid"];
         bool activeVal = [message[@"active"] boolValue];
         if (datas != NULL && datas.count > 0) {
@@ -143,29 +148,17 @@
                     [datas removeObject:dic];
                     [mdic setValue:@(activeVal) forKey:@"active"];
                     [datas addObject:mdic];
-                    [groupUserDefaults setObject:datas forKey:@"ACTIVE_SCRIPTS"];
-                    [groupUserDefaults synchronize];
+                    [SharedStorageManager shared].userscriptHeaders.content = datas;
+                    [[SharedStorageManager shared].userscriptHeaders flush];
                     break;
                 }
             }
         }
         
-        
-        if([groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"] != NULL && [groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"].count > 0){
-            NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_CHANGE"]];
-            NSDictionary *dic = @{@"uuid":uuid,@"active":activeVal?@"1":@"0"};
-            [datas addObject:dic];
-            NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-            [groupUserDefaults setObject:datas forKey:@"ACTIVE_CHANGE"];
-            [groupUserDefaults synchronize];
-        } else {
-            NSMutableArray<NSDictionary *> *datas = [[NSMutableArray alloc] init];
-            NSDictionary *dic = @{@"uuid":uuid,@"active":activeVal?@"1":@"0"};
-            [datas addObject:dic];
-            NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-            [groupUserDefaults setObject:datas forKey:@"ACTIVE_CHANGE"];
-            [groupUserDefaults synchronize];
-        }
+        NSMutableDictionary<NSString *,NSNumber *> *changed = [NSMutableDictionary dictionaryWithDictionary:[SharedStorageManager shared].activateChanged.content] ;
+        changed[uuid] = activeVal?@(YES):@(NO);
+        [SharedStorageManager shared].activateChanged.content = changed;
+        [[SharedStorageManager shared].activateChanged flush];
     }
     else if ([message[@"type"] isEqualToString:@"GM_getResourceText"]){
         NSString *uuid = message[@"uuid"];
@@ -190,7 +183,7 @@
         
     }
     else if ([message[@"type"] isEqualToString:@"GM_getResourceUrl"]){
-        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         NSString *uuid = message[@"uuid"];
         NSString *key = message[@"key"];
         if (datas != NULL && datas.count > 0) {
@@ -207,7 +200,7 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"GM_getAllResourceUrl"]){
-        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"ACTIVE_SCRIPTS"]];
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         NSString *uuid = message[@"uuid"];
         NSString *key = message[@"key"];
         if (datas != NULL && datas.count > 0) {
@@ -221,11 +214,6 @@
                 }
             }
         }
-    } else if ([message[@"type"] isEqualToString:@"GM_getUserscriptByUuid"]){
-        NSString *uuid = message[@"uuid"];
-        if([groupUserDefaults dictionaryForKey:[NSString stringWithFormat:@"ACTIVE_SCRIPTS_%@",uuid]] != NULL ){
-            body = [groupUserDefaults dictionaryForKey:[NSString stringWithFormat:@"ACTIVE_SCRIPTS_%@",uuid]];
-        }
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
@@ -236,6 +224,11 @@
 }
 
 
+- (NSString *)getContentWithUUID:(NSString *)uuid{
+    UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:uuid];
+    return info.content[@"content"];
+    return nil;
+}
 
 
 - (NSArray<NSDictionary *> *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {

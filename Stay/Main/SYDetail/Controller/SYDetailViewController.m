@@ -11,7 +11,7 @@
 #import "UserscriptUpdateManager.h"
 #import "SYNotesViewController.h"
 #import "ScriptMananger.h"
-
+#import "SharedStorageManager.h"
 
 @interface SYDetailViewController ()
 
@@ -509,18 +509,19 @@
 
 
 - (void)initScrpitContent{
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     NSArray *datas =  [[DataManager shareManager] findScript:1];
-    if(datas != NULL && datas.count > 0) {
+    if(datas.count > 0) {
         for(int i = 0; i < datas.count; i++) {
             UserScript *scrpit = datas[i];
-            [groupUserDefaults setObject:[scrpit toDictionary]  forKey:[NSString stringWithFormat:@"ACTIVE_SCRIPTS_%@",scrpit.uuid]];
+            UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:scrpit.uuid];
+            info.content = [scrpit toDictionary];
+            [info flush];
             scrpit.parsedContent = @"";
             [array addObject: [scrpit toDictionary]];
         }
-        [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
-        [groupUserDefaults synchronize];
+        [SharedStorageManager shared].userscriptHeaders.content = array;
+        [[SharedStorageManager shared].userscriptHeaders flush];
         [[ScriptMananger shareManager] buildData];
 
     }
