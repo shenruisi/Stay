@@ -25,8 +25,8 @@ static inline NSString * _Nonnull FCDataDirectory(void){
 @interface SharedStorageManager : NSObject
 
 + (instancetype)shared;
-@property (nonatomic, strong) UserscriptHeaders *userscriptHeaders;
-@property (nonatomic, strong) ActivateChanged *activateChanged;
+@property (nonatomic, strong, nullable) UserscriptHeaders *userscriptHeaders;
+@property (nonatomic, strong, nullable) ActivateChanged *activateChanged;
 - (UserscriptInfo *)getInfoOfUUID:(NSString *)uuid;
 @end
 

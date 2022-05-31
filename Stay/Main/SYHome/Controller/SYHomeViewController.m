@@ -210,6 +210,7 @@
 - (void)onBecomeActive{
     [self checkShowTips];
     
+    [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
     if (activateChanged.count > 0){
         NSArray *uuidArrray = activateChanged.allKeys;

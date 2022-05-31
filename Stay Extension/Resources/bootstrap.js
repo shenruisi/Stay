@@ -100,7 +100,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
         } else {
             $_injectInPage(script);
         }
-    } else if (runAt === "document_end") {
+    } else if (runAt === "document_end" || runAt === "document_body") {
         if (document.readyState !== "loading") {
             $_injectInPage(script);
         } else {
@@ -108,7 +108,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
                 $_injectInPage(script);
             });
         }
-    } else if (runAt === "document_idle" || runAt === "document_body") {
+    } else if (runAt === "document_idle") {
         if (document.readyState === "complete") {
             $_injectInPage(script);
         } else {

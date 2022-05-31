@@ -84,6 +84,7 @@
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
+        [SharedStorageManager shared].userscriptHeaders = nil;
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         
         for(int i = 0;i < datas.count; i++) {
@@ -155,7 +156,7 @@
             }
         }
         
-        NSMutableDictionary<NSString *,NSNumber *> *changed = [NSMutableDictionary dictionaryWithDictionary:[SharedStorageManager shared].activateChanged.content] ;
+        NSMutableDictionary<NSString *,NSNumber *> *changed = [NSMutableDictionary dictionaryWithDictionary:[SharedStorageManager shared].activateChanged.content];
         changed[uuid] = activeVal?@(YES):@(NO);
         [SharedStorageManager shared].activateChanged.content = changed;
         [[SharedStorageManager shared].activateChanged flush];
