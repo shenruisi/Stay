@@ -8,8 +8,11 @@
 
 //settings
 settings.rateApp="Rate app";
-settings.openSource="Open Source";
+settings.openSource="Open source";
 settings.joinTelegram="Join Telegram";
+settings.joinQQ="Join QQ";
+settings.joinTwitter="Follow Twitter";
+
 settings.enableStay="Turn on Stay in Safari extensions";
 
 
@@ -20,7 +23,7 @@ settings.section.otherApps.fastclip="FastClip - Copy paste enhancer";
 settings.save="Save";
 
 settings.library="Library";
-settings.search="Search";
+settings.search="Browse";
 settings.more="More";
 settings.author="Author";
 settings.version="Version";
@@ -44,6 +47,15 @@ settings.scriptError = "script error";
 
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";
+settings.update = "Update";
+cancel = "Cancel";
+Error="Error";
+Loading="Loading";
+
+Undo="Undo";
+Redo="Redo";
+Clear="Clear";
+Clipboard="From clipboard";
 
 
 

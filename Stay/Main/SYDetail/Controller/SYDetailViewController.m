@@ -10,7 +10,8 @@
 #import "SYEditViewController.h"
 #import "UserscriptUpdateManager.h"
 #import "SYNotesViewController.h"
-
+#import "ScriptMananger.h"
+#import "SharedStorageManager.h"
 
 @interface SYDetailViewController ()
 
@@ -29,7 +30,7 @@
             }
         }];
 
-    self.view.backgroundColor = [self createBgColor];
+    self.view.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setNumberOfLines:0];
@@ -82,6 +83,7 @@
     [scrollView addSubview:detailView];
     
     UILabel *nameLabel = [self createDefaultLabelWithText:self.script.name];
+    nameLabel.width = kScreenWidth -  60 - 48 - 42;
     nameLabel.top = 13;
     nameLabel.left = 17;
     [detailView addSubview:nameLabel];
@@ -136,7 +138,7 @@
     [detailView addSubview:scriptLabel];
     
     
-    NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+    NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[RGB(20, 20, 20) CGColor])?@"arrow-dark":@"arrow";
     UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
     scriptIconLabel.right = kScreenWidth - 48;
     scriptIconLabel.centerY = scriptLabel.centerY;
@@ -194,7 +196,7 @@
         notesLabel.left = 17;
         [detailView addSubview:notesLabel];
         
-        NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[[UIColor blackColor] CGColor])?@"arrow-dark":@"arrow";
+        NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[RGB(20, 20, 20) CGColor])?@"arrow-dark":@"arrow";
         UIImageView *noteIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
         noteIconLabel.right = kScreenWidth - 48;
         noteIconLabel.centerY = notesLabel.centerY;
@@ -434,7 +436,6 @@
 - (void)deleteScript:(id)sender {
     self.isSearch = true;
     [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
-    [[DataManager shareManager]  updateLibScrpitStatus:0 numberId:self.script.uuid];
     for (UIView *subView in self.view.subviews) {
         [subView removeFromSuperview];
     }
@@ -444,7 +445,6 @@
 - (void)addScript:(id)sender {
     self.isSearch = false;
     [[DataManager shareManager] insertToUserScriptnumberId: self.script.uuid];
-    [[DataManager shareManager] updateLibScrpitStatus:1 numberId: self.script.uuid];
     for (UIView *subView in self.view.subviews) {
         [subView removeFromSuperview];
     }
@@ -509,16 +509,21 @@
 
 
 - (void)initScrpitContent{
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     NSArray *datas =  [[DataManager shareManager] findScript:1];
-    if(datas != NULL && datas.count > 0) {
+    if(datas.count > 0) {
         for(int i = 0; i < datas.count; i++) {
             UserScript *scrpit = datas[i];
+            UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:scrpit.uuid];
+            info.content = [scrpit toDictionary];
+            [info flush];
+            scrpit.parsedContent = @"";
             [array addObject: [scrpit toDictionary]];
         }
-        [groupUserDefaults setObject:array forKey:@"ACTIVE_SCRIPTS"];
-        [groupUserDefaults synchronize];
+        [SharedStorageManager shared].userscriptHeaders.content = array;
+        [[SharedStorageManager shared].userscriptHeaders flush];
+        [[ScriptMananger shareManager] buildData];
+
     }
 }
 
@@ -533,14 +538,7 @@
 */
 
 - (UIColor *)createBgColor {
-    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-                return RGB(242, 242, 246);
-            }
-            else {
-                return [UIColor blackColor];
-            }
-        }];
+    UIColor *viewBgColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     return viewBgColor;
 }
 

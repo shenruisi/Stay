@@ -34,7 +34,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("bootstrap" == request.from || "iframe" == request.from) {
         if ("fetchScripts" == request.operate) {
             console.log("background---fetchScripts request==", request);
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate }, function (response) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
                 sendResponse(response);
             });
             return true;
@@ -449,7 +449,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(response);
             });
 
-        } else if ("fetchMatchedScriptLog" == request.operate) {
+        } 
+        else if ("exeScriptManually" == request.operate) {
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
+            });
+
+        } 
+        else if ("fetchMatchedScriptLog" == request.operate) {
             if (matchAppScriptList && matchAppScriptList.length > 0) {
                 if (matchAppScriptConsole.length > 0) {
                     matchAppScriptConsole = [];

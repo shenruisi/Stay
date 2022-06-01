@@ -7,11 +7,15 @@
 
 (function () {
 
-    function createGMApisWithUserScript(userscript, uuid, version) {
+    function createGMApisWithUserScript(userscript, uuid, version, scriptWithoutComment, installType) {
         let grants = userscript.grants;
         let source = 'const _uuid = "' + uuid + '";\n\n';
+        source += 'const iconUrl = "' + userscript.icon + '";\n\n';
+        source += 'const usName = "' + userscript.name + '";\n\n';
         source += 'const _version = "' + version + '";\n\n';
-        if (grants.includes('unsafeWindow')) {
+        native.nslog("createGMApisWithUserScripte-- " + installType);
+        if (grants.includes('unsafeWindow') || installType == 'page') {
+            native.nslog("page create");
             source += 'const _userscript = ' + JSON.stringify(userscript) +';\n';
             source += injectJavaScript(userscript, version);
             // source 为 window.addEventListener(), move to bootstrap
@@ -19,7 +23,7 @@
             return source;
         }
         source += 'let GM = {};\n\n';
-        source += 'let GM_info=' + GM_info(userscript, version) + ';\n';
+        source += 'let GM_info=' + GM_info(userscript, version) + '\n';
         source += 'GM.info = GM_info;\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
@@ -38,111 +42,120 @@
         source += '});\n\n';
 
         if (grants.includes('GM_listValues')) {
-            source += 'function GM_listValues (){ return __stroge};\n\n';
+            source += 'function GM_listValues (){ return __stroge}\n\n';
         }
 
         if (grants.includes('GM.listValues')) {
-            source += 'GM.listValues = ' + _fillStroge.toString() + ';\n\n';
+            source += 'GM.listValues = ' + _fillStroge.toString() + '\n\n';
         }
 
         if (grants.includes('GM_deleteValue')) {
-            source += GM_deleteValue.toString() + ';\n\n';
+            source += GM_deleteValue.toString() + '\n\n';
         }
 
         if (grants.includes('GM.deleteValue')) {
-            source += 'GM.deleteValue = ' + deleteValue_p.toString() + ';\n\n';
+            source += 'GM.deleteValue = ' + deleteValue_p.toString() + '\n\n';
         }
 
         if (grants.includes('GM_setValue')) {
-            source += GM_setValue.toString() + ';\n\n';
+            source += GM_setValue.toString() + '\n\n';
         }
 
         if (grants.includes('GM.setValue')) {
-            source += 'GM.setValue = ' + setValue_p.toString() + ';\n\n';
+            source += 'GM.setValue = ' + setValue_p.toString() + '\n\n';
         }
 
         if (grants.includes('GM_getValue')) {
-            source += GM_getValue.toString() + ';\n\n';
+            source += GM_getValue.toString() + '\n\n';
         }
 
         if (grants.includes('GM.getValue')) {
-            source += 'GM.getValue = ' + getValue_p.toString() + ';\n\n';
+            source += 'GM.getValue = ' + getValue_p.toString() + '\n\n';
         }
 
         if (grants.includes('GM.registerMenuCommand')) {
-            source += 'GM.registerMenuCommand = ' + GM_registerMenuCommand.toString() + ';\n\n';
+            source += 'GM.registerMenuCommand = ' + GM_registerMenuCommand.toString() + '\n\n';
         }
 
         if (grants.includes('GM_registerMenuCommand')) {
-            source += GM_registerMenuCommand.toString() + ';\n\n';
+            source += GM_registerMenuCommand.toString() + '\n\n';
         }
 
         if (grants.includes('GM.unregisterMenuCommand')) {
-            source += 'GM.unregisterMenuCommand = ' + GM_unregisterMenuCommand.toString() + ';\n\n';
+            source += 'GM.unregisterMenuCommand = ' + GM_unregisterMenuCommand.toString() + '\n\n';
         }
 
         if (grants.includes('GM_unregisterMenuCommand')) {
-            source += GM_unregisterMenuCommand.toString() + ';\n\n';
+            source += GM_unregisterMenuCommand.toString() + '\n\n';
         }
 
         if (grants.includes('GM_addStyle')) {
-            source += GM_addStyle.toString() + ';\n\n';
+            source += GM_addStyle.toString() + '\n\n';
         }
 
         if (grants.includes('GM.addStyle')) {
-            source += 'GM.addStyle = ' + GM_addStyle.toString() + ';\n\n';
+            source += 'GM.addStyle = ' + GM_addStyle.toString() + '\n\n';
         }
 
         if (grants.includes('GM_openInTab')) {
-            source += GM_openInTab.toString() + ';\n\n';
+            source += GM_openInTab.toString() + '\n\n';
         }
         if (grants.includes('GM.openInTab')) {
-            source += 'GM.openInTab = ' + GM_openInTab.toString() + ';\n\n';
+            source += 'GM.openInTab = ' + GM_openInTab.toString() + '\n\n';
         }
 
         if (grants.includes('GM_getResourceURL')) {
-            source += GM_getResourceURL.toString() + '; \n\n';
+            source += GM_getResourceURL.toString() + '\n\n';
         }
         if (grants.includes('GM_getResourceUrl')) {
-            source += 'GM_getResourceUrl =' + GM_getResourceURL.toString() + '; \n\n';
+            source += 'GM_getResourceUrl =' + GM_getResourceURL.toString() + '\n\n';
         }
 
         if (grants.includes('GM.getResourceURL') || grants.includes('GM.getResourceUrl')) {
-            source += 'GM.getResourceURL = ' + getResourceURL_p.toString() + '; \n\n';
-            source += 'GM.getResourceUrl = ' + getResourceURL_p.toString() + '; \n\n';
+            source += 'GM.getResourceURL = ' + getResourceURL_p.toString() + '\n\n';
+            source += 'GM.getResourceUrl = ' + getResourceURL_p.toString() + '\n\n';
         }
 
         if (grants.includes('GM.getResourceText')) {
-            source += 'GM.getResourceText = ' + getResourceText_p.toString() + '; \n\n';
+            source += 'GM.getResourceText = ' + getResourceText_p.toString() + '\n\n';
         }
 
         if (grants.includes('GM_getResourceText')) {
-            source += GM_getResourceText.toString() + '; \n\n';
+            source += GM_getResourceText.toString() + '\n\n';
         }
 
         if (grants.includes('GM_xmlhttpRequest')) {
-            source += GM_xmlhttpRequest.toString() + ';\n\n';
+            source += GM_xmlhttpRequest.toString() + '\n\n';
         }
 
         if (grants.includes('GM.xmlHttpRequest')) {
-            source += 'GM.xmlHttpRequest = ' + GM_xmlhttpRequest.toString() + ';\n\n';
+            source += 'GM.xmlHttpRequest = ' + GM_xmlhttpRequest.toString() + '\n\n';
         }
 
         if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
-            source += GM_notification.toString() + ';\n\n';
+            source += GM_notification.toString() + '\n\n';
+            source += "GM.notification = " + GM_notification.toString() + '\n\n';
+        }
+        if (grants.includes('GM_download') || grants.includes('GM.download')) {
+            source += GM_download.toString() + '\n\n';
+            source += "GM.download = " + GM_download.toString() + '\n\n';
+        }
+        if (grants.includes('GM_setClipboard') || grants.includes('GM.setClipboard')) {
+            source += GM_setClipboard.toString() + '\n\n';
+            source += "GM.setClipboard = " + GM_setClipboard.toString() + '\n\n';
         }
 
         //add GM_log by default
-        source += GM_log.toString() + ';\n\n';
+        source += GM_log.toString() + '\n\n';
 
         // source += injectJavaScript.toString() + ';\n\ninjectJavaScript();\n';
 
-        source += _fillStroge.toString() + ';\n\n';
+        source += _fillStroge.toString() + '\n\n';
 
-        source += _fillAllResourceTextStroge.toString() + ';\n\n';
+        source += _fillAllResourceTextStroge.toString() + '\n\n';
 
-        source += _fillAllResourceUrlStroge.toString() + ';\n\n';
-        native.nslog("native-source" + source);
+        source += _fillAllResourceUrlStroge.toString() + '\n\n';
+//        native.nslog("native-source" + source);
         return source;
     }
 
@@ -237,9 +250,154 @@
         });
     }
 
-    function GM_notification(params) {
-        // todo
+
+    function GM_setClipboard(data, info) {
         
+    }
+
+    function GM_download(url, name) {
+        let downloadStyle = "width: 270px;";
+        if (is_iPad()) {
+            downloadStyle = "width: 320px;"
+        }
+        let bg = "background: #fff;";
+        let fontColor = "color: #000000;"
+        if (is_dark()) {
+            bg = "background: #000;";
+            fontColor = "color: #F3F3F3;"
+        }
+        let title = "You have source to download..."
+        let text = 'Allow to download "' + name+ '"';
+        let popToastTemp = [
+            '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);padding-top: 6px;">',
+            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;"><img src=' + iconUrl + ' style="width: 20px;height: 20px;"></img><div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
+            '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
+            '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
+            '<div style="' + fontColor + ' font-size: 14px;margin-top:10px; border-top:1px solid #E0E0E0; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
+            '<div id="gm_downloadCancel" style="font-size:16px;font-weight:600;color: #B620E0;width:50%;border-right:1px solid #E0E0E0;padding: 8px;">Cancel</div>',
+            '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;">Allow</a>',
+            '</div>',
+            '</div>'
+        ];
+
+        let temp = popToastTemp.join("");
+        let tempDom = document.createElement("div");
+        tempDom.id = "downloadContainer"
+        tempDom.innerHTML = temp;
+        document.body.appendChild(tempDom);
+
+        let downloadCancelDom = document.getElementById("gm_downloadCancel");
+        downloadCancelDom.addEventListener("click", function (e) {
+            tempDom.remove();
+        })
+
+        let downloadLinkDom = document.getElementById("downloadLink");
+        downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+        downloadLinkDom.download = name;
+        downloadLinkDom.addEventListener("click", function (e) {
+            tempDom.remove();
+        })
+
+        function is_dark() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        function is_iPad() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/iPad/i) == "ipad") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    /**
+     * 1、text, title,  image, onclick
+     * 2、details, ondone
+     * @param {*} param1 
+     * @param {*} param2 
+     * @param {string} param3 
+     * @param {function} param4 
+     */
+    function GM_notification(param1, param2, param3, param4) {
+        let details = {};
+        let ondone = null;
+        if (typeof param1 === "object" || typeof param2 === "function") {
+            details = param1;
+            ondone = param2;
+        } else {
+            let detail = { text: param1, title: param2, image: param3, onclick: param4 }
+            details = detail;
+        }
+
+        let text = details.text ? details.text : "";
+        let title = details.title ? details.title : "";
+        let image = details.image ? details.image : "";
+        let timeout = details.timeout || 8000;
+        let onclick = details.onclick;
+
+        // let stayImg = browser.runtime.getURL("images/icon-256.png");
+        let notificationStyle = "width: 270px;height: 57px;transform: translateX(-50%);left: 50%;";
+        if (is_iPad()) {
+            notificationStyle = "width: 320px;height: 72px; right: 10px;"
+        }
+        let bg = "background: #fff;";
+        let fontColor = "color: #000000;"
+        if (is_dark()) {
+            bg = "background: #000;";
+            fontColor = "color: #F3F3F3;"
+        }
+        let popToastTemp = [
+            '<div id="notificationPop" style="' + notificationStyle + ' top: 10px; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);display: flex;flex-direction: row;padding: 4px;">',
+            '<div id="notifyImg"  style="text-decoration: none;width: 75px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;"><img src=' + image + ' style="width: 46px;height: 46px; border-radius: 4px;"></img></div>',
+            '<div id="notificationCon" style="padding:0 4px;font-family:Helvetica Neue;text-decoration: none;display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items:start;line-height:23px;">',
+            '<div style="font-size: 16px; color: #B620E0;font-weight:700;">' + title + '</div>',
+            '<div style="font-size: 12px;' + fontColor + ' line-height: 15px;padding-top:2px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:2;-webkit-box-orient:vertical;display:-webkit-box;">' + text + '</div>',
+            '</div>',
+            '</div>'
+        ];
+        let temp = popToastTemp.join("");
+        let tempDom = document.createElement("div");
+        tempDom.id = "notificationContainer"
+        tempDom.innerHTML = temp;
+        document.body.appendChild(tempDom);
+        let notificationDom = document.getElementById("notificationContainer");
+        notificationDom.addEventListener("click", () => {
+            if (onclick) {
+                onclick();
+            }
+        })
+        var clearFlag = 0;
+        function autoClose() {
+            if (timeout > 0) {
+                timeout = timeout - 500;
+            } else {
+                window.clearInterval(clearFlag);
+                // notificationDom.removeEventListener("click");
+                notificationDom.remove();
+                if (ondone) {
+                    ondone();
+                }
+            }
+        }
+        clearFlag = window.setInterval(() => {
+            autoClose();
+        }, 500);
+
+        function is_dark() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        function is_iPad() {
+            var ua = navigator.userAgent.toLowerCase();
+            if (ua.match(/iPad/i) == "ipad") {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     function GM_registerMenuCommand(caption, commandFunc, accessKey) {
@@ -401,8 +559,8 @@
         api += 'let __RMC_CONTEXT = [];\n';
         api += 'let GM_info =' + GM_info(userscript, version) + ';\n';
         api += `${GM_log}\n`;
-        api += `${clear_GM_log}\nclear_GM_log();`;
-        
+        api += `${clear_GM_log}\nclear_GM_log();\n`;
+        api += `${__xhr}\n`
         gmFunVals.push("info: GM_info");
 
         grants.forEach(grant => {
@@ -480,7 +638,7 @@
                 gmFunVals.push("closeTab: GM_closeTab");
             }
             else if ("GM_openInTab" === grant) {
-                api += `${GM_openInTab}\n;`;
+                api += `${GM_openInTab}\n`;
             }
             else if ("GM.closeTab" === grant || "GM_closeTab" === grant) {
                 api += `${GM_closeTab}\n`;
@@ -490,13 +648,19 @@
                 api += `${GM_notification}\n`;
                 gmFunVals.push("notification: GM_notification");
             }
-            else if (grant === "GM_xmlhttpRequest" || grant === "GM.xmlHttpRequest") {
-                api += `${xhr}\n`;
-                if (grant === "GM_xmlhttpRequest") {
-                    api += "\nconst GM_xmlhttpRequest = xhr;\n";
-                } else if (grant === "GM.xmlHttpRequest") {
-                    gmFunVals.push("xmlHttpRequest: xhr");
-                }
+            else if ("GM.setClipboard" === grant || "GM_setClipboard" === grant) {
+                api += `${GM_setClipboard}\n`;
+                gmFunVals.push("setClipboard: GM_setClipboard");
+            }
+            else if ("GM.download" === grant || "GM_download" === grant) {
+                api += `${GM_download}\n`;
+                gmFunVals.push("download: GM_download");
+            }
+            else if (grant === "GM_xmlhttpRequest"){
+                api += "\nconst GM_xmlhttpRequest = __xhr;\n";
+            }
+            else if (grant === "GM.xmlHttpRequest") {
+                gmFunVals.push("xmlHttpRequest: __xhr");
             }
         })
 
@@ -821,7 +985,7 @@
 
         }
 
-        function xhr(details) {
+        function __xhr(details) {
             // if details didn't include url, do nothing
             if (!details.url) return;
             // create unique id for the xhr

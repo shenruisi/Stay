@@ -17,13 +17,9 @@
     userScript.version = dic[@"version"];
     userScript.desc = dic[@"description"];
     userScript.homepage = dic[@"homepage"];
-    userScript.icon = dic[@"icon"];
+    userScript.icon = dic[@"iconUrl"];
     userScript.includes = dic[@"includes"];
-    NSArray *matches = dic[@"matches"];
-    if (matches.count == 0){
-        matches = @[@"*://*/*"];
-    }
-    userScript.mathes = matches;
+    userScript.mathes = dic[@"matches"];
     userScript.excludes = dic[@"excludes"];
     userScript.runAt = dic[@"runAt"];
     userScript.grants = dic[@"grants"];
@@ -37,6 +33,7 @@
     userScript.resourceUrls = dic[@"resourceUrls"];
     userScript.notes = dic[@"notes"];
     userScript.locales = dic[@"locales"];
+    userScript.unsupportedGrants = dic[@"unsupportedGrants"];
     return userScript;
 }
 
@@ -65,8 +62,55 @@
         @"resourceUrls":self.resourceUrls ? self.resourceUrls: @{},
         @"notes":self.notes ? self.notes: @[],
         @"locales":self.locales ? self.locales : @{},
-        @"installType":self.installType ? self.installType : @"content"
+        @"installType":self.installType ? self.installType : @"content",
+        @"unsupportedGrants":self.unsupportedGrants ? self.unsupportedGrants : @[]
     };
+}
+
+- (NSString *)description
+{
+    NSMutableString *builder = [[NSMutableString alloc] init];
+    if (self.name.length > 0){
+        [builder appendFormat:@"name: %@\n",self.name];
+    }
+    
+    if (self.namespace.length > 0){
+        [builder appendFormat:@"namespace: %@\n",self.namespace];
+    }
+    
+    if (self.author.length > 0){
+        [builder appendFormat:@"author: %@\n",self.author];
+    }
+    
+    if (self.version.length > 0){
+        [builder appendFormat:@"version: %@\n",self.version];
+    }
+    
+    if (self.desc.length > 0){
+        [builder appendFormat:@"description: %@\n",self.desc];
+    }
+    
+    if (self.runAt.length > 0){
+        [builder appendFormat:@"runAt: %@\n",self.runAt];
+    }
+    
+    for (NSString *match in self.mathes){
+        [builder appendFormat:@"match: %@\n",match];
+    }
+    
+    for (NSString *include in self.includes){
+        [builder appendFormat:@"include: %@\n",include];
+    }
+    
+    for (NSString *exclude in self.excludes){
+        [builder appendFormat:@"exclude: %@\n",exclude];
+    }
+    
+    for (NSString *grant in self.grants){
+        [builder appendFormat:@"grant: %@\n",grant];
+    }
+    
+    return builder;
 }
 
 @end

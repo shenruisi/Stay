@@ -36,6 +36,7 @@ static Tampermonkey *kInstance = nil;
     return [self parseWithScriptContent:scriptContent];
 }
 
+//Enter
 - (UserScript *)parseWithScriptContent:(NSString *)scriptContent{
     JSValue *parseUserScript = [self.jsContext evaluateScript:@"window.parseUserScript"];
     JSValue *userScriptHeader = [parseUserScript callWithArguments:@[scriptContent,@""]];
@@ -43,7 +44,35 @@ static Tampermonkey *kInstance = nil;
     UserScript *userScript = [UserScript ofDictionary:[userScriptHeader toDictionary]];
     userScript.uuid = [[NSUUID UUID] UUIDString];
     userScript.content = scriptContent;
-   
+    
+    //Check if unsupported grants api really used in content.
+    if (userScript.pass && userScript.unsupportedGrants.count > 0){
+        NSString *scriptWithoutComment = [self _removeComment:userScript.content];
+        NSMutableString *builder = [[NSMutableString alloc] initWithString:@"("];
+        
+        for (int i = 0; i < userScript.unsupportedGrants.count; i++){
+            NSString *unsupportedGrant = userScript.unsupportedGrants[i];
+            if (i != userScript.unsupportedGrants.count - 1){
+                [builder appendFormat:@"%@|",unsupportedGrant];
+            }
+            else{
+                [builder appendFormat:@"%@)",unsupportedGrant];
+            }
+        }
+        
+        NSRegularExpression *unsupportedGrantsExpr = [[NSRegularExpression alloc] initWithPattern:builder options:0 error:nil];
+        NSArray<NSTextCheckingResult *> *results = [unsupportedGrantsExpr matchesInString:scriptWithoutComment options:0 range:NSMakeRange(0, scriptWithoutComment.length)];
+        if (results.count > 0){
+            userScript.pass = NO;
+            NSMutableString *errorMessage = [[NSMutableString alloc] initWithString:userScript.errorMessage ? userScript.errorMessage : @""];
+            for (NSString *unsupportedGrant in userScript.unsupportedGrants){
+                [errorMessage appendFormat:@"Unsupport grant api %@\n",unsupportedGrant];
+            }
+            userScript.errorMessage = errorMessage;
+        }
+        
+    }
+    
     return userScript;
 }
 
@@ -54,9 +83,10 @@ static Tampermonkey *kInstance = nil;
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-    JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment]];
+    BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
+    userScript.installType = pageMode ? @"page" : @"content";
     
-    userScript.installType = [userScript.grants containsObject:@"unsafeWindow"] ? @"page" : @"content";
+    JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];
     
     if ([userScript.installType isEqualToString:@"page"]){
         scriptWithoutComment = [NSString stringWithFormat:
@@ -69,12 +99,6 @@ static Tampermonkey *kInstance = nil;
                                 ,gmApisSource,scriptWithoutComment,userScript.uuid];
     }
     
-    
-    
-    
-//    scriptWithoutComment = [NSString stringWithFormat:
-//                            @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init();\n"
-//                            ,gmApisSource,scriptWithoutComment];
     userScript.parsedContent = scriptWithoutComment;
 }
 

@@ -9,6 +9,7 @@
 #import "NavigationController.h"
 //#import "ViewController.h"
 #import "MainTabBarController.h"
+#import "IACManager.h"
 
 @implementation SceneDelegate
 
@@ -21,5 +22,13 @@
     self.window.rootViewController = [[MainTabBarController alloc] init];
     [self.window makeKeyAndVisible];
 }
+
+- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts{
+    UIOpenURLContext *context =  URLContexts.anyObject;
+    if (context){
+        [[IACManager sharedManager] handleOpenURL:context.URL];
+    }
+}
+
 
 @end

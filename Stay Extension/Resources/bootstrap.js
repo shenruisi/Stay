@@ -46,7 +46,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
     if (matched){
         for (var i = 0; i < userLibraryScript.includes.length; i++){
             matched = matchRule(url.href, userLibraryScript.includes[i]);
-            console.log("matchRule",url.href,userLibraryScript.includes[i],matched);
+            // console.log("matchRule",url.href,userLibraryScript.includes[i],matched);
             if (matched) break;
         }
         
@@ -100,7 +100,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
         } else {
             $_injectInPage(script);
         }
-    } else if (runAt === "document_end") {
+    } else if (runAt === "document_end" || runAt === "document_body") {
         if (document.readyState !== "loading") {
             $_injectInPage(script);
         } else {
@@ -121,7 +121,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
     }
 }
 
-//let injectScripts = []
+let matchedScripts;
 (function(){
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
@@ -131,6 +131,69 @@ const $_injectInPageWithTiming = (script, runAt) => {
         else if (request.from == "background" && "execRegisterMenuCommand" === operate && request.uuid == id) {
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, id: id });
+        }
+        else if (request.from == "background" && "exeScriptManually" === operate){
+            let targetScript;
+            for (var i=0; i < matchedScripts.length; i++){
+                if (matchedScripts[i].uuid == request.uuid){
+                    targetScript = matchedScripts[i];
+                    break;
+                }
+            }
+            
+            if (targetScript){
+                if (targetScript.requireUrls.length > 0){
+                    targetScript.requireUrls.forEach((url)=>{
+                        if (injectedVendor.has(url)) return;
+                        injectedVendor.add(url);
+                        if (url.startsWith('stay://')){
+                            browser.runtime.sendMessage({
+                                from: "bootstrap",
+                                operate: "injectFile",
+                                file:$_res($_uri(url).pathname.substring(1)),
+                                allFrames:true,
+                                runAt:"document_start"
+                            });
+                        }
+                        else{
+                            var pageInject = script.installType === "page";
+                            console.log("pageInject---",pageInject)
+                            targetScript.requireCodes.forEach((urlCodeDic)=>{
+                                if (urlCodeDic.url == url){
+                                    if (pageInject){
+                                        $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
+                                    }
+                                    else{
+                                        browser.runtime.sendMessage({
+                                            from: "bootstrap",
+                                            operate: "injectScript",
+                                            code:urlCodeDic.code,
+                                            allFrames:true,
+                                            runAt:"document_start"
+                                        });
+                                    }
+                                    
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                if (targetScript.installType === "page"){
+                    console.log("Manually page inject");
+                    $_injectInPageWithTiming(targetScript,"document_start");
+                }
+                else{
+                    console.log("Manually content inject");
+                    browser.runtime.sendMessage({
+                        from: "bootstrap",
+                        operate: "injectScript",
+                        code:targetScript.content,
+                        allFrames:!targetScript.noFrames,
+                        runAt:"document_start"
+                    });
+                }
+            }
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
@@ -161,19 +224,29 @@ const $_injectInPageWithTiming = (script, runAt) => {
         }
         return true;
     });
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts" }, (response) => {
+    
+    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         let injectedVendor = new Set();
-        let userLibraryScripts = JSON.parse(response.body);
-        let injectScripts = [];
-        userLibraryScripts.forEach((userLibraryScript)=>{
-            console.log(userLibraryScript);
-            
-            if ($_matchesCheck(userLibraryScript,new URL(location.href))){
-                injectScripts.push(userLibraryScript);
-            }
-        });
+//        let userLibraryScripts = response.body; //JSON.parse(response.body);
+//        console.log("response",response.body);
+//        let injectScripts = [];
+//        userLibraryScripts.forEach((userLibraryScript)=>{
+//            console.log("script from library",userLibraryScript);
+//            try {
+//                if ($_matchesCheck(userLibraryScript,new URL(location.href))){
+//                    console.log("userLibraryScript-", userLibraryScript)
+//                    injectScripts.push(userLibraryScript);
+//                }
+//
+//            } catch (error) {
+//                console.error("￥_matchesCheck-----error", error)
+//            }
+//        });
         
-        injectScripts.forEach((script) => {
+        matchedScripts = response.body;
+        
+        console.log("matchedScripts-", matchedScripts)
+        matchedScripts.forEach((script) => {
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
                     if (injectedVendor.has(url)) return;
@@ -227,12 +300,6 @@ const $_injectInPageWithTiming = (script, runAt) => {
                 }
                 
             }
-        });
-                
-        browser.runtime.sendMessage({
-            from: "bootstrap",
-            operate: "setMatchedScripts",
-            matchScripts: injectScripts
         });
     });
     window.addEventListener('message', (e) => {

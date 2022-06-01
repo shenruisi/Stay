@@ -70,6 +70,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'updateUrl': '',
       'excludes': [],
       'grants': [],
+      'unsupportedGrants': [],
       'homePageUrl': '',
       'author': 'Unnamed Author',
       'includes': [],
@@ -83,7 +84,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'notes':[],
       'runAt': 'end',
       'pass':true,
-      'errorMessage':''
+      'errorMessage':'',
+      'iconUrl':''
   };
 
   let meta = extractMeta(content).match(/.+/g);
@@ -107,14 +109,14 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           // Ignore invalid/unsupported meta lines.
           continue;
       }
-      native.nslog(data.keyword);
+//      native.nslog(data.keyword);
       if (UserScriptUnsupport_TAGS.has(data.keyword)){
           details.pass = false;
           details.errorMessage += "Unsupport tag: "+data.keyword+"\n";
           continue;
       }
       
-      native.nslog(data.keyword);
+//      native.nslog(data.keyword);
       switch (data.keyword) {
           case 'noframes':
               details.noFrames = true;
@@ -147,15 +149,14 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
                   details.grants.push(data.value);
               }
               else{
-                  details.pass = false;
-                  details.errorMessage += 'Unsupport GM api '+data.value+'\n';
+//                  details.pass = false;
+//                  details.errorMessage += 'Unsupport GM api '+data.value+'\n';
+                  details.unsupportedGrants.push(data.value);
               }
               break;
           case 'description':
           case 'name':
               let locale = data.locale;
-              native.nslog("locale");
-              native.nslog(locale);
               if (locale) {
                   if (!details.locales[locale]) details.locales[locale] = {};
                   details.locales[locale][data.keyword] = data.value;
@@ -173,26 +174,18 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               details.notes.push(data.value);
               break;
           case 'match':
-              try {
-                  new window.MatchPattern(data.value);
-                  details.matches.push(data.value);
-              } catch (e) {
-                  details.errorMessage += 'Unsupport match pattern' + data.value;
-              }
+              details.matches.push(data.value);
+//              try {
+//                  new window.MatchPattern(data.value);
+//
+//              } catch (e) {
+//                  details.errorMessage += 'Unsupport match pattern' + data.value;
+//              }
               break;
           case 'icon':
-              details.iconUrl = safeUrl(data.value, url).toString();
+              details.iconUrl = data.value;
               break;
           case 'require':
-              //hard code cuz only support stay:// now.
-//              if (data.value.startsWith('stay://')){
-//                  details.requireUrls.push(safeUrl(data.value, url).toString());
-//              }
-//              else{
-//                  details.pass = false;
-//                  details.errorMessage += 'Unsupport require protocol: '+data.value;
-//              }
-              
               details.requireUrls.push(safeUrl(data.value, url).toString());
               
               break;
@@ -209,7 +202,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
       }
     }
-    native.nslog(details);
+//    native.nslog(details);
     return prepDefaults(details);
 }
 

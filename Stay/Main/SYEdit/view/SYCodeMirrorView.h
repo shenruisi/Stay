@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) WKWebView *wkwebView;
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
+@property (nonatomic, strong) NSString *downloadUrl;
 @property (nonatomic, assign) BOOL active;
 
 

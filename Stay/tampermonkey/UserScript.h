@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<NSString *> *excludes;
 @property (nonatomic, copy) NSString *runAt;
 @property (nonatomic, copy) NSArray<NSString *> *grants;
+@property (nonatomic, copy) NSArray<NSString *> *unsupportedGrants;
 @property (nonatomic, assign) BOOL noFrames;
 @property (nonatomic, assign) BOOL pass;
 @property (nonatomic, copy) NSString *errorMessage;
@@ -33,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *updateUrl;
 @property (nonatomic, copy) NSString *downloadUrl;
 
-@property (nonatomic, copy) NSDate *updateTime;
+@property (nonatomic, copy) NSString *updateTime;
 @property (nonatomic, assign) BOOL active;
 @property (nonatomic, assign) BOOL updateSwitch;
 @property (nonatomic, copy) NSArray<NSString *> *requireUrls;
