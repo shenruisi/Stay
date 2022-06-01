@@ -47,7 +47,7 @@ static Tampermonkey *kInstance = nil;
     
     //Check if unsupported grants api really used in content.
     if (userScript.pass && userScript.unsupportedGrants.count > 0){
-        NSString *scriptWithoutComment = [self _removeComment:userScript.content];
+        NSString *scriptWithoutComment = [self _removeComment:scriptContent];
         NSMutableString *builder = [[NSMutableString alloc] initWithString:@"("];
         
         for (int i = 0; i < userScript.unsupportedGrants.count; i++){

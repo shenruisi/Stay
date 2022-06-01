@@ -51,6 +51,7 @@
 		588B83292846147000AB2D73 /* UserscriptInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B83272846147000AB2D73 /* UserscriptInfo.m */; };
 		588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
+		588B832F284759B900AB2D73 /* html2canvas.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 588B832E284759B900AB2D73 /* html2canvas.min.js */; };
 		58F7F4B827438CB000270873 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4B727438CB000270873 /* bootstrap.js */; };
 		58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4BA2743A93E00270873 /* parse-user-script.js */; };
 		58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */; };
@@ -229,6 +230,7 @@
 		588B83272846147000AB2D73 /* UserscriptInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserscriptInfo.m; sourceTree = "<group>"; };
 		588B832A284620F700AB2D73 /* ActivateChanged.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivateChanged.h; sourceTree = "<group>"; };
 		588B832B284620F700AB2D73 /* ActivateChanged.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivateChanged.m; sourceTree = "<group>"; };
+		588B832E284759B900AB2D73 /* html2canvas.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = html2canvas.min.js; sourceTree = "<group>"; };
 		58F7F4B727438CB000270873 /* bootstrap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58F7F4BA2743A93E00270873 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -603,6 +605,7 @@
 			isa = PBXGroup;
 			children = (
 				58F7F4E12746589C00270873 /* stay-taskloop.js */,
+				588B832E284759B900AB2D73 /* html2canvas.min.js */,
 				582F9DE3276F32B900C88135 /* base64.min.js */,
 				582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */,
 				5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */,
@@ -1132,6 +1135,7 @@
 			files = (
 				58F7F4B827438CB000270873 /* bootstrap.js in Resources */,
 				5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */,
+				588B832F284759B900AB2D73 /* html2canvas.min.js in Resources */,
 				58F7F4E22746589D00270873 /* stay-taskloop.js in Resources */,
 				5881343027294C0E0055E1CE /* iframe.html in Resources */,
 				5876891C2719238000F834A4 /* background.js in Resources */,
@@ -1508,7 +1512,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 38;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -1554,7 +1558,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 38;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
