@@ -40,14 +40,14 @@ let browserLangurage = "",
     scriptConsoleDom,
     scriptDomTmp = [
             '<div class="info-case">',
-            '<div class="title">{name}<span class="version">{version}</span><span>{status}</span></div>',
+            '<div class="title"><img style="display:{showIcon}" src={icon} />{name}<span class="version">{version}</span><span>{status}</span></div>',
             '<div class="name">{author}</div>',
             '<div class="desc">{description}</div>',
             '</div>',
             '<div class="active-case" active={active} uuid={uuid} >',
             '<div class="active-setting" style="display:{showMenu}" active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
-            // '<div class="active-manually" style="display:{showManually}" active={active} uuid={uuid}></div>',
+            '<div class="active-manually" style="display:{showManually}" name={name} active={active} uuid={uuid}></div>',
             '</div>'].join(''),
     registerMenuItemTemp = [
         '<div class="menu-item" uuid={uuid} menu-id={id}>{caption}</div>'
@@ -251,7 +251,8 @@ window.onload=function(){
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-manually") {
                 // 获取到具体事件触发的active-case，进行active
                 let uuid = target.getAttribute("uuid");
-                handleExecScriptManually(uuid);
+                let name = target.getAttribute("name");
+                handleExecScriptManually(uuid, name);
                 return;
             }
             // register menu click
@@ -334,11 +335,13 @@ function renderScriptContent(datas) {
             let grants = data.grants
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
+            data.showIcon = data.icon?"inline":"none";
             data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
             let showManually = !item.active ? "block":"none"
             data.showManually = showManually;
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
+            console.log("item----", item)
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
             _dom.setAttribute('uuid', uuid);
             _dom.setAttribute('author', data["author"]);
@@ -457,7 +460,7 @@ function handleScriptActive(uuid, active) {
  * 控制脚本是否运行
  * @param {string}   uuid        脚本id
  */
-function handleExecScriptManually(uuid) {
+function handleExecScriptManually(uuid, name) {
     if (uuid && uuid != "" && typeof uuid == "string") {
         browser.runtime.sendMessage({
             from: "popup",
@@ -465,9 +468,35 @@ function handleExecScriptManually(uuid) {
             uuid: uuid,
         }, (response) => {
             console.log("exeScriptManually response,", response)
-        })
+        });
+        console.log("name====", name);
+        let timeout = 3000;
+        let toastContainer = document.getElementById("toastContainer");
+        document.querySelector("#toastContainer .title").setInnerHtml(name);
+        toastContainer.style.display = "flex"
+        toastContainer.className = "toast-container toast-show"
+        var clearFlag = 0;
+        clearFlag = window.setInterval(() => {
+            autoClose();
+        }, 500);
+
+        function autoClose() {
+            if (timeout > 0) {
+                timeout = timeout - 500;
+            } else {
+                window.clearInterval(clearFlag);
+                // notificationDom.removeEventListener("click");
+                toastContainer.className = "toast-container toast-hide"
+                if (ondone) {
+                    ondone();
+                }
+            }
+        }
     }
 }
+
+
+
 
 
 /**

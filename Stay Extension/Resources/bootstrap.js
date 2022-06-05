@@ -100,7 +100,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
         } else {
             $_injectInPage(script);
         }
-    } else if (runAt === "document_end" || runAt === "document_body") {
+    } else if (runAt === "document_end") {
         if (document.readyState !== "loading") {
             $_injectInPage(script);
         } else {
@@ -160,39 +160,53 @@ let matchedScripts;
                             console.log("pageInject---",pageInject)
                             targetScript.requireCodes.forEach((urlCodeDic)=>{
                                 if (urlCodeDic.url == url){
-                                    if (pageInject){
-                                        $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
-                                    }
-                                    else{
-                                        browser.runtime.sendMessage({
-                                            from: "bootstrap",
-                                            operate: "injectScript",
-                                            code:urlCodeDic.code,
-                                            allFrames:true,
-                                            runAt:"document_start"
-                                        });
-                                    }
+                                    let dicName = urlCodeDic.name;
+                                    // remove Stay_Required_Inject_JS_
+                                    let requireJsDom = document.getElementById("Stay_Required_Inject_JS_" + dicName);
+                                    if (!requireJsDom) {
+                                        $_injectRequiredInPage(urlCodeDic.name, urlCodeDic.code);
+                                    } 
+                                    
+                                    // if (pageInject){
+                                    //     $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
+                                    // }
+                                    // else{
+                                    //     browser.runtime.sendMessage({
+                                    //         from: "bootstrap",
+                                    //         operate: "injectScript",
+                                    //         code:urlCodeDic.code,
+                                    //         allFrames:true,
+                                    //         runAt:"document_start"
+                                    //     });
+                                    // }
                                     
                                 }
                             });
                         }
                     });
                 }
+
+                let uuid = targetScript.uuid;
+                let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
+                if (pageJSDom){
+                    pageJSDom.remove();
+                }
+                $_injectInPageWithTiming(targetScript, "document_end");
                 
-                if (targetScript.installType === "page"){
-                    console.log("Manually page inject");
-                    $_injectInPageWithTiming(targetScript,"document_start");
-                }
-                else{
-                    console.log("Manually content inject");
-                    browser.runtime.sendMessage({
-                        from: "bootstrap",
-                        operate: "injectScript",
-                        code:targetScript.content,
-                        allFrames:!targetScript.noFrames,
-                        runAt:"document_start"
-                    });
-                }
+                // if (targetScript.installType === "page"){
+                //     console.log("Manually page inject");
+                //     $_injectInPageWithTiming(targetScript,"document_end");
+                // }
+                // else{
+                //     console.log("Manually content inject");
+                //     browser.runtime.sendMessage({
+                //         from: "bootstrap",
+                //         operate: "injectScript",
+                //         code:targetScript.content,
+                //         allFrames:!targetScript.noFrames,
+                //         runAt:"document_start"
+                //     });
+                // }
             }
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
@@ -225,7 +239,7 @@ let matchedScripts;
         return true;
     });
     
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
+    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
         let injectedVendor = new Set();
 //        let userLibraryScripts = response.body; //JSON.parse(response.body);
 //        console.log("response",response.body);

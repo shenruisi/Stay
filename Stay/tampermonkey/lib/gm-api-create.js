@@ -562,105 +562,135 @@
         api += `${clear_GM_log}\nclear_GM_log();\n`;
         api += `${__xhr}\n`
         gmFunVals.push("info: GM_info");
-
+        let gmFunName = [];
         grants.forEach(grant => {
-            if (grant === "unsafeWindow") {
+            if (grant === "unsafeWindow" && !gmFunName.includes("unsafeWindow")) {
                 api += `const unsafeWindow = window;\n`;
+                gmFunName.push("unsafeWindow");
             } 
-            else if (grant === "GM.listValues") {
+            else if (grant === "GM.listValues" && !gmFunName.includes("GM.listValues")) {
                 gmFunVals.push("listValues: GM_listValues_Async");
+                gmFunName.push("GM.listValues");
             } 
-            else if (grant === "GM_listValues"){
+            else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
                 api += `function GM_listValues(){ return __listValuesStroge;}\n`;
+                gmFunName.push("GM_listValues");
             }
-            else if (grant === "GM.deleteValue") {
+            else if (grant === "GM.deleteValue" && !gmFunName.includes("GM.deleteValue")) {
                 api += `${GM_deleteValue_Async}\n`;
                 gmFunVals.push("deleteValue: GM_deleteValue_Async");
+                gmFunName.push("GM.deleteValue");
             }
-            else if (grant === "GM_deleteValue"){
+            else if (grant === "GM_deleteValue" && !gmFunName.includes("GM_deleteValue")){
                 api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\n`;
+                gmFunName.push("GM_deleteValue");
             }
-            else if (grant === "GM_addStyle") { //同步
+            else if (grant === "GM_addStyle" && !gmFunName.includes("GM_addStyle")) { //同步
                 api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\n`;
+                gmFunName.push("GM_addStyle");
             } 
-            else if (grant === "GM.addStyle") {
+            else if (grant === "GM.addStyle" && !gmFunName.includes("GM.addStyle")) {
                 api += `${GM_addStyle_Async}\n`;
                 gmFunVals.push("addStyle: GM_addStyle_Async");
+                gmFunName.push("GM.addStyle");
             } 
-            else if ("GM.setValue" === grant){
+            else if ("GM.setValue" === grant && !gmFunName.includes("GM.setValue")){
                 api += `${GM_setValue_Async}\n`;
                 gmFunVals.push("setValue:  GM_setValue_Async");
+                gmFunName.push("GM.setValue");
             }
-            else if ("GM_setValue" === grant) {
+            else if ("GM_setValue" === grant && !gmFunName.includes("GM_setValue")) {
                 api += `${GM_setValueSync}\nconst GM_setValue = GM_setValueSync;\n`;
+                gmFunName.push("GM_setValue");
             }
-            else if ("GM.getValue" === grant) {
+            else if ("GM.getValue" === grant && !gmFunName.includes("GM.getValue")) {
                 api += `${GM_getValueAsync}\n`;
                 gmFunVals.push("getValue: GM_getValueAsync");
+                gmFunName.push("GM.getValue");
             }
-            else if ("GM_getValue" === grant) {
+            else if ("GM_getValue" === grant && !gmFunName.includes("GM_getValue")) {
                 api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\n`;
+                gmFunName.push("GM_getValue");
             }
-            else if ("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant){
+            else if (("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant) && 
+                (!gmFunName.includes("GM_registerMenuCommand") || !gmFunName.includes("GM.registerMenuCommand"))){
                 api += `${GM_registerMenuCommand}\n`;
                 gmFunVals.push("registerMenuCommand: GM_registerMenuCommand");
+                gmFunName.push("GM_registerMenuCommand");
+                gmFunName.push("GM.registerMenuCommand");
             }
-            else if ("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) {
+            else if (("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) && 
+                (!gmFunName.includes("GM_unregisterMenuCommand") || !gmFunName.includes("GM.unregisterMenuCommand"))) {
                 api += `${GM_unregisterMenuCommand}\n`;
                 gmFunVals.push("unregisterMenuCommand: GM_unregisterMenuCommand");
+                gmFunName.push("GM_unregisterMenuCommand");
+                gmFunName.push("GM.unregisterMenuCommand");
             }
-            else if ("GM_getResourceURL" === grant){
-                api += `${GM_getResourceURLSync}\nconst GM_getResourceURL=GM_getResourceURLSync;\n`;
+            else if (("GM_getResourceUrl" === grant || "GM_getResourceURL" === grant) && !gmFunName.includes("GM_getResourceURLSync")){
+                api += `${GM_getResourceURLSync}\n`;
+                gmFunName.push("GM_getResourceURLSync");
+                api += `const GM_getResourceURL=GM_getResourceURLSync;\n`;
+                api += `const GM_getResourceUrl=GM_getResourceURLSync;\n`;
             }
-            else if ("GM_getResourceUrl" === grant) {
-                api += `${GM_getResourceURLSync}\nconst GM_getResourceUrl=GM_getResourceURLSync;\n`;
-                gmFunVals.push("getResourceUrl: GM_getResourceUrl");
-            }
-            else if ("GM.getResourceURL" === grant){
+            else if (("GM.getResourceURL" === grant || "GM.getResourceUrl" === grant) && !gmFunName.includes("GM_getResourceURL_Async")){
                 api += `${GM_getResourceURL_Async}\n`;
                 gmFunVals.push("getResourceURL: GM_getResourceURL_Async");
-            }
-            else if ("GM.getResourceUrl" === grant) {
-                api += `${GM_getResourceURL_Async}\n`;
                 gmFunVals.push("getResourceUrl: GM_getResourceURL_Async");
+                gmFunName.push("GM_getResourceURL_Async");
+
             }
-            else if ("GM.getResourceText" === grant) {
+            else if ("GM.getResourceText" === grant && !gmFunName.includes("GM.getResourceText")) {
                 api += `${GM_getResourceText_Async}\n`;
                 gmFunVals.push("getResourceText: GM_getResourceText_Async");
+                gmFunName.push("GM_getResourceText_Async");
             }
-            else if ("GM_getResourceText" === grant) {
+            else if ("GM_getResourceText" === grant && !gmFunName.includes("GM_getResourceText")) {
                 api += `${GM_getResourceTextSync}\nconst GM_getResourceText = GM_getResourceTextSync;\n`;
+                gmFunName.push("GM_getResourceTextSync");
             }
-            else if ("GM.openInTab" === grant) {
+            else if ("GM.openInTab" === grant && !gmFunName.includes("GM_openInTab_async")) {
                 api += `${GM_openInTab_async}\n`;
-                api += `${GM_closeTab}\n`;
+                
                 gmFunVals.push("openInTab: GM_openInTab_async");
-                gmFunVals.push("closeTab: GM_closeTab");
+                gmFunName.push("GM_openInTab_async");
+                if (!gmFunName.includes("GM_closeTab")){
+                    api += `${GM_closeTab}\n`;
+                    gmFunVals.push("closeTab: GM_closeTab");
+                    gmFunName.push("GM_closeTab");
+                }
             }
-            else if ("GM_openInTab" === grant) {
+            else if ("GM_openInTab" === grant && !gmFunName.includes("GM_openInTab")) {
                 api += `${GM_openInTab}\n`;
+                gmFunName.push("GM_openInTab");
             }
-            else if ("GM.closeTab" === grant || "GM_closeTab" === grant) {
+            else if (("GM.closeTab" === grant || "GM_closeTab" === grant) && !gmFunName.includes("GM_closeTab")) {
                 api += `${GM_closeTab}\n`;
                 gmFunVals.push("closeTab: GM_closeTab");
+                gmFunName.push("GM_closeTab");
             }
-            else if ("GM.notification" === grant || "GM_notification" === grant) {
+            else if (("GM.notification" === grant || "GM_notification" === grant) && !gmFunName.includes("GM_notification")) {
                 api += `${GM_notification}\n`;
                 gmFunVals.push("notification: GM_notification");
+                gmFunName.push("GM_notification");
             }
-            else if ("GM.setClipboard" === grant || "GM_setClipboard" === grant) {
+            else if (("GM.setClipboard" === grant || "GM_setClipboard" === grant) && !gmFunName.includes("GM_setClipboard") ) {
                 api += `${GM_setClipboard}\n`;
                 gmFunVals.push("setClipboard: GM_setClipboard");
+                gmFunName.push("GM_setClipboard");
             }
-            else if ("GM.download" === grant || "GM_download" === grant) {
+            else if (("GM.download" === grant || "GM_download" === grant) && !gmFunName.includes("GM_download")) {
                 api += `${GM_download}\n`;
                 gmFunVals.push("download: GM_download");
+                gmFunName.push("GM_download");
             }
-            else if (grant === "GM_xmlhttpRequest"){
+            else if (grant === "GM_xmlhttpRequest" && !gmFunName.includes("GM_xmlhttpRequest")){
                 api += "\nconst GM_xmlhttpRequest = __xhr;\n";
+                gmFunName.push("GM_xmlhttpRequest");
+
             }
-            else if (grant === "GM.xmlHttpRequest") {
+            else if (grant === "GM.xmlHttpRequest" && !gmFunName.includes("GM.xmlHttpRequest")) {
                 gmFunVals.push("xmlHttpRequest: __xhr");
+                gmFunName.push("GM.xmlHttpRequest");
             }
         })
 
