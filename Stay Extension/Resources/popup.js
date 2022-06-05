@@ -469,7 +469,6 @@ function handleExecScriptManually(uuid, name) {
         }, (response) => {
             console.log("exeScriptManually response,", response)
         });
-        console.log("name====", name);
         let timeout = 3000;
         let toastContainer = document.getElementById("toastContainer");
         document.querySelector("#toastContainer .title").setInnerHtml(name);
@@ -485,11 +484,7 @@ function handleExecScriptManually(uuid, name) {
                 timeout = timeout - 500;
             } else {
                 window.clearInterval(clearFlag);
-                // notificationDom.removeEventListener("click");
                 toastContainer.className = "toast-container toast-hide"
-                if (ondone) {
-                    ondone();
-                }
             }
         }
     }

@@ -474,7 +474,14 @@ section {
 .toast-container .title{
     font-weight: 700;
     font-size: 17px;
-    text-overflow:ellipsis;overflow:hidden;display:-webkit-box;
+    text-align: center;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    display: -webkit-box;
+    -webkit-line-clamp:1;
+    -webkit-box-orient:vertical;
+    padding-bottom: 4px;
+    line-height: 29px;
     width: 100%;
 }
 .toast-show {
