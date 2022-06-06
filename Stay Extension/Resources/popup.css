@@ -197,6 +197,9 @@ section {
 .info-case .title img{
     width: 16px;
     height: 16px;
+    padding-right: 4px;
+    position: relative;
+    top: 2px;
 }
 .content-container .content-box .info-case .title span.version{
     color: #B620E0;
@@ -454,9 +457,9 @@ section {
 }
 .toast-container{
     position: fixed;
-    top: 50%;
+    bottom: 10px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0);
     z-index: 4000;
     width: 240px;
     height: 70px;
@@ -502,11 +505,11 @@ section {
 @keyframes animate{
     from {
    		height: 0px;
-    	top : 100%;
+    	bottom : 0;
     }
     to {
     	height: 70px;
-    	top : 50%;
+    	bottom : 10px;
     }
 }
 
