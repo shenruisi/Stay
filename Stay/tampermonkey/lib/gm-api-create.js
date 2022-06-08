@@ -262,9 +262,13 @@
         }
         let bg = "background: #fff;";
         let fontColor = "color: #000000;"
+        let topLine = " border-top: 1px solid #E0E0E0;"
+        let rightLine = " border-right:1px solid #E0E0E0;"
         if (is_dark()) {
             bg = "background: #000;";
-            fontColor = "color: #F3F3F3;"
+            fontColor = "color: #F3F3F3;";
+            topLine = " border-top: 1px solid #565656;"
+            rightLine = " border-right:1px solid #565656;"
         }
         let title = "You have source to download..."
         let text = 'Allow to download "' + name+ '"';
@@ -273,9 +277,9 @@
             '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;"><img src=' + iconUrl + ' style="width: 20px;height: 20px;"></img><div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
-            '<div style="' + fontColor + ' font-size: 14px;margin-top:10px; border-top:1px solid #E0E0E0; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
-            '<div id="gm_downloadCancel" style="font-size:16px;font-weight:600;color: #B620E0;width:50%;border-right:1px solid #E0E0E0;padding: 8px;">Cancel</div>',
-            '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;">Allow</a>',
+            '<div style="' + fontColor + topLine + ' font-size: 14px;margin-top:10px; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
+            '<div id="gm_downloadCancel" style=" ' + rightLine +' font-size:16px;font-weight:600;color: #B620E0;width:50%;padding: 8px;text-align:center;">Cancel</div>',
+            '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;text-align:center;">Allow</a>',
             '</div>',
             '</div>'
         ];
@@ -292,7 +296,11 @@
         })
 
         let downloadLinkDom = document.getElementById("downloadLink");
-        downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+        if (url.indexOf("data:application/octet-stream") == 0 || url.match(new RegExp("^data:application/octet-stream.*$"))){
+            downloadLinkDom.href = url;
+        }else{
+            downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+        }
         downloadLinkDom.download = name;
         downloadLinkDom.addEventListener("click", function (e) {
             tempDom.remove();
