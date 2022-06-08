@@ -270,11 +270,14 @@
             topLine = " border-top: 1px solid #565656;"
             rightLine = " border-right:1px solid #565656;"
         }
-        let title = "You have source to download..."
+        let iconDom = "";
+        if (iconUrl){
+            iconDom = '<img src=' + iconUrl + ' style="width: 20px;height: 20px;">'
+        }
         let text = 'Allow to download "' + name+ '"';
         let popToastTemp = [
-            '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);padding-top: 6px;">',
-            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;"><img src=' + iconUrl + ' style="width: 20px;height: 20px;"></img><div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
+            '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .6);padding-top: 6px;">',
+            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;">' + iconDom +'<div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
             '<div style="' + fontColor + topLine + ' font-size: 14px;margin-top:10px; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
