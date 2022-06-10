@@ -12,8 +12,11 @@
 #import "SYNotesViewController.h"
 #import "ScriptMananger.h"
 #import "SharedStorageManager.h"
+#import "SYSelectTabViewController.h"
 
 @interface SYDetailViewController ()
+@property (nonatomic, strong) UIBarButtonItem *rightIcon;
+@property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 
 @end
 
@@ -42,6 +45,7 @@
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self createDetailView];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
+    self.navigationItem.rightBarButtonItem = [self rightIcon];
 
     // Do any additional setup after loading the view.
 }
@@ -527,6 +531,27 @@
     }
 }
 
+- (void)shareBtnClick {
+    self.sYSelectTabViewController.url = self.script.downloadUrl;
+    self.sYSelectTabViewController.content = self.script.content;
+    [self.sYSelectTabViewController show];
+}
+
+- (UIBarButtonItem *)rightIcon {
+    if (nil == _rightIcon){
+        UIImage *image = [UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:17]]];
+
+        _rightIcon = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(shareBtnClick)];
+    }
+    return _rightIcon;
+}
+
+- (SYSelectTabViewController *)sYSelectTabViewController {
+    if(_sYSelectTabViewController == nil) {
+        _sYSelectTabViewController = [[SYSelectTabViewController alloc] init];
+    }
+    return _sYSelectTabViewController;
+}
 /*
 #pragma mark - Navigation
 

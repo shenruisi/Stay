@@ -45,7 +45,7 @@ let browserLangurage = "",
             '<div class="desc">{description}</div>',
             '</div>',
             '<div class="active-case" active={active} uuid={uuid} >',
-            '<div class="active-setting" style="display:{showMenu}" active={active} uuid={uuid}></div>',
+            '<div class="active-setting" style="display:{showMenu}" manually={manually} active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
             '<div class="active-manually" style="display:{showManually}" name={name} active={active} uuid={uuid}></div>',
             '</div>'].join(''),
@@ -95,6 +95,7 @@ const matchesCheck = (userLibraryScript, url) => {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("giveRegisterMenuCommand-----",request)
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
         registerMenuMap[request.uuid] = request.data
     }
@@ -259,7 +260,8 @@ window.onload=function(){
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-setting") {
                 let uuid = target.getAttribute("uuid");
                 let active = target.getAttribute("active");
-                if (active.bool()){
+                let manually = target.getAttribute("manually");
+                if (active.bool() || manually === "1"){
                     handleScriptRegisterMenu(uuid);
                 }else{
                     toastDom.setInnerHtml(i18nProp["toast_keep_active"])
@@ -336,12 +338,18 @@ function renderScriptContent(datas) {
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
             data.showIcon = data.icon?"inline":"none";
-            data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
+            data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"];
+            if (data.manually == "1"){
+                if (!item.active){
+                    data.status = i18nProp["state_manually"];
+                }
+            }else{
+                data.manually = "0"
+            }
             let showManually = !item.active ? "block":"none"
             data.showManually = showManually;
             var _dom = document.createElement('div');
             let index = data.active ? 1 : 0;
-            console.log("item----", item)
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
             _dom.setAttribute('uuid', uuid);
             _dom.setAttribute('author', data["author"]);
@@ -469,6 +477,15 @@ function handleExecScriptManually(uuid, name) {
         }, (response) => {
             console.log("exeScriptManually response,", response)
         });
+        //browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
+        // 改变数据manually状态
+        scriptStateList.forEach(function (item, index) {
+            if (uuid == item.uuid) {
+                item.manually = "1";
+            }
+        })
+        renderScriptContent(scriptStateList)
+
         let timeout = 3000;
         let toastContainer = document.getElementById("toastContainer");
         document.querySelector("#toastContainer .title").setInnerHtml(name);
