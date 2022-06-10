@@ -33,10 +33,11 @@
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
         source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
+        source += '\t\tconsole.log("fetchRegisterMenuCommand=",request,__RMC_CONTEXT);\n';
         source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
         source += '\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid){\n';
-        source += '\t\tconsole.log("menuId=",request.id,__RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;';
-        source += '\t\tif(__RMC_CONTEXT.length>0){__RMC_CONTEXT.forEach((item, index)=>{if(item.id == menuId){place = index;\n return false;\n}\n})}';
+        source += '\t\tconsole.log("menuId=",request.id,__RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;\n';
+        source += '\t\tif(__RMC_CONTEXT.length>0){\n__RMC_CONTEXT.forEach((item, index)=>{\n\t\tif(item.id == menuId){\nplace = index;\n return false;\n}\n}\n)}';
         source += '\t\tif(place>=0){\n__RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
         source += '\treturn true;\n'
         source += '});\n\n';
