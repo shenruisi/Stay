@@ -43,6 +43,17 @@
     return YES;
 }
 
+- (void)setUrl:(NSString *)url {
+    SYSelectBarModalViewController * cer =  self.navController.rootModalViewController;
+    cer.url = url;
+
+}
+
+- (void)setContent:(NSString *)content {
+    SYSelectBarModalViewController * cer =  self.navController.rootModalViewController;
+    cer.content = content;
+}
+
 
 - (FCPresentingFrom)from{
     return FCPresentingFromBottom;
