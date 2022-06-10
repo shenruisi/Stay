@@ -53,13 +53,14 @@
 - (UIView *)shareUrlBtn {
     if(_shareUrlBtn == nil) {
         _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, kScreenWidth - 80, 45)];
-        _shareUrlBtn.backgroundColor = RGB(247, 247, 247);
+        _shareUrlBtn.backgroundColor = FCStyle.secondaryPopup;
         _shareUrlBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrlClick)];
         [_shareUrlBtn addGestureRecognizer:tapGesture];
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 18)];
         label.font = FCStyle.body;
+        label.textColor = FCStyle.fcBlack;
         label.text = NSLocalizedString(@"settings.shareUrl", @"Share Url");
         label.userInteractionEnabled = NO;
         label.centerY = 22.5;
@@ -81,12 +82,13 @@
 - (UIView *)shareContentBtn {
     if(_shareContentBtn == nil) {
         _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
-        _shareContentBtn.backgroundColor = RGB(247, 247, 247);
+        _shareContentBtn.backgroundColor = FCStyle.secondaryPopup;
         _shareContentBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareContentClick)];
         [_shareContentBtn addGestureRecognizer:tapGesture];
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 18)];
         label.font = FCStyle.body;
+        label.textColor = FCStyle.fcBlack;
         label.text = NSLocalizedString(@"settings.shareContent", @"Share Content");
         label.userInteractionEnabled = NO;
         label.centerY = 22.5;
