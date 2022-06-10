@@ -104,9 +104,16 @@
 }
 
 
+
 - (CGSize)mainViewSize{
     CGFloat width = kScreenWidth - 30;
     CGFloat height = 152;
+    if (self.url == NULL || self.url.length == 0) {
+        self.shareUrlBtn.hidden = true;
+        height = 82;
+    } else {
+        self.shareUrlBtn.hidden = false;
+    }
     return CGSizeMake(width, height);
 }
 @end
