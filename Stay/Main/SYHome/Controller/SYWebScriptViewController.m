@@ -8,15 +8,16 @@
 #import "SYWebScriptViewController.h"
 #import <WebKit/WebKit.h>
 #import "SYEditViewController.h"
-
+#import "LoadingSlideController.h"
 
 
 @interface SYWebScriptViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 @property (nonatomic, strong) WKWebView *wkwebView;
-@property (nonatomic, strong) UIView *uploadView;
 @property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic, strong) UIBarButtonItem *backBtn;
 @property (nonatomic, strong) UIBarButtonItem *closeBtn;
+@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+
 @end
 
 @implementation SYWebScriptViewController
@@ -25,10 +26,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [self createBgColor];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    [self.view addSubview:self.uploadView];
     [self.view addSubview:self.wkwebView];
-    self.uploadView.center = self.view.center;
-    self.uploadView.hidden = true;
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82, [[UIScreen mainScreen] bounds].size.width, 0.5f)];
     self.progressView.backgroundColor = [UIColor whiteColor];
     //设置进度条的高度，下面这句代码表示进度条的宽度变为原来的1倍，高度变为原来的1.5倍.
@@ -109,8 +107,7 @@
     NSString *url = [webView.URL absoluteString];
     BOOL isScript = [url containsString:@"https://greasyfork.org/scripts"];
     if(isScript) {
-        self.uploadView.hidden = false;
-        [self.view bringSubviewToFront:self.uploadView];
+        [self.loadingSlideController show];
         dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
 
             NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]]];
@@ -128,25 +125,6 @@
     }
 }
 
-- (UIView *)uploadView {
-    if(_uploadView == NULL) {
-        _uploadView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 100)];
-        [_uploadView setBackgroundColor:RGB(230, 230, 230)];
-        _uploadView.layer.cornerRadius = 10;
-        _uploadView.layer.masksToBounds = 10;
-        
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textColor = [UIColor blackColor];
-        [titleLabel sizeToFit];
-        
-        titleLabel.top = 30;
-        titleLabel.centerX = (kScreenWidth - 100) / 2;
-        [_uploadView addSubview:titleLabel];
-    }
-    return _uploadView;
-}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"estimatedProgress"]) {
@@ -176,7 +154,6 @@
     NSLog(@"加载完成");
     //加载完成后隐藏progressView
     self.progressView.hidden = YES;
-    self.uploadView.hidden = YES;
     NSString *url = [webView.URL absoluteString];
     BOOL isScript = [url containsString:@"https://greasyfork.org/scripts"];
     if(isScript) {
@@ -184,6 +161,8 @@
     }
     NSString *jsString = @"localStorage.setItem('manualOverrideInstallJS', 1)";
     [self.wkwebView evaluateJavaScript:jsString completionHandler:nil];
+    [self.loadingSlideController dismiss];
+
 }
 
 //加载失败
@@ -234,5 +213,14 @@
     // Pass the selected object to the new view controller.
 }
 */
+- (LoadingSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[LoadingSlideController alloc] init];
+        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+    }
+    
+    return _loadingSlideController;
+}
+
 
 @end

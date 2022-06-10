@@ -27,17 +27,15 @@
     // Override point for customization after application launch.
     [IACManager sharedManager].callbackURLScheme = @"stay";
     [[IACManager sharedManager] handleAction:@"install" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
-        dispatch_async(dispatch_get_main_queue(),^{
-            [self.loadingSlideController show];
-        });
+        [self.loadingSlideController show];
         NSString *url = inputParameters[@"scriptURL"];
         NSString *decodeUrl = [url stringByRemovingPercentEncoding];//编码
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
+        dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
 
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[decodeUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
             dispatch_async(dispatch_get_main_queue(),^{
-              
                 if(data != nil ) {
                     if (self.loadingSlideController.isShown){
                         [self.loadingSlideController dismiss];
@@ -60,8 +58,9 @@
                     });
                 }
             });
-
-    }];
+            });
+        }];
+        
     
 //    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
 //
