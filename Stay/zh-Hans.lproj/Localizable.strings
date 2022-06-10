@@ -42,6 +42,8 @@ settings.importFromFile = "从文件导入";
 settings.downloadScript = "下载脚本";
 settings.close = "关闭";
 settings.scriptError = "脚本格式错误";
+settings.shareContent = "分享脚本";
+settings.shareUrl = "分享链接";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "确认";
