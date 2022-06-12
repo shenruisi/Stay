@@ -12,9 +12,6 @@ console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
 
-let RMC_CONTEXT = [];
-let id = "";
-
 const $_res = (name) => {
     return browser.runtime.getURL(name);
 }
@@ -122,15 +119,21 @@ const $_injectInPageWithTiming = (script, runAt) => {
 }
 
 let matchedScripts;
+// {uuid_1: [], uuid_2:[]}
+let RMC_CONTEXT = {};
 (function(){
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
+        let uuid = request.uuid;
         if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
-            browser.runtime.sendMessage({ from: "content", data: RMC_CONTEXT, uuid: id, operate: "giveRegisterMenuCommand" });
+            console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
+            let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
+            browser.runtime.sendMessage({ from: "content", data: UUID_RMC_CONTEXT, uuid: uuid, operate: "giveRegisterMenuCommand" });
         }
-        else if (request.from == "background" && "execRegisterMenuCommand" === operate && request.uuid == id) {
+        else if (request.from == "background" && "execRegisterMenuCommand" === operate) {
+            console.log("bootstrap--execRegisterMenuCommand---", request);
             let menuId = request.id; 
-            window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, id: id });
+            window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
         else if (request.from == "background" && "exeScriptManually" === operate){
             let targetScript;
@@ -317,15 +320,16 @@ let matchedScripts;
         });
     });
     window.addEventListener('message', (e) => {
+        console.log("bootstrap---addEventListener====", e)
         if (!e || !e.data || !e.data.name) return;
-        id = e.data.id;
+        let __uuid = e.data.id;
         const name = e.data.name;
         const pid = e.data.pid;
-        let message = { from: "gm-apis", uuid: id };
+        let message = { from: "gm-apis", uuid: __uuid };
         if (name === "API_LIST_VALUES") {
             message.operate = "GM_listValues";
             browser.runtime.sendMessage(message, (response) => {
-                window.postMessage({ id: id, pid: pid, name: "RESP_LIST_VALUES", response: response });
+                window.postMessage({ id: __uuid, pid: pid, name: "RESP_LIST_VALUES", response: response });
             });
 
         }
@@ -333,7 +337,7 @@ let matchedScripts;
             message.operate = "GM_deleteValue";
             message.key = e.data.key;
             browser.runtime.sendMessage(message, (response) => {
-                window.postMessage({ id: id, pid: pid, name: "RESP_DELETE_VALUE", response: response });
+                window.postMessage({ id: __uuid, pid: pid, name: "RESP_DELETE_VALUE", response: response });
             });
         }
         else if ("API_LOG" === name) {
@@ -341,7 +345,7 @@ let matchedScripts;
             message.operate = "GM_log";
             browser.runtime.sendMessage(message, (response) => {
                 response.message = message;
-                window.postMessage({ id: id, pid: pid, name: "RESP_LOG", response: response });
+                window.postMessage({ id: __uuid, pid: pid, name: "RESP_LOG", response: response });
             });
         }
         else if ("API_CLEAR_LOG" === name) {
@@ -349,15 +353,35 @@ let matchedScripts;
             browser.runtime.sendMessage(message);
         }
         else if ("REGISTER_MENU_COMMAND_CONTEXT" === name){
-            let RMC_CONTEXT_STR = e.data.rmc_context;
-            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]"){
-                RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
+            let rmc_context = e.data.rmc_context;
+            console.log("REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
+            if (!rmc_context || rmc_context == "{}"){
+                return;
             }
+            let UUID_RMC_CONTEXT = RMC_CONTEXT[__uuid];
+            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+                UUID_RMC_CONTEXT = [];
+            } 
+            UUID_RMC_CONTEXT.push(JSON.parse(rmc_context));
+            RMC_CONTEXT[__uuid] = UUID_RMC_CONTEXT;
+
+            console.log("RMC_CONTEXT-----", RMC_CONTEXT)
         }
         else if ("UNREGISTER_MENU_COMMAND_CONTEXT" === name) {
-            let RMC_CONTEXT_STR = e.data.rmc_context;
-            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]") {
-                RMC_CONTEXT = JSON.parse(RMC_CONTEXT_STR);
+            let pid = e.data.pid;
+            let RMC_CONTEXT_STR = RMC_CONTEXT[__uuid]
+            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]" && RMC_CONTEXT_STR.length>0) {
+                let place = -1;
+                RMC_CONTEXT_STR.forEach((item, index) => {
+                    if (item.id == pid) {
+                        place = index;
+                        return false;
+                    }
+                });
+                if (place >= 0) {
+                    RMC_CONTEXT_STR.splice(place, 1);
+                    RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
+                }
             }
         }
         else if ("BROWSER_ADD_LISTENER" === name) {
@@ -368,7 +392,7 @@ let matchedScripts;
                 message.operate = "API_ADD_STYLE";
                 message.css = e.data.css;
                 browser.runtime.sendMessage(message, response => {
-                    window.postMessage({ id: id, pid: pid, name: "RESP_ADD_STYLE", response: response });
+                    window.postMessage({ id: __uuid, pid: pid, name: "RESP_ADD_STYLE", response: response });
                 });
             } catch (e) {
                 console.log(e);
@@ -388,7 +412,7 @@ let matchedScripts;
             message.value = e.data.value;
             browser.runtime.sendMessage(message, response => {
                 if (name === "API_SET_VALUE") {
-                    window.postMessage({ id: id, pid: pid, name: "RESP_SET_VALUE", response: response });
+                    window.postMessage({ id: __uuid, pid: pid, name: "RESP_SET_VALUE", response: response });
                 }
             });
         }
@@ -399,23 +423,21 @@ let matchedScripts;
             browser.runtime.sendMessage(message, response => {
                 const resp = response === `undefined` ? undefined : response;
                 if (name === "API_GET_VALUE") {
-                    window.postMessage({ id: id, pid: pid, name: "RESP_GET_VALUE", response: resp });
+                    window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_VALUE", response: resp });
                 }
             });
         }
         else if ("API_GET_ALL_REXOURCE_TEXT" === name) {
             message.operate = "GM_getAllResourceText";
             browser.runtime.sendMessage(message, (response) => {
-                console.log("API_GET_ALL_REXOURCE_TEXT---", response);
-                window.postMessage({ id: id, pid: pid, name: "RESP_GET_ALL_REXOURCE_TEXT", response: response });
+                window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_ALL_REXOURCE_TEXT", response: response });
             });
         }
         else if ("API_GET_REXOURCE_TEXT_SYNC" === name || "API_GET_REXOURCE_TEXT" === name) {
             message.operate = "GM_getResourceText";
             browser.runtime.sendMessage(message, (response) => {
-                console.log("API_GET_REXOURCE_TEXT_SYNC---", response);
                 if ("API_GET_REXOURCE_TEXT" === name) {
-                    window.postMessage({ id: id, pid: pid, name: "RESP_GET_REXOURCE_TEXT", response: response });
+                    window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_REXOURCE_TEXT", response: response });
                 }
             });
         }
@@ -423,9 +445,8 @@ let matchedScripts;
             message.operate = "GM_getResourceUrl";
             message.key = e.data.key;
             browser.runtime.sendMessage(message, (response) => {
-                console.log("API_GET_REXOURCE_TEXT_SYNC---", response);
                 if ("API_GET_REXOURCE_URL" === name) {
-                    window.postMessage({ id: id, pid: pid, name: "RESP_GET_REXOURCE_URL", response: response });
+                    window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_REXOURCE_URL", response: response });
                 }
             });
         }
@@ -434,7 +455,7 @@ let matchedScripts;
             message.tabId = tabId;
             message.operate = "closeTab";
             browser.runtime.sendMessage(message, (resp)=>{
-                window.postMessage({ id: id, pid: pid, name: "RESP_CLOSE_TAB", response: resp });
+                window.postMessage({ id: __uuid, pid: pid, name: "RESP_CLOSE_TAB", response: resp });
             });
         }
         else if ("API_OPEN_IN_TAB" === name) {
@@ -445,7 +466,7 @@ let matchedScripts;
             message.url = url;
             browser.runtime.sendMessage(message, (response)=>{
                 tabId = response.tabId;
-                window.postMessage({ id: id, pid: pid, name: "RESP_OPEN_IN_TAB", tabId: tabId });
+                window.postMessage({ id: __uuid, pid: pid, name: "RESP_OPEN_IN_TAB", tabId: tabId });
             });
         }
         else if (name === "API_XHR_FROM_CREATE") {

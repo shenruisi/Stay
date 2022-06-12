@@ -475,11 +475,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         }
         else if ("fetchRegisterMenuCommand" == request.operate) {
+            console.log("background--fetchRegisterMenuCommand---", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "fetchRegisterMenuCommand" });
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", uuid: request.uuid, operate: "fetchRegisterMenuCommand" });
             });
         }
         else if ("execRegisterMenuCommand" == request.operate) {
+            console.log("background---execRegisterMenuCommand--", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand", id: request.id, uuid: request.uuid });
             });

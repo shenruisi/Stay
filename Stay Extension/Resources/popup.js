@@ -97,7 +97,11 @@ const matchesCheck = (userLibraryScript, url) => {
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("giveRegisterMenuCommand-----",request)
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
-        registerMenuMap[request.uuid] = request.data
+        let uuid = request.uuid;
+        console.log("giveRegisterMenuCommand--request.data---", request.data)
+        registerMenuMap[uuid] = request.data;
+        let registerMenu = registerMenuMap[uuid]
+        renderRegisterMenuContent(uuid, registerMenu)
     }
     return true;
 });
@@ -120,7 +124,7 @@ function fetchMatchedScriptList(){
                 scriptStateList = response.body;
                 
                 //fetch register menu from popup to content
-                browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
+                // browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
             }catch(e){
@@ -338,10 +342,12 @@ function renderScriptContent(datas) {
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
             data.showIcon = data.icon?"inline":"none";
+            let index = data.active ? 1 : 0;
             data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"];
             if (data.manually == "1"){
                 if (!item.active){
                     data.status = i18nProp["state_manually"];
+                    index = 1;
                 }
             }else{
                 data.manually = "0"
@@ -349,7 +355,7 @@ function renderScriptContent(datas) {
             let showManually = !item.active ? "block":"none"
             data.showManually = showManually;
             var _dom = document.createElement('div');
-            let index = data.active ? 1 : 0;
+            
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
             _dom.setAttribute('uuid', uuid);
             _dom.setAttribute('author', data["author"]);
@@ -374,13 +380,13 @@ function handleScriptRegisterMenu(uuid) {
     noneMenuDom.addEventListener("click", function (e) {
         closeMenuPopup(e)
     })
+    browser.runtime.sendMessage({ from: "popup", uuid: uuid, operate: "fetchRegisterMenuCommand" });
     if (!uuid){
         registerMenuConDom.hide()
         noneMenuDom.show();
         return;
     }
-    let registerMenu = registerMenuMap[uuid]
-    renderRegisterMenuContent(uuid, registerMenu)
+
 }
 
 /**
@@ -458,6 +464,7 @@ function handleScriptActive(uuid, active) {
         scriptStateList.forEach(function (item, index) {
             if(uuid == item.uuid){
                 item.active = !active
+                item.manually = "0";
             }
         })
         renderScriptContent(scriptStateList)
@@ -477,7 +484,6 @@ function handleExecScriptManually(uuid, name) {
         }, (response) => {
             console.log("exeScriptManually response,", response)
         });
-        //browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
         // 改变数据manually状态
         scriptStateList.forEach(function (item, index) {
             if (uuid == item.uuid) {
