@@ -11,6 +11,8 @@
 @interface Tampermonkey()
 
 @property (nonatomic, strong) JSContext *jsContext;
+@property (nonatomic, strong) NSSet<NSString *> *windowProperties;
+@property (nonatomic, strong) NSSet<NSString *> *windowMethods;
 @end
 
 @implementation Tampermonkey
@@ -86,6 +88,10 @@ static Tampermonkey *kInstance = nil;
     BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
     userScript.installType = pageMode ? @"page" : @"content";
     
+    if ([self usedCustomWindowPropertyOrMethod:scriptWithoutComment]){
+        userScript.installType = @"page";
+    }
+    
     JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];
     
     if ([userScript.installType isEqualToString:@"page"]){
@@ -102,6 +108,132 @@ static Tampermonkey *kInstance = nil;
     userScript.parsedContent = scriptWithoutComment;
 }
 
+- (BOOL)usedCustomWindowPropertyOrMethod:(NSString *)script{    
+    NSRegularExpression *windowExpr = [[NSRegularExpression alloc] initWithPattern:@"(window\\.[a-z|A-z|\\(|\\)]*)" options:0 error:nil];
+    NSArray<NSTextCheckingResult *> *results = [windowExpr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
+    for (NSTextCheckingResult *result in results){
+        NSInteger n = result.numberOfRanges;
+        for (int i = 1; i < n; i++){
+            if (![self.windowProperties containsObject:[script substringWithRange:[result rangeAtIndex:i]]]
+                && ![self.windowMethods containsObject:[script substringWithRange:[result rangeAtIndex:i]]]){
+                return YES;
+            }
+        }
+    }
+    
+    return NO;;
+}
+
+- (NSSet<NSString *> *)windowProperties{
+    return [NSSet setWithArray:@[
+        @"window.clientInformation",
+        @"window.navigator",
+        @"window.closed",
+        @"window.console",
+        @"window.customElements",
+        @"window.crypto",
+        @"window.devicePixelRatio",
+        @"window.document",
+        @"window.event",
+        @"window.external",
+        @"window.frameElement",
+        @"window.frames",
+        @"window.fullScreen",
+        @"window.history",
+        @"window.innerHeight",
+        @"window.innerWidth",
+        @"window.length",
+        @"window.frames",
+        @"window.location",
+        @"window.locationbar",
+        @"window.localStorage",
+        @"window.menubar",
+        @"window.messageManager",
+        @"window.mozInnerScreenX",
+        @"window.mozInnerScreenY",
+        @"window.name",
+        @"window.navigator",
+        @"window.opener",
+        @"window.outerHeight",
+        @"window.outerWidth",
+        @"window.pageXOffset",
+        @"window.pageYOffset",
+        @"window.parent",
+        @"window.performance",
+        @"window.personalbar",
+        @"window.screen",
+        @"window.screenX",
+        @"window.screenY",
+        @"window.scrollbars",
+        @"window.scrollMaxX",
+        @"window.scrollMaxY",
+        @"window.scrollX",
+        @"window.scrollY",
+        @"window.self",
+        @"window.sessionStorage",
+        @"window.sidebar",
+        @"window.speechSynthesis",
+        @"window.status",
+        @"window.statusbar",
+        @"window.toolbar",
+        @"window.top",
+        @"window.visualViewport",
+        @"window.window",
+        @"window.content",
+        @"window.defaultStatus",
+        @"window.orientation",
+        @"window.returnValue"
+    ]];
+}
+
+- (NSSet<NSString *> *)windowMethods{
+    return [NSSet setWithArray:@[
+        @"window.alert()",
+        @"window.blur()",
+        @"window.cancelAnimationFrame()",
+        @"window.cancelIdleCallback()",
+        @"window.clearImmediate()",
+        @"window.close()",
+        @"window.confirm()",
+        @"window.dump()",
+        @"window.find()",
+        @"window.focus()",
+        @"window.getComputedStyle()",
+        @"window.getDefaultComputedStyle()",
+        @"window.getSelection()",
+        @"window.matchMedia()",
+        @"window.moveBy()",
+        @"window.moveTo()",
+        @"window.open()",
+        @"window.postMessage()",
+        @"window.print()",
+        @"window.prompt()",
+        @"window.requestAnimationFrame()",
+        @"window.requestIdleCallback()",
+        @"window.resizeBy()",
+        @"window.resizeTo()",
+        @"window.scroll()",
+        @"window.scrollBy()",
+        @"window.scrollByLines()",
+        @"window.scrollByPages()",
+        @"window.scrollTo()",
+        @"window.setImmediate()",
+        @"window.setResizable()",
+        @"window.sizeToContent()",
+        @"window.showOpenFilePicker()",
+        @"window.showSaveFilePicker()",
+        @"window.showDirectoryPicker()",
+        @"window.stop()",
+        @"window.updateCommands()",
+        @"window.back()",
+        @"window.captureEvents()",
+        @"window.forward()",
+        @"window.home()",
+        @"window.openDialog()",
+        @"window.releaseEvents()",
+        @"window.showModalDialog()"
+    ]];
+}
 
 
 - (NSString *)_removeComment:(NSString *)script{

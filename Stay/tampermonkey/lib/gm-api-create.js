@@ -301,11 +301,14 @@
         })
 
         let downloadLinkDom = document.getElementById("downloadLink");
-        if (url.indexOf("data:application/octet-stream") == 0 || url.match(new RegExp("^data:application/octet-stream.*$"))){
+        console.log("downloadLinkDom",url);
+        if (url.match(new RegExp("^data:image\/.*;base64,"))){ //download image directly
             downloadLinkDom.href = url;
-        }else{
+        }
+        else{
             downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
         }
+
         downloadLinkDom.download = name;
         downloadLinkDom.addEventListener("click", function (e) {
             tempDom.remove();
