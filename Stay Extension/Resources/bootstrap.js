@@ -147,7 +147,21 @@ let RMC_CONTEXT = {};
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
         let uuid = request.uuid;
-        if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
+        if (request.from == "background" && "REGISTER_MENU_COMMAND_CONTEXT" === operate){
+            let rmc_context = request.command_content;
+            console.log("browser.addListener--REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
+            if (!rmc_context || rmc_context == "{}") {
+                return;
+            }
+            let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
+            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+                UUID_RMC_CONTEXT = [];
+            }
+            UUID_RMC_CONTEXT.push(rmc_context);
+            RMC_CONTEXT[uuid] = UUID_RMC_CONTEXT;
+            console.log("browser.addListener---RMC_CONTEXT-----", RMC_CONTEXT)
+        }
+        else if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
             console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
             let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
             browser.runtime.sendMessage({ from: "content", data: UUID_RMC_CONTEXT, uuid: uuid, operate: "giveRegisterMenuCommand" });

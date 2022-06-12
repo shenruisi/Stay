@@ -52,7 +52,7 @@ let browserLangurage = "",
     registerMenuItemTemp = [
         '<div class="menu-item" uuid={uuid} menu-id={id}>{caption}</div>'
     ].join(''),
-    scriptState = ['start', 'stop'],
+    scriptState = ['start', 'stop', 'manually start'],
     scriptLogDomTmp = [
             '<div class="console-header">',
             '<div class="console-time">{time}</div>',
@@ -98,7 +98,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("giveRegisterMenuCommand-----",request)
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
         let uuid = request.uuid;
-        console.log("giveRegisterMenuCommand--request.data---", request.data)
+        console.log("giveRegisterMenuCommand--request.data---", uuid, request.data)
         registerMenuMap[uuid] = request.data;
         let registerMenu = registerMenuMap[uuid]
         renderRegisterMenuContent(uuid, registerMenu)
@@ -342,12 +342,12 @@ function renderScriptContent(datas) {
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
             data.showIcon = data.icon?"inline":"none";
-            let index = data.active ? 1 : 0;
+            let index = item.active ? 1 : 0;
             data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"];
             if (data.manually == "1"){
                 if (!item.active){
                     data.status = i18nProp["state_manually"];
-                    index = 1;
+                    index = 2;
                 }
             }else{
                 data.manually = "0"
@@ -446,12 +446,21 @@ function handleRegisterMenuClickAction(menuId, uuid) {
 }
 
 /**
+ * 刷新页面
+ * 当启动脚本时，调用
+ */
+function refreshTargetTabs() {
+    browser.runtime.sendMessage({ from: "popup", operate: "refreshTargetTabs"});
+}
+
+/**
  * 控制脚本是否运行
  * @param {string}   uuid        脚本id
  * @param {boolean}  active      脚本当前可执行状态
  */
 function handleScriptActive(uuid, active) {
     if (uuid && uuid != "" && typeof uuid == "string") {
+        
         browser.runtime.sendMessage({
             from: "popup",
             operate: "setScriptActive",
@@ -460,6 +469,9 @@ function handleScriptActive(uuid, active) {
         }, (response) => {
             console.log("setScriptActive response,",response)
         })
+        if (!active) {
+            refreshTargetTabs();
+        }
         // 改变数据active状态
         scriptStateList.forEach(function (item, index) {
             if(uuid == item.uuid){

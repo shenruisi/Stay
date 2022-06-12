@@ -428,7 +428,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log(`abort message recieved for ${xhrId}, but it couldn't be found`);
             }
             return true;
-        } 
+        } else if (request.operate === "REGISTER_MENU_COMMAND_CONTEXT"){
+            console.log("background----REGISTER_MENU_COMMAND_CONTEXT-------", request);
+            let command_content = request.command_content
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", command_content: command_content, uuid: request.uuid, operate: "REGISTER_MENU_COMMAND_CONTEXT" });
+            });
+        }
     }
     else if ("popup" == request.from) {
         console.log(request.from + " " + request.operate);
@@ -478,13 +484,23 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.log("background--fetchRegisterMenuCommand---", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", uuid: request.uuid, operate: "fetchRegisterMenuCommand" });
+                // browser.tabs.sendMessage(tabs[0].id, { from: "background", uuid: request.uuid, operate: "fetchRegisterMenuCommand_In_Bootstrap" });
             });
         }
         else if ("execRegisterMenuCommand" == request.operate) {
             console.log("background---execRegisterMenuCommand--", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand", id: request.id, uuid: request.uuid });
+                // browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand_In_Bootstrap", id: request.id, uuid: request.uuid });
             });
+        }
+        else if ("refreshTargetTabs" == request.operate){
+            console.log("background---refreshTargetTabs--", request);
+            // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            //     browser.tabs.reload();
+            // });
+            browser.tabs.reload();
+            
         }
         return true;
     }

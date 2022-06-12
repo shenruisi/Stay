@@ -31,8 +31,11 @@
     console.log("innerHeight,", innerHeight,",innerWidth=", innerWidth)
     // document.querySelector(".CodeMirror").style.height=innerHeight;
     let isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    let defaultValue = "// ==UserScript==\n// @name         New Userscript\n// @namespace    https://stay.app/\n// @version      0.1\n" +
+                "// @description  Template userscript created by Stay\n// @author       You\n// @match        *://*/*\n// @grant        none\n// ==/UserScript==\n" +
+                "(function () {\n    'use strict';\n    // Your code here...\n})();\n";
     let myCodeMirror = CodeMirror(document.body, {
-            value: "",
+            value: defaultValue,
             mode: "javascript",
             lineNumbers: true,
             fullScreen: true,

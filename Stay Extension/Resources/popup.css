@@ -206,7 +206,7 @@ section {
     font-size: 15px;
     padding: 0 5px;
 }
-.stop .info-case .title span{
+.content-item.manually .info-case .title span, .stop .info-case .title span{
     color: #B620E0;
     font-size: 15px;
     padding-left:5px;
