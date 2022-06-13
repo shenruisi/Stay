@@ -3,7 +3,7 @@ const langMessage = {
         "matched_scripts_tab": "Matched Scripts",
         "console_tab": "Console",
         "state_actived": "Activated",
-        "state_manually": "Manually Activated",
+        "state_manually": "Manually Executed",
         "state_stopped": "Stopped",
         "null_scripts": "no available scripts were matched",
         "null_register_menu": "No register menu item",
