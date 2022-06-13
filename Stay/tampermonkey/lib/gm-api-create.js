@@ -30,12 +30,12 @@
 
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
-        source += '\t\tlet message_uuid=request.uuid;\n';
+        source += '\t\tlet message_uuid=request.uuid;\nlet UUID_RMC_CONTEXT=__RMC_CONTEXT[_uuid];\n';
         source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand1111=",message_uuid,_uuid,request,__RMC_CONTEXT);\n';
         source += '\t\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand" && message_uuid == _uuid){\n';
-        source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand222=",request,__RMC_CONTEXT);\nlet UUID_RMC_CONTEXT=__RMC_CONTEXT[_uuid];\n';
+        source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand222=",request,__RMC_CONTEXT);\n';
         source += '\t\t\tbrowser.runtime.sendMessage({from:"content",data:UUID_RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});\n}\n';
-        source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && message_uuid == _uuid){\n';
+        source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand"){\n';
         source += '\t\t\tconsole.log("menuId=",request.id,UUID_RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;\n';
         source += '\t\tif(UUID_RMC_CONTEXT && UUID_RMC_CONTEXT != "[]" && UUID_RMC_CONTEXT.length>0){\nUUID_RMC_CONTEXT.forEach((item, index)=>{\n\t\tif(item.id == menuId){\nplace = index;\n return false;\n}\n}\n)}';
         source += '\t\tif(place>=0){\nUUID_RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
@@ -433,6 +433,7 @@
         console.log("gm-api-----GM_registerMenuCommand");
 
         // browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, command_content: userInfo,  operate: "REGISTER_MENU_COMMAND_CONTEXT" });
+         
         return pid;
     }
 
