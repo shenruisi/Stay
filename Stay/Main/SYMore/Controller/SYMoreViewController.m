@@ -20,17 +20,6 @@
 
 @implementation SYMoreViewController
 
-- (void)testParseUserScript{
-    UserScript *userScript =  [[Tampermonkey shared] parseScript:@"newuserscript.user"];
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    [groupUserDefaults setObject:@[[userScript toDictionary]] forKey:@"STAY_SCRIPTS"];
-    [groupUserDefaults synchronize];
-//    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"STAY_SCRIPTS"]];
-//    NSLog([userScript toDictionary]);
-
-    
-}
-
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tableView.frame = self.view.bounds;
@@ -47,7 +36,6 @@
 }
 
 - (void)viewDidLoad {
-//    [self testParseUserScript];
     [super viewDidLoad];
     [self tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];

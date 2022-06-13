@@ -92,20 +92,24 @@ static Tampermonkey *kInstance = nil;
         userScript.installType = @"page";
     }
     
-    JSValue *gmApisSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];
+    JSValue *pageAPISource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,@"page"]];
+    
+    NSString *pageContent = [NSString stringWithFormat:
+                            @"async function stay_script_%@(){\n\t%@\n\t%@\n}\nstay_script_%@();\n",
+                            [userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"],pageAPISource,scriptWithoutComment,[userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"]];
     
     if ([userScript.installType isEqualToString:@"page"]){
-        scriptWithoutComment = [NSString stringWithFormat:
-                                @"async function stay_script_%@(){\n\t%@\n\t%@\n}\nstay_script_%@();\n",
-                                [userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"],gmApisSource,scriptWithoutComment,[userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"]];
+        userScript.parsedContent = pageContent;
     }
     else{
-        scriptWithoutComment = [NSString stringWithFormat:
-                                @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
-                                ,gmApisSource,scriptWithoutComment,userScript.uuid];
+        JSValue *contentAPISource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,@"content"]];
+        
+        NSString *content = [NSString stringWithFormat:
+                                 @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
+                                 ,contentAPISource,scriptWithoutComment,userScript.uuid];
+        userScript.parsedContent = content;
+        userScript.parsedPageContent = pageContent;
     }
-    
-    userScript.parsedContent = scriptWithoutComment;
 }
 
 - (BOOL)usedCustomWindowPropertyOrMethod:(NSString *)script{    

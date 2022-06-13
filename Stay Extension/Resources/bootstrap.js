@@ -104,7 +104,8 @@ const $_injectInPage = (script) => {
     var scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = "Stay_Inject_JS_"+script.uuid;
-    scriptTag.appendChild(document.createTextNode(script.content));
+    var content = script.installType === "page" ? script.content : script.pageContent;
+    scriptTag.appendChild(document.createTextNode(content));
     document.body.appendChild(scriptTag);
 }
 
@@ -119,7 +120,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
         } else {
             $_injectInPage(script);
         }
-    } else if (runAt === "document_end") {
+    } else if (runAt === "document_end" || runAt === "document_body") {
         if (document.readyState !== "loading") {
             $_injectInPage(script);
         } else {
@@ -139,6 +140,7 @@ const $_injectInPageWithTiming = (script, runAt) => {
         }
     }
 }
+
 
 let matchedScripts;
 // {uuid_1: [], uuid_2:[]}
@@ -183,20 +185,11 @@ let RMC_CONTEXT = {};
             if (targetScript){
                 if (targetScript.requireUrls.length > 0){
                     targetScript.requireUrls.forEach((url)=>{
-                        if (injectedVendor.has(url)) return;
-                        injectedVendor.add(url);
                         if (url.startsWith('stay://')){
-                            browser.runtime.sendMessage({
-                                from: "bootstrap",
-                                operate: "injectFile",
-                                file:$_res($_uri(url).pathname.substring(1)),
-                                allFrames:true,
-                                runAt:"document_start"
-                            });
+                            var name = $_uri(url).pathname.substring(1);
+                            $_injectRequiredInPageWithURL(name,$_res(name));
                         }
                         else{
-                            var pageInject = script.installType === "page";
-                            console.log("pageInject---",pageInject)
                             targetScript.requireCodes.forEach((urlCodeDic)=>{
                                 if (urlCodeDic.url == url){
                                     let dicName = urlCodeDic.name;
@@ -204,9 +197,7 @@ let RMC_CONTEXT = {};
                                     let requireJsDom = document.getElementById("Stay_Required_Inject_JS_" + dicName);
                                     if (!requireJsDom) {
                                         $_injectRequiredInPage(urlCodeDic.name, urlCodeDic.code);
-                                    } 
-                                    
-                                    
+                                    }
                                 }
                             });
                         }
