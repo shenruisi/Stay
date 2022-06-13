@@ -438,12 +438,9 @@
 }
 
 - (void)deleteScript:(id)sender {
-    self.isSearch = true;
     [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
-    for (UIView *subView in self.view.subviews) {
-        [subView removeFromSuperview];
-    }
-    [self createDetailView];
+   
+    [self.navigationController popViewControllerAnimated:TRUE];
 }
 
 - (void)addScript:(id)sender {
