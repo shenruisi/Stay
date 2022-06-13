@@ -35,7 +35,7 @@
         source += '\t\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand" && message_uuid == _uuid){\n';
         source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand222=",request,__RMC_CONTEXT);\n';
         source += '\t\t\tbrowser.runtime.sendMessage({from:"content",data:UUID_RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});\n}\n';
-        source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand"){\n';
+        source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && message_uuid == _uuid){\n';
         source += '\t\t\tconsole.log("menuId=",request.id,UUID_RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;\n';
         source += '\t\tif(UUID_RMC_CONTEXT && UUID_RMC_CONTEXT != "[]" && UUID_RMC_CONTEXT.length>0){\nUUID_RMC_CONTEXT.forEach((item, index)=>{\n\t\tif(item.id == menuId){\nplace = index;\n return false;\n}\n}\n)}';
         source += '\t\tif(place>=0){\nUUID_RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
