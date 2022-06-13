@@ -42,6 +42,8 @@ settings.importFromFile = "從文件導入";
 settings.downloadScript = "下載腳本";
 settings.close = "關閉";
 settings.scriptError = "腳本格式錯誤";
+settings.shareContent ="分享腳本";
+settings.shareUrl ="分享連結";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "確認";

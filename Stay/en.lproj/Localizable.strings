@@ -44,8 +44,8 @@ settings.importFromFile = "Import from file";
 settings.downloadScript = "Download script";
 settings.close = "close";
 settings.scriptError = "script error";
-settings.shareContent = "Share content";
-settings.shareUrl = "Share url";
+settings.shareContent = "Share script";
+settings.shareUrl = "Share link";
 
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";
