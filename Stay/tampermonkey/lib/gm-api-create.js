@@ -18,8 +18,6 @@
             native.nslog("page create");
             source += 'const _userscript = ' + JSON.stringify(userscript) +';\n';
             source += injectJavaScript(userscript, version);
-            // source 为 window.addEventListener(), move to bootstrap
-            // source += `window.addEventListener('message', (e)=>{\n${getSourceOfWindowListener}\ngetSourceOfWindowListener(e);\n})\n\n`;
             return source;
         }
         source += 'let GM = {};\n\n';
@@ -28,17 +26,20 @@
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
         source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge();\n\n';
-        source += 'let __RMC_CONTEXT = [];\n\n';
+        source += 'let __RMC_CONTEXT = {};\n\n';
 
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
         source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
-        source += '\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand"){\n';
-        source += '\tbrowser.runtime.sendMessage({from:"content",data:__RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});}\n';
-        source += '\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && request.uuid == _uuid){\n';
-        source += '\t\tconsole.log("menuId=",request.id,__RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;';
-        source += '\t\tif(__RMC_CONTEXT.length>0){__RMC_CONTEXT.forEach((item, index)=>{if(item.id == menuId){place = index;\n return false;\n}\n})}';
-        source += '\t\tif(place>=0){\n__RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
-        source += '\treturn true;\n'
+        source += '\t\tlet message_uuid=request.uuid;\nlet UUID_RMC_CONTEXT=__RMC_CONTEXT[_uuid];\n';
+        source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand1111=",message_uuid,_uuid,request,__RMC_CONTEXT);\n';
+        source += '\t\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand" && message_uuid == _uuid){\n';
+        source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand222=",request,__RMC_CONTEXT);\n';
+        source += '\t\t\tbrowser.runtime.sendMessage({from:"content",data:UUID_RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});\n}\n';
+        source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && message_uuid == _uuid){\n';
+        source += '\t\t\tconsole.log("menuId=",request.id,UUID_RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;\n';
+        source += '\t\tif(UUID_RMC_CONTEXT && UUID_RMC_CONTEXT != "[]" && UUID_RMC_CONTEXT.length>0){\nUUID_RMC_CONTEXT.forEach((item, index)=>{\n\t\tif(item.id == menuId){\nplace = index;\n return false;\n}\n}\n)}';
+        source += '\t\tif(place>=0){\nUUID_RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
+        source += '\t\t\treturn true;\n'
         source += '});\n\n';
 
         if (grants.includes('GM_listValues')) {
@@ -262,20 +263,27 @@
         }
         let bg = "background: #fff;";
         let fontColor = "color: #000000;"
+        let topLine = " border-top: 1px solid #E0E0E0;"
+        let rightLine = " border-right:1px solid #E0E0E0;"
         if (is_dark()) {
             bg = "background: #000;";
-            fontColor = "color: #F3F3F3;"
+            fontColor = "color: #F3F3F3;";
+            topLine = " border-top: 1px solid #565656;"
+            rightLine = " border-right:1px solid #565656;"
         }
-        let title = "You have source to download..."
+        let iconDom = "";
+        if (iconUrl){
+            iconDom = '<img src=' + iconUrl + ' style="width: 20px;height: 20px;">'
+        }
         let text = 'Allow to download "' + name+ '"';
         let popToastTemp = [
-            '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);padding-top: 6px;">',
-            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;"><img src=' + iconUrl + ' style="width: 20px;height: 20px;"></img><div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
+            '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .6);padding-top: 6px;">',
+            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;">' + iconDom +'<div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
-            '<div style="' + fontColor + ' font-size: 14px;margin-top:10px; border-top:1px solid #E0E0E0; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
-            '<div id="gm_downloadCancel" style="font-size:16px;font-weight:600;color: #B620E0;width:50%;border-right:1px solid #E0E0E0;padding: 8px;">Cancel</div>',
-            '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;">Allow</a>',
+            '<div style="' + fontColor + topLine + ' font-size: 14px;margin-top:10px; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
+            '<div id="gm_downloadCancel" style=" ' + rightLine +' font-size:16px;font-weight:600;color: #B620E0;width:50%;padding: 8px;text-align:center;">Cancel</div>',
+            '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;text-align:center;">Allow</a>',
             '</div>',
             '</div>'
         ];
@@ -292,7 +300,14 @@
         })
 
         let downloadLinkDom = document.getElementById("downloadLink");
-        downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+        console.log("downloadLinkDom",url);
+        if (url.match(new RegExp("^data:image\/.*;base64,"))){ //download image directly
+            downloadLinkDom.href = url;
+        }
+        else{
+            downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+        }
+
         downloadLinkDom.download = name;
         downloadLinkDom.addEventListener("click", function (e) {
             tempDom.remove();
@@ -407,24 +422,37 @@
         userInfo["commandFunc"] = commandFunc;
         userInfo["accessKey"] = accessKey;
         userInfo["id"] = pid;
-        __RMC_CONTEXT.push(userInfo);
+        
+        let UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
+        if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+            UUID_RMC_CONTEXT = [];
+        }
+        UUID_RMC_CONTEXT.push(userInfo);
+        __RMC_CONTEXT[_uuid] = UUID_RMC_CONTEXT;
+
+        console.log("gm-api-----GM_registerMenuCommand");
+
+        // browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, command_content: userInfo,  operate: "REGISTER_MENU_COMMAND_CONTEXT" });
+         
         return pid;
     }
 
     function GM_unregisterMenuCommand(menuId) {
-        if (!menuId || __RMC_CONTEXT.length <= 0) {
+        let __UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
+        if (!menuId || __UUID_RMC_CONTEXT.length <= 0) {
             return;
         }
         let place = -1;
-        __RMC_CONTEXT.forEach((item, index) => {
-            if (item.id == menuId) {
+        __UUID_RMC_CONTEXT.forEach((item, index) => {
+            if (item.id == menuId && item.uuid == _uuid) {
                 place = index;
                 return false;
             }
-            console.log("break-----")
         });
         if (place >= 0) {
-            __RMC_CONTEXT.splice(place, 1);
+            let pid = __UUID_RMC_CONTEXT[place].id
+            __UUID_RMC_CONTEXT.splice(place, 1);
+            __RMC_CONTEXT[_uuid] = __UUID_RMC_CONTEXT;
         }
     }
 
@@ -556,111 +584,141 @@
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
         api += `console.log("__resourceTextStroge==",__resourceTextStroge);\n`;
-        api += 'let __RMC_CONTEXT = [];\n';
+        api += 'let __RMC_CONTEXT = {};\n';
         api += 'let GM_info =' + GM_info(userscript, version) + ';\n';
         api += `${GM_log}\n`;
         api += `${clear_GM_log}\nclear_GM_log();\n`;
         api += `${__xhr}\n`
         gmFunVals.push("info: GM_info");
-
+        let gmFunName = [];
         grants.forEach(grant => {
-            if (grant === "unsafeWindow") {
+            if (grant === "unsafeWindow" && !gmFunName.includes("unsafeWindow")) {
                 api += `const unsafeWindow = window;\n`;
+                gmFunName.push("unsafeWindow");
             } 
-            else if (grant === "GM.listValues") {
+            else if (grant === "GM.listValues" && !gmFunName.includes("GM.listValues")) {
                 gmFunVals.push("listValues: GM_listValues_Async");
+                gmFunName.push("GM.listValues");
             } 
-            else if (grant === "GM_listValues"){
+            else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
                 api += `function GM_listValues(){ return __listValuesStroge;}\n`;
+                gmFunName.push("GM_listValues");
             }
-            else if (grant === "GM.deleteValue") {
+            else if (grant === "GM.deleteValue" && !gmFunName.includes("GM_deleteValue_Async")) {
                 api += `${GM_deleteValue_Async}\n`;
                 gmFunVals.push("deleteValue: GM_deleteValue_Async");
+                gmFunName.push("GM_deleteValue_Async");
             }
-            else if (grant === "GM_deleteValue"){
+            else if (grant === "GM_deleteValue" && !gmFunName.includes("GM_deleteValue")){
                 api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\n`;
+                gmFunName.push("GM_deleteValue");
             }
-            else if (grant === "GM_addStyle") { //同步
+            else if (grant === "GM_addStyle" && !gmFunName.includes("GM_addStyle")) { //同步
                 api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\n`;
+                gmFunName.push("GM_addStyle");
             } 
-            else if (grant === "GM.addStyle") {
+            else if (grant === "GM.addStyle" && !gmFunName.includes("GM_addStyle_Async")) {
                 api += `${GM_addStyle_Async}\n`;
                 gmFunVals.push("addStyle: GM_addStyle_Async");
+                gmFunName.push("GM_addStyle_Async");
             } 
-            else if ("GM.setValue" === grant){
+            else if ("GM.setValue" === grant && !gmFunName.includes("GM_setValue_Async")){
                 api += `${GM_setValue_Async}\n`;
                 gmFunVals.push("setValue:  GM_setValue_Async");
+                gmFunName.push("GM_setValue_Async");
             }
-            else if ("GM_setValue" === grant) {
+            else if ("GM_setValue" === grant && !gmFunName.includes("GM_setValue")) {
                 api += `${GM_setValueSync}\nconst GM_setValue = GM_setValueSync;\n`;
+                gmFunName.push("GM_setValue");
             }
-            else if ("GM.getValue" === grant) {
+            else if ("GM.getValue" === grant && !gmFunName.includes("GM_getValueAsync")) {
                 api += `${GM_getValueAsync}\n`;
                 gmFunVals.push("getValue: GM_getValueAsync");
+                gmFunName.push("GM_getValueAsync");
             }
-            else if ("GM_getValue" === grant) {
+            else if ("GM_getValue" === grant && !gmFunName.includes("GM_getValueSync")) {
                 api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\n`;
+                gmFunName.push("GM_getValueSync");
             }
-            else if ("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant){
+            else if (("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant) && 
+                (!gmFunName.includes("GM_registerMenuCommand") || !gmFunName.includes("GM.registerMenuCommand"))){
                 api += `${GM_registerMenuCommand}\n`;
                 gmFunVals.push("registerMenuCommand: GM_registerMenuCommand");
+                gmFunName.push("GM_registerMenuCommand");
+                gmFunName.push("GM.registerMenuCommand");
             }
-            else if ("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) {
+            else if (("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) && 
+                (!gmFunName.includes("GM_unregisterMenuCommand") || !gmFunName.includes("GM.unregisterMenuCommand"))) {
                 api += `${GM_unregisterMenuCommand}\n`;
                 gmFunVals.push("unregisterMenuCommand: GM_unregisterMenuCommand");
+                gmFunName.push("GM_unregisterMenuCommand");
+                gmFunName.push("GM.unregisterMenuCommand");
             }
-            else if ("GM_getResourceURL" === grant){
-                api += `${GM_getResourceURLSync}\nconst GM_getResourceURL=GM_getResourceURLSync;\n`;
+            else if (("GM_getResourceUrl" === grant || "GM_getResourceURL" === grant) && !gmFunName.includes("GM_getResourceURLSync")){
+                api += `${GM_getResourceURLSync}\n`;
+                gmFunName.push("GM_getResourceURLSync");
+                api += `const GM_getResourceURL=GM_getResourceURLSync;\n`;
+                api += `const GM_getResourceUrl=GM_getResourceURLSync;\n`;
             }
-            else if ("GM_getResourceUrl" === grant) {
-                api += `${GM_getResourceURLSync}\nconst GM_getResourceUrl=GM_getResourceURLSync;\n`;
-                gmFunVals.push("getResourceUrl: GM_getResourceUrl");
-            }
-            else if ("GM.getResourceURL" === grant){
+            else if (("GM.getResourceURL" === grant || "GM.getResourceUrl" === grant) && !gmFunName.includes("GM_getResourceURL_Async")){
                 api += `${GM_getResourceURL_Async}\n`;
                 gmFunVals.push("getResourceURL: GM_getResourceURL_Async");
-            }
-            else if ("GM.getResourceUrl" === grant) {
-                api += `${GM_getResourceURL_Async}\n`;
                 gmFunVals.push("getResourceUrl: GM_getResourceURL_Async");
+                gmFunName.push("GM_getResourceURL_Async");
+
             }
-            else if ("GM.getResourceText" === grant) {
+            else if ("GM.getResourceText" === grant && !gmFunName.includes("GM.GM_getResourceText_Async")) {
                 api += `${GM_getResourceText_Async}\n`;
                 gmFunVals.push("getResourceText: GM_getResourceText_Async");
+                gmFunName.push("GM_getResourceText_Async");
             }
-            else if ("GM_getResourceText" === grant) {
+            else if ("GM_getResourceText" === grant && !gmFunName.includes("GM_getResourceTextSync")) {
                 api += `${GM_getResourceTextSync}\nconst GM_getResourceText = GM_getResourceTextSync;\n`;
+                gmFunName.push("GM_getResourceTextSync");
             }
-            else if ("GM.openInTab" === grant) {
+            else if ("GM.openInTab" === grant && !gmFunName.includes("GM_openInTab_async")) {
                 api += `${GM_openInTab_async}\n`;
-                api += `${GM_closeTab}\n`;
+                
                 gmFunVals.push("openInTab: GM_openInTab_async");
-                gmFunVals.push("closeTab: GM_closeTab");
+                gmFunName.push("GM_openInTab_async");
+                if (!gmFunName.includes("GM_closeTab")){
+                    api += `${GM_closeTab}\n`;
+                    gmFunVals.push("closeTab: GM_closeTab");
+                    gmFunName.push("GM_closeTab");
+                }
             }
-            else if ("GM_openInTab" === grant) {
+            else if ("GM_openInTab" === grant && !gmFunName.includes("GM_openInTab")) {
                 api += `${GM_openInTab}\n`;
+                gmFunName.push("GM_openInTab");
             }
-            else if ("GM.closeTab" === grant || "GM_closeTab" === grant) {
+            else if (("GM.closeTab" === grant || "GM_closeTab" === grant) && !gmFunName.includes("GM_closeTab")) {
                 api += `${GM_closeTab}\n`;
                 gmFunVals.push("closeTab: GM_closeTab");
+                gmFunName.push("GM_closeTab");
             }
-            else if ("GM.notification" === grant || "GM_notification" === grant) {
+            else if (("GM.notification" === grant || "GM_notification" === grant) && !gmFunName.includes("GM_notification")) {
                 api += `${GM_notification}\n`;
                 gmFunVals.push("notification: GM_notification");
+                gmFunName.push("GM_notification");
             }
-            else if ("GM.setClipboard" === grant || "GM_setClipboard" === grant) {
+            else if (("GM.setClipboard" === grant || "GM_setClipboard" === grant) && !gmFunName.includes("GM_setClipboard") ) {
                 api += `${GM_setClipboard}\n`;
                 gmFunVals.push("setClipboard: GM_setClipboard");
+                gmFunName.push("GM_setClipboard");
             }
-            else if ("GM.download" === grant || "GM_download" === grant) {
+            else if (("GM.download" === grant || "GM_download" === grant) && !gmFunName.includes("GM_download")) {
                 api += `${GM_download}\n`;
                 gmFunVals.push("download: GM_download");
+                gmFunName.push("GM_download");
             }
-            else if (grant === "GM_xmlhttpRequest"){
+            else if (grant === "GM_xmlhttpRequest" && !gmFunName.includes("GM_xmlhttpRequest")){
                 api += "\nconst GM_xmlhttpRequest = __xhr;\n";
+                gmFunName.push("GM_xmlhttpRequest");
+
             }
-            else if (grant === "GM.xmlHttpRequest") {
+            else if (grant === "GM.xmlHttpRequest" && !gmFunName.includes("GM.xmlHttpRequest")) {
                 gmFunVals.push("xmlHttpRequest: __xhr");
+                gmFunName.push("GM.xmlHttpRequest");
             }
         })
 
@@ -856,29 +914,39 @@
 
         function GM_registerMenuCommand(caption, commandFunc, accessKey) {
             let userInfo = {};
+            console.log("GM_registerMenuCommand----", caption, accessKey);
             const pid = Math.random().toString(36).substring(1, 9);
             userInfo["caption"] = caption;
-            userInfo["commandFunc"] = commandFunc;
             userInfo["accessKey"] = accessKey;
             userInfo["id"] = pid;
-            __RMC_CONTEXT.push(userInfo);
-            window.postMessage({ id: _uuid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
+            userInfo["commandFunc"] = commandFunc;
+            console.log("GM_registerMenuCommand----", userInfo);
+            window.postMessage({ id: _uuid, pid: pid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(userInfo) });
+            let UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
+            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]"){
+                UUID_RMC_CONTEXT = [];
+            }
+            UUID_RMC_CONTEXT.push(userInfo);
+            __RMC_CONTEXT[_uuid] = UUID_RMC_CONTEXT;
+            // __RMC_CONTEXT.push(userInfo);
+           
             window.addEventListener('message', (e) => {
                 if (!e || !e.data || !e.data.name) return;
-                let uuid = e.data.id;
+                let uuid = e.data.uuid;
                 const name = e.data.name;
-                if ("execRegisterMenuCommand" === name){
+                if ("execRegisterMenuCommand" === name && uuid == _uuid){
                     let menuId = e.data.menuId;
                     let place = -1;
-                    if (__RMC_CONTEXT.length > 0) {
-                        __RMC_CONTEXT.forEach((item, index) => {
+                    let __UUID_RMC_CONTEXT = __RMC_CONTEXT[uuid]
+                    if (__UUID_RMC_CONTEXT && __UUID_RMC_CONTEXT.length > 0) {
+                        __UUID_RMC_CONTEXT.forEach((item, index) => {
                             if (item.id == menuId) {
                                 place = index;
                                 return false;
                             }
                         });
                         if (place >= 0) {
-                            __RMC_CONTEXT[place]["commandFunc"]();
+                            __UUID_RMC_CONTEXT[place]["commandFunc"]();
                         }
                     }
                 }
@@ -888,19 +956,22 @@
         }
 
         function GM_unregisterMenuCommand(menuId) {
-            if (!menuId || __RMC_CONTEXT.length<=0){
+            let __UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
+            if (!menuId || __UUID_RMC_CONTEXT.length<=0){
                 return;
             }
             let place = -1;
-            __RMC_CONTEXT.forEach((item, index)=>{
-                if (item.id == menuId){
+            __UUID_RMC_CONTEXT.forEach((item, index)=>{
+                if (item.id == menuId && item.uuid == _uuid){
                     place = index;
                     return false;
                 }
             });
             if (place>=0){
-                __RMC_CONTEXT.splice(place, 1);
-                window.postMessage({ id: _uuid, name: "UNREGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(__RMC_CONTEXT) });
+                let pid = __UUID_RMC_CONTEXT[place].id
+                __UUID_RMC_CONTEXT.splice(place, 1);
+                __RMC_CONTEXT[_uuid] = __UUID_RMC_CONTEXT;
+                window.postMessage({ id: _uuid, name: "UNREGISTER_MENU_COMMAND_CONTEXT", pid: pid });
             }
         }
 

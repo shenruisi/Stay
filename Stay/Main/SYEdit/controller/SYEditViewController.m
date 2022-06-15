@@ -12,6 +12,7 @@
 #import "UserscriptUpdateManager.h"
 #import "ScriptMananger.h"
 #import "SharedStorageManager.h"
+#import "LoadingSlideController.h"
 
 @interface SYEditViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -19,11 +20,12 @@
 @property (nonatomic, strong) UIButton *backBtn;
 @property (nonatomic, strong) UIButton *onBtn;
 @property (nonatomic, strong) SYCodeMirrorView *syCodeMirrorView;
-@property (nonatomic, strong) UIView *uploadView;
 @property (nonatomic, strong) UILabel *countLabel;
 @property (nonatomic, assign) int requireCount;
 @property (nonatomic, assign) int resourceCount;
 @property (nonatomic, assign) int sumCount;
+@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+
 
 @end
 
@@ -73,9 +75,6 @@
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
     
-    self.uploadView.center = self.view.center;
-    [self.view addSubview:self.uploadView];
-    self.uploadView.hidden = true;
     // Do any additional setup after loading the view.
 }
 
@@ -98,7 +97,8 @@
     self.requireCount = 0;
     self.resourceCount = 0;
     dispatch_async(dispatch_get_main_queue(),^{
-        self.uploadView.hidden = NO;
+//        self.loadingSlideController.originSubText = self.userScript.name;
+        [self.loadingSlideController show];
         [self reloadCount];
     });
     
@@ -121,12 +121,8 @@
 
 - (void)reloadCount {
     int downloadCount = self.resourceCount + self.requireCount;
-
-//    dispatch_async(dispatch_get_main_queue(),^{
-        self.countLabel.text = [NSString stringWithFormat:@"(%d/%d)",downloadCount,self.sumCount];
-        [self.countLabel sizeToFit];
-        self.countLabel.centerX = (kScreenWidth - 100) / 2;
-//    });
+    [self.loadingSlideController updateSubText:[NSString stringWithFormat:@"(%d/%d)",downloadCount,self.sumCount]];
+    
 }
 
 - (void)reDoHistoryChange:(NSNotification*) notification{
@@ -139,9 +135,9 @@
 }
 
 - (void)htmlLoadSuccess:(NSNotification*) notification{
-    if(self.isEditing == NO) {
-        [self.syCodeMirrorView changeContent:@""];
-    }
+//    if(self.isEditing == NO) {
+//        [self.syCodeMirrorView changeContent:@""];
+//    }
     if(self.content != nil && self.content.length > 0) {
         [self.syCodeMirrorView changeContent:self.content];
     }
@@ -158,7 +154,7 @@
 }
 
 - (void)saveSuccess:(id)sender{
-    self.uploadView.hidden = true;
+    [self.loadingSlideController dismiss];
     NSString *content = _isEdit?@"保存成功":@"创建成功";
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -173,7 +169,7 @@
 
 - (void)saveError:(NSNotification*) notification{
     dispatch_async(dispatch_get_main_queue(),^{
-            self.uploadView.hidden = true;
+        [self.loadingSlideController dismiss];
     });
     NSString *errorMessage =  [notification object];
     NSString *content = errorMessage;
@@ -368,31 +364,6 @@
     return _syCodeMirrorView;
 }
 
-
-- (UIView *)uploadView {
-    if(_uploadView == NULL) {
-        _uploadView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 100)];
-        [_uploadView setBackgroundColor:RGB(230, 230, 230)];
-        _uploadView.layer.cornerRadius = 10;
-        _uploadView.layer.masksToBounds = 10;
-        
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = NSLocalizedString(@"settings.uploadTips","Handling script resources");
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textColor = [UIColor blackColor];
-        [titleLabel sizeToFit];
-        
-        titleLabel.top = 30;
-        titleLabel.centerX = (kScreenWidth - 100) / 2;
-        [_uploadView addSubview:titleLabel];
-        
-        self.countLabel.top = titleLabel.bottom + 5;
-        self.countLabel.centerX = (kScreenWidth - 100) / 2;
-        [_uploadView addSubview:self.countLabel];
-    }
-    return _uploadView;
-}
-
 - (UILabel *)countLabel {
     if(_countLabel == NULL) {
         _countLabel = [[UILabel alloc] init];
@@ -425,5 +396,16 @@
                            (btn.frame.size.width-btn.imageView.frame.size.width)/2)];
     return  btn;
 }
+
+
+- (LoadingSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[LoadingSlideController alloc] init];
+        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+    }
+    
+    return _loadingSlideController;
+}
+
 
 @end

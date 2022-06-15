@@ -40,19 +40,19 @@ let browserLangurage = "",
     scriptConsoleDom,
     scriptDomTmp = [
             '<div class="info-case">',
-            '<div class="title">{name}<span class="version">{version}</span><span>{status}</span></div>',
+            '<div class="title"><img style="display:{showIcon}" src={icon} />{name}<span class="version">{version}</span><span>{status}</span></div>',
             '<div class="name">{author}</div>',
             '<div class="desc">{description}</div>',
             '</div>',
             '<div class="active-case" active={active} uuid={uuid} >',
-            '<div class="active-setting" style="display:{showMenu}" active={active} uuid={uuid}></div>',
+            '<div class="active-setting" style="display:{showMenu}" manually={manually} active={active} uuid={uuid}></div>',
             '<div class="active-icon" active={active} uuid={uuid} ></div>',
-            // '<div class="active-manually" style="display:{showManually}" active={active} uuid={uuid}></div>',
+            '<div class="active-manually" style="display:{showManually}" name={name} active={active} uuid={uuid}></div>',
             '</div>'].join(''),
     registerMenuItemTemp = [
         '<div class="menu-item" uuid={uuid} menu-id={id}>{caption}</div>'
     ].join(''),
-    scriptState = ['start', 'stop'],
+    scriptState = ['start', 'stop', 'manually start'],
     scriptLogDomTmp = [
             '<div class="console-header">',
             '<div class="console-time">{time}</div>',
@@ -95,8 +95,13 @@ const matchesCheck = (userLibraryScript, url) => {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("giveRegisterMenuCommand-----",request)
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
-        registerMenuMap[request.uuid] = request.data
+        let uuid = request.uuid;
+        console.log("giveRegisterMenuCommand--request.data---", uuid, request.data)
+        registerMenuMap[uuid] = request.data;
+        let registerMenu = registerMenuMap[uuid]
+        renderRegisterMenuContent(uuid, registerMenu)
     }
     return true;
 });
@@ -119,7 +124,7 @@ function fetchMatchedScriptList(){
                 scriptStateList = response.body;
                 
                 //fetch register menu from popup to content
-                browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
+                // browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
             }catch(e){
@@ -251,14 +256,16 @@ window.onload=function(){
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-manually") {
                 // 获取到具体事件触发的active-case，进行active
                 let uuid = target.getAttribute("uuid");
-                handleExecScriptManually(uuid);
+                let name = target.getAttribute("name");
+                handleExecScriptManually(uuid, name);
                 return;
             }
             // register menu click
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-setting") {
                 let uuid = target.getAttribute("uuid");
                 let active = target.getAttribute("active");
-                if (active.bool()){
+                let manually = target.getAttribute("manually");
+                if (active.bool() || manually === "1"){
                     handleScriptRegisterMenu(uuid);
                 }else{
                     toastDom.setInnerHtml(i18nProp["toast_keep_active"])
@@ -334,11 +341,21 @@ function renderScriptContent(datas) {
             let grants = data.grants
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
             data.showMenu = showMenu
-            data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"]
+            data.showIcon = data.icon?"inline":"none";
+            let index = item.active ? 1 : 0;
+            data.status = item.active ? i18nProp["state_actived"] : i18nProp["state_stopped"];
+            if (data.manually == "1"){
+                if (!item.active){
+                    data.status = i18nProp["state_manually"];
+                    index = 2;
+                }
+            }else{
+                data.manually = "0"
+            }
             let showManually = !item.active ? "block":"none"
             data.showManually = showManually;
             var _dom = document.createElement('div');
-            let index = data.active ? 1 : 0;
+            
             _dom.setAttribute('class', 'content-item ' + scriptState[index]);
             _dom.setAttribute('uuid', uuid);
             _dom.setAttribute('author', data["author"]);
@@ -363,13 +380,13 @@ function handleScriptRegisterMenu(uuid) {
     noneMenuDom.addEventListener("click", function (e) {
         closeMenuPopup(e)
     })
+    browser.runtime.sendMessage({ from: "popup", uuid: uuid, operate: "fetchRegisterMenuCommand" });
     if (!uuid){
         registerMenuConDom.hide()
         noneMenuDom.show();
         return;
     }
-    let registerMenu = registerMenuMap[uuid]
-    renderRegisterMenuContent(uuid, registerMenu)
+
 }
 
 /**
@@ -429,12 +446,21 @@ function handleRegisterMenuClickAction(menuId, uuid) {
 }
 
 /**
+ * 刷新页面
+ * 当启动脚本时，调用
+ */
+function refreshTargetTabs() {
+    browser.runtime.sendMessage({ from: "popup", operate: "refreshTargetTabs"});
+}
+
+/**
  * 控制脚本是否运行
  * @param {string}   uuid        脚本id
  * @param {boolean}  active      脚本当前可执行状态
  */
 function handleScriptActive(uuid, active) {
     if (uuid && uuid != "" && typeof uuid == "string") {
+        
         browser.runtime.sendMessage({
             from: "popup",
             operate: "setScriptActive",
@@ -443,10 +469,14 @@ function handleScriptActive(uuid, active) {
         }, (response) => {
             console.log("setScriptActive response,",response)
         })
+        if (!active) {
+            refreshTargetTabs();
+        }
         // 改变数据active状态
         scriptStateList.forEach(function (item, index) {
             if(uuid == item.uuid){
                 item.active = !active
+                item.manually = "0";
             }
         })
         renderScriptContent(scriptStateList)
@@ -457,7 +487,7 @@ function handleScriptActive(uuid, active) {
  * 控制脚本是否运行
  * @param {string}   uuid        脚本id
  */
-function handleExecScriptManually(uuid) {
+function handleExecScriptManually(uuid, name) {
     if (uuid && uuid != "" && typeof uuid == "string") {
         browser.runtime.sendMessage({
             from: "popup",
@@ -465,9 +495,38 @@ function handleExecScriptManually(uuid) {
             uuid: uuid,
         }, (response) => {
             console.log("exeScriptManually response,", response)
+        });
+        // 改变数据manually状态
+        scriptStateList.forEach(function (item, index) {
+            if (uuid == item.uuid) {
+                item.manually = "1";
+            }
         })
+        renderScriptContent(scriptStateList)
+
+        let timeout = 3000;
+        let toastContainer = document.getElementById("toastContainer");
+        document.querySelector("#toastContainer .title").setInnerHtml(name);
+        toastContainer.style.display = "flex"
+        toastContainer.className = "toast-container toast-show"
+        var clearFlag = 0;
+        clearFlag = window.setInterval(() => {
+            autoClose();
+        }, 500);
+
+        function autoClose() {
+            if (timeout > 0) {
+                timeout = timeout - 500;
+            } else {
+                window.clearInterval(clearFlag);
+                toastContainer.className = "toast-container toast-hide"
+            }
+        }
     }
 }
+
+
+
 
 
 /**

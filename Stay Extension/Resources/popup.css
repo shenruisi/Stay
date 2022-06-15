@@ -194,12 +194,19 @@ section {
     -webkit-line-clamp: 3;
     line-height: 25px;
 }
+.info-case .title img{
+    width: 16px;
+    height: 16px;
+    padding-right: 4px;
+    position: relative;
+    top: 2px;
+}
 .content-container .content-box .info-case .title span.version{
     color: #B620E0;
     font-size: 15px;
     padding: 0 5px;
 }
-.stop .info-case .title span{
+.content-item.manually .info-case .title span, .stop .info-case .title span{
     color: #B620E0;
     font-size: 15px;
     padding-left:5px;
@@ -439,7 +446,7 @@ section {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 40000;
+    z-index: 4000;
     width: 200px;
     padding: 10px 20px;
     border-radius: 4px;
@@ -447,6 +454,63 @@ section {
     color: #000000;
     font-size: 16px;
     display: none;
+}
+.toast-container{
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 4000;
+    width: 240px;
+    height: 70px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: #fff;
+    color: #000000;
+    font-size: 16px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    box-shadow:  0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .08);
+}
+.toast-container .title{
+    font-weight: 700;
+    font-size: 17px;
+    text-align: center;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    display: -webkit-box;
+    -webkit-line-clamp:1;
+    -webkit-box-orient:vertical;
+    padding-bottom: 4px;
+    line-height: 29px;
+    width: 100%;
+}
+.toast-show {
+    opacity: 1;
+    /* 动画：自下而上展示 */
+    animation: animate 0.3s infinite;
+    animation-fill-mode: forwards;
+    animation-iteration-count:1;
+}
+.toast-hide{
+    opacity: 0;
+    height: 0;
+    animation: top2Bottom 0.3s infinite;
+    animation-fill-mode: forwards;
+    animation-iteration-count:1;
+}
+
+@keyframes animate{
+    from {
+   		height: 0px;
+    	bottom : 0;
+    }
+    to {
+    	height: 70px;
+    	bottom : 10px;
+    }
 }
 
 /* 自下而上 */
@@ -492,7 +556,7 @@ section {
         background-color:#000000;
     }
     
-    .header-box,.register-menu-warpper, .toast-warpper{
+    .header-box,.register-menu-warpper, .toast-warpper, .toast-container{
         background-color: #000000;
     }
 
@@ -502,7 +566,7 @@ section {
     .content-item, .menu-item{
         border-bottom:1px solid #565656;
     }
-    .info-case .name, .menu-content, .menu-close .close, .menu-item, .toast-warpper{
+    .info-case .name, .menu-content, .menu-close .close, .menu-item, .toast-warpper, .toast-container{
         color: #FFFFFF;
     }
     .info-case .title{

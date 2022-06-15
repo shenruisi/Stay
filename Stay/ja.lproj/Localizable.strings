@@ -44,6 +44,8 @@ settings.importFromFile = "ローカルファイルから導入";
 settings.downloadScript = "ダウンロード";
 settings.close = "閉じる";
 settings.scriptError = "エラー";
+settings.shareContent = "Share script";
+settings.shareUrl = "Share link";
 
 unsupportedFileFormat = "対応していないファイルタイプ";
 ok = "OK";

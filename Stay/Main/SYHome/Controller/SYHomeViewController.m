@@ -23,10 +23,12 @@
 #import <objc/runtime.h>
 #import "UIImageView+WebCache.h"
 #import "MatchPattern.h"
+#import "SYSelectTabViewController.h"
 
 #import <UniformTypeIdentifiers/UTCoreTypes.h>
 
 #import "SharedStorageManager.h"
+#import "FCStyle.h"
 
 @interface SYHomeViewController ()<
  UITableViewDelegate,
@@ -52,6 +54,7 @@
 
 @property (nonatomic, strong) UIView *loadingView;
 
+@property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 
 @end
 
@@ -625,7 +628,21 @@
             stopAction.backgroundColor = RGB(182, 32, 224);;
         }
         
-        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,stopAction]];
+        UIImage *image = [UIImage systemImageNamed:@"square.and.arrow.up" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+     
+        UIContextualAction *shareAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            self.sYSelectTabViewController = nil;
+            UserScript *model = weakSelf.datas[indexPath.row];
+            self.sYSelectTabViewController.url = model.downloadUrl;
+            self.sYSelectTabViewController.content = model.content;
+            [tableView setEditing:NO animated:YES];
+            [self.sYSelectTabViewController show];
+        }];
+        shareAction.image = image;
+        shareAction.backgroundColor = FCStyle.fcBlue;
+
+        
+        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,shareAction,stopAction]];
     }
 }
 
@@ -781,6 +798,13 @@
     NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
     NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
     return timeString;
+}
+
+- (SYSelectTabViewController *)sYSelectTabViewController {
+    if(_sYSelectTabViewController == nil) {
+        _sYSelectTabViewController = [[SYSelectTabViewController alloc] init];
+    }
+    return _sYSelectTabViewController;
 }
 
 @end

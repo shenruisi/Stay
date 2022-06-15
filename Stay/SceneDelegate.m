@@ -14,13 +14,18 @@
 @implementation SceneDelegate
 
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
+
+#ifdef Mac
+    
+#else
     UINavigationBar.appearance.prefersLargeTitles = YES;
     UIWindowScene *windowScene = (UIWindowScene *)scene;
     self.window = [[UIWindow alloc] initWithWindowScene:windowScene];
     self.window.frame = windowScene.coordinateSpace.bounds;
-//    self.window.rootViewController = [[NavigationController alloc] initWithRootViewController:[[ViewController alloc] init]];
     self.window.rootViewController = [[MainTabBarController alloc] init];
     [self.window makeKeyAndVisible];
+#endif
+    
 }
 
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts{

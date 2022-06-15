@@ -97,12 +97,12 @@
             
             if (digest.length == 0 || [digest isEqualToString:@"no"]){
                 NSArray<NSDictionary *> *requireUrlsAndCodes = [self getUserScriptRequireListByUserScript:data];
+                NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
                 if (requireUrlsAndCodes != nil) {
-                    NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
                     mulDic[@"requireCodes"] = requireUrlsAndCodes;
-                    mulDic[@"content"] = [self getContentWithUUID:data[@"uuid"]];
-                    [datas replaceObjectAtIndex:i withObject:mulDic];
                 }
+                mulDic[@"content"] = [self getContentWithUUID:data[@"uuid"]];
+                [datas replaceObjectAtIndex:i withObject:mulDic];
             }
         }
        
