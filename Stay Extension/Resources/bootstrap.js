@@ -156,12 +156,51 @@ let RMC_CONTEXT = {};
                 return;
             }
             let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
-            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
-                UUID_RMC_CONTEXT = [];
+            let isExist = false;
+            try {
+                if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+                    UUID_RMC_CONTEXT = [];
+                } else {
+                    UUID_RMC_CONTEXT.forEach(item => {
+                        if (item.id == rmc_context.id ||
+                            (item.accessKey && item.accessKey == rmc_context.accessKey) ||
+                            (item.caption && item.caption == rmc_context.caption)) {
+                            isExist = true;
+                            throw new Error("break");
+                        }
+                    })
+                }
+            } catch (error) {
+                if (error.message != "break") throw error;
             }
-            UUID_RMC_CONTEXT.push(rmc_context);
+            
+            if (!isExist) {
+                UUID_RMC_CONTEXT.push(rmc_context);
+            }
             RMC_CONTEXT[uuid] = UUID_RMC_CONTEXT;
             console.log("browser.addListener---RMC_CONTEXT-----", RMC_CONTEXT)
+        }
+        else if (request.from == "background" && "UNREGISTER_MENU_COMMAND_CONTEXT" === operate) {
+            let menuId = request.menuId;
+            let RMC_CONTEXT_STR = RMC_CONTEXT[uuid]
+            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]" && RMC_CONTEXT_STR.length > 0) {
+                let place = -1;
+                try {
+                    RMC_CONTEXT_STR.forEach((item, index) => {
+                        if (item.id == menuId) {
+                            place = index;
+                            throw new Error("break");
+                        }
+                    });
+                } catch (error) {
+                    if (error.message != "break") throw error;
+                }
+                
+                if (place >= 0) {
+                    RMC_CONTEXT_STR.splice(place, 1);
+                    RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
+                }
+            }
         }
         else if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
             console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
@@ -245,7 +284,6 @@ let RMC_CONTEXT = {};
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
         let injectedVendor = new Set();
         matchedScripts = response.body;
-        
         console.log("matchedScripts-", matchedScripts)
         matchedScripts.forEach((script) => {
             if (script.requireUrls.length > 0 && script.active){
@@ -335,6 +373,7 @@ let RMC_CONTEXT = {};
             message.operate = "GM_log";
             browser.runtime.sendMessage(message, (response) => {
                 response.message = message;
+                console.log("bootstrap---api_log--", response)
                 window.postMessage({ id: __uuid, pid: pid, name: "RESP_LOG", response: response });
             });
         }
@@ -349,10 +388,29 @@ let RMC_CONTEXT = {};
                 return;
             }
             let UUID_RMC_CONTEXT = RMC_CONTEXT[__uuid];
-            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
-                UUID_RMC_CONTEXT = [];
-            } 
-            UUID_RMC_CONTEXT.push(JSON.parse(rmc_context));
+            let menuItem = JSON.parse(rmc_context);
+            let isExist = false;
+            try {
+                if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+                    UUID_RMC_CONTEXT = [];
+                } else {
+                    UUID_RMC_CONTEXT.forEach(item => {
+                        if (item.id == menuItem.id || 
+                            (item.accessKey && item.accessKey == menuItem.accessKey) ||
+                            (item.caption && item.caption == menuItem.caption)) {
+                            isExist = true;
+                            throw new Error("break");
+                        }
+                    })
+                }
+            } catch (error) {
+                if (error.message != "break") throw error;
+            }
+            
+            if (!isExist) {
+                UUID_RMC_CONTEXT.push(menuItem);
+            }
+
             RMC_CONTEXT[__uuid] = UUID_RMC_CONTEXT;
 
             console.log("RMC_CONTEXT-----", RMC_CONTEXT)
@@ -362,15 +420,19 @@ let RMC_CONTEXT = {};
             let RMC_CONTEXT_STR = RMC_CONTEXT[__uuid]
             if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]" && RMC_CONTEXT_STR.length>0) {
                 let place = -1;
-                RMC_CONTEXT_STR.forEach((item, index) => {
-                    if (item.id == pid) {
-                        place = index;
-                        return false;
+                try {
+                    RMC_CONTEXT_STR.forEach((item, index) => {
+                        if (item.id == pid) {
+                            place = index;
+                            throw new Error("break");
+                        }
+                    });
+                    if (place >= 0) {
+                        RMC_CONTEXT_STR.splice(place, 1);
+                        RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
                     }
-                });
-                if (place >= 0) {
-                    RMC_CONTEXT_STR.splice(place, 1);
-                    RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
+                } catch (error) {
+                    if (error.message != "break") throw error;
                 }
             }
         }

@@ -95,7 +95,6 @@ const matchesCheck = (userLibraryScript, url) => {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("giveRegisterMenuCommand-----",request)
     if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
         let uuid = request.uuid;
         console.log("giveRegisterMenuCommand--request.data---", uuid, request.data)
@@ -150,6 +149,7 @@ function fetchMatchedScriptConsole(){
     })
     browser.runtime.sendMessage({ from: "popup", operate: "fetchMatchedScriptLog" }, (response) => {
         logIsFetched = true;
+        console.log("fetchMatchedScriptLog response----", response)
         if (response && response.body && response.body.length > 0) {
             response.body.forEach(item => {
                 if (item.logList && item.logList.length > 0) {
