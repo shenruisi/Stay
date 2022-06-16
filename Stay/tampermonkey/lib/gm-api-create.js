@@ -29,18 +29,18 @@
         source += 'let __RMC_CONTEXT = {};\n\n';
 
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
-        source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
-        source += '\t\tlet message_uuid=request.uuid;\nlet UUID_RMC_CONTEXT=__RMC_CONTEXT[_uuid];\n';
-        source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand1111=",message_uuid,_uuid,request,__RMC_CONTEXT);\n';
-        source += '\t\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand" && message_uuid == _uuid){\n';
-        source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand222=",request,__RMC_CONTEXT);\n';
-        source += '\t\t\tbrowser.runtime.sendMessage({from:"content",data:UUID_RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});\n}\n';
-        source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && message_uuid == _uuid){\n';
-        source += '\t\t\tconsole.log("menuId=",request.id,UUID_RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;\n';
-        source += '\t\tif(UUID_RMC_CONTEXT && UUID_RMC_CONTEXT != "[]" && UUID_RMC_CONTEXT.length>0){\nUUID_RMC_CONTEXT.forEach((item, index)=>{\n\t\tif(item.id == menuId){\nplace = index;\n return false;\n}\n}\n)}';
-        source += '\t\tif(place>=0){\nUUID_RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
-        source += '\t\t\treturn true;\n'
-        source += '});\n\n';
+        // source += 'browser.runtime.onMessage.addListener((request, sender, sendResponse) => {\n';
+        // source += '\t\tlet message_uuid=request.uuid;\nlet UUID_RMC_CONTEXT=__RMC_CONTEXT[_uuid];\n';
+        // source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand1111=",message_uuid,_uuid,request,__RMC_CONTEXT);\n';
+        // source += '\t\tif (request.from == "background" && request.operate == "fetchRegisterMenuCommand" && message_uuid == _uuid){\n';
+        // source += '\t\t\tconsole.log("source___fetchRegisterMenuCommand222=",request,__RMC_CONTEXT);\n';
+        // source += '\t\t\tbrowser.runtime.sendMessage({from:"content",data:UUID_RMC_CONTEXT,uuid:_uuid,operate:"giveRegisterMenuCommand"});\n}\n';
+        // source += '\t\telse if (request.from == "background" && request.operate == "execRegisterMenuCommand" && message_uuid == _uuid){\n';
+        // source += '\t\t\tconsole.log("menuId=",request.id,UUID_RMC_CONTEXT);\n let menuId = request.id;\n let place=-1;\n';
+        // source += '\t\tif(UUID_RMC_CONTEXT && UUID_RMC_CONTEXT != "[]" && UUID_RMC_CONTEXT.length>0){\nUUID_RMC_CONTEXT.forEach((item, index)=>{\n\t\tif(item.id == menuId){\nplace = index;\n return false;\n}\n}\n)}';
+        // source += '\t\tif(place>=0){\nUUID_RMC_CONTEXT[place]["commandFunc"]();\n}\n}\n';
+        // source += '\t\t\treturn true;\n'
+        // source += '});\n\n';
 
         if (grants.includes('GM_listValues')) {
             source += 'function GM_listValues (){ return __stroge}\n\n';
@@ -429,11 +429,36 @@
         }
         UUID_RMC_CONTEXT.push(userInfo);
         __RMC_CONTEXT[_uuid] = UUID_RMC_CONTEXT;
-
-        console.log("gm-api-----GM_registerMenuCommand");
-
-        // browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, command_content: userInfo,  operate: "REGISTER_MENU_COMMAND_CONTEXT" });
-         
+        // console.log("gm-api-----GM_registerMenuCommand");
+        browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, command_content: userInfo,  operate: "REGISTER_MENU_COMMAND_CONTEXT" });
+        browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            let message_uuid = request.uuid; 
+            // console.log("create_gmAPI-----execRegisterMenuCommand---1", message_uuid, _uuid, request)
+            if (request.from == "background" && request.operate == "execRegisterMenuCommand" && message_uuid == _uuid) {
+                let MESSAGE_UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid];
+                let menuId = request.id;
+                let place = -1;
+                // console.log("create_gmAPI-----execRegisterMenuCommand---2", message_uuid, _uuid, MESSAGE_UUID_RMC_CONTEXT)
+                if (MESSAGE_UUID_RMC_CONTEXT && MESSAGE_UUID_RMC_CONTEXT != "[]" && MESSAGE_UUID_RMC_CONTEXT.length > 0) {
+                    try {
+                        MESSAGE_UUID_RMC_CONTEXT.forEach((item, index) => {
+                            if (item.id == menuId) {
+                                place = index;
+                                throw new Error("break");
+                            }
+                        })
+                    } catch (error) {
+                        if (error.message != "break") throw error;
+                    }
+                    // console.log("create_gmAPI-----execRegisterMenuCommand---2", message_uuid, _uuid, place)
+                    if (place>=0){
+                        MESSAGE_UUID_RMC_CONTEXT[place]["commandFunc"]();
+                        window.close();
+                    }
+                }
+            }
+            return true;
+        })
         return pid;
     }
 
@@ -443,16 +468,22 @@
             return;
         }
         let place = -1;
-        __UUID_RMC_CONTEXT.forEach((item, index) => {
-            if (item.id == menuId && item.uuid == _uuid) {
-                place = index;
-                return false;
-            }
-        });
+        try {
+            __UUID_RMC_CONTEXT.forEach((item, index) => {
+                if (item.id == menuId && item.uuid == _uuid) {
+                    place = index;
+                    throw new Error("break");
+                }
+            });
+        } catch (error) {
+            if (error.message != "break") throw error;
+        }
+        
         if (place >= 0) {
             let pid = __UUID_RMC_CONTEXT[place].id
             __UUID_RMC_CONTEXT.splice(place, 1);
             __RMC_CONTEXT[_uuid] = __UUID_RMC_CONTEXT;
+            browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, menuId: pid, operate: "REGISTER_MENU_COMMAND_CONTEXT" });
         }
     }
 
@@ -478,7 +509,7 @@
             // 通过name获取resource
             // resourceText = await GM_getResourceText_p(name);
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name],  uuid: _uuid }, (response) => {
-                console.log("GM_getResourceText send to background-----", response);
+                // console.log("GM_getResourceText send to background-----", response);
                 __resourceTextStroge[name] = response.body;
                 resourceText = response.body;
             });
@@ -490,7 +521,7 @@
     function getResourceText_p(name) {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name], uuid: _uuid }, (response) => {
-                console.log("GM_getResourceText_p-----", response);
+                // console.log("GM_getResourceText_p-----", response);
                 resolve(response.body);
             });
         });
@@ -512,7 +543,6 @@
     function getResourceURL_p(name) {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceUrl", key: name, uuid: _uuid }, (response) => {
-
                 // console.log("GM_getResourceURL_p-----",response);
                 resolve(response.body);
             });
@@ -914,13 +944,12 @@
 
         function GM_registerMenuCommand(caption, commandFunc, accessKey) {
             let userInfo = {};
-            console.log("GM_registerMenuCommand----", caption, accessKey);
             const pid = Math.random().toString(36).substring(1, 9);
             userInfo["caption"] = caption;
             userInfo["accessKey"] = accessKey;
             userInfo["id"] = pid;
             userInfo["commandFunc"] = commandFunc;
-            console.log("GM_registerMenuCommand----", userInfo);
+            // console.log("GM_registerMenuCommand----", userInfo);
             window.postMessage({ id: _uuid, pid: pid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(userInfo) });
             let UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
             if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]"){
@@ -928,8 +957,6 @@
             }
             UUID_RMC_CONTEXT.push(userInfo);
             __RMC_CONTEXT[_uuid] = UUID_RMC_CONTEXT;
-            // __RMC_CONTEXT.push(userInfo);
-           
             window.addEventListener('message', (e) => {
                 if (!e || !e.data || !e.data.name) return;
                 let uuid = e.data.uuid;
@@ -939,18 +966,21 @@
                     let place = -1;
                     let __UUID_RMC_CONTEXT = __RMC_CONTEXT[uuid]
                     if (__UUID_RMC_CONTEXT && __UUID_RMC_CONTEXT.length > 0) {
-                        __UUID_RMC_CONTEXT.forEach((item, index) => {
-                            if (item.id == menuId) {
-                                place = index;
-                                return false;
-                            }
-                        });
+                        try{
+                            __UUID_RMC_CONTEXT.forEach((item, index) => {
+                                if (item.id == menuId) {
+                                    place = index;
+                                    throw new Error("break");
+                                }
+                            });
+                        }catch(e){
+                            if (e.message != "break") throw e;
+                        }
                         if (place >= 0) {
                             __UUID_RMC_CONTEXT[place]["commandFunc"]();
                         }
                     }
                 }
-            
             });
             return pid;
         }
@@ -961,12 +991,16 @@
                 return;
             }
             let place = -1;
-            __UUID_RMC_CONTEXT.forEach((item, index)=>{
-                if (item.id == menuId && item.uuid == _uuid){
-                    place = index;
-                    return false;
-                }
-            });
+            try {
+                __UUID_RMC_CONTEXT.forEach((item, index) => {
+                    if (item.id == menuId && item.uuid == _uuid) {
+                        place = index;
+                        throw new Error("break");
+                    }
+                });
+            } catch (error) {
+                if (error.message != "break") throw error;
+            }
             if (place>=0){
                 let pid = __UUID_RMC_CONTEXT[place].id
                 __UUID_RMC_CONTEXT.splice(place, 1);
