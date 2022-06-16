@@ -13,6 +13,8 @@
 #import "BrowseView.h"
 #import "ScriptMananger.h"
 #import "FCStyle.h"
+#import "SYExpandViewController.h"
+#import <objc/runtime.h>
 
 @interface SimpleLoadingView : UIView
 
@@ -190,15 +192,28 @@
         [subView removeFromSuperview];
     }
     
+    NSArray *array = self.datas[indexPath.row][@"userscripts"];
+
+    
     UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, kScreenWidth - 30, 30)];
     lab.text = self.datas[indexPath.row][@"name"];
     lab.font = [UIFont boldSystemFontOfSize:20];
     
     [cell.contentView addSubview:lab];
     
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 60, 18);
+    [btn setTitle:@"See all" forState:UIControlStateNormal];
+    [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(seeAll:) forControlEvents:UIControlEventTouchUpInside];
+    btn.right = kScreenWidth - 5;
+    btn.font = FCStyle.headline;
+    btn.centerY = lab.centerY;
+    objc_setAssociatedObject (btn , @"array", array, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [cell.contentView addSubview:btn];
+
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 55, kScreenWidth, 145)];
     scrollView.showsHorizontalScrollIndicator = FALSE;
-    NSArray *array = self.datas[indexPath.row][@"userscripts"];
 
     if(array != nil && array.count > 0) {
         CGFloat width = 15;
@@ -215,8 +230,6 @@
     }
     
     [cell.contentView addSubview:scrollView];
-    
-    
     return cell;
 }
 
@@ -245,6 +258,13 @@
     [self queryData];
 }
 
+
+- (void)seeAll:(UIButton *)sender {
+    NSArray *array = objc_getAssociatedObject(sender,@"array");
+    SYExpandViewController *cer = [[SYExpandViewController alloc] init];
+    cer.data = array;
+    [self.navigationController pushViewController:cer animated:true];
+}
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
