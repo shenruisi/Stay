@@ -45,6 +45,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
     [self.openWindows addObject:sceneIdentifier];
     FCScene *fcScene = self.fcSceneDic[sceneIdentifier];
     if (fcScene){
+        
         return;
     }
     

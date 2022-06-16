@@ -6,10 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FCAppKitCapability.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FCAppKit : NSObject
+@interface FCAppKit : NSObject<
+ FCAppKitCapability
+>
 
 @end
 
