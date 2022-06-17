@@ -46,7 +46,7 @@ let browserLangurage = "",
             '</div>',
             '<div class="active-case" active={active} uuid={uuid} >',
             '<div class="active-setting" style="display:{showMenu}" manually={manually} active={active} uuid={uuid}></div>',
-            '<div class="active-icon" active={active} uuid={uuid} ></div>',
+            '<div class="active-icon" installType={installType} active={active} uuid={uuid} ></div>',
             '<div class="active-manually" style="display:{showManually}" name={name} active={active} uuid={uuid}></div>',
             '</div>'].join(''),
     registerMenuItemTemp = [
@@ -112,18 +112,7 @@ function fetchMatchedScriptList(){
         browserRunUrl = tab.url;
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
             try{
-//                let userLibraryScripts = response.body; //JSON.parse(response.body);
-//                userLibraryScripts.forEach((userLibraryScript) => {
-//                    let urlParse = new URL(browserRunUrl)
-//
-//                    if (matchesCheck(userLibraryScript, urlParse)) {
-//                        scriptStateList.push(userLibraryScript);
-//                    }
-//                });
                 scriptStateList = response.body;
-                
-                //fetch register menu from popup to content
-                // browser.runtime.sendMessage({ from: "popup", operate: "fetchRegisterMenuCommand" });
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
             }catch(e){
@@ -250,7 +239,9 @@ window.onload=function(){
                 // 获取到具体事件触发的active-case，进行active
                 let active = target.getAttribute("active");
                 let uuid = target.getAttribute("uuid");
-                handleScriptActive(uuid, active.bool());
+                // "page" for inject, "content" for content box
+                let installType = target.getAttribute("installType");
+                handleScriptActive(uuid, active.bool(), installType);
                 return;
             }
             if (target && target.nodeName.toLowerCase() == "div" && target.className.toLowerCase() == "active-manually") {
@@ -457,8 +448,9 @@ function refreshTargetTabs() {
  * 控制脚本是否运行
  * @param {string}   uuid        脚本id
  * @param {boolean}  active      脚本当前可执行状态
+ * @param {string}   installType        page/content
  */
-function handleScriptActive(uuid, active) {
+function handleScriptActive(uuid, active, installType) {
     if (uuid && uuid != "" && typeof uuid == "string") {
         
         browser.runtime.sendMessage({
@@ -469,7 +461,8 @@ function handleScriptActive(uuid, active) {
         }, (response) => {
             console.log("setScriptActive response,",response)
         })
-        if (!active) {
+        // start run script or content mode to stop
+        if (!active || (active && installType === "content")) {
             refreshTargetTabs();
         }
         // 改变数据active状态
