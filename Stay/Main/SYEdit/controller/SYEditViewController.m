@@ -135,9 +135,9 @@
 }
 
 - (void)htmlLoadSuccess:(NSNotification*) notification{
-//    if(self.isEditing == NO) {
-//        [self.syCodeMirrorView changeContent:@""];
-//    }
+    if(self.isEditing == NO && self.content != nil) {
+        [self.syCodeMirrorView changeContent:@""];
+    }
     if(self.content != nil && self.content.length > 0) {
         [self.syCodeMirrorView changeContent:self.content];
     }
