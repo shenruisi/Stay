@@ -432,7 +432,11 @@ function closeMenuPopup(e) {
  */
 function handleRegisterMenuClickAction(menuId, uuid) {
     console.log(menuId, uuid);
-    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id: menuId, uuid: uuid });
+    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id: menuId, uuid: uuid }, (res)=>{
+        if (res.id && res.uuid){
+            window.close();
+        }
+    });
     closeMenuPopup();
 }
 
