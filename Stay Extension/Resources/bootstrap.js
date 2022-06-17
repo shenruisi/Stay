@@ -8,7 +8,7 @@
  background.js passing message to content.js using browser.tabs.sendMessage.
  popup.js passing message to content.js should sendMessage to background.js first.
  */
-console.log("bootstrap inject");
+// console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
 
@@ -58,7 +58,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
 
 
 const $_injectRequiredInPageWithURL = (name,url) => {
-    console.log("require "+url+" inject page");
+    // console.log("require "+url+" inject page");
     if (document.readyState === "loading") {
         document.addEventListener("readystatechange", function() {
             if (document.readyState === "interactive") {
@@ -79,7 +79,7 @@ const $_injectRequiredInPageWithURL = (name,url) => {
 }
 
 const $_injectRequiredInPage = (name,content) =>{
-    console.log("require "+name+" inject page");
+    // console.log("require "+name+" inject page");
     if (document.readyState === "loading") {
         document.addEventListener("readystatechange", function() {
             if (document.readyState === "interactive") {
@@ -100,7 +100,7 @@ const $_injectRequiredInPage = (name,content) =>{
 }
 
 const $_injectInPage = (script) => {
-    console.log("inject page");
+    // console.log("inject page");
     var scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = "Stay_Inject_JS_"+script.uuid;
@@ -151,7 +151,7 @@ let RMC_CONTEXT = {};
         let uuid = request.uuid;
         if (request.from == "background" && "REGISTER_MENU_COMMAND_CONTEXT" === operate){
             let rmc_context = request.command_content;
-            console.log("browser.addListener--REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
+            // console.log("browser.addListener--REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
             if (!rmc_context || rmc_context == "{}") {
                 return;
             }
@@ -178,7 +178,7 @@ let RMC_CONTEXT = {};
                 UUID_RMC_CONTEXT.push(rmc_context);
             }
             RMC_CONTEXT[uuid] = UUID_RMC_CONTEXT;
-            console.log("browser.addListener---RMC_CONTEXT-----", RMC_CONTEXT)
+            // console.log("browser.addListener---RMC_CONTEXT-----", RMC_CONTEXT)
         }
         else if (request.from == "background" && "UNREGISTER_MENU_COMMAND_CONTEXT" === operate) {
             let menuId = request.menuId;
@@ -203,12 +203,12 @@ let RMC_CONTEXT = {};
             }
         }
         else if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
-            console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
+            // console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
             let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
             browser.runtime.sendMessage({ from: "content", data: UUID_RMC_CONTEXT, uuid: uuid, operate: "giveRegisterMenuCommand" });
         }
         else if (request.from == "background" && "execRegisterMenuCommand" === operate) {
-            console.log("bootstrap--execRegisterMenuCommand---", request);
+            // console.log("bootstrap--execRegisterMenuCommand---", request);
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
@@ -284,7 +284,7 @@ let RMC_CONTEXT = {};
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
         let injectedVendor = new Set();
         matchedScripts = response.body;
-        console.log("matchedScripts-", matchedScripts)
+        // console.log("matchedScripts-", matchedScripts)
         matchedScripts.forEach((script) => {
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
@@ -307,7 +307,7 @@ let RMC_CONTEXT = {};
                         }
                     }
                     else{
-                        console.log("pageInject---",pageInject)
+                        // console.log("pageInject---",pageInject)
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
                                 if (pageInject){
@@ -330,7 +330,7 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.content);
+                // console.log("injectScript---",script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -348,7 +348,7 @@ let RMC_CONTEXT = {};
         });
     });
     window.addEventListener('message', (e) => {
-        console.log("bootstrap---addEventListener====", e)
+        // console.log("bootstrap---addEventListener====", e)
         if (!e || !e.data || !e.data.name) return;
         let __uuid = e.data.id;
         const name = e.data.name;
@@ -373,7 +373,7 @@ let RMC_CONTEXT = {};
             message.operate = "GM_log";
             browser.runtime.sendMessage(message, (response) => {
                 response.message = message;
-                console.log("bootstrap---api_log--", response)
+                // console.log("bootstrap---api_log--", response)
                 window.postMessage({ id: __uuid, pid: pid, name: "RESP_LOG", response: response });
             });
         }
@@ -383,7 +383,7 @@ let RMC_CONTEXT = {};
         }
         else if ("REGISTER_MENU_COMMAND_CONTEXT" === name){
             let rmc_context = e.data.rmc_context;
-            console.log("REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
+            // console.log("REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
             if (!rmc_context || rmc_context == "{}"){
                 return;
             }
@@ -413,7 +413,7 @@ let RMC_CONTEXT = {};
 
             RMC_CONTEXT[__uuid] = UUID_RMC_CONTEXT;
 
-            console.log("RMC_CONTEXT-----", RMC_CONTEXT)
+            // console.log("RMC_CONTEXT-----", RMC_CONTEXT)
         }
         else if ("UNREGISTER_MENU_COMMAND_CONTEXT" === name) {
             let pid = e.data.pid;

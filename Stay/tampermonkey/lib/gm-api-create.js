@@ -453,7 +453,7 @@
                     // console.log("create_gmAPI-----execRegisterMenuCommand---2", message_uuid, _uuid, place)
                     if (place>=0){
                         MESSAGE_UUID_RMC_CONTEXT[place]["commandFunc"]();
-                        window.close();
+                        sendResponse({ body: [], id: menuId, uuid: message_uuid })
                     }
                 }
             }

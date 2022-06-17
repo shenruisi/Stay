@@ -432,7 +432,11 @@ function closeMenuPopup(e) {
  */
 function handleRegisterMenuClickAction(menuId, uuid) {
     console.log(menuId, uuid);
-    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id: menuId, uuid: uuid });
+    browser.runtime.sendMessage({ from: "popup", operate: "execRegisterMenuCommand", id: menuId, uuid: uuid }, (res)=>{
+        if (res.id && res.uuid){
+            window.close();
+        }
+    });
     closeMenuPopup();
 }
 
@@ -461,10 +465,11 @@ function handleScriptActive(uuid, active, installType) {
         }, (response) => {
             console.log("setScriptActive response,",response)
         })
+        refreshTargetTabs();
         // start run script or content mode to stop
-        if (!active || (active && installType === "content")) {
-            refreshTargetTabs();
-        }
+        // if (!active || (active && installType === "content")) {
+        //     refreshTargetTabs();
+        // }
         // 改变数据active状态
         scriptStateList.forEach(function (item, index) {
             if(uuid == item.uuid){
