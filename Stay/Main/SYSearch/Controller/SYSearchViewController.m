@@ -210,6 +210,8 @@
     btn.font = FCStyle.headline;
     btn.centerY = lab.centerY;
     objc_setAssociatedObject (btn , @"array", array, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject (btn , @"titleName", self.datas[indexPath.row][@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+
     [cell.contentView addSubview:btn];
 
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 55, kScreenWidth, 145)];
@@ -261,8 +263,10 @@
 
 - (void)seeAll:(UIButton *)sender {
     NSArray *array = objc_getAssociatedObject(sender,@"array");
+    NSString *titleName = objc_getAssociatedObject(sender,@"titleName");
     SYExpandViewController *cer = [[SYExpandViewController alloc] init];
     cer.data = array;
+    cer.title = titleName;
     [self.navigationController pushViewController:cer animated:true];
 }
 

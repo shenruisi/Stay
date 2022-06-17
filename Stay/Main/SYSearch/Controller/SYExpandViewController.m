@@ -29,16 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.tableView reloadData];
-//    self.title = ;
-//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
-//    [label setBackgroundColor:[UIColor clearColor]];
-//    [label setNumberOfLines:0];
-//    [label setTextColor:textColor];
-//    [label setTextAlignment:NSTextAlignmentCenter];
-//    [label setText:@"AUTO Expand"];
-//    label.font = [UIFont boldSystemFontOfSize:17];
-//    self.navigationItem.titleView = label;
-    self.title = @"Auto Expand";
+//    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.
 }
@@ -63,7 +54,7 @@
     }
     
 
-    CGFloat leftWidth = kScreenWidth - 15;
+    CGFloat leftWidth = kScreenWidth - 30;
 
     CGFloat titleLabelLeftSize = 0;
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15 + titleLabelLeftSize , 15, leftWidth - titleLabelLeftSize, 24)];
@@ -82,11 +73,13 @@
     [authorLabel sizeToFit];
     [cell.contentView addSubview:authorLabel];
     
-    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 21)];
+    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 50)];
     descLabel.font = [UIFont systemFontOfSize:15];
     descLabel.textAlignment = NSTextAlignmentLeft;
     descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descLabel.text = self.data[indexPath.row][@"description"];
+    descLabel.numberOfLines = 2;
+    [descLabel sizeToFit];
     descLabel.top = authorLabel.bottom + 5;
     descLabel.textColor = [UIColor grayColor];
     [cell.contentView addSubview:descLabel];
@@ -110,13 +103,12 @@
         [btn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"downloadUrl", self.data[indexPath.row][@"downloadURL"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", self.data[indexPath.row][@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
-
     }
     
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont systemFontOfSize:15];
     btn.layer.cornerRadius = 12;
-    btn.top = descLabel.bottom + 13;
+    btn.top = descLabel.bottom + 15;
     btn.left = 15;
 
     [cell.contentView addSubview:btn];
@@ -143,7 +135,23 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 143;
+    NSString *str = self.data[indexPath.row][@"description"];
+    if(str == nil) {
+     return 133;
+    } else {
+        UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, kScreenWidth - 30, 50)];
+        descLabel.font = [UIFont systemFontOfSize:15];
+        descLabel.textAlignment = NSTextAlignmentLeft;
+        descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        descLabel.numberOfLines = 2;
+        descLabel.text = self.data[indexPath.row][@"description"];
+        [descLabel sizeToFit];
+        if (descLabel.height > 30) {
+            return 153;
+        } else {
+            return 133;
+        }
+    }
 }
 
 - (NSString* )md5HexDigest:(NSString* )input {
