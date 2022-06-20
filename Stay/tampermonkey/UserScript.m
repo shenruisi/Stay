@@ -55,7 +55,6 @@
         @"noFrames":@(self.noFrames),
         @"requireUrls":self.requireUrls,
         @"content":self.parsedContent ? self.parsedContent : @"",
-        @"pageContent":self.parsedPageContent ? self.parsedPageContent : @"",
         @"active":@(self.active),
         @"updateUrl":self.updateUrl ? self.updateUrl: @"",
         @"downloadUrl":self.downloadUrl ? self.downloadUrl: @"",

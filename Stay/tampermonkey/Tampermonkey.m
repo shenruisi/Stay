@@ -88,44 +88,40 @@ static Tampermonkey *kInstance = nil;
     BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
     userScript.installType = pageMode ? @"page" : @"content";
     
-    if ([self usedCustomWindowPropertyOrMethod:scriptWithoutComment]){
+    if ([self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
         userScript.installType = @"page";
     }
     
-    JSValue *pageAPISource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,@"page"]];
-    
-    NSString *pageContent = [NSString stringWithFormat:
-                            @"async function stay_script_%@(){\n\t%@\n\t%@\n}\nstay_script_%@();\n",
-                            [userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"],pageAPISource,scriptWithoutComment,[userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"]];
+    JSValue *apiSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];
     
     if ([userScript.installType isEqualToString:@"page"]){
-        userScript.parsedContent = pageContent;
+        userScript.parsedContent = [NSString stringWithFormat:
+                                    @"async function stay_script_%@(){\n\t%@\n\t%@\n}\nstay_script_%@();\n",
+                                    [userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"],apiSource,scriptWithoutComment,[userScript.uuid stringByReplacingOccurrencesOfString:@"-" withString:@"_"]];
     }
     else{
-        JSValue *contentAPISource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,@"content"]];
-        
-        NSString *content = [NSString stringWithFormat:
-                                 @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
-                                 ,contentAPISource,scriptWithoutComment,userScript.uuid];
-        userScript.parsedContent = content;
-        userScript.parsedPageContent = pageContent;
+        userScript.parsedContent = [NSString stringWithFormat:
+                                    @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
+                                    ,apiSource,scriptWithoutComment,userScript.uuid];
     }
 }
 
-- (BOOL)usedCustomWindowPropertyOrMethod:(NSString *)script{    
-    NSRegularExpression *windowExpr = [[NSRegularExpression alloc] initWithPattern:@"(window\\.[a-z|A-z|\\(|\\)]*)" options:0 error:nil];
+- (BOOL)usedCustomWindowPropertyOrMethod:(NSString *)script name:(NSString *)name{
+    NSRegularExpression *windowExpr = [[NSRegularExpression alloc] initWithPattern:@"(window\\.[a-zA-z]+)\\(*" options:0 error:nil];
     NSArray<NSTextCheckingResult *> *results = [windowExpr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
     for (NSTextCheckingResult *result in results){
         NSInteger n = result.numberOfRanges;
         for (int i = 1; i < n; i++){
-            if (![self.windowProperties containsObject:[script substringWithRange:[result rangeAtIndex:i]]]
-                && ![self.windowMethods containsObject:[script substringWithRange:[result rangeAtIndex:i]]]){
+            NSString *windowPM = [script substringWithRange:[result rangeAtIndex:i]];
+            if (![self.windowProperties containsObject:windowPM]
+                && ![self.windowMethods containsObject:windowPM]){
+                NSLog(@"windowPM,%@ %@",name,windowPM);
                 return YES;
             }
         }
     }
     
-    return NO;;
+    return NO;
 }
 
 - (NSSet<NSString *> *)windowProperties{
@@ -186,56 +182,64 @@ static Tampermonkey *kInstance = nil;
         @"window.content",
         @"window.defaultStatus",
         @"window.orientation",
-        @"window.returnValue"
+        @"window.returnValue",
+        @"window.opera",
+        @"window.self",
+        @"window.onload"
     ]];
 }
 
 - (NSSet<NSString *> *)windowMethods{
     return [NSSet setWithArray:@[
-        @"window.alert()",
-        @"window.blur()",
-        @"window.cancelAnimationFrame()",
-        @"window.cancelIdleCallback()",
-        @"window.clearImmediate()",
-        @"window.close()",
-        @"window.confirm()",
-        @"window.dump()",
-        @"window.find()",
-        @"window.focus()",
-        @"window.getComputedStyle()",
-        @"window.getDefaultComputedStyle()",
-        @"window.getSelection()",
-        @"window.matchMedia()",
-        @"window.moveBy()",
-        @"window.moveTo()",
-        @"window.open()",
-        @"window.postMessage()",
-        @"window.print()",
-        @"window.prompt()",
-        @"window.requestAnimationFrame()",
-        @"window.requestIdleCallback()",
-        @"window.resizeBy()",
-        @"window.resizeTo()",
-        @"window.scroll()",
-        @"window.scrollBy()",
-        @"window.scrollByLines()",
-        @"window.scrollByPages()",
-        @"window.scrollTo()",
-        @"window.setImmediate()",
-        @"window.setResizable()",
-        @"window.sizeToContent()",
-        @"window.showOpenFilePicker()",
-        @"window.showSaveFilePicker()",
-        @"window.showDirectoryPicker()",
-        @"window.stop()",
-        @"window.updateCommands()",
-        @"window.back()",
-        @"window.captureEvents()",
-        @"window.forward()",
-        @"window.home()",
-        @"window.openDialog()",
-        @"window.releaseEvents()",
-        @"window.showModalDialog()"
+        @"window.alert",
+        @"window.blur",
+        @"window.cancelAnimationFrame",
+        @"window.cancelIdleCallback",
+        @"window.clearImmediate",
+        @"window.close",
+        @"window.confirm",
+        @"window.dump",
+        @"window.find",
+        @"window.focus",
+        @"window.getComputedStyle",
+        @"window.getDefaultComputedStyle",
+        @"window.getSelection",
+        @"window.matchMedia",
+        @"window.moveBy",
+        @"window.moveTo",
+        @"window.open",
+        @"window.postMessage",
+        @"window.print",
+        @"window.prompt",
+        @"window.requestAnimationFrame",
+        @"window.requestIdleCallback",
+        @"window.resizeBy",
+        @"window.resizeTo",
+        @"window.scroll",
+        @"window.scrollBy",
+        @"window.scrollByLines",
+        @"window.scrollByPages",
+        @"window.scrollTo",
+        @"window.setImmediate",
+        @"window.setResizable",
+        @"window.sizeToContent",
+        @"window.showOpenFilePicker",
+        @"window.showSaveFilePicker",
+        @"window.showDirectoryPicker",
+        @"window.stop",
+        @"window.updateCommands",
+        @"window.back",
+        @"window.captureEvents",
+        @"window.forward",
+        @"window.home",
+        @"window.openDialog",
+        @"window.releaseEvents",
+        @"window.showModalDialog",
+        @"window.dispatchEvent",
+        @"window.addEventListener",
+        @"window.removeEventListener",
+        @"window.setTimeout",
+        @"window.XMLHttpRequest"
     ]];
 }
 
