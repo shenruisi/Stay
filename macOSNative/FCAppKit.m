@@ -8,7 +8,23 @@
 #import "FCAppKit.h"
 #import <Cocoa/Cocoa.h>
 
+@interface FCAppKit()
+
+@property (nonatomic, strong) id<UINSApplicationDelegate> appDelegate;
+@end
+
 @implementation FCAppKit
+
+- (instancetype)initWithAppDelegate:(id<UINSApplicationDelegate>)appDelegate{
+    if (self = [super init]){
+        self.appDelegate = appDelegate;
+        NSLog(@"appkit loaded.");
+    }
+    
+    return self;
+}
+
+
 
 - (NSWindow *)_findWindow:(NSString *)targetIdentifier{
     NSArray *windows = [[NSApplication sharedApplication] windows];
@@ -61,6 +77,36 @@
         
         [window makeKeyAndOrderFront:nil];
     }
+}
+
+- (void)styleWindow:(NSString *)targetIdentifier origin:(NSDictionary *)origin{
+    NSWindow *window = [self _findWindow:targetIdentifier];
+    if (window){
+        window.titlebarAppearsTransparent = YES;
+        [window setCollectionBehavior:NSWindowCollectionBehaviorMoveToActiveSpace];
+//        if (origin && [origin[@"x"] floatValue] > 0 && [origin[@"y"] floatValue] > 0){
+//            [window setFrameOrigin:NSMakePoint([origin[@"x"] floatValue], [origin[@"y"] floatValue])];
+//        }
+        
+    }
+}
+
+- (void)topLevelWindow:(NSString *)targetIdentifier{
+    NSWindow *window = [self _findWindow:targetIdentifier];
+    if (window){
+        [window setLevel:CGShieldingWindowLevel()];
+    }
+}
+
+- (BOOL)titlebarAppearsTransparent:(NSString *)targetIdentifier{
+    NSWindow *window = [self _findWindow:targetIdentifier];
+    if (window){
+        if (!window.titlebarAppearsTransparent){
+            window.titlebarAppearsTransparent = YES;
+        }
+        return window.titlebarAppearsTransparent;
+    }
+    return NO;
 }
 
 @end

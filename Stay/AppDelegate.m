@@ -12,6 +12,10 @@
 #import "IACManager.h"
 #import "SYEditViewController.h"
 #import "LoadingSlideController.h"
+#import "FCShared.h"
+#ifdef Mac
+#import "Plugin.h"
+#endif
 
 @interface AppDelegate()
 
@@ -60,6 +64,10 @@
             });
             });
         }];
+    
+#ifdef Mac
+    [FCShared.plugin load];
+#endif
         
     
 //    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];

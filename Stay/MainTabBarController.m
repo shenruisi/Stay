@@ -10,9 +10,11 @@
 #import "SYHomeViewController.h"
 #import "NavigationController.h"
 #import "SYMoreViewController.h"
+#import "SYDetailViewController.h"
 
 @interface MainTabBarController ()
 
+@property (nonatomic, strong) NSMutableDictionary<NSString *,SYDetailViewController *> *detailViewControllerDic;
 @end
 
 @implementation MainTabBarController
@@ -76,7 +78,25 @@
     [self addChildViewController:navC];
 }
 
+- (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript{
+    @synchronized (self.detailViewControllerDic) {
+        SYDetailViewController *ret = self.detailViewControllerDic[userScript.uuid];
+        if (nil == ret){
+            ret = [[SYDetailViewController alloc] init];
+            ret.script = userScript;
+            self.detailViewControllerDic[userScript.uuid] = ret;
+        }
+        return ret;
+    }
+}
 
+- (NSMutableDictionary<NSString *,SYDetailViewController *> *)detailViewControllerDic{
+    if (nil == _detailViewControllerDic){
+        _detailViewControllerDic = [[NSMutableDictionary alloc] init];
+    }
+    
+    return _detailViewControllerDic;
+}
 
 /*
 #pragma mark - Navigation

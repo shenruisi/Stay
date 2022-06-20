@@ -10,13 +10,19 @@
 //#import "ViewController.h"
 #import "MainTabBarController.h"
 #import "IACManager.h"
+#ifdef Mac
+#import "SceneCenter.h"
+#endif
 
 @implementation SceneDelegate
 
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
 
+    UIWindowScene *windowScene = (UIWindowScene *)scene;
 #ifdef Mac
-    
+    [[SceneCenter shared] connectScene:@"app.fastclip.scene.main"
+                           windowScene:windowScene
+                          sceneSession:session];
 #else
     UINavigationBar.appearance.prefersLargeTitles = YES;
     UIWindowScene *windowScene = (UIWindowScene *)scene;
