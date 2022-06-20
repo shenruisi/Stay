@@ -30,24 +30,24 @@ let closeableTabs = {};
 let xhrs = [];
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-
     if ("bootstrap" == request.from || "iframe" == request.from) {
         if ("fetchScripts" == request.operate) {
-            console.log("background---fetchScripts request==", request);
+            // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
+                matchAppScriptList = response.body;
                 sendResponse(response);
             });
             return true;
         }
         else if ("injectScript" == request.operate) {
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                console.log("request.allFrames", request.allFrames);
+                // console.log("request.allFrames", request.allFrames);
                 browser.tabs.executeScript(tabs[0].id, { code: request.code, allFrames: request.allFrames, runAt: request.runAt })
             });
             return true;
         }
         else if ("injectFile" == request.operate) {
-            console.log("background", "injectFile", request.file);
+            // console.log("background", "injectFile", request.file);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.executeScript(tabs[0].id, { file: request.file, allFrames: request.allFrames, runAt: request.runAt })
             });
@@ -55,7 +55,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("setMatchedScripts" == request.operate) {
             matchAppScriptList = request.matchScripts;
-            console.log("setMatchedScripts request.matchScripts=", request.matchScripts)
+            // console.log("setMatchedScripts request.matchScripts=", request.matchScripts)
             return true;
         }
     }
@@ -65,20 +65,21 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             gm_console[request.uuid] = [];
         }
         else if ("GM_error" == request.operate) {
-            console.log("gm-apis GM_error, from exect catch, ", request);
+            // console.log("gm-apis GM_error, from exect catch, ", request);
             if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
             }
             gm_console[request.uuid].push({ msg: request.message, msgType: "error", time: new Date().dateFormat() });
-            console.log("GM_error=", gm_console);
+            // console.log("GM_error=", gm_console);
         }
         else if ("GM_log" == request.operate) {
-            console.log("gm-apis GM_log");
+            // console.log("gm-apis GM_log");
             if (!gm_console[request.uuid]) {
                 gm_console[request.uuid] = [];
             }
             gm_console[request.uuid].push({ msg: request.message, msgType: "log", time: new Date().dateFormat() });
             console.log("GM_log=", gm_console);
+            // sendResponse({ message: gm_console });
         }
         else if ("GM_getValue" == request.operate) {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, defaultValue: request.defaultValue, uuid: request.uuid }, function (response) {
@@ -105,7 +106,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("unsafeWindow" == request.operate) {
-            console.log("unsafeWindow bg-----", window.__restart_confirm_timeout, ",----", window._WWW_SRV_T);
+            // console.log("unsafeWindow bg-----", window.__restart_confirm_timeout, ",----", window._WWW_SRV_T);
             sendResponse({ unsafeWindow: window });
             return true;
         }
@@ -316,7 +317,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             reqXHR.send();/*不发送数据到服务器*/
             reqXHR.onload = function () {/*XHR对象获取到返回信息后执行*/
                 if (reqXHR.status == 200) {/*返回状态为200，即为数据获取成功*/
-                    console.log("BG-----GM_getResourceText---", reqXHR.responseText);
+                    // console.log("BG-----GM_getResourceText---", reqXHR.responseText);
                     sendResponse({ body: reqXHR.responseText });
                 }
             }
@@ -324,27 +325,27 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("GM_getResourceUrl" == request.operate) {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-                console.log("GM_getResourceUrl----", response);
+                // console.log("GM_getResourceUrl----", response);
                 sendResponse(response);
             });
             return true;
         }
         else if ("GM_getAllResourceText" == request.operate) {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-                console.log("GM_getAllResourceText----", response);
+                // console.log("GM_getAllResourceText----", response);
                 sendResponse(response);
             });
             return true;
         }
         else if ("GM_getAllResourceUrl" == request.operate) {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-                console.log("GM_getAllResourceUrl----", response);
+                // console.log("GM_getAllResourceUrl----", response);
                 sendResponse(response);
             });
             return true;
         }
         else if ("closeTab" == request.operate) {
-            console.log("bg closeTab ------");
+            // console.log("bg closeTab ------");
             if (request.tabId && closeableTabs[request.tabId]) {
                 browser.tabs.remove(request.tabId);
             }
@@ -352,7 +353,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("openInTab" == request.operate) {
-            console.log("bg openInTab ------")
+            // console.log("bg openInTab ------")
             var done = function (tab) {
                 closeableTabs[tab.id] = true;
                 sendResponse({ tabId: tab.id });
@@ -384,7 +385,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // get tab id and respond only to the content script that sent message
             const tab = sender.tab.id;
             const details = request.details;
-            console.log("background API_XHR_FROM_BOOTSTRAP========", details);
             const method = details.method ? details.method : "GET";
             const user = details.user || null;
             const password = details.password || null;
@@ -429,25 +429,31 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
             return true;
         } else if (request.operate === "REGISTER_MENU_COMMAND_CONTEXT"){
-            console.log("background----REGISTER_MENU_COMMAND_CONTEXT-------", request);
+            // console.log("background----REGISTER_MENU_COMMAND_CONTEXT-------", request);
             let command_content = request.command_content
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", command_content: command_content, uuid: request.uuid, operate: "REGISTER_MENU_COMMAND_CONTEXT" });
             });
+        } else if (request.operate === "UNREGISTER_MENU_COMMAND_CONTEXT") {
+            // console.log("background----UNREGISTER_MENU_COMMAND_CONTEXT-------", request);
+            let menuId = request.menuId
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", menuId: menuId, uuid: request.uuid, operate: "UNREGISTER_MENU_COMMAND_CONTEXT" });
+            });
         }
     }
     else if ("popup" == request.from) {
-        console.log(request.from + " " + request.operate);
+        console.log(request.from + " = " + request.operate);
         if ("fetchLog" == request.operate) {
             sendResponse({ body: gm_console });
         }
         else if ("cleanLog" == request.operate) {
             gm_console = [];
         } else if ("fetchMatchedScriptList" == request.operate) {
-            console.log("fetchMatchedScriptList--", request, matchAppScriptList)
+            // console.log("fetchMatchedScriptList--", request, matchAppScriptList)
             browser.runtime.sendMessage({ from: "background", operate: "fetchMatchedScripts" }, (response) => {
                 matchAppScriptList = response.body;
-                console.log("fetchMatchedScriptList---fetchMatchedScripts--", response, "-res--", response.body)
+                // console.log("fetchMatchedScriptList---fetchMatchedScripts--", response, "-res--", response.body)
                 sendResponse({ body: matchAppScriptList });
             })
         } else if ("setScriptActive" == request.operate) {
@@ -457,12 +463,19 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         } 
         else if ("exeScriptManually" == request.operate) {
-            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
+//            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
+//            });
+            
+            console.log("exeScriptManually in background");
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchTheScript", uuid: request.uuid }, function (response) {
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", script: response.body });
+                });
             });
-
         } 
         else if ("fetchMatchedScriptLog" == request.operate) {
+            // console.log("fetchMatchedScriptLog----matchAppScriptList=", matchAppScriptList);
             if (matchAppScriptList && matchAppScriptList.length > 0) {
                 if (matchAppScriptConsole.length > 0) {
                     matchAppScriptConsole = [];
@@ -474,33 +487,28 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     matchLog["logList"] = gm_console[item.uuid]
                     matchAppScriptConsole.push(matchLog);
                 })
-                console.log("fetchMatchedScriptLog=", matchAppScriptConsole);
+                // console.log("fetchMatchedScriptLog=", matchAppScriptConsole);
                 sendResponse({ body: matchAppScriptConsole });
             } else {
                 sendResponse({ body: [] });
             }
         }
         else if ("fetchRegisterMenuCommand" == request.operate) {
-            console.log("background--fetchRegisterMenuCommand---", request);
+            // console.log("background--fetchRegisterMenuCommand---", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", uuid: request.uuid, operate: "fetchRegisterMenuCommand" });
-                // browser.tabs.sendMessage(tabs[0].id, { from: "background", uuid: request.uuid, operate: "fetchRegisterMenuCommand_In_Bootstrap" });
             });
         }
         else if ("execRegisterMenuCommand" == request.operate) {
-            console.log("background---execRegisterMenuCommand--", request);
+            // console.log("background---execRegisterMenuCommand--", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand", id: request.id, uuid: request.uuid });
-                // browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand_In_Bootstrap", id: request.id, uuid: request.uuid });
             });
+            sendResponse({ body: [], id: request.id, uuid: request.uuid })
         }
         else if ("refreshTargetTabs" == request.operate){
-            console.log("background---refreshTargetTabs--", request);
-            // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            //     browser.tabs.reload();
-            // });
+            // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
-            
         }
         return true;
     }

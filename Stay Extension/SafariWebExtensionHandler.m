@@ -84,12 +84,13 @@
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
+        BOOL requireCompleteScript = digest.length == 0 || [digest isEqualToString:@"no"];
         [SharedStorageManager shared].userscriptHeaders = nil;
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         
         for(int i = 0;i < datas.count; i++) {
             NSDictionary *data = datas[i];
-            if (![self matchesCheck:data url:url]){
+            if ((requireCompleteScript && ![data[@"active"] boolValue]) || ![self matchesCheck:data url:url]){
                 [datas removeObjectAtIndex:i];
                 i--;
                 continue;
@@ -107,6 +108,25 @@
         }
        
         body = datas;
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchTheScript"]){
+        NSString *uuid = message[@"uuid"];
+        [SharedStorageManager shared].userscriptHeaders = nil;
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
+        
+        for(int i = 0;i < datas.count; i++) {
+            NSDictionary *data = datas[i];
+            if ([data[@"uuid"] isEqualToString:uuid]){
+                NSArray<NSDictionary *> *requireUrlsAndCodes = [self getUserScriptRequireListByUserScript:data];
+                NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
+                if (requireUrlsAndCodes != nil) {
+                    mulDic[@"requireCodes"] = requireUrlsAndCodes;
+                }
+                mulDic[@"content"] = [self getContentWithUUID:data[@"uuid"]];
+                body = mulDic;
+                break;
+            }
+        }
     }
     else if ([message[@"type"] isEqualToString:@"GM_setValue"]){
         NSString *uuid = message[@"uuid"];
@@ -228,7 +248,6 @@
 - (NSString *)getContentWithUUID:(NSString *)uuid{
     UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:uuid];
     return info.content[@"content"];
-    return nil;
 }
 
 

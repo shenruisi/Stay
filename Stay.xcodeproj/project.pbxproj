@@ -233,6 +233,7 @@
 		84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48339273B964900217BB3 /* JSDetailEntity.m */; };
 		84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD427F2851FD5D00B25A17 /* SYSelectTabViewController.m */; };
 		84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */; };
+		84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -492,6 +493,8 @@
 		84FD427F2851FD5D00B25A17 /* SYSelectTabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSelectTabViewController.m; sourceTree = "<group>"; };
 		84FD4281285315D300B25A17 /* SYSelectBarModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSelectBarModalViewController.h; sourceTree = "<group>"; };
 		84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSelectBarModalViewController.m; sourceTree = "<group>"; };
+		84FD4284285B72E400B25A17 /* SYExpandViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYExpandViewController.h; sourceTree = "<group>"; };
+		84FD4285285B72E400B25A17 /* SYExpandViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYExpandViewController.m; sourceTree = "<group>"; };
 		B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.debug.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1077,6 +1080,8 @@
 			children = (
 				84F48322273ACAD400217BB3 /* SYSearchViewController.h */,
 				84F48323273ACAD400217BB3 /* SYSearchViewController.m */,
+				84FD4284285B72E400B25A17 /* SYExpandViewController.h */,
+				84FD4285285B72E400B25A17 /* SYExpandViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1517,6 +1522,7 @@
 				58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */,
 				84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */,
 				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
+				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
@@ -1827,7 +1833,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -1842,7 +1848,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.6;
+				MARKETING_VERSION = 2.1.1;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1861,7 +1867,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -1876,7 +1882,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.6;
+				MARKETING_VERSION = 2.1.1;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -1900,7 +1906,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 41;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -1922,7 +1928,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1946,7 +1952,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 41;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -1968,7 +1974,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.1.1;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";

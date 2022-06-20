@@ -58,7 +58,7 @@ const $_matchesCheck = (userLibraryScript,url) => {
 
 
 const $_injectRequiredInPageWithURL = (name,url) => {
-    console.log("require "+url+" inject page");
+    // console.log("require "+url+" inject page");
     if (document.readyState === "loading") {
         document.addEventListener("readystatechange", function() {
             if (document.readyState === "interactive") {
@@ -79,7 +79,7 @@ const $_injectRequiredInPageWithURL = (name,url) => {
 }
 
 const $_injectRequiredInPage = (name,content) =>{
-    console.log("require "+name+" inject page");
+    // console.log("require "+name+" inject page");
     if (document.readyState === "loading") {
         document.addEventListener("readystatechange", function() {
             if (document.readyState === "interactive") {
@@ -100,11 +100,12 @@ const $_injectRequiredInPage = (name,content) =>{
 }
 
 const $_injectInPage = (script) => {
-    console.log("inject page");
+    // console.log("inject page");
     var scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = "Stay_Inject_JS_"+script.uuid;
-    var content = script.installType === "page" ? script.content : script.pageContent;
+    var content = script.content;
+//    console.log("exeScriptManually",content,script.installType);
     scriptTag.appendChild(document.createTextNode(content));
     document.body.appendChild(scriptTag);
 }
@@ -151,65 +152,133 @@ let RMC_CONTEXT = {};
         let uuid = request.uuid;
         if (request.from == "background" && "REGISTER_MENU_COMMAND_CONTEXT" === operate){
             let rmc_context = request.command_content;
-            console.log("browser.addListener--REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
+            // console.log("browser.addListener--REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
             if (!rmc_context || rmc_context == "{}") {
                 return;
             }
             let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
-            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
-                UUID_RMC_CONTEXT = [];
+            let isExist = false;
+            try {
+                if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+                    UUID_RMC_CONTEXT = [];
+                } else {
+                    UUID_RMC_CONTEXT.forEach(item => {
+                        if (item.id == rmc_context.id ||
+                            (item.accessKey && item.accessKey == rmc_context.accessKey) ||
+                            (item.caption && item.caption == rmc_context.caption)) {
+                            isExist = true;
+                            throw new Error("break");
+                        }
+                    })
+                }
+            } catch (error) {
+                if (error.message != "break") throw error;
             }
-            UUID_RMC_CONTEXT.push(rmc_context);
+            
+            if (!isExist) {
+                UUID_RMC_CONTEXT.push(rmc_context);
+            }
             RMC_CONTEXT[uuid] = UUID_RMC_CONTEXT;
-            console.log("browser.addListener---RMC_CONTEXT-----", RMC_CONTEXT)
+            // console.log("browser.addListener---RMC_CONTEXT-----", RMC_CONTEXT)
+        }
+        else if (request.from == "background" && "UNREGISTER_MENU_COMMAND_CONTEXT" === operate) {
+            let menuId = request.menuId;
+            let RMC_CONTEXT_STR = RMC_CONTEXT[uuid]
+            if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]" && RMC_CONTEXT_STR.length > 0) {
+                let place = -1;
+                try {
+                    RMC_CONTEXT_STR.forEach((item, index) => {
+                        if (item.id == menuId) {
+                            place = index;
+                            throw new Error("break");
+                        }
+                    });
+                } catch (error) {
+                    if (error.message != "break") throw error;
+                }
+                
+                if (place >= 0) {
+                    RMC_CONTEXT_STR.splice(place, 1);
+                    RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
+                }
+            }
         }
         else if (request.from == "background" && "fetchRegisterMenuCommand" === operate) {
-            console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
+            // console.log("bootstrap--fetchRegisterMenuCommand---", request, "---RMC_CONTEXT---", RMC_CONTEXT);
             let UUID_RMC_CONTEXT = RMC_CONTEXT[uuid];
             browser.runtime.sendMessage({ from: "content", data: UUID_RMC_CONTEXT, uuid: uuid, operate: "giveRegisterMenuCommand" });
         }
         else if (request.from == "background" && "execRegisterMenuCommand" === operate) {
-            console.log("bootstrap--execRegisterMenuCommand---", request);
+            // console.log("bootstrap--execRegisterMenuCommand---", request);
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
         else if (request.from == "background" && "exeScriptManually" === operate){
-            let targetScript;
-            for (var i=0; i < matchedScripts.length; i++){
-                if (matchedScripts[i].uuid == request.uuid){
-                    targetScript = matchedScripts[i];
-                    break;
-                }
-            }
-            
+            console.log("exeScriptManually",request.script);
+            let targetScript = request.script;
             if (targetScript){
+                var pageInject = targetScript.installType === "page";
                 if (targetScript.requireUrls.length > 0){
                     targetScript.requireUrls.forEach((url)=>{
                         if (url.startsWith('stay://')){
-                            var name = $_uri(url).pathname.substring(1);
-                            $_injectRequiredInPageWithURL(name,$_res(name));
+                            if (pageInject){
+                                var name = $_uri(url).pathname.substring(1);
+                                $_injectRequiredInPageWithURL(name,$_res(name));
+                            }
+                            else{
+                                browser.runtime.sendMessage({
+                                    from: "bootstrap",
+                                    operate: "injectFile",
+                                    file:$_res($_uri(url).pathname.substring(1)),
+                                    allFrames:true,
+                                    runAt:"document_end"
+                                });
+                            }
                         }
                         else{
                             targetScript.requireCodes.forEach((urlCodeDic)=>{
                                 if (urlCodeDic.url == url){
-                                    let dicName = urlCodeDic.name;
-                                    // remove Stay_Required_Inject_JS_
-                                    let requireJsDom = document.getElementById("Stay_Required_Inject_JS_" + dicName);
-                                    if (!requireJsDom) {
-                                        $_injectRequiredInPage(urlCodeDic.name, urlCodeDic.code);
+                                    if (pageInject){
+                                        let dicName = urlCodeDic.name;
+                                        // remove Stay_Required_Inject_JS_
+                                        let requireJsDom = document.getElementById("Stay_Required_Inject_JS_" + dicName);
+                                        if (!requireJsDom) {
+                                            $_injectRequiredInPage(urlCodeDic.name, urlCodeDic.code);
+                                        }
+                                    }
+                                    else{
+                                        browser.runtime.sendMessage({
+                                            from: "bootstrap",
+                                            operate: "injectScript",
+                                            code:urlCodeDic.code,
+                                            allFrames:true,
+                                            runAt:"document_end"
+                                        });
                                     }
                                 }
                             });
                         }
                     });
                 }
-
-                let uuid = targetScript.uuid;
-                let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
-                if (pageJSDom){
-                    pageJSDom.remove();
+                
+                console.log("exeScriptManually",targetScript.name,targetScript.installType);
+                if (pageInject){
+                    let uuid = targetScript.uuid;
+                    let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
+                    if (pageJSDom){
+                        pageJSDom.remove();
+                    }
+                    $_injectInPageWithTiming(targetScript, "document_end");
                 }
-                $_injectInPageWithTiming(targetScript, "document_end");
+                else{
+                    browser.runtime.sendMessage({
+                        from: "bootstrap",
+                        operate: "injectScript",
+                        code:targetScript.content,
+                        allFrames:!targetScript.noFrames,
+                        runAt:"document_end"
+                    });
+                }
             }
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
@@ -242,17 +311,16 @@ let RMC_CONTEXT = {};
         return true;
     });
     
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
+    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         let injectedVendor = new Set();
         matchedScripts = response.body;
-        
         console.log("matchedScripts-", matchedScripts)
         matchedScripts.forEach((script) => {
+            var pageInject = script.installType === "page";
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
                     if (injectedVendor.has(url)) return;
                     injectedVendor.add(url);
-                    var pageInject = script.installType === "page";
                     if (url.startsWith('stay://')){
                         if (pageInject){
                             var name = $_uri(url).pathname.substring(1);
@@ -269,7 +337,6 @@ let RMC_CONTEXT = {};
                         }
                     }
                     else{
-                        console.log("pageInject---",pageInject)
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
                                 if (pageInject){
@@ -292,7 +359,7 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.content);
+                console.log("injectScript---",script.name,script.installType);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -310,7 +377,7 @@ let RMC_CONTEXT = {};
         });
     });
     window.addEventListener('message', (e) => {
-        console.log("bootstrap---addEventListener====", e)
+        // console.log("bootstrap---addEventListener====", e)
         if (!e || !e.data || !e.data.name) return;
         let __uuid = e.data.id;
         const name = e.data.name;
@@ -335,6 +402,7 @@ let RMC_CONTEXT = {};
             message.operate = "GM_log";
             browser.runtime.sendMessage(message, (response) => {
                 response.message = message;
+                // console.log("bootstrap---api_log--", response)
                 window.postMessage({ id: __uuid, pid: pid, name: "RESP_LOG", response: response });
             });
         }
@@ -344,33 +412,56 @@ let RMC_CONTEXT = {};
         }
         else if ("REGISTER_MENU_COMMAND_CONTEXT" === name){
             let rmc_context = e.data.rmc_context;
-            console.log("REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
+            // console.log("REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
             if (!rmc_context || rmc_context == "{}"){
                 return;
             }
             let UUID_RMC_CONTEXT = RMC_CONTEXT[__uuid];
-            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
-                UUID_RMC_CONTEXT = [];
-            } 
-            UUID_RMC_CONTEXT.push(JSON.parse(rmc_context));
+            let menuItem = JSON.parse(rmc_context);
+            let isExist = false;
+            try {
+                if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
+                    UUID_RMC_CONTEXT = [];
+                } else {
+                    UUID_RMC_CONTEXT.forEach(item => {
+                        if (item.id == menuItem.id || 
+                            (item.accessKey && item.accessKey == menuItem.accessKey) ||
+                            (item.caption && item.caption == menuItem.caption)) {
+                            isExist = true;
+                            throw new Error("break");
+                        }
+                    })
+                }
+            } catch (error) {
+                if (error.message != "break") throw error;
+            }
+            
+            if (!isExist) {
+                UUID_RMC_CONTEXT.push(menuItem);
+            }
+
             RMC_CONTEXT[__uuid] = UUID_RMC_CONTEXT;
 
-            console.log("RMC_CONTEXT-----", RMC_CONTEXT)
+            // console.log("RMC_CONTEXT-----", RMC_CONTEXT)
         }
         else if ("UNREGISTER_MENU_COMMAND_CONTEXT" === name) {
             let pid = e.data.pid;
             let RMC_CONTEXT_STR = RMC_CONTEXT[__uuid]
             if (RMC_CONTEXT_STR && RMC_CONTEXT_STR != "[]" && RMC_CONTEXT_STR.length>0) {
                 let place = -1;
-                RMC_CONTEXT_STR.forEach((item, index) => {
-                    if (item.id == pid) {
-                        place = index;
-                        return false;
+                try {
+                    RMC_CONTEXT_STR.forEach((item, index) => {
+                        if (item.id == pid) {
+                            place = index;
+                            throw new Error("break");
+                        }
+                    });
+                    if (place >= 0) {
+                        RMC_CONTEXT_STR.splice(place, 1);
+                        RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
                     }
-                });
-                if (place >= 0) {
-                    RMC_CONTEXT_STR.splice(place, 1);
-                    RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
+                } catch (error) {
+                    if (error.message != "break") throw error;
                 }
             }
         }
@@ -472,5 +563,3 @@ let RMC_CONTEXT = {};
     })
     
 })();
-
-//start();

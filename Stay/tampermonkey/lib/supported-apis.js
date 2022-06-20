@@ -35,7 +35,11 @@ const GM_APIS = new Set([
     "GM.notification",
     "GM_setClipboard",
     "GM.setClipboard",
-    "GM_download"
+    "GM_download",
+    "GM_addValueChangeListener",
+    "GM.addValueChangeListener",
+    "GM_removeValueChangeListener",
+    "GM.removeValueChangeListener"
 ]);
 
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);

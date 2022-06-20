@@ -85,7 +85,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'runAt': 'end',
       'pass':true,
       'errorMessage':'',
-      'iconUrl':''
+      'iconUrl':'',
+      'stayEngine':''
   };
 
   let meta = extractMeta(content).match(/.+/g);
@@ -200,9 +201,12 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
           case 'author':
               details.author = data.value;
               break;
+          case 'stay-engine':
+              details.stayEngine = data.value;
+              break;
       }
     }
-//    native.nslog(details);
+    native.nslog(details);
     return prepDefaults(details);
 }
 
