@@ -463,10 +463,16 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         } 
         else if ("exeScriptManually" == request.operate) {
-            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
+//            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
+//            });
+            
+            console.log("exeScriptManually in background");
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchTheScript", uuid: request.uuid }, function (response) {
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", script: response.body });
+                });
             });
-
         } 
         else if ("fetchMatchedScriptLog" == request.operate) {
             // console.log("fetchMatchedScriptLog----matchAppScriptList=", matchAppScriptList);

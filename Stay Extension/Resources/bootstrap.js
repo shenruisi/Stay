@@ -8,7 +8,7 @@
  background.js passing message to content.js using browser.tabs.sendMessage.
  popup.js passing message to content.js should sendMessage to background.js first.
  */
-// console.log("bootstrap inject");
+console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
 
@@ -104,7 +104,8 @@ const $_injectInPage = (script) => {
     var scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = "Stay_Inject_JS_"+script.uuid;
-    var content = script.installType === "page" ? script.content : script.pageContent;
+    var content = script.content;
+//    console.log("exeScriptManually",content,script.installType);
     scriptTag.appendChild(document.createTextNode(content));
     document.body.appendChild(scriptTag);
 }
@@ -213,42 +214,71 @@ let RMC_CONTEXT = {};
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
         else if (request.from == "background" && "exeScriptManually" === operate){
-            let targetScript;
-            for (var i=0; i < matchedScripts.length; i++){
-                if (matchedScripts[i].uuid == request.uuid){
-                    targetScript = matchedScripts[i];
-                    break;
-                }
-            }
-            
+            console.log("exeScriptManually",request.script);
+            let targetScript = request.script;
             if (targetScript){
+                var pageInject = targetScript.installType === "page";
                 if (targetScript.requireUrls.length > 0){
                     targetScript.requireUrls.forEach((url)=>{
                         if (url.startsWith('stay://')){
-                            var name = $_uri(url).pathname.substring(1);
-                            $_injectRequiredInPageWithURL(name,$_res(name));
+                            if (pageInject){
+                                var name = $_uri(url).pathname.substring(1);
+                                $_injectRequiredInPageWithURL(name,$_res(name));
+                            }
+                            else{
+                                browser.runtime.sendMessage({
+                                    from: "bootstrap",
+                                    operate: "injectFile",
+                                    file:$_res($_uri(url).pathname.substring(1)),
+                                    allFrames:true,
+                                    runAt:"document_end"
+                                });
+                            }
                         }
                         else{
                             targetScript.requireCodes.forEach((urlCodeDic)=>{
                                 if (urlCodeDic.url == url){
-                                    let dicName = urlCodeDic.name;
-                                    // remove Stay_Required_Inject_JS_
-                                    let requireJsDom = document.getElementById("Stay_Required_Inject_JS_" + dicName);
-                                    if (!requireJsDom) {
-                                        $_injectRequiredInPage(urlCodeDic.name, urlCodeDic.code);
+                                    if (pageInject){
+                                        let dicName = urlCodeDic.name;
+                                        // remove Stay_Required_Inject_JS_
+                                        let requireJsDom = document.getElementById("Stay_Required_Inject_JS_" + dicName);
+                                        if (!requireJsDom) {
+                                            $_injectRequiredInPage(urlCodeDic.name, urlCodeDic.code);
+                                        }
+                                    }
+                                    else{
+                                        browser.runtime.sendMessage({
+                                            from: "bootstrap",
+                                            operate: "injectScript",
+                                            code:urlCodeDic.code,
+                                            allFrames:true,
+                                            runAt:"document_end"
+                                        });
                                     }
                                 }
                             });
                         }
                     });
                 }
-
-                let uuid = targetScript.uuid;
-                let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
-                if (pageJSDom){
-                    pageJSDom.remove();
+                
+                console.log("exeScriptManually",targetScript.name,targetScript.installType);
+                if (pageInject){
+                    let uuid = targetScript.uuid;
+                    let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
+                    if (pageJSDom){
+                        pageJSDom.remove();
+                    }
+                    $_injectInPageWithTiming(targetScript, "document_end");
                 }
-                $_injectInPageWithTiming(targetScript, "document_end");
+                else{
+                    browser.runtime.sendMessage({
+                        from: "bootstrap",
+                        operate: "injectScript",
+                        code:targetScript.content,
+                        allFrames:!targetScript.noFrames,
+                        runAt:"document_end"
+                    });
+                }
             }
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
@@ -281,16 +311,16 @@ let RMC_CONTEXT = {};
         return true;
     });
     
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href}, (response) => {
+    browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         let injectedVendor = new Set();
         matchedScripts = response.body;
-        // console.log("matchedScripts-", matchedScripts)
+        console.log("matchedScripts-", matchedScripts)
         matchedScripts.forEach((script) => {
+            var pageInject = script.installType === "page";
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
                     if (injectedVendor.has(url)) return;
                     injectedVendor.add(url);
-                    var pageInject = script.installType === "page";
                     if (url.startsWith('stay://')){
                         if (pageInject){
                             var name = $_uri(url).pathname.substring(1);
@@ -307,7 +337,6 @@ let RMC_CONTEXT = {};
                         }
                     }
                     else{
-                        // console.log("pageInject---",pageInject)
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
                                 if (pageInject){
@@ -330,7 +359,7 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                // console.log("injectScript---",script.content);
+                console.log("injectScript---",script.name,script.installType);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -534,5 +563,3 @@ let RMC_CONTEXT = {};
     })
     
 })();
-
-//start();
