@@ -497,8 +497,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("background---execRegisterMenuCommand--", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "execRegisterMenuCommand", id: request.id, uuid: request.uuid });
-                window.close();
             });
+            sendResponse({ body: [], id: request.id, uuid: request.uuid })
         }
         else if ("refreshTargetTabs" == request.operate){
             // console.log("background---refreshTargetTabs--", request);
