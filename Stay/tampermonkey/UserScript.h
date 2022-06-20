@@ -44,10 +44,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<NSString *> *notes;
 @property (nonatomic, copy) NSDictionary<NSString *,NSDictionary *> *locales;
 
+@property (nonatomic, copy) NSArray<NSString *> *excludeSites;
+
 @property (nonatomic, copy) NSString *installType;
+
+//Stay only
+@property (nonatomic, copy) NSString *stayEngine;
 
 + (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
+
+//Use the return value as a key of `locales`
++ (NSString *)localeCode;
++ (NSString *)localeCodeLanguageCodeOnly;
 @end
 
 NS_ASSUME_NONNULL_END
