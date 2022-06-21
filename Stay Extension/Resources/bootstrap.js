@@ -359,7 +359,7 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.name,script.installType);
+                console.log("injectScript---",script.name,script.installType,script.runAt);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
