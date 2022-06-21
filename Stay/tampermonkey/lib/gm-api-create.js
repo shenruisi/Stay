@@ -817,7 +817,9 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_LIST_VALUES") return;
-                    resolve(e.data.response.body);
+                    console.log("GM_listValues_Async----response=", e.data);
+                    let res = e.data ? (e.data.response ? e.data.response.body : {}): {};
+                    resolve(res);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
@@ -940,7 +942,8 @@
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_ALL_REXOURCE_TEXT") return;
                     console.log("GM_getAllResourceText----", e);
-                    resolve(e.data.response.body);
+                    let res = e.data ? (e.data.response ? e.data.response.body : {}) : {};
+                    resolve(res);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);

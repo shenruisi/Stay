@@ -388,6 +388,7 @@ let RMC_CONTEXT = {};
         if (name === "API_LIST_VALUES") {
             message.operate = "GM_listValues";
             browser.runtime.sendMessage(message, (response) => {
+                console.log("GM_listValues----response=", response);
                 window.postMessage({ id: __uuid, pid: pid, name: "RESP_LIST_VALUES", response: response });
             });
 
