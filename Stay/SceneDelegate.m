@@ -20,7 +20,7 @@
 
     UIWindowScene *windowScene = (UIWindowScene *)scene;
 #ifdef Mac
-    [[SceneCenter shared] connectScene:@"app.fastclip.scene.main"
+    [[SceneCenter shared] connectScene:@"app.stay.scene.main"
                            windowScene:windowScene
                           sceneSession:session];
 #else

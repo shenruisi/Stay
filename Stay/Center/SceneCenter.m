@@ -85,15 +85,20 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         }
         
         
-        FCSplitViewController *splitViewController = [[FCSplitViewController alloc] initWithStyle:UISplitViewControllerStyleDoubleColumn];
+        FCSplitViewController *splitViewController = [[FCSplitViewController alloc] init];
         splitViewController.toolbar = titlebar.toolbar;
         
         MainTabBarController *primaryController = [[MainTabBarController alloc] init];
-        [splitViewController setViewController:primaryController forColumn:UISplitViewControllerColumnPrimary];
+//        [splitViewController setViewController:primaryController forColumn:UISplitViewControllerColumnPrimary];
         
+        UserScript *userscript = [[UserScript alloc] init];
+        userscript.uuid = @"123";
         NavigateViewController *secondaryController = [[NavigateViewController alloc]
-                                                                      initWithRootViewController:[primaryController produceDetailViewControllerWithUserScript:nil]];
-        [splitViewController setViewController:secondaryController forColumn:UISplitViewControllerColumnSecondary];
+                                                                      initWithRootViewController:[primaryController produceDetailViewControllerWithUserScript:userscript]];
+//        [splitViewController setViewController:secondaryController forColumn:UISplitViewControllerColumnSecondary];
+        splitViewController.viewControllers = @[
+            primaryController,secondaryController
+        ];
         window.rootViewController = splitViewController;
         fcScene.window = window;
         fcScene.session = sceneSession;
