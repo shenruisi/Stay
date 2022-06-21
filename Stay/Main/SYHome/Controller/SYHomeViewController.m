@@ -83,6 +83,10 @@
     [self.searchController.searchBar setTintColor:RGB(182, 32, 224)];
     
     self.navigationItem.hidesSearchBarWhenScrolling = false;
+    
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
 
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
@@ -424,7 +428,7 @@
     
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15 + titleLabelLeftSize , 15, leftWidth - titleLabelLeftSize, 45)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
+    titleLabel.font = FCStyle.headlineBold;
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.numberOfLines = 2;
@@ -434,7 +438,7 @@
 
     
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 40)];
-    descLabel.font = [UIFont systemFontOfSize:15];
+    descLabel.font = FCStyle.subHeadline;
     descLabel.textAlignment = NSTextAlignmentLeft;
     descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descLabel.text = model.desc;
@@ -444,7 +448,7 @@
     [cell.contentView addSubview:descLabel];
     
     UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
-    authorLabel.font = [UIFont systemFontOfSize:16];
+    authorLabel.font = FCStyle.body;
     authorLabel.textAlignment = NSTextAlignmentLeft;
     authorLabel.text = model.author;
     authorLabel.bottom = descLabel.top - 5;
@@ -471,7 +475,7 @@
     [cell.contentView addSubview:version];
 
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
-    versionLabel.font = [UIFont boldSystemFontOfSize:15];
+    versionLabel.font = FCStyle.subHeadline;
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
     versionLabel.left = left;
@@ -480,7 +484,7 @@
     
     UILabel *statusLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
     statusLab.text = @"status";
-    statusLab.font = [UIFont systemFontOfSize:12];
+    statusLab.font = FCStyle.footnote;
     statusLab.textColor = RGB(138, 138, 138);
     statusLab.top = versionLabel.bottom + 2;
     statusLab.left = left;
@@ -488,7 +492,7 @@
 
 
     UILabel *actLabel = [[UILabel alloc]init];
-    actLabel.font = [UIFont boldSystemFontOfSize:15];
+    actLabel.font = FCStyle.subHeadline;
     if(model.active == 0) {
         actLabel.text = @"Stopped";
     } else {
@@ -502,7 +506,7 @@
     
     UILabel *updateLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
     updateLab.text = @"Update time";
-    updateLab.font = [UIFont systemFontOfSize:12];
+    updateLab.font = FCStyle.footnote;
     updateLab.textColor = RGB(138, 138, 138);
     updateLab.top = actLabel.bottom + 2;
     updateLab.left = left;
@@ -530,7 +534,7 @@
         [cell.contentView addSubview:btn];
     } else {
         UILabel *updateLabel = [[UILabel alloc]init];
-        updateLabel.font = [UIFont boldSystemFontOfSize:15];
+        updateLabel.font = FCStyle.subHeadline;
         updateLabel.text = [self timeWithTimeIntervalString:model.updateTime];
         [updateLabel sizeToFit];
         updateLabel.top = updateLab.bottom + 2;

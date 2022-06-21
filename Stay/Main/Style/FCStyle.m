@@ -82,7 +82,19 @@
 }
 
 + (UIFont *)title3{
+#ifdef iOS
     return [UIFont systemFontOfSize:20];
+#else
+    return [UIFont systemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)title3Bold{
+#ifdef iOS
+    return [UIFont boldSystemFontOfSize:20];
+#else
+    return [UIFont boldSystemFontOfSize:18];
+#endif
 }
 
 + (UIFont *)headline {

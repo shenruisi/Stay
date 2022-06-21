@@ -11,6 +11,7 @@
 #import "ScriptEntity.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "LoadingSlideController.h"
+#import "FCStyle.h"
 
 @interface BrowseView()
 
@@ -109,7 +110,7 @@
 - (UILabel *)titleLabel {
     if (_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, 200, 32)];
-        _titleLabel.font = [UIFont boldSystemFontOfSize:17];
+        _titleLabel.font = FCStyle.headlineBold;
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         _titleLabel.numberOfLines = 2;
         _titleLabel.textColor = DynamicColor([UIColor whiteColor],[UIColor blackColor]);
@@ -122,7 +123,7 @@
 - (UILabel *)authorLabel {
     if(_authorLabel == nil) {
         _authorLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 200, 18)];
-        _authorLabel.font = [UIFont systemFontOfSize:16];
+        _authorLabel.font = FCStyle.body;
         _authorLabel.lineBreakMode= NSLineBreakByTruncatingTail;
         _authorLabel.textColor = DynamicColor([UIColor whiteColor],[UIColor blackColor]);
     }
@@ -132,7 +133,7 @@
 - (UILabel *)descLabel {
     if (_descLabel == nil) {
         _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 200, 42)];
-        _descLabel.font = [UIFont systemFontOfSize:16];
+        _descLabel.font = FCStyle.body;
         _descLabel.numberOfLines = 2;
         _descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
         _descLabel.textColor = RGB(138, 138, 138);

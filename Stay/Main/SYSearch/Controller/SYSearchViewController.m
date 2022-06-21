@@ -108,6 +108,9 @@
     [self simpleLoadingView];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
@@ -197,7 +200,7 @@
     
     UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, kScreenWidth - 30, 30)];
     lab.text = self.datas[indexPath.row][@"name"];
-    lab.font = [UIFont boldSystemFontOfSize:20];
+    lab.font = FCStyle.title3Bold;
     
     [cell.contentView addSubview:lab];
     

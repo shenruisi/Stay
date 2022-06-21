@@ -37,6 +37,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
     [self tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
 }

@@ -15,6 +15,8 @@
 		582F9DE4276F32B900C88135 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE3276F32B900C88135 /* base64.min.js */; };
 		584C05A828607F4E00E07DDF /* NavigateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateViewController.m */; };
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
+		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
+		584C05AE286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
@@ -311,6 +313,8 @@
 		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateViewController.h; sourceTree = "<group>"; };
 		584C05A728607F4E00E07DDF /* NavigateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateViewController.m; sourceTree = "<group>"; };
+		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
+		584C05AC286179D000E07DDF /* ImageHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageHelper.m; sourceTree = "<group>"; };
 		5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -571,6 +575,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		584C05AA286179BB00E07DDF /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				584C05AB286179D000E07DDF /* ImageHelper.h */,
+				584C05AC286179D000E07DDF /* ImageHelper.m */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		587688CB2719237E00F834A4 = {
 			isa = PBXGroup;
 			children = (
@@ -602,6 +615,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				584C05AA286179BB00E07DDF /* Helper */,
 				58AC12F128607B1D00875D6D /* Config */,
 				58AC12E1286074C700875D6D /* Access */,
 				58F7F4DA2746339800270873 /* Stay.entitlements */,
@@ -1567,6 +1581,7 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
+				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
@@ -1660,6 +1675,7 @@
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
+				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
