@@ -544,12 +544,12 @@ function xhrHandleEvent(e, xhr, tab, id, xhrId) {
                 data: base64data,
                 type: xhr.response.type
             };
-            browser.tabs.sendMessage(tab, { operate: name, id: id, xhrId: xhrId, response: x });
+            browser.tabs.sendMessage(tab, { operate: name, uuid:id, id: id, xhrId: xhrId, response: x });
         };
     }
     // blob response will execute its own sendMessage call
     if (xhr.responseType !== "blob") {
-        browser.tabs.sendMessage(tab, { operate: name, id: id, xhrId: xhrId, response: x });
+        browser.tabs.sendMessage(tab, { operate: name, uuid: id, id: id, xhrId: xhrId, response: x });
     }
 }
 
