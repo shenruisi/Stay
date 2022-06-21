@@ -86,7 +86,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'pass':true,
       'errorMessage':'',
       'iconUrl':'',
-      'stayEngine':''
+      'stayEngine':'',
+      'injectInto':'auto'
   };
 
   let meta = extractMeta(content).match(/.+/g);
@@ -203,6 +204,9 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
           case 'stay-engine':
               details.stayEngine = data.value;
+              break;
+          case 'inject-into':
+              details.injectInto = data.value;
               break;
       }
     }
