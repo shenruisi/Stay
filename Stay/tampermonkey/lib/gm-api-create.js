@@ -6,10 +6,10 @@
 'use strict';
 
 (function () {
-
     function createGMApisWithUserScript(userscript, uuid, version, scriptWithoutComment, installType) {
         let grants = userscript.grants;
         let source = 'const _uuid = "' + uuid + '";\n\n';
+        source += "let Stay_storage_listeners = [];\n\n";
         source += 'const iconUrl = "' + userscript.icon + '";\n\n';
         source += 'const usName = "' + userscript.name + '";\n\n';
         source += 'const _version = "' + version + '";\n\n';
@@ -158,6 +158,49 @@
         source += _fillAllResourceUrlStroge.toString() + '\n\n';
 //        native.nslog("native-source" + source);
         return source;
+    }
+
+    function Stay_notifyValueChangeListeners (name, oldVal, newVal, remote) {
+        if (oldVal == newVal) return;
+        for (var i in Stay_storage_listeners) {
+            if (!Stay_storage_listeners.hasOwnProperty(i)) continue;
+            var n = TM_storage_listeners[i];
+            if (n && n.key == name) {
+                if (n.cb) {
+                    try {
+                        n.cb(name, oldVal, newVal, remote);
+                    } catch (e) {
+                        if (D) console.log("env: value change listener of '" + name + "' failed with: " + e.message);
+                    }
+                }
+            }
+        }
+    }
+
+    function GM_addValueChangeListener (name, cb) {
+        var id = 0;
+        for (var n in Stay_storage_listeners) {
+            if (!Stay_storage_listeners.hasOwnProperty(n)) continue;
+            var i = Stay_storage_listeners[n];
+            if (n.id > id) {
+                id = n.id;
+            }
+        }
+        id++;
+        var s = { id: id, key: name, cb: cb };
+        Stay_storage_listeners.push(s);
+        return id;
+    }
+
+    function GM_removeValueChangeListener(id) {
+        for (var n in Stay_storage_listeners) {
+            if (!Stay_storage_listeners.hasOwnProperty(n)) continue;
+            var i = Stay_storage_listeners[n];
+            if (n.id == id) {
+                delete Stay_storage_listeners[n];
+                return true;
+            }
+        }
     }
 
     function GM_info(userscript, version) {
@@ -1111,6 +1154,7 @@
             const abort = () => {
                 window.postMessage({ id: _uuid, name: "API_XHR_ABORT_INJ_FROM_CREATE", xhrId: xhrId });
             };
+            // console.log("XHR==request=", details);
             const callback = e => {
                 const name = e.data.name;
                 const response = e.data.response;
@@ -1121,7 +1165,7 @@
                     || !name
                     || !name.startsWith("RESP_API_XHR_TO_CREATE")
                 ) return;
-                console.log("XHR==response=", response);
+                // console.log("XHR==response=", response);
                 if (name === "RESP_API_XHR_TO_CREATE") {
                     console.log("RESP_API_XHR_TO_CREATE----");
                     // ignore

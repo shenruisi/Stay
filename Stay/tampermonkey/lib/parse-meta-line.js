@@ -106,6 +106,9 @@
      
        peg$c58 = "stay-engine",
        peg$c59 = { type: "literal", value: "stay-engine", description: "\"stay-engine\"" },
+     
+       peg$c60 = "inject-into",
+       peg$c61 = { type: "literal", value: "inject-into", description: "\"inject-into\"" },
        
        peg$currPos          = 0,
        peg$savedPos         = 0,
@@ -595,6 +598,15 @@
                                       s1 = peg$FAILED;
                                       if (peg$silentFails === 0) { peg$fail(peg$c59); }
                                     }
+                                    if (s1 === peg$FAILED) {
+                                        if (input.substr(peg$currPos, 11) === peg$c60) {
+                                          s1 = peg$c60;
+                                          peg$currPos += 11;
+                                        } else {
+                                          s1 = peg$FAILED;
+                                          if (peg$silentFails === 0) { peg$fail(peg$c61); }
+                                        }
+                                      }
                                   }
                                }
                              }

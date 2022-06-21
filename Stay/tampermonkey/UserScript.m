@@ -35,6 +35,7 @@
     userScript.locales = dic[@"locales"];
     userScript.unsupportedGrants = dic[@"unsupportedGrants"];
     userScript.stayEngine = dic[@"stayEngine"];
+    userScript.injectInto = dic[@"injectInto"];
     return userScript;
 }
 
@@ -66,7 +67,8 @@
         @"installType":self.installType ? self.installType : @"content",
         @"unsupportedGrants":self.unsupportedGrants ? self.unsupportedGrants : @[],
         @"stayEngine":self.stayEngine ? self.stayEngine : @"",
-        @"excludeSites":self.excludeSites ? self.excludeSites : @[]
+        @"excludeSites":self.excludeSites ? self.excludeSites : @[],
+        @"injectInto":self.injectInto ? self.injectInto : @"auto"
     };
 }
 

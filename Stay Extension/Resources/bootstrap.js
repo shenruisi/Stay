@@ -283,9 +283,11 @@ let RMC_CONTEXT = {};
         }
         else if (operate.startsWith("RESP_API_XHR_BG_")) {
             // only respond to messages on the correct content script
-            if (request.id !== id) return;
+            // console.log("operate===", request, ",uuid=", uuid)
+            // if (request.id !== uuid) return;
             const resp = request.response;
             const name = operate.replace("_BG_", "_TO_CREATE_");
+            
             // arraybuffer responses had their data converted, convert it back to arraybuffer
             if (request.response.responseType === "arraybuffer" && resp.response) {
                 try {
@@ -359,7 +361,7 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.name,script.installType);
+                console.log("injectScript---",script.name,script.installType,script.runAt);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
