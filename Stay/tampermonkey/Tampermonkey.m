@@ -106,6 +106,8 @@ static Tampermonkey *kInstance = nil;
     }
 }
 
+
+
 - (BOOL)usedCustomWindowPropertyOrMethod:(NSString *)script name:(NSString *)name{
     NSRegularExpression *windowExpr = [[NSRegularExpression alloc] initWithPattern:@"(window\\.[a-zA-z]+)\\(*" options:0 error:nil];
     NSArray<NSTextCheckingResult *> *results = [windowExpr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
@@ -185,7 +187,10 @@ static Tampermonkey *kInstance = nil;
         @"window.returnValue",
         @"window.opera",
         @"window.self",
-        @"window.onload"
+        @"window.onload",
+        @"window.MutationObserver",
+        @"window.WebKitMutationObserver",
+        @"window.MozMutationObserver"
     ]];
 }
 
@@ -239,7 +244,9 @@ static Tampermonkey *kInstance = nil;
         @"window.addEventListener",
         @"window.removeEventListener",
         @"window.setTimeout",
-        @"window.XMLHttpRequest"
+        @"window.XMLHttpRequest",
+        @"window.GM_openInTab",
+        @"window.onurlchange"
     ]];
 }
 
