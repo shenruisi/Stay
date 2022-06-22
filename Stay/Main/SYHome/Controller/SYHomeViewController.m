@@ -56,6 +56,8 @@
 
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 
+@property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
+
 @end
 
 @implementation SYHomeViewController
@@ -384,6 +386,18 @@
 
 }
 
+- (CGFloat)safeAreaInsetsLeft{
+#ifdef Mac
+    return 250.0;
+#else
+    return 0.0;
+#endif
+}
+
+- (void)viewWillLayoutSubviews{
+    [self.tableView reloadData];
+}
+
 
 #pragma mark - UITableViewDelegate
 
@@ -401,7 +415,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+//        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
@@ -416,7 +430,9 @@
     cell.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     
-    CGFloat leftWidth = kScreenWidth * 0.6 - 15;
+    CGFloat viewWidth = self.view.frame.size.width;
+    
+    CGFloat leftWidth = viewWidth * 0.6 - 15;
         
     CGFloat titleLabelLeftSize = 0;
     if(model.icon != NULL && model.icon.length > 0) {
@@ -455,7 +471,7 @@
     [authorLabel sizeToFit];
     [cell.contentView addSubview:authorLabel];
     
-    UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0.62 * kScreenWidth, 14, 1, 113)];
+    UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0.62 * viewWidth, 14, 1, 113)];
     verticalLine.backgroundColor =  [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
         if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
             return RGBA(216, 216, 216, 0.3);
@@ -466,15 +482,15 @@
     }];
     [cell.contentView addSubview:verticalLine];
     
-    CGFloat left = 0.65 * kScreenWidth;
-    CGFloat width = 0.3 * kScreenWidth;
+    CGFloat left = 0.65 * viewWidth;
+    CGFloat width = 0.3 * viewWidth;
     UILabel *version= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
-    version.text = @"version";
+    version.text = NSLocalizedString(@"Version",@"");
     version.font = [UIFont systemFontOfSize:12];
     version.textColor = RGB(138, 138, 138);
     [cell.contentView addSubview:version];
 
-    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, kScreenWidth / 2, 21)];
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, width / 2, 21)];
     versionLabel.font = FCStyle.subHeadline;
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
@@ -483,7 +499,7 @@
     [cell.contentView addSubview:versionLabel];
     
     UILabel *statusLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
-    statusLab.text = @"status";
+    statusLab.text = NSLocalizedString(@"Status",@"");
     statusLab.font = FCStyle.footnote;
     statusLab.textColor = RGB(138, 138, 138);
     statusLab.top = versionLabel.bottom + 2;
@@ -493,11 +509,7 @@
 
     UILabel *actLabel = [[UILabel alloc]init];
     actLabel.font = FCStyle.subHeadline;
-    if(model.active == 0) {
-        actLabel.text = @"Stopped";
-    } else {
-        actLabel.text = @"Activated";
-    }
+    actLabel.text = model.active == 0 ? NSLocalizedString(@"Stopped", @"") : NSLocalizedString(@"Activated", @"");
     [actLabel sizeToFit];
     actLabel.top = statusLab.bottom + 2;
     actLabel.left = left;
@@ -505,7 +517,7 @@
     
     
     UILabel *updateLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
-    updateLab.text = @"Update time";
+    updateLab.text = NSLocalizedString(@"UpdateTime", @"");
     updateLab.font = FCStyle.footnote;
     updateLab.textColor = RGB(138, 138, 138);
     updateLab.top = actLabel.bottom + 2;
@@ -542,27 +554,21 @@
         [cell.contentView addSubview:updateLabel];
     }
     
-    
-    
-    
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,kScreenWidth - 10,1)];
-    UIColor *lineBgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-        if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-            return RGBA(216, 216, 216, 0.3);
-        }
-        else {
-            return RGBA(37, 37, 40, 1);
-        }
-    }];
-
-    [line setBackgroundColor:lineBgcolor];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
+    line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
 
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+#ifdef Mac
+    UserScript *userscript = _datas[indexPath.row];
+//    SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+//    cer.isSearch = false;
+//    cer.script = model;
     
+#else
     if (self.searchController.active) {
         UserScript *model = _results[indexPath.row];
         SYDetailViewController *cer = [[SYDetailViewController alloc] init];
@@ -576,6 +582,8 @@
         cer.isSearch = false;
         [self.navigationController pushViewController:cer animated:true];
     }
+#endif
+    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 144.0f;

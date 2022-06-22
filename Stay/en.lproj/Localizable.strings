@@ -59,6 +59,12 @@ Redo="Redo";
 Clear="Clear";
 Clipboard="From clipboard";
 
+Activated="Activated";
+Stop="Stopped";
+Version="Version";
+Status="Status";
+UpdateTime="Update time";
+
 
 
 

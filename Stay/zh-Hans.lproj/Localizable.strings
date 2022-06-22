@@ -55,3 +55,9 @@ Undo="撤销";
 Redo="重做";
 Clear="清空";
 Clipboard="从剪贴板粘贴";
+
+Activated="已激活";
+Stop="已停止";
+Version="版本";
+Status="状态";
+UpdateTime="更新时间";
