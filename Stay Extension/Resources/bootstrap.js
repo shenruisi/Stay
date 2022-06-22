@@ -164,8 +164,8 @@ let RMC_CONTEXT = {};
                 } else {
                     UUID_RMC_CONTEXT.forEach(item => {
                         if (item.id == rmc_context.id ||
-                            (item.accessKey && item.accessKey == rmc_context.accessKey) ||
-                            (item.caption && item.caption == rmc_context.caption)) {
+                            (item.accessKey!=undefined && item.accessKey && item.accessKey == rmc_context.accessKey) ||
+                            (item.caption !=undefined && item.caption && item.caption == rmc_context.caption)) {
                             isExist = true;
                             throw new Error("break");
                         }
@@ -428,8 +428,8 @@ let RMC_CONTEXT = {};
                 } else {
                     UUID_RMC_CONTEXT.forEach(item => {
                         if (item.id == menuItem.id || 
-                            (item.accessKey && item.accessKey == menuItem.accessKey) ||
-                            (item.caption && item.caption == menuItem.caption)) {
+                            (item.accessKey!=undefined && item.accessKey && item.accessKey == menuItem.accessKey) ||
+                            (item.caption !=undefined && item.caption && item.caption == menuItem.caption)) {
                             isExist = true;
                             throw new Error("break");
                         }
@@ -459,12 +459,12 @@ let RMC_CONTEXT = {};
                             throw new Error("break");
                         }
                     });
-                    if (place >= 0) {
-                        RMC_CONTEXT_STR.splice(place, 1);
-                        RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
-                    }
                 } catch (error) {
                     if (error.message != "break") throw error;
+                }
+                if (place >= 0) {
+                    RMC_CONTEXT_STR.splice(place, 1);
+                    RMC_CONTEXT[__uuid] = RMC_CONTEXT_STR;
                 }
             }
         }
