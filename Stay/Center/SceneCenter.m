@@ -14,6 +14,8 @@
 #import "FCSplitViewController.h"
 #import "MainTabBarController.h"
 #import "NavigateViewController.h"
+#import "SegmentViewController.h"
+#import "EmptyViewController.h"
 
 FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
 
@@ -47,7 +49,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
     return instance;
 }
 
-- (void)connectScene:(FCSceneIdentifier)sceneIdentifier
+- (UIWindow *)connectScene:(FCSceneIdentifier)sceneIdentifier
          windowScene:(UIWindowScene *)windowScene
         sceneSession:(UISceneSession *)sceneSession{
     [self.openWindows addObject:sceneIdentifier];
@@ -57,12 +59,13 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
                            sceneIdentifier:sceneIdentifier
                          activeScreenInfo:FCShared.plugin.carbon.activeScreenInfo
                                     opened:NO];
-        return;
+        return fcScene.window;
     }
     
     fcScene = [[FCScene alloc] init];
     NSDictionary *origin = nil;
     
+    UIWindow *window = nil;
     if ([sceneIdentifier isEqualToString:SCENE_Main]){
         fcScene.sizeable = YES;
         UITitlebar *titlebar = windowScene.titlebar;
@@ -72,7 +75,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
         
         
-        UIWindow *window = [[UIWindow alloc] initWithWindowScene:windowScene];
+        window = [[UIWindow alloc] initWithWindowScene:windowScene];
         window.backgroundColor = FCStyle.background;
         windowScene.sizeRestrictions.minimumSize = CGSizeMake(425, 480);
         NSDictionary *frame = [[FCConfig shared] getValueOfKey:GroupUserDefaultsKeyMacMainWindowFrame];
@@ -94,7 +97,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         UserScript *userscript = [[UserScript alloc] init];
         userscript.uuid = @"123";
         NavigateViewController *secondaryController = [[NavigateViewController alloc]
-                                                                      initWithRootViewController:[primaryController produceDetailViewControllerWithUserScript:userscript]];
+                                                                      initWithRootViewController:[[EmptyViewController alloc] init]];
 //        [splitViewController setViewController:secondaryController forColumn:UISplitViewControllerColumnSecondary];
         splitViewController.viewControllers = @[
             primaryController,secondaryController
@@ -131,6 +134,29 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         
        
     }
+    
+    return window;
 }
+
+- (UIWindowScene *)sceneForIdentifier:(FCSceneIdentifier)identifier{
+    return self.fcSceneDic[identifier].window.windowScene;
+}
+
+- (NSMutableDictionary *)fcSceneDic{
+    if (nil == _fcSceneDic){
+        _fcSceneDic = [[NSMutableDictionary alloc] init];
+    }
+    
+    return _fcSceneDic;
+}
+
+- (NSMutableSet<FCSceneIdentifier> *)openWindows{
+    if (nil == _openWindows){
+        _openWindows = [[NSMutableSet alloc] init];
+    }
+    
+    return _openWindows;
+}
+
 
 @end

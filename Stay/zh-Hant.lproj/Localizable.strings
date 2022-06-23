@@ -57,7 +57,7 @@ Clear="清空";
 Clipboard="從剪貼板粘貼";
 
 Activated="已啟動";
-Stop="已停止";
+Stopped="已停止";
 Version="版本";
 Status="狀態";
 UpdateTime="更新時間";

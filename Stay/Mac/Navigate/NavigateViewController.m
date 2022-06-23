@@ -10,9 +10,10 @@
 
 #ifdef Mac
 #import "FCToolbar.h"
+#import "QuickAccess.h"
 #endif
 #import "FCStyle.h"
-//#import "QuickAccess.h"
+//
 
 const NSInteger kPadTrackFixed = 100;
 
@@ -66,7 +67,7 @@ typedef enum  {
     [self gestureLoad];
     [self shadowBorder];
     self.navigationController.navigationBarHidden = YES;
-    [self pushViewController:self.rootViewController removeUUID:nil inViewDidLoad:YES isForward:NO];
+//    [self pushViewController:self.rootViewController removeUUID:nil inViewDidLoad:YES isForward:NO];
 }
 
 - (void)gestureLoad{
@@ -75,6 +76,15 @@ typedef enum  {
     panRecoginzier.maximumNumberOfTouches = 2;
     panRecoginzier.allowedScrollTypesMask = UIScrollTypeMaskContinuous;
     [self.view addGestureRecognizer:panRecoginzier];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    NSLog(@"NavigateViewController view %@",self.view);
+    NSLog(@"%@ %f",[QuickAccess splitController].view,[QuickAccess splitController].preferredPrimaryColumnWidth);
+    self.view.bounds = CGRectMake(0,0,[QuickAccess splitController].view.frame.size.width - ([QuickAccess splitController].preferredPrimaryColumnWidth), [QuickAccess splitController].view.frame.size.height);
+    [self pushViewController:self.rootViewController removeUUID:nil inViewDidLoad:YES isForward:NO];
+    
 }
 
 - (void)pushViewController:(UIViewController *)viewController{
@@ -95,7 +105,7 @@ typedef enum  {
                  isForward:(BOOL)isForward{
     if (self.topViewController == viewController) return;
     
-    viewController.view.frame = self.view.bounds;
+   viewController.view.frame = self.view.bounds;
 //    [viewController viewDidLoad];
     
     UIViewController *previousController = self.topViewController;

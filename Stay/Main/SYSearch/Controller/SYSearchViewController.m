@@ -16,6 +16,14 @@
 #import "SYExpandViewController.h"
 #import <objc/runtime.h>
 
+#ifdef Mac
+#import "ToolbarTrackView.h"
+#import "FCSplitViewController.h"
+#import "QuickAccess.h"
+#endif
+
+static CGFloat kMacToolbar = 50.0;
+
 @interface SimpleLoadingView : UIView
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicator;
@@ -99,15 +107,28 @@
 // 数据源数组
 @property (nonatomic, strong) NSMutableArray *datas;
 @property (nonatomic, strong) SimpleLoadingView *simpleLoadingView;
+@property (nonatomic, strong) UIView *line;
 @end
 
 @implementation SYSearchViewController
 
+- (void)loadView{
+#ifdef Mac
+    ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
+    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
+    self.view = view;
+#else
+    self.view = [[UIView alloc] init];
+#endif
+    
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self simpleLoadingView];
+//    [self simpleLoadingView];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),RGB(240, 240, 245));
+    self.view.backgroundColor = FCStyle.background;
 #ifdef Mac
     self.navigationController.navigationBarHidden = YES;
 #endif
@@ -117,6 +138,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+#ifdef Mac
+    if (self.datas.count > 0){
+        [self.line setFrame:CGRectMake(0,kMacToolbar-1,self.view.frame.size.width,1)];
+        [self.tableView setFrame:CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar)];
+        [self.tableView reloadData];
+    }
+#endif
+    
+}
 
 - (void)queryData{
     if (self.datas.count == 0){
@@ -148,7 +180,11 @@
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
         [[ScriptMananger shareManager] refreshData];
+#ifdef Mac
+        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+#else
         self.tableView.frame = self.view.bounds;
+#endif
         [self.tableView reloadData];
     });
 
@@ -217,8 +253,8 @@
 
     [cell.contentView addSubview:btn];
 
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 55, kScreenWidth, 145)];
-    scrollView.showsHorizontalScrollIndicator = FALSE;
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 55, self.view.frame.size.width, 145)];
+    scrollView.showsHorizontalScrollIndicator = NO;
 
     if(array != nil && array.count > 0) {
         CGFloat width = 15;
@@ -280,6 +316,7 @@
         _tableView.dataSource = self;
         _tableView.backgroundColor =  DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
         [self.view addSubview:_tableView];
+       
     }
     
     return _tableView;
@@ -295,14 +332,25 @@
 
 - (SimpleLoadingView *)simpleLoadingView{
     if (nil == _simpleLoadingView){
+
         _simpleLoadingView = [[SimpleLoadingView alloc] initWithFrame:CGRectMake(0,
                                                                                  (self.view.frame.size.height - 50) / 2,
                                                                                  self.view.frame.size.width, 50)];
+        
         [self.view addSubview:_simpleLoadingView];
     }
     
     return _simpleLoadingView;
 }
 
+- (UIView *)line{
+    if (nil == _line){
+        _line = [[UIView alloc] initWithFrame:CGRectMake(0, kMacToolbar-1, self.view.frame.size.width, 1)];
+        _line.backgroundColor = FCStyle.fcSeparator;
+        [self.view addSubview:_line];
+    }
+    
+    return _line;
+}
 
 @end

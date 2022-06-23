@@ -28,7 +28,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self createTabbar];
-    
+    NSLog(@"MainTabBarController view %@",self.view);
 }
 
 -(void)createTabbar

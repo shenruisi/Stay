@@ -8,6 +8,25 @@
 #import "FCAppKit.h"
 #import <Cocoa/Cocoa.h>
 
+@interface _CursorTextView : NSTextView
+@end
+
+@implementation _CursorTextView
+
+- (void)mouseMoved:(NSEvent *)event{
+    [[NSCursor arrowCursor] set];
+}
+
+- (void)cursorUpdate:(NSEvent *)event{
+    [[NSCursor arrowCursor] set];
+}
+
+- (void)resetCursorRects{
+    [self discardCursorRects];
+    [self addCursorRect:self.bounds cursor:[NSCursor arrowCursor]];
+}
+@end
+
 @interface FCAppKit()
 
 @property (nonatomic, strong) id<UINSApplicationDelegate> appDelegate;
@@ -107,6 +126,73 @@
         return window.titlebarAppearsTransparent;
     }
     return NO;
+}
+
+- (NSToolbarItem *)appIcon:(NSString *)identifier imageData:(NSData *)imageData{
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
+    [imageView setImage:[[NSImage alloc] initWithData:imageData]];
+    imageView.wantsLayer = YES;
+    imageView.layer.cornerRadius = 5;
+    imageView.layer.masksToBounds = YES;
+    item.view = imageView;
+    item.minSize = CGSizeMake(20, 20);
+    item.maxSize = CGSizeMake(20, 20);
+    return item;
+}
+
+- (NSToolbarItem *)appName:(NSString *)identifier{
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    _CursorTextView *textView = [[_CursorTextView alloc] initWithFrame:NSMakeRect(0, 0, 65, 18)];
+    [textView setString:@"Stay 2"];
+    textView.font = [NSFont systemFontOfSize:14];
+    textView.selectable = NO;
+    textView.backgroundColor = [NSColor clearColor];
+    textView.editable = NO;
+    item.view = textView;
+    return item;
+}
+
+- (NSToolbarItem *)labelItem:(NSString *)identifier text:(NSString *)text fontSize:(CGFloat)fontSize{
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    _CursorTextView *textView = [[_CursorTextView alloc] initWithFrame:NSMakeRect(0, 0, 130, 20)];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text];
+    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+    paraStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    paraStyle.maximumLineHeight = 20;
+    [attributedString addAttributes:@{
+        NSParagraphStyleAttributeName:paraStyle,
+        NSFontAttributeName:[NSFont boldSystemFontOfSize:fontSize],
+        NSForegroundColorAttributeName:[NSColor labelColor]
+    } range:NSMakeRange(0, text.length)];
+    [textView.textStorage setAttributedString:attributedString];
+    textView.selectable = NO;
+    textView.backgroundColor = [NSColor clearColor];
+    textView.editable = NO;
+    item.view = textView;
+    
+    return item;
+}
+
+- (NSToolbarItem *)slideTrackToolbarItem:(NSString *)identifier width:(CGFloat)width{
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.view = [[NSView alloc] initWithFrame:CGRectMake(0, 0, width, 10)];
+    item.view.wantsLayer = YES;
+//    item.view.layer.backgroundColor = [NSColor yellowColor].CGColor;
+    return item;
+}
+
+- (NSToolbarItem *)blockItem:(NSString *)identifier width:(CGFloat)width{
+    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+    item.view = [[NSView alloc] initWithFrame:CGRectMake(0, 0, width, 10)];
+    item.view.wantsLayer = YES;
+    return item;
+}
+
+
+- (void)slideTrackToolbarItemChanged:(NSToolbarItem *)item width:(CGFloat)width{
+    item.minSize = CGSizeMake(width, 10);
+    item.maxSize = CGSizeMake(width, 10);
 }
 
 @end

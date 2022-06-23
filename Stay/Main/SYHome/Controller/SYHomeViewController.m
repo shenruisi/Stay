@@ -30,6 +30,25 @@
 #import "SharedStorageManager.h"
 #import "FCStyle.h"
 
+#ifdef Mac
+#import "ToolbarTrackView.h"
+#import "FCSplitViewController.h"
+#endif
+
+static CGFloat kMacToolbar = 50.0;
+
+@interface _SYHomeViewTableViewCell : UITableViewCell
+@end
+
+@implementation _SYHomeViewTableViewCell
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated{
+    [super setSelected:selected animated:animated];
+    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+}
+
+@end
+
 @interface SYHomeViewController ()<
  UITableViewDelegate,
  UITableViewDataSource,
@@ -58,9 +77,23 @@
 
 @property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
 
+@property (nonatomic, strong) UIView *line;
 @end
 
 @implementation SYHomeViewController
+
+- (void)loadView{
+#ifdef Mac
+    ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
+    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
+    self.view = view;
+#else
+    self.view = [[UIView alloc] init];
+#endif
+    
+    
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -85,10 +118,6 @@
     [self.searchController.searchBar setTintColor:RGB(182, 32, 224)];
     
     self.navigationItem.hidesSearchBarWhenScrolling = false;
-    
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
 
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
@@ -96,12 +125,21 @@
     
     [self.view addSubview:self.loadingView];
     
+#ifdef Mac
+//    [self.view setFrame:CGRectMake(0, 0 + 60, self.view.frame.size.width, self.view.frame.size.height - 60)];
+    self.navigationController.navigationBarHidden = YES;
+    [self line];
+#endif
+    self.view.backgroundColor = FCStyle.background;
+    
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
 }
+
+
 
 - (void)tableDidSelected:(NSNotification *)notification {
     NSIndexPath *indexpath = (NSIndexPath *)notification.object;
@@ -209,7 +247,11 @@
 }
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
+#ifdef Mac
+        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+#else
         self.tableView.frame = self.view.bounds;
+#endif
         [self.tableView reloadData];
     });
 
@@ -395,7 +437,12 @@
 }
 
 - (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+#ifdef Mac
+    [self.line setFrame:CGRectMake(0,kMacToolbar-1,self.view.frame.size.width,1)];
+    [self.tableView setFrame:CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar)];
     [self.tableView reloadData];
+#endif
 }
 
 
@@ -411,10 +458,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
+    _SYHomeViewTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+        cell = [[_SYHomeViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+#ifndef Mac
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+#endif
+        
 //        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     }
     for (UIView *subView in cell.contentView.subviews) {
@@ -677,9 +727,15 @@
     [self reloadTableView];
     [self initScrpitContent];
     dispatch_async(dispatch_get_main_queue(), ^{
+#ifdef Mac
+        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+#else
         self.tableView.frame = self.view.bounds;
+#endif
         [self.tableView reloadData];
     });
+    
+    NSLog(@"SYHomeViewController view %@",self.view);
     
 }
 
@@ -727,6 +783,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        _tableView.allowsSelection = YES;
         _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
         [self.view addSubview:_tableView];
     }
@@ -812,11 +869,20 @@
     return timeString;
 }
 
+- (UIView *)line{
+    if (nil == _line){
+        _line = [[UIView alloc] initWithFrame:CGRectMake(0, kMacToolbar-1, self.view.frame.size.width, 1)];
+        _line.backgroundColor = FCStyle.fcSeparator;
+        [self.view addSubview:_line];
+    }
+    
+    return _line;
+}
+
 - (SYSelectTabViewController *)sYSelectTabViewController {
     if(_sYSelectTabViewController == nil) {
         _sYSelectTabViewController = [[SYSelectTabViewController alloc] init];
     }
     return _sYSelectTabViewController;
 }
-
 @end

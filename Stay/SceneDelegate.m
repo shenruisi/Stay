@@ -20,9 +20,10 @@
 
     UIWindowScene *windowScene = (UIWindowScene *)scene;
 #ifdef Mac
-    [[SceneCenter shared] connectScene:@"app.stay.scene.main"
+    UIWindow *window = [[SceneCenter shared] connectScene:@"app.stay.scene.main"
                            windowScene:windowScene
                           sceneSession:session];
+    self.window = window;
 #else
     UINavigationBar.appearance.prefersLargeTitles = YES;
     UIWindowScene *windowScene = (UIWindowScene *)scene;

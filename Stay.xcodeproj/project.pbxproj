@@ -18,6 +18,11 @@
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		584C05AE286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */; };
+		58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C312862E6DA00AA80D5 /* SegmentViewController.m */; };
+		58639C332862EE7B00AA80D5 /* macOSNative.bundle in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 588202C7285A12B400B2721A /* macOSNative.bundle */; platformFilter = maccatalyst; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C352863040700AA80D5 /* ToolbarTrackView.m */; };
+		58639C39286312B100AA80D5 /* QuickAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C38286312B100AA80D5 /* QuickAccess.m */; };
+		58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3C28631FB900AA80D5 /* EmptyViewController.m */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -136,7 +141,6 @@
 		588202A72859E73900B2721A /* scriptManager.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED47276C637200651DF9 /* scriptManager.sqlite */; };
 		588202A82859E73900B2721A /* convert2RegExp.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4CA27454E0600270873 /* convert2RegExp.js */; };
 		588202A92859E73900B2721A /* stop@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC852274CA4A5005367C6 /* stop@3x.png */; };
-		588202AB2859E73900B2721A /* Stay Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5876890C2719238000F834A4 /* Stay Extension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		588202B42859F99000B2721A /* FCSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202B32859F99000B2721A /* FCSplitViewController.m */; };
 		588202B82859F9FD00B2721A /* SceneCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202B72859F9FD00B2721A /* SceneCenter.m */; };
 		588202CB285A12C400B2721A /* FCAppKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202C1285A100300B2721A /* FCAppKit.m */; };
@@ -296,7 +300,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				588202AB2859E73900B2721A /* Stay Extension.appex in Embed App Extensions */,
+				58639C332862EE7B00AA80D5 /* macOSNative.bundle in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,6 +320,14 @@
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
 		584C05AC286179D000E07DDF /* ImageHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageHelper.m; sourceTree = "<group>"; };
 		5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
+		58639C302862E6DA00AA80D5 /* SegmentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SegmentViewController.h; sourceTree = "<group>"; };
+		58639C312862E6DA00AA80D5 /* SegmentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SegmentViewController.m; sourceTree = "<group>"; };
+		58639C342863040700AA80D5 /* ToolbarTrackView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToolbarTrackView.h; sourceTree = "<group>"; };
+		58639C352863040700AA80D5 /* ToolbarTrackView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToolbarTrackView.m; sourceTree = "<group>"; };
+		58639C37286312B100AA80D5 /* QuickAccess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuickAccess.h; sourceTree = "<group>"; };
+		58639C38286312B100AA80D5 /* QuickAccess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QuickAccess.m; sourceTree = "<group>"; };
+		58639C3B28631FB900AA80D5 /* EmptyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmptyViewController.h; sourceTree = "<group>"; };
+		58639C3C28631FB900AA80D5 /* EmptyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmptyViewController.m; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -584,6 +596,17 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		58639C3A28631F9200AA80D5 /* Navigate */ = {
+			isa = PBXGroup;
+			children = (
+				584C05A628607F4E00E07DDF /* NavigateViewController.h */,
+				584C05A728607F4E00E07DDF /* NavigateViewController.m */,
+				58639C3B28631FB900AA80D5 /* EmptyViewController.h */,
+				58639C3C28631FB900AA80D5 /* EmptyViewController.m */,
+			);
+			path = Navigate;
+			sourceTree = "<group>";
+		};
 		587688CB2719237E00F834A4 = {
 			isa = PBXGroup;
 			children = (
@@ -714,14 +737,19 @@
 		588202B12859F77500B2721A /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				584C05A628607F4E00E07DDF /* NavigateViewController.h */,
-				584C05A728607F4E00E07DDF /* NavigateViewController.m */,
+				58639C3A28631F9200AA80D5 /* Navigate */,
 				58AC12EE28607AB700875D6D /* FCToolbar.h */,
 				58AC12EF28607AB800875D6D /* FCToolbar.m */,
 				588202B22859F99000B2721A /* FCSplitViewController.h */,
 				588202B32859F99000B2721A /* FCSplitViewController.m */,
 				58AC12E62860752800875D6D /* Plugin.h */,
 				58AC12E72860752800875D6D /* Plugin.m */,
+				58639C302862E6DA00AA80D5 /* SegmentViewController.h */,
+				58639C312862E6DA00AA80D5 /* SegmentViewController.m */,
+				58639C342863040700AA80D5 /* ToolbarTrackView.h */,
+				58639C352863040700AA80D5 /* ToolbarTrackView.m */,
+				58639C37286312B100AA80D5 /* QuickAccess.h */,
+				58639C38286312B100AA80D5 /* QuickAccess.m */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -1682,6 +1710,7 @@
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
 				588202552859E73900B2721A /* ScriptDetailModel.m in Sources */,
+				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
@@ -1698,6 +1727,7 @@
 				588202612859E73900B2721A /* FCDisk.m in Sources */,
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
+				58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */,
 				588202642859E73900B2721A /* JSDetailEntity.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
@@ -1707,6 +1737,7 @@
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
+				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
 				588202B82859F9FD00B2721A /* SceneCenter.m in Sources */,
 				5882026C2859E73900B2721A /* SYHomeViewController.m in Sources */,
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
@@ -1722,6 +1753,7 @@
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
+				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				58AC12F028607AB800875D6D /* FCToolbar.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
@@ -1758,6 +1790,7 @@
 		};
 		588202CD285A12FA00B2721A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = maccatalyst;
 			target = 588202C6285A12B400B2721A /* macOSNative */;
 			targetProxy = 588202CC285A12FA00B2721A /* PBXContainerItemProxy */;
 		};

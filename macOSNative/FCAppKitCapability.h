@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class NSToolbarItem;
 @protocol UINSApplicationDelegate;
 @protocol FCAppKitCapability <NSObject>
 
@@ -19,6 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
    sceneIdentifier:(NSString *)sceneIdentifier
   activeScreenInfo:(NSDictionary *)activeScreenInfo
             opened:(BOOL)opened;
+
+- (NSToolbarItem *)appIcon:(NSString *)identifier imageData:(NSData *)imageData;
+- (NSToolbarItem *)appName:(NSString *)identifier;
+- (NSToolbarItem *)slideTrackToolbarItem:(NSString *)identifier width:(CGFloat)width;
+- (NSToolbarItem *)labelItem:(NSString *)identifier text:(NSString *)text fontSize:(CGFloat)fontSize;
+- (NSToolbarItem *)blockItem:(NSString *)identifier width:(CGFloat)width;
+- (void)slideTrackToolbarItemChanged:(NSToolbarItem *)item width:(CGFloat)width;
 @end
 
 NS_ASSUME_NONNULL_END

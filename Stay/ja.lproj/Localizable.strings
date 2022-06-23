@@ -60,7 +60,7 @@ Clear="Clear";
 Clipboard="From clipboard";
 
 Activated="アクティブ化";
-Stop="中止";
+Stopped="中止";
 Version="バージョン";
 Status="ステータス";
 UpdateTime="更新時間";

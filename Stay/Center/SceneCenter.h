@@ -16,10 +16,10 @@ extern FCSceneIdentifier const _Nonnull SCENE_Main;
 
 + (instancetype)shared;
 
-- (void)connectScene:(FCSceneIdentifier)sceneIdentifier
+- (UIWindow *)connectScene:(FCSceneIdentifier)sceneIdentifier
          windowScene:(UIWindowScene *)windowScene
         sceneSession:(UISceneSession *)sceneSession;
-
+- (UIWindowScene *)sceneForIdentifier:(FCSceneIdentifier)identifier;
 @end
 
 NS_ASSUME_NONNULL_END

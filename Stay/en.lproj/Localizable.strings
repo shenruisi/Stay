@@ -60,7 +60,7 @@ Clear="Clear";
 Clipboard="From clipboard";
 
 Activated="Activated";
-Stop="Stopped";
+Stopped="Stopped";
 Version="Version";
 Status="Status";
 UpdateTime="Update time";
