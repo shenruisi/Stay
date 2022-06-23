@@ -97,7 +97,6 @@
 		588202782859E73900B2721A /* ModalNavigationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1F1283B5B3D00BC2A92 /* ModalNavigationItem.m */; };
 		588202792859E73900B2721A /* UserScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4D12745FC0B00270873 /* UserScript.m */; };
 		5882027B2859E73900B2721A /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */; };
-		5882027C2859E73900B2721A /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
 		5882027E2859E73900B2721A /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83B275E028A005531EC /* index.html */; };
 		5882027F2859E73900B2721A /* delete@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC850274C9AC3005367C6 /* delete@3x.png */; };
 		588202802859E73900B2721A /* play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC854274CAB0F005367C6 /* play@3x.png */; };
@@ -250,6 +249,7 @@
 		84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD427F2851FD5D00B25A17 /* SYSelectTabViewController.m */; };
 		84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */; };
 		84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
+		B77AC65E261A7CF9A19D79B8 /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -309,7 +309,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
 		15C79AB227912BC600559EA5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		15F20BD0281BD09300330A56 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkUserscript.js; sourceTree = "<group>"; };
 		15F20BD2281BD24800330A56 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
@@ -402,6 +401,7 @@
 		58AC12EF28607AB800875D6D /* FCToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCToolbar.m; sourceTree = "<group>"; };
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
+		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
 		58F7F4B727438CB000270873 /* bootstrap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58F7F4BA2743A93E00270873 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -537,7 +537,7 @@
 		84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSelectBarModalViewController.m; sourceTree = "<group>"; };
 		84FD4284285B72E400B25A17 /* SYExpandViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYExpandViewController.h; sourceTree = "<group>"; };
 		84FD4285285B72E400B25A17 /* SYExpandViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYExpandViewController.m; sourceTree = "<group>"; };
-		B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.debug.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.debug.xcconfig"; sourceTree = "<group>"; };
+		AFC033266A9F46E1635E10FC /* Pods-Stay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.debug.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -547,6 +547,7 @@
 			files = (
 				58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */,
 				6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */,
+				B77AC65E261A7CF9A19D79B8 /* libPods-Stay.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +577,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5882027B2859E73900B2721A /* JavaScriptCore.framework in Frameworks */,
-				5882027C2859E73900B2721A /* libPods-Stay.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,8 +968,8 @@
 		61471BD8CEEC7081650F0787 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */,
-				061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */,
+				AFC033266A9F46E1635E10FC /* Pods-Stay.debug.xcconfig */,
+				58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1316,7 +1316,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 588202AC2859E73900B2721A /* Build configuration list for PBXNativeTarget "Stay-Mac" */;
 			buildPhases = (
-				588202482859E73900B2721A /* [CP] Check Pods Manifest.lock */,
 				588202492859E73900B2721A /* Sources */,
 				5882027A2859E73900B2721A /* Frameworks */,
 				5882027D2859E73900B2721A /* Resources */,
@@ -1561,28 +1560,6 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 		0A3ACB5B24D9B9A165231F4F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Stay-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		588202482859E73900B2721A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2015,7 +1992,7 @@
 		};
 		5876892E2719238000F834A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */;
+			baseConfigurationReference = AFC033266A9F46E1635E10FC /* Pods-Stay.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2061,7 +2038,7 @@
 		};
 		5876892F2719238000F834A4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */;
+			baseConfigurationReference = 58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2194,7 +2171,6 @@
 		};
 		588202AD2859E73900B2721A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8B67DF96D5260DD0072C091 /* Pods-Stay.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2245,7 +2221,6 @@
 		};
 		588202AE2859E73900B2721A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 061AFC211A05E3B5F4B9737A /* Pods-Stay.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
