@@ -1,26 +1,21 @@
 //
 //  NavigateViewController.h
-//  FastClip-iOS
+//  Stay-Mac
 //
-//  Created by ris on 2022/3/17.
+//  Created by ris on 2022/6/23.
 //
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @interface NavigateViewController : UIViewController
 
-- (instancetype)initWithRootViewController:(UIViewController *)rootViewController;
-- (void)pushViewController:(UIViewController *)viewController;
-- (void)pushViewController:(UIViewController *)viewController removeUUID:(nullable NSString *)tabUUID;
-- (void)removeViewControllerWithUUID:(NSString *)tabUUID;
-- (void)popViewController;
-// Call - pushViewController inside.
-- (void)forward;
-@property (nonatomic, readonly) UIViewController *topViewController;
-
+- (void)navigateViewDidLoad;
+- (void)navigateViewWillAppear:(BOOL)animated;
+- (void)navigateViewDidAppear:(BOOL)animated;
+- (void)navigateViewWillDisappear:(BOOL)animated;
+- (void)navigateViewDidDisappear:(BOOL)animated;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSToolbarItem *)appName:(NSString *)identifier;
 - (NSToolbarItem *)slideTrackToolbarItem:(NSString *)identifier width:(CGFloat)width;
 - (NSToolbarItem *)labelItem:(NSString *)identifier text:(NSString *)text fontSize:(CGFloat)fontSize;
+- (void)labelItemChanged:(NSToolbarItem *)item text:(NSString *)text fontSize:(CGFloat)fontSize;
 - (NSToolbarItem *)blockItem:(NSString *)identifier width:(CGFloat)width;
 - (void)slideTrackToolbarItemChanged:(NSToolbarItem *)item width:(CGFloat)width;
 @end

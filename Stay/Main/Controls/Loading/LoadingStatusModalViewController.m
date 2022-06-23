@@ -37,7 +37,7 @@
 - (UILabel *)mainLabel{
     if (nil == _mainLabel){
         _mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, self.view.frame.size.width, 17)];
-        _mainLabel.textAlignment = UITextAlignmentCenter;
+        _mainLabel.textAlignment = NSTextAlignmentCenter;
         _mainLabel.text = self.originMainText;
         _mainLabel.font = FCStyle.headlineBold;
         _mainLabel.textColor = FCStyle.fcBlack;
@@ -50,7 +50,7 @@
 - (UILabel *)subLabel{
     if (nil == _subLabel){
         _subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 55, self.view.frame.size.width, 16)];
-        _subLabel.textAlignment = UITextAlignmentCenter;
+        _subLabel.textAlignment = NSTextAlignmentCenter;
         _subLabel.text = self.originSubText;
         _subLabel.font = FCStyle.body;
         _subLabel.textColor = FCStyle.fcSecondaryBlack;

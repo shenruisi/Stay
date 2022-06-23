@@ -8,9 +8,13 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 
-NS_ASSUME_NONNULL_BEGIN
 
+#ifdef Mac
+#import "NavigateViewController.h"
+@interface SYEditViewController : NavigateViewController
+#else
 @interface SYEditViewController : UIViewController
+#endif
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
@@ -20,4 +24,3 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *downloadUrl;
 @end
 
-NS_ASSUME_NONNULL_END

@@ -13,7 +13,7 @@
 #import "FCConfig.h"
 #import "FCSplitViewController.h"
 #import "MainTabBarController.h"
-#import "NavigateViewController.h"
+#import "NavigateCollectionController.h"
 #import "SegmentViewController.h"
 #import "EmptyViewController.h"
 
@@ -96,7 +96,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         
         UserScript *userscript = [[UserScript alloc] init];
         userscript.uuid = @"123";
-        NavigateViewController *secondaryController = [[NavigateViewController alloc]
+        NavigateCollectionController *secondaryController = [[NavigateCollectionController alloc]
                                                                       initWithRootViewController:[[EmptyViewController alloc] init]];
 //        [splitViewController setViewController:secondaryController forColumn:UISplitViewControllerColumnSecondary];
         splitViewController.viewControllers = @[

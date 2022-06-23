@@ -7,12 +7,14 @@
 
 #import <UIKit/UIKit.h>
 #import "FCToolbar.h"
+#import "SYDetailViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FCSplitViewController : UISplitViewController
 
 @property (nonatomic, strong, nullable) FCToolbar *toolbar;
+- (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript;
 @end
 
 NS_ASSUME_NONNULL_END

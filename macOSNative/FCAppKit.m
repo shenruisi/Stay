@@ -155,7 +155,7 @@
 
 - (NSToolbarItem *)labelItem:(NSString *)identifier text:(NSString *)text fontSize:(CGFloat)fontSize{
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
-    _CursorTextView *textView = [[_CursorTextView alloc] initWithFrame:NSMakeRect(0, 0, 130, 20)];
+    _CursorTextView *textView = [[_CursorTextView alloc] initWithFrame:NSMakeRect(0, 0, 200, 20)];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text];
     NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
     paraStyle.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -172,6 +172,24 @@
     item.view = textView;
     
     return item;
+}
+
+- (void)labelItemChanged:(NSToolbarItem *)item text:(NSString *)text fontSize:(CGFloat)fontSize{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text];
+    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
+    paraStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    paraStyle.maximumLineHeight = 20;
+    _CursorTextView *textView = (_CursorTextView *)item.view;
+    [attributedString addAttributes:@{
+        NSParagraphStyleAttributeName:paraStyle,
+        NSFontAttributeName:[NSFont boldSystemFontOfSize:fontSize],
+        NSForegroundColorAttributeName:[NSColor labelColor]
+    } range:NSMakeRange(0, text.length)];
+    textView.selectable = NO;
+    textView.backgroundColor = [NSColor clearColor];
+    textView.editable = NO;
+//    textView.textColor = [NSColor labelColor];
+    [((NSTextView *)item.view).textStorage setAttributedString:attributedString];
 }
 
 - (NSToolbarItem *)slideTrackToolbarItem:(NSString *)identifier width:(CGFloat)width{

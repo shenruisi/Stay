@@ -13,7 +13,7 @@
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
 		582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */; };
 		582F9DE4276F32B900C88135 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE3276F32B900C88135 /* base64.min.js */; };
-		584C05A828607F4E00E07DDF /* NavigateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateViewController.m */; };
+		584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateCollectionController.m */; };
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		584C05AE286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
@@ -23,6 +23,7 @@
 		58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C352863040700AA80D5 /* ToolbarTrackView.m */; };
 		58639C39286312B100AA80D5 /* QuickAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C38286312B100AA80D5 /* QuickAccess.m */; };
 		58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3C28631FB900AA80D5 /* EmptyViewController.m */; };
+		58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3F2863FB1A00AA80D5 /* NavigateViewController.m */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -315,8 +316,8 @@
 		15F20BD3281BD24800330A56 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-meta-line.js"; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
 		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
-		584C05A628607F4E00E07DDF /* NavigateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateViewController.h; sourceTree = "<group>"; };
-		584C05A728607F4E00E07DDF /* NavigateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateViewController.m; sourceTree = "<group>"; };
+		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
+		584C05A728607F4E00E07DDF /* NavigateCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateCollectionController.m; sourceTree = "<group>"; };
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
 		584C05AC286179D000E07DDF /* ImageHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageHelper.m; sourceTree = "<group>"; };
 		5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
@@ -328,6 +329,8 @@
 		58639C38286312B100AA80D5 /* QuickAccess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QuickAccess.m; sourceTree = "<group>"; };
 		58639C3B28631FB900AA80D5 /* EmptyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmptyViewController.h; sourceTree = "<group>"; };
 		58639C3C28631FB900AA80D5 /* EmptyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmptyViewController.m; sourceTree = "<group>"; };
+		58639C3E2863FB1A00AA80D5 /* NavigateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigateViewController.h; sourceTree = "<group>"; };
+		58639C3F2863FB1A00AA80D5 /* NavigateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigateViewController.m; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -599,8 +602,10 @@
 		58639C3A28631F9200AA80D5 /* Navigate */ = {
 			isa = PBXGroup;
 			children = (
-				584C05A628607F4E00E07DDF /* NavigateViewController.h */,
-				584C05A728607F4E00E07DDF /* NavigateViewController.m */,
+				58639C3E2863FB1A00AA80D5 /* NavigateViewController.h */,
+				58639C3F2863FB1A00AA80D5 /* NavigateViewController.m */,
+				584C05A628607F4E00E07DDF /* NavigateCollectionController.h */,
+				584C05A728607F4E00E07DDF /* NavigateCollectionController.m */,
 				58639C3B28631FB900AA80D5 /* EmptyViewController.h */,
 				58639C3C28631FB900AA80D5 /* EmptyViewController.m */,
 			);
@@ -1738,6 +1743,7 @@
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
+				58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */,
 				588202B82859F9FD00B2721A /* SceneCenter.m in Sources */,
 				5882026C2859E73900B2721A /* SYHomeViewController.m in Sources */,
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
@@ -1745,7 +1751,7 @@
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
-				584C05A828607F4E00E07DDF /* NavigateViewController.m in Sources */,
+				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,

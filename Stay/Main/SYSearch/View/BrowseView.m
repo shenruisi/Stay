@@ -13,6 +13,10 @@
 #import "LoadingSlideController.h"
 #import "FCStyle.h"
 
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
+
 @interface BrowseView()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
@@ -73,12 +77,15 @@
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
-                
                 NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
+#ifdef Mac
+                
+#else
                 [self.navigationController pushViewController:cer animated:true];
+#endif
             }
             else{
                 [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];

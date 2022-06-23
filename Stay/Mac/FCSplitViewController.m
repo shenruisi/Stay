@@ -11,6 +11,7 @@
 #import "ImageHelper.h"
 #import "FCStyle.h"
 #import "FCConfig.h"
+#import "NavigateCollectionController.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 250;
 
@@ -19,6 +20,7 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
  UISplitViewControllerDelegate
 >
 
+@property (nonatomic, strong) NSMutableDictionary<NSString *,SYDetailViewController *> *detailViewControllerDic;
 @end
 
 @implementation FCSplitViewController
@@ -40,6 +42,10 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
     // Do any additional setup after loading the view.
     self.view.backgroundColor = FCStyle.fcSeparator;
     NSLog(@"FCSplitViewController view %@",self.view);
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(navigateViewDidShow:)
+                                                 name:NCCDidShowViewControllerNotification
+                                               object:nil];
 }
 
 - (void)loadView{
@@ -113,13 +119,9 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
         return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_TabName]){
-//        NSString *tabUUID = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyMacSelectedTabUUID];
-//        if (![FCShared.tabManager tabOfUUID:tabUUID]){
-//
-//        }
-//        return [FCShared.plugin.appKit labelItem:Toolbar_TabName
-//                                            text:[FCShared.tabManager tabNameWithUUID:tabUUID]
-//                                        fontSize:FCStyle.headlineBold.pointSize];
+        return [FCShared.plugin.appKit labelItem:Toolbar_TabName
+                                            text:@""
+                                        fontSize:FCStyle.headlineBold.pointSize];
         
         return nil;
     }
@@ -181,10 +183,16 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Collapse]){
         if (self.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
-            [self showColumn:UISplitViewControllerColumnPrimary];
+            [UIView animateWithDuration:0.5 animations:^{
+                self.preferredDisplayMode = UISplitViewControllerDisplayModeOneBesideSecondary;
+            }];
+            
         }
         else{
-            [self hideColumn:UISplitViewControllerColumnPrimary];
+            [UIView animateWithDuration:0.5 animations:^{
+                self.preferredDisplayMode = UISplitViewControllerDisplayModeSecondaryOnly;
+            }];
+            
         }
         
     }
@@ -216,6 +224,62 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_AppIcon]){
 //        [self showPref];
 //    }
+}
+
+- (NSToolbarItem *)_itemOfIdentifier:(NSToolbarItemIdentifier)identifier{
+    for (NSToolbarItem *item in self.toolbar.items){
+        if ([item.itemIdentifier isEqualToString:identifier]){
+            return item;
+        }
+    }
+    
+    return nil;
+}
+
+- (void)navigateViewDidShow:(NSNotification *)note{
+    NavigateViewController *viewController = note.object;
+    if ([viewController isKindOfClass:[SYDetailViewController class]]){
+        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
+        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
+                                            text:detailViewController.script.name
+                                        fontSize:FCStyle.headlineBold.pointSize];
+    }
+    else{
+    }
+}
+
+- (NSMutableDictionary<NSString *,SYDetailViewController *> *)detailViewControllerDic{
+    if (nil == _detailViewControllerDic){
+        _detailViewControllerDic = [[NSMutableDictionary alloc] init];
+    }
+    
+    return _detailViewControllerDic;
+}
+
+- (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript{
+    @synchronized (self.detailViewControllerDic) {
+        SYDetailViewController *ret = self.detailViewControllerDic[userScript.uuid];
+        if (nil == ret){
+            ret = [[SYDetailViewController alloc] init];
+            ret.script = userScript;
+            self.detailViewControllerDic[userScript.uuid] = ret;
+        }
+        return ret;
+    }
+}
+
+- (void)removeObserver{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:NCCDidShowViewControllerNotification
+                                                  object:nil];
+    
+    
+    
+}
+
+- (void)dealloc{
+    [self removeObserver];
+    
 }
 
 

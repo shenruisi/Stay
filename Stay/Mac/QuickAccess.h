@@ -7,13 +7,14 @@
 
 #import <Foundation/Foundation.h>
 #import "FCSplitViewController.h"
-
+#import "NavigateCollectionController.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QuickAccess : NSObject
 
 + (nullable FCSplitViewController *)splitController;
 + (nullable UITabBarController *)primaryController;
++ (nullable NavigateCollectionController *)secondaryController;
 @end
 
 NS_ASSUME_NONNULL_END

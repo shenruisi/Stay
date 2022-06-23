@@ -33,6 +33,7 @@
 #ifdef Mac
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
+#import "QuickAccess.h"
 #endif
 
 static CGFloat kMacToolbar = 50.0;
@@ -78,6 +79,8 @@ static CGFloat kMacToolbar = 50.0;
 @property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
 
 @property (nonatomic, strong) UIView *line;
+
+@property (nonatomic, copy) NSString *selectedUUID;
 @end
 
 @implementation SYHomeViewController
@@ -129,6 +132,10 @@ static CGFloat kMacToolbar = 50.0;
 //    [self.view setFrame:CGRectMake(0, 0 + 60, self.view.frame.size.width, self.view.frame.size.height - 60)];
     self.navigationController.navigationBarHidden = YES;
     [self line];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(navigateViewDidShow:)
+                                                 name:NCCDidShowViewControllerNotification
+                                               object:nil];
 #endif
     self.view.backgroundColor = FCStyle.background;
     
@@ -137,6 +144,8 @@ static CGFloat kMacToolbar = 50.0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
+    
+    
 }
 
 
@@ -614,10 +623,12 @@ static CGFloat kMacToolbar = 50.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #ifdef Mac
     UserScript *userscript = _datas[indexPath.row];
-//    SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-//    cer.isSearch = false;
-//    cer.script = model;
-    
+    SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+    cer.isSearch = false;
+    cer.script = userscript;
+    self.selectedUUID = userscript.uuid;
+    [[QuickAccess secondaryController] pushViewController:
+     [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];
 #else
     if (self.searchController.active) {
         UserScript *model = _results[indexPath.row];
@@ -885,4 +896,41 @@ static CGFloat kMacToolbar = 50.0;
     }
     return _sYSelectTabViewController;
 }
+
+- (void)navigateViewDidShow:(NSNotification *)note{
+    NavigateViewController *viewController = note.object;
+    if ([viewController isKindOfClass:[SYDetailViewController class]]){
+        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
+        self.selectedUUID = detailViewController.script.uuid;
+        [self.tableView selectRowAtIndexPath:[self indexPathOfUUID:detailViewController.script.uuid]
+                                    animated:YES
+                              scrollPosition:UITableViewScrollPositionMiddle];
+    }
+    else{
+        if (self.selectedUUID.length > 0){
+            [self.tableView deselectRowAtIndexPath:[self indexPathOfUUID:self.selectedUUID] animated:NO];
+            self.selectedUUID = nil;
+        }   
+    }
+}
+
+- (NSIndexPath *)indexPathOfUUID:(NSString *)uuid{
+    @synchronized (self.datas) {
+        for (NSInteger i = 0; i < self.datas.count; i++){
+            UserScript *scrpit = self.datas[i];
+            if ([scrpit.uuid isEqualToString:uuid]){
+                return [NSIndexPath indexPathForRow:i inSection:0];
+            }
+        }
+    }
+    
+    return nil;
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:NCCDidShowViewControllerNotification
+                                                  object:nil];
+}
+
 @end

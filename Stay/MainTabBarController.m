@@ -14,7 +14,7 @@
 
 @interface MainTabBarController ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *,SYDetailViewController *> *detailViewControllerDic;
+
 @end
 
 @implementation MainTabBarController
@@ -78,34 +78,6 @@
     [self addChildViewController:navC];
 }
 
-- (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript{
-    @synchronized (self.detailViewControllerDic) {
-        SYDetailViewController *ret = self.detailViewControllerDic[userScript.uuid];
-        if (nil == ret){
-            ret = [[SYDetailViewController alloc] init];
-            ret.script = userScript;
-            self.detailViewControllerDic[userScript.uuid] = ret;
-        }
-        return ret;
-    }
-}
 
-- (NSMutableDictionary<NSString *,SYDetailViewController *> *)detailViewControllerDic{
-    if (nil == _detailViewControllerDic){
-        _detailViewControllerDic = [[NSMutableDictionary alloc] init];
-    }
-    
-    return _detailViewControllerDic;
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

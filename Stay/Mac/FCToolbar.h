@@ -30,6 +30,7 @@ static const NSToolbarItemIdentifier Toolbar_Done = @"toolbar.done";
 
 @interface FCToolbar : NSToolbar
 
+@property (nonatomic, assign) CGFloat height;
 @end
 
 

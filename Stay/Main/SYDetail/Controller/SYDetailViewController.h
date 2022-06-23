@@ -7,11 +7,16 @@
 
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
-NS_ASSUME_NONNULL_BEGIN
 
+#ifdef Mac
+#import "NavigateViewController.h"
+@interface SYDetailViewController : NavigateViewController
+#else
 @interface SYDetailViewController : UIViewController
+#endif
+
 @property (nonatomic, strong) UserScript *script;
 @property (nonatomic, assign) BOOL isSearch;
 @end
 
-NS_ASSUME_NONNULL_END
+

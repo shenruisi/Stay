@@ -14,6 +14,10 @@
 #import "SharedStorageManager.h"
 #import "SYSelectTabViewController.h"
 
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
+
 @interface SYDetailViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
@@ -46,6 +50,10 @@
     [self createDetailView];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
+    
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
 
     // Do any additional setup after loading the view.
 }
@@ -77,7 +85,11 @@
             }
         }];
     
+#ifdef Mac
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,[QuickAccess splitController].toolbar.height,self.view.width ,self.view.height)];
+#else
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0,0,self.view.width ,self.view.height)];
+#endif
     
     [self.view addSubview:scrollView];
     

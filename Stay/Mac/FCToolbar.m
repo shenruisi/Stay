@@ -20,6 +20,8 @@
     return self;
 }
 
-
+- (CGFloat)height{
+    return 50.0;
+}
 
 @end

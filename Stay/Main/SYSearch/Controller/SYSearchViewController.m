@@ -22,7 +22,7 @@
 #import "QuickAccess.h"
 #endif
 
-static CGFloat kMacToolbar = 50.0;
+CGFloat kMacToolbar = 50.0;
 
 @interface SimpleLoadingView : UIView
 
