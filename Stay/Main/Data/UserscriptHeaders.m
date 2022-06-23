@@ -28,6 +28,7 @@
 }
 
 - (NSData *)archiveData{
+    NSLog(@"self.path %@",self.path);
     return [NSJSONSerialization dataWithJSONObject:self.content options:0 error:nil];
 }
 

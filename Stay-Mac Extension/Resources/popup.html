@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>跳转到</title>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <link rel="stylesheet" href="./popup.css">
+    <script type="text/javascript" src="./convert2RegExp.js"></script>
+    <script type="text/javascript" src="./MatchPattern.js"></script>
+    <script type="text/javascript" src="./message.js"></script>
+    <script type="module" src="./popup.js"></script>
+</head>
+<body>
+    <div class="header-box">
+        <div class="main-icon" id="mainIcon" ><img src="./images/page-icon.png"></div>
+        <div class="header-tab">
+            <div class="tab match-tab active-tab" tab=1 data-i18n="matched_scripts_tab">已匹配脚本</div>
+            <div class="tab console-tab" tab=2 data-i18n="console_tab">控制台</div>
+            <div id="logNotify" class="notify"></div>
+        </div>
+    </div>
+    <div class="toast-warpper" id="toastWarpper"></div>
+    <div class="register-menu-popup" style="display: none;" id="registerMenuPopup">
+        <div class="register-menu-warpper" id="registerMenuWarpper">
+            <div class="register-menu">
+                <div class="menu-close">
+                    <div class="close" data-i18n="menu_close">关闭</div>
+                </div>
+                <div class="menu-item-box" >
+                    <div class="menu-content" id="registerMenuCon">
+                        <div class="menu-item"></div>
+                    </div>
+                    <div class="menu-content none-menu" id="noneMenu" data-i18n="null_register_menu">
+                        不应用于该网站
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+    <div class="content-container">
+        <div class="content-box" id="scriptSateList">
+        
+        
+        </div>
+        
+        <div class="content-box" id="scriptConsole" style="display:none">
+            <div class="console-item">
+                <div class="console-header">
+                    <div class="console-time">2021-12-17 10:38:22</div>
+                    <div class="console-name">Zhihu-content.js</div>
+                </div>
+                <div class="console-con">zxnt-> NOT GDPR ->start ads zxnt-> NOT GDPR ->start ads zxnt-> NOT GDPR ->start ads
+                    zxnt-> NOT GDPR ->start ads idfs 方见附件fg gfd</div>
+            </div>
+        </div>
+        <div id="dataNull" class="content-none" style="display:none;"></div>
+    </div>
+    <div class="toast-container" id="toastContainer">
+        <div class="title"></div>
+        <div class="content" data-i18n="run_manually"></div>
+    </div>
+</body>
+</html>

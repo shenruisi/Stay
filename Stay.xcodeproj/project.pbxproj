@@ -24,6 +24,35 @@
 		58639C39286312B100AA80D5 /* QuickAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C38286312B100AA80D5 /* QuickAccess.m */; };
 		58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3C28631FB900AA80D5 /* EmptyViewController.m */; };
 		58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3F2863FB1A00AA80D5 /* NavigateViewController.m */; };
+		58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639CDD2864477D00AA80D5 /* SafariWebExtensionHandler.m */; };
+		58639CE12864477D00AA80D5 /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = 58639CE02864477D00AA80D5 /* _locales */; };
+		58639CE32864477D00AA80D5 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 58639CE22864477D00AA80D5 /* images */; };
+		58639CE52864477D00AA80D5 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 58639CE42864477D00AA80D5 /* manifest.json */; };
+		58639CE72864477D00AA80D5 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CE62864477D00AA80D5 /* background.js */; };
+		58639CEB2864477D00AA80D5 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 58639CEA2864477D00AA80D5 /* popup.html */; };
+		58639CED2864477D00AA80D5 /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = 58639CEC2864477D00AA80D5 /* popup.css */; };
+		58639CEF2864477D00AA80D5 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CEE2864477D00AA80D5 /* popup.js */; };
+		58639CF7286447B200AA80D5 /* Stay-Mac Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */; platformFilter = maccatalyst; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		58639CF9286447F900AA80D5 /* convert2RegExp.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CF8286447F900AA80D5 /* convert2RegExp.js */; };
+		58639D00286449D700AA80D5 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFB286449D700AA80D5 /* jquery.cookie.min.js */; };
+		58639D01286449D700AA80D5 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFC286449D700AA80D5 /* gm-apis-gen.js */; };
+		58639D02286449D700AA80D5 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFD286449D700AA80D5 /* base64.min.js */; };
+		58639D03286449D700AA80D5 /* html2canvas.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFE286449D700AA80D5 /* html2canvas.min.js */; };
+		58639D04286449D700AA80D5 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFF286449D700AA80D5 /* jquery-3.5.1.min.js */; };
+		58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0528644B7E00AA80D5 /* convert2RegExp.js */; };
+		58639D0D28644B7E00AA80D5 /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0628644B7E00AA80D5 /* message.js */; };
+		58639D0E28644B7E00AA80D5 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0728644B7E00AA80D5 /* parse-meta-line.js */; };
+		58639D0F28644B7E00AA80D5 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0828644B7E00AA80D5 /* parse-user-script.js */; };
+		58639D1028644B7E00AA80D5 /* checkUserscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0928644B7E00AA80D5 /* checkUserscript.js */; };
+		58639D1128644B7E00AA80D5 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0A28644B7E00AA80D5 /* bootstrap.js */; };
+		58639D1228644B7E00AA80D5 /* MatchPattern.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0B28644B7E00AA80D5 /* MatchPattern.js */; };
+		58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639D1328644BEB00AA80D5 /* MatchPattern.m */; };
+		58639D1828644BEB00AA80D5 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639D1628644BEB00AA80D5 /* Stroge.m */; };
+		58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B831E2845FBFC00AB2D73 /* SharedStorageManager.m */; };
+		58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B8323284603FF00AB2D73 /* UserscriptHeaders.m */; };
+		58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B83272846147000AB2D73 /* UserscriptInfo.m */; };
+		58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
+		58639D1D28644D8800AA80D5 /* FCDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B831B2845F7BF00AB2D73 /* FCDisk.m */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -158,6 +187,7 @@
 		588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832F284759B900AB2D73 /* html2canvas.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 588B832E284759B900AB2D73 /* html2canvas.min.js */; };
+		589741C928645889008FB897 /* stay-taskloop.js in Resources */ = {isa = PBXBuildFile; fileRef = 589741C828645889008FB897 /* stay-taskloop.js */; };
 		58AC12E42860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
@@ -178,7 +208,6 @@
 		58F7F4D22745FC0C00270873 /* UserScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4D12745FC0B00270873 /* UserScript.m */; };
 		58F7F4D627461F9A00270873 /* stay-taskloop.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4D527461F9A00270873 /* stay-taskloop.js */; };
 		58F7F4DD274648FA00270873 /* MatchPattern.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4DC274648FA00270873 /* MatchPattern.js */; };
-		58F7F4DF27464E5100270873 /* convert2RegExp.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4DE27464E5100270873 /* convert2RegExp.js */; };
 		58F7F4E22746589D00270873 /* stay-taskloop.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4E12746589C00270873 /* stay-taskloop.js */; };
 		58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4E5274754B900270873 /* gm-apis-gen.js */; };
 		58F7F4E9274776AB00270873 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F7F4E8274776AB00270873 /* Stroge.m */; };
@@ -254,6 +283,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 58639CD92864477D00AA80D5;
+			remoteInfo = "Stay-Mac Extension";
+		};
 		587688F72719238000F834A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
@@ -302,6 +338,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				58639CF7286447B200AA80D5 /* Stay-Mac Extension.appex in Embed App Extensions */,
 				58639C332862EE7B00AA80D5 /* macOSNative.bundle in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -332,6 +369,35 @@
 		58639C3C28631FB900AA80D5 /* EmptyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmptyViewController.m; sourceTree = "<group>"; };
 		58639C3E2863FB1A00AA80D5 /* NavigateViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigateViewController.h; sourceTree = "<group>"; };
 		58639C3F2863FB1A00AA80D5 /* NavigateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigateViewController.m; sourceTree = "<group>"; };
+		58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay-Mac Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58639CDC2864477D00AA80D5 /* SafariWebExtensionHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafariWebExtensionHandler.h; sourceTree = "<group>"; };
+		58639CDD2864477D00AA80D5 /* SafariWebExtensionHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafariWebExtensionHandler.m; sourceTree = "<group>"; };
+		58639CE02864477D00AA80D5 /* _locales */ = {isa = PBXFileReference; lastKnownFileType = folder; path = _locales; sourceTree = "<group>"; };
+		58639CE22864477D00AA80D5 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		58639CE42864477D00AA80D5 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		58639CE62864477D00AA80D5 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
+		58639CEA2864477D00AA80D5 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
+		58639CEC2864477D00AA80D5 /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = popup.css; sourceTree = "<group>"; };
+		58639CEE2864477D00AA80D5 /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = popup.js; sourceTree = "<group>"; };
+		58639CF02864477D00AA80D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58639CF12864477D00AA80D5 /* Stay_Mac_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stay_Mac_Extension.entitlements; sourceTree = "<group>"; };
+		58639CF8286447F900AA80D5 /* convert2RegExp.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = convert2RegExp.js; sourceTree = "<group>"; };
+		58639CFB286449D700AA80D5 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = jquery.cookie.min.js; path = "Stay Extension/Resources/vendor/jquery.cookie.min.js"; sourceTree = SOURCE_ROOT; };
+		58639CFC286449D700AA80D5 /* gm-apis-gen.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "gm-apis-gen.js"; path = "Stay Extension/Resources/vendor/gm-apis-gen.js"; sourceTree = SOURCE_ROOT; };
+		58639CFD286449D700AA80D5 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = base64.min.js; path = "Stay Extension/Resources/vendor/base64.min.js"; sourceTree = SOURCE_ROOT; };
+		58639CFE286449D700AA80D5 /* html2canvas.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = html2canvas.min.js; path = "Stay Extension/Resources/vendor/html2canvas.min.js"; sourceTree = SOURCE_ROOT; };
+		58639CFF286449D700AA80D5 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "jquery-3.5.1.min.js"; path = "Stay Extension/Resources/vendor/jquery-3.5.1.min.js"; sourceTree = SOURCE_ROOT; };
+		58639D0528644B7E00AA80D5 /* convert2RegExp.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = convert2RegExp.js; path = "Stay Extension/Resources/convert2RegExp.js"; sourceTree = SOURCE_ROOT; };
+		58639D0628644B7E00AA80D5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = message.js; path = "Stay Extension/Resources/message.js"; sourceTree = SOURCE_ROOT; };
+		58639D0728644B7E00AA80D5 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "parse-meta-line.js"; path = "Stay Extension/Resources/parse-meta-line.js"; sourceTree = SOURCE_ROOT; };
+		58639D0828644B7E00AA80D5 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "parse-user-script.js"; path = "Stay Extension/Resources/parse-user-script.js"; sourceTree = SOURCE_ROOT; };
+		58639D0928644B7E00AA80D5 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = checkUserscript.js; path = "Stay Extension/Resources/checkUserscript.js"; sourceTree = SOURCE_ROOT; };
+		58639D0A28644B7E00AA80D5 /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = bootstrap.js; path = "Stay Extension/Resources/bootstrap.js"; sourceTree = SOURCE_ROOT; };
+		58639D0B28644B7E00AA80D5 /* MatchPattern.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = MatchPattern.js; path = "Stay Extension/Resources/MatchPattern.js"; sourceTree = SOURCE_ROOT; };
+		58639D1328644BEB00AA80D5 /* MatchPattern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MatchPattern.m; path = "Stay Extension/MatchPattern.m"; sourceTree = SOURCE_ROOT; };
+		58639D1428644BEB00AA80D5 /* MatchPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MatchPattern.h; path = "Stay Extension/MatchPattern.h"; sourceTree = SOURCE_ROOT; };
+		58639D1528644BEB00AA80D5 /* Stroge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Stroge.h; path = "Stay Extension/Stroge.h"; sourceTree = SOURCE_ROOT; };
+		58639D1628644BEB00AA80D5 /* Stroge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Stroge.m; path = "Stay Extension/Stroge.m"; sourceTree = SOURCE_ROOT; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -391,6 +457,7 @@
 		588B832A284620F700AB2D73 /* ActivateChanged.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivateChanged.h; sourceTree = "<group>"; };
 		588B832B284620F700AB2D73 /* ActivateChanged.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivateChanged.m; sourceTree = "<group>"; };
 		588B832E284759B900AB2D73 /* html2canvas.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = html2canvas.min.js; sourceTree = "<group>"; };
+		589741C828645889008FB897 /* stay-taskloop.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "stay-taskloop.js"; path = "Stay/stay/vendor/stay-taskloop.js"; sourceTree = SOURCE_ROOT; };
 		58AC12E22860750800875D6D /* FCShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCShared.h; sourceTree = "<group>"; };
 		58AC12E32860750800875D6D /* FCShared.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCShared.m; sourceTree = "<group>"; };
 		58AC12E62860752800875D6D /* Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
@@ -421,7 +488,6 @@
 		58F7F4DA2746339800270873 /* Stay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stay.entitlements; sourceTree = "<group>"; };
 		58F7F4DB2746342400270873 /* Stay Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Extension.entitlements"; sourceTree = "<group>"; };
 		58F7F4DC274648FA00270873 /* MatchPattern.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = MatchPattern.js; sourceTree = "<group>"; };
-		58F7F4DE27464E5100270873 /* convert2RegExp.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = convert2RegExp.js; path = Stay/tampermonkey/lib/convert2RegExp.js; sourceTree = SOURCE_ROOT; };
 		58F7F4E12746589C00270873 /* stay-taskloop.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "stay-taskloop.js"; path = "Stay/stay/vendor/stay-taskloop.js"; sourceTree = SOURCE_ROOT; };
 		58F7F4E5274754B900270873 /* gm-apis-gen.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "gm-apis-gen.js"; sourceTree = "<group>"; };
 		58F7F4E7274776AB00270873 /* Stroge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stroge.h; sourceTree = "<group>"; };
@@ -545,6 +611,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		58639CD72864477D00AA80D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		587688D12719237E00F834A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -617,6 +690,57 @@
 			path = Navigate;
 			sourceTree = "<group>";
 		};
+		58639CDB2864477D00AA80D5 /* Stay-Mac Extension */ = {
+			isa = PBXGroup;
+			children = (
+				58639D1428644BEB00AA80D5 /* MatchPattern.h */,
+				58639D1328644BEB00AA80D5 /* MatchPattern.m */,
+				58639D1528644BEB00AA80D5 /* Stroge.h */,
+				58639D1628644BEB00AA80D5 /* Stroge.m */,
+				58639CDC2864477D00AA80D5 /* SafariWebExtensionHandler.h */,
+				58639CDD2864477D00AA80D5 /* SafariWebExtensionHandler.m */,
+				58639CF02864477D00AA80D5 /* Info.plist */,
+				58639CF12864477D00AA80D5 /* Stay_Mac_Extension.entitlements */,
+				58639CDF2864477D00AA80D5 /* Resources */,
+			);
+			path = "Stay-Mac Extension";
+			sourceTree = "<group>";
+		};
+		58639CDF2864477D00AA80D5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				58639D0A28644B7E00AA80D5 /* bootstrap.js */,
+				58639D0928644B7E00AA80D5 /* checkUserscript.js */,
+				58639D0528644B7E00AA80D5 /* convert2RegExp.js */,
+				58639D0B28644B7E00AA80D5 /* MatchPattern.js */,
+				58639D0628644B7E00AA80D5 /* message.js */,
+				58639D0728644B7E00AA80D5 /* parse-meta-line.js */,
+				58639D0828644B7E00AA80D5 /* parse-user-script.js */,
+				58639CFA286449C800AA80D5 /* vendor */,
+				58639CE02864477D00AA80D5 /* _locales */,
+				58639CE22864477D00AA80D5 /* images */,
+				58639CE42864477D00AA80D5 /* manifest.json */,
+				58639CE62864477D00AA80D5 /* background.js */,
+				58639CEA2864477D00AA80D5 /* popup.html */,
+				58639CEC2864477D00AA80D5 /* popup.css */,
+				58639CEE2864477D00AA80D5 /* popup.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		58639CFA286449C800AA80D5 /* vendor */ = {
+			isa = PBXGroup;
+			children = (
+				589741C828645889008FB897 /* stay-taskloop.js */,
+				58639CFD286449D700AA80D5 /* base64.min.js */,
+				58639CFC286449D700AA80D5 /* gm-apis-gen.js */,
+				58639CFE286449D700AA80D5 /* html2canvas.min.js */,
+				58639CFF286449D700AA80D5 /* jquery-3.5.1.min.js */,
+				58639CFB286449D700AA80D5 /* jquery.cookie.min.js */,
+			);
+			path = vendor;
+			sourceTree = "<group>";
+		};
 		587688CB2719237E00F834A4 = {
 			isa = PBXGroup;
 			children = (
@@ -625,6 +749,7 @@
 				587688F92719238000F834A4 /* StayTests */,
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
+				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -641,6 +766,7 @@
 				5876890C2719238000F834A4 /* Stay Extension.appex */,
 				588202AF2859E73900B2721A /* Stay-Mac.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
+				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -723,6 +849,7 @@
 		587689142719238000F834A4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				58639CF8286447F900AA80D5 /* convert2RegExp.js */,
 				15F20BD3281BD24800330A56 /* parse-meta-line.js */,
 				15F20BD2281BD24800330A56 /* parse-user-script.js */,
 				15F20BD0281BD09300330A56 /* checkUserscript.js */,
@@ -737,7 +864,6 @@
 				5876891F2719238000F834A4 /* popup.html */,
 				587689212719238000F834A4 /* popup.css */,
 				587689232719238000F834A4 /* popup.js */,
-				58F7F4DE27464E5100270873 /* convert2RegExp.js */,
 				58F7F4DC274648FA00270873 /* MatchPattern.js */,
 				58F7F4B727438CB000270873 /* bootstrap.js */,
 			);
@@ -1247,6 +1373,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */;
+			buildPhases = (
+				58639CD62864477D00AA80D5 /* Sources */,
+				58639CD72864477D00AA80D5 /* Frameworks */,
+				58639CD82864477D00AA80D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay-Mac Extension";
+			productName = "Stay-Mac Extension";
+			productReference = 58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		587688D32719237E00F834A4 /* Stay */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5876892D2719238000F834A4 /* Build configuration list for PBXNativeTarget "Stay" */;
@@ -1333,6 +1476,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				58639CF6286447A600AA80D5 /* PBXTargetDependency */,
 				588202CD285A12FA00B2721A /* PBXTargetDependency */,
 			);
 			name = "Stay-Mac";
@@ -1366,6 +1510,9 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
+					58639CD92864477D00AA80D5 = {
+						CreatedOnToolsVersion = 13.3.1;
+					};
 					587688D32719237E00F834A4 = {
 						CreatedOnToolsVersion = 13.0;
 						LastSwiftMigration = 1320;
@@ -1408,11 +1555,39 @@
 				5876890B2719238000F834A4 /* Stay Extension */,
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
+				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		58639CD82864477D00AA80D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58639D0D28644B7E00AA80D5 /* message.js in Resources */,
+				58639D0F28644B7E00AA80D5 /* parse-user-script.js in Resources */,
+				58639D0E28644B7E00AA80D5 /* parse-meta-line.js in Resources */,
+				58639D01286449D700AA80D5 /* gm-apis-gen.js in Resources */,
+				58639CE72864477D00AA80D5 /* background.js in Resources */,
+				58639D1028644B7E00AA80D5 /* checkUserscript.js in Resources */,
+				58639D03286449D700AA80D5 /* html2canvas.min.js in Resources */,
+				58639CED2864477D00AA80D5 /* popup.css in Resources */,
+				58639D02286449D700AA80D5 /* base64.min.js in Resources */,
+				58639D1228644B7E00AA80D5 /* MatchPattern.js in Resources */,
+				58639D04286449D700AA80D5 /* jquery-3.5.1.min.js in Resources */,
+				58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */,
+				58639CEB2864477D00AA80D5 /* popup.html in Resources */,
+				58639D1128644B7E00AA80D5 /* bootstrap.js in Resources */,
+				589741C928645889008FB897 /* stay-taskloop.js in Resources */,
+				58639CE32864477D00AA80D5 /* images in Resources */,
+				58639CE52864477D00AA80D5 /* manifest.json in Resources */,
+				58639CE12864477D00AA80D5 /* _locales in Resources */,
+				58639D00286449D700AA80D5 /* jquery.cookie.min.js in Resources */,
+				58639CEF2864477D00AA80D5 /* popup.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		587688D22719237E00F834A4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1488,6 +1663,7 @@
 				58F7F4E22746589D00270873 /* stay-taskloop.js in Resources */,
 				5881343027294C0E0055E1CE /* iframe.html in Resources */,
 				5876891C2719238000F834A4 /* background.js in Resources */,
+				58639CF9286447F900AA80D5 /* convert2RegExp.js in Resources */,
 				587689222719238000F834A4 /* popup.css in Resources */,
 				15C79AB327912BC600559EA5 /* message.js in Resources */,
 				587689202719238000F834A4 /* popup.html in Resources */,
@@ -1502,7 +1678,6 @@
 				582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */,
 				587689162719238000F834A4 /* _locales in Resources */,
 				582F9DE4276F32B900C88135 /* base64.min.js in Resources */,
-				58F7F4DF27464E5100270873 /* convert2RegExp.js in Resources */,
 				587689242719238000F834A4 /* popup.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1615,6 +1790,21 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		58639CD62864477D00AA80D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */,
+				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
+				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
+				58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */,
+				58639D1828644BEB00AA80D5 /* Stroge.m in Sources */,
+				58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */,
+				58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */,
+				58639D1D28644D8800AA80D5 /* FCDisk.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		587688D02719237E00F834A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1787,6 +1977,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = maccatalyst;
+			target = 58639CD92864477D00AA80D5 /* Stay-Mac Extension */;
+			targetProxy = 58639CF5286447A600AA80D5 /* PBXContainerItemProxy */;
+		};
 		587688F82719238000F834A4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 587688D32719237E00F834A4 /* Stay */;
@@ -1835,6 +2031,76 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		58639CF32864477D00AA80D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 44;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay-Mac Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay-Mac Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 2.1.1;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Mac-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		58639CF42864477D00AA80D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 44;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay-Mac Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay-Mac Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 2.1.1;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Mac-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
 		587689272719238000F834A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2348,6 +2614,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58639CF32864477D00AA80D5 /* Debug */,
+				58639CF42864477D00AA80D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		587688CF2719237E00F834A4 /* Build configuration list for PBXProject "Stay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

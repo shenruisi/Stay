@@ -178,8 +178,9 @@
 }
 
 - (NSFileHandle *)readFH{
+    NSError *error = nil;
     if (nil == _readFH && _url != nil){
-        _readFH = [NSFileHandle fileHandleForReadingFromURL:_url error:nil];
+        _readFH = [NSFileHandle fileHandleForReadingFromURL:_url error:&error];
     }
 
     return _readFH;
