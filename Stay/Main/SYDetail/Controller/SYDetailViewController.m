@@ -75,6 +75,10 @@
     [self createDetailView];
 }
 
+- (void)relayout{
+    
+}
+
 - (void)createDetailView{
     UIColor *bgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {

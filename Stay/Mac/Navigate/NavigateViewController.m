@@ -7,6 +7,7 @@
 
 #import "NavigateViewController.h"
 #import "FCStyle.h"
+#import "QuickAccess.h"
 
 static CGFloat kMacToolbar = 50.0;
 
@@ -19,6 +20,7 @@ static CGFloat kMacToolbar = 50.0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+   
 }
 
 - (void)navigateViewDidLoad{
@@ -31,6 +33,15 @@ static CGFloat kMacToolbar = 50.0;
 - (void)navigateViewWillDisappear:(BOOL)animated{}
 - (void)navigateViewDidDisappear:(BOOL)animated{}
 
+- (void)relayout{}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    
+//    NSLog(@"NavigateViewController viewWillLayoutSubviews %f",[QuickAccess homeViewController].view.frame.size.width);
+//    self.view.bounds = CGRectMake(0,0,[QuickAccess splitController].view.frame.size.width - [QuickAccess homeViewController].view.frame.size.width, [QuickAccess splitController].view.frame.size.height);
+}
+
 - (UIView *)line{
     if (nil == _line){
         _line = [[UIView alloc] initWithFrame:CGRectMake(0, kMacToolbar - 1, self.view.frame.size.width, 1)];
@@ -40,4 +51,9 @@ static CGFloat kMacToolbar = 50.0;
     
     return _line;
 }
+
+
+
+
+
 @end

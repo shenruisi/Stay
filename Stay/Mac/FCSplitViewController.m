@@ -16,9 +16,12 @@
 #import "QuickAccess.h"
 #import "SYCodeMirrorView.h"
 #import "SYHomeViewController.h"
+#import "SYExpandViewController.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 270;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
+
+NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.stay.notification.SVCDisplayModeDidChangeNotification";
 
 @interface FCSplitViewController ()<
  NSToolbarDelegate,
@@ -194,11 +197,23 @@ static CGFloat MAX_PRIMARY_WIDTH = 540;
         if (self.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
             [UIView animateWithDuration:0.5 animations:^{
                 self.preferredDisplayMode = UISplitViewControllerDisplayModeOneBesideSecondary;
+            } completion:^(BOOL finished) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:SVCDisplayModeDidChangeNotification
+                                                                                        object:nil
+                                                                                      userInfo:@{
+                                        @"operate":@"show"
+                                    }];
             }];
         }
         else{
             [UIView animateWithDuration:0.5 animations:^{
                 self.preferredDisplayMode = UISplitViewControllerDisplayModeSecondaryOnly;
+            } completion:^(BOOL finished) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:SVCDisplayModeDidChangeNotification
+                                                                                        object:nil
+                                                                                      userInfo:@{
+                                        @"operate":@"hide"
+                                    }];
             }];
             
         }
@@ -282,6 +297,11 @@ static CGFloat MAX_PRIMARY_WIDTH = 540;
         else{
             [self.toolbar insertItemWithItemIdentifier:Toolbar_Save atIndex:self.toolbar.items.count];
         }
+    }
+    else if ([viewController isKindOfClass:[SYExpandViewController class]]){
+        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
+                                            text:viewController.title
+                                        fontSize:FCStyle.headlineBold.pointSize];
     }
     else{
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]

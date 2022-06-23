@@ -13,6 +13,10 @@
 #import "ScriptMananger.h"
 #import "SharedStorageManager.h"
 #import "LoadingSlideController.h"
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
+#import "FCStyle.h"
 
 @interface SYEditViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -41,7 +45,7 @@
                 return [UIColor whiteColor];
             }
         }];
-    self.view.backgroundColor = [self createBgColor];
+    self.view.backgroundColor = FCStyle.background;
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setNumberOfLines:0];
@@ -75,7 +79,23 @@
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
     
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
     // Do any additional setup after loading the view.
+}
+
+- (void)navigateViewDidLoad{
+#ifdef Mac
+    [super navigateViewDidLoad];
+    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
+    self.componetView.hidden = YES;
+#endif
+}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
 }
 
 - (void)dealloc {
@@ -363,7 +383,7 @@
 
 - (SYCodeMirrorView *)syCodeMirrorView {
     if (_syCodeMirrorView == nil) {
-        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, kScreenWidth, kScreenHeight - StatusBarHeight - 70)];
+        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, self.view.frame.size.width, self.view.frame.size.height - StatusBarHeight - 70)];
     }
     return _syCodeMirrorView;
 }

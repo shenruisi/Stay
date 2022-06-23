@@ -64,6 +64,9 @@ Stopped="中止";
 Version="バージョン";
 Status="ステータス";
 UpdateTime="更新時間";
+SeeAll = "See all";
+Detail="Detail";
+Get="Get";
 
 mac.toolbar.back.tip = "戻る";
 mac.toolbar.forward.tip = "進む";

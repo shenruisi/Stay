@@ -234,7 +234,7 @@ CGFloat kMacToolbar = 50.0;
     NSArray *array = self.datas[indexPath.row][@"userscripts"];
 
     
-    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, kScreenWidth - 30, 30)];
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, self.view.frame.size.width - 30, 30)];
     lab.text = self.datas[indexPath.row][@"name"];
     lab.font = FCStyle.title3Bold;
     
@@ -242,11 +242,14 @@ CGFloat kMacToolbar = 50.0;
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 60, 18);
-    [btn setTitle:@"See all" forState:UIControlStateNormal];
-    [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+    [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"SeeAll", @"")
+                                                            attributes:@{
+        NSForegroundColorAttributeName : FCStyle.accent,
+        NSFontAttributeName : FCStyle.headline
+    }] forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(seeAll:) forControlEvents:UIControlEventTouchUpInside];
-    btn.right = kScreenWidth - 5;
-    btn.font = FCStyle.headline;
+    [btn sizeToFit];
+    btn.right = self.view.frame.size.width - 5;
     btn.centerY = lab.centerY;
     objc_setAssociatedObject (btn , @"array", array, OBJC_ASSOCIATION_COPY_NONATOMIC);
     objc_setAssociatedObject (btn , @"titleName", self.datas[indexPath.row][@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -306,7 +309,12 @@ CGFloat kMacToolbar = 50.0;
     SYExpandViewController *cer = [[SYExpandViewController alloc] init];
     cer.data = array;
     cer.title = titleName;
+#ifdef Mac
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
     [self.navigationController pushViewController:cer animated:true];
+#endif
+    
 }
 
 - (UITableView *)tableView {

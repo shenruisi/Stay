@@ -16,6 +16,7 @@
 #import <objc/runtime.h>
 #import "FCStyle.h"
 
+#import "QuickAccess.h"
 
 @interface SYExpandViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
@@ -32,7 +33,11 @@
 //    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
 }
+
 
 
 #pragma mark - UITableViewDelegate
@@ -54,11 +59,11 @@
     }
     
 
-    CGFloat leftWidth = kScreenWidth - 30;
+    CGFloat leftWidth = self.view.frame.size.width - 30;
 
     CGFloat titleLabelLeftSize = 0;
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15 + titleLabelLeftSize , 15, leftWidth - titleLabelLeftSize, 24)];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
+    titleLabel.font = FCStyle.headlineBold;
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.text = self.data[indexPath.row][@"name"];
@@ -66,7 +71,7 @@
     [cell.contentView addSubview:titleLabel];
 
     UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
-    authorLabel.font = [UIFont systemFontOfSize:16];
+    authorLabel.font = FCStyle.body;
     authorLabel.textAlignment = NSTextAlignmentLeft;
     authorLabel.text = self.data[indexPath.row][@"author"];
     authorLabel.top = titleLabel.bottom + 5;
@@ -74,7 +79,7 @@
     [cell.contentView addSubview:authorLabel];
     
     UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 50)];
-    descLabel.font = [UIFont systemFontOfSize:15];
+    descLabel.font = FCStyle.subHeadline;
     descLabel.textAlignment = NSTextAlignmentLeft;
     descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descLabel.text = self.data[indexPath.row][@"description"];
@@ -95,18 +100,25 @@
     btn.backgroundColor = RGB(182,32,224);
     
     if(entity != nil) {
-        [btn setTitle:@"Detail" forState:UIControlStateNormal];
+        [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.fcBlack,
+            NSFontAttributeName : FCStyle.subHeadline
+        }] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(queryDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"uuid", uuid, OBJC_ASSOCIATION_COPY_NONATOMIC);
     } else {
-        [btn setTitle:@"Get" forState:UIControlStateNormal];
+        [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Get", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.fcBlack,
+            NSFontAttributeName : FCStyle.subHeadline
+        }] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"downloadUrl", self.data[indexPath.row][@"downloadURL"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", self.data[indexPath.row][@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    btn.titleLabel.font = [UIFont systemFontOfSize:15];
     btn.layer.cornerRadius = 12;
     btn.top = descLabel.bottom + 15;
     btn.left = 15;
@@ -118,12 +130,12 @@
     image = [image imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.frame = CGRectMake(0, 0, 19, 19);
+    imageView.frame = CGRectMake(0, 0, 15, 15);
     imageView.centerY = btn.centerY;
     imageView.left = btn.right + 12;
     [cell.contentView addSubview:imageView];
     
-    UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 15)];
+    UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 15)];
     version.font = FCStyle.footnote;
     version.text = self.data[indexPath.row][@"version"];
     version.textColor = FCStyle.fcBlack;
@@ -181,7 +193,11 @@
     SYDetailViewController *cer = [[SYDetailViewController alloc] init];
     cer.isSearch = false;
     cer.script = model;
+#ifdef Mac
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
     [self.navigationController pushViewController:cer animated:true];
+#endif
 }
 
 - (void)getDetail:(UIButton *)sender {
@@ -206,7 +222,12 @@
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
+#ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+#else
                 [self.navigationController pushViewController:cer animated:true];
+#endif
+                
             }
             else{
                 [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];

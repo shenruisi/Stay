@@ -13,6 +13,7 @@
 #import "QuickAccess.h"
 #endif
 #import "FCStyle.h"
+#import "FCConfig.h"
 
 NSNotificationName const _Nonnull NCCDidShowViewControllerNotification = @"app.stay.notification.NCCDidShowViewControllerNotification";
 
@@ -68,6 +69,10 @@ typedef enum  {
     [self gestureLoad];
     [self shadowBorder];
     self.navigationController.navigationBarHidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(displayModeDidChange:)
+                                                     name:SVCDisplayModeDidChangeNotification
+                                                   object:nil];
 }
 
 - (void)gestureLoad{
@@ -450,6 +455,25 @@ typedef enum  {
     
 }
 
+- (void)displayModeDidChange:(NSNotification *)note{}
+
+//- (void)displayModeDidChange:(NSNotification *)note{
+//    NSString *operate = note.userInfo[@"operate"];
+//    NSInteger preferredWidth = [[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyMacPrimaryWidth];
+//    if ([operate isEqualToString:@"hide"]){
+//        NSLog(@"NavigateViewController %f",[QuickAccess homeViewController].view.frame.size.width);
+//        self.view.frame = CGRectMake(0,0,[QuickAccess splitController].view.frame.size.width, [QuickAccess splitController].view.frame.size.height);
+//        self.topViewController.view.bounds = self.view.bounds;
+//        [self.topViewController relayout];
+//    }
+//    else if ([operate isEqualToString:@"show"]){
+//        NSLog(@"NavigateViewController %f",[QuickAccess homeViewController].view.frame.size.width);
+//        self.view.frame = CGRectMake(preferredWidth,0,[QuickAccess splitController].view.frame.size.width -preferredWidth, [QuickAccess splitController].view.frame.size.height);
+//        self.topViewController.view.bounds = self.view.bounds;
+//        [self.topViewController relayout];
+//    }
+//}
+
 - (NSObject *)panLock{
     if (nil == _panLock){
         _panLock = [[NSObject alloc] init];
@@ -478,6 +502,12 @@ typedef enum  {
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection{
     self.shadowBorder.layer.shadowColor = FCStyle.fcShadowLine.CGColor;
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:SVCDisplayModeDidChangeNotification
+                                                      object:nil];
 }
 
 @end

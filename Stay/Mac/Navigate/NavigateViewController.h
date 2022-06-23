@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)navigateViewDidAppear:(BOOL)animated;
 - (void)navigateViewWillDisappear:(BOOL)animated;
 - (void)navigateViewDidDisappear:(BOOL)animated;
+- (void)relayout;
 @end
 
 NS_ASSUME_NONNULL_END

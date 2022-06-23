@@ -64,6 +64,9 @@ Stopped="Stopped";
 Version="Version";
 Status="Status";
 UpdateTime="Update time";
+SeeAll="See all";
+Detail="Detail";
+Get="Get";
 
 mac.toolbar.back.tip = "Navigate Back";
 mac.toolbar.forward.tip = "Navigate Forward";

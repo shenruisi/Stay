@@ -25,6 +25,11 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
     return self;
 }
 
+- (void)setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    [self.wkwebView setFrame:self.bounds];
+}
+
 - (WKWebView *)wkwebView {
     if(_wkwebView == nil) {
         WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];

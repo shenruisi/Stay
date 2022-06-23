@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification;
+
 @interface FCSplitViewController : UISplitViewController
 
 @property (nonatomic, strong, nullable) FCToolbar *toolbar;

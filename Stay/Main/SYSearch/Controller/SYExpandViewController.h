@@ -7,12 +7,16 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
 
+#ifdef Mac
+#import "NavigateViewController.h"
+@interface SYExpandViewController : NavigateViewController
+#else
 @interface SYExpandViewController : UIViewController
+#endif
 
 @property (nonatomic, strong) NSArray *data;
 
 @end
 
-NS_ASSUME_NONNULL_END
+
