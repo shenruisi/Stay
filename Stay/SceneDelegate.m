@@ -26,7 +26,6 @@
     self.window = window;
 #else
     UINavigationBar.appearance.prefersLargeTitles = YES;
-    UIWindowScene *windowScene = (UIWindowScene *)scene;
     self.window = [[UIWindow alloc] initWithWindowScene:windowScene];
     self.window.frame = windowScene.coordinateSpace.bounds;
     self.window.rootViewController = [[MainTabBarController alloc] init];
