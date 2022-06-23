@@ -18,6 +18,7 @@ static const NSToolbarItemIdentifier Toolbar_Back = @"toolbar.back";
 static const NSToolbarItemIdentifier Toolbar_Forward = @"toolbar.forward";
 static const NSToolbarItemIdentifier Toolbar_TabName = @"toolbar.tabName";
 static const NSToolbarItemIdentifier Toolbar_SlideTrackInSecondary = @"toolbar.slideTrackInSecondary";
+static const NSToolbarItemIdentifier Toolbar_Placeholder = @"toolbar.placeholder";
 static const NSToolbarItemIdentifier Toolbar_Add = @"toolbar.add";
 static const NSToolbarItemIdentifier Toolbar_More = @"toolbar.more";
 static const NSToolbarItemIdentifier Toolbar_Save = @"toolbar.save";

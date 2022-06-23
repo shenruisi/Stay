@@ -61,3 +61,6 @@ Stopped="已停止";
 Version="版本";
 Status="狀態";
 UpdateTime="更新時間";
+
+mac.toolbar.back.tip = "後退";
+mac.toolbar.forward.tip = "前進";

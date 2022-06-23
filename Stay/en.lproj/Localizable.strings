@@ -65,8 +65,8 @@ Version="Version";
 Status="Status";
 UpdateTime="Update time";
 
-
-
+mac.toolbar.back.tip = "Navigate Back";
+mac.toolbar.forward.tip = "Navigate Forward";
 
 
 

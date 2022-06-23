@@ -22,5 +22,9 @@
 @property (nonatomic, assign) bool isEdit;
 @property (nonatomic, assign) bool isSearch;
 @property (nonatomic, strong) NSString *downloadUrl;
+
+@property (nonatomic, assign, readonly) BOOL isNew;
+
+- (void)save;
 @end
 

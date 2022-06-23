@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName const _Nonnull CMVDidFinishContentNotification;
+
 @interface SYCodeMirrorView : UIView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 
 @property (nonatomic, strong) WKWebView *wkwebView;

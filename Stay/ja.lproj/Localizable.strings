@@ -64,3 +64,6 @@ Stopped="中止";
 Version="バージョン";
 Status="ステータス";
 UpdateTime="更新時間";
+
+mac.toolbar.back.tip = "戻る";
+mac.toolbar.forward.tip = "進む";

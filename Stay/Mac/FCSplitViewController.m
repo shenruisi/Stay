@@ -12,6 +12,9 @@
 #import "FCStyle.h"
 #import "FCConfig.h"
 #import "NavigateCollectionController.h"
+#import "SYEditViewController.h"
+#import "QuickAccess.h"
+#import "SYCodeMirrorView.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 250;
 
@@ -21,6 +24,7 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 >
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *,SYDetailViewController *> *detailViewControllerDic;
+@property (nonatomic, weak) SYEditViewController *holdEditViewController;
 @end
 
 @implementation FCSplitViewController
@@ -46,6 +50,10 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
                                              selector:@selector(navigateViewDidShow:)
                                                  name:NCCDidShowViewControllerNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(codeMirrorViewDidFinishContent:)
+                                                 name:CMVDidFinishContentNotification
+                                               object:nil];
 }
 
 - (void)loadView{
@@ -61,12 +69,12 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar{
     return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_Collapse,
-             Toolbar_Block,Toolbar_Back,Toolbar_Forward,Toolbar_TabName,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Add,Toolbar_More];
+             Toolbar_Block,Toolbar_Back,Toolbar_Forward,Toolbar_TabName,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Placeholder];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar{
     return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_Collapse,Toolbar_Block,
-             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done];
+             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar{
@@ -126,35 +134,27 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
         return nil;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Add]){
-//        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
-//        item.target = self;
-//        item.action = @selector(toolbarItemDidClick:);
-//        item.bordered = YES;
-//        item.image = [UIImage systemImageNamed:@"plus"];
-//        item.toolTip = NSLocalizedString(@"mac.toolbar.snippet.tip", @"");
-//        [FCShared.plugin.appKit addMenuForItem:item title:NSLocalizedString(@"NewSnippet", @"") sfName:@"plus"];
-//        return item;
-        return nil;
+        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        item.target = self;
+        item.action = @selector(toolbarItemDidClick:);
+        item.bordered = YES;
+        item.title =  NSLocalizedString(@"settings.create", @"");
+        return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_More]){
-//        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
-//        item.target = self;
-//        item.action = @selector(toolbarItemDidClick:);
-//        item.bordered = YES;
-//        item.image = [UIImage systemImageNamed:@"ellipsis.circle"];
-//        item.toolTip = NSLocalizedString(@"More", @"");
-//        [FCShared.plugin.appKit addMenuForItem:item title:NSLocalizedString(@"More", @"") sfName:@"ellipsis.circle"];
-//        return item;
-        return nil;
+        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        item.target = self;
+        item.action = @selector(toolbarItemDidClick:);
+        item.bordered = YES;
+        item.image = [UIImage systemImageNamed:@"ellipsis.circle"];
+        return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Save]){
-//        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
-//        item.target = self;
-//        item.action = @selector(toolbarItemDidClick:);
-//        item.bordered = YES;
-//        item.title =  NSLocalizedString(@"Save", @"");
-//        item.toolTip = NSLocalizedString(@"SaveSnippet", @"");
-//        return item;
+        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        item.target = self;
+        item.action = @selector(toolbarItemDidClick:);
+        item.bordered = YES;
+        item.title =  NSLocalizedString(@"settings.save", @"");
         return nil;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Done]){
@@ -196,9 +196,10 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
         }
         
     }
-//    else if ([sender.itemIdentifier isEqualToString:Toolbar_Add]){
-//        [self showAdd];
-//    }
+    else if ([sender.itemIdentifier isEqualToString:Toolbar_Add]){
+        [self.holdEditViewController save];
+//
+    }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
 //        [self showTabEdit];
 //    }
@@ -243,8 +244,34 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
                                             text:detailViewController.script.name
                                         fontSize:FCStyle.headlineBold.pointSize];
+        [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
+        [self.toolbar insertItemWithItemIdentifier:Toolbar_More atIndex:self.toolbar.items.count];
+    }
+    else if ([viewController isKindOfClass:[SYEditViewController class]]){
+        self.holdEditViewController = (SYEditViewController *)viewController;
+        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
+                                            text:NSLocalizedString(@"settings.newScript", @"")
+                                        fontSize:FCStyle.headlineBold.pointSize];
+        [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
+        if (self.holdEditViewController.isNew){
+            [self.toolbar insertItemWithItemIdentifier:Toolbar_Add atIndex:self.toolbar.items.count];
+        }
+        else{
+            [self.toolbar insertItemWithItemIdentifier:Toolbar_Save atIndex:self.toolbar.items.count];
+        }
     }
     else{
+        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
+                                            text:@""
+                                        fontSize:FCStyle.headlineBold.pointSize];
+    }
+}
+
+- (void)codeMirrorViewDidFinishContent:(NSNotification *)note{
+    if (self.holdEditViewController){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[QuickAccess secondaryController] popViewController];
+        });
     }
 }
 
@@ -273,8 +300,9 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
                                                     name:NCCDidShowViewControllerNotification
                                                   object:nil];
     
-    
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:CMVDidFinishContentNotification
+                                                  object:nil];
 }
 
 - (void)dealloc{

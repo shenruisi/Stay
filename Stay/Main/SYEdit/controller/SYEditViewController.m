@@ -194,6 +194,10 @@
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
+- (void)save{
+    [self saveBtnClick:nil];
+}
+
 - (void)saveBtnClick:(id)sender{
     if(self.uuid != nil && self.uuid.length > 0) {
         self.syCodeMirrorView.uuid = self.uuid;
@@ -407,5 +411,8 @@
     return _loadingSlideController;
 }
 
+- (BOOL)isNew{
+    return self.uuid.length == 0;
+}
 
 @end

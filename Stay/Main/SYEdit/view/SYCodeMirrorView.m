@@ -12,7 +12,7 @@
 #import "UserscriptUpdateManager.h"
 #import <CommonCrypto/CommonDigest.h>
 
-
+NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.notification.CMVDidFinishContentNotification";
 
 @implementation SYCodeMirrorView
 
@@ -135,7 +135,11 @@
                        [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                    }
                    [self initScrpitContent:true];
-
+                    [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
+                                                                        object:nil
+                                                                      userInfo:@{
+                        @"operate":@"insert"
+                    }];
                 } else {
                    [self saveError:userScript.errorMessage];
                 }
@@ -193,6 +197,11 @@
                if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                    [[DataManager shareManager] updateUserScript:userScript];
                    [self initScrpitContent:true];
+                   [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
+                                                                       object:nil
+                                                                     userInfo:@{
+                       @"operate":@"update"
+                   }];
                } else {
                    [self saveError:userScript.errorMessage];
                }
