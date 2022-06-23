@@ -24,10 +24,10 @@
         
         for(NSToolbarItem *item in self.toolbar.items){
             if ([item.itemIdentifier isEqualToString:Toolbar_SlideTrackInPrimary]){
-                [FCShared.plugin.appKit slideTrackToolbarItemChanged:item width:self.frame.size.width - 250];
+                [FCShared.plugin.appKit slideTrackToolbarItemChanged:item width:self.frame.size.width - 270];
             }
         }
-        NSLog(@"ToolbarTrackView %f",self.frame.size.width - 100);
+        
         [[FCConfig shared] setIntegerValueOfKey:GroupUserDefaultsKeyMacPrimaryWidth value:self.frame.size.width];
     }
    

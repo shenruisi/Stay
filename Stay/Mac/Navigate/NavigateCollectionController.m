@@ -68,7 +68,6 @@ typedef enum  {
     [self gestureLoad];
     [self shadowBorder];
     self.navigationController.navigationBarHidden = YES;
-//    [self pushViewController:self.rootViewController removeUUID:nil inViewDidLoad:YES isForward:NO];
 }
 
 - (void)gestureLoad{
@@ -118,25 +117,8 @@ typedef enum  {
     [[NSNotificationCenter defaultCenter] postNotificationName:NCCDidShowViewControllerNotification
                                                         object:viewController];
     
-//    if ([viewController isKindOfClass:[BaseSnippetListController class]]){
-//        BaseSnippetListController *snippetController = (BaseSnippetListController *)viewController;
-//        [[QuickAccess splitController] tabName:snippetController.pinTab == nil
-//         ? NSLocalizedString(@"AllSnippets", @"") : [FCShared.tabManager tabNameWithUUID:snippetController.pinTab.uuid]];
-//        if (!inViewDidLoad){
-//            [[QuickAccess splitController] tabToolbar];
-//        }
-//        [[QuickAccess splitController] searchNow:viewController];
-//        [[QuickAccess primaryController] navigateTo:snippetController.pinTab == nil ? AllSnippetsUUID : snippetController.pinTab.uuid];
-//    }
-//    else if ([viewController isKindOfClass:[DetailController class]]){
-//        [[QuickAccess splitController] tabName:@""];
-//        [[QuickAccess splitController] detailToolbar];
-//    }
     
     [previousController navigateViewWillDisappear:NO];
-//    if ([previousController isKindOfClass:[BaseSnippetListController class]]){
-//        [(BaseSnippetListController *)previousController setSelectModeWithIsOn:NO];
-//    }
     [previousController.view removeFromSuperview];
     [previousController navigateViewDidDisappear:NO];
     
@@ -227,18 +209,7 @@ typedef enum  {
 
 - (void)popStateFresh{
     UIViewController *previousController = self.viewControllers[self.viewControllers.count - 2];
-//    if ([previousController isKindOfClass:[BaseSnippetListController class]]){
-//        BaseSnippetListController *snippetController =  (BaseSnippetListController *)previousController;
-//        [[QuickAccess splitController] tabName:snippetController.pinTab == nil
-//         ? NSLocalizedString(@"AllSnippets", @""):[FCShared.tabManager tabNameWithUUID:snippetController.pinTab.uuid]];
-//        [[QuickAccess splitController] tabToolbar];
-//        [[QuickAccess splitController] searchNow:snippetController];
-//        [[QuickAccess primaryController] navigateTo:snippetController.pinTab == nil ? AllSnippetsUUID : snippetController.pinTab.uuid];
-//    }
-//    else if ([previousController isKindOfClass:[DetailController class]]){
-//        [[QuickAccess splitController] tabName:@""];
-//        [[QuickAccess splitController] detailToolbar];
-//    }
+
     [self.forwardViewControllers addObject:self.topViewController];
     [self.viewControllers removeLastObject];
     [self freshBackForwadItem];
@@ -255,17 +226,17 @@ typedef enum  {
 
 - (void)freshBackForwadItem{
     if (self.viewControllers.count > 1){
-//        [[QuickAccess splitController] enableToolbarItem:Toolbar_Back];
+        [[QuickAccess splitController] enableToolbarItem:Toolbar_Back];
     }
     else{
-//        [[QuickAccess splitController] disableToolbarItem:Toolbar_Back];
+        [[QuickAccess splitController] disableToolbarItem:Toolbar_Back];
     }
     
     if (self.forwardViewControllers.count > 0){
-//        [[QuickAccess splitController] enableToolbarItem:Toolbar_Forward];
+        [[QuickAccess splitController] enableToolbarItem:Toolbar_Forward];
     }
     else{
-//        [[QuickAccess splitController] disableToolbarItem:Toolbar_Forward];
+        [[QuickAccess splitController] disableToolbarItem:Toolbar_Forward];
     }
 }
 
@@ -400,10 +371,6 @@ typedef enum  {
                 } completion:^(BOOL finished) {
                     [previousController viewDidAppear:YES];
                     
-//                    if ([self.topViewController isKindOfClass:[BaseSnippetListController class]]){
-//                        BaseSnippetListController *snippetController = (BaseSnippetListController *)self.topViewController;
-//                        [snippetController setSelectModeWithIsOn:NO];
-//                    }
                     
                     [self.topViewController viewDidDisappear:YES];
                     [self.topViewController.view removeFromSuperview];
@@ -461,24 +428,9 @@ typedef enum  {
                     [pushController viewDidAppear:YES];
                     [self.topViewController viewDidDisappear:YES];
                     
-//                    if ([self.topViewController isKindOfClass:[BaseSnippetListController class]]){
-//                        BaseSnippetListController *snippetController = (BaseSnippetListController *)self.topViewController;
-//                        [snippetController setSelectModeWithIsOn:NO];
-//                    }
                     
                     [self.topViewController.view removeFromSuperview];
                     
-//                    if ([pushController isKindOfClass:[BaseSnippetListController class]]){
-//                        BaseSnippetListController *snippetController = (BaseSnippetListController *)pushController;
-//                        [[QuickAccess splitController] tabName:snippetController.pinTab == nil
-//                         ? NSLocalizedString(@"AllSnippets", @""):[FCShared.tabManager tabNameWithUUID:snippetController.pinTab.uuid]];
-//                        [[QuickAccess splitController] tabToolbar];
-//                        [[QuickAccess primaryController] navigateTo:snippetController.pinTab == nil ? AllSnippetsUUID : snippetController.pinTab.uuid];
-//                    }
-//                    else if ([pushController isKindOfClass:[DetailController class]]){
-//                        [[QuickAccess splitController] tabName:@""];
-//                        [[QuickAccess splitController] detailToolbar];
-//                    }
                     [self.viewControllers addObject:pushController];
                     [self.forwardViewControllers removeLastObject];
                     [self freshBackForwadItem];

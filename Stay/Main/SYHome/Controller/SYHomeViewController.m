@@ -723,6 +723,10 @@ static CGFloat kMacToolbar = 50.0;
     return YES;
 }
 
+- (void)import{
+    [self addBtnClick:nil];
+}
+
 - (void)addBtnClick:(id)sender {
     self.itemPopVC = [[SYAddScriptController alloc] init];
     self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;

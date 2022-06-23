@@ -23,6 +23,7 @@ static const NSToolbarItemIdentifier Toolbar_Add = @"toolbar.add";
 static const NSToolbarItemIdentifier Toolbar_More = @"toolbar.more";
 static const NSToolbarItemIdentifier Toolbar_Save = @"toolbar.save";
 static const NSToolbarItemIdentifier Toolbar_Done = @"toolbar.done";
+static const NSToolbarItemIdentifier Toolbar_Import = @"toolbar.import";
 
 @protocol FCToolbarDelegate <NSObject>
 

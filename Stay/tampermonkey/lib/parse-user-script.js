@@ -210,7 +210,7 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
       }
     }
-    native.nslog(details);
+//    native.nslog(details);
     return prepDefaults(details);
 }
 

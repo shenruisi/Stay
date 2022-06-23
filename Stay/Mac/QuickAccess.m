@@ -18,7 +18,7 @@
     return nil;
 }
 
-+ (nullable UITabBarController *)primaryController{
++ (nullable MainTabBarController *)primaryController{
     UISplitViewController *splitViewController = [self splitController];
     if (splitViewController){
         return splitViewController.viewControllers[0];
@@ -32,6 +32,10 @@
         return splitViewController.viewControllers[1];
     }
     return nil;
+}
+
++ (nullable SYHomeViewController *)homeViewController{
+    return [self primaryController].homeViewController;
 }
 
 

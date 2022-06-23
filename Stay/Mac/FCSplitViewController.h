@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) FCToolbar *toolbar;
 - (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript;
+- (void)enableToolbarItem:(NSToolbarItemIdentifier)identifier;
+- (void)disableToolbarItem:(NSToolbarItemIdentifier)identifier;
 @end
 
 NS_ASSUME_NONNULL_END

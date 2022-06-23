@@ -41,7 +41,7 @@
     SYHomeViewController *homeController = [[SYHomeViewController alloc] init];
     SYSearchViewController *searchController = [[SYSearchViewController alloc] init];
     SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];
-    
+    self.homeViewController = homeController;
     [self setUpOneChildViewController:homeController image:[UIImage imageNamed:imgArray[0]] selectImage: [UIImage imageNamed:imgSelectArray[0]]  title:titleArray[0]];
     [self setUpOneChildViewController:searchController image:[UIImage imageNamed:imgArray[1]] selectImage: [UIImage imageNamed:imgSelectArray[1]] title:titleArray[1]];
     [self setUpOneChildViewController:syMoreController image:[UIImage imageNamed:imgArray[2]] selectImage: [UIImage imageNamed:imgSelectArray[2]] title:titleArray[2]];
@@ -53,6 +53,9 @@
     navC.title = title;
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     navC.tabBarItem.image = image;
+#ifdef Mac
+    navC.tabBarItem.imageInsets = UIEdgeInsetsMake(3, 3, 0, 3);
+#endif
     selectImage = [selectImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [navC.tabBarItem setSelectedImage:selectImage];
     navC.tabBarItem.title = title;

@@ -15,8 +15,10 @@
 #import "SYEditViewController.h"
 #import "QuickAccess.h"
 #import "SYCodeMirrorView.h"
+#import "SYHomeViewController.h"
 
-static CGFloat MIN_PRIMARY_WIDTH = 250;
+static CGFloat MIN_PRIMARY_WIDTH = 270;
+static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 @interface FCSplitViewController ()<
  NSToolbarDelegate,
@@ -32,6 +34,7 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 - (instancetype)init{
     if (self = [super init]){
         self.minimumPrimaryColumnWidth = MIN_PRIMARY_WIDTH;
+        self.maximumPrimaryColumnWidth = MAX_PRIMARY_WIDTH;
         NSInteger preferredWidth = [[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyMacPrimaryWidth];
         if (preferredWidth > 0){
             self.preferredPrimaryColumnWidth = preferredWidth;
@@ -68,13 +71,13 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar{
-    return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_Collapse,
+    return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_Import,Toolbar_Collapse,
              Toolbar_Block,Toolbar_Back,Toolbar_Forward,Toolbar_TabName,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Placeholder];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar{
     return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_Collapse,Toolbar_Block,
-             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder];
+             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar{
@@ -95,6 +98,14 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
         NSToolbarItem *item = [FCShared.plugin.appKit appName:itemIdentifier];
         return item;
     }
+    else if ([itemIdentifier isEqualToString:Toolbar_Import]){
+        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        item.target = self;
+        item.action = @selector(toolbarItemDidClick:);
+        item.bordered = YES;
+        item.image = [UIImage systemImageNamed:@"plus"];
+        return item;
+    }
     else if ([itemIdentifier isEqualToString:Toolbar_Collapse]){
         NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
         item.target = self;
@@ -105,7 +116,7 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
         return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_SlideTrackInPrimary]){
-        return  [FCShared.plugin.appKit slideTrackToolbarItem:itemIdentifier width:self.primaryColumnWidth - 250];
+        return  [FCShared.plugin.appKit slideTrackToolbarItem:itemIdentifier width:self.primaryColumnWidth - 270];
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Block]){
         return [FCShared.plugin.appKit blockItem:itemIdentifier width:12];
@@ -174,19 +185,16 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 
 - (void)toolbarItemDidClick:(NSToolbarItem *)sender{
     if ([sender.itemIdentifier isEqualToString:Toolbar_Back]){
-//        NavigateViewController *navigateViewController = [self viewControllerForColumn:UISplitViewControllerColumnSecondary];
-//        [navigateViewController popViewController];
+        [[QuickAccess secondaryController] popViewController];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Forward]){
-//        NavigateViewController *navigateViewController = [self viewControllerForColumn:UISplitViewControllerColumnSecondary];
-//        [navigateViewController forward];
+        [[QuickAccess secondaryController] forward];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Collapse]){
         if (self.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
             [UIView animateWithDuration:0.5 animations:^{
                 self.preferredDisplayMode = UISplitViewControllerDisplayModeOneBesideSecondary;
             }];
-            
         }
         else{
             [UIView animateWithDuration:0.5 animations:^{
@@ -198,7 +206,10 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Add]){
         [self.holdEditViewController save];
-//
+    }
+    else if ([sender.itemIdentifier isEqualToString:Toolbar_Import]){
+        [[QuickAccess homeViewController] import];
+        
     }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
 //        [self showTabEdit];
@@ -226,6 +237,18 @@ static CGFloat MIN_PRIMARY_WIDTH = 250;
 //        [self showPref];
 //    }
 }
+
+- (void)enableToolbarItem:(NSToolbarItemIdentifier)identifier{
+    [self _itemOfIdentifier:identifier].action = @selector(toolbarItemDidClick:);
+    [[self _itemOfIdentifier:identifier] validate];
+    
+}
+
+- (void)disableToolbarItem:(NSToolbarItemIdentifier)identifier{
+    [self _itemOfIdentifier:identifier].action = nil;
+    [[self _itemOfIdentifier:identifier] validate];
+}
+
 
 - (NSToolbarItem *)_itemOfIdentifier:(NSToolbarItemIdentifier)identifier{
     for (NSToolbarItem *item in self.toolbar.items){
