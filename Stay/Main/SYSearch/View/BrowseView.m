@@ -82,7 +82,7 @@
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
 #ifdef Mac
-                
+                [[QuickAccess secondaryController] pushViewController:cer];
 #else
                 [self.navigationController pushViewController:cer animated:true];
 #endif

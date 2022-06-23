@@ -5,7 +5,9 @@
 //  Created by ris on 2021/10/15.
 //
 
+#ifndef Mac
 #import <UMCommon/UMCommon.h>
+#endif
 #import "AppDelegate.h"
 #import "NavigationController.h"
 #import "SceneDelegate.h"
@@ -30,7 +32,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+#ifndef Mac
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
+#endif
     
     [IACManager sharedManager].callbackURLScheme = @"stay";
     [[IACManager sharedManager] handleAction:@"install" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {

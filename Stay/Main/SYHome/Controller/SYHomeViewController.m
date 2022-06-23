@@ -897,6 +897,7 @@ static CGFloat kMacToolbar = 50.0;
     return _sYSelectTabViewController;
 }
 
+#ifdef Mac
 - (void)navigateViewDidShow:(NSNotification *)note{
     NavigateViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
@@ -913,6 +914,7 @@ static CGFloat kMacToolbar = 50.0;
         }   
     }
 }
+#endif
 
 - (NSIndexPath *)indexPathOfUUID:(NSString *)uuid{
     @synchronized (self.datas) {
@@ -928,9 +930,11 @@ static CGFloat kMacToolbar = 50.0;
 }
 
 - (void)dealloc{
+#ifdef Mac
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NCCDidShowViewControllerNotification
                                                   object:nil];
+#endif
 }
 
 @end

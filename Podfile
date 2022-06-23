@@ -6,3 +6,8 @@ target 'Stay' do
  pod 'UMCommon'
  pod 'UMDevice'
 end
+
+target 'Stay-Mac' do
+ pod 'InterAppCommunication'
+ pod 'SDWebImage'
+end
