@@ -61,6 +61,10 @@
     return [UIColor colorNamed: @"FCSecondaryBlackColor"];
 }
 
++ (UIColor *)fcWhite {
+    return [UIColor colorNamed: @"FCWhiteColor"];
+}
+
 + (UIColor *)fcShadowLine {
     return [UIColor colorNamed: @"FCShadowLineColor"];
 }

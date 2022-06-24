@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *fcPlaceHolder;
 @property(class, nonatomic, readonly) UIColor *fcBlack;
 @property(class, nonatomic, readonly) UIColor *fcSecondaryBlack;
+@property(class, nonatomic, readonly) UIColor *fcWhite;
 @property(class, nonatomic, readonly) UIColor *fcBlue;
 @property(class, nonatomic, readonly) UIColor *fcGolden;
 @property(class, nonatomic, readonly) UIColor *backgroundGolden;

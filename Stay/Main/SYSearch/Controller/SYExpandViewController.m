@@ -103,7 +103,7 @@
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{
-            NSForegroundColorAttributeName : FCStyle.fcBlack,
+            NSForegroundColorAttributeName : FCStyle.fcWhite,
             NSFontAttributeName : FCStyle.subHeadline
         }] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(queryDetail:) forControlEvents:UIControlEventTouchUpInside];
@@ -111,7 +111,7 @@
     } else {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Get", @"")
                                                                 attributes:@{
-            NSForegroundColorAttributeName : FCStyle.fcBlack,
+            NSForegroundColorAttributeName : FCStyle.fcWhite,
             NSFontAttributeName : FCStyle.subHeadline
         }] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
