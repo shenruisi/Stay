@@ -15,8 +15,9 @@
 #import "SYEditViewController.h"
 #import <objc/runtime.h>
 #import "FCStyle.h"
-
+#ifdef Mac
 #import "QuickAccess.h"
+#endif
 
 @interface SYExpandViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
