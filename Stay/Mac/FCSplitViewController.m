@@ -22,6 +22,7 @@ static CGFloat MIN_PRIMARY_WIDTH = 270;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.stay.notification.SVCDisplayModeDidChangeNotification";
+NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.notification.SVCDidBecomeActiveNotification";
 
 @interface FCSplitViewController ()<
  NSToolbarDelegate,
@@ -59,6 +60,10 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(codeMirrorViewDidFinishContent:)
                                                  name:CMVDidFinishContentNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sceneWillEnterForeground:)
+                                                 name:UISceneWillEnterForegroundNotification
                                                object:nil];
 }
 
@@ -169,7 +174,7 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
         item.action = @selector(toolbarItemDidClick:);
         item.bordered = YES;
         item.title =  NSLocalizedString(@"settings.save", @"");
-        return nil;
+        return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Done]){
 //        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
@@ -226,6 +231,9 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
         [[QuickAccess homeViewController] import];
         
     }
+    else if ([sender.itemIdentifier isEqualToString:Toolbar_Save]){
+        [self.holdEditViewController save];
+    }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
 //        [self showTabEdit];
 //    }
@@ -275,6 +283,11 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
     return nil;
 }
 
+- (void)sceneWillEnterForeground:(NSNotification *)note{
+    [[NSNotificationCenter defaultCenter] postNotificationName:SVCDidBecomeActiveNotification
+                                                        object:nil];
+}
+
 - (void)navigateViewDidShow:(NSNotification *)note{
     NavigateViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
@@ -287,16 +300,17 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
     }
     else if ([viewController isKindOfClass:[SYEditViewController class]]){
         self.holdEditViewController = (SYEditViewController *)viewController;
-        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
-                                            text:NSLocalizedString(@"settings.newScript", @"")
-                                        fontSize:FCStyle.headlineBold.pointSize];
         [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
-        if (self.holdEditViewController.isNew){
+        NSString *text = self.holdEditViewController.isEdit ? NSLocalizedString(@"UpdateScript", @"") : NSLocalizedString(@"settings.newScript", @"");
+        if (!self.holdEditViewController.isEdit){
             [self.toolbar insertItemWithItemIdentifier:Toolbar_Add atIndex:self.toolbar.items.count];
         }
         else{
             [self.toolbar insertItemWithItemIdentifier:Toolbar_Save atIndex:self.toolbar.items.count];
         }
+        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
+                                            text:text
+                                        fontSize:FCStyle.headlineBold.pointSize];
     }
     else if ([viewController isKindOfClass:[SYExpandViewController class]]){
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
@@ -314,6 +328,8 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
     if (self.holdEditViewController){
         dispatch_async(dispatch_get_main_queue(), ^{
             [[QuickAccess secondaryController] popViewController];
+            [[NSNotificationCenter defaultCenter] postNotificationName:HomeViewShouldReloadDataNotification
+                                                                object:nil];
         });
     }
 }
@@ -346,6 +362,11 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:CMVDidFinishContentNotification
                                                   object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UISceneWillEnterForegroundNotification
+                                                  object:nil];
+    
 }
 
 - (void)dealloc{

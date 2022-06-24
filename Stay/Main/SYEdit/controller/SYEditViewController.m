@@ -431,8 +431,5 @@
     return _loadingSlideController;
 }
 
-- (BOOL)isNew{
-    return self.uuid.length == 0;
-}
 
 @end

@@ -64,6 +64,7 @@ UpdateTime="更新時間";
 SeeAll = "查看全部";
 Detail="詳情";
 Get="獲取";
+UpdateScript="更新腳本";
 
 mac.toolbar.back.tip = "後退";
 mac.toolbar.forward.tip = "前進";

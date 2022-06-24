@@ -37,7 +37,7 @@
 #endif
 
 static CGFloat kMacToolbar = 50.0;
-
+NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
 @interface _SYHomeViewTableViewCell : UITableViewCell
 @end
 
@@ -136,6 +136,17 @@ static CGFloat kMacToolbar = 50.0;
                                              selector:@selector(navigateViewDidShow:)
                                                  name:NCCDidShowViewControllerNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(homeViewShouldReloadData:)
+                                                 name:HomeViewShouldReloadDataNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onBecomeActive)
+                                                 name:SVCDidBecomeActiveNotification
+                                               object:nil];
+    
 #endif
     self.view.backgroundColor = FCStyle.background;
     
@@ -764,10 +775,15 @@ static CGFloat kMacToolbar = 50.0;
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
 
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            SYEditViewController *cer = [[SYEditViewController alloc] init];
-            cer.content = scriptContent;
-            cer.downloadUrl = downloadUrl;
-            [self.navigationController pushViewController:cer animated:true];
+        SYEditViewController *cer = [[SYEditViewController alloc] init];
+        cer.content = scriptContent;
+        cer.downloadUrl = downloadUrl;
+        cer.isEdit = YES;
+#ifdef Mac
+        [[QuickAccess secondaryController] pushViewController:cer];
+#else
+        [self.navigationController pushViewController:cer animated:true];
+#endif
         }];
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","Cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 
@@ -933,10 +949,17 @@ static CGFloat kMacToolbar = 50.0;
     return nil;
 }
 
+- (void)homeViewShouldReloadData:(NSNotification *)note{
+    [self refreshScript];
+}
+
 - (void)dealloc{
 #ifdef Mac
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NCCDidShowViewControllerNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SVCDidBecomeActiveNotification
                                                   object:nil];
 #endif
 }

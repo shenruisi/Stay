@@ -42,4 +42,8 @@
 }
 
 
+- (void)sceneDidBecomeActive:(UIScene *)scene{
+    
+}
+
 @end

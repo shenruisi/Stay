@@ -67,6 +67,7 @@ UpdateTime="Update time";
 SeeAll="See all";
 Detail="Detail";
 Get="Get";
+UpdateScript="Update script";
 
 mac.toolbar.back.tip = "Navigate Back";
 mac.toolbar.forward.tip = "Navigate Forward";

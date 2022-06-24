@@ -7,6 +7,10 @@
 
 #import "SYSelectBarModalViewController.h"
 #import "FCStyle.h"
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
+
 @implementation SYSelectBarModalViewController
 
 - (void)viewDidLoad{
@@ -47,7 +51,11 @@
 
 - (UIView *)shareUrlBtn {
     if(_shareUrlBtn == nil) {
+#ifdef Mac
+        _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, self.mainViewSize.width - 50, 45)];
+#else
         _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, kScreenWidth - 80, 45)];
+#endif
         _shareUrlBtn.backgroundColor = FCStyle.secondaryPopup;
         _shareUrlBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrlClick)];
@@ -76,7 +84,11 @@
 
 - (UIView *)shareContentBtn {
     if(_shareContentBtn == nil) {
+#ifdef Mac
+        _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, self.mainViewSize.width - 50, 45)];
+#else
         _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
+#endif
         _shareContentBtn.backgroundColor = FCStyle.secondaryPopup;
         _shareContentBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareContentClick)];
@@ -106,7 +118,12 @@
 
 
 - (CGSize)mainViewSize{
+#ifdef Mac
+    CGFloat width = 300;
+#else
     CGFloat width = kScreenWidth - 30;
+#endif
+    
     CGFloat height = 152;
 //    if (self.url == NULL || self.url.length == 0) {
 //        self.shareUrlBtn.hidden = true;
