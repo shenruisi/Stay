@@ -36,6 +36,7 @@
     userScript.unsupportedGrants = dic[@"unsupportedGrants"];
     userScript.stayEngine = dic[@"stayEngine"];
     userScript.injectInto = dic[@"injectInto"];
+    userScript.license = dic[@"license"];
     return userScript;
 }
 
@@ -68,7 +69,8 @@
         @"unsupportedGrants":self.unsupportedGrants ? self.unsupportedGrants : @[],
         @"stayEngine":self.stayEngine ? self.stayEngine : @"",
         @"excludeSites":self.excludeSites ? self.excludeSites : @[],
-        @"injectInto":self.injectInto ? self.injectInto : @"auto"
+        @"injectInto":self.injectInto ? self.injectInto : @"auto",
+        @"license":self.license ? self.license : @""
     };
 }
 

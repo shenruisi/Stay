@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *installType;
 
 @property (nonatomic, copy) NSString *injectInto;
+@property (nonatomic, copy) NSString *license;
 
 //Stay only
 @property (nonatomic, copy) NSString *stayEngine;

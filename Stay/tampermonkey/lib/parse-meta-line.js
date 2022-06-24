@@ -109,6 +109,9 @@
      
        peg$c60 = "inject-into",
        peg$c61 = { type: "literal", value: "inject-into", description: "\"inject-into\"" },
+     
+       peg$c62 = "license",
+       peg$c63 = { type: "literal", value: "license", description: "\"license\"" },
        
        peg$currPos          = 0,
        peg$savedPos         = 0,
@@ -606,6 +609,15 @@
                                           s1 = peg$FAILED;
                                           if (peg$silentFails === 0) { peg$fail(peg$c61); }
                                         }
+                                        if (s1 === peg$FAILED) {
+                                            if (input.substr(peg$currPos, 7) === peg$c62) {
+                                              s1 = peg$c62;
+                                              peg$currPos += 7;
+                                            } else {
+                                              s1 = peg$FAILED;
+                                              if (peg$silentFails === 0) { peg$fail(peg$c63); }
+                                            }
+                                          }
                                       }
                                   }
                                }

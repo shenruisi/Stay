@@ -87,7 +87,8 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
       'errorMessage':'',
       'iconUrl':'',
       'stayEngine':'',
-      'injectInto':'auto'
+      'injectInto':'auto',
+      'license':''
   };
 
   let meta = extractMeta(content).match(/.+/g);
@@ -207,6 +208,9 @@ window.parseUserScript = function(content, url, failWhenMissing=false) {
               break;
           case 'inject-into':
               details.injectInto = data.value;
+              break;
+          case 'license':
+              details.license = data.value;
               break;
       }
     }
