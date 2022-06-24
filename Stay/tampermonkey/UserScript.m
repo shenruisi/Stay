@@ -68,7 +68,8 @@
         @"installType":self.installType ? self.installType : @"content",
         @"unsupportedGrants":self.unsupportedGrants ? self.unsupportedGrants : @[],
         @"stayEngine":self.stayEngine ? self.stayEngine : @"",
-        @"excludeSites":self.excludeSites ? self.excludeSites : @[],
+        @"whitelist":self.whitelist ? self.whitelist : @[],
+        @"blacklist":self.blacklist ? self.blacklist : @[],
         @"injectInto":self.injectInto ? self.injectInto : @"auto",
         @"license":self.license ? self.license : @""
     };
