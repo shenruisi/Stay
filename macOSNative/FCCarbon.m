@@ -8,6 +8,8 @@
 #import "FCCarbon.h"
 
 #import <Cocoa/Cocoa.h>
+#import <SafariServices/SafariServices.h>
+
 
 @interface FCCarbon()
 
@@ -47,6 +49,14 @@
         @"height":@(self.activeScreen.frame.size.height),
         @"id":self.activeScreen.deviceDescription[@"NSScreenNumber"]
     };
+}
+
+- (void)enableExtension{
+    NSWorkspaceOpenConfiguration *conf = [NSWorkspaceOpenConfiguration configuration];
+    [[NSWorkspace sharedWorkspace] openApplicationAtURL:[NSURL fileURLWithPath:@"/Applications/Safari.app"] configuration:conf completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error) {
+        
+    }];
+
 }
 
 @end

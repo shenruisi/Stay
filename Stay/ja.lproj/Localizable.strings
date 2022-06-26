@@ -68,6 +68,8 @@ SeeAll = "See all";
 Detail="Detail";
 Get="Get";
 UpdateScript="Update script";
+ActivateForSafari="Activate for Safari";
+ExtensionGuide="Safari -> Preferences… -> Extensions";
 
 mac.toolbar.back.tip = "戻る";
 mac.toolbar.forward.tip = "進む";
