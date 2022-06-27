@@ -43,7 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSDictionary *resourceUrls;
 @property (nonatomic, copy) NSArray<NSString *> *notes;
 @property (nonatomic, copy) NSDictionary<NSString *,NSDictionary *> *locales;
-@property (nonatomic, copy) NSArray<NSString *> *excludeSites;
+@property (nonatomic, copy) NSArray<NSString *> *whitelist;
+@property (nonatomic, copy) NSArray<NSString *> *blacklist;
 @property (nonatomic, copy) NSString *installType;
 
 @property (nonatomic, copy) NSString *injectInto;

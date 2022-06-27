@@ -65,6 +65,8 @@ SeeAll = "查看全部";
 Detail="详情";
 Get="获取";
 UpdateScript="更新脚本";
+ActivateForSafari="在Safari中激活扩展";
+ExtensionGuide="Safari浏览器 -> 偏好设置… -> 扩展";
 
 mac.toolbar.back.tip = "后退";
 mac.toolbar.forward.tip = "前进";

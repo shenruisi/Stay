@@ -18,6 +18,17 @@ NSString * const SFExtensionMessageKey = @"message";
 
 @implementation SafariWebExtensionHandler
 
+- (instancetype)init{
+    if (self = [super init]){
+//        [[NSDistributedNotificationCenter defaultCenter] addObserver:self
+//                                                            selector:@selector(showPref:)
+//                                                                name:@"app.stay.distributed.showPref"
+//                                                              object:nil];
+    }
+    
+    return self;
+}
+
 //https://wiki.greasespot.net/Include_and_exclude_rules
 - (NSRegularExpression *)convert2GlobsRegExp:(NSString *)str{
     NSString *expr = [[[[str stringByReplacingOccurrencesOfString:@"." withString:@"\\."]
@@ -324,6 +335,15 @@ NSString * const SFExtensionMessageKey = @"message";
         dic[str] = responData;
     }
     return dic;
+}
+
+
+
+- (void)stateOfExtension{
+//    [SFSafariApplication get]
+    [SFSafariExtensionManager getStateOfSafariExtensionWithIdentifier:@"com.dajiu.stay.pro.Mac-Extension" completionHandler:^(SFSafariExtensionState * _Nullable state, NSError * _Nullable error) {
+        
+    }];
 }
 
 @end

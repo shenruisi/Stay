@@ -88,7 +88,14 @@ static Tampermonkey *kInstance = nil;
     BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
     userScript.installType = pageMode ? @"page" : @"content";
     
-    if ([self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
+    if (![userScript.installType isEqualToString:@"page"] && [self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
+        userScript.installType = @"page";
+    }
+    
+    if (![userScript.installType isEqualToString:@"page"] && [self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
+        NSMutableArray *newGrants = [NSMutableArray arrayWithArray:userScript.grants];
+        [newGrants addObject:@"unsafeWindow"];
+        userScript.grants = newGrants;
         userScript.installType = @"page";
     }
     
@@ -107,6 +114,11 @@ static Tampermonkey *kInstance = nil;
 }
 
 
+- (BOOL)containsUnsafeWindow:(NSString *)script name:(NSString *)name{
+    NSRegularExpression *unsafeWindowExpr = [[NSRegularExpression alloc] initWithPattern:@"(unsafeWindow\\.[a-zA-z]+)\\(*" options:0 error:nil];
+    NSArray<NSTextCheckingResult *> *results = [unsafeWindowExpr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
+    return results.count > 0;
+}
 
 - (BOOL)usedCustomWindowPropertyOrMethod:(NSString *)script name:(NSString *)name{
     NSRegularExpression *windowExpr = [[NSRegularExpression alloc] initWithPattern:@"(window\\.[a-zA-z]+)\\(*" options:0 error:nil];

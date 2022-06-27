@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FCCarbonCapability <NSObject>
 - (NSDictionary *)activeScreenInfo;
+- (void)enableExtension;
 @end
 
 NS_ASSUME_NONNULL_END

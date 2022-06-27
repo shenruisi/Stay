@@ -19,7 +19,6 @@
 		584C05AE286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */; };
 		58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C312862E6DA00AA80D5 /* SegmentViewController.m */; };
-		58639C332862EE7B00AA80D5 /* macOSNative.bundle in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 588202C7285A12B400B2721A /* macOSNative.bundle */; platformFilter = maccatalyst; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C352863040700AA80D5 /* ToolbarTrackView.m */; };
 		58639C39286312B100AA80D5 /* QuickAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C38286312B100AA80D5 /* QuickAccess.m */; };
 		58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3C28631FB900AA80D5 /* EmptyViewController.m */; };
@@ -188,6 +187,8 @@
 		588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832F284759B900AB2D73 /* html2canvas.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 588B832E284759B900AB2D73 /* html2canvas.min.js */; };
 		589741C928645889008FB897 /* stay-taskloop.js in Resources */ = {isa = PBXBuildFile; fileRef = 589741C828645889008FB897 /* stay-taskloop.js */; };
+		589741CA2868084B008FB897 /* macOSNative.bundle in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 588202C7285A12B400B2721A /* macOSNative.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		589741D328684D05008FB897 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 589741CF2868098B008FB897 /* SafariServices.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		58AC12E42860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
@@ -311,7 +312,7 @@
 			remoteGlobalIDString = 5876890B2719238000F834A4;
 			remoteInfo = "Stay Extension";
 		};
-		588202CC285A12FA00B2721A /* PBXContainerItemProxy */ = {
+		589741CB28680854008FB897 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
 			proxyType = 1;
@@ -338,8 +339,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				589741CA2868084B008FB897 /* macOSNative.bundle in Embed App Extensions */,
 				58639CF7286447B200AA80D5 /* Stay-Mac Extension.appex in Embed App Extensions */,
-				58639C332862EE7B00AA80D5 /* macOSNative.bundle in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -458,6 +459,8 @@
 		588B832B284620F700AB2D73 /* ActivateChanged.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivateChanged.m; sourceTree = "<group>"; };
 		588B832E284759B900AB2D73 /* html2canvas.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = html2canvas.min.js; sourceTree = "<group>"; };
 		589741C828645889008FB897 /* stay-taskloop.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "stay-taskloop.js"; path = "Stay/stay/vendor/stay-taskloop.js"; sourceTree = SOURCE_ROOT; };
+		589741CD28680925008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/iOSSupport/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
+		589741CF2868098B008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
 		58AC12E22860750800875D6D /* FCShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCShared.h; sourceTree = "<group>"; };
 		58AC12E32860750800875D6D /* FCShared.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCShared.m; sourceTree = "<group>"; };
 		58AC12E62860752800875D6D /* Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
@@ -662,6 +665,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				589741D328684D05008FB897 /* SafariServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -974,6 +978,8 @@
 		58F7F4BC2743AABE00270873 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				589741CD28680925008FB897 /* SafariServices.framework */,
+				589741CF2868098B008FB897 /* SafariServices.framework */,
 				58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */,
 				8324085BF6D1637082EC8C6B /* libPods-Stay.a */,
 				D8656D7B23E583F217D908B6 /* libPods-Stay-Mac.a */,
@@ -1476,8 +1482,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				589741CC28680854008FB897 /* PBXTargetDependency */,
 				58639CF6286447A600AA80D5 /* PBXTargetDependency */,
-				588202CD285A12FA00B2721A /* PBXTargetDependency */,
 			);
 			name = "Stay-Mac";
 			productName = Stay;
@@ -1998,11 +2004,10 @@
 			target = 5876890B2719238000F834A4 /* Stay Extension */;
 			targetProxy = 5876890E2719238000F834A4 /* PBXContainerItemProxy */;
 		};
-		588202CD285A12FA00B2721A /* PBXTargetDependency */ = {
+		589741CC28680854008FB897 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = maccatalyst;
 			target = 588202C6285A12B400B2721A /* macOSNative */;
-			targetProxy = 588202CC285A12FA00B2721A /* PBXContainerItemProxy */;
+			targetProxy = 589741CB28680854008FB897 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2319,6 +2324,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -2365,6 +2371,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
