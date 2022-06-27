@@ -297,11 +297,11 @@ let RMC_CONTEXT = {};
                     console.error("error parsing xhr arraybuffer response", error);
                 }
                 // blob responses had their data converted, convert it back to blob
-            } else if (request.response.responseType === "blob" && resp.response && resp.response.data) {
-                fetch(request.response.response.data)
+            } else if (resp.responseType === "blob" && resp.response && resp.response.data) {
+                fetch(resp.response.data)
                     .then(res => res.blob())
                     .then(b => {
-                        resp.response = b;
+                        resp.response.blob = b;
                         window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
                     });
             }
