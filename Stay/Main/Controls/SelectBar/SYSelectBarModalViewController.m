@@ -33,6 +33,8 @@
         
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
 
+    activityVC.popoverPresentationController.sourceView = self.getMainView;
+    activityVC.popoverPresentationController.sourceRect = self.getMainView.bounds;
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:activityVC animated:YES completion:nil];
         
 }
@@ -45,6 +47,8 @@
     NSArray *activityItems = @[textToShare];
         
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+    activityVC.popoverPresentationController.sourceView = self.getMainView;
+    activityVC.popoverPresentationController.sourceRect = self.getMainView.bounds;
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:activityVC animated:YES completion:nil];
 }
 
