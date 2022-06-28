@@ -8,7 +8,7 @@
 
 //settings
 settings.rateApp="評價應用";
-settings.openSource="開源代碼";
+settings.openSource="查閱開源代碼";
 settings.joinTelegram="加入Telegram";
 settings.enableStay="在Safari瀏覽器擴展中激活Stay";
 settings.joinQQ="加入QQ群";
@@ -70,3 +70,7 @@ ExtensionGuide="Safari瀏覽器 -> 偏好設定… -> 擴展";
 
 mac.toolbar.back.tip = "後退";
 mac.toolbar.forward.tip = "前進";
+
+Interaction="互動";
+Social="社交媒體";
+MoreApp="更多應用";

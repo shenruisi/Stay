@@ -9,6 +9,10 @@
 #import <WebKit/WebKit.h>
 #import "SYEditViewController.h"
 #import "LoadingSlideController.h"
+#import "FCStyle.h"
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
 
 
 @interface SYWebScriptViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
@@ -24,18 +28,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [self createBgColor];
+    self.view.backgroundColor = FCStyle.background;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self.view addSubview:self.wkwebView];
-    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82, [[UIScreen mainScreen] bounds].size.width, 0.5f)];
-    self.progressView.backgroundColor = [UIColor whiteColor];
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 43,self.view.frame.size.width, 0.5f)];
+#else
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82,self.view.frame.size.width, 0.5f)];
+#endif
+    
+    self.progressView.backgroundColor =  FCStyle.background;
     //设置进度条的高度，下面这句代码表示进度条的宽度变为原来的1倍，高度变为原来的1.5倍.
-    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.5f);
+//    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.5f);
     [self.progressView setProgressViewStyle:UIProgressViewStyleDefault];
     [self.progressView setProgressTintColor:RGB(185,101,223)];
     [self.view addSubview:self.progressView];
     [self.wkwebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     self.navigationItem.leftBarButtonItems = @[self.backBtn,self.closeBtn];
+
+}
+
+- (void)navigateViewDidLoad{
+    self.progressView.frame = CGRectMake(0, 43,self.view.frame.size.width, 0.5f);
+    self.wkwebView.frame = CGRectMake(0,50,self.view.width,self.view.height-43);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -59,8 +75,8 @@
 
         config.userContentController = wkUController;
         
-        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,82,kScreenWidth,self.view.height) configuration:config];
-        _wkwebView.backgroundColor = [self createBgColor];
+        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0,self.progressView.bottom,self.view.width,self.view.height-self.progressView.bottom) configuration:config];
+        _wkwebView.backgroundColor = FCStyle.background;
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;
         [_wkwebView setOpaque:false];
@@ -73,7 +89,13 @@
     return _wkwebView;
 }
 
+- (BOOL)canGoback{
+    return [self.wkwebView canGoBack];
+}
 
+- (void)goback{
+    [self.wkwebView goBack];
+}
 
 - (void)backItemAction:(UIButton *)sender
 {
@@ -85,23 +107,13 @@
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     }
 }
-- (UIColor *)createBgColor {
-    UIColor *viewBgColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-            if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-                return RGB(242, 242, 246);
-            }
-            else {
-                return RGB(21, 21, 21);
-            }
-        }];
-    return viewBgColor;
-}
+
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation{
     NSLog(@"开始加载网页");
     //开始加载网页时展示出progressView
     self.progressView.hidden = NO;
     //开始加载网页的时候将progressView的Height恢复为1.5倍
-    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.5f);
+    self.progressView.transform = CGAffineTransformMakeScale(1.0f, 0.4f);
     //防止progressView被网页挡住
     [self.view bringSubviewToFront:self.progressView];
     NSString *url = [webView.URL absoluteString];
@@ -117,7 +129,11 @@
                     SYEditViewController *cer = [[SYEditViewController alloc] init];
                     cer.content = str;
                     cer.downloadUrl = url;
+#ifdef Mac
+                    [[QuickAccess secondaryController] pushViewController:cer];
+#else
                     [self.navigationController pushViewController:cer animated:true];
+#endif
                 });
             }
         });
