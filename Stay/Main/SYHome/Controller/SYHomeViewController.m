@@ -415,19 +415,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [SharedStorageManager shared].userscriptHeaders.content = array;
     [[SharedStorageManager shared].userscriptHeaders flush];
     
-    
-    
-//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-//    NSMutableArray *array =  [[NSMutableArray alloc] init];
-//    for(int i = 0; i < self.datas.count; i++) {
-//        UserScript *scrpit = self.datas[i];
-//        [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"STAY_SCRIPTS_%@",scrpit.uuid]];
-//        scrpit.parsedContent = @"";
-//        [array addObject: [scrpit toDictionary]];
-//    }
-//    [groupUserDefaults setObject:array forKey:@"STAY_SCRIPTS"];
-//    [groupUserDefaults synchronize];
-    
     [[ScriptMananger shareManager] buildData];
 
 }
