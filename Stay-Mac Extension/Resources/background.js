@@ -142,6 +142,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         o.responseXML = null;
                         o.responseText = null;
                         o.response = xhr.response;
+                        if (xhr.responseType === "blob") {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(xhr.response);
+                            reader.onloadend = function () {
+                                const base64data = reader.result;
+                                console.log("GM_xmlhttpRequest.BG=", window.URL.createObjectURL(xhr.response), ",base64data---", base64data)
+                                o.response = {
+                                    data: base64data,
+                                    type: xhr.response.type
+                                };
+                            };
+                        }
                     }
                 } else {
                     o.responseXML = null;
@@ -443,7 +455,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
     else if ("popup" == request.from) {
-        console.log(request.from + " = " + request.operate);
+        // console.log(request.from + " = " + request.operate);
         if ("fetchLog" == request.operate) {
             sendResponse({ body: gm_console });
         }
@@ -540,6 +552,7 @@ function xhrHandleEvent(e, xhr, tab, id, xhrId) {
         reader.readAsDataURL(xhr.response);
         reader.onloadend = function () {
             const base64data = reader.result;
+            console.log("window.URL.createObjectURL(xhr.response)=", window.URL.createObjectURL(xhr.response), ",base64data---", base64data)
             x.response = {
                 data: base64data,
                 type: xhr.response.type

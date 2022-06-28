@@ -319,38 +319,47 @@
         }
         let text = 'Allow to download "' + name+ '"';
         let popToastTemp = [
-            '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .6);padding-top: 6px;">',
-            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;">' + iconDom +'<div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
-            '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
-            '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
-            '<div style="' + fontColor + topLine + ' font-size: 14px;margin-top:10px; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
-            '<div id="gm_downloadCancel" style=" ' + rightLine +' font-size:16px;font-weight:600;color: #B620E0;width:50%;padding: 8px;text-align:center;">Cancel</div>',
-            '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;text-align:center;">Allow</a>',
-            '</div>',
-            '</div>'
+            // '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .6);padding-top: 6px;">',
+            // '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;">' + iconDom +'<div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
+            // '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
+            // '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
+            // '<div style="' + fontColor + topLine + ' font-size: 14px;margin-top:10px; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
+            // '<div id="gm_downloadCancel" style=" ' + rightLine +' font-size:16px;font-weight:600;color: #B620E0;width:50%;padding: 8px;text-align:center;">Cancel</div>',
+            '<a id="GM_downloadLink" target="_blank" style="display:none">Allow</a>',
+            // '</div>',
+            // '</div>'
         ];
+        let tempDom = document.getElementById("GM_downloadContainer");
+        if (!tempDom){
+            let temp = popToastTemp.join("");
+            tempDom = document.createElement("div");
+            tempDom.id = "GM_downloadContainer"
+            tempDom.innerHTML = temp;
+            document.body.appendChild(tempDom);
+        }
 
-        let temp = popToastTemp.join("");
-        let tempDom = document.createElement("div");
-        tempDom.id = "downloadContainer"
-        tempDom.innerHTML = temp;
-        document.body.appendChild(tempDom);
-
-        let downloadCancelDom = document.getElementById("gm_downloadCancel");
-        downloadCancelDom.addEventListener("click", function (e) {
-            tempDom.remove();
-        })
-
-        let downloadLinkDom = document.getElementById("downloadLink");
-        console.log("downloadLinkDom",url);
-        if (url.match(new RegExp("^data:image\/.*;base64,"))){ //download image directly
+        let downloadLinkDom = document.getElementById("GM_downloadLink");
+        console.log("GM_downloadLink", url);
+        if (url.match(new RegExp("^data:.*;base64,"))){ //download image directly
             downloadLinkDom.href = url;
+            downloadLinkDom.click()
         }
         else{
-            downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
+            __xhr({
+                method: "GET",
+                responseType: "blob",
+                url: url,
+                onload: res => {
+                    if (res.status === 200) {
+                        let downLoadUrl = window.URL.createObjectURL(res.response.blob);
+                        downloadLinkDom.href = downLoadUrl
+                        downloadLinkDom.download = name
+                        downloadLinkDom.click()
+                    }
+                }
+            });
         }
 
-        downloadLinkDom.download = name;
         downloadLinkDom.addEventListener("click", function (e) {
             tempDom.remove();
         })
@@ -598,13 +607,22 @@
             var onerror = response.onerror;
             var onload = response.onload;
             if (params.onreadystatechange && onreadystatechange) {
+                
                 params.onreadystatechange(onreadystatechange)
             }
-
             if (params.onerror && onerror) {
                 params.onerror(onerror)
             }
             if (params.onload && onload) {
+                console.log("GM_xmlhttpRequest.onload====",onload)
+                // if (resp.responseType === "blob" && resp.response && resp.response.data) {
+                //     fetch(resp.response.data)
+                //         .then(res => res.blob())
+                //         .then(b => {
+                //             resp.response.blob = b;
+                //             window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
+                //         });
+                // }
                 params.onload(onload)
             }
         });
@@ -826,7 +844,7 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_LIST_VALUES") return;
-                    console.log("GM_listValues_Async----response=", e.data);
+                    // console.log("GM_listValues_Async----response=", e.data);
                     let res = e.data ? (e.data.response ? e.data.response.body : {}): {};
                     resolve(res);
                     window.removeEventListener("message", callback);
@@ -839,7 +857,7 @@
 
         function GM_setValueSync(key, value) {
             let old = __listValuesStroge[key];
-            console.log("GM_setValueSync-----key===", key,",value=",value);
+            // console.log("GM_setValueSync-----key===", key,",value=",value);
             __listValuesStroge[key] = value;
             window.postMessage({ id: _uuid, name: "API_SET_VALUE_SYNC", key: key, value: value });
             Stay_notifyValueChangeListeners(key, old, __listValuesStroge[key], false);
