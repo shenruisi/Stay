@@ -209,7 +209,10 @@
             @{
                 @"section":NSLocalizedString(@"MoreApp",@""),
                 @"cells":@[
-                    @{@"icon":@"FastClipIcon",@"title":@"FastClip 3",@"url":@"https://apps.apple.com/cn/app/fastclip-copy-paste-enhancer/id1476085650?l=en"}
+                    @{@"icon":@"FastClipIcon",@"title":@"FastClip 3",
+                      @"url":@"https://apps.apple.com/cn/app/fastclip-copy-paste-enhancer/id1476085650?l=en",
+                      @"subtitle":@"Snippets Editor"
+                    }
                 ]
             }
         ];
@@ -224,7 +227,7 @@
         _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
-        _tableView.separatorColor = FCStyle.fcSecondaryBlack;
+        _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.backgroundColor = FCStyle.background;

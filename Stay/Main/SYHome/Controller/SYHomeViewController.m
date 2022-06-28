@@ -45,10 +45,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @implementation _SYHomeViewTableViewCell
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+    }
+    
+    return self;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
 }
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+}
+
 
 @end
 
@@ -495,10 +507,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     if (cell == nil) {
         cell = [[_SYHomeViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
 #ifndef Mac
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
 #endif
         
-//        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+//       cell.accessoryType=UITableViewCellAccessoryNone;
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
@@ -637,10 +649,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [cell.contentView addSubview:updateLabel];
     }
     
+    UIImageView *accessory =  [[UIImageView alloc] initWithFrame:CGRectMake(viewWidth - 10 - 15, (144.0 - 13)/2, 10, 13)];
+    UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                             withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+    image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [accessory setImage:image];
+    [cell.contentView addSubview:accessory];
+    
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
     line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
-
     return cell;
 }
 
