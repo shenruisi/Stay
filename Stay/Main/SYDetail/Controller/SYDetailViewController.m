@@ -336,8 +336,8 @@
         matchLabel.textColor = FCStyle.fcPlaceHolder;
         [_matchScrollView addSubview:matchLabel];
         CGFloat top = matchLabel.bottom + 8;
-        if (self.script.mathes.count > 0) {
-            for (NSString *title in self.script.mathes) {
+        if (self.script.matches.count > 0) {
+            for (NSString *title in self.script.matches) {
                 UIView *view = [self baseNote:title];
                 view.top = top;
                 view.left = baseLeft;

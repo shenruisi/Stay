@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "iCloudService.h"
 NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
 @class Plugin;
@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
 @property (class, readonly, strong) Plugin *plugin;
 #endif
+@property (class, readonly, strong) iCloudService *iCloudService;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -19,7 +19,7 @@
 #import "SYExpandViewController.h"
 #import "SYWebScriptViewController.h"
 
-static CGFloat MIN_PRIMARY_WIDTH = 270;
+static CGFloat MIN_PRIMARY_WIDTH = 310;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.stay.notification.SVCDisplayModeDidChangeNotification";
@@ -81,13 +81,13 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar{
-    return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_Import,Toolbar_Collapse,
+    return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_iCloudOn,Toolbar_Import,Toolbar_Collapse,
              Toolbar_Block,Toolbar_Back,Toolbar_Forward,Toolbar_TabName,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Placeholder];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar{
     return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_Collapse,Toolbar_Block,
-             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import];
+             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import,Toolbar_iCloudOn];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar{
@@ -108,6 +108,14 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         NSToolbarItem *item = [FCShared.plugin.appKit appName:itemIdentifier];
         return item;
     }
+    else if ([itemIdentifier isEqualToString:Toolbar_iCloudOn]){
+        NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
+        item.target = self;
+        item.action = @selector(toolbarItemDidClick:);
+        item.bordered = YES;
+        item.image = [UIImage systemImageNamed:@"checkmark.icloud"];
+        return item;
+    }
     else if ([itemIdentifier isEqualToString:Toolbar_Import]){
         NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
         item.target = self;
@@ -126,7 +134,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_SlideTrackInPrimary]){
-        return  [FCShared.plugin.appKit slideTrackToolbarItem:itemIdentifier width:self.primaryColumnWidth - 270];
+        return  [FCShared.plugin.appKit slideTrackToolbarItem:itemIdentifier width:self.primaryColumnWidth - 310];
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Block]){
         return [FCShared.plugin.appKit blockItem:itemIdentifier width:12];
@@ -240,6 +248,23 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Save]){
         [self.holdEditViewController save];
+    }
+    else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloudOn]){
+        NSError *error = nil;
+        BOOL firstInit = [FCShared.iCloudService firstInit:&error];
+        if (error){
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"icloud.error", @"")
+                                                                           message:NSLocalizedString(@"TryAgainLater", @"")
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+                }];
+            [alert addAction:conform];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        
     }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
 //        [self showTabEdit];

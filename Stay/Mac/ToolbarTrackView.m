@@ -24,7 +24,7 @@
         
         for(NSToolbarItem *item in self.toolbar.items){
             if ([item.itemIdentifier isEqualToString:Toolbar_SlideTrackInPrimary]){
-                [FCShared.plugin.appKit slideTrackToolbarItemChanged:item width:self.frame.size.width - 270];
+                [FCShared.plugin.appKit slideTrackToolbarItemChanged:item width:self.frame.size.width - 310];
             }
         }
         

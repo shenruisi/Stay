@@ -245,9 +245,9 @@
         }
         NSString * mathesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
         if (mathesStr != NULL && mathesStr.length > 0) {
-            scrpitDetail.mathes = [mathesStr componentsSeparatedByString:@","];
+            scrpitDetail.matches = [mathesStr componentsSeparatedByString:@","];
         } else {
-            scrpitDetail.mathes = @[];
+            scrpitDetail.matches = @[];
         }
         NSString * excludesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
         if (excludesStr != NULL && excludesStr.length > 0) {
@@ -440,9 +440,9 @@
         }
         NSString * mathesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
         if (mathesStr != NULL && mathesStr.length > 0) {
-            scrpitDetail.mathes = [mathesStr componentsSeparatedByString:@","];
+            scrpitDetail.matches = [mathesStr componentsSeparatedByString:@","];
         } else {
-            scrpitDetail.mathes = @[];
+            scrpitDetail.matches = @[];
         }
         NSString * excludesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
         if (excludesStr != NULL && excludesStr.length > 0) {
@@ -555,9 +555,9 @@
         }
         NSString * mathesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
         if (mathesStr != NULL && mathesStr.length > 0) {
-            scrpitDetail.mathes = [mathesStr componentsSeparatedByString:@","];
+            scrpitDetail.matches = [mathesStr componentsSeparatedByString:@","];
         } else {
-            scrpitDetail.mathes = @[];
+            scrpitDetail.matches = @[];
         }
         NSString * excludesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
         if (excludesStr != NULL && excludesStr.length > 0) {
@@ -647,8 +647,8 @@
             sqlite3_bind_text(statement, 9, NULL, -1,NULL);
         }
         
-        if(scrpitDetail.mathes.count > 0) {
-            sqlite3_bind_text(statement, 10, [[scrpitDetail.mathes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        if(scrpitDetail.matches.count > 0) {
+            sqlite3_bind_text(statement, 10, [[scrpitDetail.matches componentsJoinedByString:@","] UTF8String], -1,NULL);
         } else {
             sqlite3_bind_text(statement, 10, NULL, -1,NULL);
         }
@@ -791,8 +791,8 @@
             sqlite3_bind_text(statement, 8, NULL, -1,NULL);
         }
         
-        if(scrpitDetail.mathes.count > 0) {
-            sqlite3_bind_text(statement, 9, [[scrpitDetail.mathes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        if(scrpitDetail.matches.count > 0) {
+            sqlite3_bind_text(statement, 9, [[scrpitDetail.matches componentsJoinedByString:@","] UTF8String], -1,NULL);
         } else {
             sqlite3_bind_text(statement, 9, NULL, -1,NULL);
         }
@@ -904,9 +904,9 @@
         }
         NSString * mathesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
         if (mathesStr != NULL && mathesStr.length > 0) {
-            scrpitDetail.mathes = [mathesStr componentsSeparatedByString:@","];
+            scrpitDetail.matches = [mathesStr componentsSeparatedByString:@","];
         } else {
-            scrpitDetail.mathes = @[];
+            scrpitDetail.matches = @[];
         }
         NSString * excludesStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
         if (excludesStr != NULL && excludesStr.length > 0) {
@@ -1016,8 +1016,8 @@
             sqlite3_bind_text(statement, 9, NULL, -1,NULL);
         }
         
-        if(scrpitDetail.mathes.count > 0) {
-            sqlite3_bind_text(statement, 10, [[scrpitDetail.mathes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        if(scrpitDetail.matches.count > 0) {
+            sqlite3_bind_text(statement, 10, [[scrpitDetail.matches componentsJoinedByString:@","] UTF8String], -1,NULL);
         } else {
             sqlite3_bind_text(statement, 10, NULL, -1,NULL);
         }

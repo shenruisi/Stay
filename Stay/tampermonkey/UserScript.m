@@ -19,7 +19,7 @@
     userScript.homepage = dic[@"homepage"];
     userScript.icon = dic[@"iconUrl"];
     userScript.includes = dic[@"includes"];
-    userScript.mathes = dic[@"matches"];
+    userScript.matches = dic[@"matches"];
     userScript.excludes = dic[@"excludes"];
     userScript.runAt = dic[@"runAt"];
     userScript.grants = dic[@"grants"];
@@ -51,7 +51,7 @@
         @"homepage":self.homepage ? self.homepage : @"",
         @"icon":self.icon ? self.icon : @"",
         @"includes":self.includes,
-        @"matches":self.mathes,
+        @"matches":self.matches,
         @"excludes":self.excludes,
         @"runAt":self.runAt,
         @"grants":self.grants,
@@ -74,6 +74,7 @@
         @"license":self.license ? self.license : @""
     };
 }
+
 
 - (NSString *)description
 {
@@ -102,7 +103,7 @@
         [builder appendFormat:@"runAt: %@\n",self.runAt];
     }
     
-    for (NSString *match in self.mathes){
+    for (NSString *match in self.matches){
         [builder appendFormat:@"match: %@\n",match];
     }
     
@@ -130,5 +131,6 @@
     NSLocale *locale = [NSLocale currentLocale];
     return locale.languageCode;
 }
+
 
 @end

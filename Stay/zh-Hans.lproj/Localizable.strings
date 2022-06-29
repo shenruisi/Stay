@@ -74,3 +74,10 @@ mac.toolbar.forward.tip = "前进";
 Interaction="互动";
 Social="社交媒体";
 MoreApp="更多应用";
+
+TryAgainLater="请稍后重试。";
+
+icloud.error = "iCloud出错";
+icloud.firstInit = "需要在此设备上开启首次数据同步吗？";
+icloud.syncNow = "立即同步";
+icloud.syncNow.alert ="需要立即同步吗？";

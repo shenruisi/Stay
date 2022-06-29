@@ -26,4 +26,15 @@ static Plugin *_plugin = nil;
 }
 #endif
 
+static iCloudService *_iCloudService = nil;
++ (iCloudService *)iCloudService{
+    static dispatch_once_t onceToken_iCloudService;
+    dispatch_once(&onceToken_iCloudService, ^{
+        if (nil == _iCloudService){
+            _iCloudService = [[iCloudService alloc] init];
+        }
+    });
+    return _iCloudService;
+}
+
 @end

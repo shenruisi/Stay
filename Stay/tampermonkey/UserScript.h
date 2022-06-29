@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CloudKit/CloudKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 //https://www.tampermonkey.net/documentation.php
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *homepage;
 @property (nonatomic, copy) NSString *icon;
 @property (nonatomic, copy) NSArray<NSString *> *includes;
-@property (nonatomic, copy) NSArray<NSString *> *mathes;
+@property (nonatomic, copy) NSArray<NSString *> *matches;
 @property (nonatomic, copy) NSArray<NSString *> *excludes;
 @property (nonatomic, copy) NSString *runAt;
 @property (nonatomic, copy) NSArray<NSString *> *grants;
@@ -53,12 +54,14 @@ NS_ASSUME_NONNULL_BEGIN
 //Stay only
 @property (nonatomic, copy) NSString *stayEngine;
 
+
 + (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
 
 //Use the return value as a key of `locales`
 + (NSString *)localeCode;
 + (NSString *)localeCodeLanguageCodeOnly;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -24,6 +24,10 @@ static const NSToolbarItemIdentifier Toolbar_More = @"toolbar.more";
 static const NSToolbarItemIdentifier Toolbar_Save = @"toolbar.save";
 static const NSToolbarItemIdentifier Toolbar_Done = @"toolbar.done";
 static const NSToolbarItemIdentifier Toolbar_Import = @"toolbar.import";
+static const NSToolbarItemIdentifier Toolbar_iCloud = @"toolbar.iCloud";
+static const NSToolbarItemIdentifier Toolbar_iCloudOn = @"toolbar.iCloudOn";
+static const NSToolbarItemIdentifier Toolbar_iCloudOff = @"toolbar.iCloudOff";
+static const NSToolbarItemIdentifier Toolbar_iCloudSlash = @"toolbar.iCloudSlash";
 
 @protocol FCToolbarDelegate <NSObject>
 

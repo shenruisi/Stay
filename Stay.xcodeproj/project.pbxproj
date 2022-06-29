@@ -198,6 +198,15 @@
 		58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
 		58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
+		58EA444D286AFCE500BD6C4D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EA444C286AFCE500BD6C4D /* CloudKit.framework */; };
+		58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA444F286B00B500BD6C4D /* iCloudService.m */; };
+		58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA444F286B00B500BD6C4D /* iCloudService.m */; };
+		58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4454286C1E4F00BD6C4D /* StatusRecord.m */; };
+		58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4454286C1E4F00BD6C4D /* StatusRecord.m */; };
+		58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */; };
+		58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */; };
+		58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4460286C368800BD6C4D /* ContentRecord.m */; };
+		58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4460286C368800BD6C4D /* ContentRecord.m */; };
 		58F7F4B827438CB000270873 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4B727438CB000270873 /* bootstrap.js */; };
 		58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4BA2743A93E00270873 /* parse-user-script.js */; };
 		58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */; };
@@ -479,6 +488,15 @@
 		58EA44442869BB5200BD6C4D /* ImportSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportSlideController.m; sourceTree = "<group>"; };
 		58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportMenuModalViewController.h; sourceTree = "<group>"; };
 		58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportMenuModalViewController.m; sourceTree = "<group>"; };
+		58EA444C286AFCE500BD6C4D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		58EA444E286B00B500BD6C4D /* iCloudService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iCloudService.h; sourceTree = "<group>"; };
+		58EA444F286B00B500BD6C4D /* iCloudService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iCloudService.m; sourceTree = "<group>"; };
+		58EA4453286C1E4F00BD6C4D /* StatusRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StatusRecord.h; sourceTree = "<group>"; };
+		58EA4454286C1E4F00BD6C4D /* StatusRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StatusRecord.m; sourceTree = "<group>"; };
+		58EA445B286C2C9800BD6C4D /* UserscriptRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserscriptRecord.h; sourceTree = "<group>"; };
+		58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserscriptRecord.m; sourceTree = "<group>"; };
+		58EA445F286C368800BD6C4D /* ContentRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentRecord.h; sourceTree = "<group>"; };
+		58EA4460286C368800BD6C4D /* ContentRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentRecord.m; sourceTree = "<group>"; };
 		58F7F4B727438CB000270873 /* bootstrap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58F7F4BA2743A93E00270873 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -631,6 +649,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */,
+				58EA444D286AFCE500BD6C4D /* CloudKit.framework in Frameworks */,
 				6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */,
 				B77AC65E261A7CF9A19D79B8 /* libPods-Stay.a in Frameworks */,
 			);
@@ -783,6 +802,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				58EA444B286AFB5400BD6C4D /* iCloud */,
 				584C05AA286179BB00E07DDF /* Helper */,
 				58AC12F128607B1D00875D6D /* Config */,
 				58AC12E1286074C700875D6D /* Access */,
@@ -965,6 +985,29 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		58EA444B286AFB5400BD6C4D /* iCloud */ = {
+			isa = PBXGroup;
+			children = (
+				58EA4452286B019400BD6C4D /* RecordTypes */,
+				58EA444E286B00B500BD6C4D /* iCloudService.h */,
+				58EA444F286B00B500BD6C4D /* iCloudService.m */,
+			);
+			path = iCloud;
+			sourceTree = "<group>";
+		};
+		58EA4452286B019400BD6C4D /* RecordTypes */ = {
+			isa = PBXGroup;
+			children = (
+				58EA4453286C1E4F00BD6C4D /* StatusRecord.h */,
+				58EA4454286C1E4F00BD6C4D /* StatusRecord.m */,
+				58EA445B286C2C9800BD6C4D /* UserscriptRecord.h */,
+				58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */,
+				58EA445F286C368800BD6C4D /* ContentRecord.h */,
+				58EA4460286C368800BD6C4D /* ContentRecord.m */,
+			);
+			path = RecordTypes;
+			sourceTree = "<group>";
+		};
 		58F7F4B92743A92A00270873 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -982,6 +1025,7 @@
 		58F7F4BC2743AABE00270873 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58EA444C286AFCE500BD6C4D /* CloudKit.framework */,
 				589741CD28680925008FB897 /* SafariServices.framework */,
 				589741CF2868098B008FB897 /* SafariServices.framework */,
 				58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */,
@@ -1838,10 +1882,12 @@
 				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
+				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
+				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
@@ -1857,6 +1903,7 @@
 				587689402720064D00F834A4 /* NavigationController.m in Sources */,
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
+				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
@@ -1872,6 +1919,7 @@
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
+				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
@@ -1918,6 +1966,7 @@
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
+				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
@@ -1966,8 +2015,10 @@
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
+				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
+				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
@@ -1976,6 +2027,7 @@
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				58AC12F028607AB800875D6D /* FCToolbar.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
+				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
 			);
