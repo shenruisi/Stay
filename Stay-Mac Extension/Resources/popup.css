@@ -33,7 +33,7 @@ body{
     min-width: 375px;
     width: 100%;
     min-height: 380px;
-    /* max-height: 480px; */
+    max-height: 480px;
 }
 body,
 div,

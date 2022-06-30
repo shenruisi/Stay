@@ -150,7 +150,27 @@ let RMC_CONTEXT = {};
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
         let uuid = request.uuid;
-        if (request.from == "background" && "REGISTER_MENU_COMMAND_CONTEXT" === operate){
+        if (request.from == "background" && "FETCH_BLOB_URL" === operate){
+            
+            var xhrId = request.xhrId;
+            let base64Data = request.base64Data;
+            // console.log("FETCH_BLOB_URL------start, xhrId=", xhrId, ",base64Data==", base64Data);
+            var byteString;
+            if (base64Data.split(',')[0].indexOf('base64') >= 0)
+                byteString = window.atob(base64Data.split(',')[1]);
+            else
+                byteString = unescape(base64Data.split(',')[1]);
+            var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            let blob = new Blob([ia], { type: mimeString });
+            let blobUrl = window.URL.createObjectURL(blob);
+            // console.log("FETCH_BLOB_URL------blobUrl==", blobUrl);
+            sendResponse({ body: { blob: blob, blobUrl: blobUrl }, xhrId: xhrId });
+        }
+        else if (request.from == "background" && "REGISTER_MENU_COMMAND_CONTEXT" === operate){
             let rmc_context = request.command_content;
             // console.log("browser.addListener--REGISTER_MENU_COMMAND_CONTEXT---rmc_context====", rmc_context)
             if (!rmc_context || rmc_context == "{}") {
@@ -301,7 +321,9 @@ let RMC_CONTEXT = {};
                 fetch(resp.response.data)
                     .then(res => res.blob())
                     .then(b => {
+                        let blobUrl = window.URL.createObjectURL(b);
                         resp.response.blob = b;
+                        resp.response.blobUrl = blobUrl;
                         window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
                     });
             }
