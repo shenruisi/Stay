@@ -123,6 +123,10 @@
             source += GM_notification.toString() + '\n\n';
             source += "GM.notification = " + GM_notification.toString() + '\n\n';
         }
+        if (grants.includes('GM_cookie') || grants.includes('GM.cookie')) {
+            source += GM_cookie.toString() + '\n\n';
+            source += "GM.cookie = " + GM_cookie.toString() + '\n\n';
+        }
         if (grants.includes('GM_download') || grants.includes('GM.download')) {
             source += GM_download.toString() + '\n\n';
             source += 'GM.download = GM_download\n\n';
@@ -292,6 +296,10 @@
 
 
     function GM_setClipboard(data, info) {
+        
+    }
+
+    function GM_cookie(action, detail, res) {
         
     }
 
@@ -758,6 +766,11 @@
                 api += `${GM_download}\n`;
                 gmFunVals.push("download: GM_download");
                 gmFunName.push("GM_download");
+            }
+            else if (("GM.cookie" === grant || "GM_cookie" === grant) && !gmFunName.includes("GM_cookie")) {
+                api += `${GM_cookie}\n`;
+                gmFunVals.push("cookie: GM_cookie");
+                gmFunName.push("GM_cookie");
             }
             else if (grant === "GM_xmlhttpRequest" && !gmFunName.includes("GM_xmlhttpRequest")){
                 api += "\nconst GM_xmlhttpRequest = __xhr;\n";
