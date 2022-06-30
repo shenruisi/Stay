@@ -264,6 +264,44 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
             [alert addAction:conform];
             [self presentViewController:alert animated:YES completion:nil];
         }
+        else{
+            if (firstInit){
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                               message:NSLocalizedString(@"icloud.firstInit", @"")
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                [alert addAction:conform];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                  style:UIAlertActionStyleCancel
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            else{
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                               message:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                [alert addAction:conform];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                  style:UIAlertActionStyleCancel
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        }
         
     }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){

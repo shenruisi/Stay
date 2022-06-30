@@ -13,8 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)logged;
 - (NSString *)serviceIdentifier;
-- (BOOL)firstInit:(NSError **)outError;
-
+- (BOOL)firstInit:(NSError * __strong *)outError;
+- (void)pushUserscripts:(NSArray *)userscripts
+              syncStart:(void(^)(void))syncStart
+      completionHandler:(void (^)(NSError *))completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -48,11 +48,12 @@
     return identifier;
 }
 
-- (BOOL)firstInit:(NSError **)outError{
+- (BOOL)firstInit:(NSError * __strong *)outError{
     __block BOOL ret = NO;
-    CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[StatusRecord.type]];
-    if (nil == zone){
-        *outError = [[NSError alloc] init];
+    NSError *zoneError = nil;
+    CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[StatusRecord.type] error:&zoneError];
+    if (nil != zoneError){
+        *outError = zoneError;
         return ret;
     }
     
@@ -61,19 +62,46 @@
     CKQuery *query = [[CKQuery alloc] initWithRecordType:StatusRecord.type predicate:predicate];
     [self.database performQuery:query inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
         if (error){
-//            *outError = error;
+            *outError = error;
         }
         else{
-            ret = results.count > 0;
+            if (results.count == 0){
+                ret = YES;
+            }
+            else{
+                StatusRecord *statusRecord = [StatusRecord ofRecord:results.firstObject];
+                ret = statusRecord.firstInitTimestamp == 0;
+            }
         }
         dispatch_semaphore_signal(sem);
     }];
-    
+
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     return ret;
 }
 
-- (CKRecordZone *)_getZone:(NSString *)zoneName recordTypes:(NSArray<CKRecordType> *)recordTypes{
+- (void)pushUserscripts:(NSArray *)userscripts
+              syncStart:(void(^)(void))syncStart
+      completionHandler:(void (^)(NSError *))completionHandler{
+    
+}
+
+- (void)_initStatusRecordType{
+    CKRecordZone *zone = [[CKRecordZone alloc] initWithZoneName:@"Userscripts"];
+    [self.database saveRecordZone:zone completionHandler:^(CKRecordZone * _Nullable zone, NSError * _Nullable error) {
+        if (nil == error){
+            StatusRecord *statusRecord = [[StatusRecord alloc] init];
+            statusRecord.firstInitTimestamp = 0;
+            CKRecord *ckRecord = [[CKRecord alloc] initWithRecordType:StatusRecord.type zoneID:zone.zoneID];
+            [statusRecord fillCKRecord:ckRecord];
+            [self.database saveRecord:ckRecord completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+                NSLog(@"error %@",error);
+            }];
+        }
+    }];
+}
+
+- (CKRecordZone *)_getZone:(NSString *)zoneName recordTypes:(NSArray<CKRecordType> *)recordTypes error:(NSError * __strong *)outError{
     __block CKRecordZone *zone = self.zoneDic[zoneName];
     if (zone) return zone;
     
@@ -89,29 +117,36 @@
                 [subs addObject:subscription];
             }
             
-            CKModifySubscriptionsOperation *operation =
-                   [[CKModifySubscriptionsOperation alloc]
-                    initWithSubscriptionsToSave:subs
-                    subscriptionIDsToDelete:NULL];
+            if (subs.count > 0){
+                CKModifySubscriptionsOperation *operation =
+                       [[CKModifySubscriptionsOperation alloc]
+                        initWithSubscriptionsToSave:subs
+                        subscriptionIDsToDelete:NULL];
+        
+                operation.modifySubscriptionsCompletionBlock =
+                        ^(NSArray *subscriptions, NSArray *deleted, NSError *error) {
+                        if (error) {
+                            // Handle the error.
+                            *outError = error;
+                            NSLog(@"subscriptions error");
+                        } else {
+                            self.zoneDic[zoneName] = zone;
+                        }
+                        dispatch_semaphore_signal(sem);
+                    };
+
+                operation.qualityOfService = NSQualityOfServiceUserInitiated;
+                [self.database addOperation:operation];
+            }
+            else{
+                self.zoneDic[zoneName] = zone;
+                dispatch_semaphore_signal(sem);
+            }
             
-            operation.modifySubscriptionsCompletionBlock =
-                    ^(NSArray *subscriptions, NSArray *deleted, NSError *error) {
-                    if (error) {
-                        // Handle the error.
-                        NSLog(@"subscriptions error");
-                    } else {
-                        self.zoneDic[zoneName] = zone;
-                    }
-                    dispatch_semaphore_signal(sem);
-                };
-                    
-            // Set an appropriate QoS and add the operation to the private
-            // database's operation queue to execute it.
-            operation.qualityOfService = NSQualityOfServiceUtility;
-            [self.database addOperation:operation];
         }
         else{
             NSLog(@"_getZone error %@",error);
+            *outError = error;
             dispatch_semaphore_signal(sem);
         }
     }];
@@ -144,21 +179,26 @@
                     initWithSubscriptionsToSave:subs
                     subscriptionIDsToDelete:NULL];
             
-            operation.modifySubscriptionsCompletionBlock =
-                    ^(NSArray *subscriptions, NSArray *deleted, NSError *error) {
-                    if (error) {
-                        // Handle the error.
-                        NSLog(@"subscriptions error");
-                    } else {
-                        self.zoneDic[zoneName] = zone;
-                        action(zone,nil);
-                    }
-                };
-                    
-            // Set an appropriate QoS and add the operation to the private
-            // database's operation queue to execute it.
-            operation.qualityOfService = NSQualityOfServiceUtility;
-            [self.database addOperation:operation];
+            if (subs.count > 0){
+                operation.modifySubscriptionsCompletionBlock =
+                        ^(NSArray *subscriptions, NSArray *deleted, NSError *error) {
+                        if (error) {
+                            // Handle the error.
+                            action(zone,error);
+                            NSLog(@"subscriptions error");
+                        } else {
+                            self.zoneDic[zoneName] = zone;
+                            action(zone,nil);
+                        }
+                    };
+                operation.qualityOfService = NSQualityOfServiceUserInitiated;
+                [self.database addOperation:operation];
+            }
+            else{
+                self.zoneDic[zoneName] = zone;
+                action(zone,nil);
+            }
+            
         }
         else{
             action(zone,error);
@@ -174,7 +214,7 @@
 }
 
 - (void)clearZone:(NSString *)zoneName recordTypes:(NSArray<CKRecordType> *)recordTypes{
-    if ([zoneName isEqualToString:@"Tabs"]) return;
+    if ([zoneName isEqualToString:@"Userscripts"]) return;
     
     for (CKRecordType recordType in recordTypes){
         [self.database deleteSubscriptionWithID:[NSString stringWithFormat:@"%@-%@-changes",zoneName,recordType] completionHandler:^(CKSubscriptionID  _Nullable subscriptionID, NSError * _Nullable error) {
