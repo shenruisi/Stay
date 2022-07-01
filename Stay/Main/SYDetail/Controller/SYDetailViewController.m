@@ -348,7 +348,7 @@
         [self.sYSelectTabViewController dismiss];
         [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
         [self.navigationController popViewControllerAnimated:TRUE];
-        NSNotification *notification = [NSNotification notificationWithName:@"groupDeleteScript" object:nil];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     }];
     UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -395,7 +395,7 @@
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        NSNotification *notification = [NSNotification notificationWithName:@"groupActiveScript" object:nil];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
         [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
@@ -403,7 +403,7 @@
         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
-        NSNotification *notification = [NSNotification notificationWithName:@"groupStopScript" object:nil];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
     
