@@ -7,11 +7,11 @@
 */
 
 //settings
-settings.rateApp="Rate app";
-settings.openSource="Open source";
-settings.joinTelegram="Join Telegram";
-settings.joinQQ="Join QQ";
-settings.joinTwitter="Follow Twitter";
+settings.rateApp="Rate App";
+settings.openSource="View Open Source";
+settings.joinTelegram="Join Telegram Group";
+settings.joinQQ="Join QQ Group";
+settings.joinTwitter="Follow Us on Twitter";
 
 settings.enableStay="Turn on Stay in Safari extensions";
 
@@ -73,6 +73,10 @@ ExtensionGuide="Safari -> Preferences… -> Extensions";
 
 mac.toolbar.back.tip = "Navigate Back";
 mac.toolbar.forward.tip = "Navigate Forward";
+
+Interaction="INTERACTION";
+Social="SOCIAL";
+MoreApp="MORE APP";
 
 
 

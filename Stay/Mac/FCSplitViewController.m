@@ -17,6 +17,7 @@
 #import "SYCodeMirrorView.h"
 #import "SYHomeViewController.h"
 #import "SYExpandViewController.h"
+#import "SYWebScriptViewController.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 270;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
@@ -31,6 +32,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *,SYDetailViewController *> *detailViewControllerDic;
 @property (nonatomic, weak) SYEditViewController *holdEditViewController;
+@property (nonatomic, weak) SYWebScriptViewController *holdWebScriptViewController;
 @end
 
 @implementation FCSplitViewController
@@ -193,7 +195,12 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 
 - (void)toolbarItemDidClick:(NSToolbarItem *)sender{
     if ([sender.itemIdentifier isEqualToString:Toolbar_Back]){
-        [[QuickAccess secondaryController] popViewController];
+        if (self.holdWebScriptViewController && [self.holdWebScriptViewController canGoback]){
+            [self.holdWebScriptViewController goback];
+        }
+        else{
+            [[QuickAccess secondaryController] popViewController];
+        }
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Forward]){
         [[QuickAccess secondaryController] forward];
@@ -297,6 +304,8 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                         fontSize:FCStyle.headlineBold.pointSize];
         [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
         [self.toolbar insertItemWithItemIdentifier:Toolbar_More atIndex:self.toolbar.items.count];
+        self.holdEditViewController = nil;
+        self.holdWebScriptViewController = nil;
     }
     else if ([viewController isKindOfClass:[SYEditViewController class]]){
         self.holdEditViewController = (SYEditViewController *)viewController;
@@ -311,16 +320,36 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
                                             text:text
                                         fontSize:FCStyle.headlineBold.pointSize];
+        self.holdWebScriptViewController = nil;
     }
     else if ([viewController isKindOfClass:[SYExpandViewController class]]){
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
                                             text:viewController.title
                                         fontSize:FCStyle.headlineBold.pointSize];
+        [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
+        [self.toolbar insertItemWithItemIdentifier:Toolbar_Placeholder atIndex:self.toolbar.items.count];
+        self.holdEditViewController = nil;
+        self.holdWebScriptViewController = nil;
+    }
+    else if ([viewController isKindOfClass:[SYWebScriptViewController class]]){
+        self.holdWebScriptViewController = (SYWebScriptViewController *)viewController;
+        [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
+                                            text:@"Greasy Fork"
+                                        fontSize:FCStyle.headlineBold.pointSize];
+        [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
+        [self.toolbar insertItemWithItemIdentifier:Toolbar_Placeholder atIndex:self.toolbar.items.count];
+        self.holdEditViewController = nil;
     }
     else{
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
                                             text:@""
                                         fontSize:FCStyle.headlineBold.pointSize];
+        if (self.toolbar.items.count > 0 && ![self _itemOfIdentifier:Toolbar_Placeholder]){
+            [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
+            [self.toolbar insertItemWithItemIdentifier:Toolbar_Placeholder atIndex:self.toolbar.items.count];
+            self.holdEditViewController = nil;
+            self.holdWebScriptViewController = nil;
+        }
     }
 }
 

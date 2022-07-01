@@ -39,11 +39,9 @@
 		58639D03286449D700AA80D5 /* html2canvas.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFE286449D700AA80D5 /* html2canvas.min.js */; };
 		58639D04286449D700AA80D5 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639CFF286449D700AA80D5 /* jquery-3.5.1.min.js */; };
 		58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0528644B7E00AA80D5 /* convert2RegExp.js */; };
-		58639D0D28644B7E00AA80D5 /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0628644B7E00AA80D5 /* message.js */; };
 		58639D0E28644B7E00AA80D5 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0728644B7E00AA80D5 /* parse-meta-line.js */; };
 		58639D0F28644B7E00AA80D5 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0828644B7E00AA80D5 /* parse-user-script.js */; };
 		58639D1028644B7E00AA80D5 /* checkUserscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0928644B7E00AA80D5 /* checkUserscript.js */; };
-		58639D1128644B7E00AA80D5 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0A28644B7E00AA80D5 /* bootstrap.js */; };
 		58639D1228644B7E00AA80D5 /* MatchPattern.js in Resources */ = {isa = PBXBuildFile; fileRef = 58639D0B28644B7E00AA80D5 /* MatchPattern.js */; };
 		58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639D1328644BEB00AA80D5 /* MatchPattern.m */; };
 		58639D1828644BEB00AA80D5 /* Stroge.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639D1628644BEB00AA80D5 /* Stroge.m */; };
@@ -75,7 +73,6 @@
 		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
 		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
 		5881343127294C0E0055E1CE /* iframe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5881342F27294C0E0055E1CE /* iframe.js */; };
-		58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58813436272AACEC0055E1CE /* fastclip-icon@3x.png */; };
 		5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */; };
 		5882024B2859E73900B2721A /* FCStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1EA283B57BB00BC2A92 /* FCStyle.m */; };
 		5882024C2859E73900B2721A /* FCApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB1ED283B5AE100BC2A92 /* FCApp.m */; };
@@ -129,7 +126,6 @@
 		5882027F2859E73900B2721A /* delete@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC850274C9AC3005367C6 /* delete@3x.png */; };
 		588202802859E73900B2721A /* play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84BDC854274CAB0F005367C6 /* play@3x.png */; };
 		588202812859E73900B2721A /* more-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB527592B850075ABD5 /* more-selected@3x.png */; };
-		588202822859E73900B2721A /* fastclip-icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58813436272AACEC0055E1CE /* fastclip-icon@3x.png */; };
 		588202832859E73900B2721A /* homepage-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED4B277AB93E00651DF9 /* homepage-selected@3x.png */; };
 		588202842859E73900B2721A /* MatchPattern.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4C827454C2400270873 /* MatchPattern.js */; };
 		588202852859E73900B2721A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -196,6 +192,12 @@
 		58AC12F028607AB800875D6D /* FCToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12EF28607AB800875D6D /* FCToolbar.m */; };
 		58AC12F428607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
+		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
+		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
+		58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
+		58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
+		58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
+		58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
 		58F7F4B827438CB000270873 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4B727438CB000270873 /* bootstrap.js */; };
 		58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4BA2743A93E00270873 /* parse-user-script.js */; };
 		58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */; };
@@ -389,11 +391,9 @@
 		58639CFE286449D700AA80D5 /* html2canvas.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = html2canvas.min.js; path = "Stay Extension/Resources/vendor/html2canvas.min.js"; sourceTree = SOURCE_ROOT; };
 		58639CFF286449D700AA80D5 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "jquery-3.5.1.min.js"; path = "Stay Extension/Resources/vendor/jquery-3.5.1.min.js"; sourceTree = SOURCE_ROOT; };
 		58639D0528644B7E00AA80D5 /* convert2RegExp.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = convert2RegExp.js; path = "Stay Extension/Resources/convert2RegExp.js"; sourceTree = SOURCE_ROOT; };
-		58639D0628644B7E00AA80D5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = message.js; path = "Stay Extension/Resources/message.js"; sourceTree = SOURCE_ROOT; };
 		58639D0728644B7E00AA80D5 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "parse-meta-line.js"; path = "Stay Extension/Resources/parse-meta-line.js"; sourceTree = SOURCE_ROOT; };
 		58639D0828644B7E00AA80D5 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "parse-user-script.js"; path = "Stay Extension/Resources/parse-user-script.js"; sourceTree = SOURCE_ROOT; };
 		58639D0928644B7E00AA80D5 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = checkUserscript.js; path = "Stay Extension/Resources/checkUserscript.js"; sourceTree = SOURCE_ROOT; };
-		58639D0A28644B7E00AA80D5 /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = bootstrap.js; path = "Stay Extension/Resources/bootstrap.js"; sourceTree = SOURCE_ROOT; };
 		58639D0B28644B7E00AA80D5 /* MatchPattern.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = MatchPattern.js; path = "Stay Extension/Resources/MatchPattern.js"; sourceTree = SOURCE_ROOT; };
 		58639D1328644BEB00AA80D5 /* MatchPattern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MatchPattern.m; path = "Stay Extension/MatchPattern.m"; sourceTree = SOURCE_ROOT; };
 		58639D1428644BEB00AA80D5 /* MatchPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MatchPattern.h; path = "Stay Extension/MatchPattern.h"; sourceTree = SOURCE_ROOT; };
@@ -431,7 +431,6 @@
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
 		5881342F27294C0E0055E1CE /* iframe.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iframe.js; sourceTree = "<group>"; };
-		58813436272AACEC0055E1CE /* fastclip-icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fastclip-icon@3x.png"; sourceTree = "<group>"; };
 		588202AF2859E73900B2721A /* Stay 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stay 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		588202B02859E73A00B2721A /* Stay copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Stay copy-Info.plist"; path = "/Users/ris/Documents/GitHub/Stay/Stay copy-Info.plist"; sourceTree = "<absolute>"; };
 		588202B22859F99000B2721A /* FCSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCSplitViewController.h; sourceTree = "<group>"; };
@@ -474,6 +473,12 @@
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
+		58CF689D286D917800A52B2B /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
+		58CF689F286D91B200A52B2B /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
+		58EA44432869BB5200BD6C4D /* ImportSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportSlideController.h; sourceTree = "<group>"; };
+		58EA44442869BB5200BD6C4D /* ImportSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportSlideController.m; sourceTree = "<group>"; };
+		58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportMenuModalViewController.h; sourceTree = "<group>"; };
+		58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportMenuModalViewController.m; sourceTree = "<group>"; };
 		58F7F4B727438CB000270873 /* bootstrap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58F7F4BA2743A93E00270873 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -713,11 +718,11 @@
 		58639CDF2864477D00AA80D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				58639D0A28644B7E00AA80D5 /* bootstrap.js */,
+				58CF689F286D91B200A52B2B /* bootstrap.js */,
+				58CF689D286D917800A52B2B /* message.js */,
 				58639D0928644B7E00AA80D5 /* checkUserscript.js */,
 				58639D0528644B7E00AA80D5 /* convert2RegExp.js */,
 				58639D0B28644B7E00AA80D5 /* MatchPattern.js */,
-				58639D0628644B7E00AA80D5 /* message.js */,
 				58639D0728644B7E00AA80D5 /* parse-meta-line.js */,
 				58639D0828644B7E00AA80D5 /* parse-user-script.js */,
 				58639CFA286449C800AA80D5 /* vendor */,
@@ -937,7 +942,6 @@
 				84BDC850274C9AC3005367C6 /* delete@3x.png */,
 				8496DFB727592C260075ABD5 /* more@3x.png */,
 				84F4831D273AC51800217BB3 /* js-lib@3x.png */,
-				58813436272AACEC0055E1CE /* fastclip-icon@3x.png */,
 				5889733D2723033600BE123E /* icon@3x.png */,
 			);
 			path = Images;
@@ -1302,6 +1306,10 @@
 				8457A84527FE8CA40010A387 /* SYScriptAddViewController.m */,
 				8457A84727FEF0660010A387 /* SYWebScriptViewController.h */,
 				8457A84827FEF0660010A387 /* SYWebScriptViewController.m */,
+				58EA44432869BB5200BD6C4D /* ImportSlideController.h */,
+				58EA44442869BB5200BD6C4D /* ImportSlideController.m */,
+				58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */,
+				58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1571,7 +1579,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58639D0D28644B7E00AA80D5 /* message.js in Resources */,
 				58639D0F28644B7E00AA80D5 /* parse-user-script.js in Resources */,
 				58639D0E28644B7E00AA80D5 /* parse-meta-line.js in Resources */,
 				58639D01286449D700AA80D5 /* gm-apis-gen.js in Resources */,
@@ -1582,13 +1589,14 @@
 				58639D02286449D700AA80D5 /* base64.min.js in Resources */,
 				58639D1228644B7E00AA80D5 /* MatchPattern.js in Resources */,
 				58639D04286449D700AA80D5 /* jquery-3.5.1.min.js in Resources */,
+				58CF689E286D917900A52B2B /* message.js in Resources */,
 				58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */,
 				58639CEB2864477D00AA80D5 /* popup.html in Resources */,
-				58639D1128644B7E00AA80D5 /* bootstrap.js in Resources */,
 				589741C928645889008FB897 /* stay-taskloop.js in Resources */,
 				58639CE32864477D00AA80D5 /* images in Resources */,
 				58639CE52864477D00AA80D5 /* manifest.json in Resources */,
 				58639CE12864477D00AA80D5 /* _locales in Resources */,
+				58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */,
 				58639D00286449D700AA80D5 /* jquery.cookie.min.js in Resources */,
 				58639CEF2864477D00AA80D5 /* popup.js in Resources */,
 			);
@@ -1602,7 +1610,6 @@
 				84BDC851274C9AC3005367C6 /* delete@3x.png in Resources */,
 				84BDC855274CAB0F005367C6 /* play@3x.png in Resources */,
 				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
-				58813437272AACEC0055E1CE /* fastclip-icon@3x.png in Resources */,
 				84C1ED4C277AB93E00651DF9 /* homepage-selected@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
@@ -1696,7 +1703,6 @@
 				5882027F2859E73900B2721A /* delete@3x.png in Resources */,
 				588202802859E73900B2721A /* play@3x.png in Resources */,
 				588202812859E73900B2721A /* more-selected@3x.png in Resources */,
-				588202822859E73900B2721A /* fastclip-icon@3x.png in Resources */,
 				588202832859E73900B2721A /* homepage-selected@3x.png in Resources */,
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
@@ -1839,7 +1845,9 @@
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
+				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
+				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
@@ -1927,6 +1935,7 @@
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
+				58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				5882025C2859E73900B2721A /* SYNetworkUtils.m in Sources */,
 				588202B42859F99000B2721A /* FCSplitViewController.m in Sources */,
 				5882025D2859E73900B2721A /* AppDelegate.m in Sources */,
@@ -1959,6 +1968,7 @@
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
+				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
@@ -2306,6 +2316,11 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"iOS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
@@ -2353,6 +2368,11 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"iOS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
@@ -2508,6 +2528,7 @@
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
 				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2563,6 +2584,7 @@
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
 				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -73,3 +73,7 @@ ExtensionGuide="Safari -> Preferences… -> Extensions";
 
 mac.toolbar.back.tip = "戻る";
 mac.toolbar.forward.tip = "進む";
+
+Interaction="INTERACTION";
+Social="SOCIAL";
+MoreApp="MORE APP";

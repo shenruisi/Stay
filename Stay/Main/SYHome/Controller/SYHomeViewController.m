@@ -36,6 +36,8 @@
 #import "QuickAccess.h"
 #endif
 
+#import "ImportSlideController.h"
+
 static CGFloat kMacToolbar = 50.0;
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
 @interface _SYHomeViewTableViewCell : UITableViewCell
@@ -43,10 +45,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @implementation _SYHomeViewTableViewCell
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+    }
+    
+    return self;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
 }
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+}
+
 
 @end
 
@@ -81,6 +95,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, strong) UIView *line;
 
 @property (nonatomic, copy) NSString *selectedUUID;
+
+@property (nonatomic, strong) ImportSlideController *importSlideController;
 @end
 
 @implementation SYHomeViewController
@@ -162,15 +178,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 
 - (void)tableDidSelected:(NSNotification *)notification {
-    NSIndexPath *indexpath = (NSIndexPath *)notification.object;
-    if(indexpath.row == 0) {
+    NSInteger index = [(NSNumber *)notification.object integerValue];
+    if(index == 0) {
         SYEditViewController *cer = [[SYEditViewController alloc] init];
+#ifdef Mac
+        [[QuickAccess secondaryController] pushViewController:cer];
+#else
         [self.navigationController pushViewController:cer animated:true];
-        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-        self.itemPopVC = nil;
-    } else if(indexpath.row == 1) {
-        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-        self.itemPopVC = nil;
+#endif
+        
+    } else if(index == 1) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"从链接新增脚本" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             UITextField *titleTextField = alert.textFields.firstObject;
@@ -189,7 +206,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                             SYEditViewController *cer = [[SYEditViewController alloc] init];
                             cer.content = str;
                             cer.downloadUrl = url;
+#ifdef Mac
+                            [[QuickAccess secondaryController] pushViewController:cer];
+#else
                             [self.navigationController pushViewController:cer animated:true];
+#endif
+                            
                         }else {
                             NSString *content = @"下载脚本失败";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
@@ -213,19 +235,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [alert addAction:cancle];
         [alert addAction:conform];
         [self presentViewController:alert animated:YES completion:nil];
-    } else if (indexpath.row == 2) {
+    } else if (index == 2) {
         SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
+#ifdef Mac
+        [[QuickAccess secondaryController] pushViewController:cer];
+#else
         [self.navigationController pushViewController:cer animated:true];
-        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-        self.itemPopVC = nil;
+#endif
+        
+        
     }
-    else if (indexpath.row == 3) {
-        [self.itemPopVC dismissViewControllerAnimated:YES completion:nil];
-        self.itemPopVC = nil;
+    else if (index == 3) {
         UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeItem] asCopy:YES];
         documentPicker.delegate = self;
         [self presentViewController:documentPicker animated:YES completion:nil];
     }
+    [self.importSlideController dismiss];
 }
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls{
@@ -390,19 +415,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [SharedStorageManager shared].userscriptHeaders.content = array;
     [[SharedStorageManager shared].userscriptHeaders flush];
     
-    
-    
-//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-//    NSMutableArray *array =  [[NSMutableArray alloc] init];
-//    for(int i = 0; i < self.datas.count; i++) {
-//        UserScript *scrpit = self.datas[i];
-//        [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"STAY_SCRIPTS_%@",scrpit.uuid]];
-//        scrpit.parsedContent = @"";
-//        [array addObject: [scrpit toDictionary]];
-//    }
-//    [groupUserDefaults setObject:array forKey:@"STAY_SCRIPTS"];
-//    [groupUserDefaults synchronize];
-    
     [[ScriptMananger shareManager] buildData];
 
 }
@@ -482,10 +494,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     if (cell == nil) {
         cell = [[_SYHomeViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
 #ifndef Mac
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
 #endif
         
-//        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+//       cell.accessoryType=UITableViewCellAccessoryNone;
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
@@ -624,10 +636,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [cell.contentView addSubview:updateLabel];
     }
     
+    UIImageView *accessory =  [[UIImageView alloc] initWithFrame:CGRectMake(viewWidth - 10 - 15, (144.0 - 13)/2, 10, 13)];
+    UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                             withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+    image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [accessory setImage:image];
+    [cell.contentView addSubview:accessory];
+    
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
     line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
-
     return cell;
 }
 
@@ -739,13 +757,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)addBtnClick:(id)sender {
-    self.itemPopVC = [[SYAddScriptController alloc] init];
-    self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
-    self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
-    self.itemPopVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  //rect参数是以view的左上角为坐标原点（0，0）
-    self.itemPopVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向,如果是baritem不设置方向，会默认up，up的效果也是最理想的
-    self.itemPopVC.popoverPresentationController.delegate = self;
-    [self presentViewController:self.itemPopVC animated:YES completion:nil];
+//    self.itemPopVC = [[SYAddScriptController alloc] init];
+//    self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
+//    self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
+//    self.itemPopVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  //rect参数是以view的左上角为坐标原点（0，0）
+//    self.itemPopVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向,如果是baritem不设置方向，会默认up，up的效果也是最理想的
+//    self.itemPopVC.popoverPresentationController.delegate = self;
+//    [self presentViewController:self.itemPopVC animated:YES completion:nil];
+    
+    if (!self.importSlideController.isShown){
+        [self.importSlideController show];
+    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -951,6 +974,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)homeViewShouldReloadData:(NSNotification *)note{
     [self refreshScript];
+}
+
+- (ImportSlideController *)importSlideController{
+    if (nil == _importSlideController){
+        _importSlideController = [[ImportSlideController alloc] init];
+    }
+    
+    return _importSlideController;
 }
 
 - (void)dealloc{

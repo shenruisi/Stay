@@ -7,10 +7,13 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
+#ifdef Mac
+#import "NavigateViewController.h"
+@interface SYWebScriptViewController : NavigateViewController
+#else
 @interface SYWebScriptViewController : UIViewController
+#endif
 
+- (BOOL)canGoback;
+- (void)goback;
 @end
-
-NS_ASSUME_NONNULL_END
