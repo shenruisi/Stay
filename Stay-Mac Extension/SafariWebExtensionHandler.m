@@ -69,7 +69,7 @@ NSString * const SFExtensionMessageKey = @"message";
         }
     }
     
-    if (matched) return NO;
+    if (matched) return YES;
     
     NSArray *matches = userscript[@"matches"];
     for (NSString *match in matches){
