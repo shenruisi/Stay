@@ -161,6 +161,8 @@
     if(self.script.active) {
         [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
         self.actBtn.backgroundColor = FCStyle.accent;
+        self.actBtn.layer.borderWidth = 1;
+        self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
         [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
@@ -178,7 +180,7 @@
     descDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
-    descDetailLabel.numberOfLines = 2;
+    descDetailLabel.numberOfLines = 3;
     [descDetailLabel sizeToFit];
     [self.view addSubview:descDetailLabel];
     
@@ -197,8 +199,26 @@
     version.left = imageView.right + 5;
     version.centerY = imageView.centerY;
     [self.view addSubview:version];
-
     top = version.bottom + 10;
+    
+    if(self.script.license != nil && self.script.license.length > 0) {
+        UIImage *licenseImage =  [UIImage systemImageNamed:@"l.circle.fill"
+                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+        licenseImage = [licenseImage imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImageView *licenseImageView = [[UIImageView alloc] initWithImage:licenseImage];
+        licenseImageView.frame = CGRectMake(left, top, 19, 19);
+        [self.view addSubview:licenseImageView];
+        UILabel *license = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 15)];
+        license.font = FCStyle.footnote;
+        license.text = self.script.license;
+        license.textColor = FCStyle.fcBlack;
+        license.left = licenseImageView.right + 5;
+        license.centerY = licenseImageView.centerY;
+        [self.view addSubview:license];
+        top = license.bottom + 10;
+    }
+    
+    
     if(self.script.downloadUrl != nil && self.script.downloadUrl.length > 0){
        UILabel *autoUpdateLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.autoUpdate","autoUpdate")];
         autoUpdateLabel.width = 200;
@@ -207,14 +227,14 @@
         autoUpdateLabel.font = FCStyle.bodyBold;
         [self.view  addSubview:autoUpdateLabel];
       
-        UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
+        UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,31)];
         autoUpdateSwitch.centerY = autoUpdateLabel.centerY;
         autoUpdateSwitch.right = kScreenWidth - left;
         [autoUpdateSwitch setOnTintColor:FCStyle.accent];
         [autoUpdateSwitch setOn: self.script.updateSwitch];
         [self.view addSubview:autoUpdateSwitch];
         [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
-        top = autoUpdateLabel.bottom + 20;
+        top = autoUpdateLabel.bottom + 15;
    }
     
     UILabel *scriptLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.scriptContent","Script Content")];
@@ -238,8 +258,31 @@
     [scriptBtn addTarget:self action:@selector(showScript:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:scriptBtn];
 
-    
     top = scriptLabel.bottom + 10;
+    
+    
+    UILabel *injectLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.injectMode","Inject Mode")];
+    injectLabel.font = FCStyle.headlineBold;
+    injectLabel.width = 200;
+    injectLabel.top = top;
+    injectLabel.left = left;
+    [self.view addSubview:injectLabel];
+    
+    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:@"Auto",@"Page",@"Content",nil];
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
+    segmentedControl.frame =  CGRectMake(0, top, 243.0, 31);
+    segmentedControl.selectedSegmentIndex = 0;
+    
+    [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
+    if(self.script.injectInto != nil && self.script.injectInto.length > 0) {
+        NSUInteger idx = [segmentedArray indexOfObject:self.script.injectInto];
+        segmentedControl.selectedSegmentIndex = idx;
+    }
+    segmentedControl.right = self.view.width - 13;
+    segmentedControl.centerY = injectLabel.centerY;
+    [self.view addSubview:segmentedControl];
+
+    top = segmentedControl.bottom + 10;
     
     UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
     [self.view addSubview:buttonView];
@@ -318,12 +361,25 @@
     [self.navigationController pushViewController:cer animated:true];
 }
 
+
+- (void)segmentControllerAction:(UISegmentedControl *)segment
+{
+    NSInteger index = segment.selectedSegmentIndex;
+    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:@"Auto",@"Page",@"Content",nil];
+    NSString *inject = segmentedArray[index];
+    [[DataManager shareManager] updateScriptConfigInjectInfo:inject numberId:self.script.uuid];
+    [self initScrpitContent];
+
+}
+
 - (void) switchAction:(id)sender {
     self.script.active = !self.script.active;
     
     if(self.script.active) {
         [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
         self.actBtn.backgroundColor = FCStyle.accent;
+        self.actBtn.layer.borderWidth = 1;
+        self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
         [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
@@ -462,11 +518,29 @@
             matchLabel.textColor = FCStyle.fcPlaceHolder;
             top = matchLabel.bottom + 8;
             [_matchScrollView addSubview:matchLabel];
-            for (NSString *title in self.script.mathes) {
+            for (int i = 0; i < self.script.mathes.count; i++) {
+                NSString *title  = self.script.mathes[i];
                 UIView *view = [self baseNote:title];
+                if (i == 0) {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+                }
                 view.top = top;
                 view.left = baseLeft;
                 [_matchScrollView addSubview:view];
+                if (i != self.script.includes.count -1) {
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    line.backgroundColor = FCStyle.fcSeparator;
+                    line.top = top + 47;
+                    [_matchScrollView addSubview:line];
+                } else {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                if (self.script.mathes.count == 1) {
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                
                 top += 48;
             }
         }
@@ -482,11 +556,30 @@
             [_matchScrollView addSubview:includesLabel];
             top = includesLabel.bottom + 8;
             
-            for (NSString *title in self.script.includes) {
+            for (int i = 0; i < self.script.includes.count; i++) {
+                NSString *title  = self.script.includes[i];
                 UIView *view = [self baseNote:title];
                 view.top = top;
                 view.left = baseLeft;
                 [_matchScrollView addSubview:view];
+                if (i == 0) {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+                }
+                if (i != self.script.includes.count -1) {
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    line.backgroundColor = FCStyle.fcSeparator;
+                    line.top = top + 47;
+                    [_matchScrollView addSubview:line];
+                }else {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                
+                if (self.script.includes.count == 1) {
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                
                 top += 48;
             }
         }
@@ -502,11 +595,31 @@
             [_matchScrollView addSubview:excludesLabel];
             
             top = excludesLabel.bottom + 8;
-            for (NSString *title in self.script.excludes) {
+            for (int i = 0; i < self.script.excludes.count; i ++) {
+                NSString *title  = self.script.excludes[i];
+
                 UIView *view = [self baseNote:title];
                 view.top = top;
                 view.left = baseLeft;
                 [_matchScrollView addSubview:view];
+                if (i == 0) {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+                }
+                if (i != self.script.excludes.count -1) {
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    line.backgroundColor = FCStyle.fcSeparator;
+                    line.top = top + 47;
+                    [_matchScrollView addSubview:line];
+                }else {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                
+                if (self.script.excludes.count == 1) {
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+
                 top += 48;
             }
         }
@@ -524,11 +637,30 @@
         CGFloat baseLeft = 12;
         CGFloat top = 22;
         if (self.script.grants.count > 0) {
-            for (NSString *title in self.script.grants) {
+            for (int i = 0; i < self.script.grants.count; i++) {
+                NSString *title  = self.script.grants[i];
                 UIView *view = [self baseNote:title];
                 view.top = top;
                 view.left = baseLeft;
                 [_grantScrollView addSubview:view];
+                if (i == 0) {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+                }
+                if (i != self.script.grants.count -1) {
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    line.backgroundColor = FCStyle.fcSeparator;
+                    line.top = top + 47;
+                    [_grantScrollView addSubview:line];
+                }else {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                
+                if (self.script.grants.count == 1) {
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+
                 top += 48;
             }
         }
@@ -558,8 +690,8 @@
 }
 
 - (UIView *)baseNote:(NSString *)title{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth - 24, 48)];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth - 24 - 23, 18)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 24, 48)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width  - 24 - 23, 18)];
     label.font = FCStyle.body;
     label.text = title;
     label.textColor = FCStyle.fcBlack;
@@ -628,7 +760,7 @@
     image = [image imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 27, 28);
+    btn.frame = CGRectMake(0, 0, 23, 23);
     [btn setBackgroundImage:image forState:UIControlStateNormal];
     btn.centerY = 24;
     btn.right = self.view.width - 10 - 18;
