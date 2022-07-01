@@ -52,10 +52,11 @@
 }
 
 - (void)navigateViewDidLoad{
+#ifdef Mac
     [super navigateViewDidLoad];
     [self createDetailView];
+#endif
 }
-
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
