@@ -540,7 +540,7 @@
         _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
         _actBtn.font = FCStyle.subHeadlineBold;
         _actBtn.layer.cornerRadius = 15;
-        _actBtn.right = kScreenWidth - 12;
+        _actBtn.right = self.view.width - 12;
         [self.view addSubview:_actBtn];
         
         [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -568,6 +568,8 @@
         CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
         _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 31)];
         _slideView.backgroundColor = RGBA(182, 32, 224, 0.11);
+        _slideView.layer.cornerRadius = 8;
+        _slideView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
     }
     
     return _slideView;
