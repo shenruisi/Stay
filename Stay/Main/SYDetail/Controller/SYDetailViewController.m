@@ -54,6 +54,9 @@
 - (void)navigateViewDidLoad{
 #ifdef Mac
     [super navigateViewDidLoad];
+    UIView *navigationBarConver = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
+    navigationBarConver.backgroundColor = FCStyle.background;
+    [self.view addSubview:navigationBarConver];
     [self createDetailView];
 #endif
 }
@@ -201,7 +204,7 @@
         autoUpdateLabel.width = 200;
         autoUpdateLabel.top = top;
         autoUpdateLabel.left = left;
-        autoUpdateLabel.font = FCStyle.headlineBold;
+        autoUpdateLabel.font = FCStyle.bodyBold;
         [self.view  addSubview:autoUpdateLabel];
       
         UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
@@ -215,7 +218,7 @@
    }
     
     UILabel *scriptLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.scriptContent","Script Content")];
-    scriptLabel.font = FCStyle.headlineBold;
+    scriptLabel.font = FCStyle.bodyBold;
     scriptLabel.width = 200;
     scriptLabel.top = top;
     scriptLabel.left = left;
@@ -255,7 +258,7 @@
         [btn setTitle:selectedArray[i] forState:UIControlStateNormal];
         [btn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(switchTab:) forControlEvents:UIControlEventTouchUpInside];
-        btn.font = FCStyle.headlineBold;
+        btn.font = FCStyle.bodyBold;
         btn.tag = 100 + i;
         btnLeft += btnWidth + 14;
         [buttonView addSubview:btn];
@@ -508,7 +511,7 @@
             }
         }
         
-        _matchScrollView.contentSize = CGSizeMake(kScreenWidth,top);
+        _matchScrollView.contentSize = CGSizeMake(self.view.width,top);
         
         
     }
@@ -537,7 +540,12 @@
 
 - (UIButton *)actBtn {
     if (_actBtn == nil) {
+#ifdef Mac
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 30)];
+#else
         _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
+#endif
+        
         _actBtn.font = FCStyle.subHeadlineBold;
         _actBtn.layer.cornerRadius = 15;
         _actBtn.right = self.view.width - 12;

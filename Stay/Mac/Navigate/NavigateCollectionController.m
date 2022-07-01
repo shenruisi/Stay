@@ -66,6 +66,7 @@ typedef enum  {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = FCStyle.background;
     [self gestureLoad];
     [self shadowBorder];
     self.navigationController.navigationBarHidden = YES;
