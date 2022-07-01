@@ -27,7 +27,7 @@
 @property (nonatomic, strong) UIButton *actBtn;
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
-
+@property (nonatomic, assign) CGFloat scrollerTop;
 
 @end
 
@@ -98,7 +98,10 @@
     btn.top = top;
     btn.left = left;
     [btn addTarget:self action:@selector(addBlackSite) forControlEvents:UIControlEventTouchUpInside];
+    top = btn.bottom + 20;
     [self.blackTableView addSubview:btn];
+    self.blackTableView.contentSize = CGSizeMake(self.view.width, top + _scrollerTop);
+
 }
 
 - (void)buildWhiteView {
@@ -127,6 +130,8 @@
     btn.left = left;
     [btn addTarget:self action:@selector(addWhiteSite) forControlEvents:UIControlEventTouchUpInside];
     [self.whiteTableView addSubview:btn];
+    top = btn.bottom + 20;
+    self.whiteTableView.contentSize = CGSizeMake(self.view.width, top + _scrollerTop);
 }
 
 - (void)createDetailView{
@@ -314,7 +319,7 @@
     
     
     top = buttonView.bottom;
-    
+    _scrollerTop = top;
     self.scrollView.top = top;
     self.scrollView.height = kScreenHeight - top;
     [self.view addSubview:self.scrollView];
@@ -338,9 +343,20 @@
 
 
 - (void)deleteScript:(id)sender {
-    [self.sYSelectTabViewController dismiss];
-    [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
-    [self.navigationController popViewControllerAnimated:TRUE];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"是否删除脚本" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.sYSelectTabViewController dismiss];
+        [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
+        [self.navigationController popViewControllerAnimated:TRUE];
+        NSNotification *notification = [NSNotification notificationWithName:@"groupDeleteScript" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
+    }];
+    UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [alert addAction:cancle];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
+
 }
 
 - (void)showScript:(id)sender {
@@ -379,12 +395,16 @@
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        NSNotification *notification = [NSNotification notificationWithName:@"groupActiveScript" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
         [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
         self.actBtn.backgroundColor = [UIColor whiteColor];
         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
+        NSNotification *notification = [NSNotification notificationWithName:@"groupStopScript" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
     
     if (self.script.active) {

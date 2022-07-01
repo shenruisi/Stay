@@ -691,6 +691,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
+            NSNotification *notification = [NSNotification notificationWithName:@"groupDeleteScript" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
@@ -704,6 +706,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
+            NSNotification *notification = [NSNotification notificationWithName:@"groupDeleteScript" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
 
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
@@ -713,8 +717,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UserScript *model = weakSelf.datas[indexPath.row];
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+                    NSNotification *notification = [NSNotification notificationWithName:@"groupStopScript" object:nil];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+                    NSNotification *notification = [NSNotification notificationWithName:@"groupActiveScript" object:nil];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
                 [weakSelf reloadTableView];

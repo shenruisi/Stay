@@ -186,7 +186,15 @@
     [self initScrpitContent];
     NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
+    if(_isEdit) {
+        NSNotification *notification = [NSNotification notificationWithName:@"groupUpdateScript" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+    } else {
+        NSNotification *notification = [NSNotification notificationWithName:@"groupAddScript" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+    }
     [self presentViewController:alert animated:YES completion:nil];
+    
 }
 
 - (void)saveError:(NSNotification*) notification{
