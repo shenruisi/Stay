@@ -174,7 +174,7 @@
     descDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
-    descDetailLabel.numberOfLines = 0;
+    descDetailLabel.numberOfLines = 2;
     [descDetailLabel sizeToFit];
     [self.view addSubview:descDetailLabel];
     
