@@ -14,6 +14,7 @@
 #import "SharedStorageManager.h"
 #import "SYSelectTabViewController.h"
 #import "FCStyle.h"
+#import <objc/runtime.h>
 
 @interface SYDetailViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -21,6 +22,12 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIScrollView *matchScrollView;
 @property (nonatomic, strong) UIScrollView *grantScrollView;
+@property (nonatomic, strong) UIScrollView *whiteTableView;
+@property (nonatomic, strong) UIScrollView *blackTableView;
+@property (nonatomic, strong) UIButton *actBtn;
+@property (nonatomic, strong) UIView *slideView;
+@property (nonatomic, strong) UIView *slideLineView;
+
 
 @end
 
@@ -34,6 +41,7 @@
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self createDetailView];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
 
     // Do any additional setup after loading the view.
@@ -54,6 +62,61 @@
     self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self createDetailView];
+}
+
+- (void)buildBlackView {
+    [self.blackTableView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    CGFloat left = 10;
+    CGFloat top = 14;
+    if(self.script.blacklist != nil && self.script.blacklist.count > 0) {
+        for (NSString *str in self.script.blacklist ) {
+            UIView *whiteSiteView = [self creteSitesView:str type:@"black"];
+            whiteSiteView.top = top;
+            whiteSiteView.left = left;
+            [self.blackTableView addSubview:whiteSiteView];
+            top += 58;
+        }
+    }
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, self.view.width - 20, 48);
+    btn.backgroundColor = FCStyle.accent;
+    [btn setTitle:NSLocalizedString(@"settings.add","Add") forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    btn.titleLabel.font = FCStyle.headlineBold;
+    btn.layer.cornerRadius = 8;
+    btn.top = top;
+    btn.left = left;
+    [btn addTarget:self action:@selector(addBlackSite) forControlEvents:UIControlEventTouchUpInside];
+    [self.blackTableView addSubview:btn];
+}
+
+- (void)buildWhiteView {
+    [self.whiteTableView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
+    CGFloat left = 10;
+    CGFloat top = 14;
+    if(self.script.whitelist != nil && self.script.whitelist.count > 0) {
+        for (NSString *str in self.script.whitelist ) {
+            UIView *whiteSiteView = [self creteSitesView:str type:@"white"];
+            whiteSiteView.top = top;
+            whiteSiteView.left = left;
+            [self.whiteTableView addSubview:whiteSiteView];
+            top += 58;
+        }
+    }
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, self.view.width - 20, 48);
+    btn.backgroundColor = FCStyle.accent;
+    [btn setTitle:NSLocalizedString(@"settings.add","Add") forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    btn.titleLabel.font = FCStyle.headlineBold;
+    btn.layer.cornerRadius = 8;
+    btn.top = top;
+    btn.left = left;
+    [btn addTarget:self action:@selector(addWhiteSite) forControlEvents:UIControlEventTouchUpInside];
+    [self.whiteTableView addSubview:btn];
 }
 
 - (void)createDetailView{
@@ -78,22 +141,18 @@
     authour.textColor = FCStyle.fcSecondaryBlack;
     [self.view addSubview:authour];
     
-    UIButton *actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
     if(self.script.active) {
-        [actBtn setTitle:@"Activated" forState:UIControlStateNormal];
-        actBtn.backgroundColor = FCStyle.accent;
-        [actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
+        self.actBtn.backgroundColor = FCStyle.accent;
+        [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
-        [actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
-        actBtn.backgroundColor = [UIColor whiteColor];
-        [actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        actBtn.layer.borderWidth = 1;
-        actBtn.layer.borderColor = [UIColor blackColor].CGColor;
+        [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
+        self.actBtn.backgroundColor = [UIColor whiteColor];
+        [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        self.actBtn.layer.borderWidth = 1;
+        self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
     }
-    actBtn.font = FCStyle.subHeadlineBold;
-    actBtn.layer.cornerRadius = 15;
-    actBtn.right = kScreenWidth - 12;
-    [self.view addSubview:actBtn];
+
     
     top = authour.bottom + 10;
     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,kScreenWidth - left * 2 ,50)];
@@ -125,23 +184,25 @@
     top = version.bottom + 10;
     if(self.script.downloadUrl != nil && self.script.downloadUrl.length > 0){
        UILabel *autoUpdateLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.autoUpdate","autoUpdate")];
-       autoUpdateLabel.top = top;
-       autoUpdateLabel.left = left;
-       autoUpdateLabel.font = FCStyle.headlineBold;
-       [self.view  addSubview:autoUpdateLabel];
+        autoUpdateLabel.width = 200;
+        autoUpdateLabel.top = top;
+        autoUpdateLabel.left = left;
+        autoUpdateLabel.font = FCStyle.headlineBold;
+        [self.view  addSubview:autoUpdateLabel];
       
-       UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
-       autoUpdateSwitch.centerY = autoUpdateLabel.centerY;
-       autoUpdateSwitch.right = kScreenWidth - left;
-       [autoUpdateSwitch setOnTintColor:FCStyle.accent];
-       [autoUpdateSwitch setOn: self.script.updateSwitch];
-       [self.view addSubview:autoUpdateSwitch];
-       [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
+        UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,27)];
+        autoUpdateSwitch.centerY = autoUpdateLabel.centerY;
+        autoUpdateSwitch.right = kScreenWidth - left;
+        [autoUpdateSwitch setOnTintColor:FCStyle.accent];
+        [autoUpdateSwitch setOn: self.script.updateSwitch];
+        [self.view addSubview:autoUpdateSwitch];
+        [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
         top = autoUpdateLabel.bottom + 20;
    }
     
     UILabel *scriptLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.scriptContent","Script Content")];
     scriptLabel.font = FCStyle.headlineBold;
+    scriptLabel.width = 200;
     scriptLabel.top = top;
     scriptLabel.left = left;
     [self.view addSubview:scriptLabel];
@@ -163,27 +224,36 @@
     
     top = scriptLabel.bottom + 10;
     
-    UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, kScreenWidth, 35)];
-    
+    UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
     [self.view addSubview:buttonView];
     
-    NSArray *selectedArray = @[@"Matches",@"Grants",@"Download URL",@"Exclude sites"];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 34, self.view.width, 1)];
+    lineView.backgroundColor = FCStyle.fcShadowLine;
     
-    NSArray *widthArray =@[@"0.18", @"0.134",@"0.28", @"0.256"];
+    [buttonView addSubview:lineView];
     
+    NSArray *selectedArray = @[@"Matches",@"Grants",@"White list", @"Black list"];
     CGFloat btnLeft = 5;
     
     for(int i = 0; i < 4; i++) {
-        NSString *rate = widthArray[i];
-        CGFloat btnWidth =  rate.floatValue * kScreenWidth;
+        CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnLeft, 0, btnWidth, 31)];
         [btn setTitle:selectedArray[i] forState:UIControlStateNormal];
         [btn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(switchTab:) forControlEvents:UIControlEventTouchUpInside];
         btn.font = FCStyle.headlineBold;
         btn.tag = 100 + i;
         btnLeft += btnWidth + 14;
         [buttonView addSubview:btn];
+        
+        if (i == 0) {
+            [buttonView addSubview:self.slideView];
+            self.slideView.left = 5;
+            [buttonView addSubview:self.slideLineView];
+            self.slideLineView.left = 5;
+        }
     }
+    
     
     top = buttonView.bottom;
     
@@ -192,14 +262,22 @@
     [self.view addSubview:self.scrollView];
     
     [self.scrollView addSubview:self.matchScrollView];
-    self.matchScrollView.contentSize = CGSizeMake(kScreenWidth, self.matchScrollView.contentSize.height + top);
+    self.matchScrollView.contentSize = CGSizeMake(self.view.width, self.matchScrollView.contentSize.height + top);
     
     
     [self.scrollView addSubview:self.grantScrollView];
-    self.grantScrollView.contentSize = CGSizeMake(kScreenWidth, self.grantScrollView.contentSize.height + top);
+    self.grantScrollView.contentSize = CGSizeMake(self.view.width, self.grantScrollView.contentSize.height + top);
 
+    [self.scrollView addSubview:self.whiteTableView];
+    self.whiteTableView.contentSize = CGSizeMake(self.view.width, self.grantScrollView.contentSize.height + top);
     
+    [self.scrollView addSubview:self.blackTableView];
+    self.blackTableView.contentSize = CGSizeMake(self.view.width, self.grantScrollView.contentSize.height + top);
+    [self buildWhiteView];
+    [self buildBlackView];
 }
+
+
 
 - (void)deleteScript:(id)sender {
     [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
@@ -222,12 +300,27 @@
     [self.navigationController pushViewController:cer animated:true];
 }
 
-- (void) switchAction:(UISwitch *) scriptSwitch {
-    if (scriptSwitch.on == YES) {
+- (void) switchAction:(id)sender {
+    self.script.active = !self.script.active;
+    
+    if(self.script.active) {
+        [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
+        self.actBtn.backgroundColor = FCStyle.accent;
+        [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    } else {
+        [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
+        self.actBtn.backgroundColor = [UIColor whiteColor];
+        [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        self.actBtn.layer.borderWidth = 1;
+        self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
+    }
+    
+    if (self.script.active) {
         [[DataManager shareManager] updateScrpitStatus:1 numberId:self.script.uuid];
     } else {
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
+    
     [self initScrpitContent];
 }
 
@@ -282,9 +375,22 @@
     }
 }
 
+- (void)switchTab:(UIButton *)btn {
+    int tag =  btn.tag - 100;
+    
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        self.slideView.left = btn.left;
+        self.slideLineView.left = btn.left;
+    }];
+    
+    self.scrollView.contentOffset = CGPointMake(tag * self.view.width, 0);
+}
+
 - (void)shareBtnClick {
     self.sYSelectTabViewController.url = self.script.downloadUrl;
     self.sYSelectTabViewController.content = self.script.content;
+    self.sYSelectTabViewController.needDelete = true;
     [self.sYSelectTabViewController show];
 }
 
@@ -321,7 +427,7 @@
 
 - (UIScrollView *)scrollView {
     if(_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth * 4, kScreenHeight)];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 4, kScreenHeight)];
     }
     return _scrollView;
 }
@@ -329,14 +435,15 @@
 - (UIScrollView *)matchScrollView {
     if(_matchScrollView == nil) {
         CGFloat baseLeft = 12;
-        _matchScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-        UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
-        matchLabel.top = 13;
-        matchLabel.left = baseLeft;
-        matchLabel.textColor = FCStyle.fcPlaceHolder;
-        [_matchScrollView addSubview:matchLabel];
-        CGFloat top = matchLabel.bottom + 8;
+        _matchScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kScreenHeight)];
+        CGFloat top = 13;
         if (self.script.mathes.count > 0) {
+            UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
+            matchLabel.top = 13;
+            matchLabel.left = baseLeft;
+            matchLabel.textColor = FCStyle.fcPlaceHolder;
+            top = matchLabel.bottom + 8;
+            [_matchScrollView addSubview:matchLabel];
             for (NSString *title in self.script.mathes) {
                 UIView *view = [self baseNote:title];
                 view.top = top;
@@ -344,21 +451,19 @@
                 [_matchScrollView addSubview:view];
                 top += 48;
             }
-        } else {
-            
         }
         
-        top += 35;
-        UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
-        includesLabel.top = top;
-        includesLabel.left = baseLeft;
-        includesLabel.textColor = FCStyle.fcPlaceHolder;
-        [_matchScrollView addSubview:includesLabel];
-        
-        top = includesLabel.bottom + 8;
-
         
         if (self.script.includes.count > 0) {
+            
+            top += 35;
+            UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
+            includesLabel.top = top;
+            includesLabel.left = baseLeft;
+            includesLabel.textColor = FCStyle.fcPlaceHolder;
+            [_matchScrollView addSubview:includesLabel];
+            top = includesLabel.bottom + 8;
+            
             for (NSString *title in self.script.includes) {
                 UIView *view = [self baseNote:title];
                 view.top = top;
@@ -366,21 +471,19 @@
                 [_matchScrollView addSubview:view];
                 top += 48;
             }
-        } else {
-            
         }
         
-        top += 35;
 
-        UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
-        excludesLabel.top = top;
-        excludesLabel.left = baseLeft;
-        excludesLabel.textColor = FCStyle.fcPlaceHolder;
-        [_matchScrollView addSubview:excludesLabel];
-        
-        top = excludesLabel.bottom + 8;
-        
         if (self.script.excludes.count > 0) {
+            top += 35;
+
+            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
+            excludesLabel.top = top;
+            excludesLabel.left = baseLeft;
+            excludesLabel.textColor = FCStyle.fcPlaceHolder;
+            [_matchScrollView addSubview:excludesLabel];
+            
+            top = excludesLabel.bottom + 8;
             for (NSString *title in self.script.excludes) {
                 UIView *view = [self baseNote:title];
                 view.top = top;
@@ -388,8 +491,6 @@
                 [_matchScrollView addSubview:view];
                 top += 48;
             }
-        } else {
-            
         }
         
         _matchScrollView.contentSize = CGSizeMake(kScreenWidth,top);
@@ -401,7 +502,7 @@
 
 - (UIScrollView *)grantScrollView {
     if(_grantScrollView == nil) {
-        _grantScrollView =  [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+        _grantScrollView =  [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width, 0, self.view.width, kScreenHeight)];
         CGFloat baseLeft = 12;
         CGFloat top = 22;
         if (self.script.grants.count > 0) {
@@ -412,13 +513,26 @@
                 [_grantScrollView addSubview:view];
                 top += 48;
             }
-        } else {
-            
         }
+        _grantScrollView.contentSize = CGSizeMake(kScreenWidth,top);
+
     }
     return _grantScrollView;
 }
 
+- (UIButton *)actBtn {
+    if (_actBtn == nil) {
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
+        _actBtn.font = FCStyle.subHeadlineBold;
+        _actBtn.layer.cornerRadius = 15;
+        _actBtn.right = kScreenWidth - 12;
+        [self.view addSubview:_actBtn];
+        
+        [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
+
+    }
+    return _actBtn;
+}
 
 - (UIView *)baseNote:(NSString *)title{
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth - 24, 48)];
@@ -432,6 +546,141 @@
     [view addSubview:label];
     view.backgroundColor = FCStyle.secondaryPopup;
     return view;
+}
+
+- (UIView *)slideView {
+    if (_slideView == nil) {
+        CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
+        _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 31)];
+        _slideView.backgroundColor = RGBA(182, 32, 224, 0.11);
+    }
+    
+    return _slideView;
+}
+
+- (UIView *)slideLineView {
+    if (_slideLineView == nil) {
+        CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
+        _slideLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 32, btnWidth, 3)];
+        _slideLineView.backgroundColor = FCStyle.accent;
+    }
+    
+    return _slideLineView;
+}
+
+- (UIScrollView *)whiteTableView {
+    if(_whiteTableView == nil) {
+        _whiteTableView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width * 2, 0, self.view.width, kScreenHeight)];
+        
+    }
+    
+    return _whiteTableView;
+}
+
+- (UIScrollView *)blackTableView {
+    if(_blackTableView == nil) {
+        _blackTableView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width * 3, 0, self.view.width, kScreenHeight)];
+    }
+    
+    return _blackTableView;
+}
+
+- (UIView *)creteSitesView:(NSString *)site type:(NSString *)type {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 23, 48)];
+    view.backgroundColor = FCStyle.secondaryPopup;
+    view.layer.cornerRadius = 8;
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 323, 19)];
+    title.text = site;
+    title.font = FCStyle.body;
+    title.textColor = FCStyle.fcBlack;
+    title.centerY = 24;
+    title.left = 12;
+
+    [view addSubview:title];
+    
+    UIImage *image =  [UIImage systemImageNamed:@"minus.circle"
+                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+    image = [image imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 27, 28);
+    [btn setBackgroundImage:image forState:UIControlStateNormal];
+    btn.centerY = 24;
+    btn.right = self.view.width - 10 - 18;
+    [btn addTarget:self action:@selector(updateSite:) forControlEvents:UIControlEventTouchUpInside];
+    objc_setAssociatedObject (btn , @"site", site, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject (btn , @"type", type, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [view addSubview:btn];
+    return view;
+}
+
+- (void)addBlackSite {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"add black site" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *titleTextField = alert.textFields.firstObject;
+        NSString *site = titleTextField.text;
+        
+        NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.blacklist];
+        [array addObject:site];
+        self.script.blacklist = array;
+        [[DataManager shareManager] updateScriptConfigBlackList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
+        [self initScrpitContent];
+        [self buildBlackView];
+    }];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+          textField.placeholder = @"add site";
+      }];
+    UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+
+    [alert addAction:cancle];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)updateSite:(UIButton *)btn {
+    NSString *site = objc_getAssociatedObject(btn,@"site");
+    NSString *type = objc_getAssociatedObject(btn,@"type");
+
+    if([type isEqualToString:@"black"]) {
+        NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.blacklist];
+        [array removeObject:site];
+        self.script.blacklist = array;
+        [self buildBlackView];
+    } else {
+        NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.whitelist];
+        [array removeObject:site];
+        self.script.whitelist = array;
+        [self buildWhiteView];
+    }
+    
+
+}
+
+
+- (void)addWhiteSite {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"add white site" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *titleTextField = alert.textFields.firstObject;
+        NSString *site = titleTextField.text;
+        
+        NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.whitelist];
+        [array addObject:site];
+        self.script.whitelist = array;
+        
+        [[DataManager shareManager] updateScriptConfigWhiteList:[array componentsJoinedByString:@","]  numberId:self.script.uuid];
+        [self initScrpitContent];
+        [self buildWhiteView];
+    }];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+          textField.placeholder = @"add site";
+      }];
+    UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+
+    [alert addAction:cancle];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

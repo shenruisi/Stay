@@ -18,10 +18,29 @@
 
     [self shareUrlBtn];
     [self shareContentBtn];
+    
+    CGFloat height = 213;
+    CGFloat top = 17;
+    self.shareContentBtn.top = top;
+    top = 17 + 16 + 45;
     if (self.url == NULL || self.url.length == 0) {
         self.shareUrlBtn.hidden = true;
-        [self getMainView].height = 82;
-    } 
+        height -= 61;
+    } else {
+        self.shareUrlBtn.top = top;
+        top += 16 + 45;
+    }
+    [self deleteBtn];
+
+    if(!self.needDelete) {
+        self.deleteBtn.hidden = true;
+        height -= 61;
+    } else {
+        self.deleteBtn.top = top;
+    }
+    
+    [self getMainView].height = height;
+    
 }
 
 - (void)shareUrlClick {
@@ -50,6 +69,11 @@
     activityVC.popoverPresentationController.sourceView = self.getMainView;
     activityVC.popoverPresentationController.sourceRect = self.getMainView.bounds;
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:activityVC animated:YES completion:nil];
+}
+
+- (void)deletebtnClick {
+    NSNotification *notification = [NSNotification notificationWithName:@"deleteDetail" object:nil];
+    [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
 
 
@@ -119,6 +143,38 @@
     return _shareContentBtn;
 }
 
+- (UIView *)deleteBtn {
+    if(_deleteBtn == nil) {
+#ifdef Mac
+        _deleteBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, self.mainViewSize.width - 50, 45)];
+#else
+        _deleteBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
+#endif
+        _deleteBtn.backgroundColor = FCStyle.secondaryPopup;
+        _deleteBtn.layer.cornerRadius = 10;
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deletebtnClick)];
+        [_deleteBtn addGestureRecognizer:tapGesture];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 18)];
+        label.font = FCStyle.body;
+        label.textColor = RGB(224, 32, 32);
+        label.text = NSLocalizedString(@"settings.delete", @"Delete");
+        label.userInteractionEnabled = NO;
+        label.centerY = 22.5;
+        [_deleteBtn addSubview:label];
+        UIImage *image = [UIImage systemImageNamed:@"trash.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:22]]];
+        image = [image imageWithTintColor:RGB(224, 32, 32) renderingMode:UIImageRenderingModeAlwaysOriginal];
+
+        UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
+        imageview.image = image;
+        imageview.centerY = 22.5;
+        imageview.right = kScreenWidth - 95;
+        [_deleteBtn addSubview:imageview];
+
+        [self.view addSubview:_deleteBtn];
+    }
+    
+    return _deleteBtn;
+}
 
 
 - (CGSize)mainViewSize{

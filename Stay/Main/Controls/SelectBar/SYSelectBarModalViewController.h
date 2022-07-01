@@ -13,9 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UIView *shareUrlBtn;
 @property(nonatomic, strong) UIView *shareContentBtn;
+@property(nonatomic, strong) UIView *deleteBtn;
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *url;
+@property (nonatomic, assign) BOOL needDelete;
+
 
 @end
 
