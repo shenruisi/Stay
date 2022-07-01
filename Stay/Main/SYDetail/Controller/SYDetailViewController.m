@@ -226,7 +226,7 @@
       
         UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,31)];
         autoUpdateSwitch.centerY = autoUpdateLabel.centerY;
-        autoUpdateSwitch.right = kScreenWidth - left;
+        autoUpdateSwitch.right = self.view.width - left;
         [autoUpdateSwitch setOnTintColor:FCStyle.accent];
         [autoUpdateSwitch setOn: self.script.updateSwitch];
         [self.view addSubview:autoUpdateSwitch];
@@ -243,14 +243,14 @@
     
     NSString *imageName = CGColorEqualToColor([[self createBgColor] CGColor],[RGB(20, 20, 20) CGColor])?@"arrow-dark":@"arrow";
     UIImageView *scriptIconLabel = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
-    scriptIconLabel.right = kScreenWidth - 19;
+    scriptIconLabel.right = self.view.width - 19;
     scriptIconLabel.centerY = scriptLabel.centerY;
     [self.view  addSubview:scriptIconLabel];
     
     UIButton *scriptBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    scriptBtn.frame = CGRectMake(0, 0, kScreenWidth, 40);
+    scriptBtn.frame = CGRectMake(0, 0, self.view.width, 40);
     scriptBtn.centerY = scriptLabel.centerY;
-    scriptBtn.right = kScreenWidth - left;
+    scriptBtn.right = self.view.width - left;
 
     [scriptBtn addTarget:self action:@selector(showScript:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:scriptBtn];
@@ -268,12 +268,13 @@
     NSArray *segmentedArray = [[NSArray alloc]initWithObjects:@"Auto",@"Page",@"Content",nil];
     UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
     segmentedControl.frame =  CGRectMake(0, top, 243.0, 31);
-    segmentedControl.selectedSegmentIndex = 0;
     
     [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
     if(self.script.injectInto != nil && self.script.injectInto.length > 0) {
         NSUInteger idx = [segmentedArray indexOfObject:self.script.injectInto];
         segmentedControl.selectedSegmentIndex = idx;
+    } else {
+        segmentedControl.selectedSegmentIndex = 0;
     }
     segmentedControl.right = self.view.width - 13;
     segmentedControl.centerY = injectLabel.centerY;
@@ -404,7 +405,7 @@
 }
 
 - (UIView *)createLine{
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,99,kScreenWidth - 57 ,1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,99,self.view.width - 57 ,1)];
     UIColor *bgcolor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
                 return RGBA(216, 216, 216, 0.3);
@@ -525,10 +526,11 @@
                 view.top = top;
                 view.left = baseLeft;
                 [_matchScrollView addSubview:view];
-                if (i != self.script.includes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                if (i != self.script.mathes.count -1) {
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
                     line.backgroundColor = FCStyle.fcSeparator;
                     line.top = top + 47;
+                    line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 } else {
                     view.layer.cornerRadius = 8;
@@ -564,9 +566,10 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != self.script.includes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
                     line.backgroundColor = FCStyle.fcSeparator;
                     line.top = top + 47;
+                    line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 }else {
                     view.layer.cornerRadius = 8;
@@ -604,9 +607,10 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != self.script.excludes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
                     line.backgroundColor = FCStyle.fcSeparator;
                     line.top = top + 47;
+                    line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 }else {
                     view.layer.cornerRadius = 8;
@@ -621,7 +625,7 @@
             }
         }
         
-        _matchScrollView.contentSize = CGSizeMake(kScreenWidth,top);
+        _matchScrollView.contentSize = CGSizeMake(self.view.width,top);
         
         
     }
@@ -645,9 +649,10 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != self.script.grants.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
                     line.backgroundColor = FCStyle.fcSeparator;
                     line.top = top + 47;
+                    line.left = baseLeft + 23;
                     [_grantScrollView addSubview:line];
                 }else {
                     view.layer.cornerRadius = 8;
@@ -661,7 +666,7 @@
                 top += 48;
             }
         }
-        _grantScrollView.contentSize = CGSizeMake(kScreenWidth,top);
+        _grantScrollView.contentSize = CGSizeMake(self.view.width,top);
 
     }
     return _grantScrollView;
