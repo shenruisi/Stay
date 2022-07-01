@@ -280,6 +280,7 @@
 
 
 - (void)deleteScript:(id)sender {
+    [self.sYSelectTabViewController dismiss];
     [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
     [self.navigationController popViewControllerAnimated:TRUE];
 }

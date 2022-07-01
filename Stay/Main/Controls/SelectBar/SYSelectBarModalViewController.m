@@ -71,7 +71,7 @@
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:activityVC animated:YES completion:nil];
 }
 
-- (void)deletebtnClick {
+- (void)deleteBtnClick {
     NSNotification *notification = [NSNotification notificationWithName:@"deleteDetail" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
@@ -152,7 +152,7 @@
 #endif
         _deleteBtn.backgroundColor = FCStyle.secondaryPopup;
         _deleteBtn.layer.cornerRadius = 10;
-        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deletebtnClick)];
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteBtnClick)];
         [_deleteBtn addGestureRecognizer:tapGesture];
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 18)];
         label.font = FCStyle.body;
@@ -184,7 +184,7 @@
     CGFloat width = kScreenWidth - 30;
 #endif
     
-    CGFloat height = 152;
+    CGFloat height = 213;
 //    if (self.url == NULL || self.url.length == 0) {
 //        self.shareUrlBtn.hidden = true;
 //        height = 82;
