@@ -11,9 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification;
 
+@class UserScript;
 @interface SYHomeViewController : UIViewController
 
 - (void)import;
+- (NSArray<UserScript *> *)userscripts;
 @end
 
 NS_ASSUME_NONNULL_END

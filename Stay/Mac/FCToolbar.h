@@ -28,6 +28,7 @@ static const NSToolbarItemIdentifier Toolbar_iCloud = @"toolbar.iCloud";
 static const NSToolbarItemIdentifier Toolbar_iCloudOn = @"toolbar.iCloudOn";
 static const NSToolbarItemIdentifier Toolbar_iCloudOff = @"toolbar.iCloudOff";
 static const NSToolbarItemIdentifier Toolbar_iCloudSlash = @"toolbar.iCloudSlash";
+static const NSToolbarItemIdentifier Toolbar_iCloudSync = @"toolbar.iCloudSync";
 
 @protocol FCToolbarDelegate <NSObject>
 

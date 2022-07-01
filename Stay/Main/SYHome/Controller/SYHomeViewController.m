@@ -79,7 +79,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) UITableView *tableView;
-// 数据源数组
+
 @property (nonatomic, strong) NSMutableArray *datas;
 // 搜索结果数组
 @property (nonatomic, strong) NSMutableArray *results;
@@ -851,6 +851,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
     return _datas;
+}
+
+- (NSArray<UserScript *> *)userscripts{
+    return [self.datas copy];
 }
 
 - (NSMutableArray *)results {

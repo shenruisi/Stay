@@ -11,18 +11,28 @@
 #import "StatusRecord.h"
 #import "UserscriptRecord.h"
 #import "ContentRecord.h"
+#import "UserScript.h"
 
-@interface iCloudService()
+@interface iCloudService(){
+    dispatch_queue_t _iCloudServiceQueue;
+}
 
 @property (nonatomic, strong) CKContainer *container;
 @property (nonatomic, strong) CKDatabase *database;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, CKRecordZone *> *zoneDic;
-
-
 @end
 
 
 @implementation iCloudService
+
+- (instancetype)init{
+    if (self = [super init]){
+        _iCloudServiceQueue = dispatch_queue_create([@"app.stay.queue.iCloudService" UTF8String],
+                                              DISPATCH_QUEUE_CONCURRENT);
+    }
+    
+    return self;
+}
 
 - (BOOL)logged{
     __block BOOL status;
@@ -46,6 +56,39 @@
     }];
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     return identifier;
+}
+
+- (void)checkFirstInit:(void (^)(BOOL firstInit, NSError *error))completionHandler{
+    NSNumber *n = [[NSUserDefaults standardUserDefaults] objectForKey:@"iCloudService.firstInit"];
+    if (n && ![n boolValue]){
+        completionHandler(NO,nil);
+        return;
+    }
+    
+    [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
+        if (error){
+            completionHandler(YES,error);
+        }
+        else{
+            NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+            CKQuery *query = [[CKQuery alloc] initWithRecordType:StatusRecord.type predicate:predicate];
+            [self.database performQuery:query inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+                if (error){
+                    completionHandler(YES,error);
+                }
+                else{
+                    if (results.count == 0){
+                        completionHandler(YES,nil);
+                    }
+                    else{
+                        StatusRecord *statusRecord = [StatusRecord ofRecord:results.firstObject];
+                        [[NSUserDefaults standardUserDefaults] setObject:@(statusRecord.firstInitTimestamp == 0) forKey:@"iCloudService.firstInit"];
+                        completionHandler(statusRecord.firstInitTimestamp == 0,nil);
+                    }
+                }
+            }];
+        }
+    } zoneName:@"Userscripts" recordTypes:@[StatusRecord.type]];
 }
 
 - (BOOL)firstInit:(NSError * __strong *)outError{
@@ -80,10 +123,91 @@
     return ret;
 }
 
-- (void)pushUserscripts:(NSArray *)userscripts
+- (void)pushUserscripts:(NSArray<UserScript *> *)userscripts
               syncStart:(void(^)(void))syncStart
       completionHandler:(void (^)(NSError *))completionHandler{
+    syncStart();
+    dispatch_async(_iCloudServiceQueue, ^{
+        for (UserScript *userscript in userscripts){
+            [self addUserscript:userscript];
+        }
+        NSError *zoneError = nil;
+        CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[StatusRecord.type] error:&zoneError];
+        if (nil == zoneError){
+            NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+            CKQuery *query = [[CKQuery alloc] initWithRecordType:StatusRecord.type predicate:predicate];
+            [self.database performQuery:query inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+                if (error){
+                    completionHandler(error);
+                }
+                else{
+                    CKRecord *ckStatusRecord = results.count == 0 ? [[CKRecord alloc] initWithRecordType:StatusRecord.type zoneID:zone.zoneID] : results.firstObject;
+                    StatusRecord *statusRecord = [[StatusRecord alloc] init];
+                    statusRecord.firstInitTimestamp = [[NSDate date] timeIntervalSince1970];
+                    [statusRecord fillCKRecord:ckStatusRecord];
+                    [self.database saveRecord:ckStatusRecord completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+                        if (nil == error){
+                            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"iCloudService.firstInit"];
+                        }
+                        completionHandler(error);
+                    }];
+                }
+            }];
+        }
+        completionHandler(zoneError);
+    });
+}
+
+- (void)addUserscript:(UserScript *)userscript{
+    NSError *zoneError = nil;
+    CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type] error:&zoneError];
+    if (zoneError != nil) return;
     
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    NSPredicate *userscriptPredicate = [NSPredicate predicateWithFormat:@"uuid == %@", userscript.uuid];
+    CKQuery *userscriptQuery = [[CKQuery alloc] initWithRecordType:UserscriptRecord.type predicate:userscriptPredicate];
+    [self.database performQuery:userscriptQuery inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+        if (error){ //error jump this adding
+            dispatch_semaphore_signal(sem);
+        }
+        else{
+            CKRecord *ckUserscriptRecord = results.count == 0 ? [[CKRecord alloc] initWithRecordType:UserscriptRecord.type zoneID:zone.zoneID] : results.firstObject;
+            UserscriptRecord *userscriptRecord = [[UserscriptRecord alloc] init];
+            userscriptRecord.uuid = userscript.uuid;
+            userscriptRecord.header = [[NSString alloc] initWithData:
+                                       [NSJSONSerialization dataWithJSONObject:
+                                        [userscript toDictionaryWithoutContent] options:0 error:nil]
+                                                            encoding:NSUTF8StringEncoding];
+            double now = [[NSDate date] timeIntervalSince1970];
+            userscriptRecord.createTimestamp = now;
+            userscriptRecord.updateTimestamp = now;
+            [userscriptRecord fillCKRecord:ckUserscriptRecord];
+            [self.database saveRecord:ckUserscriptRecord completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+                if (error){
+                    dispatch_semaphore_signal(sem);
+                }
+                else{
+                    NSPredicate *contentPredicate = [NSPredicate predicateWithFormat:@"uuid == %@", userscript.uuid];
+                    CKQuery *contentQuery = [[CKQuery alloc] initWithRecordType:ContentRecord.type predicate:contentPredicate];
+                    [self.database performQuery:contentQuery inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+                        if (nil == error){
+                            CKRecord *ckCotentRecord = results.count == 0 ? [[CKRecord alloc] initWithRecordType:ContentRecord.type zoneID:zone.zoneID] : results.firstObject;
+                            ContentRecord *contentRecord = [[ContentRecord alloc] init];
+                            contentRecord.uuid = userscript.uuid;
+                            contentRecord.raw = [userscript.content copy];
+                            [contentRecord fillCKRecord:ckCotentRecord];
+                            [self.database saveRecord:ckCotentRecord completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+                            }];
+                        }
+                        dispatch_semaphore_signal(sem);
+                    }];
+                    
+                }
+            }];
+        }
+    }];
+
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 }
 
 - (void)_initStatusRecordType{
@@ -100,6 +224,7 @@
         }
     }];
 }
+
 
 - (CKRecordZone *)_getZone:(NSString *)zoneName recordTypes:(NSArray<CKRecordType> *)recordTypes error:(NSError * __strong *)outError{
     __block CKRecordZone *zone = self.zoneDic[zoneName];

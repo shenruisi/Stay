@@ -46,4 +46,7 @@ CGRect  CGRectMoveToCenter(CGRect rect, CGPoint center);
 - (void) moveBy: (CGPoint) delta;
 - (void) scaleBy: (CGFloat) scaleFactor;
 - (void) fitInSize: (CGSize) aSize;
+
+//- (void)rotateWithDuration:(double)duration;
+//- (void)stopRotating;
 @end

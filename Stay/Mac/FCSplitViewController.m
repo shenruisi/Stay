@@ -87,7 +87,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar{
     return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_Collapse,Toolbar_Block,
-             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import,Toolbar_iCloudOn];
+             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import,Toolbar_iCloudOn,Toolbar_iCloudSync];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar{
@@ -101,7 +101,6 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         item.target = self;
         item.action = @selector(toolbarItemDidClick:);
         item.bordered = YES;
-        item.toolTip = NSLocalizedString(@"mac.toolbar.preferences.tip", @"");
         return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_AppName]){
@@ -114,6 +113,16 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         item.action = @selector(toolbarItemDidClick:);
         item.bordered = YES;
         item.image = [UIImage systemImageNamed:@"checkmark.icloud"];
+        return item;
+    }
+    else if ([itemIdentifier isEqualToString:Toolbar_iCloudSync]){
+        NSToolbarItem *item = [FCShared.plugin.appKit iCloudSync:itemIdentifier
+                                                       imageData:UIImagePNGRepresentation([ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:[UIFont systemFontOfSize:23] color:[UIColor colorWithRed:105/255.0 green:105/255.0 blue:105/255.0 alpha:1]])];
+        item.target = self;
+        item.action = @selector(toolbarItemDidClick:);
+        item.bordered = YES;
+        item.toolTip = NSLocalizedString(@"icloud.insync", @"");
+
         return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_Import]){
@@ -250,59 +259,71 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [self.holdEditViewController save];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloudOn]){
-        NSError *error = nil;
-        BOOL firstInit = [FCShared.iCloudService firstInit:&error];
-        if (error){
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"icloud.error", @"")
-                                                                           message:NSLocalizedString(@"TryAgainLater", @"")
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction * _Nonnull action) {
-                [self.navigationController popViewControllerAnimated:YES];
-                }];
-            [alert addAction:conform];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-        else{
-            if (firstInit){
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
-                                                                               message:NSLocalizedString(@"icloud.firstInit", @"")
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
-                                                                  style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction * _Nonnull action) {
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                [alert addAction:conform];
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
-                                                                  style:UIAlertActionStyleCancel
-                                                                handler:^(UIAlertAction * _Nonnull action) {
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                [alert addAction:cancel];
-                [self presentViewController:alert animated:YES completion:nil];
+        [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
+            if (error){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"icloud.error", @"")
+                                                                                   message:NSLocalizedString(@"TryAgainLater", @"")
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                        [self.navigationController popViewControllerAnimated:YES];
+                        }];
+                    [alert addAction:conform];
+                    [self presentViewController:alert animated:YES completion:nil];
+                });
             }
             else{
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
-                                                                               message:NSLocalizedString(@"icloud.syncNow", @"")
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                                  style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction * _Nonnull action) {
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                [alert addAction:conform];
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
-                                                                  style:UIAlertActionStyleCancel
-                                                                handler:^(UIAlertAction * _Nonnull action) {
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
-                [alert addAction:cancel];
-                [self presentViewController:alert animated:YES completion:nil];
+                if (firstInit){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                       message:NSLocalizedString(@"icloud.firstInit", @"")
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
+                                                        syncStart:^{
+                                [self remoteSyncStart];
+                            } completionHandler:^(NSError * error) {
+                                [self remoteSyncEnd];
+                            }];
+                        }];
+                        [alert addAction:conform];
+                        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                          style:UIAlertActionStyleCancel
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }];
+                        [alert addAction:cancel];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    });
+                    
+                }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                       message:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }];
+                        [alert addAction:conform];
+                        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                          style:UIAlertActionStyleCancel
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }];
+                        [alert addAction:cancel];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    });
+                    
+                }
             }
-        }
-        
+        }];
     }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
 //        [self showTabEdit];
@@ -329,6 +350,20 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_AppIcon]){
 //        [self showPref];
 //    }
+}
+
+- (void)remoteSyncStart{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.toolbar removeItemAtIndex:3];
+        [self.toolbar insertItemWithItemIdentifier:Toolbar_iCloudSync atIndex:3];
+    });
+}
+
+- (void)remoteSyncEnd{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.toolbar removeItemAtIndex:3];
+        [self.toolbar insertItemWithItemIdentifier:Toolbar_iCloudOn atIndex:3];
+    });
 }
 
 - (void)enableToolbarItem:(NSToolbarItemIdentifier)identifier{

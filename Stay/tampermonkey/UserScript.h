@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 //https://www.tampermonkey.net/documentation.php
-@interface UserScript : NSObject
+@interface UserScript : NSObject<NSCopying>
 
 @property (nonatomic, copy) NSString *uuid;
 @property (nonatomic, copy) NSString *name;
@@ -57,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
+- (NSDictionary *)toDictionaryWithoutContent;
 
 //Use the return value as a key of `locales`
 + (NSString *)localeCode;

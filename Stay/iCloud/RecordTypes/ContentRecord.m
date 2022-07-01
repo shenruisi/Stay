@@ -11,13 +11,13 @@
 
 - (void)fillCKRecord:(CKRecord *)ckRecord{
     [ckRecord setObject:self.uuid forKey:@"uuid"];
-    [ckRecord setObject:self.asset forKey:@"asset"];
+    [ckRecord setObject:self.raw forKey:@"raw"];
 }
 
 + (ContentRecord *)ofRecord:(CKRecord *)record{
     ContentRecord *contentRecord = [[ContentRecord alloc] init];
     contentRecord.uuid = [record objectForKey:@"uuid"];
-    contentRecord.asset = [record objectForKey:@"asset"];
+    contentRecord.raw = [record objectForKey:@"raw"];
     return contentRecord;
 }
 

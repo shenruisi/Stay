@@ -75,6 +75,72 @@
     };
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone{
+    UserScript *copyed = [[[self class] allocWithZone:zone] init];
+    copyed.name = [self.name copy];
+    copyed.namespace = [self.namespace copy];
+    copyed.author = [self.author copy];
+    copyed.version = [self.version copy];
+    copyed.desc = [self.desc copy];
+    copyed.homepage = [self.homepage copy];
+    copyed.icon = [self.icon copy];
+    copyed.includes = [self.includes copy];
+    copyed.matches = [self.matches copy];
+    copyed.excludes = [self.excludes copy];
+    copyed.runAt = [self.runAt copy];
+    copyed.grants = [self.grants copy];
+    copyed.noFrames = self.noFrames;
+    copyed.pass = self.pass;
+    copyed.errorMessage = [self.errorMessage copy];
+    copyed.requireUrls = [self.requireUrls copy];
+    copyed.updateUrl = [self.updateUrl copy];
+    copyed.downloadUrl = [self.downloadUrl copy];
+    copyed.requireCodes = [self.requireCodes copy];
+    copyed.resourceUrls = [self.resourceUrls copy];
+    copyed.notes = [self.notes copy];
+    copyed.locales = [self.locales copy];
+    copyed.unsupportedGrants = [self.unsupportedGrants copy];
+    copyed.stayEngine = [self.stayEngine copy];
+    copyed.injectInto = [self.injectInto copy];
+    copyed.license = [self.license copy];
+    return copyed;
+}
+
+
+- (NSDictionary *)toDictionaryWithoutContent{
+    return @{
+        @"uuid":self.uuid ? self.uuid : @"",
+        @"name":self.name ? self.name : @"",
+        @"namespace":self.namespace ? self.namespace : @"",
+        @"author":self.author ? self.author : @"",
+        @"version":self.version ? self.version : @"",
+        @"description":self.desc ? self.desc : @"",
+        @"homepage":self.homepage ? self.homepage : @"",
+        @"icon":self.icon ? self.icon : @"",
+        @"includes":self.includes,
+        @"matches":self.matches,
+        @"excludes":self.excludes,
+        @"runAt":self.runAt,
+        @"grants":self.grants,
+        @"noFrames":@(self.noFrames),
+        @"requireUrls":self.requireUrls,
+        @"active":@(self.active),
+        @"updateUrl":self.updateUrl ? self.updateUrl: @"",
+        @"downloadUrl":self.downloadUrl ? self.downloadUrl: @"",
+        @"requireCodes":self.requireCodes ? self.requireCodes: @[],
+        @"resourceUrls":self.resourceUrls ? self.resourceUrls: @{},
+        @"notes":self.notes ? self.notes: @[],
+        @"locales":self.locales ? self.locales : @{},
+        @"installType":self.installType ? self.installType : @"content",
+        @"unsupportedGrants":self.unsupportedGrants ? self.unsupportedGrants : @[],
+        @"stayEngine":self.stayEngine ? self.stayEngine : @"",
+        @"whitelist":self.whitelist ? self.whitelist : @[],
+        @"blacklist":self.blacklist ? self.blacklist : @[],
+        @"injectInto":self.injectInto ? self.injectInto : @"auto",
+        @"license":self.license ? self.license : @""
+    };
+}
+
 
 - (NSString *)description
 {

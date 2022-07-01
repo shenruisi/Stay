@@ -84,3 +84,4 @@ icloud.error = "iCloud error";
 icloud.firstInit = "Need to turn on first sync on this device?";
 icloud.syncNow = "Sync now";
 icloud.syncNow.alert ="Need to sync now?";
+icloud.insync = "In sync…";

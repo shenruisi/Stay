@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContentRecord : NSObject
 
 @property (nonatomic, strong) NSString *uuid;
-@property (nonatomic, strong) CKAsset *asset;
+@property (nonatomic, strong) CKAsset *raw;
 
 @property (class, strong, readonly) NSString *type;
 
