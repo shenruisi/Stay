@@ -255,7 +255,7 @@
     [scriptBtn addTarget:self action:@selector(showScript:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:scriptBtn];
 
-    top = scriptLabel.bottom + 10;
+    top = scriptLabel.bottom + 15;
     
     
     UILabel *injectLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.injectMode","Inject Mode")];
