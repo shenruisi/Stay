@@ -39,12 +39,21 @@
     self.view.backgroundColor = FCStyle.popup;
 
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+#ifndef Mac
     [self createDetailView];
+#endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
-
+#ifdef Mac
+    self.navigationController.navigationBarHidden = YES;
+#endif
     // Do any additional setup after loading the view.
+}
+
+- (void)navigateViewDidLoad{
+    [super navigateViewDidLoad];
+    [self createDetailView];
 }
 
 
@@ -123,19 +132,23 @@
     CGFloat left = 15;
     CGFloat maxWidthRate = 0.7;
     CGFloat top = 0;
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(left, 17 + 91, kScreenWidth * maxWidthRate, 21)];
+#ifdef Mac
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(left, 50 + 20, self.view.width * maxWidthRate, 21)];
+#else
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(left, 17 + 91, self.view.width * maxWidthRate, 21)];
+#endif
     title.text = self.script.name;
     title.textColor = FCStyle.fcBlack;
     title.font = FCStyle.headlineBold;
     [self.view addSubview:title];
     top = title.bottom + 5;
-    UILabel *runAt = [[UILabel alloc] initWithFrame:CGRectMake(left, top, kScreenWidth * maxWidthRate, 16)];
+    UILabel *runAt = [[UILabel alloc] initWithFrame:CGRectMake(left, top, self.view.width * maxWidthRate, 16)];
     runAt.font = FCStyle.subHeadline;
     runAt.text = [NSString stringWithFormat:@"Run at %@",self.script.runAt];
     runAt.textColor = FCStyle.fcBlack;
     [self.view addSubview:runAt];
     top = runAt.bottom + 5;
-    UILabel *authour = [[UILabel alloc] initWithFrame:CGRectMake(left, top, kScreenWidth * maxWidthRate, 16)];
+    UILabel *authour = [[UILabel alloc] initWithFrame:CGRectMake(left, top, self.view.width * maxWidthRate, 16)];
     authour.font = FCStyle.subHeadline;
     authour.text = [NSString stringWithFormat:@"Created by %@",self.script.author];
     authour.textColor = FCStyle.fcSecondaryBlack;
@@ -155,7 +168,7 @@
 
     
     top = authour.bottom + 10;
-    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,kScreenWidth - left * 2 ,50)];
+    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,50)];
     descDetailLabel.font = FCStyle.headline;
     descDetailLabel.text = self.script.desc;
     descDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -173,7 +186,7 @@
     imageView.frame = CGRectMake(left, top, 19, 19);
     [self.view addSubview:imageView];
     
-    UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 15)];
+    UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 15)];
     version.font = FCStyle.footnote;
     version.text = self.script.version;
     version.textColor = FCStyle.fcBlack;
