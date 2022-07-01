@@ -13,6 +13,8 @@
 #import "ContentRecord.h"
 #import "UserScript.h"
 
+NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"app.stay.notification.iCloudServiceUserscriptSavedNotification";
+
 @interface iCloudService(){
     dispatch_queue_t _iCloudServiceQueue;
 }
@@ -28,10 +30,14 @@
 - (instancetype)init{
     if (self = [super init]){
         _iCloudServiceQueue = dispatch_queue_create([@"app.stay.queue.iCloudService" UTF8String],
-                                              DISPATCH_QUEUE_CONCURRENT);
+                                              DISPATCH_QUEUE_SERIAL);
     }
     
     return self;
+}
+
+- (dispatch_queue_t)queue{
+    return _iCloudServiceQueue;
 }
 
 - (BOOL)logged{
@@ -158,6 +164,43 @@
     });
 }
 
+- (void)removeUserscript:(UserScript *)userscript{
+    NSError *zoneError = nil;
+    CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type] error:&zoneError];
+    if (zoneError != nil) return;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    NSPredicate *userscriptPredicate = [NSPredicate predicateWithFormat:@"uuid == %@", userscript.uuid];
+    CKQuery *userscriptQuery = [[CKQuery alloc] initWithRecordType:UserscriptRecord.type predicate:userscriptPredicate];
+    [self.database performQuery:userscriptQuery inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+        if (error || results.count == 0){
+            dispatch_semaphore_signal(sem);
+        }
+        else{
+            [self.database deleteRecordWithID:results.firstObject.recordID completionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
+                if (error){
+                    dispatch_semaphore_signal(sem);
+                }
+                else{
+                    NSPredicate *contentPredicate = [NSPredicate predicateWithFormat:@"uuid == %@", userscript.uuid];
+                    CKQuery *contentQuery = [[CKQuery alloc] initWithRecordType:ContentRecord.type predicate:contentPredicate];
+                    [self.database performQuery:contentQuery inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+                        if (error || results.count == 0){
+                            dispatch_semaphore_signal(sem);
+                        }
+                        else{
+                            [self.database deleteRecordWithID:results.firstObject.recordID completionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
+                                dispatch_semaphore_signal(sem);
+                            }];
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
+
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+}
+
 - (void)addUserscript:(UserScript *)userscript{
     NSError *zoneError = nil;
     CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type] error:&zoneError];
@@ -197,6 +240,12 @@
                             contentRecord.raw = [userscript.content copy];
                             [contentRecord fillCKRecord:ckCotentRecord];
                             [self.database saveRecord:ckCotentRecord completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+                                if (nil == error){
+                                    [[NSNotificationCenter defaultCenter]
+                                     postNotificationName:iCloudServiceUserscriptSavedNotification
+                                     object:nil
+                                     userInfo:@{@"uuid":userscript.uuid}];
+                                }
                             }];
                         }
                         dispatch_semaphore_signal(sem);

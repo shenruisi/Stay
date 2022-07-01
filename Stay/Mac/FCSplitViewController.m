@@ -259,7 +259,9 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [self.holdEditViewController save];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloudOn]){
+        [self remoteSyncStart];
         [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
+            [self remoteSyncEnd];
             if (error){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"icloud.error", @"")

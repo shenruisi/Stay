@@ -8,6 +8,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+extern NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification;
+
 @class UserScript;
 @interface iCloudService : NSObject
 
@@ -18,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pushUserscripts:(NSArray<UserScript *> *)userscripts
               syncStart:(void(^)(void))syncStart
       completionHandler:(void (^)(NSError *error))completionHandler;
+- (void)removeUserscript:(UserScript *)userscript;
+- (void)addUserscript:(UserScript *)userscript;
+- (dispatch_queue_t)queue;
 @end
 
 NS_ASSUME_NONNULL_END

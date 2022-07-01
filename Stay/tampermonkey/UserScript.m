@@ -37,6 +37,7 @@
     userScript.stayEngine = dic[@"stayEngine"];
     userScript.injectInto = dic[@"injectInto"];
     userScript.license = dic[@"license"];
+    userScript.iCloudIdentifier = dic[@"iCloudIdentifier"];
     return userScript;
 }
 
@@ -71,7 +72,8 @@
         @"whitelist":self.whitelist ? self.whitelist : @[],
         @"blacklist":self.blacklist ? self.blacklist : @[],
         @"injectInto":self.injectInto ? self.injectInto : @"auto",
-        @"license":self.license ? self.license : @""
+        @"license":self.license ? self.license : @"",
+        @"iCloudIdentifier":self.iCloudIdentifier ? self.iCloudIdentifier : @""
     };
 }
 
@@ -103,6 +105,7 @@
     copyed.stayEngine = [self.stayEngine copy];
     copyed.injectInto = [self.injectInto copy];
     copyed.license = [self.license copy];
+    copyed.iCloudIdentifier = [self.iCloudIdentifier copy];
     return copyed;
 }
 
@@ -137,7 +140,8 @@
         @"whitelist":self.whitelist ? self.whitelist : @[],
         @"blacklist":self.blacklist ? self.blacklist : @[],
         @"injectInto":self.injectInto ? self.injectInto : @"auto",
-        @"license":self.license ? self.license : @""
+        @"license":self.license ? self.license : @"",
+        @"iCloudIdentifier":self.iCloudIdentifier ? self.iCloudIdentifier : @""
     };
 }
 
