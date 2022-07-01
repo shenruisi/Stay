@@ -170,7 +170,7 @@
     
     top = authour.bottom + 10;
     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,50)];
-    descDetailLabel.font = FCStyle.headline;
+    descDetailLabel.font = FCStyle.body;
     descDetailLabel.text = self.script.desc;
     descDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descDetailLabel.textColor =  FCStyle.fcBlack;
