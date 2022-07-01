@@ -16,6 +16,10 @@
 #import "FCStyle.h"
 #import <objc/runtime.h>
 
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
+
 @interface SYDetailViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
@@ -55,10 +59,21 @@
 #ifdef Mac
     [super navigateViewDidLoad];
     UIView *navigationBarConver = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
+    navigationBarConver.tag = NSIntegerMax;
     navigationBarConver.backgroundColor = FCStyle.background;
     [self.view addSubview:navigationBarConver];
     [self createDetailView];
 #endif
+}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    for (UIView *subView in self.view.subviews) {
+        if (subView.tag != NSIntegerMax){
+            [subView removeFromSuperview];
+        }
+    }
+    [self createDetailView];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -353,7 +368,11 @@
     cer.userScript = self.script;
     cer.isEdit = true;
     cer.isSearch = self.isSearch;
+#ifdef Mac
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
     [self.navigationController pushViewController:cer animated:true];
+#endif
 }
 
 - (void)showNotes:(id)sender {
