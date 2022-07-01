@@ -130,9 +130,7 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
 }
 
 - (void)pushUserscripts:(NSArray<UserScript *> *)userscripts
-              syncStart:(void(^)(void))syncStart
       completionHandler:(void (^)(NSError *))completionHandler{
-    syncStart();
     dispatch_async(_iCloudServiceQueue, ^{
         for (UserScript *userscript in userscripts){
             [self addUserscript:userscript];
@@ -161,6 +159,12 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
             }];
         }
         completionHandler(zoneError);
+    });
+}
+
+- (void)pullUserscriptWithCompletionHandler:(void (^)(NSArray<UserScript *> * userscripts, NSError * error))completionHandler{
+    dispatch_async(_iCloudServiceQueue, ^{
+        
     });
 }
 

@@ -285,10 +285,9 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                         UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
                                                                           style:UIAlertActionStyleDefault
                                                                         handler:^(UIAlertAction * _Nonnull action) {
+                            [self remoteSyncStart];
                             [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
-                                                        syncStart:^{
-                                [self remoteSyncStart];
-                            } completionHandler:^(NSError * error) {
+                                                  completionHandler:^(NSError * error) {
                                 [self remoteSyncEnd];
                             }];
                         }];
