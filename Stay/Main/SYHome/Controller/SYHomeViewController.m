@@ -37,6 +37,8 @@
 #endif
 
 #import "ImportSlideController.h"
+#import "SYTextInputViewController.h"
+#import "LoadingSlideController.h"
 
 static CGFloat kMacToolbar = 50.0;
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -84,10 +86,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 // 搜索结果数组
 @property (nonatomic, strong) NSMutableArray *results;
 
-@property (strong, nonatomic) SYAddScriptController *itemPopVC;
-
-@property (nonatomic, strong) UIView *loadingView;
-
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 
 @property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
@@ -97,6 +95,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, copy) NSString *selectedUUID;
 
 @property (nonatomic, strong) ImportSlideController *importSlideController;
+
+@property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
+
+@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+
 @end
 
 @implementation SYHomeViewController
@@ -117,8 +120,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    [ScriptMananger shareManager];
-    self.loadingView.center = self.view.center;
-    self.loadingView.hidden = YES;
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -142,7 +143,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
     
-    [self.view addSubview:self.loadingView];
     
 #ifdef Mac
 //    [self.view setFrame:CGRectMake(0, 0 + 60, self.view.frame.size.width, self.view.frame.size.height - 60)];
@@ -173,9 +173,50 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
     
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
+
 }
 
-
+- (void)linkAction:(NSNotification *)notification {
+    [self.sYTextInputViewController dismiss];
+    self.sYTextInputViewController = nil;
+   NSString *url = notification.object;
+   if(url != nil && url.length > 0) {
+       [self.loadingSlideController show];
+       dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+           NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+            [set addCharactersInString:@"#"];
+           NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+            
+           dispatch_async(dispatch_get_main_queue(),^{
+               if(data != nil ) {
+                   if (self.loadingSlideController.isShown){
+                       [self.loadingSlideController dismiss];
+                       self.loadingSlideController = nil;
+                   }
+                   NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                   SYEditViewController *cer = [[SYEditViewController alloc] init];
+                   cer.content = str;
+                   cer.downloadUrl = url;
+#ifdef Mac
+                   [[QuickAccess secondaryController] pushViewController:cer];
+#else
+                   [self.navigationController pushViewController:cer animated:true];
+#endif
+               }else {
+                   [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+                       if (self.loadingSlideController.isShown){
+                           [self.loadingSlideController dismiss];
+                           self.loadingSlideController = nil;
+                       }
+                   });
+               }
+           });
+       });
+   }
+}
 
 - (void)tableDidSelected:(NSNotification *)notification {
     NSInteger index = [(NSNumber *)notification.object integerValue];
@@ -188,53 +229,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
         
     } else if(index == 1) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"从链接新增脚本" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UITextField *titleTextField = alert.textFields.firstObject;
-            NSString *url = titleTextField.text;
-            self.loadingView.hidden = false;
-            [self.view bringSubviewToFront:self.loadingView];
-            if(url != nil && url.length > 0) {
-                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-                    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-                     [set addCharactersInString:@"#"];
-                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-                                        
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        if(data != nil ) {
-                            NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                            SYEditViewController *cer = [[SYEditViewController alloc] init];
-                            cer.content = str;
-                            cer.downloadUrl = url;
-#ifdef Mac
-                            [[QuickAccess secondaryController] pushViewController:cer];
-#else
-                            [self.navigationController pushViewController:cer animated:true];
-#endif
-                            
-                        }else {
-                            NSString *content = @"下载脚本失败";
-                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
-                            UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                    NSLog(@"点击了确认按钮");
-                                }];
-                            [alert addAction:conform];
-                            [self presentViewController:alert animated:YES completion:nil];
-                        }
-                        self.loadingView.hidden = true;
-                    });
-                });
-            }
-        }];
-        [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-              textField.placeholder = @"请输入链接";
-          }];
-        UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        }];
-
-        [alert addAction:cancle];
-        [alert addAction:conform];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self.sYTextInputViewController show];
     } else if (index == 2) {
         SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
 #ifdef Mac
@@ -330,7 +325,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         if(!isSearch && !scrpit.updateSwitch) {
             continue;
         }
-
+            
         if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
                 if(responseObject != nil) {
@@ -765,18 +760,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)addBtnClick:(id)sender {
-//    self.itemPopVC = [[SYAddScriptController alloc] init];
-//    self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
-//    self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
-//    self.itemPopVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  //rect参数是以view的左上角为坐标原点（0，0）
-//    self.itemPopVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向,如果是baritem不设置方向，会默认up，up的效果也是最理想的
-//    self.itemPopVC.popoverPresentationController.delegate = self;
-//    [self presentViewController:self.itemPopVC animated:YES completion:nil];
-    
     if (!self.importSlideController.isShown){
         [self.importSlideController show];
     }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -885,25 +871,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return _rightIcon;
 }
 
-- (UIView *)loadingView {
-    if(_loadingView == nil) {
-        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
-        [_loadingView setBackgroundColor:RGB(230, 230, 230)];
-        _loadingView.layer.cornerRadius = 10;
-        _loadingView.layer.masksToBounds = 10;
-        
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textColor = [UIColor blackColor];
-        [titleLabel sizeToFit];
-
-        titleLabel.top = 30;
-        titleLabel.centerX = (kScreenWidth - 100) / 2;
-        [_loadingView addSubview:titleLabel];
-    }
-    return _loadingView;
-}
 
 - (NSString *)timeWithTimeIntervalString:(NSString *)timeString
 {
@@ -990,6 +957,24 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
     return _importSlideController;
+}
+
+- (SYTextInputViewController *)sYTextInputViewController {
+    if(nil == _sYTextInputViewController) {
+        _sYTextInputViewController = [[SYTextInputViewController alloc] init];
+       _sYTextInputViewController.notificationName = @"linkAction";
+
+    }
+    return _sYTextInputViewController;
+}
+
+- (LoadingSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[LoadingSlideController alloc] init];
+        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+    }
+    
+    return _loadingSlideController;
 }
 
 - (void)dealloc{

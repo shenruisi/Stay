@@ -271,6 +271,8 @@
 		84C1ED4E277AD26700651DF9 /* base16-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED4D277AD26700651DF9 /* base16-dark.css */; };
 		84C1ED50277AD93300651DF9 /* arrow-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED4F277AD93300651DF9 /* arrow-dark@3x.png */; };
 		84C1ED52277AE1B500651DF9 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED51277AE1B500651DF9 /* search-selected@3x.png */; };
+		84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */; };
+		84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
 		84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4831D273AC51800217BB3 /* js-lib@3x.png */; };
@@ -594,6 +596,10 @@
 		84C1ED4D277AD26700651DF9 /* base16-dark.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "base16-dark.css"; sourceTree = "<group>"; };
 		84C1ED4F277AD93300651DF9 /* arrow-dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-dark@3x.png"; sourceTree = "<group>"; };
 		84C1ED51277AE1B500651DF9 /* search-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search-selected@3x.png"; sourceTree = "<group>"; };
+		84C2B3F428757B7D002A0C1B /* SYTextInputModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTextInputModelViewController.h; sourceTree = "<group>"; };
+		84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTextInputModelViewController.m; sourceTree = "<group>"; };
+		84C2B3F728757B9E002A0C1B /* SYTextInputViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTextInputViewController.h; sourceTree = "<group>"; };
+		84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTextInputViewController.m; sourceTree = "<group>"; };
 		84C54CFA2753BDAF00A9F14C /* SYDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDetailViewController.h; sourceTree = "<group>"; };
 		84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDetailViewController.m; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
@@ -1044,6 +1050,7 @@
 		58FEB1D9283B54C600BC2A92 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				84C2B3F328757B45002A0C1B /* TextInput */,
 				84FD427D2851FB1A00B25A17 /* SelectBar */,
 				588B831A2845F7BE00AB2D73 /* FCDisk.h */,
 				588B831B2845F7BF00AB2D73 /* FCDisk.m */,
@@ -1229,6 +1236,17 @@
 				84BDC848274BC5AD005367C6 /* ScriptDetailModel.m */,
 			);
 			path = DataModel;
+			sourceTree = "<group>";
+		};
+		84C2B3F328757B45002A0C1B /* TextInput */ = {
+			isa = PBXGroup;
+			children = (
+				84C2B3F428757B7D002A0C1B /* SYTextInputModelViewController.h */,
+				84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */,
+				84C2B3F728757B9E002A0C1B /* SYTextInputViewController.h */,
+				84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */,
+			);
+			path = TextInput;
 			sourceTree = "<group>";
 		};
 		84C54CF62753BD4B00A9F14C /* SYDetail */ = {
@@ -1867,6 +1885,8 @@
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
+				84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */,
+				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
