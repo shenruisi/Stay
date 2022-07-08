@@ -891,7 +891,7 @@
     NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.whitelist];
     [array addObject:site];
     self.script.whitelist = array;
-    [[DataManager shareManager] updateScriptConfigBlackList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
+    [[DataManager shareManager] updateScriptConfigWhiteList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
     [self initScrpitContent];
     [self buildWhiteView];
 }
