@@ -15,6 +15,8 @@
 #import "SYSelectTabViewController.h"
 #import "FCStyle.h"
 #import <objc/runtime.h>
+#import "SYTextInputViewController.h"
+
 
 #ifdef Mac
 #import "QuickAccess.h"
@@ -32,6 +34,8 @@
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
+@property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
+
 
 @end
 
@@ -48,6 +52,10 @@
 #endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(whiteSiteNotification:) name:@"whiteSiteNotification" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blackSiteNotification:) name:@"blackSiteNotification" object:nil];
+
     self.navigationItem.rightBarButtonItem = [self rightIcon];
 #ifdef Mac
     self.navigationController.navigationBarHidden = YES;
@@ -816,27 +824,8 @@
 }
 
 - (void)addBlackSite {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"add black site" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        UITextField *titleTextField = alert.textFields.firstObject;
-        NSString *site = titleTextField.text;
-        
-        NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.blacklist];
-        [array addObject:site];
-        self.script.blacklist = array;
-        [[DataManager shareManager] updateScriptConfigBlackList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
-        [self initScrpitContent];
-        [self buildBlackView];
-    }];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-          textField.placeholder = @"add site";
-      }];
-    UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    }];
-
-    [alert addAction:cancle];
-    [alert addAction:conform];
-    [self presentViewController:alert animated:YES completion:nil];
+    [self.sYTextInputViewController updateNotificationName:@"blackSiteNotification"];
+    [self.sYTextInputViewController show];
 }
 
 - (void)updateSite:(UIButton *)btn {
@@ -859,29 +848,43 @@
 }
 
 
-- (void)addWhiteSite {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"add white site" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        UITextField *titleTextField = alert.textFields.firstObject;
-        NSString *site = titleTextField.text;
-        
-        NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.whitelist];
-        [array addObject:site];
-        self.script.whitelist = array;
-        
-        [[DataManager shareManager] updateScriptConfigWhiteList:[array componentsJoinedByString:@","]  numberId:self.script.uuid];
-        [self initScrpitContent];
-        [self buildWhiteView];
-    }];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-          textField.placeholder = @"add site";
-      }];
-    UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-    }];
+- (void)blackSiteNotification:(NSNotification *)notification {
+    [self.sYTextInputViewController dismiss];
+    self.sYTextInputViewController = nil;
 
-    [alert addAction:cancle];
-    [alert addAction:conform];
-    [self presentViewController:alert animated:YES completion:nil];
+    NSString *site = notification.object;
+    NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.blacklist];
+    [array addObject:site];
+    self.script.blacklist = array;
+    [[DataManager shareManager] updateScriptConfigBlackList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
+    [self initScrpitContent];
+    [self buildBlackView];
+}
+
+- (void)whiteSiteNotification:(NSNotification *)notification {
+    [self.sYTextInputViewController dismiss];
+    self.sYTextInputViewController = nil;
+
+    NSString *site = notification.object;
+    NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.whitelist];
+    [array addObject:site];
+    self.script.whitelist = array;
+    [[DataManager shareManager] updateScriptConfigBlackList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
+    [self initScrpitContent];
+    [self buildWhiteView];
+}
+
+- (void)addWhiteSite {
+    [self.sYTextInputViewController updateNotificationName:@"whiteSiteNotification"];
+    [self.sYTextInputViewController show];
+}
+
+
+- (SYTextInputViewController *)sYTextInputViewController {
+    if(nil == _sYTextInputViewController) {
+        _sYTextInputViewController = [[SYTextInputViewController alloc] init];
+    }
+    return _sYTextInputViewController;
 }
 
 @end
