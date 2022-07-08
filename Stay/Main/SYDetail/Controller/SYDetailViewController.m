@@ -214,7 +214,7 @@
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
     descDetailLabel.contentInset = UIEdgeInsetsMake(-5, -5, 0, 0);
-    descDetailLabel.font = FCStyle.headline;
+    descDetailLabel.font = FCStyle.body;
     UILabel *heightLab = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,20)];
     heightLab.font = FCStyle.headline;
     heightLab.lineBreakMode= NSLineBreakByTruncatingMiddle;
