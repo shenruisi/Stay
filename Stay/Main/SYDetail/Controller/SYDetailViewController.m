@@ -36,8 +36,6 @@
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
-@property (nonatomic, assign) bool isExpand;
-@property (nullable, nonatomic, copy) NSAttributedString *truncationToken;
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
@@ -368,21 +366,21 @@
     top = buttonView.bottom;
     _scrollerTop = top;
     self.scrollView.top = top;
-    self.scrollView.height = kScreenHeight - top;
+    self.scrollView.height = self.view.height - top;
     [self.view addSubview:self.scrollView];
     
     [self.scrollView addSubview:self.matchScrollView];
-    self.matchScrollView.contentSize = CGSizeMake(self.view.width, self.matchScrollView.contentSize.height + top);
-    
+//    self.matchScrollView.contentSize = CGSizeMake(self.view.width, self.matchScrollView.contentSize.height + top);
+    self.matchScrollView.height = self.view.height- top;
     
     [self.scrollView addSubview:self.grantScrollView];
-    self.grantScrollView.contentSize = CGSizeMake(self.view.width, self.grantScrollView.contentSize.height + top);
+    self.grantScrollView.height = self.view.height - top;
 
     [self.scrollView addSubview:self.whiteTableView];
-    self.whiteTableView.contentSize = CGSizeMake(self.view.width, self.grantScrollView.contentSize.height + top);
+    self.whiteTableView.contentSize = CGSizeMake(self.view.width, self.whiteTableView.contentSize.height + top);
     
     [self.scrollView addSubview:self.blackTableView];
-    self.blackTableView.contentSize = CGSizeMake(self.view.width, self.grantScrollView.contentSize.height + top);
+    self.blackTableView.contentSize = CGSizeMake(self.view.width, self.blackTableView.contentSize.height + top);
     [self buildWhiteView];
     [self buildBlackView];
 }
@@ -573,7 +571,7 @@
 
 - (UIScrollView *)scrollView {
     if(_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 4, kScreenHeight)];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 4, self.view.height)];
     }
     return _scrollView;
 }
@@ -581,7 +579,7 @@
 - (UIScrollView *)matchScrollView {
     if(_matchScrollView == nil) {
         CGFloat baseLeft = 12;
-        _matchScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kScreenHeight)];
+        _matchScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height)];
         CGFloat top = 13;
         if (self.script.mathes.count > 0) {
             UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
@@ -708,7 +706,7 @@
 
 - (UIScrollView *)grantScrollView {
     if(_grantScrollView == nil) {
-        _grantScrollView =  [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width, 0, self.view.width, kScreenHeight)];
+        _grantScrollView =  [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width, 0, self.view.width, self.view.height)];
         CGFloat baseLeft = 12;
         CGFloat top = 22;
         if (self.script.grants.count > 0) {
