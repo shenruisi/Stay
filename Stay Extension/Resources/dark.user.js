@@ -1773,20 +1773,17 @@
             const id = ++counter;
             resolvers$1.set(id, resolve);
             rejectors.set(id, reject);
-            console.log("bgFetch------------------------------------bgFetch=======", request);
             browser.runtime.sendMessage({
                 from:"bootstrap",
                 operate: MessageType.CS_FETCH,
                 data: request,
                 id
             });
-            // handleParseBg("cs-fetch", request, id)
         });
     }
 
     browser.runtime.onMessage.addListener(({ type, data, error, id }) => {
         if (type === MessageType.BG_FETCH_RESPONSE) {
-            console.log("addListener--------------type=", type)
             const resolve = resolvers$1.get(id);
             const reject = rejectors.get(id);
             resolvers$1.delete(id);
@@ -2116,10 +2113,6 @@
             property === "background-image" ||
             property === "list-style-image"
         ) {
-            console.log("background-image--------", value,
-                rule,
-                ignoreImageSelectors,
-                isCancelled)
             const modifier = getBgImageModifier(
                 value,
                 rule,
@@ -2502,7 +2495,6 @@
                 };
             };
             const getURLModifier = (urlValue) => {
-                console.log("urlValue--====", urlValue)
                 var _a;
                 if (
                     shouldIgnoreImage(rule.selectorText, ignoreImageSelectors)
@@ -2538,7 +2530,6 @@
                             } else {
                                 awaitingForImageLoading.set(url, []);
                                 imageDetails = await getImageDetails(url);
-                                console.log("getURLModifier---url-----", url, ",imageDetails==", imageDetails)
                                 imageDetailsCache.set(url, imageDetails);
                                 awaitingForImageLoading
                                     .get(url)
@@ -2551,7 +2542,6 @@
                                 return null;
                             }
                         } catch (err) {
-                            console.log("getURLModifier---error-----", err)
                             logWarn(err);
                             if (awaitingForImageLoading.has(url)) {
                                 awaitingForImageLoading
@@ -2576,7 +2566,6 @@
                     isTooLarge,
                     width
                 } = imageDetails;
-                console.log("filter-----", filter, imageDetails.src)
                 let result;
                 if (isTooLarge) {
                     result = `url("${imageDetails.src}")`;
@@ -2988,14 +2977,12 @@
                 property === "background-image" ||
                 property === "box-shadow"
             ) {
-                console.log("sourceValue-----", sourceValue)
                 return (theme) => {
                     const unknownVars = new Set();
                     const modify = () => {
                         const variableReplaced = replaceCSSVariablesNames(
                             sourceValue,
                             (v) => {
-                                console.log("v---------", v);
                                 if (this.isVarType(v, VAR_TYPE_BGCOLOR)) {
                                     return wrapBgColorVariableName(v);
                                 }
