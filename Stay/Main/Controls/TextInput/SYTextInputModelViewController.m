@@ -40,7 +40,7 @@
         _confirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _confirmBtn.frame = CGRectMake(10, 210, self.mainViewSize.width - 20, 48);
         _confirmBtn.backgroundColor = FCStyle.accent;
-        [_confirmBtn setTitle:NSLocalizedString(@"settings.add","Add") forState:UIControlStateNormal];
+        [_confirmBtn setTitle:NSLocalizedString(@"settings.save","Save") forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _confirmBtn.titleLabel.font = FCStyle.headlineBold;
         _confirmBtn.layer.cornerRadius = 8;

@@ -163,6 +163,33 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                  name:SVCDidBecomeActiveNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidDeleteHandler:)
+                                                 name:@"app.stay.notification.userscriptDidDeleteNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidActiveHandler:)
+                                                 name:@"app.stay.notification.userscriptDidActiveNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidStopHandler:)
+                                                 name:@"app.stay.notification.userscriptDidStopNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidAddHandler:)
+                                                 name:@"app.stay.notification.userscriptDidAddNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidUpdateHandler:)
+                                                 name:@"app.stay.notification.userscriptDidUpdateNotification"
+                                               object:nil];
+    
+    
+    
 #endif
     self.view.backgroundColor = FCStyle.background;
     
@@ -982,8 +1009,29 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NCCDidShowViewControllerNotification
                                                   object:nil];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SVCDidBecomeActiveNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidDeleteNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidActiveNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidStopNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidAddNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                   object:nil];
 #endif
 }

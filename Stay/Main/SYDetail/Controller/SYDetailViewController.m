@@ -18,11 +18,13 @@
 #import "SYTextInputViewController.h"
 
 
+
 #ifdef Mac
 #import "QuickAccess.h"
 #endif
 
-@interface SYDetailViewController ()
+@interface SYDetailViewController ()<UITextViewDelegate>
+
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -34,6 +36,9 @@
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
+@property (nonatomic, assign) bool isExpand;
+@property (nullable, nonatomic, copy) NSAttributedString *truncationToken;
+
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
 
@@ -202,17 +207,33 @@
 
     
     top = authour.bottom + 10;
-    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,50)];
-    descDetailLabel.font = FCStyle.body;
+    UITextView *descDetailLabel = [[UITextView alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,30)];
+    descDetailLabel.delegate = self;
+    descDetailLabel.editable = NO;
     descDetailLabel.text = self.script.desc;
-    descDetailLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
-    descDetailLabel.numberOfLines = 3;
-    [descDetailLabel sizeToFit];
+    descDetailLabel.contentInset = UIEdgeInsetsMake(-5, -5, 0, 0);
+    descDetailLabel.font = FCStyle.headline;
+    UILabel *heightLab = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,20)];
+    heightLab.font = FCStyle.headline;
+    heightLab.lineBreakMode= NSLineBreakByTruncatingMiddle;
+    heightLab.textColor =  FCStyle.fcBlack;
+    heightLab.textAlignment = NSTextAlignmentLeft;
+    heightLab.numberOfLines = 0;
+    heightLab.text = self.script.desc;
+    [heightLab sizeToFit];
+    if(heightLab.height > 70) {
+        descDetailLabel.showsVerticalScrollIndicator = true;
+        descDetailLabel.height = 70;
+        [descDetailLabel flashScrollIndicators];
+    } else {
+        descDetailLabel.scrollEnabled = NO;
+    }
     [self.view addSubview:descDetailLabel];
-    
-    top = descDetailLabel.bottom + 10;
+        
+    top =  descDetailLabel.bottom + 10;
+
     UIImage *image =  [UIImage systemImageNamed:@"v.circle.fill"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
     image = [image imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -413,7 +434,6 @@
     NSString *inject = segmentedArray[index];
     [[DataManager shareManager] updateScriptConfigInjectInfo:inject numberId:self.script.uuid];
     [self initScrpitContent];
-
 }
 
 - (void) switchAction:(id)sender {
@@ -443,6 +463,8 @@
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
     
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+          [[NSNotificationCenter defaultCenter]postNotification:notification];
     [self initScrpitContent];
 }
 
@@ -452,7 +474,10 @@
     } else {
         [[DataManager shareManager] updateScriptConfigAutoupdate:0 numberId:self.script.uuid];
     }
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+          [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
+
 
 - (UIView *)createLine{
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,99,self.view.width - 57 ,1)];
@@ -493,7 +518,6 @@
         [SharedStorageManager shared].userscriptHeaders.content = array;
         [[SharedStorageManager shared].userscriptHeaders flush];
         [[ScriptMananger shareManager] buildData];
-
     }
 }
 
@@ -886,5 +910,7 @@
     }
     return _sYTextInputViewController;
 }
+
+
 
 @end
