@@ -54,6 +54,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return self;
 }
 
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
@@ -204,6 +209,47 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 }
 
+- (void)userscriptDidDeleteHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidActiveHandler:(NSNotification *)note{
+    NSIndexPath *indexPath = [self indexPathOfUUID:self.selectedUUID];
+    [self reloadTableView];
+    [self.tableView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+    dispatch_get_main_queue(), ^{
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    });
+
+}
+
+- (void)userscriptDidStopHandler:(NSNotification *)note{
+    NSIndexPath *indexPath = [self indexPathOfUUID:self.selectedUUID];
+    [self reloadTableView];
+    [self.tableView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+    dispatch_get_main_queue(), ^{
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    });
+}
+
+- (void)userscriptDidAddHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidUpdateHandler:(NSNotification *)note{
+    NSIndexPath *indexPath = [self indexPathOfUUID:self.selectedUUID];
+    [self reloadTableView];
+    [self.tableView reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+    dispatch_get_main_queue(), ^{
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    });
+}
+
 - (void)linkAction:(NSNotification *)notification {
     [self.sYTextInputViewController dismiss];
     self.sYTextInputViewController = nil;
@@ -327,7 +373,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
     [self checkShowTips];
-    
+
     [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
     if (activateChanged.count > 0){
@@ -344,6 +390,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     //自动更新代码保留先注释
     NSArray *array = [[DataManager shareManager] findScript:1];
     [self updateScriptWhen:array type:false];
+    
+#ifdef Mac
+    if (self.selectedUUID.length > 0){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+        dispatch_get_main_queue(), ^{
+            [self.tableView selectRowAtIndexPath:[self indexPathOfUUID:self.selectedUUID] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+        });
+    }
+#endif
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
@@ -668,15 +723,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
     line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #ifdef Mac
     UserScript *userscript = _datas[indexPath.row];
-    SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-    cer.isSearch = false;
-    cer.script = userscript;
     self.selectedUUID = userscript.uuid;
     [[QuickAccess secondaryController] pushViewController:
      [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];

@@ -33,7 +33,6 @@
     return self.navController;
 }
 
-
 - (void)updateNotificationName:(NSString *)text{
     SYTextInputModelViewController *cer = (SYTextInputModelViewController *)self.navController.rootModalViewController;
     [cer updateNotificationName:text];

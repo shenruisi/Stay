@@ -85,19 +85,25 @@ static Tampermonkey *kInstance = nil;
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-    BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
-    userScript.installType = pageMode ? @"page" : @"content";
-    
-    if (![userScript.installType isEqualToString:@"page"] && [self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
-        userScript.installType = @"page";
+    if (userScript.injectInto.length == 0 || [[userScript.injectInto lowercaseString] isEqualToString:@"auto"]){
+        BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
+        userScript.installType = pageMode ? @"page" : @"content";
+        
+        if (![userScript.installType isEqualToString:@"page"] && [self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
+            userScript.installType = @"page";
+        }
+        
+        if (![userScript.installType isEqualToString:@"page"] && [self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
+            NSMutableArray *newGrants = [NSMutableArray arrayWithArray:userScript.grants];
+            [newGrants addObject:@"unsafeWindow"];
+            userScript.grants = newGrants;
+            userScript.installType = @"page";
+        }
+    }
+    else{
+        userScript.installType = [userScript.injectInto lowercaseString];
     }
     
-    if (![userScript.installType isEqualToString:@"page"] && [self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
-        NSMutableArray *newGrants = [NSMutableArray arrayWithArray:userScript.grants];
-        [newGrants addObject:@"unsafeWindow"];
-        userScript.grants = newGrants;
-        userScript.installType = @"page";
-    }
     
     JSValue *apiSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];
     

@@ -7,6 +7,7 @@
 
 #import "SYTextInputModelViewController.h"
 #import "FCStyle.h"
+#import "SYTextInputViewController.h"
 
 @implementation SYTextInputModelViewController
 - (void)viewDidLoad{
@@ -16,7 +17,9 @@
 
 
 -(void) addBlackSite {
-    [[NSNotificationCenter defaultCenter] postNotificationName:self.notificationName object:self.inputView.text];
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.notificationName object:self.inputView.text userInfo:@{
+        @"uuid":((SYTextInputViewController *)self.navigationController.slideController).uuid
+    }];
 }
 
 - (void)updateNotificationName:(NSString *)text {

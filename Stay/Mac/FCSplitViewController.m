@@ -376,9 +376,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         SYDetailViewController *ret = self.detailViewControllerDic[userScript.uuid];
         if (nil == ret){
             ret = [[SYDetailViewController alloc] init];
-            ret.script = userScript;
             self.detailViewControllerDic[userScript.uuid] = ret;
         }
+       
+        ret.script = userScript;
+        NSLog(@"selected userscript %@",ret.script.injectInto);
         return ret;
     }
 }

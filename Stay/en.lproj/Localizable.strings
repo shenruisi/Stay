@@ -78,5 +78,8 @@ Interaction="INTERACTION";
 Social="SOCIAL";
 MoreApp="MORE APP";
 settings.injectMode = "Inject Mode";
+Whitelist = "White list";
+Blacklist = "Black list";
+
 
 
