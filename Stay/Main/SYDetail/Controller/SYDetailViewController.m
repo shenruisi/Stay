@@ -237,7 +237,11 @@
     [heightLab sizeToFit];
     if(heightLab.height > 70) {
         descDetailLabel.showsVerticalScrollIndicator = true;
+#ifdef Mac
         descDetailLabel.height = 70;
+#else
+        descDetailLabel.height = 62;
+#endif
         [descDetailLabel flashScrollIndicators];
     } else {
         descDetailLabel.scrollEnabled = NO;
