@@ -17,8 +17,9 @@
 
 
 -(void) addBlackSite {
+    NSString *uuid = ((SYTextInputViewController *)self.navigationController.slideController).uuid;
     [[NSNotificationCenter defaultCenter] postNotificationName:self.notificationName object:self.inputView.text userInfo:@{
-        @"uuid":((SYTextInputViewController *)self.navigationController.slideController).uuid
+        @"uuid":uuid ? uuid : @""
     }];
 }
 

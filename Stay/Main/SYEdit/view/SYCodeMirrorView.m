@@ -27,7 +27,14 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
 
 - (void)setFrame:(CGRect)frame{
     [super setFrame:frame];
-    [self.wkwebView setFrame:self.bounds];
+//    [self.wkwebView setFrame:self.bounds];
+//    NSLog(@"self.wkwebView %@",NSStringFromCGRect(self.wkwebView.bounds));
+}
+
+- (void)reload{
+    [self.wkwebView removeFromSuperview];
+    self.wkwebView = nil;
+    [self addSubview:self.wkwebView];
 }
 
 - (WKWebView *)wkwebView {
@@ -41,8 +48,12 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
 
         config.userContentController = wkUController;
-        
+#ifdef Mac
+        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,self.width,self.height) configuration:config];
+#else
         _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.height) configuration:config];
+#endif
+        
         _wkwebView.backgroundColor = [self createBgColor];
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;

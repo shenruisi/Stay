@@ -225,6 +225,7 @@
     descDetailLabel.text = self.script.desc;
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
+    descDetailLabel.backgroundColor = UIColor.clearColor;
     descDetailLabel.contentInset = UIEdgeInsetsMake(-5, -5, 0, 0);
     descDetailLabel.font = FCStyle.body;
     UILabel *heightLab = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,20)];
@@ -327,7 +328,7 @@
     
     
     UILabel *injectLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.injectMode","Inject Mode")];
-    injectLabel.font = FCStyle.headlineBold;
+    injectLabel.font = FCStyle.bodyBold;
     injectLabel.width = 200;
     injectLabel.top = top;
     injectLabel.left = left;
@@ -459,7 +460,7 @@
     self.script.active = !self.script.active;
     
     if(self.script.active) {
-        [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"Activated", @"")  forState:UIControlStateNormal];
         self.actBtn.backgroundColor = FCStyle.accent;
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
@@ -467,7 +468,7 @@
         NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
-        [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
         self.actBtn.backgroundColor = [UIColor whiteColor];
         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.actBtn.layer.borderWidth = 1;
@@ -482,7 +483,7 @@
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
     
-    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
     [self initScrpitContent];
 }
@@ -557,6 +558,10 @@
     self.sYSelectTabViewController.content = self.script.content;
     self.sYSelectTabViewController.needDelete = true;
     [self.sYSelectTabViewController show];
+}
+
+- (void)share{
+    [self shareBtnClick];
 }
 
 - (UIBarButtonItem *)rightIcon {
