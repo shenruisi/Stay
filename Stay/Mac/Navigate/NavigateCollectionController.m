@@ -14,6 +14,7 @@
 #endif
 #import "FCStyle.h"
 #import "FCConfig.h"
+#import "SYEditViewController.h"
 
 NSNotificationName const _Nonnull NCCDidShowViewControllerNotification = @"app.stay.notification.NCCDidShowViewControllerNotification";
 
@@ -278,6 +279,7 @@ typedef enum  {
 //        CGPoint point = [recognizer translationInView:self.view];
 //        NSLog(@"padTrackGesture %@",NSStringFromPoint(point));
 //        if (point.x < kPadTrackFixed || point.x > self.view.frame.size.width - kPadTrackFixed) return;
+     
         if (self.panTrackDirection != PanTrackDirectionUndefined) return;
         self.panTrackStartPoint = [recognizer translationInView:self.view];
         self.panTrackDirection = PanTrackDirectionStart;

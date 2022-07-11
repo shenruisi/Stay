@@ -29,6 +29,8 @@ extern NSNotificationName const _Nonnull CMVDidFinishContentNotification;
 - (void)clearAll;
 - (void)blur;
 
+- (void)reload;
+
 
 
 

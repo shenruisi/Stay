@@ -12,8 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYTextInputViewController : FCSlideController
 
 @property(nonatomic, strong) NSString *notificationName;
+@property(nonatomic, strong) NSString *uuid;
 
 - (void)updateNotificationName:(NSString *)text;
+
 
 @end
 

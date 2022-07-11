@@ -102,7 +102,11 @@
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
         imageview.image = image;
         imageview.centerY = 22.5;
+#ifdef Mac
+        imageview.right = self.mainViewSize.width - 65;
+#else
         imageview.right = kScreenWidth - 95;
+#endif
         [_shareUrlBtn addSubview:imageview];
 
         [self.view addSubview:_shareUrlBtn];
@@ -134,7 +138,11 @@
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
         imageview.image = image;
         imageview.centerY = 22.5;
+#ifdef Mac
+        imageview.right = self.mainViewSize.width - 65;
+#else
         imageview.right = kScreenWidth - 95;
+#endif
         [_shareContentBtn addSubview:imageview];
 
         [self.view addSubview:_shareContentBtn];
@@ -167,7 +175,11 @@
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
         imageview.image = image;
         imageview.centerY = 22.5;
+#ifdef Mac
+        imageview.right = self.mainViewSize.width - 65;
+#else
         imageview.right = kScreenWidth - 95;
+#endif
         [_deleteBtn addSubview:imageview];
 
         [self.view addSubview:_deleteBtn];
@@ -178,11 +190,8 @@
 
 
 - (CGSize)mainViewSize{
-#ifdef Mac
-    CGFloat width = 300;
-#else
-    CGFloat width = kScreenWidth - 30;
-#endif
+    
+    CGFloat width = MIN(kScreenWidth - 30, 450);
     
     CGFloat height = 213;
 //    if (self.url == NULL || self.url.length == 0) {

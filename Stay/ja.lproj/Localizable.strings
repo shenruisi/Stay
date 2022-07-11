@@ -77,3 +77,6 @@ mac.toolbar.forward.tip = "進む";
 Interaction="INTERACTION";
 Social="SOCIAL";
 MoreApp="MORE APP";
+settings.injectMode = "Inject Mode";
+Whitelist = "White list";
+Blacklist = "Black list";

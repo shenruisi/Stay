@@ -97,6 +97,8 @@
     [super viewWillLayoutSubviews];
 #ifdef Mac
     [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
+    [self.syCodeMirrorView reload];
+    NSLog(@"self.syCodeMirrorView %@",NSStringFromCGRect(self.syCodeMirrorView.frame));
 #endif
 }
 

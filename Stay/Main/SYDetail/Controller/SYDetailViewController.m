@@ -36,6 +36,7 @@
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
+@property (nonatomic, strong) UIView *navigationBarCover;
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
@@ -69,21 +70,34 @@
 - (void)navigateViewDidLoad{
 #ifdef Mac
     [super navigateViewDidLoad];
-    UIView *navigationBarConver = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
-    navigationBarConver.tag = NSIntegerMax;
-    navigationBarConver.backgroundColor = FCStyle.background;
-    [self.view addSubview:navigationBarConver];
+    [self navigationBarCover];
     [self createDetailView];
 #endif
 }
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
+    [self reload];
+}
+
+//- (void)navigateViewWillAppear:(BOOL)animated{
+//    [self reload];
+//}
+
+- (void)reload{
+    self.navigationBarCover = nil;
+    self.actBtn = nil;
+    self.matchScrollView = nil;
+    self.grantScrollView = nil;
+    self.whiteTableView = nil;
+    self.blackTableView = nil;
+    self.scrollView = nil;
+    self.slideView = nil;
+    self.slideLineView = nil;
     for (UIView *subView in self.view.subviews) {
-        if (subView.tag != NSIntegerMax){
-            [subView removeFromSuperview];
-        }
+        [subView removeFromSuperview];
     }
+    [self navigationBarCover];
     [self createDetailView];
 }
 
@@ -190,13 +204,13 @@
     [self.view addSubview:authour];
     
     if(self.script.active) {
-        [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
         self.actBtn.backgroundColor = FCStyle.accent;
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
-        [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
         self.actBtn.backgroundColor = [UIColor whiteColor];
         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.actBtn.layer.borderWidth = 1;
@@ -211,6 +225,7 @@
     descDetailLabel.text = self.script.desc;
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
+    descDetailLabel.backgroundColor = UIColor.clearColor;
     descDetailLabel.contentInset = UIEdgeInsetsMake(-5, -5, 0, 0);
     descDetailLabel.font = FCStyle.body;
     UILabel *heightLab = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 ,20)];
@@ -313,7 +328,7 @@
     
     
     UILabel *injectLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.injectMode","Inject Mode")];
-    injectLabel.font = FCStyle.headlineBold;
+    injectLabel.font = FCStyle.bodyBold;
     injectLabel.width = 200;
     injectLabel.top = top;
     injectLabel.left = left;
@@ -324,8 +339,9 @@
     segmentedControl.frame =  CGRectMake(0, top, 243.0, 31);
     
     [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
-    if(self.script.injectInto != nil && self.script.injectInto.length > 0) {
+    if(self.script.injectInto.length > 0) {
         NSUInteger idx = [segmentedArray indexOfObject:self.script.injectInto];
+        NSLog(@"selected idx %@ %ld",self.script.injectInto,idx);
         segmentedControl.selectedSegmentIndex = idx;
     } else {
         segmentedControl.selectedSegmentIndex = 0;
@@ -344,7 +360,7 @@
     
     [buttonView addSubview:lineView];
     
-    NSArray *selectedArray = @[@"Matches",@"Grants",@"White list", @"Black list"];
+    NSArray *selectedArray = @[@"Matches",@"Grants",NSLocalizedString(@"Whitelist", @""),NSLocalizedString(@"Blacklist", @"")];
     CGFloat btnLeft = 5;
     
     for(int i = 0; i < 4; i++) {
@@ -436,13 +452,15 @@
     NSString *inject = segmentedArray[index];
     [[DataManager shareManager] updateScriptConfigInjectInfo:inject numberId:self.script.uuid];
     [self initScrpitContent];
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+          [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
 
 - (void) switchAction:(id)sender {
     self.script.active = !self.script.active;
     
     if(self.script.active) {
-        [self.actBtn setTitle:@"Activated" forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"Activated", @"")  forState:UIControlStateNormal];
         self.actBtn.backgroundColor = FCStyle.accent;
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
@@ -450,7 +468,7 @@
         NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:nil];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
-        [self.actBtn setTitle:@"Stopped" forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
         self.actBtn.backgroundColor = [UIColor whiteColor];
         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.actBtn.layer.borderWidth = 1;
@@ -465,7 +483,7 @@
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
     
-    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
     [self initScrpitContent];
 }
@@ -542,6 +560,10 @@
     [self.sYSelectTabViewController show];
 }
 
+- (void)share{
+    [self shareBtnClick];
+}
+
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
         UIImage *image = [UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:17]]];
@@ -589,7 +611,8 @@
             UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
             matchLabel.top = 13;
             matchLabel.left = baseLeft;
-            matchLabel.textColor = FCStyle.fcPlaceHolder;
+            matchLabel.textColor = FCStyle.fcSecondaryBlack;
+            matchLabel.font = FCStyle.subHeadline;
             top = matchLabel.bottom + 8;
             [_matchScrollView addSubview:matchLabel];
             for (int i = 0; i < self.script.mathes.count; i++) {
@@ -841,7 +864,7 @@
     btn.frame = CGRectMake(0, 0, 23, 23);
     [btn setBackgroundImage:image forState:UIControlStateNormal];
     btn.centerY = 24;
-    btn.right = self.view.width - 10 - 18;
+    btn.right = self.view.width - 15 - 18;
     [btn addTarget:self action:@selector(updateSite:) forControlEvents:UIControlEventTouchUpInside];
     objc_setAssociatedObject (btn , @"site", site, OBJC_ASSOCIATION_COPY_NONATOMIC);
     objc_setAssociatedObject (btn , @"type", type, OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -857,24 +880,35 @@
 - (void)updateSite:(UIButton *)btn {
     NSString *site = objc_getAssociatedObject(btn,@"site");
     NSString *type = objc_getAssociatedObject(btn,@"type");
+    
+    
 
     if([type isEqualToString:@"black"]) {
         NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.blacklist];
         [array removeObject:site];
         self.script.blacklist = array;
+        [[DataManager shareManager] updateScriptConfigBlackList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
+        [self initScrpitContent];
         [self buildBlackView];
     } else {
         NSMutableArray *array =  [NSMutableArray arrayWithArray:self.script.whitelist];
         [array removeObject:site];
         self.script.whitelist = array;
+        [[DataManager shareManager] updateScriptConfigWhiteList:[array componentsJoinedByString:@","] numberId:self.script.uuid];
+        [self initScrpitContent];
         [self buildWhiteView];
     }
     
-
+    
+    
 }
 
 
 - (void)blackSiteNotification:(NSNotification *)notification {
+    if (![notification.userInfo[@"uuid"] isEqualToString:self.script.uuid]){
+        return;
+    }
+    
     [self.sYTextInputViewController dismiss];
     self.sYTextInputViewController = nil;
 
@@ -888,6 +922,10 @@
 }
 
 - (void)whiteSiteNotification:(NSNotification *)notification {
+    if (![notification.userInfo[@"uuid"] isEqualToString:self.script.uuid]){
+        return;
+    }
+    
     [self.sYTextInputViewController dismiss];
     self.sYTextInputViewController = nil;
 
@@ -909,8 +947,19 @@
 - (SYTextInputViewController *)sYTextInputViewController {
     if(nil == _sYTextInputViewController) {
         _sYTextInputViewController = [[SYTextInputViewController alloc] init];
+        _sYTextInputViewController.uuid = self.script.uuid;
     }
     return _sYTextInputViewController;
+}
+
+- (UIView *)navigationBarCover{
+    if (nil == _navigationBarCover){
+        _navigationBarCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
+        _navigationBarCover.backgroundColor = FCStyle.background;
+        [self.view addSubview:_navigationBarCover];
+    }
+    
+    return _navigationBarCover;
 }
 
 

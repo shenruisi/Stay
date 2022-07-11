@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) UserScript *script;
 @property (nonatomic, assign) BOOL isSearch;
+- (void)share;
 @end
 
 

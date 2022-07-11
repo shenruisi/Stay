@@ -54,9 +54,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return self;
 }
 
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+#ifdef Mac
+    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#endif
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
+#ifdef Mac
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#endif
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview{
@@ -100,6 +109,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 
+@property (nonatomic, assign) NSInteger selectedRow;
 @end
 
 @implementation SYHomeViewController
@@ -119,6 +129,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.selectedRow = -1;
 //    [ScriptMananger shareManager];
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
@@ -202,6 +213,34 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
 
+}
+
+- (void)userscriptDidDeleteHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+    
+}
+
+- (void)userscriptDidActiveHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidStopHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidAddHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidUpdateHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+
+    
 }
 
 - (void)linkAction:(NSNotification *)notification {
@@ -327,7 +366,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
     [self checkShowTips];
-    
+
     [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
     if (activateChanged.count > 0){
@@ -510,8 +549,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return self.datas.count;
 }
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     _SYHomeViewTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
         cell = [[_SYHomeViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -668,16 +707,41 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
     line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
+    
+   
+    
     return cell;
 }
 
+#ifdef Mac
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.selectedRow >= 0){
+        NSLog(@"selectedRow willDisplayCell%ld",self.selectedRow);
+        [cell setSelected:indexPath.row == self.selectedRow animated:NO];
+
+    }
+}
+
+//- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
+//    if (self.selectedUUID.length > 0){
+////        NSLog(@"self.selectedUUID %@",self.selectedUUID);
+//        cell.selected = indexPath.row == [self indexPathOfUUID:self.selectedUUID].row;
+//
+//    }
+//}
+#endif
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #ifdef Mac
+    if (self.selectedRow >= 0){
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
+        cell.selected = NO;
+    }
+    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
     UserScript *userscript = _datas[indexPath.row];
-    SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-    cer.isSearch = false;
-    cer.script = userscript;
-    self.selectedUUID = userscript.uuid;
+    self.selectedRow = indexPath.row;
+//    self.selectedUUID = userscript.uuid;
     [[QuickAccess secondaryController] pushViewController:
      [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];
 #else
@@ -858,7 +922,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        _tableView.allowsSelection = YES;
         _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
         [self.view addSubview:_tableView];
     }
@@ -946,17 +1009,17 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)navigateViewDidShow:(NSNotification *)note{
     NavigateViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
-        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
-        self.selectedUUID = detailViewController.script.uuid;
-        [self.tableView selectRowAtIndexPath:[self indexPathOfUUID:detailViewController.script.uuid]
-                                    animated:YES
-                              scrollPosition:UITableViewScrollPositionMiddle];
+//        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
+//        self.selectedUUID = detailViewController.script.uuid;
+//        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]
+//                                    animated:YES
+//                              scrollPosition:UITableViewScrollPositionMiddle];
     }
     else{
-        if (self.selectedUUID.length > 0){
-            [self.tableView deselectRowAtIndexPath:[self indexPathOfUUID:self.selectedUUID] animated:NO];
-            self.selectedUUID = nil;
-        }   
+        if (self.selectedRow >= 0){
+            [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO];
+            self.selectedRow = -1;
+        }
     }
 }
 #endif

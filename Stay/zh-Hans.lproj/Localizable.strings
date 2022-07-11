@@ -74,3 +74,6 @@ mac.toolbar.forward.tip = "前进";
 Interaction="互动";
 Social="社交媒体";
 MoreApp="更多应用";
+settings.injectMode = "嵌入方式";
+Whitelist = "白名单";
+Blacklist = "黑名单";
