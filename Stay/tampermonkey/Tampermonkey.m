@@ -93,7 +93,7 @@ static Tampermonkey *kInstance = nil;
             userScript.installType = @"page";
         }
         
-        if (![userScript.installType isEqualToString:@"page"] && [self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
+        if ([self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
             NSMutableArray *newGrants = [NSMutableArray arrayWithArray:userScript.grants];
             [newGrants addObject:@"unsafeWindow"];
             userScript.grants = newGrants;

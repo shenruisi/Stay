@@ -738,7 +738,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
         cell.selected = NO;
     }
-    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
+//    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
     UserScript *userscript = _datas[indexPath.row];
     self.selectedRow = indexPath.row;
 //    self.selectedUUID = userscript.uuid;
