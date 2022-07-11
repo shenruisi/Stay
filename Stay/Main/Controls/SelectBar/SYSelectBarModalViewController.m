@@ -46,7 +46,7 @@
 - (void)shareUrlClick {
     
     //分享的url
-    NSURL *urlToShare = [NSURL URLWithString:self.url];
+    NSURL *urlToShare = [NSURL URLWithString:[self.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
     NSArray *activityItems = @[urlToShare];
         
