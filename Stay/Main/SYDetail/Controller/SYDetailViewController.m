@@ -121,6 +121,18 @@
     [self.blackTableView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     CGFloat left = 10;
     CGFloat top = 14;
+    
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 20, 100)];
+    title.numberOfLines = 0;
+    title.font = FCStyle.subHeadline;
+    title.textColor = FCStyle.fcPlaceHolder;
+    title.text = [NSString stringWithFormat:@"手动添加站点（支持正则）到黑名单下可以让脚本%@只在黑名单内的站点运行",self.script.name];
+    [title sizeToFit];
+    [self.blackTableView addSubview:title];
+    title.top = top;
+    title.left = 10;
+    top = title.bottom + 30;
+
     if(self.script.blacklist != nil && self.script.blacklist.count > 0) {
         for (NSString *str in self.script.blacklist ) {
             UIView *whiteSiteView = [self creteSitesView:str type:@"black"];
@@ -152,6 +164,19 @@
 
     CGFloat left = 10;
     CGFloat top = 14;
+    
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 20, 100)];
+    title.numberOfLines = 0;
+    title.font = FCStyle.subHeadline;
+    title.textColor = FCStyle.fcPlaceHolder;
+    title.text = [NSString stringWithFormat:@"手动添加站点（支持正则）到白名单下可以让脚本%@只在白名单内的站点运行",self.script.name];
+    [title sizeToFit];
+    [self.whiteTableView addSubview:title];
+    title.top = top;
+    title.left = 10;
+    top = title.bottom + 30;
+
+    
     if(self.script.whitelist != nil && self.script.whitelist.count > 0) {
         for (NSString *str in self.script.whitelist ) {
             UIView *whiteSiteView = [self creteSitesView:str type:@"white"];
