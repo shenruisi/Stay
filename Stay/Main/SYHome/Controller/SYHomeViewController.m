@@ -321,7 +321,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         NSError *error = nil;
         cer.content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
         if (!error){
-            [self.navigationController pushViewController:cer animated:true];
+#ifdef Mac
+        [[QuickAccess secondaryController] pushViewController:cer];
+#else
+        [self.navigationController pushViewController:cer animated:true];
+#endif
+            
         }
         else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@""
