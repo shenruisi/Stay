@@ -37,6 +37,8 @@
 #endif
 
 #import "ImportSlideController.h"
+#import "SYTextInputViewController.h"
+#import "LoadingSlideController.h"
 
 static CGFloat kMacToolbar = 50.0;
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -52,9 +54,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return self;
 }
 
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+#ifdef Mac
+    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#endif
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
+#ifdef Mac
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#endif
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview{
@@ -84,10 +95,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 // 搜索结果数组
 @property (nonatomic, strong) NSMutableArray *results;
 
-@property (strong, nonatomic) SYAddScriptController *itemPopVC;
-
-@property (nonatomic, strong) UIView *loadingView;
-
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 
 @property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
@@ -97,6 +104,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, copy) NSString *selectedUUID;
 
 @property (nonatomic, strong) ImportSlideController *importSlideController;
+
+@property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
+
+@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+
+@property (nonatomic, assign) NSInteger selectedRow;
 @end
 
 @implementation SYHomeViewController
@@ -116,9 +129,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.selectedRow = -1;
 //    [ScriptMananger shareManager];
-    self.loadingView.center = self.view.center;
-    self.loadingView.hidden = YES;
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -142,7 +154,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
     
-    [self.view addSubview:self.loadingView];
     
 #ifdef Mac
 //    [self.view setFrame:CGRectMake(0, 0 + 60, self.view.frame.size.width, self.view.frame.size.height - 60)];
@@ -163,6 +174,33 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                  name:SVCDidBecomeActiveNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidDeleteHandler:)
+                                                 name:@"app.stay.notification.userscriptDidDeleteNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidActiveHandler:)
+                                                 name:@"app.stay.notification.userscriptDidActiveNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidStopHandler:)
+                                                 name:@"app.stay.notification.userscriptDidStopNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidAddHandler:)
+                                                 name:@"app.stay.notification.userscriptDidAddNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidUpdateHandler:)
+                                                 name:@"app.stay.notification.userscriptDidUpdateNotification"
+                                               object:nil];
+    
+    
+    
 #endif
     self.view.backgroundColor = FCStyle.background;
     
@@ -173,9 +211,78 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
     
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
+
 }
 
+- (void)userscriptDidDeleteHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+    
+}
 
+- (void)userscriptDidActiveHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidStopHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidAddHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+}
+
+- (void)userscriptDidUpdateHandler:(NSNotification *)note{
+    [self reloadTableView];
+    [self.tableView reloadData];
+
+    
+}
+
+- (void)linkAction:(NSNotification *)notification {
+    [self.sYTextInputViewController dismiss];
+    self.sYTextInputViewController = nil;
+   NSString *url = notification.object;
+   if(url != nil && url.length > 0) {
+       [self.loadingSlideController show];
+       dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+           NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+            [set addCharactersInString:@"#"];
+           NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+            
+           dispatch_async(dispatch_get_main_queue(),^{
+               if(data != nil ) {
+                   if (self.loadingSlideController.isShown){
+                       [self.loadingSlideController dismiss];
+                       self.loadingSlideController = nil;
+                   }
+                   NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                   SYEditViewController *cer = [[SYEditViewController alloc] init];
+                   cer.content = str;
+                   cer.downloadUrl = url;
+#ifdef Mac
+                   [[QuickAccess secondaryController] pushViewController:cer];
+#else
+                   [self.navigationController pushViewController:cer animated:true];
+#endif
+               }else {
+                   [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+                       if (self.loadingSlideController.isShown){
+                           [self.loadingSlideController dismiss];
+                           self.loadingSlideController = nil;
+                       }
+                   });
+               }
+           });
+       });
+   }
+}
 
 - (void)tableDidSelected:(NSNotification *)notification {
     NSInteger index = [(NSNumber *)notification.object integerValue];
@@ -188,53 +295,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
         
     } else if(index == 1) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"从链接新增脚本" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            UITextField *titleTextField = alert.textFields.firstObject;
-            NSString *url = titleTextField.text;
-            self.loadingView.hidden = false;
-            [self.view bringSubviewToFront:self.loadingView];
-            if(url != nil && url.length > 0) {
-                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-                    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-                     [set addCharactersInString:@"#"];
-                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-                                        
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        if(data != nil ) {
-                            NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                            SYEditViewController *cer = [[SYEditViewController alloc] init];
-                            cer.content = str;
-                            cer.downloadUrl = url;
-#ifdef Mac
-                            [[QuickAccess secondaryController] pushViewController:cer];
-#else
-                            [self.navigationController pushViewController:cer animated:true];
-#endif
-                            
-                        }else {
-                            NSString *content = @"下载脚本失败";
-                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
-                            UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                    NSLog(@"点击了确认按钮");
-                                }];
-                            [alert addAction:conform];
-                            [self presentViewController:alert animated:YES completion:nil];
-                        }
-                        self.loadingView.hidden = true;
-                    });
-                });
-            }
-        }];
-        [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-              textField.placeholder = @"请输入链接";
-          }];
-        UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        }];
-
-        [alert addAction:cancle];
-        [alert addAction:conform];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self.sYTextInputViewController show];
     } else if (index == 2) {
         SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
 #ifdef Mac
@@ -260,7 +321,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         NSError *error = nil;
         cer.content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
         if (!error){
-            [self.navigationController pushViewController:cer animated:true];
+#ifdef Mac
+        [[QuickAccess secondaryController] pushViewController:cer];
+#else
+        [self.navigationController pushViewController:cer animated:true];
+#endif
+            
         }
         else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@""
@@ -305,7 +371,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
     [self checkShowTips];
-    
+
     [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
     if (activateChanged.count > 0){
@@ -330,7 +396,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         if(!isSearch && !scrpit.updateSwitch) {
             continue;
         }
-
+            
         if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
                 if(responseObject != nil) {
@@ -488,8 +554,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return self.datas.count;
 }
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     _SYHomeViewTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
         cell = [[_SYHomeViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -646,16 +712,41 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
     line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
+    
+   
+    
     return cell;
 }
 
+#ifdef Mac
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.selectedRow >= 0){
+        NSLog(@"selectedRow willDisplayCell%ld",self.selectedRow);
+        [cell setSelected:indexPath.row == self.selectedRow animated:NO];
+
+    }
+}
+
+//- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
+//    if (self.selectedUUID.length > 0){
+////        NSLog(@"self.selectedUUID %@",self.selectedUUID);
+//        cell.selected = indexPath.row == [self indexPathOfUUID:self.selectedUUID].row;
+//
+//    }
+//}
+#endif
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #ifdef Mac
+    if (self.selectedRow >= 0){
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
+        cell.selected = NO;
+    }
+//    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
     UserScript *userscript = _datas[indexPath.row];
-    SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-    cer.isSearch = false;
-    cer.script = userscript;
-    self.selectedUUID = userscript.uuid;
+    self.selectedRow = indexPath.row;
+//    self.selectedUUID = userscript.uuid;
     [[QuickAccess secondaryController] pushViewController:
      [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];
 #else
@@ -691,6 +782,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
@@ -704,6 +797,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
 
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
@@ -713,8 +808,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UserScript *model = weakSelf.datas[indexPath.row];
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:nil];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:nil];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
                 [weakSelf reloadTableView];
@@ -757,18 +856,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)addBtnClick:(id)sender {
-//    self.itemPopVC = [[SYAddScriptController alloc] init];
-//    self.itemPopVC.modalPresentationStyle = UIModalPresentationPopover;
-//    self.itemPopVC.preferredContentSize = self.itemPopVC.view.bounds.size;
-//    self.itemPopVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  //rect参数是以view的左上角为坐标原点（0，0）
-//    self.itemPopVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向,如果是baritem不设置方向，会默认up，up的效果也是最理想的
-//    self.itemPopVC.popoverPresentationController.delegate = self;
-//    [self presentViewController:self.itemPopVC animated:YES completion:nil];
-    
     if (!self.importSlideController.isShown){
         [self.importSlideController show];
     }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -837,7 +927,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        _tableView.allowsSelection = YES;
         _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
         [self.view addSubview:_tableView];
     }
@@ -881,25 +970,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return _rightIcon;
 }
 
-- (UIView *)loadingView {
-    if(_loadingView == nil) {
-        _loadingView = [[UIView alloc] initWithFrame:CGRectMake(50, 0, kScreenWidth - 100, 80)];
-        [_loadingView setBackgroundColor:RGB(230, 230, 230)];
-        _loadingView.layer.cornerRadius = 10;
-        _loadingView.layer.masksToBounds = 10;
-        
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.text = NSLocalizedString(@"settings.downloadScript","download script");
-        titleLabel.font = [UIFont boldSystemFontOfSize:18];
-        titleLabel.textColor = [UIColor blackColor];
-        [titleLabel sizeToFit];
-
-        titleLabel.top = 30;
-        titleLabel.centerX = (kScreenWidth - 100) / 2;
-        [_loadingView addSubview:titleLabel];
-    }
-    return _loadingView;
-}
 
 - (NSString *)timeWithTimeIntervalString:(NSString *)timeString
 {
@@ -948,17 +1018,17 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)navigateViewDidShow:(NSNotification *)note{
     NavigateViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
-        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
-        self.selectedUUID = detailViewController.script.uuid;
-        [self.tableView selectRowAtIndexPath:[self indexPathOfUUID:detailViewController.script.uuid]
-                                    animated:YES
-                              scrollPosition:UITableViewScrollPositionMiddle];
+//        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
+//        self.selectedUUID = detailViewController.script.uuid;
+//        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]
+//                                    animated:YES
+//                              scrollPosition:UITableViewScrollPositionMiddle];
     }
     else{
-        if (self.selectedUUID.length > 0){
-            [self.tableView deselectRowAtIndexPath:[self indexPathOfUUID:self.selectedUUID] animated:NO];
-            self.selectedUUID = nil;
-        }   
+        if (self.selectedRow >= 0){
+            [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0] animated:NO];
+            self.selectedRow = -1;
+        }
     }
 }
 #endif
@@ -988,13 +1058,52 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return _importSlideController;
 }
 
+- (SYTextInputViewController *)sYTextInputViewController {
+    if(nil == _sYTextInputViewController) {
+        _sYTextInputViewController = [[SYTextInputViewController alloc] init];
+       _sYTextInputViewController.notificationName = @"linkAction";
+
+    }
+    return _sYTextInputViewController;
+}
+
+- (LoadingSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[LoadingSlideController alloc] init];
+        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+    }
+    
+    return _loadingSlideController;
+}
+
 - (void)dealloc{
 #ifdef Mac
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NCCDidShowViewControllerNotification
                                                   object:nil];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SVCDidBecomeActiveNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidDeleteNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidActiveNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidStopNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidAddNotification"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                   object:nil];
 #endif
 }

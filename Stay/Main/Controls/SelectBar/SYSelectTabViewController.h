@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *url;
+@property (nonatomic, assign) BOOL needDelete;
 
 @end
 

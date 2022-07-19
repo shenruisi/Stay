@@ -82,3 +82,10 @@ icloud.firstInit = "需要在此设备上开启首次数据同步吗？";
 icloud.syncNow = "立即同步";
 icloud.syncNow.alert ="需要立即同步吗？";
 icloud.insync = "同步中…";
+
+settings.injectMode = "嵌入方式";
+Whitelist = "白名单";
+Blacklist = "黑名单";
+
+Created="创建成功";
+Saved="保存成功";

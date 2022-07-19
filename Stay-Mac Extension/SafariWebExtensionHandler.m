@@ -69,7 +69,7 @@ NSString * const SFExtensionMessageKey = @"message";
         }
     }
     
-    if (matched) return NO;
+    if (matched) return YES;
     
     NSArray *matches = userscript[@"matches"];
     for (NSString *match in matches){
@@ -306,10 +306,13 @@ NSString * const SFExtensionMessageKey = @"message";
         NSMutableArray *requireList = [[NSMutableArray alloc] init];
         for(int j = 0; j < array.count; j++) {
             NSString *requireUrl = array[j];
+            if ([requireUrl hasPrefix:@"stay://vendor"]){
+                continue;
+            }
             NSString *fileName = requireUrl.lastPathComponent;
             NSString *strogeUrl = [NSString stringWithFormat:@"%@/%@/require/%@",groupPath,scrpit[@"uuid"],fileName];
             if(![[NSFileManager defaultManager] fileExistsAtPath:strogeUrl]) {
-                return nil;
+                continue;
             }
             NSData *data=[NSData dataWithContentsOfFile:strogeUrl];
             NSString *responData =  [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];

@@ -81,7 +81,13 @@
 }
 
 - (void)navigationBarDidClickCancelButton{
-    [self.navigationController popModalViewController];
+    if (self.isRoot){
+        [self.navigationController.slideController dismiss];
+    }
+    else{
+        [self.navigationController popModalViewController];
+    }
+    
 }
 
 

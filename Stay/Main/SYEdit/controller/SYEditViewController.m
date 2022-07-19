@@ -97,6 +97,8 @@
     [super viewWillLayoutSubviews];
 #ifdef Mac
     [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
+    [self.syCodeMirrorView reload];
+    NSLog(@"self.syCodeMirrorView %@",NSStringFromCGRect(self.syCodeMirrorView.frame));
 #endif
 }
 
@@ -177,16 +179,24 @@
 
 - (void)saveSuccess:(id)sender{
     [self.loadingSlideController dismiss];
-    NSString *content = _isEdit?@"保存成功":@"创建成功";
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    NSString *content = _isEdit? NSLocalizedString(@"Saved", @"") :  NSLocalizedString(@"Created", @"");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self.navigationController popViewControllerAnimated:YES];
         }];
     [alert addAction:conform];
     [self initScrpitContent];
     NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
+    if(_isEdit) {
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+    } else {
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+    }
     [self presentViewController:alert animated:YES completion:nil];
+    
 }
 
 - (void)saveError:(NSNotification*) notification{
@@ -195,8 +205,8 @@
     });
     NSString *errorMessage =  [notification object];
     NSString *content = errorMessage;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:content preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *conform = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSLog(@"点击了确认按钮");
         }];
     [alert addAction:conform];
