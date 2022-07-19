@@ -77,6 +77,10 @@
         [self addColumn:@"user_config_script" column:@"inject_info"];
     }
     
+    if(![self isExitedColumn:@"iCloud_identifier"]) {
+        [self addColumn:@"user_config_script" column:@"iCloud_identifier"];
+    }
+    
 
     return;
 }
@@ -721,7 +725,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ? where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ?,iCloud_identifier = ?   where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -788,7 +792,8 @@
         sqlite3_bind_double(statement, 22, timeString.doubleValue);
         
         sqlite3_bind_text(statement, 23,[scrpitDetail.license UTF8String], -1,NULL);
-        sqlite3_bind_text(statement, 24,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 24,[scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 25,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
 
     }
     
@@ -918,6 +923,9 @@
         } else {
             scrpitDetail.notes = @[];
         }
+        
+        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 25)== NULL?"":(const char *)sqlite3_column_text(stmt, 25)];
+        scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
