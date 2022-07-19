@@ -346,7 +346,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if([groupUserDefaults objectForKey:@"tips"] != NULL){
         int count = [[groupUserDefaults objectForKey:@"tips"] intValue];
-        if(count == 10) {
+        if(count == 5) {
           [SKStoreReviewController requestReview];
         }
         count += 1;
