@@ -77,3 +77,6 @@ MoreApp="更多應用";
 settings.injectMode = "嵌入方式";
 Whitelist = "白名單";
 Blacklist = "黑名單";
+
+Created="創建成功";
+Saved="保存成功";

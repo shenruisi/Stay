@@ -476,6 +476,7 @@
     NSArray *segmentedArray = [[NSArray alloc]initWithObjects:@"Auto",@"Page",@"Content",nil];
     NSString *inject = segmentedArray[index];
     [[DataManager shareManager] updateScriptConfigInjectInfo:inject numberId:self.script.uuid];
+    self.script.injectInto = inject;
     [self initScrpitContent];
     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
           [[NSNotificationCenter defaultCenter]postNotification:notification];

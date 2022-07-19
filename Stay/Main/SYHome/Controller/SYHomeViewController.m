@@ -321,7 +321,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         NSError *error = nil;
         cer.content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
         if (!error){
-            [self.navigationController pushViewController:cer animated:true];
+#ifdef Mac
+        [[QuickAccess secondaryController] pushViewController:cer];
+#else
+        [self.navigationController pushViewController:cer animated:true];
+#endif
+            
         }
         else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@""
@@ -738,7 +743,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
         cell.selected = NO;
     }
-    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
+//    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
     UserScript *userscript = _datas[indexPath.row];
     self.selectedRow = indexPath.row;
 //    self.selectedUUID = userscript.uuid;
