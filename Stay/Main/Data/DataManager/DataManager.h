@@ -22,15 +22,20 @@
 
 - (NSArray *)selectScriptByKeywordByAdded:(NSString *)keyword;
 
-
-- (void)insertToUserScriptnumberId:(NSString *)uuid;
-
 - (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid;
 
 - (void)insertUserConfigByUserScript:(UserScript *)scrpitDetail;
 
 - (void)updateUserScript:(UserScript *)scrpitDetail;
 
-
 - (void)updateScriptConfigAutoupdate:(int)status numberId:(NSString *)uuid;
+
+
+- (void)updateScriptConfigBlackList:(NSString *)str numberId:(NSString *)uuid;
+
+- (void)updateScriptConfigWhiteList:(NSString *)str numberId:(NSString *)uuid;
+
+- (void)updateScriptConfigInjectInfo:(NSString *)str numberId:(NSString *)uuid;
+
+
 @end

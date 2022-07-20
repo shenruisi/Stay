@@ -85,19 +85,33 @@ static Tampermonkey *kInstance = nil;
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-    BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
-    userScript.installType = pageMode ? @"page" : @"content";
-    
-    if (![userScript.installType isEqualToString:@"page"] && [self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
-        userScript.installType = @"page";
+    if (userScript.injectInto.length == 0 || [[userScript.injectInto lowercaseString] isEqualToString:@"auto"]){
+        BOOL pageMode = [userScript.grants containsObject:@"unsafeWindow"];
+        userScript.installType = pageMode ? @"page" : @"content";
+        
+        if (![userScript.installType isEqualToString:@"page"] && [self usedCustomWindowPropertyOrMethod:scriptWithoutComment name:userScript.name]){
+            userScript.installType = @"page";
+        }
+        
+        if ([self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
+            NSMutableArray *newGrants = [NSMutableArray arrayWithArray:userScript.grants];
+            [newGrants addObject:@"unsafeWindow"];
+            userScript.grants = newGrants;
+            userScript.installType = @"page";
+        }
+    }
+    else{
+        userScript.installType = [userScript.injectInto lowercaseString];
     }
     
-    if (![userScript.installType isEqualToString:@"page"] && [self containsUnsafeWindow:scriptWithoutComment name:userScript.name]){
-        NSMutableArray *newGrants = [NSMutableArray arrayWithArray:userScript.grants];
-        [newGrants addObject:@"unsafeWindow"];
-        userScript.grants = newGrants;
-        userScript.installType = @"page";
+    if ([self needInjectBuiltinJQuery:scriptWithoutComment name:userScript.name]){
+        if (![userScript.requireUrls containsObject:@"stay://vendor/jquery.min.js"]){
+            NSMutableArray *newRequireUrls = [[NSMutableArray alloc] initWithArray:userScript.requireUrls];
+            [newRequireUrls insertObject:@"stay://vendor/jquery.min.js" atIndex:0];
+            userScript.requireUrls = newRequireUrls;
+        }
     }
+    
     
     JSValue *apiSource = [createGMApisWithUserScript callWithArguments:@[userScript.toDictionary,userScript.uuid,appVersion,scriptWithoutComment,userScript.installType]];
     
@@ -111,6 +125,18 @@ static Tampermonkey *kInstance = nil;
                                     @"async function gm_init(){\n\t%@\n\t%@\n}\ngm_init().catch((e)=>browser.runtime.sendMessage({ from: 'gm-apis', operate: 'GM_error', message: e.message, uuid:'%@'}));\n"
                                     ,apiSource,scriptWithoutComment,userScript.uuid];
     }
+}
+
+- (BOOL)needInjectBuiltinJQuery:(NSString *)script name:(NSString *)name{
+    NSRegularExpression *jqueryExpr = [[NSRegularExpression alloc] initWithPattern:@"(\\$[\\.a-zA-z]*)\\(+" options:0 error:nil];
+    NSArray<NSTextCheckingResult *> *results = [jqueryExpr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
+    if (results.count > 0){
+        NSRegularExpression *requiredjQueryExpr = [[NSRegularExpression alloc] initWithPattern:@"\\/\\/\\s*@require\\s+.*\\/(jquery[^a-zA-Z]*)[.min]*.js" options:0 error:nil];
+        results = [requiredjQueryExpr  matchesInString:script options:0 range:NSMakeRange(0, script.length)];
+        return results.count == 0;
+    }
+    
+    return NO;
 }
 
 

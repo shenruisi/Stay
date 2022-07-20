@@ -18,6 +18,7 @@
 #import "SYHomeViewController.h"
 #import "SYExpandViewController.h"
 #import "SYWebScriptViewController.h"
+#import "SYDetailViewController.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 310;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
@@ -33,6 +34,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 @property (nonatomic, strong) NSMutableDictionary<NSString *,SYDetailViewController *> *detailViewControllerDic;
 @property (nonatomic, weak) SYEditViewController *holdEditViewController;
 @property (nonatomic, weak) SYWebScriptViewController *holdWebScriptViewController;
+@property (nonatomic, weak) SYDetailViewController *holdDetailViewController;
 @end
 
 @implementation FCSplitViewController
@@ -259,6 +261,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [self.holdEditViewController save];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloudOn]){
+        
         [self remoteSyncStart];
         [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
             [self remoteSyncEnd];
@@ -286,10 +289,10 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                                                           style:UIAlertActionStyleDefault
                                                                         handler:^(UIAlertAction * _Nonnull action) {
                             [self remoteSyncStart];
-                            [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
-                                                  completionHandler:^(NSError * error) {
-                                [self remoteSyncEnd];
-                            }];
+//                            [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
+//                                                  completionHandler:^(NSError * error) {
+//                                [self remoteSyncEnd];
+//                            }];
                         }];
                         [alert addAction:conform];
                         UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
@@ -329,6 +332,9 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
 //        [self showTabEdit];
 //    }
+    else if ([sender.itemIdentifier isEqualToString:Toolbar_More]){
+        [self.holdDetailViewController share];
+    }
 //    else if ([sender.itemIdentifier isEqualToString:Toolbar_Search]){
 //        [self.toolbar removeItemAtIndex:self.toolbar.items.count - 3];
 //        [self.toolbar insertItemWithItemIdentifier:Toolbar_SearchField atIndex:self.toolbar.items.count - 2];
@@ -397,6 +403,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 - (void)navigateViewDidShow:(NSNotification *)note{
     NavigateViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
+        self.holdDetailViewController = (SYDetailViewController *)viewController;
         SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
                                             text:detailViewController.script.name
@@ -420,6 +427,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                             text:text
                                         fontSize:FCStyle.headlineBold.pointSize];
         self.holdWebScriptViewController = nil;
+        self.holdDetailViewController = nil;
     }
     else if ([viewController isKindOfClass:[SYExpandViewController class]]){
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
@@ -429,6 +437,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [self.toolbar insertItemWithItemIdentifier:Toolbar_Placeholder atIndex:self.toolbar.items.count];
         self.holdEditViewController = nil;
         self.holdWebScriptViewController = nil;
+        self.holdDetailViewController = nil;
     }
     else if ([viewController isKindOfClass:[SYWebScriptViewController class]]){
         self.holdWebScriptViewController = (SYWebScriptViewController *)viewController;
@@ -438,6 +447,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [self.toolbar removeItemAtIndex:self.toolbar.items.count-1];
         [self.toolbar insertItemWithItemIdentifier:Toolbar_Placeholder atIndex:self.toolbar.items.count];
         self.holdEditViewController = nil;
+        self.holdDetailViewController = nil;
     }
     else{
         [FCShared.plugin.appKit labelItemChanged:[self _itemOfIdentifier:Toolbar_TabName]
@@ -448,6 +458,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
             [self.toolbar insertItemWithItemIdentifier:Toolbar_Placeholder atIndex:self.toolbar.items.count];
             self.holdEditViewController = nil;
             self.holdWebScriptViewController = nil;
+            self.holdDetailViewController = nil;
         }
     }
 }
@@ -475,9 +486,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         SYDetailViewController *ret = self.detailViewControllerDic[userScript.uuid];
         if (nil == ret){
             ret = [[SYDetailViewController alloc] init];
-            ret.script = userScript;
             self.detailViewControllerDic[userScript.uuid] = ret;
         }
+       
+        ret.script = userScript;
+        NSLog(@"selected userscript %@",ret.script.injectInto);
         return ret;
     }
 }

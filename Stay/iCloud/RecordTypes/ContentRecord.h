@@ -7,14 +7,16 @@
 
 #import <Foundation/Foundation.h>
 #import <CloudKit/CloudKit.h>
+#import "BaseRecord.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ContentRecord : NSObject
+@interface ContentRecord : BaseRecord
 
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, strong) CKAsset *raw;
-
+@property (nonatomic, assign) double createTimestamp;
+@property (nonatomic, assign) double updateTimestamp;
 @property (class, strong, readonly) NSString *type;
 
 - (void)fillCKRecord:(CKRecord *)ckRecord;

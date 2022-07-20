@@ -23,6 +23,7 @@
         cer.hideNavigationBar = YES;
         cer.url = self.url;
         cer.content = self.content;
+        cer.needDelete = self.needDelete;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer radius:15];
         _navController.slideController = self;
     }

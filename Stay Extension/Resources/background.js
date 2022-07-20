@@ -300,6 +300,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("GM_xmlhttpRequest" == request.operate) {
             let params = request.params
+            let xhrId = request.xhrId;
             let xhr = new XMLHttpRequest();
             var createState = function () {
                 var rh = '';
@@ -318,6 +319,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     readyState: xhr.readyState,
                     responseHeaders: rh,
                     finalUrl: fu,
+                    responseType: xhr.responseType,
                     status: (xhr.readyState == 4 ? xhr.status : 0),
                     statusText: (xhr.readyState == 4 ? xhr.statusText : '')
                 };
@@ -346,7 +348,37 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     console.log('api_create: error at onload, should not happen! -> retry :)')
                     return;
                 }
-                sendResponse({ onload: responseState });
+
+                if (responseState.responseType === "blob" && responseState.response) {
+                    let downLoadUrl = window.URL.createObjectURL(responseState.response);
+                    console.log("GM_xmlhttpRequest.BG___reader,base64data--start-downLoadUrl=", downLoadUrl)
+                    const reader = new FileReader();
+                    reader.readAsDataURL(responseState.response);
+                    reader.onloadend = function () {
+                        let base64Data = reader.result;
+                        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                            // console.log("FETCH_BLOB_URL-----start-xhrId==", xhrId);
+                            browser.tabs.sendMessage(tabs[0].id,
+                                { from: "background", base64Data: base64Data, xhrId: xhrId, uuid: request.uuid, operate: "FETCH_BLOB_URL" }).then(
+                                (res) => {
+                                    // console.log("FETCH_BLOB_URL---res---", res);
+                                    if (xhrId === res.xhrId) {
+                                        let type = responseState.response.type;
+                                        responseState.response = {
+                                            blob: res.body.blob,
+                                            blobUrl: res.body.blobUrl,
+                                            data: base64Data,
+                                            type: type
+                                        };
+                                        sendResponse({ onload: responseState });
+                                    }
+
+                                });
+                        });
+                    };
+                } else {
+                    sendResponse({ onload: responseState });
+                }
             };
             var onerror = function () {
                 var responseState = createState();

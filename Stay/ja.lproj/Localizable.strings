@@ -78,6 +78,7 @@ Interaction="INTERACTION";
 Social="SOCIAL";
 MoreApp="MORE APP";
 
+
 TryAgainLater="Please try again later";
 
 icloud.error = "iCloud error";
@@ -85,3 +86,11 @@ icloud.firstInit = "Need to turn on first sync on this device?";
 icloud.syncNow = "Sync now";
 icloud.syncNow.alert ="Need to sync now?";
 icloud.insync = "In sync…";
+
+settings.injectMode = "Inject Mode";
+Whitelist = "White list";
+Blacklist = "Black list";
+
+Created="Created";
+Saved="Saved";
+
