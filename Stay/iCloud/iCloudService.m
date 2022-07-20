@@ -137,9 +137,7 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
             else if ([record.recordType isEqualToString:ContentRecord.type]){
                 ContentRecord *contentRecord = [ContentRecord ofRecord:record];
                 UserScript *userscript = userscriptToSave[contentRecord.uuid];
-                NSString *content = [NSString stringWithContentsOfURL:contentRecord.raw.fileURL
-                                                             encoding:NSUTF8StringEncoding
-                                                                error:nil];
+                NSString *content = contentRecord.raw;
                 if (nil == userscript){
                     userscript = [[UserScript alloc] init];
                 }
@@ -158,7 +156,7 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
         operation.recordZoneChangeTokensUpdatedBlock = ^(CKRecordZoneID *recordZoneID,
                                                          CKServerChangeToken *token,
                                                          NSData *data) {
-            self.changeToken = token;
+//            self.changeToken = token;
         };
 
         // If the fetch for the current record zone completes
@@ -167,13 +165,13 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
                                                      CKServerChangeToken *token,
                                                      NSData *data, BOOL more,
                                                      NSError *error) {
-            if (error) {
-                // Handle the error.
-            } else {
-                self.changeToken = token;
-            }
-            changedHandler(userscriptToSave);
-            deletedHandler(userscriptToDelete);
+//            if (error) {
+//                // Handle the error.
+//            } else {
+//                self.changeToken = token;
+//            }
+//            changedHandler(userscriptToSave);
+//            deletedHandler(userscriptToDelete);
             
         };
         
