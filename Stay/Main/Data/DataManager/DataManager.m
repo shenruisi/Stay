@@ -349,6 +349,9 @@
 
         scrpitDetail.injectInto = inject;
         
+        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
+        scrpitDetail.iCloudIdentifier = iCloudIdentifier;
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -549,6 +552,9 @@
 
         scrpitDetail.injectInto = inject;
         
+        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
+        
+        scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
