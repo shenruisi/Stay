@@ -41,7 +41,8 @@
 #import "LoadingSlideController.h"
 
 #import "FCShared.h"
-
+#import "ImageHelper.h"
+#import "UIView+Rotate.h"
 
 static CGFloat kMacToolbar = 50.0;
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -74,7 +75,59 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)willMoveToSuperview:(UIView *)newSuperview{
     [super willMoveToSuperview:newSuperview];
 }
+@end
 
+@interface _iCloudView : UIView
+
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIImageView *syncImageView;
+- (void)startAnimate;
+- (void)stopAnimate;
+@end
+
+@implementation _iCloudView
+
+- (void)startAnimate{
+    self.imageView.image = [ImageHelper sfNamed:@"icloud" font:[UIFont systemFontOfSize:22]];
+    self.syncImageView.hidden = NO;
+    [self.syncImageView rotateWithDuration:1];
+}
+
+- (void)stopAnimate{
+    [self.syncImageView stopRotating];
+    self.syncImageView.hidden = YES;
+    self.imageView.image = [ImageHelper sfNamed:@"checkmark.icloud" font:[UIFont systemFontOfSize:22]];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    self.imageView.frame = self.bounds;
+    self.syncImageView.frame = CGRectMake((self.imageView.frame.size.width - self.syncImageView.size.width) / 2+1,
+                                          (self.imageView.frame.size.height - self.syncImageView.size.height) / 2+1, self.syncImageView.size.width, self.syncImageView.size.height);
+}
+
+- (UIImageView *)imageView{
+    if (nil == _imageView){
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _imageView.image = [ImageHelper sfNamed:@"checkmark.icloud" font:[UIFont systemFontOfSize:22]];
+        [self addSubview:_imageView];
+    }
+    
+    return _imageView;
+}
+
+- (UIImageView *)syncImageView{
+    if (nil == _syncImageView){
+        _syncImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 13, 13)];
+        _syncImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _syncImageView.image = [ImageHelper sfNamed:@"arrow.2.circlepath" font:[UIFont boldSystemFontOfSize:13]];
+        [self.imageView addSubview:_syncImageView];
+        _syncImageView.hidden = YES;
+        [self addSubview:_syncImageView];
+    }
+    
+    return _syncImageView;
+}
 
 @end
 
@@ -89,7 +142,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 >
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
+@property (nonatomic, strong) UIBarButtonItem *iCloudIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
+
+@property (nonatomic, strong) _iCloudView *customView;
 
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) UITableView *tableView;
@@ -136,7 +192,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //    [ScriptMananger shareManager];
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
-    self.navigationItem.rightBarButtonItem = [self rightIcon];
+    self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
@@ -179,6 +235,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(remoteSyncStart)
+                                                 name:iCloudServiceSyncStartNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(remoteSyncEnd)
+                                                 name:iCloudServiceSyncEndNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userscriptDidDeleteHandler:)
                                                  name:@"app.stay.notification.userscriptDidDeleteNotification"
                                                object:nil];
@@ -217,6 +283,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidDeleteHandler:(NSNotification *)note{
+    if (FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService removeUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+        }];
+    }
 #ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
@@ -225,6 +303,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidActiveHandler:(NSNotification *)note{
+    if (FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+        }];
+    }
 #ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
@@ -232,6 +322,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidStopHandler:(NSNotification *)note{
+    if (FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+        }];
+    }
 #ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
@@ -259,6 +361,19 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidUpdateHandler:(NSNotification *)note{
+    if (FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+        }];
+    }
+    
 #ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
@@ -842,7 +957,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object: model.uuid];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
@@ -857,7 +972,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object: model.uuid];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
 
         }];
@@ -974,11 +1089,21 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 }
 
-
-
 - (void) reloadTableView {
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+}
+
+- (void)remoteSyncStart{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.customView startAnimate];
+    });
+}
+
+- (void)remoteSyncEnd{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.customView stopAnimate];
+    });
 }
 
 - (UITableView *)tableView {
@@ -1028,6 +1153,28 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _rightIcon = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
+}
+
+- (_iCloudView *)customView{
+    if (nil == _customView){
+        _customView = [[_iCloudView alloc] initWithFrame:CGRectMake(0, 0, 32, 22)];
+    }
+    
+    return _customView;;
+}
+
+- (UIBarButtonItem *)iCloudIcon{
+    if (nil == _iCloudIcon){
+        _iCloudIcon = [[UIBarButtonItem alloc] initWithCustomView:self.customView];
+        _iCloudIcon.target = self;
+        _iCloudIcon.action = @selector(iCloudAction:);
+    }
+    
+    return _iCloudIcon;
+}
+
+- (void)iCloudAction:(id)sender{
+    
 }
 
 
@@ -1137,14 +1284,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)dealloc{
-#ifdef Mac
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:NCCDidShowViewControllerNotification
-                                                  object:nil];
+                                                 name:iCloudServiceSyncStartNotification
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SVCDidBecomeActiveNotification
-                                                  object:nil];
+                                                 name:iCloudServiceSyncEndNotification
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"app.stay.notification.userscriptDidDeleteNotification"
@@ -1165,6 +1311,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                   object:nil];
+    
+#ifdef Mac
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:NCCDidShowViewControllerNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SVCDidBecomeActiveNotification
+                                                  object:nil];
+    
 #endif
 }
 

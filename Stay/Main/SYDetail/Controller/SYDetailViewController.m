@@ -438,7 +438,7 @@
         [self.sYSelectTabViewController dismiss];
         [[DataManager shareManager] deleteScriptInUserScriptByNumberId: self.script.uuid];
         [self.navigationController popViewControllerAnimated:TRUE];
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:self.script.uuid];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     }];
     UIAlertAction *cancle = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

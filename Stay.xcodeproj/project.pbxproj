@@ -200,6 +200,7 @@
 		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
+		58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
 		58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
@@ -496,6 +497,8 @@
 		58CF689F286D91B200A52B2B /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
+		58D1B44428880474009BD608 /* UIView+Rotate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Rotate.h"; sourceTree = "<group>"; };
+		58D1B44528880474009BD608 /* UIView+Rotate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Rotate.m"; sourceTree = "<group>"; };
 		58EA44432869BB5200BD6C4D /* ImportSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportSlideController.h; sourceTree = "<group>"; };
 		58EA44442869BB5200BD6C4D /* ImportSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportSlideController.m; sourceTree = "<group>"; };
 		58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportMenuModalViewController.h; sourceTree = "<group>"; };
@@ -717,6 +720,8 @@
 			children = (
 				584C05AB286179D000E07DDF /* ImageHelper.h */,
 				584C05AC286179D000E07DDF /* ImageHelper.m */,
+				58D1B44428880474009BD608 /* UIView+Rotate.h */,
+				58D1B44528880474009BD608 /* UIView+Rotate.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1926,6 +1931,7 @@
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
+				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,

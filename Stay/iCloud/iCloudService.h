@@ -26,7 +26,6 @@ extern NSNotificationName const _Nonnull iCloudServiceSyncEndNotification;
 - (void)addUserscript:(UserScript *)userscript;
 
 
-
 - (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler;
 - (void)removeUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler;
 - (void)fetchUserscriptWithCompletionHandler:

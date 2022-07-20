@@ -8,6 +8,13 @@
 #import <Foundation/Foundation.h>
 #import <CloudKit/CloudKit.h>
 
+typedef enum : NSUInteger {
+    UserScriptStatusOK = 0,
+    UserScriptStatusNeedRequire = 1,
+    UserScriptStatusNeedResource = 1 << 1
+} UserScriptStatus;
+
+
 NS_ASSUME_NONNULL_BEGIN
 //https://www.tampermonkey.net/documentation.php
 @interface UserScript : NSObject<NSCopying>
@@ -57,6 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 //add by iCloud feature
 @property (nonatomic, copy) NSString *iCloudIdentifier;
 
+@property (nonatomic, assign) NSInteger status;
 
 + (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
