@@ -22,8 +22,9 @@ extern NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotificatio
 - (void)pullUserscriptWithCompletionHandler:(void (^)(NSArray<UserScript *> * userscripts, NSError * error))completionHandler;
 - (void)removeUserscript:(UserScript *)userscript;
 - (void)addUserscript:(UserScript *)userscript;
-- (void)fetchUserscriptWithChangedHandler:(void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts))changedHandler
-                           deletedHandler:(void (^)(NSArray<NSString *> *deletedUUIDs))deletedHandler;
+- (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler;
+- (void)fetchUserscriptWithCompletionHandler:
+(void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts,NSArray<NSString *> *deletedUUIDs))completionHandler;
 - (dispatch_queue_t)queue;
 - (void)refresh;
 

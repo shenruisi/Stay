@@ -107,8 +107,8 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
     return identifier;
 }
 
-- (void)fetchUserscriptWithChangedHandler:(void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts))changedHandler
-                           deletedHandler:(void (^)(NSArray<NSString *> *deletedUUIDs))deletedHandler{
+- (void)fetchUserscriptWithCompletionHandler:
+(void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts,NSArray<NSString *> *deletedUUIDs))completionHandler{
     [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
         CKFetchRecordZoneChangesConfiguration *config = [CKFetchRecordZoneChangesConfiguration new];
         config.previousServerChangeToken = self.changeToken;
@@ -321,6 +321,56 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
     }];
 
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+}
+
+- (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler{
+    [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
+        if (error){
+            completionHandler(error);
+            return;
+        }
+        
+        CKRecord *ckUserscriptRecord = [[CKRecord alloc] initWithRecordType:UserscriptRecord.type
+                                                       recordID:[[CKRecordID alloc] initWithRecordName:userscript.uuid zoneID:zone.zoneID]];
+        UserscriptRecord *userscriptRecord = [[UserscriptRecord alloc] init];
+        userscriptRecord.uuid = userscript.uuid;
+        userscriptRecord.header = [[NSString alloc] initWithData:
+                                   [NSJSONSerialization dataWithJSONObject:
+                                    [userscript toDictionaryWithoutContent] options:0 error:nil]
+                                                        encoding:NSUTF8StringEncoding];
+        double now = [[NSDate date] timeIntervalSince1970];
+        userscriptRecord.createTimestamp = now;
+        userscriptRecord.updateTimestamp = now;
+        [userscriptRecord fillCKRecord:ckUserscriptRecord];
+        
+        CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:@[ckUserscriptRecord] recordIDsToDelete:nil];
+        operation.savePolicy = CKRecordSaveAllKeys;
+        operation.qualityOfService = NSQualityOfServiceUserInitiated;
+        operation.modifyRecordsCompletionBlock = ^(NSArray<CKRecord *> * _Nullable savedRecords, NSArray<CKRecordID *> * _Nullable deletedRecordIDs, NSError * _Nullable operationError) {
+            if (operationError){
+                completionHandler(operationError);
+                return;
+            }
+            
+            CKRecord *ckContentRecord = [[CKRecord alloc] initWithRecordType:ContentRecord.type
+                                                                    recordID:[[CKRecordID alloc] initWithRecordName:userscript.uuid zoneID:zone.zoneID]];
+            ContentRecord *contentRecord = [[ContentRecord alloc] init];
+            contentRecord.uuid = userscript.uuid;
+            contentRecord.raw = [userscript.content copy];
+            [contentRecord fillCKRecord:ckContentRecord];
+            
+            CKModifyRecordsOperation *contentOperation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:@[ckContentRecord] recordIDsToDelete:nil];
+            contentOperation.savePolicy = CKRecordSaveAllKeys;
+            contentOperation.qualityOfService = NSQualityOfServiceUserInitiated;
+            contentOperation.modifyRecordsCompletionBlock = ^(NSArray<CKRecord *> * _Nullable savedRecords, NSArray<CKRecordID *> * _Nullable deletedRecordIDs, NSError * _Nullable operationError) {
+                completionHandler(operationError);
+            };
+            [self.database addOperation:contentOperation];
+        };
+            
+        [self.database addOperation:operation];
+        
+    } zoneName:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type]];
 }
 
 - (void)addUserscript:(UserScript *)userscript{

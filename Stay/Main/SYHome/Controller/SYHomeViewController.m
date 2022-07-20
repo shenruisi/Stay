@@ -176,6 +176,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                              selector:@selector(onBecomeActive)
                                                  name:SVCDidBecomeActiveNotification
                                                object:nil];
+#endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userscriptDidDeleteHandler:)
@@ -202,9 +203,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                  name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                object:nil];
     
-    
-    
-#endif
     self.view.backgroundColor = FCStyle.background;
     
     // Do any additional setup after loading the view.
@@ -219,29 +217,41 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidDeleteHandler:(NSNotification *)note{
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
     
 }
 
 - (void)userscriptDidActiveHandler:(NSNotification *)note{
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 }
 
 - (void)userscriptDidStopHandler:(NSNotification *)note{
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 }
 
 - (void)userscriptDidAddHandler:(NSNotification *)note{
+    
+    
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 }
 
 - (void)userscriptDidUpdateHandler:(NSNotification *)note{
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 
     
 }
@@ -394,10 +404,29 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     [FCShared.iCloudService refresh];
     if (FCShared.iCloudService.isLogin){
-        [FCShared.iCloudService fetchUserscriptWithChangedHandler:^(NSDictionary<NSString *,UserScript *> *changedUserscripts) {
+        [FCShared.iCloudService fetchUserscriptWithCompletionHandler:
+         ^(NSDictionary<NSString *,UserScript *> *changedUserscripts, NSArray<NSString *> *deletedUUIDs) {
+            NSArray *changedUUIDs = [changedUserscripts allKeys];
+            for (NSString *uuid in changedUUIDs){
+                UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
+                UserScript *changedUserscript = changedUserscripts[uuid];
+                if (nil == userscriptInDB){
+//                    [[DataManager shareManager] ]
+                }
+                else{
+                    [[DataManager shareManager] updateUserScript:changedUserscript];
+                }
+            }
             
-        } deletedHandler:^(NSArray<NSString *> *deletedUUIDs) {
+            for (NSString *deletedUUID in deletedUUIDs){
+                [[DataManager shareManager] deleteScriptInUserScriptByNumberId:deletedUUID];
+            }
             
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadTableView];
+                [self.tableView reloadData];
+                [self initScrpitContent];
+            });
         }];
     }
 }
