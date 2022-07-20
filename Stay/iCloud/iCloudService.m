@@ -15,16 +15,19 @@
 
 NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"app.stay.notification.iCloudServiceUserscriptSavedNotification";
 
+NSNotificationName const _Nonnull iCloudServiceSyncStartNotification = @"app.stay.notification.iCloudServiceSyncStartNotification";
+NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.notification.iCloudServiceSyncEndNotification";
+
 @interface iCloudService(){
     dispatch_queue_t _iCloudServiceQueue;
     BOOL _isLogin;
-    NSString *_identifier;
 }
 
 @property (nonatomic, strong) CKContainer *container;
 @property (nonatomic, strong) CKDatabase *database;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, CKRecordZone *> *zoneDic;
 @property (nonatomic, strong) CKServerChangeToken *changeToken;
+@property (nonatomic, strong) NSString *identifier;
 @end
 
 
@@ -51,35 +54,43 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
     }
     
     NSString *newIdentifier = [self serviceIdentifier];
-    if ([_identifier isEqualToString:newIdentifier]){
+    if ([self.identifier isEqualToString:newIdentifier]){
         return;
     }
 
     [self _reset];
-    _identifier = newIdentifier;
+    self.identifier = newIdentifier;
 }
 
 - (void)_reset{
     self.container = nil;
     self.database = nil;
     self.zoneDic = nil;
-    _identifier = nil;
+    self.identifier = nil;
+    self.changeToken = nil;
 }
 
 - (BOOL)isLogin{
     return _isLogin;
 }
 
-- (NSString *)identifier{
-    return _identifier;
-}
-
 - (CKServerChangeToken *)changeToken{
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"iCloudService.Userscripts.changeToken"];
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"iCloudService.Userscripts.changeToken"];
+    return (CKServerChangeToken *)[NSKeyedUnarchiver unarchivedObjectOfClass:[CKServerChangeToken class] fromData:data error:nil];
 }
 
 - (void)setChangeToken:(CKServerChangeToken *)changeToken{
-    [[NSUserDefaults standardUserDefaults] setObject:changeToken forKey:@"iCloudService.Userscripts.changeToken"];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:changeToken requiringSecureCoding:YES error:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"iCloudService.Userscripts.changeToken"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSString *)identifier{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:@"iCloudService.Userscripts.identifier"];
+}
+
+- (void)setIdentifier:(NSString *)identifier{
+    [[NSUserDefaults standardUserDefaults] setObject:identifier forKey:@"iCloudService.Userscripts.identifier"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -165,14 +176,12 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
                                                      CKServerChangeToken *token,
                                                      NSData *data, BOOL more,
                                                      NSError *error) {
-//            if (error) {
-//                // Handle the error.
-//            } else {
-//                self.changeToken = token;
-//            }
-//            changedHandler(userscriptToSave);
-//            deletedHandler(userscriptToDelete);
-            
+            if (error) {
+                // Handle the error.
+            } else {
+                self.changeToken = token;
+            }
+            completionHandler(userscriptToSave,userscriptToDelete);
         };
         
         operation.qualityOfService = NSQualityOfServiceUserInitiated;
@@ -182,7 +191,7 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
 }
 
 - (void)checkFirstInitWithCompletionHandler:(void (^)(BOOL firstInit, NSError *error))completionHandler{
-    NSNumber *n = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"iCloudService.%@.firstInit",_identifier]];
+    NSNumber *n = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"iCloudService.%@.firstInit",self.identifier]];
     if (n && ![n boolValue]){
         completionHandler(NO,nil);
         return;
@@ -249,8 +258,9 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
 - (void)pushUserscripts:(NSArray<UserScript *> *)userscripts
       completionHandler:(void (^)(NSError *))completionHandler{
     dispatch_async(_iCloudServiceQueue, ^{
+        NSString *identifier = self.identifier;
         for (UserScript *userscript in userscripts){
-            userscript.iCloudIdentifier = self->_identifier;
+            userscript.iCloudIdentifier = identifier;
             [self addUserscript:userscript];
         }
         NSError *zoneError = nil;
@@ -269,7 +279,7 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
                     [statusRecord fillCKRecord:ckStatusRecord];
                     [self.database saveRecord:ckStatusRecord completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
                         if (nil == error){
-                            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"iCloudService.%@.firstInit",self->_identifier]];
+                            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"iCloudService.%@.firstInit",identifier]];
                         }
                         completionHandler(error);
                     }];
@@ -323,15 +333,23 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
 }
 
+- (NSString *)userscriptRecordName:(NSString *)uuid{
+    return [NSString stringWithFormat:@"userscript.%@",uuid];
+}
+
+- (NSString *)contentRecordName:(NSString *)uuid{
+    return [NSString stringWithFormat:@"content.%@",uuid];
+}
+
 - (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler{
     [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
         if (error){
             completionHandler(error);
             return;
         }
-        
+        userscript.iCloudIdentifier = self.identifier;
         CKRecord *ckUserscriptRecord = [[CKRecord alloc] initWithRecordType:UserscriptRecord.type
-                                                       recordID:[[CKRecordID alloc] initWithRecordName:userscript.uuid zoneID:zone.zoneID]];
+                                                       recordID:[[CKRecordID alloc] initWithRecordName:[self userscriptRecordName:userscript.uuid] zoneID:zone.zoneID]];
         UserscriptRecord *userscriptRecord = [[UserscriptRecord alloc] init];
         userscriptRecord.uuid = userscript.uuid;
         userscriptRecord.header = [[NSString alloc] initWithData:
@@ -353,7 +371,7 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
             }
             
             CKRecord *ckContentRecord = [[CKRecord alloc] initWithRecordType:ContentRecord.type
-                                                                    recordID:[[CKRecordID alloc] initWithRecordName:userscript.uuid zoneID:zone.zoneID]];
+                                                                    recordID:[[CKRecordID alloc] initWithRecordName:[self contentRecordName:userscript.uuid] zoneID:zone.zoneID]];
             ContentRecord *contentRecord = [[ContentRecord alloc] init];
             contentRecord.uuid = userscript.uuid;
             contentRecord.raw = [userscript.content copy];
@@ -429,6 +447,22 @@ NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification = @"a
     }];
 
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+}
+
+- (void)showError:(NSError *)error inCer:(UIViewController *)cer{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"icloud.error", @"")
+                                                                       message:[error localizedDescription]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+            [cer.navigationController popViewControllerAnimated:YES];
+            }];
+        [alert addAction:conform];
+        [cer presentViewController:alert animated:YES completion:nil];
+    });
+    
 }
 
 - (void)_initStatusRecordType{

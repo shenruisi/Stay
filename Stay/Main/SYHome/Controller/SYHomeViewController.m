@@ -239,7 +239,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidAddHandler:(NSNotification *)note{
-    
+    if (FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+        }];
+    }
     
 #ifdef Mac
     [self reloadTableView];
@@ -402,16 +413,23 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSArray *array = [[DataManager shareManager] findScript:1];
     [self updateScriptWhen:array type:false];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
     [FCShared.iCloudService refresh];
     if (FCShared.iCloudService.isLogin){
+        for (UserScript *userscriptInDB in array){
+            if (![userscriptInDB.iCloudIdentifier isEqualToString:FCShared.iCloudService.identifier]){
+                [[DataManager shareManager] deleteScriptInUserScriptByNumberId:userscriptInDB.uuid];
+            }
+        }
+        
         [FCShared.iCloudService fetchUserscriptWithCompletionHandler:
          ^(NSDictionary<NSString *,UserScript *> *changedUserscripts, NSArray<NSString *> *deletedUUIDs) {
             NSArray *changedUUIDs = [changedUserscripts allKeys];
             for (NSString *uuid in changedUUIDs){
                 UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
                 UserScript *changedUserscript = changedUserscripts[uuid];
-                if (nil == userscriptInDB){
-//                    [[DataManager shareManager] ]
+                if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
+                    [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
                 }
                 else{
                     [[DataManager shareManager] updateUserScript:changedUserscript];
@@ -426,6 +444,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                 [self reloadTableView];
                 [self.tableView reloadData];
                 [self initScrpitContent];
+                [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
             });
         }];
     }

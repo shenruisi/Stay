@@ -65,6 +65,17 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                              selector:@selector(codeMirrorViewDidFinishContent:)
                                                  name:CMVDidFinishContentNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(remoteSyncStart)
+                                                 name:iCloudServiceSyncStartNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(remoteSyncEnd)
+                                                 name:iCloudServiceSyncEndNotification
+                                               object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(sceneWillEnterForeground:)
                                                  name:UISceneWillEnterForegroundNotification
@@ -502,6 +513,14 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:CMVDidFinishContentNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:iCloudServiceSyncStartNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:iCloudServiceSyncEndNotification
                                                   object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
