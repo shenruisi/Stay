@@ -10,6 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotification;
+extern NSNotificationName const _Nonnull iCloudServiceSyncStartNotification;
+extern NSNotificationName const _Nonnull iCloudServiceSyncEndNotification;
 
 @class UserScript,BaseRecord;
 @interface iCloudService : NSObject
@@ -22,10 +24,16 @@ extern NSNotificationName const _Nonnull iCloudServiceUserscriptSavedNotificatio
 - (void)pullUserscriptWithCompletionHandler:(void (^)(NSArray<UserScript *> * userscripts, NSError * error))completionHandler;
 - (void)removeUserscript:(UserScript *)userscript;
 - (void)addUserscript:(UserScript *)userscript;
-- (void)fetchUserscriptWithChangedHandler:(void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts))changedHandler
-                           deletedHandler:(void (^)(NSArray<NSString *> *deletedUUIDs))deletedHandler;
+
+
+
+- (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler;
+- (void)removeUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler;
+- (void)fetchUserscriptWithCompletionHandler:
+(void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts,NSArray<NSString *> *deletedUUIDs))completionHandler;
 - (dispatch_queue_t)queue;
 - (void)refresh;
+- (void)showError:(NSError *)error inCer:(UIViewController *)cer;
 
 @property (nonatomic, assign, readonly) BOOL isLogin;
 @property (nonatomic, strong, readonly) NSString *identifier;

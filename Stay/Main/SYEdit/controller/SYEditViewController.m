@@ -190,10 +190,10 @@
     NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
     if(_isEdit) {
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:uuid];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":uuid}];
                 [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:uuid];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil userInfo:@{@"uuid":uuid}];
                 [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
     [self presentViewController:alert animated:YES completion:nil];
