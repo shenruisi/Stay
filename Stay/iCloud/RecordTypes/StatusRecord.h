@@ -7,10 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CloudKit/CloudKit.h>
+#import "BaseRecord.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface StatusRecord : NSObject
+@interface StatusRecord : BaseRecord
 
 @property (nonatomic, assign) double firstInitTimestamp;
 

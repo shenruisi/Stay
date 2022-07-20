@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *stayEngine;
 
 //add by iCloud feature
-@property (nonatomic, assign) NSString *iCloudIdentifier;
+@property (nonatomic, copy) NSString *iCloudIdentifier;
 
 
 + (instancetype)ofDictionary:(NSDictionary *)dic;
