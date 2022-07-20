@@ -261,6 +261,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [self.holdEditViewController save];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloudOn]){
+        
         [self remoteSyncStart];
         [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
             [self remoteSyncEnd];
@@ -288,10 +289,10 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                                                           style:UIAlertActionStyleDefault
                                                                         handler:^(UIAlertAction * _Nonnull action) {
                             [self remoteSyncStart];
-                            [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
-                                                  completionHandler:^(NSError * error) {
-                                [self remoteSyncEnd];
-                            }];
+//                            [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
+//                                                  completionHandler:^(NSError * error) {
+//                                [self remoteSyncEnd];
+//                            }];
                         }];
                         [alert addAction:conform];
                         UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")

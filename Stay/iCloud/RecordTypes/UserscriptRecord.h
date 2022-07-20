@@ -7,10 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CloudKit/CloudKit.h>
+#import "BaseRecord.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UserscriptRecord : NSObject
+@interface UserscriptRecord : BaseRecord
 
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, strong) NSString *header;

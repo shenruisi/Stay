@@ -40,6 +40,9 @@
 #import "SYTextInputViewController.h"
 #import "LoadingSlideController.h"
 
+#import "FCShared.h"
+
+
 static CGFloat kMacToolbar = 50.0;
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
 @interface _SYHomeViewTableViewCell : UITableViewCell
@@ -388,6 +391,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     //自动更新代码保留先注释
     NSArray *array = [[DataManager shareManager] findScript:1];
     [self updateScriptWhen:array type:false];
+    
+    [FCShared.iCloudService refresh];
+    if (FCShared.iCloudService.isLogin){
+        [FCShared.iCloudService fetchUserscriptWithChangedHandler:^(NSDictionary<NSString *,UserScript *> *changedUserscripts) {
+            
+        } deletedHandler:^(NSArray<NSString *> *deletedUUIDs) {
+            
+        }];
+    }
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
