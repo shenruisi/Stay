@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContentRecord : BaseRecord
 
 @property (nonatomic, strong) NSString *uuid;
-@property (nonatomic, strong) CKAsset *raw;
+@property (nonatomic, strong) NSString *raw;
 @property (nonatomic, assign) double createTimestamp;
 @property (nonatomic, assign) double updateTimestamp;
 @property (class, strong, readonly) NSString *type;
