@@ -794,7 +794,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object: model.uuid];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
@@ -809,7 +809,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object: model.uuid];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
 
         }];
@@ -820,11 +820,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UserScript *model = weakSelf.datas[indexPath.row];
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:nil];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:model.uuid];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:nil];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:model.uuid];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
