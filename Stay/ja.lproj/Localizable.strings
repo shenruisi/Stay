@@ -100,3 +100,6 @@ UpgradeTo="Upgrade to Stay Pro";
 SYNC="SYNC";
 SyncNow="Sync now";
 FullResync="Full resync";
+
+LifetimeSubscription="Lifetime";
+OneTimePayment="One-time payment";

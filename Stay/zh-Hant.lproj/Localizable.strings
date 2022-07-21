@@ -96,3 +96,6 @@ UpgradeTo="升級到Stay Pro";
 SYNC="同步";
 SyncNow="立即同步";
 FullResync="全量重新同步";
+
+LifetimeSubscription="永久";
+OneTimePayment="一次性購買";
