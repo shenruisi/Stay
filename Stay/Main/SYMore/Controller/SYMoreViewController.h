@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSNotificationName const _Nonnull  SYMoreViewReloadCellNotification;
+
 @interface SYMoreViewController : UIViewController
 
 @end

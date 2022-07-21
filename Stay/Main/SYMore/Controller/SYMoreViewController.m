@@ -8,10 +8,12 @@
 #import "Tampermonkey.h"
 #import "SYMoreViewController.h"
 #import "FCStyle.h"
+#import "FCConfig.h"
+
+NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 
 @interface _MoreTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *entity;
-@property (nonatomic, strong) UIView *line;
 @property (nonatomic, strong) UIImageView *accessory;
 @end
 
@@ -38,11 +40,14 @@
     
     NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
     NSString *title = entity[@"title"];
-    [builder appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:@{
-        NSForegroundColorAttributeName:FCStyle.fcBlack,
-        NSFontAttributeName:FCStyle.body
-        
-    }]];
+    if (title.length > 0){
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcBlack,
+            NSFontAttributeName:FCStyle.body
+            
+        }]];
+    }
+    
     
     NSString *subtitle = entity[@"subtitle"];
     if (subtitle.length > 0){
@@ -73,6 +78,177 @@
     
     return _accessory;
 }
+
+
+@end
+
+@interface _SubscriptionTableViewCell : _MoreTableViewCell{
+    UIImageView *_goldenRccessory;
+}
+
+@end
+
+@implementation _SubscriptionTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+        self.textLabel.textColor = FCStyle.fcGolden;
+        self.backgroundColor = FCStyle.backgroundGolden;
+        self.layer.borderColor = FCStyle.borderGolden.CGColor;
+        self.layer.borderWidth = 1;
+        [self accessory];
+    }
+    
+    return self;
+}
+
+- (void)setEntity:(NSDictionary<NSString *,NSString *> *)entity{
+    [super setEntity:entity];
+    
+    NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
+    NSString *title = entity[@"title"];
+    [builder appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:@{
+        NSForegroundColorAttributeName:FCStyle.fcGolden,
+        NSFontAttributeName:FCStyle.body
+    }]];
+    
+    self.textLabel.attributedText = builder;
+}
+
+- (UIImageView *)accessory{
+    if (nil == _goldenRccessory){
+        _goldenRccessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+        UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+        image = [image imageWithTintColor:FCStyle.fcGolden renderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_goldenRccessory setImage:image];
+        self.accessoryView =_goldenRccessory;
+    }
+    
+    return _goldenRccessory;
+}
+@end
+
+@interface _iCloudSwitchTableViewCell : _MoreTableViewCell{
+    
+}
+@property (nonatomic, strong) UISwitch *switchButton;
+@end
+
+@implementation _iCloudSwitchTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self switchButton];
+    }
+    
+    return self;
+}
+
+- (UISwitch *)switchButton{
+    if (nil == _switchButton){
+        _switchButton = [[UISwitch alloc] init];
+        [_switchButton setOnTintColor:FCStyle.accent];
+        [_switchButton setOn:[[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled]];
+        [_switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+        self.accessoryView = _switchButton;
+    }
+    return _switchButton;
+}
+
+- (void)switchAction:(UISwitch *)sender{
+    [[FCConfig shared] setBoolValueOfKey:GroupUserDefaultsKeySyncEnabled value:sender.on];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
+                                                        object:nil
+                                                      userInfo:@{
+        @"section":@(1),
+        @"row":@(1)
+    }];
+}
+
+@end
+
+@interface _iCloudOperateTableViewCell : _MoreTableViewCell{
+    
+}
+@property (nonatomic, strong) UIButton *syncNowButton;
+@property (nonatomic, strong) UIView *line;
+@property (nonatomic, strong) UIButton *fullResyncButton;
+
+@end
+
+@implementation _iCloudOperateTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+        self.accessoryView = nil;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self syncNowButton];
+        [self line];
+        [self fullResyncButton];
+    }
+    
+    return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    self.line.frame = CGRectMake((self.width - self.line.width) / 2,
+                                 (self.height - self.line.height) / 2,
+                                 self.line.width, self.line.height);
+    self.syncNowButton.frame = CGRectMake((self.width/2 - self.syncNowButton.width) / 2,
+                                          (self.height - self.syncNowButton.height) / 2,
+                                          self.syncNowButton.width,
+                                          self.syncNowButton.height);
+    self.fullResyncButton.frame = CGRectMake(self.width/2 + (self.width/2 - self.fullResyncButton.width) / 2,
+                                          (self.height - self.fullResyncButton.height) / 2,
+                                          self.fullResyncButton.width,
+                                          self.fullResyncButton.height);
+}
+
+- (UIView *)line{
+    if (nil == _line){
+        _line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 20)];
+        _line.backgroundColor = FCStyle.fcSeparator;
+        [self addSubview:_line];
+    }
+    
+    return _line;
+}
+
+- (UIButton *)syncNowButton{
+    if (nil == _syncNowButton){
+        _syncNowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+        
+//        NSLog(@"GroupUserDefaultsKeySyncEnabled %ld",[[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled]);
+        _syncNowButton.enabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+        
+        [_syncNowButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"SyncNow", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : _syncNowButton.enabled ? FCStyle.accent : [UIColor systemGray3Color],
+            NSFontAttributeName : FCStyle.body
+        }] forState:UIControlStateNormal];
+        
+        [self addSubview:_syncNowButton];
+    }
+    return _syncNowButton;
+}
+
+- (UIButton *)fullResyncButton{
+    if (nil == _fullResyncButton){
+        _fullResyncButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+        _fullResyncButton.enabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+        [_fullResyncButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"FullResync", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : _fullResyncButton.enabled ? FCStyle.accent : [UIColor systemGray3Color],
+            NSFontAttributeName : FCStyle.body
+        }] forState:UIControlStateNormal];
+        [self addSubview:_fullResyncButton];
+    }
+    return _fullResyncButton;
+}
+
 
 
 @end
@@ -112,6 +288,18 @@
     self.view.backgroundColor = FCStyle.background;
     [self tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reloadCell:)
+                                                 name:SYMoreViewReloadCellNotification
+                                               object:nil];
+}
+
+- (void)reloadCell:(NSNotification *)note{
+    NSInteger section = [note.userInfo[@"section"] integerValue];
+    NSInteger row = [note.userInfo[@"row"] integerValue];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:section]]
+                          withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -129,14 +317,23 @@
 }
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    NSString *identifier = [NSString stringWithFormat:@"settings.%ld.cell",indexPath.section];
-    _MoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (nil == cell){
-        cell = [[_MoreTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        
-//        cell.accessoryType = UITableViewCellAccessoryNone;
+    _MoreTableViewCell *cell = nil;
+    NSDictionary *entity = self.dataSource[indexPath.section][@"cells"][indexPath.row];
+    if ([entity[@"type"] isEqualToString:@"subscription"]){
+        cell = [[_SubscriptionTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
-    cell.entity = self.dataSource[indexPath.section][@"cells"][indexPath.row];
+    else if ([entity[@"type"] isEqualToString:@"iCloudSwitch"]){
+        cell = [[_iCloudSwitchTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
+    else if ([entity[@"type"] isEqualToString:@"iCloudOperate"]){
+        cell = [[_iCloudOperateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        [((_iCloudOperateTableViewCell *)cell).syncNowButton addTarget:self action:@selector(syncNowAction:) forControlEvents:UIControlEventTouchUpInside];
+        [((_iCloudOperateTableViewCell *)cell).fullResyncButton addTarget:self action:@selector(fullResyncAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    else{
+        cell = [[_MoreTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
+    cell.entity = entity;
     NSLog(@"SYMoreViewController %ld,%ld",indexPath.row,((NSArray *)self.dataSource[indexPath.section][@"cells"]).count - 1);
     return cell;
 }
@@ -159,6 +356,13 @@
     
 }
 
+- (void)syncNowAction:(id)sender{
+    
+}
+
+- (void)fullResyncAction:(id)sender{
+    
+}
 
 - (BOOL)joinGroup:(NSString *)groupUin key:(NSString *)key{
     NSString *urlStr = [NSString stringWithFormat:@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=%@&key=%@&card_type=group&source=external&jump_from=webapi", @"714147685",@"c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217"];
@@ -178,6 +382,25 @@
 - (NSArray *)dataSource{
     if (nil == _dataSource){
         _dataSource = @[
+            @{
+                @"section":NSLocalizedString(@"Subscription",@""),
+                @"cells":@[
+                    @{@"title":NSLocalizedString(@"UpgradeTo",@""),
+                      @"type":@"subscription"
+                    }
+                ]
+            },
+            @{
+                @"section":NSLocalizedString(@"SYNC",@""),
+                @"cells":@[
+                    @{@"title":@"iCloud",
+                      @"type":@"iCloudSwitch"
+                    },
+                    @{
+                      @"type":@"iCloudOperate",
+                    }
+                ]
+            },
             @{
                 @"section":NSLocalizedString(@"Interaction",@""),
                 @"cells":@[
@@ -236,5 +459,10 @@
     return _tableView;
 }
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SYMoreViewReloadCellNotification
+                                                  object:nil];
+}
 
 @end

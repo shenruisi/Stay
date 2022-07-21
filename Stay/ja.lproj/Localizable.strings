@@ -94,3 +94,9 @@ Blacklist = "Black list";
 Created="Created";
 Saved="Saved";
 
+Subscription="SUBSCRIPTION";
+UpgradeTo="Upgrade to Stay Pro";
+
+SYNC="SYNC";
+SyncNow="Sync now";
+FullResync="Full resync";
