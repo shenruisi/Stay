@@ -47,4 +47,14 @@ static SharedStorageManager *_instance = nil;
     return _activateChanged;
 }
 
+- (UserDefaults *)userDefaults{
+    if (nil == _userDefaults){
+        _userDefaults = [[UserDefaults alloc] initWithPath:[FCDataDirectory()
+                                                            stringByAppendingPathComponent:@"userDefaults"]
+                                               isDirectory:NO];
+    }
+    
+    return _userDefaults;
+}
+
 @end

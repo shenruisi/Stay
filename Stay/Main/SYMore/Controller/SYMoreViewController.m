@@ -59,7 +59,6 @@
     self.imageView.image = entity[@"icon"].length > 0 ? [UIImage imageNamed:entity[@"icon"]] : nil;
     self.imageView.layer.cornerRadius = 8;
     self.imageView.layer.masksToBounds = YES;
-//    self.indentationLevel = entity[@"icon"].length > 0 ? 0:1;
 }
 
 - (UIImageView *)accessory{

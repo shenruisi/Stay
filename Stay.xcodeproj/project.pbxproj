@@ -201,6 +201,10 @@
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
+		58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B4482888EBB3009BD608 /* UserDefaults.m */; };
+		58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B4482888EBB3009BD608 /* UserDefaults.m */; };
+		58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B4482888EBB3009BD608 /* UserDefaults.m */; };
+		58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B4482888EBB3009BD608 /* UserDefaults.m */; };
 		58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
@@ -499,6 +503,8 @@
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
 		58D1B44428880474009BD608 /* UIView+Rotate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Rotate.h"; sourceTree = "<group>"; };
 		58D1B44528880474009BD608 /* UIView+Rotate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Rotate.m"; sourceTree = "<group>"; };
+		58D1B4472888EBB3009BD608 /* UserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
+		58D1B4482888EBB3009BD608 /* UserDefaults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		58EA44432869BB5200BD6C4D /* ImportSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportSlideController.h; sourceTree = "<group>"; };
 		58EA44442869BB5200BD6C4D /* ImportSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportSlideController.m; sourceTree = "<group>"; };
 		58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportMenuModalViewController.h; sourceTree = "<group>"; };
@@ -1279,6 +1285,8 @@
 				588B83272846147000AB2D73 /* UserscriptInfo.m */,
 				588B832A284620F700AB2D73 /* ActivateChanged.h */,
 				588B832B284620F700AB2D73 /* ActivateChanged.m */,
+				58D1B4472888EBB3009BD608 /* UserDefaults.h */,
+				58D1B4482888EBB3009BD608 /* UserDefaults.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1890,6 +1898,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */,
+				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
 				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
 				58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */,
@@ -1959,6 +1968,7 @@
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
@@ -1991,6 +2001,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
+				58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				588B83212845FC0C00AB2D73 /* FCDisk.m in Sources */,
@@ -2069,6 +2080,7 @@
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
+				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				58AC12F028607AB800875D6D /* FCToolbar.m in Sources */,

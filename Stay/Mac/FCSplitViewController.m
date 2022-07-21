@@ -277,22 +277,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
             [self remoteSyncEnd];
             if (error){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"icloud.error", @"")
-                                                                                   message:NSLocalizedString(@"TryAgainLater", @"")
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                                      style:UIAlertActionStyleDefault
-                                                                    handler:^(UIAlertAction * _Nonnull action) {
-                        [self.navigationController popViewControllerAnimated:YES];
-                        }];
-                    [alert addAction:conform];
-                    [self presentViewController:alert animated:YES completion:nil];
-                });
+                [FCShared.iCloudService showErrorWithMessage:NSLocalizedString(@"TryAgainLater", @"") inCer:self];
             }
             else{
                 if (firstInit){
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                        dispatch_async(dispatch_get_main_queue(), ^{
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
                                                                                        message:NSLocalizedString(@"icloud.firstInit", @"")
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -300,10 +289,13 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                                                           style:UIAlertActionStyleDefault
                                                                         handler:^(UIAlertAction * _Nonnull action) {
                             [self remoteSyncStart];
-//                            [FCShared.iCloudService pushUserscripts:[QuickAccess homeViewController].userscripts
-//                                                  completionHandler:^(NSError * error) {
-//                                [self remoteSyncEnd];
-//                            }];
+                            [FCShared.iCloudService initUserscripts:[QuickAccess homeViewController].userscripts
+                                                  completionHandler:^(NSError *error) {
+                                [self remoteSyncEnd];
+                                if (error){
+                                    [FCShared.iCloudService showError:error inCer:self];
+                                }
+                            }];
                         }];
                         [alert addAction:conform];
                         UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
@@ -324,7 +316,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                         UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                                           style:UIAlertActionStyleDefault
                                                                         handler:^(UIAlertAction * _Nonnull action) {
-                            [self.navigationController popViewControllerAnimated:YES];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:SVCDidBecomeActiveNotification object:nil];
                         }];
                         [alert addAction:conform];
                         UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
