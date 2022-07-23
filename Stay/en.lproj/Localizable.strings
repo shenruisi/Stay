@@ -101,3 +101,16 @@ FullResync="Full resync";
 
 LifetimeSubscription="Lifetime";
 OneTimePayment="One-time payment";
+
+Upgrade="Upgrade";
+iCloudFeature="iCloud Sync";
+iCloudFeatureDesc="Sync userscript between multiple devices";
+DarkModeFeature="Dark Mode";
+DarkModeFeatureDesc="Built-in dark mode for every website ";
+IndieFeature="Support Indie Development";
+IndieFeatureDesc="Your support helps keep the project going";
+ContinuePay = "Continue with %@ Payment";
+Subscribed = "Subscribed";
+Restore= "Restore";
+PrivacyPolicy = "Privacy Policy";
+TermsOfUse = "Terms of Use";

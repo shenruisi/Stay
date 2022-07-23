@@ -9,6 +9,11 @@
 #import "SYMoreViewController.h"
 #import "FCStyle.h"
 #import "FCConfig.h"
+#if iOS
+#import "Stay-Swift.h"
+#else
+#import "Stay_2-Swift.h"
+#endif
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 
@@ -340,10 +345,17 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSString *url = self.dataSource[indexPath.section][@"cells"][indexPath.row][@"url"];
+    
+    NSDictionary *dict = self.dataSource[indexPath.section][@"cells"][indexPath.row];
+    NSString *url = dict[@"url"];
     if (url.length > 0){
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]
                                            options:@{} completionHandler:^(BOOL succeed){}];
+    } else {
+        NSString *type = dict[@"type"];
+        if ([type isEqualToString:@"subscription"]) {
+            [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+        }
     }
 }
 
