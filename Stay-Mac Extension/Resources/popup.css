@@ -139,8 +139,13 @@ section {
 .header-tab .active-tab{
     color:#B620E0;
 }
-
-.console-tab{
+.darkmode-tab .pro{
+    background-color: #F9DF8D;
+    border: 1px solid rgba(132, 86, 29, 0.3);
+    color: #84561D;
+    padding: 2px 4px;
+}
+.console-tab,.darkmode-tab{
     font-size:13px;
     width: 50%;
     text-align: center;
@@ -582,7 +587,7 @@ section {
     .match-tab {
         color: #c5c5c5;
     }
-    .console-tab{
+    .console-tab, .darkmode-tab{
         border-left: 1px solid #565656;
         color: #c5c5c5;
     }

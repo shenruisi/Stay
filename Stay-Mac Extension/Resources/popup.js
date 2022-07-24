@@ -38,6 +38,7 @@ let browserLangurage = "",
     showLogNotify = false,
     logIsFetched = false,
     scriptConsoleDom,
+    darkmodeProDom,
     scriptDomTmp = [
             '<div class="info-case">',
             '<div class="title"><img style="display:{showIcon}" src={icon} />{name}<span class="version">{version}</span><span>{status}</span></div>',
@@ -206,6 +207,7 @@ window.onload=function(){
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
+    darkmodeProDom = document.getElementById('darkmodePro');
     // load i18n properties
     i18nProp = langMessage[browserLangurage] || langMessage["en_US"]
     try {
@@ -530,7 +532,7 @@ function handleExecScriptManually(uuid, name) {
 /**
  * tab切换点击事件
  * @param {object} target   被点击的元素
- * @param {number} type     1:match,2:console
+ * @param {number} type     1:match,2:console,3:darkmode
  **/
 function handleTabAction(target, type) {
     if (typeof type != "undefined" && type > 0) {
@@ -539,12 +541,19 @@ function handleTabAction(target, type) {
         if(type == 1){
             scriptStateListDom.show();
             scriptConsoleDom.hide();
-        }else{
+            darkmodeProDom.hide();
+        }else if(type == 2){
             showLogNotify = false;
             logNotifyDom.hide()
             scriptStateListDom.hide();
             scriptConsoleDom.show();
+            darkmodeProDom.hide();
             fetchAndRenderConsoleLog()
+        }else if(type == 3){
+            darkmodeProDom.show();
+            scriptStateListDom.hide();
+            scriptConsoleDom.hide();
+
         }
     }
 }

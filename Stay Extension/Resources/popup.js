@@ -38,6 +38,7 @@ let browserLangurage = "",
     showLogNotify = false,
     logIsFetched = false,
     scriptConsoleDom,
+    darkmodeProDom,
     scriptDomTmp = [
             '<div class="info-case">',
             '<div class="title"><img style="display:{showIcon}" src={icon} />{name}<span class="version">{version}</span><span>{status}</span></div>',
@@ -206,6 +207,7 @@ window.onload=function(){
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
+    darkmodeProDom = document.getElementById('darkmodePro');
     // load i18n properties
     i18nProp = langMessage[browserLangurage] || langMessage["en_US"]
     try {
