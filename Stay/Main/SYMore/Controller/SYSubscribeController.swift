@@ -273,7 +273,7 @@ class FeatureView : UIView {
                 container.heightAnchor.constraint(equalToConstant: 66),
                 icon.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 18),
                 icon.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-                title.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15),
+                title.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 66),
                 title.topAnchor.constraint(equalTo: container.topAnchor, constant: 14),
                 desc.leadingAnchor.constraint(equalTo: title.leadingAnchor),
                 desc.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -14),
