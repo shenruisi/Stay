@@ -78,7 +78,7 @@ MoreApp="更多应用";
 TryAgainLater="请稍后重试。";
 
 icloud.error = "iCloud出错";
-icloud.firstInit = "需要在此设备上开启首次数据同步吗？";
+icloud.firstInit = "需要在此设备上开启首次数据同步吗？（将资料库中的所有脚本同步到iCloud）";
 icloud.syncNow = "立即同步";
 icloud.syncNow.alert ="需要立即同步吗？";
 icloud.insync = "同步中…";
@@ -119,3 +119,4 @@ Tips="提示";
 iCloudLogin="登录你的iCloud账号后进行同步";
 iCloudLastSync="上次同步：";
 iCloudTrunOn="开启同步";
+iCloudTrunOffTips="关闭iCloud同步后，你对脚本的所有操作将不再会自动同步。";

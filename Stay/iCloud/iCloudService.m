@@ -251,7 +251,7 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
 }
 
 - (NSString *)firstInitKey{
-    return [NSString stringWithFormat:@"iCloudService.%@.firstInit",self.identifier];
+    return [NSString stringWithFormat:@"iCloudService.%@.firstInit2",self.identifier];
 }
 
 - (void)checkFirstInit:(void (^)(BOOL firstInit, NSError *error))completionHandler{
@@ -266,58 +266,14 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
             completionHandler(YES,error);
         }
         else{
-            NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
-            CKQuery *query = [[CKQuery alloc] initWithRecordType:StatusRecord.type predicate:predicate];
-            [self.database performQuery:query inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
-                if (error){
-                    completionHandler(YES,error);
-                }
-                else{
-                    if (results.count == 0){
-                        completionHandler(YES,nil);
-                    }
-                    else{
-                        StatusRecord *statusRecord = [StatusRecord ofRecord:results.firstObject];
-                        [[NSUserDefaults standardUserDefaults] setObject:@(statusRecord.firstInitTimestamp == 0)
-                                                                  forKey:[self firstInitKey]];
-                        completionHandler(statusRecord.firstInitTimestamp == 0,nil);
-                    }
-                }
-            }];
+            CKFetchRecordsOperation *operation = [[CKFetchRecordsOperation alloc] initWithRecordIDs:@[[[CKRecordID alloc] initWithRecordName:[self firstInitKey] zoneID:zone.zoneID]]];
+            operation.fetchRecordsCompletionBlock = ^(NSDictionary<CKRecordID *,CKRecord *> * _Nullable recordsByRecordID, NSError * _Nullable operationError) {
+                completionHandler(recordsByRecordID.count == 0, nil);
+            };
+            operation.qualityOfService = NSQualityOfServiceUserInitiated;
+            [self.database addOperation:operation];
         }
     } zoneName:@"Userscripts" recordTypes:@[StatusRecord.type]];
-}
-
-- (BOOL)firstInit:(NSError * __strong *)outError{
-    __block BOOL ret = NO;
-    NSError *zoneError = nil;
-    CKRecordZone *zone = [self _getZone:@"Userscripts" recordTypes:@[StatusRecord.type] error:&zoneError];
-    if (nil != zoneError){
-        *outError = zoneError;
-        return ret;
-    }
-    
-    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-    NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
-    CKQuery *query = [[CKQuery alloc] initWithRecordType:StatusRecord.type predicate:predicate];
-    [self.database performQuery:query inZoneWithID:zone.zoneID completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
-        if (error){
-            *outError = error;
-        }
-        else{
-            if (results.count == 0){
-                ret = YES;
-            }
-            else{
-                StatusRecord *statusRecord = [StatusRecord ofRecord:results.firstObject];
-                ret = statusRecord.firstInitTimestamp == 0;
-            }
-        }
-        dispatch_semaphore_signal(sem);
-    }];
-
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-    return ret;
 }
 
 - (NSString *)userscriptRecordName:(NSString *)uuid{
@@ -358,7 +314,7 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
         }
         
         NSString *identifier = self.identifier;
-        NSMutableArray *recordToSave = [[NSMutableArray alloc] init];
+        NSMutableArray<CKRecord *> *recordToSave = [[NSMutableArray alloc] init];
         for (UserScript *userscript in userscripts){
             userscript.iCloudIdentifier = identifier;
             CKRecord *ckUserscriptRecord = [[CKRecord alloc] initWithRecordType:UserscriptRecord.type
@@ -384,6 +340,13 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
             [recordToSave addObject:ckContentRecord];
         }
         
+        CKRecord *ckStatusRecord = [[CKRecord alloc] initWithRecordType:StatusRecord.type
+                                                               recordID:[[CKRecordID alloc] initWithRecordName:[self firstInitKey]zoneID:zone.zoneID]];
+        StatusRecord *statusRecord = [[StatusRecord alloc] init];
+        statusRecord.firstInitTimestamp = [[NSDate date] timeIntervalSince1970];
+        [statusRecord fillCKRecord:ckStatusRecord];
+        [recordToSave addObject:ckStatusRecord];
+        
         CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:recordToSave recordIDsToDelete:nil];
         operation.savePolicy = CKRecordSaveAllKeys;
         operation.qualityOfService = NSQualityOfServiceUserInitiated;
@@ -392,7 +355,7 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
         };
         [self.database addOperation:operation];
         
-    } zoneName:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type]];
+    } zoneName:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type,StatusRecord.type]];
 }
 
 - (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler{

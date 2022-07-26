@@ -20,10 +20,6 @@ extern NSNotificationName const _Nonnull iCloudServiceSyncEndNotification;
 - (void)loggedWithCompletionHandler:(void(^)(BOOL status,NSError *error))completionHandler;
 - (void)serviceIdentifierWithCompletionHandler:(void(^)(NSString *identifier,NSError *error))completionHandler;
 - (void)checkFirstInit:(void (^)(BOOL firstInit, NSError *error))completionHandler;
-- (void)pushUserscripts:(NSArray<UserScript *> *)userscripts
-      serviceIdentifier:(NSString *)serviceIdentifier
-      completionHandler:(void (^)(NSError *error))completionHandler;
-
 - (void)initUserscripts:(NSArray<UserScript *> *)userscripts
       completionHandler:(void (^)(NSError *error))completionHandler;
 - (void)addUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler;
@@ -36,6 +32,7 @@ extern NSNotificationName const _Nonnull iCloudServiceSyncEndNotification;
 - (void)showErrorWithMessage:(NSString *)message inCer:(UIViewController *)cer;
 
 - (void)clearToken;
+- (void)clearFirstInit;
 
 @property (nonatomic, assign, readonly) BOOL isLogin;
 @property (nonatomic, strong, readonly) NSString *identifier;

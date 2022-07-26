@@ -84,7 +84,7 @@ Blacklist = "Black list";
 TryAgainLater="Please try again later";
 
 icloud.error = "iCloud error";
-icloud.firstInit = "Need to turn on first sync on this device?";
+icloud.firstInit = "Need to turn on first sync on this device? (Sync all scripts in your library to iCloud)";
 icloud.syncNow = "Sync now";
 icloud.syncNow.alert ="Need to sync now?";
 icloud.insync = "In sync…";
@@ -122,3 +122,4 @@ Tips="Tips";
 iCloudLogin="Login your iCloud for syncing";
 iCloudLastSync="Last Sync:";
 iCloudTrunOn="Turn on for syncing";
+iCloudTrunOffTips="After turning off iCloud sync, all your actions on the script will no longer be automatically synced.";

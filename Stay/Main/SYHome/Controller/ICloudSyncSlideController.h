@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ICloudSyncSlideController : FCSlideController
 
+@property (nonatomic, weak) UIViewController *cer;
 @end
 
 NS_ASSUME_NONNULL_END

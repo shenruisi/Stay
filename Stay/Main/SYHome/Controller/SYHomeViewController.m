@@ -665,6 +665,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                         }
                         
                         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
+                                                                            object:nil
+                                                                          userInfo:@{
+                            @"section":@(1),
+                            @"row":@(0)
+                        }];
                     }];
                 }
             }];
@@ -1306,6 +1312,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 if (error){
                                     [FCShared.iCloudService showError:error inCer:self];
                                 }
+                                else{
+                                    [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                                }
                             }];
                         }];
                         [alert addAction:conform];
@@ -1446,6 +1455,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (ICloudSyncSlideController *)iCloudSyncSlideController{
     if (nil == _iCloudSyncSlideController){
         _iCloudSyncSlideController = [[ICloudSyncSlideController alloc] init];
+        _iCloudSyncSlideController.cer = self;
     }
     
     return _iCloudSyncSlideController;
