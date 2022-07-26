@@ -24,6 +24,11 @@ class SYSubscribeController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = FCStyle.background
         self.title = NSLocalizedString("Upgrade", comment: "")
+        #if Mac
+        let barItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
+        barItem.tintColor = FCStyle.accent
+        navigationItem.leftBarButtonItem = barItem
+        #endif
         
         let features = [
             FeatureItem(icon: UIImage(systemName: "icloud.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))!.withTintColor(FCStyle.accent).withRenderingMode(.alwaysOriginal), title: NSLocalizedString("iCloudFeature", comment: ""), desc: NSLocalizedString("iCloudFeatureDesc", comment: "")),
@@ -177,6 +182,11 @@ class SYSubscribeController: UIViewController {
                 trailLabel.text = product?.introductoryOffer
             }
         }
+    }
+    
+    @objc
+    func cancelAction() {
+        dismiss(animated: true, completion: nil)
     }
     
     @objc
