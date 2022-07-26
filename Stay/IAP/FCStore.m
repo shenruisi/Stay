@@ -93,7 +93,7 @@ static FCStore *instance = nil;
 - (FCPlan *)getPlan:(BOOL)refresh{
     RMAppReceipt *receipt = [RMAppReceipt bundleReceipt];
     FCPlan *plan = FCPlan.None;
-    if (receipt && [receipt.bundleIdentifier isEqualToString:@"com.dajiu.fastclip.pro"]){
+    if (receipt && [receipt.bundleIdentifier isEqualToString:@"com.dajiu.stay.pro"]){
         NSDate *currentDate = [NSDate date];
         
         NSArray *sortedPurchases = [receipt.inAppPurchases sortedArrayUsingComparator:
@@ -133,7 +133,7 @@ static FCStore *instance = nil;
 
 - (BOOL)subscribed:(NSString *)productIdentifier{
     RMAppReceipt *receipt = [RMAppReceipt bundleReceipt];
-    if (receipt && [receipt.bundleIdentifier isEqualToString:@"com.dajiu.fastclip.pro"]){
+    if (receipt && [receipt.bundleIdentifier isEqualToString:@"com.dajiu.stay.pro"]){
         NSDate *currentDate = [NSDate date];
         
         NSArray *sortedPurchases = [receipt.inAppPurchases sortedArrayUsingComparator:

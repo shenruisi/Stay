@@ -7,7 +7,8 @@
 
 #import <UIKit/UIKit.h>
 
-extern NSNotificationName const _Nonnull  SYMoreViewReloadCellNotification;
+extern NSNotificationName const _Nonnull SYMoreViewReloadCellNotification;
+extern NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification;
 
 @interface SYMoreViewController : UIViewController
 

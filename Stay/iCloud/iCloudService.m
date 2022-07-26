@@ -62,6 +62,44 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
     self.identifier = newIdentifier;
 }
 
+- (void)refreshWithCompletionHandler:(void (^)(NSError * error))completionHandler{
+    [self loggedWithCompletionHandler:^(BOOL status, NSError *error) {
+        if (error){
+            completionHandler(error);
+            return;
+        }
+        
+        self->_isLogin = status;
+        if (!self->_isLogin){
+            [self _reset];
+            completionHandler(nil);
+            return;
+        }
+        
+        
+        [self serviceIdentifierWithCompletionHandler:^(NSString *identifier, NSError *error) {
+            if (error){
+                completionHandler(error);
+            }
+            else{
+                NSString *newIdentifier = identifier;
+                if ([self.identifier isEqualToString:newIdentifier]){
+                    completionHandler(nil);
+                    return;
+                }
+
+                [self _reset];
+                self.identifier = newIdentifier;
+                completionHandler(nil);
+            }
+        }];
+    }];
+}
+
+- (void)clearToken{
+    self.changeToken = nil;
+}
+
 - (void)_reset{
     self.container = nil;
     self.database = nil;
@@ -94,6 +132,12 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)loggedWithCompletionHandler:(void(^)(BOOL status,NSError *error))completionHandler{
+    [self.container accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError * _Nullable error) {
+        completionHandler(accountStatus == CKAccountStatusAvailable,error);
+    }];
+}
+
 - (BOOL)logged{
     __block BOOL status;
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
@@ -104,6 +148,19 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     return status;
 }
+
+- (void)serviceIdentifierWithCompletionHandler:(void(^)(NSString *identifier,NSError *error))completionHandler{
+    [self.container fetchUserRecordIDWithCompletionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
+        if (error){
+            completionHandler(nil,error);
+        }
+        else{
+            completionHandler([recordID.recordName copy],nil);
+        }
+        
+    }];
+}
+
 
 - (NSString *)serviceIdentifier{
     __block NSString *identifier;

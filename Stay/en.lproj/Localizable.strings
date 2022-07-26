@@ -114,3 +114,11 @@ Subscribed = "Subscribed";
 Restore= "Restore";
 PrivacyPolicy = "Privacy Policy";
 TermsOfUse = "Terms of Use";
+
+
+iCloudProAlert="iCloud Sync need PRO version.";
+
+Tips="Tips";
+iCloudLogin="Login your iCloud for syncing";
+iCloudLastSync="Last Sync:";
+iCloudTrunOn="Turn on for syncing";

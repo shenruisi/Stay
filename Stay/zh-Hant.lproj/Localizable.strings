@@ -100,15 +100,22 @@ FullResync="全量重新同步";
 LifetimeSubscription="永久";
 OneTimePayment="一次性購買";
 
-Upgrade="Upgrade";
-iCloudFeature="iCloud Sync";
-iCloudFeatureDesc="Sync userscript between multiple devices";
-DarkModeFeature="Dark Mode";
-DarkModeFeatureDesc="Built-in dark mode for every website ";
-IndieFeature="Support Indie Development";
-IndieFeatureDesc="Your support helps keep the project going";
-ContinuePay = "Continue with %@ Payment";
-Subscribed = "Subscribed";
-Restore= "Restore";
-PrivacyPolicy = "Privacy Policy";
-TermsOfUse = "Terms of Use";
+Upgrade="升級";
+iCloudFeature="iCloud同步";
+iCloudFeatureDesc="在不同的設備間同步用戶腳本";
+DarkModeFeature="網頁暗黑模式";
+DarkModeFeatureDesc="為每個站點內建了網頁暗黑模式腳本";
+IndieFeature="支持獨立開發者";
+IndieFeatureDesc="支持我們來保持項目持續的迭代";
+ContinuePay = "購買 %@";
+Subscribed = "已訂閱";
+Restore= "恢復購買";
+PrivacyPolicy = "隱私政策";
+TermsOfUse = "服務條款";
+
+iCloudProAlert="需要升級到PRO版本來使用iCloud同步功能。";
+
+Tips="提示";
+iCloudLogin="登錄你的iCloud賬號後進行同步";
+iCloudLastSync="上次同步：";
+iCloudTrunOn="開啟同步";

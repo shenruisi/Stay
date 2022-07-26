@@ -14,8 +14,11 @@
 #else
 #import "Stay_2-Swift.h"
 #endif
+#import "FCStore.h"
+#import "FCShared.h"
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
+NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
 
 @interface _MoreTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *entity;
@@ -91,6 +94,7 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
     UIImageView *_goldenRccessory;
 }
 
+- (void)refresh;
 @end
 
 @implementation _SubscriptionTableViewCell
@@ -101,23 +105,29 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
         self.backgroundColor = FCStyle.backgroundGolden;
         self.layer.borderColor = FCStyle.borderGolden.CGColor;
         self.layer.borderWidth = 1;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self accessory];
     }
     
     return self;
 }
 
-- (void)setEntity:(NSDictionary<NSString *,NSString *> *)entity{
-    [super setEntity:entity];
-    
+- (void)refresh{
+    FCPlan *plan = [[FCStore shared] getPlan:NO];
     NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
-    NSString *title = entity[@"title"];
+    NSString *title = plan == FCPlan.None ? self.entity[@"title"] : (plan.localizedTitle ? plan.localizedTitle : @"");
     [builder appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:@{
         NSForegroundColorAttributeName:FCStyle.fcGolden,
         NSFontAttributeName:FCStyle.body
     }]];
     
     self.textLabel.attributedText = builder;
+}
+
+- (void)setEntity:(NSDictionary<NSString *,NSString *> *)entity{
+    [super setEntity:entity];
+    
+    [self refresh];
 }
 
 - (UIImageView *)accessory{
@@ -138,6 +148,7 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
     
 }
 @property (nonatomic, strong) UISwitch *switchButton;
+@property (nonatomic, weak) UIViewController *cer;
 @end
 
 @implementation _iCloudSwitchTableViewCell
@@ -149,6 +160,41 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
     }
     
     return self;
+}
+
+- (void)setEntity:(NSDictionary<NSString *, NSString *>  *)entity{
+    [super setEntity:entity];
+    [self refresh];
+}
+
+- (void)refresh{
+    NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
+    NSString *title = self.entity[@"title"];
+    if (title.length > 0){
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcBlack,
+            NSFontAttributeName:FCStyle.body
+            
+        }]];
+    }
+    BOOL syncEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    NSString *lastSync = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyLastSync];
+    if (lastSync.length > 0){
+        lastSync = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"iCloudLastSync",@""),lastSync];
+    }
+    NSString *subtitle =  syncEnabled ? (FCShared.iCloudService.isLogin ?
+                                         lastSync  : NSLocalizedString(@"iCloudLogin", @"")) : NSLocalizedString(@"iCloudTrunOn", @"");
+    if (subtitle.length > 0){
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",subtitle] attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
+            NSFontAttributeName:FCStyle.footnote,
+            NSObliquenessAttributeName:@(0.2)
+            
+        }]];
+    }
+    
+    
+    self.textLabel.attributedText = builder;
 }
 
 - (UISwitch *)switchButton{
@@ -163,7 +209,26 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
 }
 
 - (void)switchAction:(UISwitch *)sender{
+    if ([[FCStore shared] getPlan:NO] == FCPlan.None){
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"UpgradeTo", @"")
+                                                                       message:NSLocalizedString(@"iCloudProAlert", @"")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+            sender.on = NO;
+            [self.cer.navigationController popViewControllerAnimated:YES];
+            }];
+        [alert addAction:conform];
+        [self.cer presentViewController:alert animated:YES completion:nil];
+        return;
+    }
     [[FCConfig shared] setBoolValueOfKey:GroupUserDefaultsKeySyncEnabled value:sender.on];
+    [self refresh];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewICloudDidSwitchNotification
+                                                        object:nil
+                                                      userInfo:nil];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
                                                         object:nil
                                                       userInfo:@{
@@ -298,6 +363,18 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
                                              selector:@selector(reloadCell:)
                                                  name:SYMoreViewReloadCellNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(subscibeDidChangeHandler:)
+                                                 name:@"app.stay.notification.SYSubscibeChangeNotification"
+                                               object:nil];
+}
+
+- (void)subscibeDidChangeHandler:(NSNotification *)note{
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    if ([cell isKindOfClass:[_SubscriptionTableViewCell class]]){
+        [(_SubscriptionTableViewCell *)cell refresh];
+    }
 }
 
 - (void)reloadCell:(NSNotification *)note{
@@ -329,6 +406,7 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
     }
     else if ([entity[@"type"] isEqualToString:@"iCloudSwitch"]){
         cell = [[_iCloudSwitchTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        ((_iCloudSwitchTableViewCell *)cell).cer = self;
     }
     else if ([entity[@"type"] isEqualToString:@"iCloudOperate"]){
         cell = [[_iCloudOperateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
@@ -474,6 +552,10 @@ NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SYMoreViewReloadCellNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.SYSubscibeChangeNotification"
                                                   object:nil];
 }
 

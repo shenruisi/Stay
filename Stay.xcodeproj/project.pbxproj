@@ -56,6 +56,14 @@
 		58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B83272846147000AB2D73 /* UserscriptInfo.m */; };
 		58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		58639D1D28644D8800AA80D5 /* FCDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B831B2845F7BF00AB2D73 /* FCDisk.m */; };
+		5867D14C288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D14B288E8B6A00EC822B /* ICloudSyncSlideController.m */; };
+		5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D14B288E8B6A00EC822B /* ICloudSyncSlideController.m */; };
+		5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D14F288E8C0C00EC822B /* ICloudSwitchViewController.m */; };
+		5867D151288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D14F288E8C0C00EC822B /* ICloudSwitchViewController.m */; };
+		5867D154288F88FC00EC822B /* AlertHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D153288F88FC00EC822B /* AlertHelper.m */; };
+		5867D155288F88FC00EC822B /* AlertHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D153288F88FC00EC822B /* AlertHelper.m */; };
+		5867D158288F91F900EC822B /* TimeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D157288F91F900EC822B /* TimeHelper.m */; };
+		5867D159288F91F900EC822B /* TimeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D157288F91F900EC822B /* TimeHelper.m */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -437,6 +445,14 @@
 		58639D1428644BEB00AA80D5 /* MatchPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MatchPattern.h; path = "Stay Extension/MatchPattern.h"; sourceTree = SOURCE_ROOT; };
 		58639D1528644BEB00AA80D5 /* Stroge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Stroge.h; path = "Stay Extension/Stroge.h"; sourceTree = SOURCE_ROOT; };
 		58639D1628644BEB00AA80D5 /* Stroge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Stroge.m; path = "Stay Extension/Stroge.m"; sourceTree = SOURCE_ROOT; };
+		5867D14A288E8B6A00EC822B /* ICloudSyncSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICloudSyncSlideController.h; sourceTree = "<group>"; };
+		5867D14B288E8B6A00EC822B /* ICloudSyncSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICloudSyncSlideController.m; sourceTree = "<group>"; };
+		5867D14E288E8C0C00EC822B /* ICloudSwitchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICloudSwitchViewController.h; sourceTree = "<group>"; };
+		5867D14F288E8C0C00EC822B /* ICloudSwitchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ICloudSwitchViewController.m; sourceTree = "<group>"; };
+		5867D152288F88FC00EC822B /* AlertHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlertHelper.h; sourceTree = "<group>"; };
+		5867D153288F88FC00EC822B /* AlertHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlertHelper.m; sourceTree = "<group>"; };
+		5867D156288F91F900EC822B /* TimeHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeHelper.h; sourceTree = "<group>"; };
+		5867D157288F91F900EC822B /* TimeHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeHelper.m; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -751,6 +767,10 @@
 				584C05AC286179D000E07DDF /* ImageHelper.m */,
 				58D1B44428880474009BD608 /* UIView+Rotate.h */,
 				58D1B44528880474009BD608 /* UIView+Rotate.m */,
+				5867D152288F88FC00EC822B /* AlertHelper.h */,
+				5867D153288F88FC00EC822B /* AlertHelper.m */,
+				5867D156288F91F900EC822B /* TimeHelper.h */,
+				5867D157288F91F900EC822B /* TimeHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1438,6 +1458,10 @@
 				58EA44442869BB5200BD6C4D /* ImportSlideController.m */,
 				58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */,
 				58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */,
+				5867D14A288E8B6A00EC822B /* ICloudSyncSlideController.h */,
+				5867D14B288E8B6A00EC822B /* ICloudSyncSlideController.m */,
+				5867D14E288E8C0C00EC822B /* ICloudSwitchViewController.h */,
+				5867D14F288E8C0C00EC822B /* ICloudSwitchViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2000,6 +2024,7 @@
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
+				5867D14C288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				58AC12F428607B3400875D6D /* FCConfig.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
@@ -2017,9 +2042,11 @@
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
+				5867D154288F88FC00EC822B /* AlertHelper.m in Sources */,
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
@@ -2036,6 +2063,7 @@
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
+				5867D158288F91F900EC822B /* TimeHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
@@ -2104,6 +2132,7 @@
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
+				5867D151288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
 				58D1B45528893D4B009BD608 /* FCStore.m in Sources */,
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
@@ -2114,6 +2143,7 @@
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
 				588202552859E73900B2721A /* ScriptDetailModel.m in Sources */,
+				5867D155288F88FC00EC822B /* AlertHelper.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
@@ -2124,6 +2154,7 @@
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
+				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,
 				58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				5882025C2859E73900B2721A /* SYNetworkUtils.m in Sources */,
 				582441CE28781E0D003DF4F7 /* SYTextInputModelViewController.m in Sources */,
@@ -2155,6 +2186,7 @@
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
+				5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,

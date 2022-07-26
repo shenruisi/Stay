@@ -16,6 +16,7 @@ extern NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification;
 
 - (void)import;
 - (NSArray<UserScript *> *)userscripts;
+- (void)iCloudSyncIfNeeded;
 @end
 
 NS_ASSUME_NONNULL_END
