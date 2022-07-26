@@ -509,7 +509,14 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     } else {
         NSString *type = dict[@"type"];
         if ([type isEqualToString:@"subscription"]) {
+#ifdef Mac
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
+                               animated:YES completion:^{}];
+#else
             [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+#endif
+            
         }
     }
 }
