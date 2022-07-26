@@ -19,6 +19,7 @@
 #import "SYExpandViewController.h"
 #import "SYWebScriptViewController.h"
 #import "SYDetailViewController.h"
+#import "FCStore.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 310;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
@@ -80,6 +81,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                              selector:@selector(sceneWillEnterForeground:)
                                                  name:UISceneWillEnterForegroundNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(subscibeDidChangeHandler:)
+                                                 name:@"app.stay.notification.SYSubscibeChangeNotification"
+                                               object:nil];
 }
 
 - (void)loadView{
@@ -94,13 +100,13 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar{
-    return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_iCloudOn,Toolbar_Import,Toolbar_Collapse,
+    return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_SlideTrackInPrimary,Toolbar_iCloud,Toolbar_Import,Toolbar_Collapse,
              Toolbar_Block,Toolbar_Back,Toolbar_Forward,Toolbar_TabName,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Placeholder];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar{
     return @[Toolbar_AppIcon,Toolbar_AppName,Toolbar_Collapse,Toolbar_Block,
-             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import,Toolbar_iCloudOn,Toolbar_iCloudSync];
+             Toolbar_Back,Toolbar_Forward,Toolbar_TabName,Toolbar_Add,Toolbar_More,Toolbar_Save,Toolbar_SlideTrackInPrimary,Toolbar_SlideTrackInSecondary,NSToolbarFlexibleSpaceItemIdentifier,Toolbar_Done,Toolbar_Placeholder,Toolbar_Import,Toolbar_iCloud,Toolbar_iCloudSync];
 }
 
 - (NSArray<NSToolbarItemIdentifier> *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar{
@@ -110,7 +116,8 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSToolbarItemIdentifier)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
     {
     if ([itemIdentifier isEqualToString:Toolbar_AppIcon]){
-        NSToolbarItem *item = [FCShared.plugin.appKit appIcon:itemIdentifier imageData:[ImageHelper dataNamed:@"NavIcon"]];
+        NSToolbarItem *item = [FCShared.plugin.appKit appIcon:itemIdentifier imageData:
+                               [[FCStore shared] getPlan:NO] == FCPlan.None ? [ImageHelper dataNamed:@"NavIcon"] : [ImageHelper dataNamed:@"NavProIcon"]];
         item.target = self;
         item.action = @selector(toolbarItemDidClick:);
         item.bordered = YES;
@@ -120,7 +127,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         NSToolbarItem *item = [FCShared.plugin.appKit appName:itemIdentifier];
         return item;
     }
-    else if ([itemIdentifier isEqualToString:Toolbar_iCloudOn]){
+    else if ([itemIdentifier isEqualToString:Toolbar_iCloud]){
         NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdentifier];
         item.target = self;
         item.action = @selector(toolbarItemDidClick:);
@@ -362,6 +369,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 //    }
 }
 
+- (void)subscibeDidChangeHandler:(NSNotification *)note{
+    NSToolbarItem *item = [self _itemOfIdentifier:Toolbar_AppIcon];
+    [FCShared.plugin.appKit changeAppIcon:item imageData:[[FCStore shared] getPlan:NO] == FCPlan.None ? [ImageHelper dataNamed:@"NavIcon"] : [ImageHelper dataNamed:@"NavProIcon"]];
+}
+
 - (void)remoteSyncStart{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.toolbar removeItemAtIndex:3];
@@ -517,6 +529,10 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UISceneWillEnterForegroundNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.SYSubscibeChangeNotification"
                                                   object:nil];
     
 }
