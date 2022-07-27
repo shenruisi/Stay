@@ -5871,15 +5871,33 @@
         removeDynamicTheme();
     }
 
+    function is_dark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function autoDarkmode() {
+        if (is_dark){
+            setupDarkmode();
+        }else{
+            cleanupDarkmode();
+        }
+    }
+
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
         let from = request.from;
         if (from == "background") {
-            if ("SETUP_DARKMODE" === operate){
-                setupDarkmode();
-            }
-            else if ("CLEANUP_DARKMODE" === operate) {
-                cleanupDarkmode();
+            if ("DARKMODE_SETTING" === operate){
+                const status = request.status;
+                if ("on" === status){
+                    setupDarkmode();
+                }
+                else if ("off" === status){
+                    cleanupDarkmode();
+                }
+                else if ("auto" === status){
+                    autoDarkmode();
+                }
             }
         }
     })

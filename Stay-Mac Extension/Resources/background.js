@@ -510,11 +510,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         }
         else if ("exeScriptManually" == request.operate) {
-//            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
-//            });
-            
-            console.log("exeScriptManually in background");
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTheScript", uuid: request.uuid }, function (response) {
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", script: response.body });
@@ -556,6 +551,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("refreshTargetTabs" == request.operate){
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
+        }
+        else if ("DARKMODE_SETTING" == request.operate){
+            const darkmodeStatus = request.status;
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus });
+            });
         }
         return true;
     }

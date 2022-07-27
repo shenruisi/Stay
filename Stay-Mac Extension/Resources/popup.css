@@ -77,6 +77,14 @@ section {
   padding: 0;
   box-sizing: border-box;
 }
+input {
+    border: none;
+    -webkit-appearance: none;
+    /*去除阴影边框*/
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    /*点击高亮的颜色*/
+}
 .header-box{
     width: 100%;
     margin: 0 auto;
@@ -102,7 +110,7 @@ section {
     flex:1;
     background: #fff;
     height: 28px;
-    width: 70%;
+    width: 76%;
     border: 1px solid rgba(151,151,151,0.14);
     border-radius: 7px;
     justify-content: center;
@@ -126,7 +134,7 @@ section {
     -webkit-transform: scale(.5);
 }
 .match-tab{
-    width: 50%;
+    width: 33%;
     font-size:13px;
     text-align: center;
     color: rgba(0,0,0,0.5);
@@ -143,11 +151,24 @@ section {
     background-color: #F9DF8D;
     border: 1px solid rgba(132, 86, 29, 0.3);
     color: #84561D;
-    padding: 2px 4px;
+    padding: 0px 4px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    margin-left: 3px;
+}
+.console-tab{
+    width: 28%;
+}
+.darkmode-tab {
+    width: 38%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 .console-tab,.darkmode-tab{
     font-size:13px;
-    width: 50%;
+    /* width: 33%; */
     text-align: center;
     border-left: 1px solid #D8D8D8;
     color: rgba(0,0,0,0.5);
@@ -461,6 +482,124 @@ section {
     font-size: 14px;
     display: none;
 }
+.darkmode-container{
+    width: 78%;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+.darkmode-upgrade, .darkmode-pro{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+}
+.darkmode-img img{
+    width: 100px;
+    height: 100px;
+}
+.upgrade-btn{
+    border-radius: 15px;
+    font-weight: 500;
+    background-color: #F9DF8D;
+    border: 1px solid rgba(132, 86, 29, 0.3);
+    color: #84561D;
+    font-size: 15px;
+    padding: 2px 18px;
+    margin-top: 12px;
+}
+.darkmode-setting{
+    margin: 0 auto 15px auto;
+    display: flex;
+    /* flex: 1; */
+    background: #fff;
+    height: 26px;
+    width: 100%;
+    border: 1px solid #B620E0;
+    border-radius: 7px;
+    justify-content: space-between;
+    justify-items: center;
+    align-items: center;
+    position: relative;
+}
+.darkmode-setting .setting:first-child{
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.darkmode-setting .setting:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+.darkmode-setting .setting{
+    width: 33.33%;
+    color: #000000;
+    font-size: 15px;
+    font-weight: 400;
+    height: 100%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    flex-flow: column;
+}
+.darkmode-pro .darkmode-setting .active {
+    color: #FFFFFF;
+    background: #B620E0;
+}
+.darkmode-web{position: relative;margin-bottom: 10px;width: 100%;}
+.darkmode-web input.website-input{
+    width: 100%;
+    padding: 0 30px 0 10px;
+    border-radius: 7px;
+    border: 1px solid #B620E0;
+    height: 24px;
+    line-height: 24px;
+    font-size: 12px;
+}
+.check-box{
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 26px;
+    height: 20px;       
+}
+.check-box input.allow{
+    cursor: pointer;
+    position: relative;
+    width: 11px;
+    height: 11px;
+}
+ input[type=checkbox]::after {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #fff;
+    color: #fff;
+    height: 12px;
+    width: 12px;
+    display: inline-block;
+    visibility: visible;
+    text-align: center;
+    content: '';
+    border-radius: 2px;
+    box-sizing: border-box;
+    border: 1px solid #B620E0;
+}
+input[type='checkbox']:checked::after {
+    content: '✓';
+    font-size: 10px;
+    line-height: 10px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #B620E0;
+ }
+.darkmode-note{
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+
 .toast-container{
     position: fixed;
     bottom: 10px;
@@ -510,7 +649,7 @@ section {
 
 @keyframes animate{
     from {
-           height: 0px;
+        height: 0px;
         bottom : 0;
     }
     to {

@@ -61,7 +61,9 @@ let browserLangurage = "",
             '</div>',
             '<div class="console-con">{message}</div>'
             ].join(''),
+    isStayPro=true,
     logState = {error:"error-log", log:""};
+
 
 //https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
 //Short code
@@ -114,6 +116,8 @@ function fetchMatchedScriptList(){
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
             try{
                 scriptStateList = response.body;
+                // todo
+                // isStayPro = 
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
             }catch(e){
@@ -207,7 +211,7 @@ window.onload=function(){
     logNotifyDom = document.getElementById("logNotify")
     scriptStateListDom = document.getElementById('scriptSateList');
     scriptConsoleDom = document.getElementById('scriptConsole');
-    darkmodeProDom = document.getElementById('darkmodePro');
+    darkmodeProDom = document.getElementById('darkmodeContainer');
     // load i18n properties
     i18nProp = langMessage[browserLangurage] || langMessage["en_US"]
     try {

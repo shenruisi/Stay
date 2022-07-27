@@ -19,7 +19,7 @@
         <div class="header-tab">
             <div class="tab match-tab active-tab" tab=1 data-i18n="matched_scripts_tab">已匹配脚本</div>
             <div class="tab console-tab" tab=2 data-i18n="console_tab">控制台</div>
-            <div class="tab darkmode-tab" tab=3 data-i18n="darkmode_tab">暗黑模式</div>
+            <div class="tab darkmode-tab" tab=3 ><span data-i18n="darkmode_tab">暗黑模式</span><span class="pro">Pro</span></div>
             <div id="logNotify" class="notify"></div>
         </div>
     </div>
@@ -47,7 +47,28 @@
         
         
         </div>
-        
+        <div class="content-box" id="darkmodeContainer">
+            <div class="darkmode-container" id="darkmodeUpgrade" style="display:none">
+                <div class="darkmode-upgrade">
+                    <div class="darkmode-img"><img src="./images/darkmode.png"/></div>
+                    <div class="upgrade-btn" data-i18n="upgrade_pro">Upgrade to Stay Pro</div>
+                </div>
+            </div>
+            <div class="darkmode-container" id="darkmodePro" style="display:none">
+                <div class="darkmode-pro">
+                    <div class="darkmode-setting">
+                        <div class="setting on" status="on" data-i18n="darkmode_on"></div>
+                        <div class="setting auto" status="auto" data-i18n="darkmode_auto"></div>
+                        <div class="setting off" status="off" data-i18n="darkmode_off"></div>
+                    </div>
+                    <div class="darkmode-web">
+                        <div class="check-box"><input id="allowEnabled" checked=true type="checkbox" class="allow" /></div>
+                        <input id="domainInput" class="website-input" type="text" disabled >
+                    </div>
+                    <div class="darkmode-note" data-i18n="darkmode_enabled"></div>
+                </div>
+            </div>
+        </div>
         <div class="content-box" id="scriptConsole" style="display:none">
             <div class="console-item">
                 <div class="console-header">
