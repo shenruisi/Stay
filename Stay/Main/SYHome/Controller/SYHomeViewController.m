@@ -173,6 +173,85 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @end
 
+@interface _EmptyTipsView : UIView
+
+@property (nonatomic, strong) UILabel *part1Label;
+@property (nonatomic, strong) UIButton *addButton;
+@property (nonatomic, strong) UILabel *part2Label;
+@end
+
+@implementation _EmptyTipsView
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]){
+        [self part1Label];
+        [self.part1Label sizeToFit];
+        [self addButton];
+        [self part2Label];
+        [self.part2Label sizeToFit];
+    }
+    
+    return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    CGFloat width = self.part1Label.width + self.part2Label.width + self.addButton.width;
+    CGFloat left = (self.width - width) / 2;
+    CGFloat y = (self.height - self.addButton.height) / 2;
+    self.part1Label.frame = CGRectMake(left, y, self.part1Label.width, self.part1Label.height);
+    self.addButton.frame = CGRectMake(self.part1Label.right, y, self.addButton.width, self.addButton.height);
+    self.part2Label.frame = CGRectMake(self.addButton.right, y, self.part2Label.width, self.part2Label.height);
+}
+
+- (UILabel *)part1Label{
+    if (nil == _part1Label){
+        _part1Label = [[UILabel alloc] init];
+
+        NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"HomeEmptyTips1", @"") attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
+            NSFontAttributeName:FCStyle.body,
+            NSObliquenessAttributeName:@(0.2)
+            
+        }]];
+        _part1Label.attributedText = builder;
+        [self addSubview:_part1Label];
+    }
+    
+    return _part1Label;
+}
+
+- (UIButton *)addButton{
+    if (nil == _addButton){
+        _addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 16, 16)];
+        [_addButton setImage:[ImageHelper sfNamed:@"plus" font:[UIFont boldSystemFontOfSize:16] color:FCStyle.accent] forState:UIControlStateNormal];
+        [self addSubview:_addButton];
+    }
+    
+    return _addButton;
+}
+
+- (UILabel *)part2Label{
+    if (nil == _part2Label){
+        _part2Label = [[UILabel alloc] init];
+
+        NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"HomeEmptyTips2", @"") attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
+            NSFontAttributeName:FCStyle.body,
+            NSObliquenessAttributeName:@(0.2)
+            
+        }]];
+        _part2Label.attributedText = builder;
+        [self addSubview:_part2Label];
+    }
+    
+    return _part2Label;
+}
+
+@end
+
 @interface SYHomeViewController ()<
  UITableViewDelegate,
  UITableViewDataSource,
@@ -212,6 +291,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 
 @property (nonatomic, assign) NSInteger selectedRow;
+
+@property (nonatomic, strong) _EmptyTipsView *emptyTipsView;
 @end
 
 @implementation SYHomeViewController
@@ -337,6 +418,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
 
 }
+
+
 
 - (void)iCloudDidChangeHandler:(NSNotification *)note{
     [self.customView refreshIcon];
@@ -1172,6 +1255,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
         [self.tableView reloadData];
     });
+    [self emptyTipsView];
     
     NSLog(@"SYHomeViewController view %@",self.view);
     
@@ -1216,6 +1300,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void) reloadTableView {
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+    
+    self.tableView.hidden = _datas.count == 0;
+    self.emptyTipsView.hidden = _datas.count > 0;
 }
 
 - (void)remoteSyncStart{
@@ -1393,6 +1480,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
   NSDate* date = [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]/ 1000.0];
   NSString* dateString = [formatter stringFromDate:date];
   return dateString;
+}
+
+- (_EmptyTipsView *)emptyTipsView{
+    if (nil == _emptyTipsView){
+#ifdef Mac
+        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
+#else
+        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:self.view.bounds];
+#endif
+        _emptyTipsView.hidden = YES;
+        [_emptyTipsView.addButton addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        _emptyTipsView.backgroundColor = FCStyle.secondaryBackground;
+        [self.view addSubview:_emptyTipsView];
+    }
+    
+    return _emptyTipsView;
 }
 
 - (NSString *)getNowDate {

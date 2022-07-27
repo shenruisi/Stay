@@ -123,3 +123,7 @@ iCloudLogin="Login your iCloud for syncing";
 iCloudLastSync="Last Sync:";
 iCloudTrunOn="Turn on for syncing";
 iCloudTrunOffTips="After turning off iCloud sync, all your actions on the script will no longer be automatically synced.";
+
+HomeEmptyTips1="Click";
+HomeEmptyTips2="in the upper right corner to add a userscript";
+

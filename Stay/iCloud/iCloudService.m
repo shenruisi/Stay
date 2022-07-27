@@ -219,6 +219,7 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
         operation.recordWithIDWasDeletedBlock = ^(CKRecordID *recordID, CKRecordType recordType) {
             NSString *uuid = recordID.recordName;
             if ([recordType isEqualToString:UserscriptRecord.type]){
+                uuid = [uuid stringByReplacingOccurrencesOfString:@"userscript." withString:@""];
                 [userscriptToDelete addObject:uuid];
             }
         };

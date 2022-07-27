@@ -120,3 +120,6 @@ iCloudLogin="登錄你的iCloud賬號後進行同步";
 iCloudLastSync="上次同步：";
 iCloudTrunOn="開啟同步";
 iCloudTrunOffTips="關閉iCloud同步後，你對腳本的所有操作將不再會自動同步。";
+
+HomeEmptyTips1="點擊右上角";
+HomeEmptyTips2="添加用戶腳本";
