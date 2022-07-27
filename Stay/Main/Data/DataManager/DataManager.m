@@ -81,7 +81,9 @@
         [self addColumn:@"user_config_script" column:@"iCloud_identifier"];
     }
     
-
+    if(![self isExitedColumn:@"status"]) {
+        [self addColumn:@"user_config_script" column:@"status"];
+    }
     return;
 }
 
@@ -352,6 +354,11 @@
         NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
         scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
+        
+        int status = sqlite3_column_int(stmt, 30);
+        scrpitDetail.status = status;
+        
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -586,7 +593,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier,status) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -657,6 +664,7 @@
         sqlite3_bind_int(statement, 24, 0);
         sqlite3_bind_text(statement, 25, [scrpitDetail.license UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 26, [scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
+        sqlite3_bind_int(statement, 27, 1);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -912,9 +920,10 @@
         scrpitDetail.updateUrl = updateUrl;
         NSString *downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 21)== NULL?"":(const char *)sqlite3_column_text(stmt, 21)];
         scrpitDetail.downloadUrl = downloadUrl;
+    
         int updateSwitch = sqlite3_column_int(stmt, 22);
         scrpitDetail.updateSwitch = updateSwitch == 1? true:false;
-        
+
         NSString * resourceUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 23)== NULL?"":(const char *)sqlite3_column_text(stmt, 23)];
         if (resourceUrl != NULL && resourceUrl.length > 0) {
             NSData *jsonData = [resourceUrl dataUsingEncoding:NSUTF8StringEncoding];
@@ -931,8 +940,37 @@
             scrpitDetail.notes = @[];
         }
         
-        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 25)== NULL?"":(const char *)sqlite3_column_text(stmt, 25)];
+        NSString * license = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 25)== NULL?"":(const char *)sqlite3_column_text(stmt, 25)];
+
+        scrpitDetail.license = license;
+        
+        NSString * blackListStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 26)== NULL?"":(const char *)sqlite3_column_text(stmt, 26)];
+        
+        if (blackListStr != NULL && blackListStr.length > 0) {
+            scrpitDetail.blacklist = [blackListStr componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.blacklist = @[];
+        }
+        
+        NSString * whiteListStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 27)== NULL?"":(const char *)sqlite3_column_text(stmt, 27)];
+        
+        if (whiteListStr != NULL && whiteListStr.length > 0) {
+            scrpitDetail.whitelist = [whiteListStr componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.whitelist = @[];
+        }
+        
+        NSString * inject = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 28)== NULL?"":(const char *)sqlite3_column_text(stmt, 28)];
+
+        scrpitDetail.injectInto = inject;
+        
+        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
         scrpitDetail.iCloudIdentifier = iCloudIdentifier;
+        
+        
+        int status = sqlite3_column_int(stmt, 30);
+        scrpitDetail.status = status;
+        
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
@@ -1191,6 +1229,47 @@
 }
 
 
+- (void)updateScriptConfigStatus:(int)status numberId:(NSString *)uuid {
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE user_config_script SET status = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_int(stmt, 1, status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+}
 
 
 @end
