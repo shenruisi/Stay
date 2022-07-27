@@ -195,7 +195,6 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         }]];
     }
     
-    
     self.textLabel.attributedText = builder;
 }
 
@@ -234,6 +233,8 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                           style:UIAlertActionStyleDefault
                                                         handler:^(UIAlertAction * _Nonnull action) {
+            on = NO;
+            sender.on = on;
             [self saveICloudStatusAndPostNotification:on];
         }];
         [alert addAction:conform];
@@ -241,6 +242,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                           style:UIAlertActionStyleCancel
                                                         handler:^(UIAlertAction * _Nonnull action) {
             on = YES;
+            sender.on = on;
             [self saveICloudStatusAndPostNotification:on];
             [self.cer.navigationController popViewControllerAnimated:YES];
         }];
@@ -252,6 +254,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * _Nonnull error) {
                 if (error){
                     on = NO;
+                    sender.on = on;
                     [self saveICloudStatusAndPostNotification:on];
                     [FCShared.iCloudService showError:error inCer:self.cer];
                     return;
@@ -310,6 +313,13 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                       userInfo:@{
         @"section":@(1),
         @"row":@(1)
+    }];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
+                                                        object:nil
+                                                      userInfo:@{
+        @"section":@(1),
+        @"row":@(0)
     }];
 }
 

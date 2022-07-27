@@ -351,9 +351,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)userscriptDidDeleteHandler:(NSNotification *)note{
     if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
-        NSString *uuid = note.userInfo[@"uuid"];
-        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
-        [FCShared.iCloudService removeUserscript:userscript
+        NSString *uuid = note.userInfo[@"uuid"]; 
+        [FCShared.iCloudService removeUserscript:uuid
                             completionHandler:^(NSError *error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
             if (error){
@@ -639,14 +638,26 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                         if (changedUserscripts.count > 0 || deletedUUIDs.count > 0){
                             NSArray *changedUUIDs = [changedUserscripts allKeys];
                             for (NSString *uuid in changedUUIDs){
-                                UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
                                 UserScript *changedUserscript = changedUserscripts[uuid];
+                                if (changedUserscript.name.length == 0){
+                                    continue;
+                                }
+                                UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
                                 if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
                                     [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
                                 }
                                 else{
                                     [[DataManager shareManager] updateUserScript:changedUserscript];
                                 }
+                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                                    UserScriptStatus status =  UserScriptStatusOK;
+                                    [[UserscriptUpdateManager shareManager] saveIcon:changedUserscript];
+                                    BOOL requireSucceed = [[UserscriptUpdateManager shareManager] saveRequireUrl:changedUserscript];
+                                    status = status | (requireSucceed ? UserScriptStatusOK :  UserScriptStatusNeedRequire);
+                                    BOOL resourceSucceed = [[UserscriptUpdateManager shareManager] saveResourceUrl:changedUserscript];
+                                    status = status | (resourceSucceed ? UserScriptStatusOK :  UserScriptStatusNeedResource);
+                                });
+                                
                             }
                             
                             for (NSString *deletedUUID in deletedUUIDs){

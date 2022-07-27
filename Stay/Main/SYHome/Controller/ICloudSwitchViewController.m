@@ -30,7 +30,12 @@
     cell.backgroundColor = FCStyle.secondaryPopup;
     [cell addSubview:self.titleLabel];
     [cell addSubview:self.switchButton];
+#ifdef Mac
+    self.switchButton.top = 12;
+#else
     self.switchButton.top = 8;
+#endif
+    
     self.switchButton.right = self.view.frame.size.width - 45;
     [self.view addSubview:cell];
 }
@@ -78,6 +83,7 @@
                                                           style:UIAlertActionStyleCancel
                                                         handler:^(UIAlertAction * _Nonnull action) {
             on = YES;
+            sender.on = on;
             [self saveICloudStatusAndPostNotification:on];
             [cer.navigationController popViewControllerAnimated:YES];
         }];
@@ -89,6 +95,7 @@
             [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * _Nonnull error) {
                 if (error){
                     on = NO;
+                    sender.on = on;
                     [self saveICloudStatusAndPostNotification:on];
                     [FCShared.iCloudService showError:error inCer:cer];
                     return;

@@ -231,7 +231,7 @@ class SYSubscribeController: UIViewController {
     
     @objc
     func privacyAction() {
-        if let url = URL(string: "https://app.termly.io/document/privacy-policy/464fb3d0-33f5-4b1a-a2b3-6c437dc4312e") {
+        if let url = URL(string: "https://www.privacypolicyonline.com/live.php?token=ZPXT0Jfv2diYUfbf5ciLDV9oYRgJ6Evc") {
             UIApplication.shared.open(url)
         }
     }

@@ -174,7 +174,6 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     return identifier;
 }
-
 - (void)fetchUserscriptWithCompletionHandler:
 (void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts,NSArray<NSString *> *deletedUUIDs))completionHandler{
     [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
@@ -284,16 +283,16 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
     return [NSString stringWithFormat:@"content.%@",uuid];
 }
 
-- (void)removeUserscript:(UserScript *)userscript completionHandler:(void(^)(NSError *error))completionHandler{
+- (void)removeUserscript:(NSString *)uuid completionHandler:(void(^)(NSError *error))completionHandler{
     [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
         if (error){
             completionHandler(error);
             return;
         }
-        
-        CKRecordID *ckUserscriptRecordID = [[CKRecordID alloc] initWithRecordName:[self userscriptRecordName:userscript.uuid] zoneID:zone.zoneID];
-        CKRecordID *ckContentRecordID = [[CKRecordID alloc] initWithRecordName:[self contentRecordName:userscript.uuid] zoneID:zone.zoneID];
-        
+
+        CKRecordID *ckUserscriptRecordID = [[CKRecordID alloc] initWithRecordName:[self userscriptRecordName:uuid] zoneID:zone.zoneID];
+        CKRecordID *ckContentRecordID = [[CKRecordID alloc] initWithRecordName:[self contentRecordName:uuid] zoneID:zone.zoneID];
+
         CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:nil recordIDsToDelete:@[ckUserscriptRecordID,ckContentRecordID]];
         operation.savePolicy = CKRecordSaveAllKeys;
         operation.qualityOfService = NSQualityOfServiceUserInitiated;
@@ -303,7 +302,32 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
         [self.database addOperation:operation];
 
     } zoneName:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type]];
+    
 }
+
+- (void)removeUseless{
+    [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
+        
+        NSArray *recordNames = @[
+            @"D2EFED87BE4A79A24DA0A2BE4DA91913"
+        ];
+        
+        NSMutableArray<CKRecordID *> *recordIDs = [NSMutableArray new];
+        for (NSString *recordName in recordNames){
+            [recordIDs addObject:[[CKRecordID alloc] initWithRecordName:recordName zoneID:zone.zoneID]];
+        }
+        
+        CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:nil recordIDsToDelete:recordIDs];
+        operation.savePolicy = CKRecordSaveAllKeys;
+        operation.qualityOfService = NSQualityOfServiceUserInitiated;
+        operation.modifyRecordsCompletionBlock = ^(NSArray<CKRecord *> * _Nullable savedRecords, NSArray<CKRecordID *> * _Nullable deletedRecordIDs, NSError * _Nullable operationError) {
+            NSLog(@"delete");
+        };
+        [self.database addOperation:operation];
+
+    } zoneName:@"Userscripts" recordTypes:@[UserscriptRecord.type,ContentRecord.type]];
+}
+
 
 - (void)initUserscripts:(NSArray<UserScript *> *)userscripts
       completionHandler:(void (^)(NSError *error))completionHandler{

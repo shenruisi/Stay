@@ -20,6 +20,9 @@
 #import "SYWebScriptViewController.h"
 #import "SYDetailViewController.h"
 #import "FCStore.h"
+#import "ICloudSyncSlideController.h"
+#import "AlertHelper.h"
+#import "TimeHelper.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 310;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
@@ -36,6 +39,8 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 @property (nonatomic, weak) SYEditViewController *holdEditViewController;
 @property (nonatomic, weak) SYWebScriptViewController *holdWebScriptViewController;
 @property (nonatomic, weak) SYDetailViewController *holdDetailViewController;
+@property (nonatomic, strong) NSString *iCloudSFName;
+ @property (nonatomic, strong) ICloudSyncSlideController *iCloudSyncSlideController;
 @end
 
 @implementation FCSplitViewController
@@ -88,6 +93,13 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
                                                object:nil];
 }
 
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    if (self.iCloudSyncSlideController.isShown){
+        [self.iCloudSyncSlideController layoutSubviews];
+    }
+}
+
 - (void)loadView{
     [super loadView];
   
@@ -132,7 +144,8 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         item.target = self;
         item.action = @selector(toolbarItemDidClick:);
         item.bordered = YES;
-        item.image = [UIImage systemImageNamed:@"checkmark.icloud"];
+        self.iCloudSFName = nil;
+        item.image = nil;
         return item;
     }
     else if ([itemIdentifier isEqualToString:Toolbar_iCloudSync]){
@@ -278,6 +291,80 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Save]){
         [self.holdEditViewController save];
     }
+    else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloud]){
+        if ([self.iCloudSFName isEqualToString:@"checkmark.icloud"]){
+            [self remoteSyncStart];
+            [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
+                [self remoteSyncEnd];
+                if (error){
+                    [FCShared.iCloudService showErrorWithMessage:NSLocalizedString(@"TryAgainLater", @"") inCer:self];
+                }
+                else{
+                    if (firstInit){
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                           message:NSLocalizedString(@"icloud.firstInit", @"")
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                              style:UIAlertActionStyleDefault
+                                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                [self remoteSyncStart];
+                                [FCShared.iCloudService initUserscripts:[QuickAccess homeViewController].userscripts completionHandler:^(NSError * _Nonnull error) {
+                                    [self remoteSyncEnd];
+                                    if (error){
+                                        [FCShared.iCloudService showError:error inCer:self];
+                                    }
+                                    else{
+                                        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                                    }
+                                }];
+                            }];
+                            [alert addAction:conform];
+                            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                              style:UIAlertActionStyleCancel
+                                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                [self.navigationController popViewControllerAnimated:YES];
+                            }];
+                            [alert addAction:cancel];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        });
+                        
+                    }
+                    else{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                           message:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                              style:UIAlertActionStyleDefault
+                                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                [[QuickAccess homeViewController] iCloudSyncIfNeeded];
+                            }];
+                            [alert addAction:conform];
+                            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                              style:UIAlertActionStyleCancel
+                                                                            handler:^(UIAlertAction * _Nonnull action) {
+                                [self.navigationController popViewControllerAnimated:YES];
+                            }];
+                            [alert addAction:cancel];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        });
+                        
+                    }
+                }
+            }];
+        }
+        else if ([self.iCloudSFName isEqualToString:@"icloud.slash"]){
+            if (!self.iCloudSyncSlideController.isShown){
+                [self.iCloudSyncSlideController show];
+            }
+        }
+        else if ([self.iCloudSFName isEqualToString:@"person.icloud"]){
+            [AlertHelper simpleWithTitle:NSLocalizedString(@"Tips", @"")
+                                 message:NSLocalizedString(@"iCloudLogin", @"")
+                                   inCer:self];
+        }
+    }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_iCloudOn]){
         
         [self remoteSyncStart];
@@ -384,7 +471,8 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 - (void)remoteSyncEnd{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.toolbar removeItemAtIndex:3];
-        [self.toolbar insertItemWithItemIdentifier:Toolbar_iCloudOn atIndex:3];
+        [self.toolbar insertItemWithItemIdentifier:Toolbar_iCloud atIndex:3];
+        [self refreshICloudIcon];
     });
 }
 
@@ -410,7 +498,39 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     return nil;
 }
 
+- (void)refreshICloudIcon{
+    NSToolbarItem *item = [self _itemOfIdentifier:Toolbar_iCloud];
+    FCPlan *plan = [[FCStore shared] getPlan:NO];
+    if (plan == FCPlan.None){
+        self.iCloudSFName = nil;
+        item.image = nil;
+    }
+    else{
+        BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+        if (iCloudEnabled){
+            [FCShared.iCloudService refreshWithCompletionHandler:^(NSError *error) {
+                if (nil == error){
+                    self.iCloudSFName = FCShared.iCloudService.isLogin ?  @"checkmark.icloud" : @"person.icloud";
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        item.image = [UIImage systemImageNamed:self.iCloudSFName];
+                    });
+                }
+            }];
+            
+        }
+        else{
+            self.iCloudSFName = @"icloud.slash";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                item.image = [UIImage systemImageNamed:self.iCloudSFName];
+            });
+            
+        }
+        
+    }
+}
+
 - (void)sceneWillEnterForeground:(NSNotification *)note{
+    [self refreshICloudIcon];
     [[NSNotificationCenter defaultCenter] postNotificationName:SVCDidBecomeActiveNotification
                                                         object:nil];
 }
@@ -508,6 +628,14 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
         NSLog(@"selected userscript %@",ret.script.injectInto);
         return ret;
     }
+}
+
+- (ICloudSyncSlideController *)iCloudSyncSlideController{
+    if (nil == _iCloudSyncSlideController){
+        _iCloudSyncSlideController = [[ICloudSyncSlideController alloc] init];
+        _iCloudSyncSlideController.cer = self;
+    }
+    return _iCloudSyncSlideController;
 }
 
 - (void)removeObserver{
