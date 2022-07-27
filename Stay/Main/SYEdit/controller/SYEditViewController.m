@@ -177,7 +177,8 @@
     self.componetView.bottom = kScreenHeight - 20;
 }
 
-- (void)saveSuccess:(id)sender{
+- (void)saveSuccess:(NSNotification*) sender{
+    NSString *uuid =  [sender object];
     [self.loadingSlideController dismiss];
     NSString *content = _isEdit? NSLocalizedString(@"Saved", @"") :  NSLocalizedString(@"Created", @"");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
@@ -189,10 +190,10 @@
     NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
     if(_isEdit) {
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":uuid}];
                 [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil userInfo:@{@"uuid":uuid}];
                 [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
     [self presentViewController:alert animated:YES completion:nil];

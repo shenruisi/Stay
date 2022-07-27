@@ -145,9 +145,10 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                        if((userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0)&&(tmpScript.downloadUrl != NULL && tmpScript.downloadUrl.length >= 0)) {
                            userScript.downloadUrl = tmpScript.downloadUrl;
                        }
-                    
+                       self.uuid = uuid;
                        [[DataManager shareManager] updateUserScript:userScript];
                    } else {
+                       self.uuid = uuid;
                        [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                    }
                    [self initScrpitContent:true];
@@ -262,7 +263,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
 - (void)initScrpitContent:(BOOL)success{
     if(success) {
         dispatch_async(dispatch_get_main_queue(),^{
-            NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:nil];
+            NSNotification *notification = [NSNotification notificationWithName:@"saveSuccess" object:self.uuid];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
         });
     }

@@ -349,6 +349,9 @@
 
         scrpitDetail.injectInto = inject;
         
+        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
+        scrpitDetail.iCloudIdentifier = iCloudIdentifier;
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -549,6 +552,9 @@
 
         scrpitDetail.injectInto = inject;
         
+        NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
+        
+        scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -580,7 +586,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -650,6 +656,7 @@
         sqlite3_bind_double(statement, 23, timeString.doubleValue);
         sqlite3_bind_int(statement, 24, 0);
         sqlite3_bind_text(statement, 25, [scrpitDetail.license UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 26, [scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);

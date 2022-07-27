@@ -112,6 +112,7 @@
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+        [SharedStorageManager shared].userDefaults.safariExtensionEnabled = YES;
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
         BOOL requireCompleteScript = digest.length == 0 || [digest isEqualToString:@"no"];

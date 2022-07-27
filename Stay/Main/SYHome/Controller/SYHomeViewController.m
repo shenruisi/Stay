@@ -41,7 +41,16 @@
 #import "LoadingSlideController.h"
 
 #import "FCShared.h"
+#import "ImageHelper.h"
+#import "UIView+Rotate.h"
 
+#import "FCStore.h"
+#import "FCConfig.h"
+
+#import "SYMoreViewController.h"
+#import "ICloudSyncSlideController.h"
+#import "AlertHelper.h"
+#import "TimeHelper.h"
 
 static CGFloat kMacToolbar = 50.0;
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -74,7 +83,93 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)willMoveToSuperview:(UIView *)newSuperview{
     [super willMoveToSuperview:newSuperview];
 }
+@end
 
+@interface _iCloudView : UIView
+
+@property (nonatomic, strong) UIImageView *sfImageView;
+@property (nonatomic, strong) UIImageView *syncImageView;
+@property (nonatomic, strong) NSString *sfName;
+- (void)refreshIcon;
+- (void)startAnimate;
+- (void)stopAnimate;
+
+@end
+
+@implementation _iCloudView
+
+- (void)startAnimate{
+    self.sfName = @"icloud";
+    self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:[UIFont systemFontOfSize:22]];
+    self.syncImageView.hidden = NO;
+    [self.syncImageView rotateWithDuration:1];
+}
+
+- (void)stopAnimate{
+    self.sfName = @"checkmark.icloud";
+    [self.syncImageView stopRotating];
+    self.syncImageView.hidden = YES;
+    self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:[UIFont systemFontOfSize:22]];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    self.sfImageView.frame = self.bounds;
+    self.syncImageView.frame = CGRectMake((self.sfImageView.frame.size.width - self.syncImageView.size.width) / 2+1,
+                                          (self.sfImageView.frame.size.height - self.syncImageView.size.height) / 2+1, self.syncImageView.size.width, self.syncImageView.size.height);
+    [self refreshIcon];
+}
+
+- (void)refreshIcon{
+    FCPlan *plan = [[FCStore shared] getPlan:NO];
+    if (plan == FCPlan.None){
+        self.sfName = nil;
+        self.sfImageView.image = nil;
+    }
+    else{
+        BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+        if (iCloudEnabled){
+            [FCShared.iCloudService refreshWithCompletionHandler:^(NSError *error) {
+                if (nil == error){
+                    self.sfName = FCShared.iCloudService.isLogin ?  @"checkmark.icloud" : @"person.icloud";
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.sfImageView.image = [ImageHelper sfNamed:self.sfName
+                                            font:[UIFont systemFontOfSize:22]];
+                    });
+                }
+            }];
+            
+        }
+        else{
+            self.sfName = @"icloud.slash";
+            self.sfImageView.image = [ImageHelper sfNamed:self.sfName
+                                font:[UIFont systemFontOfSize:22]];
+        }
+        
+    }
+}
+
+- (UIImageView *)sfImageView{
+    if (nil == _sfImageView){
+        _sfImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        [self addSubview:_sfImageView];
+    }
+    
+    return _sfImageView;
+}
+
+- (UIImageView *)syncImageView{
+    if (nil == _syncImageView){
+        _syncImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 13, 13)];
+        _syncImageView.contentMode = UIViewContentModeScaleAspectFit;
+        _syncImageView.image = [ImageHelper sfNamed:@"arrow.2.circlepath" font:[UIFont boldSystemFontOfSize:13]];
+        [self.sfImageView addSubview:_syncImageView];
+        _syncImageView.hidden = YES;
+        [self addSubview:_syncImageView];
+    }
+    
+    return _syncImageView;
+}
 
 @end
 
@@ -89,7 +184,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 >
 
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
+@property (nonatomic, strong) UIBarButtonItem *iCloudIcon;
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
+
+@property (nonatomic, strong) _iCloudView *customView;
 
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) UITableView *tableView;
@@ -107,6 +205,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, copy) NSString *selectedUUID;
 
 @property (nonatomic, strong) ImportSlideController *importSlideController;
+@property (nonatomic, strong) ICloudSyncSlideController *iCloudSyncSlideController;
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
@@ -136,7 +235,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //    [ScriptMananger shareManager];
 //    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
-    self.navigationItem.rightBarButtonItem = [self rightIcon];
+    self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
@@ -176,6 +275,30 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                              selector:@selector(onBecomeActive)
                                                  name:SVCDidBecomeActiveNotification
                                                object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(remoteSyncStart)
+                                                 name:iCloudServiceSyncStartNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(remoteSyncEnd)
+                                                 name:iCloudServiceSyncEndNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(subscibeDidChangeHandler:)
+                                                 name:@"app.stay.notification.SYSubscibeChangeNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(iCloudDidChangeHandler:)
+                                                 name:SYMoreViewICloudDidSwitchNotification
+                                               object:nil];
+    
+#endif
+    
+   
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userscriptDidDeleteHandler:)
@@ -202,9 +325,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                  name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                object:nil];
     
-    
-    
-#endif
     self.view.backgroundColor = FCStyle.background;
     
     // Do any additional setup after loading the view.
@@ -218,30 +338,126 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 }
 
+- (void)iCloudDidChangeHandler:(NSNotification *)note{
+    [self.customView refreshIcon];
+}
+
+- (void)subscibeDidChangeHandler:(NSNotification *)note{
+    UIImageView *imageView = self.leftIcon.customView;
+    [imageView setImage:[[FCStore shared] getPlan:NO] != FCPlan.None ? [UIImage imageNamed:@"NavProIcon"] : [UIImage imageNamed:@"NavIcon"]];
+    [self.customView refreshIcon];
+}
+
 - (void)userscriptDidDeleteHandler:(NSNotification *)note{
+    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"]; 
+        [FCShared.iCloudService removeUserscript:uuid
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+            else{
+                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+            }
+        }];
+    }
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
     
 }
 
 - (void)userscriptDidActiveHandler:(NSNotification *)note{
+    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+            else{
+                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+            }
+        }];
+    }
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 }
 
 - (void)userscriptDidStopHandler:(NSNotification *)note{
+    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+            else{
+                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+            }
+        }];
+    }
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 }
 
 - (void)userscriptDidAddHandler:(NSNotification *)note{
+    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+            else{
+                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+            }
+        }];
+    }
+    
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 }
 
 - (void)userscriptDidUpdateHandler:(NSNotification *)note{
+    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+        NSString *uuid = note.userInfo[@"uuid"];
+        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+        [FCShared.iCloudService addUserscript:userscript
+                            completionHandler:^(NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+            if (error){
+                [FCShared.iCloudService showError:error inCer:self];
+            }
+            else{
+                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+            }
+        }];
+    }
+    
+#ifdef Mac
     [self reloadTableView];
     [self.tableView reloadData];
+#endif
 
     
 }
@@ -392,13 +608,84 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSArray *array = [[DataManager shareManager] findScript:1];
     [self updateScriptWhen:array type:false];
     
-    [FCShared.iCloudService refresh];
-    if (FCShared.iCloudService.isLogin){
-        [FCShared.iCloudService fetchUserscriptWithChangedHandler:^(NSDictionary<NSString *,UserScript *> *changedUserscripts) {
-            
-        } deletedHandler:^(NSArray<NSString *> *deletedUUIDs) {
-            
-        }];
+    [self iCloudSyncIfNeeded];
+}
+
+- (void)iCloudSyncIfNeeded{
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    FCPlan *plan = [[FCStore shared] getPlan:YES];
+    if (plan != FCPlan.None){
+        [self.customView refreshIcon];
+        if (iCloudEnabled){
+            [FCShared.iCloudService refreshWithCompletionHandler:^(NSError *error) {
+                
+                if (error){
+                    [FCShared.iCloudService showError:error inCer:self];
+                    return;
+                }
+                
+                if (FCShared.iCloudService.isLogin){
+                    [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+                    NSArray *array = [[DataManager shareManager] findScript:1];
+                    for (UserScript *userscriptInDB in array){
+                        if (![userscriptInDB.iCloudIdentifier isEqualToString:FCShared.iCloudService.identifier]){
+                            [[DataManager shareManager] deleteScriptInUserScriptByNumberId:userscriptInDB.uuid];
+                        }
+                    }
+                    
+                    [FCShared.iCloudService fetchUserscriptWithCompletionHandler:
+                     ^(NSDictionary<NSString *,UserScript *> *changedUserscripts, NSArray<NSString *> *deletedUUIDs) {
+                        if (changedUserscripts.count > 0 || deletedUUIDs.count > 0){
+                            NSArray *changedUUIDs = [changedUserscripts allKeys];
+                            for (NSString *uuid in changedUUIDs){
+                                UserScript *changedUserscript = changedUserscripts[uuid];
+                                if (changedUserscript.name.length == 0){
+                                    continue;
+                                }
+                                UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
+                                if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
+                                    [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
+                                }
+                                else{
+                                    [[DataManager shareManager] updateUserScript:changedUserscript];
+                                }
+                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                                    UserScriptStatus status =  UserScriptStatusOK;
+                                    [[UserscriptUpdateManager shareManager] saveIcon:changedUserscript];
+                                    BOOL requireSucceed = [[UserscriptUpdateManager shareManager] saveRequireUrl:changedUserscript];
+                                    status = status | (requireSucceed ? UserScriptStatusOK :  UserScriptStatusNeedRequire);
+                                    BOOL resourceSucceed = [[UserscriptUpdateManager shareManager] saveResourceUrl:changedUserscript];
+                                    status = status | (resourceSucceed ? UserScriptStatusOK :  UserScriptStatusNeedResource);
+                                });
+                                
+                            }
+                            
+                            for (NSString *deletedUUID in deletedUUIDs){
+                                [[DataManager shareManager] deleteScriptInUserScriptByNumberId:deletedUUID];
+                            }
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self reloadTableView];
+                                [self.tableView reloadData];
+                                [self initScrpitContent];
+                                [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+                            });
+                        }
+                        else{
+                            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+                        }
+                        
+                        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
+                                                                            object:nil
+                                                                          userInfo:@{
+                            @"section":@(1),
+                            @"row":@(0)
+                        }];
+                    }];
+                }
+            }];
+        }
     }
 }
 
@@ -794,7 +1081,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
@@ -809,7 +1096,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self reloadTableView];
             [tableView reloadData];
             [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil];
+            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
             [[NSNotificationCenter defaultCenter]postNotification:notification];
 
         }];
@@ -820,11 +1107,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UserScript *model = weakSelf.datas[indexPath.row];
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:nil];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:model.uuid];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:nil];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:model.uuid];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
@@ -926,11 +1213,21 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 }
 
-
-
 - (void) reloadTableView {
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+}
+
+- (void)remoteSyncStart{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.customView startAnimate];
+    });
+}
+
+- (void)remoteSyncEnd{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.customView stopAnimate];
+    });
 }
 
 - (UITableView *)tableView {
@@ -968,7 +1265,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (UIBarButtonItem *)leftIcon{
     if (nil == _leftIcon){
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon"]];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        [imageView setImage:[[FCStore shared] getPlan:NO] != FCPlan.None ? [UIImage imageNamed:@"NavProIcon"] : [UIImage imageNamed:@"NavIcon"]];
+        imageView.layer.cornerRadius = 6;
+        imageView.layer.masksToBounds = YES;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         _leftIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
     }
@@ -980,6 +1280,99 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _rightIcon = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBtnClick:)];
     }
     return _rightIcon;
+}
+
+- (_iCloudView *)customView{
+    if (nil == _customView){
+        _customView = [[_iCloudView alloc] initWithFrame:CGRectMake(0, 0, 30, 22)];
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(iCloudAction:)];
+        [_customView addGestureRecognizer:tapGesture];
+    }
+    
+    return _customView;;
+}
+
+- (UIBarButtonItem *)iCloudIcon{
+    if (nil == _iCloudIcon){
+        _iCloudIcon = [[UIBarButtonItem alloc] initWithCustomView:self.customView];
+    }
+    
+    return _iCloudIcon;
+}
+
+- (void)iCloudAction:(id)sender{
+    if ([self.customView.sfName isEqualToString:@"checkmark.icloud"]){
+        [self remoteSyncStart];
+        [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * error) {
+            [self remoteSyncEnd];
+            if (error){
+                [FCShared.iCloudService showErrorWithMessage:NSLocalizedString(@"TryAgainLater", @"") inCer:self];
+            }
+            else{
+                if (firstInit){
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                       message:NSLocalizedString(@"icloud.firstInit", @"")
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self remoteSyncStart];
+                            [FCShared.iCloudService initUserscripts:self.userscripts completionHandler:^(NSError * _Nonnull error) {
+                                [self remoteSyncEnd];
+                                if (error){
+                                    [FCShared.iCloudService showError:error inCer:self];
+                                }
+                                else{
+                                    [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                                }
+                            }];
+                        }];
+                        [alert addAction:conform];
+                        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                          style:UIAlertActionStyleCancel
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }];
+                        [alert addAction:cancel];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    });
+                    
+                }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                       message:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self iCloudSyncIfNeeded];
+                        }];
+                        [alert addAction:conform];
+                        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                          style:UIAlertActionStyleCancel
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }];
+                        [alert addAction:cancel];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    });
+                    
+                }
+            }
+        }];
+    }
+    else if ([self.customView.sfName isEqualToString:@"icloud.slash"]){
+        if (!self.iCloudSyncSlideController.isShown){
+            [self.iCloudSyncSlideController show];
+        }
+    }
+    else if ([self.customView.sfName isEqualToString:@"person.icloud"]){
+        [AlertHelper simpleWithTitle:NSLocalizedString(@"Tips", @"")
+                             message:NSLocalizedString(@"iCloudLogin", @"")
+                               inCer:self];
+    }
 }
 
 
@@ -1070,6 +1463,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return _importSlideController;
 }
 
+- (ICloudSyncSlideController *)iCloudSyncSlideController{
+    if (nil == _iCloudSyncSlideController){
+        _iCloudSyncSlideController = [[ICloudSyncSlideController alloc] init];
+        _iCloudSyncSlideController.cer = self;
+    }
+    
+    return _iCloudSyncSlideController;
+}
+
+
 - (SYTextInputViewController *)sYTextInputViewController {
     if(nil == _sYTextInputViewController) {
         _sYTextInputViewController = [[SYTextInputViewController alloc] init];
@@ -1089,15 +1492,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)dealloc{
-#ifdef Mac
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:NCCDidShowViewControllerNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SVCDidBecomeActiveNotification
-                                                  object:nil];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"app.stay.notification.userscriptDidDeleteNotification"
                                                   object:nil];
@@ -1117,6 +1511,23 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                   object:nil];
+    
+#ifdef Mac
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:NCCDidShowViewControllerNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SVCDidBecomeActiveNotification
+                                                  object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:iCloudServiceSyncStartNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:iCloudServiceSyncEndNotification
+                                               object:nil];
 #endif
 }
 

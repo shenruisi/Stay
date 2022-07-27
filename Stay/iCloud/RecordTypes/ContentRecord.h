@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, strong) NSString *raw;
-@property (nonatomic, assign) double createTimestamp;
-@property (nonatomic, assign) double updateTimestamp;
 @property (class, strong, readonly) NSString *type;
 
 - (void)fillCKRecord:(CKRecord *)ckRecord;

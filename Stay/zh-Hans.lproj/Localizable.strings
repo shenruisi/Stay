@@ -78,7 +78,7 @@ MoreApp="更多应用";
 TryAgainLater="请稍后重试。";
 
 icloud.error = "iCloud出错";
-icloud.firstInit = "需要在此设备上开启首次数据同步吗？";
+icloud.firstInit = "需要在此设备上开启首次数据同步吗？（将资料库中的所有脚本同步到iCloud）";
 icloud.syncNow = "立即同步";
 icloud.syncNow.alert ="需要立即同步吗？";
 icloud.insync = "同步中…";
@@ -89,3 +89,34 @@ Blacklist = "黑名单";
 
 Created="创建成功";
 Saved="保存成功";
+
+Subscription="订阅";
+UpgradeTo="升级到Stay Pro";
+
+SYNC="同步";
+SyncNow="立即同步";
+FullResync="全量重新同步";
+
+LifetimeSubscription="永久";
+OneTimePayment="一次性购买";
+
+Upgrade="升级";
+iCloudFeature="iCloud同步";
+iCloudFeatureDesc="在不同的设备间同步用户脚本";
+DarkModeFeature="网页暗黑模式";
+DarkModeFeatureDesc="为每个站点内建了网页暗黑模式脚本";
+IndieFeature="支持独立开发者";
+IndieFeatureDesc="支持我们来保持项目持续的迭代";
+ContinuePay = "购买 %@";
+Subscribed = "已订阅";
+Restore= "恢复购买";
+PrivacyPolicy = "隐私政策";
+TermsOfUse = "服务条款";
+
+iCloudProAlert="需要升级到PRO版本来使用iCloud同步功能。";
+
+Tips="提示";
+iCloudLogin="登录你的iCloud账号后进行同步";
+iCloudLastSync="上次同步：";
+iCloudTrunOn="开启同步";
+iCloudTrunOffTips="关闭iCloud同步后，你对脚本的所有操作将不再会自动同步。";

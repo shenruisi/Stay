@@ -9,6 +9,7 @@
 #import "UserscriptHeaders.h"
 #import "UserscriptInfo.h"
 #import "ActivateChanged.h"
+#import "UserDefaults.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,6 +28,7 @@ static inline NSString * _Nonnull FCDataDirectory(void){
 + (instancetype)shared;
 @property (nonatomic, strong, nullable) UserscriptHeaders *userscriptHeaders;
 @property (nonatomic, strong, nullable) ActivateChanged *activateChanged;
+@property (nonatomic, strong, nullable) UserDefaults *userDefaults;
 - (UserscriptInfo *)getInfoOfUUID:(NSString *)uuid;
 @end
 

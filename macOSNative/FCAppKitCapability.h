@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
             opened:(BOOL)opened;
 
 - (NSToolbarItem *)appIcon:(NSString *)identifier imageData:(NSData *)imageData;
+- (void)changeAppIcon:(NSToolbarItem *)item imageData:(NSData *)imageData;
 - (NSToolbarItem *)appName:(NSString *)identifier;
 - (NSToolbarItem *)iCloudSync:(NSString *)identifier imageData:(NSData *)imageData;
 - (NSToolbarItem *)slideTrackToolbarItem:(NSString *)identifier width:(CGFloat)width;

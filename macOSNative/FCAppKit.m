@@ -142,6 +142,13 @@
     return item;
 }
 
+- (void)changeAppIcon:(NSToolbarItem *)item imageData:(NSData *)imageData{
+    NSImageView *imageView = (NSImageView *)item.view;
+    [imageView setImage:[[NSImage alloc] initWithData:imageData]];
+    item.minSize = CGSizeMake(20, 20);
+    item.maxSize = CGSizeMake(20, 20);
+}
+
 - (NSToolbarItem *)iCloudSync:(NSString *)identifier imageData:(NSData *)imageData{
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
     NSProgressIndicator *indicator = [[NSProgressIndicator alloc] initWithFrame:CGRectMake(5, 0, 20, 20)];
