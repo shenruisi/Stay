@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef enum : NSInteger {
     GroupUserDefaultsKeyMacMainWindowFrame = 1000,
-    GroupUserDefaultsKeyMacPrimaryWidth
+    GroupUserDefaultsKeyMacPrimaryWidth,
+    GroupUserDefaultsKeySyncEnabled = 10000,
+    GroupUserDefaultsKeyLastSync
 } GroupUserDefaultsKey;
 
 @interface FCConfig : NSObject

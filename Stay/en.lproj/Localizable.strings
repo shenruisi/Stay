@@ -84,7 +84,7 @@ Blacklist = "Black list";
 TryAgainLater="Please try again later";
 
 icloud.error = "iCloud error";
-icloud.firstInit = "Need to turn on first sync on this device?";
+icloud.firstInit = "Need to turn on first sync on this device? (Sync all scripts in your library to iCloud)";
 icloud.syncNow = "Sync now";
 icloud.syncNow.alert ="Need to sync now?";
 icloud.insync = "In sync…";
@@ -92,4 +92,38 @@ icloud.insync = "In sync…";
 Created="Created";
 Saved="Saved";
 
+Subscription="SUBSCRIPTION";
+UpgradeTo="Upgrade to Stay Pro";
+
+SYNC="SYNC";
+SyncNow="Sync now";
+FullResync="Full resync";
+
+LifetimeSubscription="Lifetime";
+OneTimePayment="One-time payment";
+
+Upgrade="Upgrade";
+iCloudFeature="iCloud Sync";
+iCloudFeatureDesc="Sync userscript between multiple devices";
+DarkModeFeature="Dark Mode";
+DarkModeFeatureDesc="Built-in dark mode for every website ";
+IndieFeature="Support Indie Development";
+IndieFeatureDesc="Your support helps keep the project going";
+ContinuePay = "Continue with %@ Payment";
+Subscribed = "Subscribed";
+Restore= "Restore";
+PrivacyPolicy = "Privacy Policy";
+TermsOfUse = "Terms of Use";
+
+
+iCloudProAlert="iCloud Sync need PRO version.";
+
+Tips="Tips";
+iCloudLogin="Login your iCloud for syncing";
+iCloudLastSync="Last Sync:";
+iCloudTrunOn="Turn on for syncing";
+iCloudTrunOffTips="After turning off iCloud sync, all your actions on the script will no longer be automatically synced.";
+
+HomeEmptyTips1="Click";
+HomeEmptyTips2="in the upper right corner to add a userscript";
 

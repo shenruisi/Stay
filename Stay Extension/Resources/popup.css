@@ -582,7 +582,7 @@ section {
     .match-tab {
         color: #c5c5c5;
     }
-    .console-tab{
+    .console-tab,.darkmode-tab{
         border-left: 1px solid #565656;
         color: #c5c5c5;
     }

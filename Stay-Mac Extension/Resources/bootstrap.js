@@ -384,6 +384,7 @@ let RMC_CONTEXT = {};
             
             if (script.active){ //inject active script
                 console.log("injectScript---",script.name,script.installType,script.runAt);
+                // console.log("injectScript---", script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }

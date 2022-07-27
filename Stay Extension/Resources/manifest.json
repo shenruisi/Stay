@@ -31,6 +31,12 @@
             "matches": [ "*://*/*.js" ],
             "all_frames": false,
             "run_at": "document_end"
+        },
+        {
+            "js": ["fallback.js","dark.user.js"],
+            "matches": [ "*://*/*" ],
+            "all_frames": false,
+            "run_at": "document_start"
         }
     ],
 
@@ -45,5 +51,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging"]
+    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms"]
 }

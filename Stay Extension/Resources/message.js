@@ -2,6 +2,7 @@ const langMessage = {
     "en_US": {
         "matched_scripts_tab": "Matched Scripts",
         "console_tab": "Console",
+        "darkmode_tab": "Darkmode",
         "state_actived": "Activated",
         "state_manually": "Manually Executed",
         "state_stopped": "Stopped",
@@ -14,6 +15,7 @@ const langMessage = {
     "zh_CN": {
         "matched_scripts_tab": "已匹配脚本",
         "console_tab": "控制台",
+        "darkmode_tab": "暗黑模式",
         "state_actived": "运行中",
         "state_manually": "手动执行",
         "state_stopped": "已停止",
@@ -26,6 +28,7 @@ const langMessage = {
     "zh_HK": {
         "matched_scripts_tab": "已匹配腳本",
         "console_tab": "控制台",
+        "darkmode_tab": "暗黑模式",
         "state_actived": "運行中",
         "state_manually": "手動執行",
         "state_stopped": "已停止",
