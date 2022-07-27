@@ -39,6 +39,7 @@
 #import "ImportSlideController.h"
 #import "SYTextInputViewController.h"
 #import "LoadingSlideController.h"
+#import "SYFlashViewController.h"
 
 #import "FCShared.h"
 
@@ -213,6 +214,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
+
+    
+    [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
 
 }
 

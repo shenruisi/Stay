@@ -288,6 +288,16 @@
 		84C1ED52277AE1B500651DF9 /* search-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C1ED51277AE1B500651DF9 /* search-selected@3x.png */; };
 		84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */; };
 		84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */; };
+		84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B401288D86AF002A0C1B /* SYFlashViewController.m */; };
+		84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B401288D86AF002A0C1B /* SYFlashViewController.m */; };
+		84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B406288D955F002A0C1B /* FirstFlashView.m */; };
+		84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B406288D955F002A0C1B /* FirstFlashView.m */; };
+		84C2B40A288E30C7002A0C1B /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B409288E30C7002A0C1B /* noActIcon@3x.png */; };
+		84C2B40B288E30C7002A0C1B /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B409288E30C7002A0C1B /* noActIcon@3x.png */; };
+		84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40C288E30CC002A0C1B /* flash@3x.png */; };
+		84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40C288E30CC002A0C1B /* flash@3x.png */; };
+		84C2B4102890AC38002A0C1B /* flashTech.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40F2890AC38002A0C1B /* flashTech.mp4 */; };
+		84C2B4112890AC38002A0C1B /* flashTech.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40F2890AC38002A0C1B /* flashTech.mp4 */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
 		84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4831D273AC51800217BB3 /* js-lib@3x.png */; };
@@ -628,8 +638,15 @@
 		84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTextInputModelViewController.m; sourceTree = "<group>"; };
 		84C2B3F728757B9E002A0C1B /* SYTextInputViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTextInputViewController.h; sourceTree = "<group>"; };
 		84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTextInputViewController.m; sourceTree = "<group>"; };
+		84C2B400288D86AF002A0C1B /* SYFlashViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYFlashViewController.h; sourceTree = "<group>"; };
+		84C2B401288D86AF002A0C1B /* SYFlashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYFlashViewController.m; sourceTree = "<group>"; };
+		84C2B405288D955F002A0C1B /* FirstFlashView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstFlashView.h; sourceTree = "<group>"; };
+		84C2B406288D955F002A0C1B /* FirstFlashView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstFlashView.m; sourceTree = "<group>"; };
+		84C2B409288E30C7002A0C1B /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
+		84C2B40C288E30CC002A0C1B /* flash@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flash@3x.png"; sourceTree = "<group>"; };
+		84C2B40F2890AC38002A0C1B /* flashTech.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = flashTech.mp4; sourceTree = "<group>"; };
 		84C54CFA2753BDAF00A9F14C /* SYDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDetailViewController.h; sourceTree = "<group>"; };
-		84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDetailViewController.m; sourceTree = "<group>"; };
+		84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.c.objc; path = SYDetailViewController.m; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		84F48317273A739800217BB3 /* MainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		84F4831D273AC51800217BB3 /* js-lib@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "js-lib@3x.png"; sourceTree = "<group>"; };
@@ -962,6 +979,9 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				84C2B40F2890AC38002A0C1B /* flashTech.mp4 */,
+				84C2B40C288E30CC002A0C1B /* flash@3x.png */,
+				84C2B409288E30C7002A0C1B /* noActIcon@3x.png */,
 				84A15E02282CE1FC002E121D /* addedScript@3x.png */,
 				84A15E03282CE1FC002E121D /* addScript@3x.png */,
 				8457A84A280276010010A387 /* webback@3x.png */,
@@ -1307,6 +1327,33 @@
 			path = TextInput;
 			sourceTree = "<group>";
 		};
+		84C2B3FE288D82D2002A0C1B /* SYFlash */ = {
+			isa = PBXGroup;
+			children = (
+				84C2B404288D9539002A0C1B /* View */,
+				84C2B3FF288D82D2002A0C1B /* Controller */,
+			);
+			path = SYFlash;
+			sourceTree = "<group>";
+		};
+		84C2B3FF288D82D2002A0C1B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				84C2B400288D86AF002A0C1B /* SYFlashViewController.h */,
+				84C2B401288D86AF002A0C1B /* SYFlashViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		84C2B404288D9539002A0C1B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				84C2B405288D955F002A0C1B /* FirstFlashView.h */,
+				84C2B406288D955F002A0C1B /* FirstFlashView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		84C54CF62753BD4B00A9F14C /* SYDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -1329,6 +1376,7 @@
 		84F4830D273A69AA00217BB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				84C2B3FE288D82D2002A0C1B /* SYFlash */,
 				58FEB1E8283B57A400BC2A92 /* Style */,
 				58FEB1D9283B54C600BC2A92 /* Controls */,
 				8410C835275E0278005531EC /* CodeMirror */,
@@ -1690,7 +1738,10 @@
 				84C1ED4C277AB93E00651DF9 /* homepage-selected@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
+				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
 				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
+				84C2B40A288E30C7002A0C1B /* noActIcon@3x.png in Resources */,
+				84C2B4102890AC38002A0C1B /* flashTech.mp4 in Resources */,
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
@@ -1784,7 +1835,10 @@
 				588202832859E73900B2721A /* homepage-selected@3x.png in Resources */,
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
+				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
 				588202862859E73900B2721A /* more@3x.png in Resources */,
+				84C2B40B288E30C7002A0C1B /* noActIcon@3x.png in Resources */,
+				84C2B4112890AC38002A0C1B /* flashTech.mp4 in Resources */,
 				588202872859E73900B2721A /* typescript.html in Resources */,
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
 				588202892859E73900B2721A /* parse-meta-line.js in Resources */,
@@ -1930,6 +1984,7 @@
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
+				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
@@ -1960,6 +2015,7 @@
 				588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
+				84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2010,11 +2066,13 @@
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
+				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
 				588202552859E73900B2721A /* ScriptDetailModel.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
+				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
