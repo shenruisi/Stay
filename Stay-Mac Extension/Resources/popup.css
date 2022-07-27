@@ -135,6 +135,7 @@ input {
 }
 .match-tab{
     width: 33%;
+    cursor: pointer;
     font-size:13px;
     text-align: center;
     color: rgba(0,0,0,0.5);
@@ -159,9 +160,11 @@ input {
 }
 .console-tab{
     width: 28%;
+    cursor: pointer;
 }
 .darkmode-tab {
     width: 38%;
+    cursor: pointer;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -533,6 +536,7 @@ input {
     width: 33.33%;
     color: #000000;
     font-size: 15px;
+    cursor: pointer;
     font-weight: 400;
     height: 100%;
     display: flex;
