@@ -15,11 +15,13 @@
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.safariExtensionEnabled forKey:@"safariExtensionEnabled"];
+    [coder encodeBool:self.pro forKey:@"pro"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _safariExtensionEnabled = [coder decodeBoolForKey:@"safariExtensionEnabled"];
+        _pro = [coder decodeBoolForKey:@"pro"];
     }
     
     return self;
@@ -41,6 +43,11 @@
 
 - (void)setSafariExtensionEnabled:(BOOL)safariExtensionEnabled{
     _safariExtensionEnabled = safariExtensionEnabled;
+    [self flush];
+}
+
+- (void)setPro:(BOOL)pro{
+    _pro = pro;
     [self flush];
 }
 

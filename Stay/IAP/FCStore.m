@@ -14,6 +14,7 @@
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 #import "RMAppReceipt.h"
+#import "SharedStorageManager.h"
 
 NSString * const _Nonnull FCProductIdentifierMonthly = @"Stay_Pro_Monthly";
 NSString * const _Nonnull FCProductIdentifierYearly = @"Stay_Pro_Yearly";
@@ -128,6 +129,7 @@ static FCStore *instance = nil;
         }
     }
     
+    [SharedStorageManager shared].userDefaults.pro = plan != FCPlan.None;
     return plan;
 }
 
