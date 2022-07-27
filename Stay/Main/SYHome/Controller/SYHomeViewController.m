@@ -644,6 +644,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
 }
 
+
 //检测评分
 - (void)checkShowTips{
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];

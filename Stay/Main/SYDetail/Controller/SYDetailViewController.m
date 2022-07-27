@@ -491,16 +491,13 @@
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:self.script.uuid];
-        [[NSNotificationCenter defaultCenter]postNotification:notification];
     } else {
         [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
         self.actBtn.backgroundColor = [UIColor whiteColor];
         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.actBtn.layer.borderWidth = 1;
         self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
-        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:self.script.uuid];
-        [[NSNotificationCenter defaultCenter]postNotification:notification];
+       
     }
     
     if (self.script.active) {
@@ -509,7 +506,7 @@
         [[DataManager shareManager] updateScrpitStatus:0 numberId:self.script.uuid];
     }
     
-    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:self.script.uuid userInfo:@{@"uuid":self.script.uuid}];
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
     [self initScrpitContent];
 }
@@ -520,7 +517,7 @@
     } else {
         [[DataManager shareManager] updateScriptConfigAutoupdate:0 numberId:self.script.uuid];
     }
-    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:self.script.uuid];
+    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
 

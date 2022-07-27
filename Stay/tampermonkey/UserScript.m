@@ -39,6 +39,9 @@
     userScript.license = dic[@"license"];
     userScript.iCloudIdentifier = dic[@"iCloudIdentifier"];
     userScript.status = [dic[@"status"] integerValue];
+    userScript.active = dic[@"active"]  == nil ? NO : [dic[@"active"] boolValue];
+    userScript.whitelist = dic[@"whitelist"] == nil ? @[] : dic[@"whitelist"];
+    userScript.blacklist = dic[@"blacklist"] == nil ? @[] : dic[@"blacklist"];
     return userScript;
 }
 
