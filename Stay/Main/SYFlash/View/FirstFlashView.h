@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "ZFPlayer.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UITableView *tableview;
 @property (nonatomic, strong) UIButton *runBtn;
 @property (nonatomic, strong) UIView *forPlayView;
-@property (nonatomic, strong) ZFPlayerController *player;
 @property (nonatomic, assign) NSInteger selectedCount;
+@property (nonatomic, strong) NSString *guideUrl;
 
 -(void)createFirstView;
 

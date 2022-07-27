@@ -35,10 +35,10 @@
 - (void)onBecomeActive{
 
     [SharedStorageManager shared].userDefaults = nil;
-    if([[SharedStorageManager shared].userDefaults.safariExtension]) {
-        
+    if([SharedStorageManager shared].userDefaults.safariExtensionEnabled) {
+        self.firstView.activite = true;
+        [self.firstView createFirstView];
     }
-)
 }
 /*
 #pragma mark - Navigation
@@ -57,8 +57,8 @@
 - (FirstFlashView *)firstView {
     if (_firstView == nil) {
         _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 2,  self.view.height)];
-        _firstView.activite = TRUE;
         _firstView.scrollEnabled = NO;
+        _firstView.selectedCount = 0;
         [_firstView createFirstView];
     }
     

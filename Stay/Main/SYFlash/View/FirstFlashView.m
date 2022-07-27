@@ -165,10 +165,9 @@ UITableViewDataSource
     
     NSString *url = @"https://fastclip.app/stay/welcome-zh.json";
     
-//    if (![[UserScript localeCode] isEqualToString:@"zh"]) {
-//        url = @"https://fastclip.app/stay/welcome.json";
-//    }
-//
+    if (![[UserScript localeCode] isEqualToString:@"zh"]) {
+        url = @"https://fastclip.app/stay/welcome.json";
+    }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -178,6 +177,7 @@ UITableViewDataSource
         if (data.length > 0) {
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             self.scriptList = dic[@"userscripts"];
+            self.guideUrl = dic[@"guide"];
             dispatch_async(dispatch_get_main_queue(),^{
                 [_runBtn setTitle:[NSString stringWithFormat:@"运行%@", _scriptList[0][@"name"]] forState:UIControlStateNormal];
             });
@@ -194,6 +194,8 @@ UITableViewDataSource
     [seeMoreBtn setTitle:@"查看更多脚本安装方式" forState:UIControlStateNormal];
     seeMoreBtn.titleLabel.font = FCStyle.headline;
     [seeMoreBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
+    
+    [seeMoreBtn addTarget:self action:@selector(seeMore) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:seeMoreBtn];
     
     UIButton *closebtn = [[UIButton alloc] initWithFrame:CGRectMake(left, top, 40, 22)];
@@ -232,9 +234,9 @@ UITableViewDataSource
         [subView removeFromSuperview];
     }
     
-    cell.selectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    cell.selectedBackgroundView.backgroundColor = RGBA(182, 32, 224, 0.11);
-    
+    if(indexPath.row == self.selectedCount) {
+        cell.contentView.backgroundColor  = RGBA(182, 32, 224, 0.11);
+    }
     
     NSString *icon = self.scriptList[indexPath.row][@"icon"];
 
@@ -270,6 +272,7 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.selectedCount = indexPath.row;
+    [tableView reloadData];
 }
 
 
@@ -277,6 +280,14 @@ UITableViewDataSource
 - (void)closeFlash {
     NSNotification *notification = [NSNotification notificationWithName:@"closeFlash" object:nil];
     [[NSNotificationCenter defaultCenter]postNotification:notification];
+}
+
+- (void)seeMore {
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+     [set addCharactersInString:@"#"];
+    if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.guideUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]]){
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.guideUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+    }
 }
 
 - (void)clickRun {
