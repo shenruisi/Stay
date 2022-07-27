@@ -53,6 +53,7 @@
 #import "TimeHelper.h"
 
 static CGFloat kMacToolbar = 50.0;
+static NSString *kRateKey = @"rate.2.3.0";
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
 @interface _SYHomeViewTableViewCell : UITableViewCell
 @end
@@ -646,15 +647,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //检测评分
 - (void)checkShowTips{
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    if([groupUserDefaults objectForKey:@"tips"] != NULL){
-        int count = [[groupUserDefaults objectForKey:@"tips"] intValue];
+    if([groupUserDefaults objectForKey:kRateKey] != NULL){
+        int count = [[groupUserDefaults objectForKey:kRateKey] intValue];
         if(count == 5) {
           [SKStoreReviewController requestReview];
         }
         count += 1;
-        [groupUserDefaults setObject:@(count)  forKey:@"tips"];
+        [groupUserDefaults setObject:@(count)  forKey:kRateKey];
     } else {
-        [groupUserDefaults setObject:@(1) forKey:@"tips"];
+        [groupUserDefaults setObject:@(1) forKey:kRateKey];
         [groupUserDefaults synchronize];
     }
 }
