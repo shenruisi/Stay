@@ -267,6 +267,10 @@
             }
         }
     }
+    else if ([message[@"type"] isEqualToString:@"p"]){
+        body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
+    }
+
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,

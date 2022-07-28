@@ -15,22 +15,22 @@
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.safariExtensionEnabled forKey:@"safariExtensionEnabled"];
-    [coder encodeBool:self.pro forKey:@"pro"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _safariExtensionEnabled = [coder decodeBoolForKey:@"safariExtensionEnabled"];
-        _pro = [coder decodeBoolForKey:@"pro"];
     }
     
     return self;
 }
 
 - (NSData * _Nullable)archiveData {
-    return [NSKeyedArchiver archivedDataWithRootObject:self
-                                 requiringSecureCoding:YES
-                                                 error:nil];
+    NSError *error = nil;
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self
+                                         requiringSecureCoding:YES
+                                                         error:&error];
+    return data;
 }
 
 - (void)unarchiveData:(NSData * _Nullable)data {
@@ -43,11 +43,6 @@
 
 - (void)setSafariExtensionEnabled:(BOOL)safariExtensionEnabled{
     _safariExtensionEnabled = safariExtensionEnabled;
-    [self flush];
-}
-
-- (void)setPro:(BOOL)pro{
-    _pro = pro;
     [self flush];
 }
 

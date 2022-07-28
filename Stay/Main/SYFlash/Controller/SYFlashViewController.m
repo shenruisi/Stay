@@ -36,7 +36,7 @@
 
     [SharedStorageManager shared].userDefaults = nil;
     if([SharedStorageManager shared].userDefaults.safariExtensionEnabled) {
-        self.firstView.activite = true;
+        self.firstView.activite = YES;
         [self.firstView createFirstView];
     }
 }

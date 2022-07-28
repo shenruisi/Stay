@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FirstFlashView : UIScrollView
 
 
-@property (nonatomic, assign) Boolean *activite;
+@property (nonatomic, assign) BOOL activite;
 @property (nonatomic, strong) NSArray *scriptList;
 @property (nonatomic, strong) UITableView *tableview;
 @property (nonatomic, strong) UIButton *runBtn;
