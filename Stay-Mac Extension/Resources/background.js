@@ -30,7 +30,16 @@ let closeableTabs = {};
 let xhrs = [];
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if ("bootstrap" == request.from || "iframe" == request.from) {
+    if ("darkmode" == request.from) {
+        if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                console.log("GET_STAY_AROUND-----BG==", response);
+                sendResponse({ body: response.body })
+            });
+        }
+        return true;
+    }
+    else if ("bootstrap" == request.from || "iframe" == request.from) {
         if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
@@ -535,6 +544,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ body: [] });
             }
         }
+        else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
+            // console.log("background--fetchRegisterMenuCommand---", request);
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
+            });
+        }
         else if ("fetchRegisterMenuCommand" == request.operate) {
             // console.log("background--fetchRegisterMenuCommand---", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -555,7 +570,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("DARKMODE_SETTING" == request.operate){
             const darkmodeStatus = request.status;
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus });
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus, enabled: request.enabled });
             });
         }
         return true;

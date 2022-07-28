@@ -135,6 +135,7 @@ input {
 }
 .match-tab{
     width: 33%;
+    cursor: pointer;
     font-size:13px;
     text-align: center;
     color: rgba(0,0,0,0.5);
@@ -159,9 +160,11 @@ input {
 }
 .console-tab{
     width: 28%;
+    cursor: pointer;
 }
 .darkmode-tab {
     width: 38%;
+    cursor: pointer;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -532,7 +535,8 @@ input {
 .darkmode-setting .setting{
     width: 33.33%;
     color: #000000;
-    font-size: 15px;
+    font-size: 13px;
+    cursor: pointer;
     font-weight: 400;
     height: 100%;
     display: flex;
@@ -546,7 +550,7 @@ input {
     color: #FFFFFF;
     background: #B620E0;
 }
-.darkmode-web{position: relative;margin-bottom: 10px;width: 100%;}
+.darkmode-web{position: relative;margin-bottom: 10px;width: 100%; background: #fff;}
 .darkmode-web input.website-input{
     width: 100%;
     padding: 0 30px 0 10px;
@@ -568,12 +572,14 @@ input {
     position: relative;
     width: 11px;
     height: 11px;
+    background: #fff;
+    color: #000000;
 }
  input[type=checkbox]::after {
     position: absolute;
     top: 0px;
     right: 0px;
-    background-color: #fff;
+    background: #fff;
     color: #fff;
     height: 12px;
     width: 12px;
@@ -701,11 +707,11 @@ input[type='checkbox']:checked::after {
         background-color:#000000;
     }
     
-    .header-box,.register-menu-warpper, .toast-warpper, .toast-container{
+    .header-box,.register-menu-warpper, .toast-warpper, .toast-container, .darkmode-setting{
         background-color: #000000;
     }
 
-    .content-box, .menu-content, .menu-close{
+    .content-box, .menu-content, .menu-close, .darkmode-web, input[type=checkbox]::after,.check-box input.allow{
         background:rgb(28,28,30);
     }
     .content-item, .menu-item{
@@ -723,17 +729,17 @@ input[type='checkbox']:checked::after {
     .start .info-case .title span{
         color: #c5c5c5;
     }
-    .match-tab {
+    .match-tab, .darkmode-setting .setting {
         color: #c5c5c5;
     }
-    .console-tab, .darkmode-tab{
+    .console-tab, .darkmode-tab, .darkmode-tab{
         border-left: 1px solid #565656;
         color: #c5c5c5;
     }
     .header-tab{
         background:rgb(28,28,30);
     }
-    .console-name{
+    .console-name, .check-box input.allow{
         color: #c5c5c5;
     }
     .console-time{
