@@ -419,9 +419,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
 
-    
-    [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
-
+#ifndef Mac
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
+        [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
+        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
+    }
+#endif
 }
 
 

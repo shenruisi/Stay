@@ -148,6 +148,7 @@ UITableViewDataSource
     if (![[UserScript localeCode] isEqualToString:@"zh"]) {
         url = @"https://fastclip.app/stay/welcome.json";
     }
+    url = @"https://fastclip.app/stay/welcome.json";
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -372,7 +373,7 @@ UITableViewDataSource
         _tableview = [[UITableView alloc]initWithFrame:CGRectMake(self.width/2+15 , 0, self.width / 2  - 30, 196) style:UITableViewStylePlain];
         _tableview.delegate = self;
         _tableview.dataSource = self;
-        _tableview.backgroundColor = FCStyle.secondaryPopup;
+        _tableview.backgroundColor = [UIColor clearColor];
         _tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableview.layer.cornerRadius = 8;
         [self addSubview:_tableview];
