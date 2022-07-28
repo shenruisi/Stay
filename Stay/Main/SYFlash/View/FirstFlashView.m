@@ -148,7 +148,6 @@ UITableViewDataSource
     if (![[UserScript localeCode] isEqualToString:@"zh"]) {
         url = @"https://fastclip.app/stay/welcome.json";
     }
-    url = @"https://fastclip.app/stay/welcome.json";
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
