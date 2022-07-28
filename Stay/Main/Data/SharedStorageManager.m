@@ -57,4 +57,14 @@ static SharedStorageManager *_instance = nil;
     return _userDefaults;
 }
 
+- (UserDefaultsExRO *)userDefaultsExRO{
+    if (nil == _userDefaultsExRO){
+        _userDefaultsExRO = [[UserDefaultsExRO alloc] initWithPath:[FCDataDirectory()
+                                                            stringByAppendingPathComponent:@"userDefaultsExRO"]
+                                                       isDirectory:NO];
+    }
+    
+    return _userDefaultsExRO;
+}
+
 @end

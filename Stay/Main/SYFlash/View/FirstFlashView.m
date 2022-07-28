@@ -17,11 +17,15 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "SharedStorageManager.h"
 #import "ScriptMananger.h"
+#import "ImageHelper.h"
+#import <WebKit/WebKit.h>
 
 @interface FirstFlashView()<
 UITableViewDelegate,
 UITableViewDataSource
->
+>{
+    UILabel *_runScriptLabel;
+}
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 
 @end
@@ -29,145 +33,121 @@ UITableViewDataSource
 @implementation FirstFlashView
 
 -(void)createFirstView {
+    self.tableview = nil;
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    CGFloat left = 18;
-    CGFloat top = 55;
-    
+    CGFloat left = 15;
+    CGFloat top = 40;
     CGFloat width = self.width / 2 - (left * 2);
-    
-    
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 24)];
-    title.text = @"尝试首次通过Stay 2来运行脚本";
-    title.font = FCStyle.headlineBold;
+
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 30)];
+    title.text = NSLocalizedString(@"GuidePage1Text1", @"");
+    title.font = FCStyle.title1Bold;
     title.textColor = FCStyle.fcBlack;
     [self addSubview:title];
     
-    top += 36;
-    
-    UILabel *stepLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 22)];
-    stepLabel.text = @"步骤 1/2";
+    top = title.bottom + 5;
+    UILabel *stepLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 20)];
+    stepLabel.text = NSLocalizedString(@"GuidePage1Text2", @"");
     stepLabel.font = FCStyle.body;
-    stepLabel.textColor = FCStyle.fcPlaceHolder;
+    stepLabel.textColor = FCStyle.fcSecondaryBlack;
     [self addSubview:stepLabel];
     
-    top += 26;
-    
-    UILabel *extensionLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 22)];
-    extensionLabel.text = @"激活Stay 2浏览器扩展";
+    top = stepLabel.bottom + 5;
+    UILabel *extensionLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 20)];
+    extensionLabel.text = NSLocalizedString(@"GuidePage1Text3", @"");
     extensionLabel.font = FCStyle.body;
     extensionLabel.textColor = FCStyle.fcBlack;
     [self addSubview:extensionLabel];
     
-    top += 32;
-    
-    UIView *activiteView = [[UIView alloc] initWithFrame:CGRectMake(14, top, width, 48)];
+    top = extensionLabel.bottom + 10;
+    UIView *activiteView = [[UIView alloc] initWithFrame:CGRectMake(left, top, width, 45)];
     activiteView.backgroundColor = FCStyle.background;
     activiteView.layer.cornerRadius = 8;
     UIImage *image = [UIImage imageNamed:self.activite?@"icon":@"noActIcon"];
-    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(9,17,26,26)] ;
+    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,17,26,26)] ;
     imageview.image = image;
     imageview.centerY = 24;
     [activiteView addSubview:imageview];
     
-    UILabel *activiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, 50, 22)];
-    activiteLabel.text = self.activite?@"已激活":@"未激活";
-    activiteLabel.font = FCStyle.bodyBold;
+    UILabel *activiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, 100, 22)];
+    activiteLabel.text = self.activite? NSLocalizedString(@"Activated", @"") : NSLocalizedString(@"NotActivated", @"");
+    activiteLabel.font = FCStyle.body;
     activiteLabel.textColor = FCStyle.fcBlack;
-    activiteLabel.right = width - 15 - 28;
+    activiteLabel.right = width - 15;
     activiteLabel.centerY = 24;
+    activiteLabel.textAlignment = UITextAlignmentRight;
     [activiteView addSubview:activiteLabel];
     [self addSubview:activiteView];
     
-    top += 61;
-    
+    top = activiteView.bottom + 10;
     UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 22)];
-    tipsLabel.text = @"根据如下视频操作喂你吃后,返回Stay 2";
+    tipsLabel.text = NSLocalizedString(@"GuidePage1Text4", @"");
     tipsLabel.font = FCStyle.body;
-    tipsLabel.textColor = FCStyle.fcPlaceHolder;
+    tipsLabel.textColor = FCStyle.fcSecondaryBlack;
     [self addSubview:tipsLabel];
     
-    top += 42;
-    CGFloat imageLeft = (self.width / 2 - 320) / 2;
-    UIImageView *techImageView = [[UIImageView alloc] initWithFrame:CGRectMake(imageLeft, top, 320, 452.84)];
-    UIImage *techImage = [UIImage imageNamed:@"flash"];
-    techImageView.layer.borderWidth = 5;
-    techImageView.layer.cornerRadius = 8;
-    techImageView.layer.borderColor = FCStyle.fcPlaceHolder.CGColor;
-    techImageView.image = techImage;
-    [self addSubview:techImageView];
+    top =  tipsLabel.bottom + 10;
+    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+    WKUserContentController * wkUController = [[WKUserContentController alloc] init];
+    config.userContentController = wkUController;
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake((self.width/2 - 320) / 2,top,320,450) configuration:config];
+    webView.layer.cornerRadius = 10;
+    webView.layer.borderColor = FCStyle.fcSeparator.CGColor;
+    webView.layer.borderWidth = 1;
+    [webView setOpaque:false];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://fastclip.app/stay/video/activated.htm"]]];
+    [self addSubview:webView];
     
-    UIImageView *playImageView = [[UIImageView alloc] initWithFrame:CGRectMake(imageLeft, top, 58, 58)];
-    UIImage *playImage = [UIImage systemImageNamed:@"play.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:48]]];
-    playImage = [playImage imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
-    playImageView.image = playImage;
-    playImageView.center = techImageView.center;
-    [self addSubview:playImageView];
-    
-    top += 452.84 + 20;
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(81, top, 241, 45)];
+    top = webView.bottom + 15;
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake((self.width/2-240)/2, top, 240, 45)];
     btn.backgroundColor = FCStyle.accent;
     btn.layer.cornerRadius = 8;
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn setTitle:self.activite?@"下一步":@"去激活" forState:UIControlStateNormal];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, (45 - 16) / 2, 150, 16)];
+    titleLabel.text = self.activite?NSLocalizedString(@"Next",@""):NSLocalizedString(@"GuidePage1Button", @"");
+    titleLabel.font = FCStyle.bodyBold;
+    titleLabel.textColor = [UIColor whiteColor];
+    [btn addSubview:titleLabel];
     [btn addTarget:self action:@selector(btnClick) forControlEvents:UIControlEventTouchUpInside];
-    btn.titleLabel.font = FCStyle.bodyBold;
-    UIImage *nextImage = [UIImage systemImageNamed:@"chevron.right" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:16]]];
-    nextImage = [nextImage imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
-    [btn setImage:nextImage forState:UIControlStateNormal];
-    
-    btn.titleEdgeInsets =  UIEdgeInsetsMake(0, -170, 0, 0);
-    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 210, 0, 0);
+    UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, (45 - 16) / 2, 12, 16)];
+    [accessory setImage:[ImageHelper sfNamed:@"chevron.right" font:[UIFont systemFontOfSize:16] color:[UIColor whiteColor]]];
+    accessory.right = 240 - 15;
+    [btn addSubview:accessory];
     [self addSubview:btn];
     
 
     
-    left = width + 18 + 36;
-    top = 55;
+    left = self.width/2 + 15;
+    top = 40;
     
-    UILabel *title2 = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 24)];
-    title2.text = @"尝试首次通过Stay 2来运行脚本";
-    title2.font = FCStyle.headlineBold;
+    UILabel *title2 = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 30)];
+    title2.text = NSLocalizedString(@"GuidePage1Text1", @"");
+    title2.font = FCStyle.title1Bold;
     title2.textColor = FCStyle.fcBlack;
     [self addSubview:title2];
-    top += 36;
     
-    UILabel *stepLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 22)];
-    stepLabel2.text = @"步骤 2/2";
+    top = title2.bottom + 5;
+    UILabel *stepLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 20)];
+    stepLabel2.text = NSLocalizedString(@"GuidePage2Text2", @"");
     stepLabel2.font = FCStyle.body;
-    stepLabel2.textColor = FCStyle.fcPlaceHolder;
+    stepLabel2.textColor = FCStyle.fcSecondaryBlack;
     [self addSubview:stepLabel2];
-    top += 26;
     
-    UILabel *extensionLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 22)];
-    extensionLabel2.text = @"选择脚本运行";
+    top = stepLabel2.bottom + 5;
+    UILabel *extensionLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 20)];
+    extensionLabel2.text = NSLocalizedString(@"GuidePage2Text3", @"");
     extensionLabel2.font = FCStyle.body;
     extensionLabel2.textColor = FCStyle.fcBlack;
     [self addSubview:extensionLabel2];
+    
     top += 41;
-    
-    
     self.tableview.top = top;
-    self.tableview.left = left;
-    
-    
-    _runBtn = [[UIButton alloc] initWithFrame:CGRectMake(left, top, 241, 45)];
-    _runBtn.backgroundColor = FCStyle.accent;
-    _runBtn.layer.cornerRadius = 8;
-    [_runBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _runBtn.titleLabel.font = FCStyle.bodyBold;
-    [_runBtn setImage:nextImage forState:UIControlStateNormal];
-    _runBtn.titleEdgeInsets =  UIEdgeInsetsMake(0, -100, 0, 0);
-    _runBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 210, 0, 0);
-    _runBtn.bottom = self.height - 100;
-    _runBtn.centerX = self.width * 3 / 4;
-    [_runBtn addTarget:self action:@selector(clickRun) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_runBtn];
     
     NSString *url = @"https://fastclip.app/stay/welcome-zh.json";
     
-    if (![[UserScript localeCode] isEqualToString:@"zh"]) {
-        url = @"https://fastclip.app/stay/welcome.json";
-    }
+//    if (![[UserScript localeCode] isEqualToString:@"zh"]) {
+//        url = @"https://fastclip.app/stay/welcome.json";
+//    }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -179,7 +159,8 @@ UITableViewDataSource
             self.scriptList = dic[@"userscripts"];
             self.guideUrl = dic[@"guide"];
             dispatch_async(dispatch_get_main_queue(),^{
-                [_runBtn setTitle:[NSString stringWithFormat:@"运行%@", _scriptList[0][@"name"]] forState:UIControlStateNormal];
+                self->_runScriptLabel.text = [NSString stringWithFormat:@"运行%@", self->_scriptList[0][@"name"]];
+                
             });
 
         }
@@ -188,18 +169,31 @@ UITableViewDataSource
         });
     });
     
-    top += 233;
-    
-    UIButton *seeMoreBtn = [[UIButton alloc] initWithFrame:CGRectMake(left, top, width, 24)];
-    [seeMoreBtn setTitle:@"查看更多脚本安装方式" forState:UIControlStateNormal];
-    seeMoreBtn.titleLabel.font = FCStyle.headline;
+    top = self.tableview.bottom + 15;
+    UIButton *seeMoreBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.width/2+(self.width/2-240)/2, top, 240, 24)];
+    [seeMoreBtn setTitle:NSLocalizedString(@"GuidePage2Text4", @"") forState:UIControlStateNormal];
+    seeMoreBtn.titleLabel.font = FCStyle.body;
     [seeMoreBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
-    
     [seeMoreBtn addTarget:self action:@selector(seeMore) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:seeMoreBtn];
     
+    _runBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.width/2+(self.width/2-240)/2, 682, 240, 45)];
+    _runBtn.backgroundColor = FCStyle.accent;
+    _runBtn.layer.cornerRadius = 8;
+    _runScriptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, (45 - 16) / 2, 150, 16)];
+    _runScriptLabel.text = self.activite?NSLocalizedString(@"Next",@""):NSLocalizedString(@"GuidePage1Button", @"");
+    _runScriptLabel.font = FCStyle.bodyBold;
+    _runScriptLabel.textColor = [UIColor whiteColor];
+    [_runBtn addSubview:_runScriptLabel];
+    UIImageView *accessory2 = [[UIImageView alloc] initWithFrame:CGRectMake(0, (45 - 16) / 2, 12, 16)];
+    [accessory2 setImage:[ImageHelper sfNamed:@"chevron.right" font:[UIFont systemFontOfSize:16] color:[UIColor whiteColor]]];
+    accessory2.right = 240 - 15;
+    [_runBtn addSubview:accessory2];
+    [_runBtn addTarget:self action:@selector(clickRun) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_runBtn];
+    
     UIButton *closebtn = [[UIButton alloc] initWithFrame:CGRectMake(left, top, 40, 22)];
-    [closebtn  setTitle:@"跳过" forState:UIControlStateNormal];
+    [closebtn  setTitle:NSLocalizedString(@"Skip", @"") forState:UIControlStateNormal];
     closebtn.titleLabel.font = FCStyle.body;
     [closebtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     closebtn.top = 10;
@@ -208,7 +202,7 @@ UITableViewDataSource
     [self addSubview:closebtn];
     
     UIButton *closebtn2 = [[UIButton alloc] initWithFrame:CGRectMake(left, top, 40, 22)];
-    [closebtn2  setTitle:@"跳过" forState:UIControlStateNormal];
+    [closebtn2  setTitle:NSLocalizedString(@"Skip", @"") forState:UIControlStateNormal];
     closebtn2.titleLabel.font = FCStyle.body;
     [closebtn2 setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     closebtn2.top = 10;
@@ -223,19 +217,16 @@ UITableViewDataSource
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
-    }
-    cell.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cell.backgroundColor = FCStyle.secondaryPopup;
 
-    cell.contentView.backgroundColor =DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    cell.contentView.backgroundColor = FCStyle.secondaryPopup;
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
     }
     
     if(indexPath.row == self.selectedCount) {
-        cell.contentView.backgroundColor  = RGBA(182, 32, 224, 0.11);
+        cell.contentView.backgroundColor  = FCStyle.accentHighlight;
     }
     
     NSString *icon = self.scriptList[indexPath.row][@"icon"];
@@ -245,24 +236,27 @@ UITableViewDataSource
     [cell.contentView addSubview:imageview];
 
     
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(54, 18, 300, 22)];
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(54, 18, 300, 16)];
     title.text = self.scriptList[indexPath.row][@"name"];
-    title.font = FCStyle.headlineBold;
+    title.font = FCStyle.bodyBold;
     title.textColor = FCStyle.fcBlack;
     [cell.contentView addSubview:title];
     
     
     
-    UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(15, 49, tableView.width - 30, 45)];
+    UILabel *desc = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, tableView.width - 30, 45)];
     desc.text = self.scriptList[indexPath.row][@"description"];
-    desc.font = FCStyle.body;
-    desc.textColor = FCStyle.fcPlaceHolder;
+    desc.font = FCStyle.subHeadline;
+    desc.textColor = FCStyle.fcSecondaryBlack;
     desc.numberOfLines = 0;
     [cell.contentView addSubview:desc];
+    
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(14,97, tableView.width - 30,1)];
     line.backgroundColor = FCStyle.fcSeparator;
     [cell.contentView addSubview:line];
+    line.hidden = indexPath.row == self.scriptList.count - 1;
+    
     return  cell;
 }
 
@@ -274,8 +268,6 @@ UITableViewDataSource
     self.selectedCount = indexPath.row;
     [tableView reloadData];
 }
-
-
 
 - (void)closeFlash {
     NSNotification *notification = [NSNotification notificationWithName:@"closeFlash" object:nil];
@@ -370,10 +362,11 @@ UITableViewDataSource
 
 - (UITableView *)tableview {
     if (_tableview == nil) {
-        _tableview = [[UITableView alloc]initWithFrame:CGRectMake(14 , 0, self.width / 2  - 28, 212) style:UITableViewStylePlain];
+        _tableview = [[UITableView alloc]initWithFrame:CGRectMake(self.width/2+15 , 0, self.width / 2  - 30, 196) style:UITableViewStylePlain];
         _tableview.delegate = self;
         _tableview.dataSource = self;
-        _tableview.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableview.backgroundColor = FCStyle.secondaryPopup;
+        _tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableview.layer.cornerRadius = 8;
         [self addSubview:_tableview];
     }

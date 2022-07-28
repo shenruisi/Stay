@@ -57,6 +57,7 @@ Clear="清空";
 Clipboard="从剪贴板粘贴";
 
 Activated="已激活";
+NotActivated="未激活";
 Stopped="已停止";
 Version="版本";
 Status="状态";
@@ -123,3 +124,15 @@ iCloudTrunOffTips="关闭iCloud同步后，你对脚本的所有操作将不再�
 
 HomeEmptyTips1="点击右上角";
 HomeEmptyTips2="添加用户脚本";
+
+GuidePage1Text1="尝试首次运行一个脚本";
+GuidePage1Text2="步骤 1/2";
+GuidePage1Text3="激活 Stay 2 Safari扩展";
+GuidePage1Text4="根据视频在Safari中操作，完成后返回Stay 2。";
+GuidePage1Button="去激活";
+Next="下一步";
+Skip="跳过";
+GuidePage2Text2="步骤 2/2";
+GuidePage2Text3="选择要运行的用户脚本";
+GuidePage2Text4="查看更多安装方式";
+GuidePage2Button="运行";

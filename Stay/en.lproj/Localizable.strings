@@ -60,6 +60,7 @@ Clear="Clear";
 Clipboard="From clipboard";
 
 Activated="Activated";
+NotActivated="Not activated";
 Stopped="Stopped";
 Version="Version";
 Status="Status";
@@ -127,3 +128,14 @@ iCloudTrunOffTips="After turning off iCloud sync, all your actions on the script
 HomeEmptyTips1="Click";
 HomeEmptyTips2="in the upper right corner to add a userscript";
 
+GuidePage1Text1="Run a userscript";
+GuidePage1Text2="Step 1/2";
+GuidePage1Text3="Activate the Stay 2 Safari extension";
+GuidePage1Text4="Operate accroding to the video, back to Stay 2.";
+GuidePage1Button="Go & Activated";
+Next="Next";
+Skip="Skip";
+GuidePage2Text2="Step 2/2";
+GuidePage2Text3="Select a userscript to run";
+GuidePage2Text4="View more installation methods";
+GuidePage2Button="Run";

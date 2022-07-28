@@ -85,6 +85,22 @@
     return [UIColor colorNamed:@"BorderGoldenColor"];
 }
 
++ (UIFont *)title1{
+#ifdef iOS
+    return [UIFont systemFontOfSize:28];
+#else
+    return [UIFont systemFontOfSize:26];
+#endif
+}
+
++ (UIFont *)title1Bold{
+#ifdef iOS
+    return [UIFont boldSystemFontOfSize:28];
+#else
+    return [UIFont boldSystemFontOfSize:26];
+#endif
+}
+
 + (UIFont *)title3{
 #ifdef iOS
     return [UIFont systemFontOfSize:20];

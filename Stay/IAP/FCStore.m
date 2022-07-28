@@ -129,7 +129,7 @@ static FCStore *instance = nil;
         }
     }
     
-    [SharedStorageManager shared].userDefaults.pro = plan != FCPlan.None;
+    [SharedStorageManager shared].userDefaultsExRO.pro = plan != FCPlan.None;
     return plan;
 }
 

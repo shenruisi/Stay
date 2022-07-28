@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *bodyBold;
 @property(class, nonatomic, readonly) UIFont *footnote;
 @property(class, nonatomic, readonly) UIFont *footnoteBold;
+@property(class, nonatomic, readonly) UIFont *title1;
+@property(class, nonatomic, readonly) UIFont *title1Bold;
 @property(class, nonatomic, readonly) UIFont *title3;
 @property(class, nonatomic, readonly) UIFont *title3Bold;
 
