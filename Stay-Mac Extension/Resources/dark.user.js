@@ -5899,15 +5899,15 @@
     let darkmodeConfig = {
         enabled: true,
     };
-    let isStayAround = window.localStorage.getItem("stay_around");
-    // console.log("isStayAround--1---", isStayAround)
+    let isStayAround = " ";//window.localStorage.getItem("stay_around");
+     console.log("isStayAround--1---", isStayAround)
     if (!isStayAround || isStayAround == "undefined" || isStayAround == " "){
         // todo loop to fetch stayAround
-        // console.log("isStayAround--1---", isStayAround)
+         console.log("isStayAround--2---", isStayAround)
         // fetch darkmode pro flag
         browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
             isStayAround = response.body;
-            // console.log("isStayAround--2--p-response=", response)
+             console.log("isStayAround--2--p-response=", response)
             window.localStorage.setItem("stay_around", isStayAround);
             checkStayAround();
         });
