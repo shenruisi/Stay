@@ -268,6 +268,7 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"p"]){
+        [SharedStorageManager shared].userDefaultsExRO = nil;
         body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
     }
 
