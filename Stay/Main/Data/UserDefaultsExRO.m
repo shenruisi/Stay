@@ -43,7 +43,10 @@
 
 - (void)setPro:(BOOL)pro{
     _pro = pro;
-    [self flush];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self flush];
+    });
+    
 }
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {
