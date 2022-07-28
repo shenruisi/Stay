@@ -92,6 +92,7 @@ static FCStore *instance = nil;
 }
 
 - (FCPlan *)getPlan:(BOOL)refresh{
+    return FCPlan.None;
     RMAppReceipt *receipt = [RMAppReceipt bundleReceipt];
     FCPlan *plan = FCPlan.None;
     if (receipt && [receipt.bundleIdentifier isEqualToString:@"com.dajiu.stay.pro"]){

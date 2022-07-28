@@ -283,7 +283,7 @@ NSString * const SFExtensionMessageKey = @"message";
         }
     }
     else if ([message[@"type"] isEqualToString:@"p"]){
-        body = [SharedStorageManager shared].userDefaults.pro ? @"a":@"b";
+        body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

@@ -88,13 +88,14 @@ UITableViewDataSource
     
     top =  tipsLabel.bottom + 10;
     WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-    WKUserContentController * wkUController = [[WKUserContentController alloc] init];
-    config.userContentController = wkUController;
+    config.allowsInlineMediaPlayback = YES;
+    config.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+//    WKUserContentController * wkUController = [[WKUserContentController alloc] init];
     WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake((self.width/2 - 320) / 2,top,320,450) configuration:config];
     webView.layer.cornerRadius = 10;
     webView.layer.borderColor = FCStyle.fcSeparator.CGColor;
     webView.layer.borderWidth = 1;
-    [webView setOpaque:false];
+//    [webView setOpaque:false];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://fastclip.app/stay/video/activated.htm"]]];
     [self addSubview:webView];
     
