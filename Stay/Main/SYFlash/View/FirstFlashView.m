@@ -145,9 +145,9 @@ UITableViewDataSource
     
     NSString *url = @"https://fastclip.app/stay/welcome-zh.json";
     
-//    if (![[UserScript localeCode] isEqualToString:@"zh"]) {
-//        url = @"https://fastclip.app/stay/welcome.json";
-//    }
+    if (![[UserScript localeCode] isEqualToString:@"zh"]) {
+        url = @"https://fastclip.app/stay/welcome.json";
+    }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -159,7 +159,7 @@ UITableViewDataSource
             self.scriptList = dic[@"userscripts"];
             self.guideUrl = dic[@"guide"];
             dispatch_async(dispatch_get_main_queue(),^{
-                self->_runScriptLabel.text = [NSString stringWithFormat:@"运行%@", self->_scriptList[0][@"name"]];
+                self->_runScriptLabel.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"GuidePage2Button", @""), self->_scriptList[0][@"name"]];
                 
             });
 
@@ -170,17 +170,17 @@ UITableViewDataSource
     });
     
     top = self.tableview.bottom + 15;
-    UIButton *seeMoreBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.width/2+(self.width/2-240)/2, top, 240, 24)];
-    [seeMoreBtn setTitle:NSLocalizedString(@"GuidePage2Text4", @"") forState:UIControlStateNormal];
-    seeMoreBtn.titleLabel.font = FCStyle.body;
-    [seeMoreBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
-    [seeMoreBtn addTarget:self action:@selector(seeMore) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:seeMoreBtn];
+//    UIButton *seeMoreBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.width/2+(self.width/2-240)/2, top, 240, 24)];
+//    [seeMoreBtn setTitle:NSLocalizedString(@"GuidePage2Text4", @"") forState:UIControlStateNormal];
+//    seeMoreBtn.titleLabel.font = FCStyle.body;
+//    [seeMoreBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
+//    [seeMoreBtn addTarget:self action:@selector(seeMore) forControlEvents:UIControlEventTouchUpInside];
+//    [self addSubview:seeMoreBtn];
     
     _runBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.width/2+(self.width/2-240)/2, 682, 240, 45)];
     _runBtn.backgroundColor = FCStyle.accent;
     _runBtn.layer.cornerRadius = 8;
-    _runScriptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, (45 - 16) / 2, 150, 16)];
+    _runScriptLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, (45 - 16) / 2, 200, 16)];
     _runScriptLabel.text = self.activite?NSLocalizedString(@"Next",@""):NSLocalizedString(@"GuidePage1Button", @"");
     _runScriptLabel.font = FCStyle.bodyBold;
     _runScriptLabel.textColor = [UIColor whiteColor];
@@ -231,7 +231,7 @@ UITableViewDataSource
     
     NSString *icon = self.scriptList[indexPath.row][@"icon"];
 
-    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,26,26)] ;
+    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,12,26,26)] ;
     [imageview sd_setImageWithURL:[NSURL URLWithString: icon]];
     [cell.contentView addSubview:imageview];
 
@@ -266,6 +266,7 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.selectedCount = indexPath.row;
+    self->_runScriptLabel.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"GuidePage2Button", @""),  _scriptList[indexPath.row][@"name"]];
     [tableView reloadData];
 }
 
@@ -311,7 +312,13 @@ UITableViewDataSource
             });
             return;
         }
-        [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+        if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){
+            [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+        }
+        else{
+            [[DataManager shareManager] updateUserScript:userScript];
+        }
+        
         
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
