@@ -664,7 +664,7 @@
         sqlite3_bind_int(statement, 24, 0);
         sqlite3_bind_text(statement, 25, [scrpitDetail.license UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 26, [scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
-        sqlite3_bind_int(statement, 27, 1);
+        sqlite3_bind_int(statement, 27, 0);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
