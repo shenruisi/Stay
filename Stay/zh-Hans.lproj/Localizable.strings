@@ -87,7 +87,8 @@ icloud.insync = "同步中…";
 settings.injectMode = "嵌入方式";
 Whitelist = "白名单";
 Blacklist = "黑名单";
-
+WhitelistExplain="手动添加站点（支持正则）到白名单下可以让脚本 %@ 只在白名单内的站点运行";
+BlacklistExplain="手动添加站点（支持正则）到黑名单下可以让脚本 %@ 不在黑名单内的站点运行";
 Created="创建成功";
 Saved="保存成功";
 

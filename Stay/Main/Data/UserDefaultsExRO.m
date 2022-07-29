@@ -7,7 +7,22 @@
 
 #import "UserDefaultsExRO.h"
 
+@interface UserDefaultsExRO(){
+    dispatch_queue_t _userDefaultsExROtQueue;
+}
+
+@end
+
 @implementation UserDefaultsExRO
+
+- (instancetype)initWithPath:(NSString *)path isDirectory:(BOOL)isDirectory{
+    if (self = [super initWithPath:path isDirectory:isDirectory]){
+        _userDefaultsExROtQueue = dispatch_queue_create([[self queueName:@"userDefaultsExROtQueue"] UTF8String],
+                                              DISPATCH_QUEUE_SERIAL);
+    }
+    
+    return  self;
+}
 
 + (BOOL)supportsSecureCoding{
     return YES;
@@ -43,13 +58,11 @@
 
 - (void)setPro:(BOOL)pro{
     _pro = pro;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self flush];
-    });
+    [self flush];
     
 }
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {
-    return  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    return  _userDefaultsExROtQueue;
 }
 @end
