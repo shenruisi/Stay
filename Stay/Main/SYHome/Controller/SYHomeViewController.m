@@ -742,15 +742,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 else{
                                     [[DataManager shareManager] updateUserScript:changedUserscript];
                                 }
-                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-                                    UserScriptStatus status =  UserScriptStatusOK;
-                                    [[UserscriptUpdateManager shareManager] saveIcon:changedUserscript];
-                                    BOOL requireSucceed = [[UserscriptUpdateManager shareManager] saveRequireUrl:changedUserscript];
-                                    status = status | (requireSucceed ? UserScriptStatusOK :  UserScriptStatusNeedRequire);
-                                    BOOL resourceSucceed = [[UserscriptUpdateManager shareManager] saveResourceUrl:changedUserscript];
-                                    status = status | (resourceSucceed ? UserScriptStatusOK :  UserScriptStatusNeedResource);
-                                });
+//                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+//
+//                                });
                                 
+                                UserScriptStatus status =  UserScriptStatusOK;
+                                [[UserscriptUpdateManager shareManager] saveIcon:changedUserscript];
+                                BOOL requireSucceed = [[UserscriptUpdateManager shareManager] saveRequireUrl:changedUserscript];
+                                status = status | (requireSucceed ? UserScriptStatusOK :  UserScriptStatusNeedRequire);
+                                BOOL resourceSucceed = [[UserscriptUpdateManager shareManager] saveResourceUrl:changedUserscript];
+                                status = status | (resourceSucceed ? UserScriptStatusOK :  UserScriptStatusNeedResource);
                             }
                             
                             for (NSString *deletedUUID in deletedUUIDs){

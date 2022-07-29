@@ -91,6 +91,8 @@ icloud.insync = "In sync…";
 settings.injectMode = "Inject Mode";
 Whitelist = "White list";
 Blacklist = "Black list";
+WhitelistExplain="Adding sites (regular support) to the whitelist, %@ will run only on sites within the whitelist";
+BlacklistExplain="Adding sites (regular support) to the blacklist, %@ will run on sites that are not in the blacklist";
 
 Created="Created";
 Saved="Saved";

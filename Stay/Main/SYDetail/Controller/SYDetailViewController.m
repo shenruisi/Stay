@@ -126,7 +126,7 @@
     title.numberOfLines = 0;
     title.font = FCStyle.subHeadline;
     title.textColor = FCStyle.fcPlaceHolder;
-    title.text = [NSString stringWithFormat:@"手动添加站点（支持正则）到黑名单下可以让脚本%@只在黑名单内的站点运行",self.script.name];
+    title.text = [NSString stringWithFormat:NSLocalizedString(@"BlacklistExplain", @""),self.script.name];
     [title sizeToFit];
     [self.blackTableView addSubview:title];
     title.top = top;
@@ -169,7 +169,7 @@
     title.numberOfLines = 0;
     title.font = FCStyle.subHeadline;
     title.textColor = FCStyle.fcPlaceHolder;
-    title.text = [NSString stringWithFormat:@"手动添加站点（支持正则）到白名单下可以让脚本%@只在白名单内的站点运行",self.script.name];
+    title.text = [NSString stringWithFormat:NSLocalizedString(@"WhitelistExplain", @""),self.script.name];
     [title sizeToFit];
     [self.whiteTableView addSubview:title];
     title.top = top;
