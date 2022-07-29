@@ -21,6 +21,12 @@
 #import "Plugin.h"
 #endif
 
+#if iOS
+#import "Stay-Swift.h"
+#else
+#import "Stay_2-Swift.h"
+#endif
+
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
@@ -81,8 +87,21 @@
 #ifdef Mac
     [FCShared.plugin load];
 #endif
+    
         
     
+#ifdef Mac
+
+#else
+[[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+    [[NSUserDefaults standardUserDefaults] setObject:@(2) forKey:@"pay"];
+    if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
+        ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
+        [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"pay"];
+    }
+}];
+#endif
 //    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
 //
 //    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"STAY_SCRIPTS"]];
