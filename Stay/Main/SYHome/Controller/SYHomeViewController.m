@@ -1030,7 +1030,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     version.textColor = RGB(138, 138, 138);
     [cell.contentView addSubview:version];
 
-    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, width / 2, 21)];
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, width, 21)];
     versionLabel.font = FCStyle.subHeadline;
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
