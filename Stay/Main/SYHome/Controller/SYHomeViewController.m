@@ -1201,11 +1201,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UserScript *model = weakSelf.datas[indexPath.row];
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidStopNotification" object:model.uuid];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+                        @"uuid":model.uuid
+                    }];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidActiveNotification" object:model.uuid];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+                        @"uuid":model.uuid
+                    }];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
