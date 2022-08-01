@@ -1,6 +1,6 @@
 const langMessage = {
     "en_US": {
-        "matched_scripts_tab": "Matched Scripts",
+        "matched_scripts_tab": "Matched",
         "console_tab": "Console",
         "darkmode_tab": "Darkmode",
         "state_actived": "Activated",

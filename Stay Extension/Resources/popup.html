@@ -47,9 +47,27 @@
         
         
         </div>
-        <div class="content-box" id="darkmodePro">
-        
-        
+        <div class="content-box" id="darkmodeContainer">
+            <div class="darkmode-container" id="darkmodeUpgrade" style="display:none">
+                <div class="darkmode-upgrade">
+                    <div class="darkmode-img"><img src="./images/darkmode.png"/></div>
+                    <div class="upgrade-btn" data-i18n="upgrade_pro">Upgrade to Stay Pro</div>
+                </div>
+            </div>
+            <div class="darkmode-container" id="darkmodePro" style="display:none">
+                <div class="darkmode-pro">
+                    <div class="darkmode-setting">
+                        <div class="setting on" status="on" data-i18n="darkmode_on"></div>
+                        <div class="setting auto" status="auto" data-i18n="darkmode_auto"></div>
+                        <div class="setting off" status="off" data-i18n="darkmode_off"></div>
+                    </div>
+                    <div class="darkmode-web">
+                        <div class="check-box"><input id="allowEnabled" checked=true type="checkbox" class="allow" /></div>
+                        <input id="domainInput" class="website-input" type="text" disabled >
+                    </div>
+                    <div id="darkmodeAllowNote" class="darkmode-note"></div>
+                </div>
+            </div>
         </div>
         <div class="content-box" id="scriptConsole" style="display:none">
             <div class="console-item">
