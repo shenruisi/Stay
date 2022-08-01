@@ -13,6 +13,12 @@
 #ifdef Mac
 #import "SceneCenter.h"
 #endif
+#if iOS
+#import "Stay-Swift.h"
+#else
+#import "Stay_2-Swift.h"
+#endif
+
 
 @implementation SceneDelegate
 
@@ -32,10 +38,15 @@
     [self.window makeKeyAndVisible];
 #endif
     
+    if(connectionOptions.URLContexts != NULL) {
+        [self scene:scene openURLContexts:connectionOptions.URLContexts];
+    }
+    
 }
 
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts{
     UIOpenURLContext *context =  URLContexts.anyObject;
+    
     if (context){
         [[IACManager sharedManager] handleOpenURL:context.URL];
     }
