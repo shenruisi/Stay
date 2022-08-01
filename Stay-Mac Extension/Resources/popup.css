@@ -3,7 +3,6 @@
 }
 html {
   overflow-y: scroll;
-  background-color: #f6f6f6;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
@@ -705,7 +704,7 @@ input[type='checkbox']:checked::after {
 
 @media (prefers-color-scheme: dark) {
     /* Dark Mode styles go here. */
-    body {
+    html,body {
         font-family: system-ui;
         background-color:#000000;
     }
