@@ -94,11 +94,9 @@
 
 #else
 [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
-    [[NSUserDefaults standardUserDefaults] setObject:@(2) forKey:@"pay"];
     if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
         ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
         [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"pay"];
     }
 }];
 #endif

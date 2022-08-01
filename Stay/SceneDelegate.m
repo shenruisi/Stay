@@ -42,13 +42,6 @@
         [self scene:scene openURLContexts:connectionOptions.URLContexts];
     }
     
-    
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"pay"] != nil) {
-        ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
-        [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
-        
-    }
-    
 }
 
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts{
