@@ -411,8 +411,8 @@
 		1509C3A1288FFD70009BDB85 /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
 		1509C3A2288FFD71009BDB85 /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = fallback.js; sourceTree = "<group>"; };
 		15C79AB227912BC600559EA5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
-		15CBFFE2289786B2000D708F /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = dark.user.js; path = Resources/dark.user.js; sourceTree = "<group>"; };
-		15CBFFE3289786B2000D708F /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = fallback.js; path = Resources/fallback.js; sourceTree = "<group>"; };
+		15CBFFE2289786B2000D708F /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
+		15CBFFE3289786B2000D708F /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = fallback.js; sourceTree = "<group>"; };
 		15F20BD0281BD09300330A56 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkUserscript.js; sourceTree = "<group>"; };
 		15F20BD2281BD24800330A56 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		15F20BD3281BD24800330A56 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-meta-line.js"; sourceTree = "<group>"; };
@@ -965,8 +965,6 @@
 		587689102719238000F834A4 /* Stay Extension */ = {
 			isa = PBXGroup;
 			children = (
-				15CBFFE2289786B2000D708F /* dark.user.js */,
-				15CBFFE3289786B2000D708F /* fallback.js */,
 				58F7F4DB2746342400270873 /* Stay Extension.entitlements */,
 				58F7F4E7274776AB00270873 /* Stroge.h */,
 				58F7F4E8274776AB00270873 /* Stroge.m */,
@@ -983,6 +981,8 @@
 		587689142719238000F834A4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				15CBFFE2289786B2000D708F /* dark.user.js */,
+				15CBFFE3289786B2000D708F /* fallback.js */,
 				58639CF8286447F900AA80D5 /* convert2RegExp.js */,
 				15F20BD3281BD24800330A56 /* parse-meta-line.js */,
 				15F20BD2281BD24800330A56 /* parse-user-script.js */,

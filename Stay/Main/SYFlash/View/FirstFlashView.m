@@ -98,6 +98,8 @@ UITableViewDataSource
     webView.layer.cornerRadius = 10;
     webView.layer.borderColor = FCStyle.fcSeparator.CGColor;
     webView.layer.borderWidth = 1;
+    webView.layer.masksToBounds = YES;
+    webView.backgroundColor = [UIColor clearColor];
 //    [webView setOpaque:false];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://fastclip.app/stay/video/activated.htm"]]];
     [self addSubview:webView];
@@ -347,6 +349,9 @@ UITableViewDataSource
         [UIView animateWithDuration:0.5 animations:^{
             self.contentOffset =  CGPointMake(self.width / 2 , 0);
         }];
+    }
+    else{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://fastclip.app"]];
     }
 }
 
