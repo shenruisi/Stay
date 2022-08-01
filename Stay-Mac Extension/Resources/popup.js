@@ -628,6 +628,7 @@ function checkProAndRenderPannel(params) {
         document.getElementById("darkmodeUpgrade").show();
         document.querySelector("#darkmodeUpgrade .upgrade-btn").addEventListener("click", function (e) {
             console.log("darkmodeUpgrade");
+            window.open("stay://x-callback-url/pay?");
         })
     }
 }

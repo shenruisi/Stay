@@ -61,15 +61,24 @@ let browserLangurage = "",
             '</div>',
             '<div class="console-con">{message}</div>'
             ].join(''),
-    isStayPro=true,
+    isStayAround='b',
+    darkmodeToggleStatus="on",
+    darkmodeConfig={},
     logState = {error:"error-log", log:""};
-
 
 //https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
 //Short code
 function matchRule(str, rule) {
   var escapeRegex = (str) => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   return new RegExp("^" + rule.split("*").map(escapeRegex).join(".*") + "$").test(str);
+}
+
+function getDomain(url) {
+    try {
+        return new URL(url).hostname.toLowerCase();
+    } catch (error) {
+        return url.split("/")[0].toLowerCase();
+    }
 }
 
 const matchesCheck = (userLibraryScript, url) => {
@@ -98,15 +107,30 @@ const matchesCheck = (userLibraryScript, url) => {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.from == "content" && request.operate == "giveRegisterMenuCommand") {
+    const from = request.from;
+    const operate = request.operate;
+    if (from == "content" && operate == "giveRegisterMenuCommand") {
         let uuid = request.uuid;
-        console.log("giveRegisterMenuCommand--request.data---", uuid, request.data)
+        // console.log("giveRegisterMenuCommand--request.data---", uuid, request.data)
         registerMenuMap[uuid] = request.data;
         let registerMenu = registerMenuMap[uuid]
         renderRegisterMenuContent(uuid, registerMenu)
     }
+    else if("darkmode" === from){
+        if (operate == "giveDarkmodeConfig"){
+            console.log("giveDarkmodeConfig==res==", request);
+            darkmodeToggleStatus = request.darkmodeToggleStatus;
+            isStayAround = request.isStayAround;
+            darkmodeConfig = request.darkmodeConfig;
+        }
+    }
     return true;
 });
+
+function fetchDarkmodeConfig() {
+    browser.runtime.sendMessage({ from: "popup", operate: "FETCH_DARKMODE_CONFIG"}, (response) => {})
+}
+
 /**
  * 获取当前网页可匹配的脚本
  */
@@ -116,8 +140,6 @@ function fetchMatchedScriptList(){
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
             try{
                 scriptStateList = response.body;
-                // todo
-                // isStayPro = 
                 renderScriptContent(scriptStateList);
                 fetchMatchedScriptConsole();
             }catch(e){
@@ -227,13 +249,19 @@ window.onload=function(){
                 item.setInnerHtml(i18nProp[item.dataset.i18n]);
             }
         })
-        fetchMatchedScriptList()
+        fetchMatchedScriptList();
+        fetchDarkmodeConfig();
         // 给header tab绑定事件
-        document.querySelector(".header-box .header-tab").addEventListener("click", function (e) {
+        const headerTabDOM = document.querySelector(".header-box .header-tab");
+        headerTabDOM.addEventListener("click", function (e) {
             let target = e.target;
-            if (target) {
-                let type = target.getAttribute("tab");
-                handleTabAction(target, type);
+            while (target != headerTabDOM) {
+                if (target.tagName.toLowerCase() == 'div' && target.className.includes("tab")) {
+                    let type = target.getAttribute("tab");
+                    handleTabAction(target, type);
+                    break;
+                }
+                target = target.parentNode;
             }
         })
         // 给scriptStateListDom添加监听器
@@ -333,7 +361,7 @@ function renderScriptContent(datas) {
         scriptStateListDom.show()
         document.getElementById("dataNull").hide()
         scriptList.forEach(function (item, idnex, array) {
-            var data = item; 
+            var data = item;
             let uuid = data["uuid"];
             let grants = data.grants
             let showMenu = grants && grants.length > 0 && (grants.includes("GM.registerMenuCommand") || grants.includes("GM_registerMenuCommand")) ? "block":"none"
@@ -366,7 +394,7 @@ function renderScriptContent(datas) {
 
 /**
  * open register menu
- * @param {string} uuid 
+ * @param {string} uuid
  */
 function handleScriptRegisterMenu(uuid) {
     let registerMenuPopupDom = document.getElementById("registerMenuPopup");
@@ -420,7 +448,7 @@ function renderRegisterMenuContent(uuid, datas) {
 
 /**
  * close popup of register menu
- * @param {object} e 
+ * @param {object} e
  */
 function closeMenuPopup(e) {
     document.getElementById("registerMenuWarpper").className = "register-menu-warpper filter-form-hide";
@@ -529,28 +557,121 @@ function handleExecScriptManually(uuid, name) {
     }
 }
 
-
-
-
-
 /**
  * tab切换点击事件
  * @param {object} target   被点击的元素
- * @param {number} type     1:match,2:console
+ * @param {number} type     1:match,2:console,3:darkmode
  **/
 function handleTabAction(target, type) {
     if (typeof type != "undefined" && type > 0) {
         document.getElementsByClassName("active-tab")[0].classList.remove("active-tab"); // 删除之前已选中tab的样式
         target.classList.add('active-tab'); // 给当前选中tab添加样式
+        
         if(type == 1){
             scriptStateListDom.show();
             scriptConsoleDom.hide();
-        }else{
+            hideDarkmodeTab();
+        }else if(type == 2){
             showLogNotify = false;
             logNotifyDom.hide()
             scriptStateListDom.hide();
             scriptConsoleDom.show();
+            hideDarkmodeTab();
             fetchAndRenderConsoleLog()
+        }else if(type == 3){
+            showLogNotify = false;
+            darkmodeProDom.show();
+            scriptStateListDom.hide();
+            scriptConsoleDom.hide();
+            checkProAndRenderPannel()
+        }
+    }
+}
+
+function hideDarkmodeTab() {
+    darkmodeProDom.hide();
+    if(document.querySelector("#darkmodePro .darkmode-setting")) document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click");
+    if(document.getElementById("allowEnabled")) document.getElementById("allowEnabled").removeEventListener("change");
+    if(document.querySelector("#darkmodeUpgrade .upgrade-btn")) document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click");
+}
+
+function checkProAndRenderPannel(params) {
+    if ("b" !== isStayAround){
+        document.getElementById("darkmodePro").show();
+        document.getElementById("darkmodeUpgrade").hide();
+        darkmodeProSettingInit();
+
+        // add Event Listener for toggle status of darkmode
+        const darkmodeProSettingDom = document.querySelector("#darkmodePro .darkmode-setting");
+        darkmodeProSettingDom.addEventListener("click", function (e){
+            let target = e.target;
+            if (target.tagName.toLowerCase() == 'div' && target.className.includes("setting") && !target.className.includes("active")) {
+                handleDarkmodeProSetting(target);
+            }
+        })
+        // add Event Listener for whether enabled of website
+        const allowEnabledDom = document.getElementById("allowEnabled");
+        allowEnabledDom.addEventListener('change', function (e) {
+            // console.log("allowEnabled  onchange value==== ", e, ",this.checked=", this.checked)
+            if (darkmodeToggleStatus == "on" || "auto" == darkmodeToggleStatus) {
+                darkmodeConfig.enabled = this.checked
+                browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, enabled: darkmodeConfig.enabled }, (response) => {})
+                showDarkmodeAllowNote(darkmodeConfig.enabled);
+            }
+        });
+    }else{
+        document.getElementById("darkmodePro").hide();
+        document.getElementById("darkmodeUpgrade").show();
+        document.querySelector("#darkmodeUpgrade .upgrade-btn").addEventListener("click", function (e) {
+            console.log("darkmodeUpgrade");
+            window.open("stay://x-callback-url/pay?");
+        })
+    }
+}
+
+function darkmodeProSettingInit() {
+    const activeStatusDom = document.querySelector("#darkmodePro .darkmode-setting .setting[status='" + darkmodeToggleStatus + "']");
+    const domain = getDomain(browserRunUrl);
+    document.getElementById('domainInput').value = domain;
+    const activePro = document.querySelector("#darkmodePro .darkmode-setting .active");
+    if (!activePro || activeStatusDom != activePro) {
+        if (activePro) {
+            activePro.classList.remove("active"); // 删除之前已选中tab的样式
+        }
+        activeStatusDom.classList.add('active'); // 给当前选中tab添加样式
+        document.getElementById('allowEnabled').checked = darkmodeConfig.enabled;
+        document.getElementById("allowEnabled").disabled = false;
+        showDarkmodeAllowNote(darkmodeConfig.enabled);
+    }
+}
+
+function showDarkmodeAllowNote(enabled) {
+    if (enabled) {
+        document.getElementById('darkmodeAllowNote').setInnerHtml(i18nProp["darkmode_enabled"]);
+    } else {
+        document.getElementById('darkmodeAllowNote').setInnerHtml(i18nProp["darkmode_disabled"]);
+    }
+}
+
+function handleDarkmodeProSetting(target) {
+    const activePro = document.querySelector("#darkmodePro .darkmode-setting .active");
+    if (!activePro || target != activePro){
+        if (activePro){
+            activePro.classList.remove("active"); // 删除之前已选中tab的样式
+        }
+        target.classList.add('active'); // 给当前选中tab添加样式
+        darkmodeToggleStatus = target.getAttribute("status");
+        // console.log("darkmodeStatus-----", darkmodeToggleStatus);
+        document.getElementById('allowEnabled').checked = darkmodeConfig.enabled;
+        if (darkmodeToggleStatus){
+            if ("off" === darkmodeToggleStatus){
+                document.getElementById("allowEnabled").disabled = true;
+            }else{
+                document.getElementById("allowEnabled").disabled = false;
+            }
+            browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, enabled: darkmodeConfig.enabled }, (response) => {
+                console.log("DARKMODE_SETTING response----", response)
+            })
         }
     }
 }

@@ -28,6 +28,170 @@ let matchAppScriptConsole = [];
 let gm_console = {};
 let closeableTabs = {};
 let xhrs = [];
+const userAgent =
+    typeof navigator === "undefined"
+        ? "some useragent"
+        : navigator.userAgent.toLowerCase();
+
+const isThunderbird = userAgent.includes("thunderbird");
+const isSafari = userAgent.includes("safari") || isThunderbird;
+
+async function getOKResponse(url, mimeType, origin) {
+    const response = await fetch(url, {
+        cache: "force-cache",
+        credentials: "omit",
+        referrer: origin
+    });
+    if (
+        isSafari &&
+        mimeType === "text/css" &&
+        url.startsWith("safari-web-extension://") &&
+        url.endsWith(".css")
+    ) {
+        return response;
+    }
+    if (
+        mimeType &&
+        !response.headers.get("Content-Type").startsWith(mimeType)
+    ) {
+        throw new Error(`Mime type mismatch when loading ${url}`);
+    }
+    if (!response.ok) {
+        throw new Error(
+            `Unable to load ${url} ${response.status} ${response.statusText}`
+        );
+    }
+    return response;
+}
+async function loadAsDataURL(url, mimeType) {
+    const response = await getOKResponse(url, mimeType);
+    return await readResponseAsDataURL(response);
+}
+async function readResponseAsDataURL(response) {
+    const blob = await response.blob();
+    const dataURL = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+    });
+    console.log("dataURL------", dataURL)
+    return dataURL;
+}
+async function loadAsText(url, mimeType, origin) {
+    const response = await getOKResponse(url, mimeType, origin);
+    return response.text();
+}
+function getDuration(time) {
+    let duration = 0;
+    if (time.seconds) {
+        duration += time.seconds * 1000;
+    }
+    if (time.minutes) {
+        duration += time.minutes * 60 * 1000;
+    }
+    if (time.hours) {
+        duration += time.hours * 60 * 60 * 1000;
+    }
+    if (time.days) {
+        duration += time.days * 24 * 60 * 60 * 1000;
+    }
+    return duration;
+}
+function getStringSize(value) {
+    return value.length * 2;
+}
+
+class LimitedCacheStorage {
+    constructor() {
+        this.bytesInUse = 0;
+        this.records = new Map();
+        this.alarmIsActive = false;
+        browser.alarms.onAlarm.addListener(async (alarm) => {
+            if (alarm.name === LimitedCacheStorage.ALARM_NAME) {
+                this.alarmIsActive = false;
+                this.removeExpiredRecords();
+            }
+        });
+    }
+    ensureAlarmIsScheduled() {
+        if (!this.alarmIsActive) {
+            browser.alarms.create(LimitedCacheStorage.ALARM_NAME, {
+                delayInMinutes: 1
+            });
+            this.alarmIsActive = true;
+        }
+    }
+    has(url) {
+        return this.records.has(url);
+    }
+    get(url) {
+        if (this.records.has(url)) {
+            const record = this.records.get(url);
+            record.expires = Date.now() + LimitedCacheStorage.TTL;
+            this.records.delete(url);
+            this.records.set(url, record);
+            return record.value;
+        }
+        return null;
+    }
+    set(url, value) {
+        this.ensureAlarmIsScheduled();
+        const size = getStringSize(value);
+        if (size > LimitedCacheStorage.QUOTA_BYTES) {
+            return;
+        }
+        for (const [url, record] of this.records) {
+            if (this.bytesInUse + size > LimitedCacheStorage.QUOTA_BYTES) {
+                this.records.delete(url);
+                this.bytesInUse -= record.size;
+            } else {
+                break;
+            }
+        }
+        const expires = Date.now() + LimitedCacheStorage.TTL;
+        this.records.set(url, { url, value, size, expires });
+        this.bytesInUse += size;
+    }
+    removeExpiredRecords() {
+        const now = Date.now();
+        for (const [url, record] of this.records) {
+            if (record.expires < now) {
+                this.records.delete(url);
+                this.bytesInUse -= record.size;
+            } else {
+                break;
+            }
+        }
+        if (this.records.size !== 0) {
+            this.ensureAlarmIsScheduled();
+        }
+    }
+}
+LimitedCacheStorage.QUOTA_BYTES =
+    (navigator.deviceMemory || 4) * 16 * 1024 * 1024;
+LimitedCacheStorage.TTL = getDuration({ minutes: 10 });
+LimitedCacheStorage.ALARM_NAME = "network";
+
+
+const caches = {
+    "data-url": new LimitedCacheStorage(),
+    "text": new LimitedCacheStorage()
+};
+const loaders = {
+    "data-url": loadAsDataURL,
+    "text": loadAsText
+};
+
+async function getUrlData({ url, responseType, mimeType, origin }) {
+    const cache = caches[responseType];
+    const load = loaders[responseType];
+    if (cache.has(url)) {
+        return cache.get(url);
+    }
+    const data = await load(url, mimeType, origin);
+    cache.set(url, data);
+    return data;
+}
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("darkmode" == request.from) {
@@ -40,6 +204,32 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     }
     else if ("bootstrap" == request.from || "iframe" == request.from) {
+        if ("cs-fetch" == request.operate){
+            const id = request.id;
+            const sendRes = async (response) =>
+                browser.tabs.sendMessage(sender.tab.id, {
+                    type: "bg-fetch-response",
+                    id,
+                    ...response
+                });
+            if (isThunderbird) {
+                if (request.data.url.startsWith("safari-web-extension://") || request.data.url.startsWith("safari://")) {
+                    sendRes({ data: null });
+                    return;
+                }
+            }
+            try {
+                const { url, responseType, mimeType, origin } = request.data;
+                getUrlData({ url, responseType, mimeType, origin }).then(response=>{
+                    console.log("response11111---=-=-=-=-=-", response);
+                    sendRes({ data: response });
+                })
+            } catch (err) {
+                sendRes({
+                    error: err && err.message ? err.message : err
+                });
+            }
+        }
         if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
@@ -194,21 +384,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                         }
                                     );
                             });
-
-                            
-                            // console.log("GM_xmlhttpRequest.BG___reader,base64data---", base64data)
-                            // fetch(base64data)
-                            //     .then(res => res.blob())
-                            //     .then(b => {
-                            //         console.log("GM_xmlhttpRequest.BG___reader,fetch--base64data---", b);
-                            //         let type = responseState.response.type;
-                            //         responseState.response = {
-                            //             blob: b,
-                            //             data: base64data,
-                            //             type: type
-                            //         };
-                            //         sendResponse({ onload: responseState });
-                            //     });
                         };
                     }else{
                         sendResponse({ onload: responseState });
@@ -341,11 +516,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 } else {
                     xhr.send();
                 }
-                // if (!body && params.binary) {
-                //     xhr.send(params.binary.getBlob('text/plain'));
-                // }else{
-                //     xhr.send(body);
-                // }
             } catch (error) {
                 console.log('xhr: error: ', error);
                 var resp = {
@@ -544,12 +714,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ body: [] });
             }
         }
-        else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
-            // console.log("background--fetchRegisterMenuCommand---", request);
-            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
-            });
-        }
         else if ("fetchRegisterMenuCommand" == request.operate) {
             // console.log("background--fetchRegisterMenuCommand---", request);
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -566,6 +730,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("refreshTargetTabs" == request.operate){
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
+        }
+        else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
+            // console.log("background--fetchRegisterMenuCommand---", request);
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
+            });
         }
         else if ("DARKMODE_SETTING" == request.operate){
             const darkmodeStatus = request.status;

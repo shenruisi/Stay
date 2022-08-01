@@ -192,7 +192,16 @@ async function getUrlData({ url, responseType, mimeType, origin }) {
 }
 let fileLoader = null;
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if ("bootstrap" == request.from || "iframe" == request.from) {
+    if ("darkmode" == request.from) {
+        if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                console.log("GET_STAY_AROUND-----BG==", response);
+                sendResponse({ body: response.body })
+            });
+        }
+        return true;
+    }
+    else if ("bootstrap" == request.from || "iframe" == request.from) {
         if ("cs-fetch" == request.operate){
             const id = request.id;
             const sendRes = async (response) =>
@@ -505,11 +514,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 } else {
                     xhr.send();
                 }
-                // if (!body && params.binary) {
-                //     xhr.send(params.binary.getBlob('text/plain'));
-                // }else{
-                //     xhr.send(body);
-                // }
             } catch (error) {
                 console.log('xhr: error: ', error);
                 var resp = {
@@ -683,11 +687,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         } 
         else if ("exeScriptManually" == request.operate) {
-//            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", uuid: request.uuid });
-//            });
-            
-            console.log("exeScriptManually in background");
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTheScript", uuid: request.uuid }, function (response) {
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "exeScriptManually", script: response.body });
@@ -729,6 +728,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("refreshTargetTabs" == request.operate){
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
+        }
+        else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
+            // console.log("background--fetchRegisterMenuCommand---", request);
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
+            });
+        }
+        else if ("DARKMODE_SETTING" == request.operate){
+            const darkmodeStatus = request.status;
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus, enabled: request.enabled });
+            });
         }
         return true;
     }

@@ -988,6 +988,8 @@
             a: 1
         };
     }
+
+
     const isCharDigit = (char) => char >= "0" && char <= "9";
     const getAmountOfDigits = (number) => Math.floor(Math.log10(number)) + 1;
     function lowerCalcExpression(color) {
@@ -1238,6 +1240,93 @@
             "-webkit-focus-ring-color": 0xe59700
         }).map(([key, value]) => [key.toLowerCase(), value])
     );
+
+    function getSRGBLightness(r, g, b) {
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    }
+
+    function hasBuiltInDarkTheme() {
+        const drStyles = document.querySelectorAll(".darkreader");
+        drStyles.forEach((style) => (style.disabled = true));
+        const rootColor = parse(
+            getComputedStyle(document.documentElement).backgroundColor
+        );
+        const bodyColor = document.body
+            ? parse(getComputedStyle(document.body).backgroundColor)
+            : {r: 0, g: 0, b: 0, a: 0};
+        const rootLightness =
+            1 -
+            rootColor.a +
+            rootColor.a *
+                getSRGBLightness(rootColor.r, rootColor.g, rootColor.b);
+        const finalLightness =
+            (1 - bodyColor.a) * rootLightness +
+            bodyColor.a *
+                getSRGBLightness(bodyColor.r, bodyColor.g, bodyColor.b);
+        const darkThemeDetected = finalLightness < 0.5;
+        drStyles.forEach((style) => (style.disabled = false));
+        return darkThemeDetected;
+    }
+    function runCheck(callback) {
+        const darkThemeDetected = hasBuiltInDarkTheme();
+        callback(darkThemeDetected);
+    }
+    function hasSomeStyle() {
+        if (
+            document.documentElement.style.backgroundColor ||
+            (document.body && document.body.style.backgroundColor)
+        ) {
+            return true;
+        }
+        for (const style of document.styleSheets) {
+            if (
+                style &&
+                style.ownerNode &&
+                !style.ownerNode.classList.contains("darkreader")
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    let observer$1;
+    let readyStateListener;
+    function runDarkThemeDetector(callback) {
+        stopDarkThemeDetector();
+        if (document.body && hasSomeStyle()) {
+            runCheck(callback);
+            return;
+        }
+        observer$1 = new MutationObserver(() => {
+            if (document.body && hasSomeStyle()) {
+                stopDarkThemeDetector();
+                runCheck(callback);
+            }
+        });
+        observer$1.observe(document.documentElement, {childList: true});
+        if (document.readyState !== "complete") {
+            readyStateListener = () => {
+                if (document.readyState === "complete") {
+                    stopDarkThemeDetector();
+                    runCheck(callback);
+                }
+            };
+            document.addEventListener("readystatechange", readyStateListener);
+        }
+    }
+    function stopDarkThemeDetector() {
+        if (observer$1) {
+            observer$1.disconnect();
+            observer$1 = null;
+        }
+        if (readyStateListener) {
+            document.removeEventListener(
+                "readystatechange",
+                readyStateListener
+            );
+            readyStateListener = null;
+        }
+    }
 
     function scale(x, inLow, inHigh, outLow, outHigh) {
         return ((x - inLow) * (outHigh - outLow)) / (inHigh - inLow) + outLow;
@@ -5760,10 +5849,7 @@
         createDarkReaderInstanceMarker();
         return false;
     }
-    function createOrUpdateDynamicTheme(
-        filterConfig,
-        dynamicThemeFixes,
-    ) {
+    function createOrUpdateDynamicTheme(filterConfig, dynamicThemeFixes, isIFrame) {
         filter = filterConfig;
         fixes = dynamicThemeFixes;
         if (fixes) {
@@ -5862,6 +5948,7 @@
     function setupDarkmode() {
         let fixesText = `%7B%22url%22%3A%5B%22*%22%5D%2C%22invert%22%3A%5B%22.jfk-bubble.gtx-bubble%22%2C%22.captcheck_answer_label%20%3E%20input%20%2B%20img%22%2C%22span%23closed_text%20%3E%20img%5Bsrc%5E%3D%5C%22https%3A%2F%2Fwww.gstatic.com%2Fimages%2Fbranding%2Fgooglelogo%5C%22%5D%22%2C%22span%5Bdata-href%5E%3D%5C%22https%3A%2F%2Fwww.hcaptcha.com%2F%5C%22%5D%20%3E%20%23icon%22%2C%22%23bit-notification-bar-iframe%22%2C%22%3A%3A-webkit-calendar-picker-indicator%22%5D%2C%22css%22%3A%22.vimvixen-hint%20%7B%5Cn%20%20%20%20background-color%3A%20%24%7B%23ffd76e%7D%20!important%3B%5Cn%20%20%20%20border-color%3A%20%24%7B%23c59d00%7D%20!important%3B%5Cn%20%20%20%20color%3A%20%24%7B%23302505%7D%20!important%3B%5Cn%7D%5Cn%3A%3Aplaceholder%20%7B%5Cn%20%20%20%20opacity%3A%200.5%20!important%3B%5Cn%7D%5Cna%5Bhref%3D%5C%22https%3A%2F%2Fcoinmarketcap.com%2F%5C%22%5D%20%3E%20svg%5Bwidth%3D%5C%2294%5C%22%5D%5Bheight%3D%5C%2216%5C%22%5D%20%3E%20path%20%7B%5Cn%20%20%20%20fill%3A%20var(--darkreader-neutral-text)%20!important%3B%5Cn%7D%5Cn%23edge-translate-panel-body%2C%5Cn.MuiTypography-body1%20%7B%5Cn%20%20%20%20color%3A%20var(--darkreader-neutral-text)%20!important%3B%5Cn%7D%5Cngr-main-header%20%7B%5Cn%20%20%20%20background-color%3A%20%24%7Blightblue%7D%20!important%3B%5Cn%7D%5Cnembed%5Btype%3D%5C%22application%2Fpdf%5C%22%5D%20%7B%20filter%3A%20invert(100%25)%20contrast(90%25)%3B%20%7D%22%2C%22ignoreInlineStyle%22%3A%5B%22.sr-wrapper%20*%22%2C%22.sr-reader%20*%22%2C%22.diigoHighlight%22%5D%2C%22ignoreImageAnalysis%22%3A%5B%5D%7D`;
         removeStyle();
+        fixesText = decodeURIComponent(fixesText);
         createOrUpdateDynamicTheme(DEFAULT_THEME, fixesText);
     }
 
@@ -5869,6 +5956,7 @@
         removeStyle();
         removeSVGFilter();
         removeDynamicTheme();
+        stopDarkThemeDetector();
     }
 
     function is_dark() {
@@ -5899,26 +5987,35 @@
     let darkmodeConfig = {
         enabled: true,
     };
-    let isStayAround = " ";//window.localStorage.getItem("stay_around");
-     console.log("isStayAround--1---", isStayAround)
-    if (!isStayAround || isStayAround == "undefined" || isStayAround == " "){
-        // todo loop to fetch stayAround
-         console.log("isStayAround--2---", isStayAround)
-        // fetch darkmode pro flag
-        browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
+    let isStayAround = window.localStorage.getItem("stay_around");
+    console.log("isStayAround--1---", isStayAround)
+   if (!isStayAround || isStayAround == "undefined" || isStayAround == " "){
+       // todo loop to fetch stayAround
+        console.log("isStayAround--2---", isStayAround)
+       // fetch darkmode pro flag
+       fetchStayAround()
+   }else{
+       checkStayAround();
+       asyncFetchStayAround();
+   }
+
+   async function asyncFetchStayAround(){
+       browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
             isStayAround = response.body;
-             console.log("isStayAround--2--p-response=", response)
+            console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
+            window.localStorage.setItem("stay_around", isStayAround);
+       });
+   }
+
+   function fetchStayAround(){
+       browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
+            isStayAround = response.body;
+            console.log("fetchStayAround isStayAround--2--p-response=", response)
             window.localStorage.setItem("stay_around", isStayAround);
             checkStayAround();
-        });
-    }else{
-        checkStayAround();
-    }
+       });
+   }
 
-
-   
-    // window.localStorage.setItem("stay_dakemode_toggle_status", darkmodeToggleStatus);
-    
     // check domain whether to darkmode
     // 1、whether pro around
     // 2、toggleStatus[on/auto/off]
@@ -5937,6 +6034,7 @@
 
     function handleToggleDarkmode() {
         if ("b" !== isStayAround) {
+            window.localStorage.setItem("stay_" + browserDomain, JSON.stringify(darkmodeConfig));
             const enabled = darkmodeConfig.enabled;
             switch (darkmodeToggleStatus) {
                 case "on":
@@ -5974,7 +6072,6 @@
                 window.localStorage.setItem("stay_dakemode_toggle_status", darkmodeToggleStatus);
                 let enabled = request.enabled;
                 darkmodeConfig.enabled = enabled;
-                window.localStorage.setItem("stay_" + browserDomain, JSON.stringify(darkmodeConfig));
                 handleToggleDarkmode();
             }
             else if ("FETCH_DARKMODE_CONFIG" === operate) {

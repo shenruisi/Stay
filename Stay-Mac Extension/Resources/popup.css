@@ -509,6 +509,7 @@ input {
     font-size: 15px;
     padding: 2px 18px;
     margin-top: 12px;
+    cursor: pointer;
 }
 .darkmode-setting{
     margin: 0 auto 15px auto;
@@ -550,12 +551,13 @@ input {
     color: #FFFFFF;
     background: #B620E0;
 }
-.darkmode-web{position: relative;margin-bottom: 10px;width: 100%; background: #fff;}
+.darkmode-web{
+    border-radius: 7px;
+    border: 1px solid #B620E0;
+    position: relative;margin-bottom: 10px;width: 100%; background: #fff;}
 .darkmode-web input.website-input{
     width: 100%;
     padding: 0 30px 0 10px;
-    border-radius: 7px;
-    border: 1px solid #B620E0;
     height: 24px;
     line-height: 24px;
     font-size: 12px;
@@ -565,7 +567,8 @@ input {
     right: 2px;
     top: 2px;
     width: 26px;
-    height: 20px;       
+    height: 20px;  
+    z-index: 999;     
 }
 .check-box input.allow{
     cursor: pointer;
