@@ -590,9 +590,15 @@ function handleTabAction(target, type) {
 
 function hideDarkmodeTab() {
     darkmodeProDom.hide();
-    if(document.querySelector("#darkmodePro .darkmode-setting")) document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click");
-    if(document.getElementById("allowEnabled")) document.getElementById("allowEnabled").removeEventListener("change");
-    if(document.querySelector("#darkmodeUpgrade .upgrade-btn")) document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click");
+    if(document.querySelector("#darkmodePro .darkmode-setting")){
+        document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click");
+    } 
+    if(document.getElementById("allowEnabled")){
+        document.getElementById("allowEnabled").removeEventListener("change");
+    } 
+    if(document.querySelector("#darkmodeUpgrade .upgrade-btn")){
+        document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click");
+    } 
 }
 
 function checkProAndRenderPannel(params) {

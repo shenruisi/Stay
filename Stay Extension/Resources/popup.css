@@ -3,7 +3,6 @@
 }
 html {
   overflow-y: scroll;
-  background-color: #f6f6f6;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
@@ -29,7 +28,6 @@ body {
 }
 body{
     padding: 10px;
-    max-width: 375px;
     min-width: 375px;
     width: 100%;
     min-height: 380px;
@@ -703,9 +701,15 @@ input[type='checkbox']:checked::after {
     from{height: 100%;}
 }
 
+@media only screen  and (min-device-width : 768px)  and (max-device-width : 1024px){  
+    body{
+        max-width: 375px;
+    }
+} 
+
 @media (prefers-color-scheme: dark) {
     /* Dark Mode styles go here. */
-    body {
+    html,body {
         font-family: system-ui;
         background-color:#000000;
     }
