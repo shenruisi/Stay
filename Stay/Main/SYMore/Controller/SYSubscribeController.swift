@@ -238,7 +238,7 @@ class SYSubscribeController: UIViewController {
     
     @objc
     func termAction() {
-        if let url = URL(string: "https://fastclip.app/policy/terms.htm") {
+        if let url = URL(string: "https://fastclip.app/policy/terms-stay.htm") {
             UIApplication.shared.open(url)
         }
     }

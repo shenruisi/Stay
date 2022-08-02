@@ -42,6 +42,7 @@
     userScript.active = dic[@"active"]  == nil ? NO : [dic[@"active"] boolValue];
     userScript.whitelist = dic[@"whitelist"] == nil ? @[] : dic[@"whitelist"];
     userScript.blacklist = dic[@"blacklist"] == nil ? @[] : dic[@"blacklist"];
+    userScript.updateSwitch = [dic[@"updateSwitch"] boolValue];
     return userScript;
 }
 
@@ -78,7 +79,8 @@
         @"injectInto":self.injectInto ? self.injectInto : @"auto",
         @"license":self.license ? self.license : @"",
         @"iCloudIdentifier":self.iCloudIdentifier ? self.iCloudIdentifier : @"",
-        @"status":@(self.status)
+        @"status":@(self.status),
+        @"updateSwitch":@(self.updateSwitch)
     };
 }
 
@@ -112,6 +114,7 @@
     copyed.license = [self.license copy];
     copyed.iCloudIdentifier = [self.iCloudIdentifier copy];
     copyed.status = self.status;
+    copyed.updateSwitch = self.updateSwitch;
     return copyed;
 }
 
@@ -148,7 +151,8 @@
         @"injectInto":self.injectInto ? self.injectInto : @"auto",
         @"license":self.license ? self.license : @"",
         @"iCloudIdentifier":self.iCloudIdentifier ? self.iCloudIdentifier : @"",
-        @"status":@(self.status)
+        @"status":@(self.status),
+        @"updateSwitch":@(self.updateSwitch)
     };
 }
 

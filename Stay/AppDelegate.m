@@ -88,21 +88,24 @@
     [FCShared.plugin load];
 #endif
     
-        
-    
+     
+    [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
 #ifdef Mac
-
+        if ([QuickAccess primaryController] != nil){
+            [QuickAccess primaryController].selectedIndex = 2;
+            [[QuickAccess primaryController].selectedViewController presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
+                               animated:YES completion:^{}];
+        }
 #else
-[[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
-    if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-        ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
-        [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
-    }
-}];
+        if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
+            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
+            [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+        }
 #endif
-//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-//
-//    NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[groupUserDefaults arrayForKey:@"STAY_SCRIPTS"]];
+        
+    }];
+    
     
     return YES;
 }
