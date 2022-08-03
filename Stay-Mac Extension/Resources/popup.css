@@ -160,6 +160,7 @@ input {
 .console-tab{
     width: 28%;
     cursor: pointer;
+    position: relative;
 }
 .darkmode-tab {
     width: 38%;
@@ -737,6 +738,9 @@ input[type='checkbox']:checked::after {
     .console-tab, .darkmode-tab, .darkmode-tab{
         border-left: 1px solid #565656;
         color: #c5c5c5;
+    }
+    .darkmode-note {
+        color: rgba(197, 197, 197, 0.4);
     }
     .header-tab{
         background:rgb(28,28,30);

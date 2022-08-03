@@ -123,8 +123,8 @@ input {
     line-height: 26px;
     border-radius: 50%;
     position: absolute;
-    top: -9px;
-    right: -9px;
+    top: -4px;
+    right: -5px;
     background: #B620E0;
     color: #fff;
     font-size: 14px;
@@ -159,6 +159,7 @@ input {
 .console-tab{
     width: 28%;
     cursor: pointer;
+    position: relative;
 }
 .darkmode-tab {
     width: 38%;
@@ -559,6 +560,7 @@ input {
     height: 24px;
     line-height: 24px;
     font-size: 12px;
+    color: #FFFFFF;
 }
 .check-box{
     position: absolute;
@@ -738,6 +740,9 @@ input[type='checkbox']:checked::after {
     }
     .match-tab, .darkmode-setting .setting {
         color: #c5c5c5;
+    }
+    .darkmode-note {
+        color: rgba(197, 197, 197, 0.4);
     }
     .console-tab, .darkmode-tab, .darkmode-tab{
         border-left: 1px solid #565656;
