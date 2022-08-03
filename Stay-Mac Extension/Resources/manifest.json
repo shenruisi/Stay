@@ -56,5 +56,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms"]
+    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage"]
 }

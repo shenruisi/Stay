@@ -1874,20 +1874,6 @@
         });
     }
 
-    browser.runtime.onMessage.addListener(({ type, data, error, id }) => {
-        if (type === MessageType.BG_FETCH_RESPONSE) {
-            const resolve = resolvers$1.get(id);
-            const reject = rejectors.get(id);
-            resolvers$1.delete(id);
-            rejectors.delete(id);
-            if (error) {
-                reject && reject(error);
-            } else {
-                resolve && resolve(data);
-            }
-        }
-    });
-
     async function getOKResponse(url, mimeType, origin) {
         const response = await fetch(url, {
             cache: "force-cache",
@@ -5979,63 +5965,140 @@
         }
     }
 
+    const DEFAULT_SETTINGS = {
+        enabled: true,
+        theme: DEFAULT_THEME,
+        presets: [],
+        customThemes: [],
+        siteList: [],
+        siteListEnabled: [],
+        applyToListedOnly: false,
+        changeBrowserTheme: false,
+        syncSettings: true,
+        syncSitesFixes: false,
+        automation: "",
+        automationBehaviour: "OnOff",
+        time: {
+            activation: "18:00",
+            deactivation: "9:00"
+        },
+        location: {
+            latitude: null,
+            longitude: null
+        },
+        enableForPDF: true,
+        enableForProtectedPages: false,
+        enableContextMenus: false,
+        detectDarkTheme: false
+    };
     
+    async function writeLocalStorage(values) {
+        return new Promise(async (resolve) => {
+            browser.storage.local.set(values, () => {
+                resolve();
+            });
+        });
+    }
+
+    async function readLocalStorage(defaults) {
+        return new Promise((resolve) => {
+            browser.storage.local.get(defaults, (local) => {
+                if (browser.runtime.lastError) {
+                    console.error(browser.runtime.lastError.message);
+                    resolve(defaults);
+                    return;
+                }
+                resolve(local);
+            });
+            // resolve(defaults);
+        });
+    }
+
     // console.log("window.location.href=", window.location.href);
     let browserDomain = getDomain(window.location.href);
 
-    let darkmodeToggleStatus = window.localStorage.getItem("stay_dakemode_toggle_status") || "on";
-    let darkmodeConfig = {
-        enabled: true,
+    let darkmodeConfigSetting;
+
+    const DARK_MODE_CONFIG = {
+        isStayAround: "",
+        siteListDisabled: [],
+        toggleStatus:"on", //on,off,auto
     };
-    let isStayAround = window.localStorage.getItem("stay_around");
-    console.log("isStayAround--1---", isStayAround)
-   if (!isStayAround || isStayAround == "undefined" || isStayAround == " "){
-       // todo loop to fetch stayAround
-        console.log("isStayAround--2---", isStayAround)
-       // fetch darkmode pro flag
-       fetchStayAround()
-   }else{
-       checkStayAround();
-       asyncFetchStayAround();
-   }
 
-   async function asyncFetchStayAround(){
-       browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
-            isStayAround = response.body;
-            console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
-            window.localStorage.setItem("stay_around", isStayAround);
-       });
-   }
+    handleStartDarkMode();
 
-   function fetchStayAround(){
-       browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
-            isStayAround = response.body;
-            console.log("fetchStayAround isStayAround--2--p-response=", response)
-            window.localStorage.setItem("stay_around", isStayAround);
-            checkStayAround();
-       });
-   }
+    function validateSettings(darkmodeConfig) {
+        if (!isPlainObject(darkmodeConfig)) {
+            return {
+                errors: ["Settings are not a plain object"],
+                darkmodeConfig: DARK_MODE_CONFIG
+            };
+        }
+    }
 
+    async function handleStartDarkMode(){
+        let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
+        validateSettings(darkmodeConfig);
+        // handleBrowserListenerMessage(darkmodeConfig);
+        darkmodeConfigSetting = darkmodeConfig;
+        console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
+        if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
+            console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
+            fetchStayAround(darkmodeConfig);
+        }else{
+            console.log("isStayAround is null-------");
+            checkStayAround(darkmodeConfig);
+            asyncFetchStayAround();
+        }
+    }
+
+    async function asyncFetchStayAround(){
+        let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
+        browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
+            let isStayAround = response.body;
+            // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
+            darkmodeConfig["isStayAround"]= isStayAround;
+            writeLocalStorage(darkmodeConfig);
+        });
+    }
+
+    function fetchStayAround(darkmodeConfig){
+        // console.log("fetchStayAround isStayAround--2--p-start=", darkmodeConfig)
+        browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
+            let isStayAround = response.body;
+            // console.log("fetchStayAround isStayAround--2--p-response=", response)
+            darkmodeConfig["isStayAround"]= isStayAround;
+            // todo test
+            // darkmodeConfig["isStayAround"] = "a";
+            checkStayAround(darkmodeConfig);
+        });
+    }
+
+    function isPlainObject(x) {
+        return typeof x === "object" && x != null && !Array.isArray(x);
+    }
+    function isArray(x) {
+        return Array.isArray(x);
+    }
     // check domain whether to darkmode
     // 1、whether pro around
     // 2、toggleStatus[on/auto/off]
     // 3、allow enabled for website [true/false]
-    function checkStayAround() {
+    function checkStayAround(darkmodeConfig) {
+        let isStayAround = darkmodeConfig["isStayAround"];
         if ("b" !== isStayAround){
-            const darkmodeConfigStr = window.localStorage.getItem("stay_" + browserDomain);
-            // console.log("darkmodeConfigStr====", darkmodeConfigStr)
-            if (darkmodeConfigStr && darkmodeConfigStr !== "undefined" && darkmodeConfigStr !== "null" && darkmodeConfigStr !== "{}") {
-                darkmodeConfig = JSON.parse(darkmodeConfigStr);
-            }
-            handleToggleDarkmode()
+            writeLocalStorage(darkmodeConfig);
+            handleToggleDarkmode(darkmodeConfig)
         }
     }
 
-
-    function handleToggleDarkmode() {
+    function handleToggleDarkmode(darkmodeConfig) {
+        let isStayAround = darkmodeConfig["isStayAround"];
         if ("b" !== isStayAround) {
-            window.localStorage.setItem("stay_" + browserDomain, JSON.stringify(darkmodeConfig));
-            const enabled = darkmodeConfig.enabled;
+            // writeLocalStorage(darkmodeConfig);
+            let siteListDisabled = darkmodeConfig["siteListDisabled"];
+            let darkmodeToggleStatus = darkmodeConfig["toggleStatus"];
+            const enabled = isArray(siteListDisabled)&&siteListDisabled.includes(browserDomain)?false:true;
             switch (darkmodeToggleStatus) {
                 case "on":
                     if (enabled) {
@@ -6058,33 +6121,63 @@
         }
     }
 
-    String.prototype.bool = function () {
-        return (/^true$/i).test(this);
-    }
 
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        let operate = request.operate;
-        let from = request.from;
+        const { type, data, error, id, from, operate} = request
+
+        if (type === MessageType.BG_FETCH_RESPONSE) {
+            const resolve = resolvers$1.get(id);
+            const reject = rejectors.get(id);
+            resolvers$1.delete(id);
+            rejectors.delete(id);
+            if (error) {
+                reject && reject(error);
+            } else {
+                resolve && resolve(data);
+            }
+        }
+
         if (from == "background") {
             if ("DARKMODE_SETTING" === operate) {
+                validateSettings(darkmodeConfigSetting)
+                // console.log("addListener--DARKMODE_SETTING--darkmodeConfig--2--", darkmodeConfigSetting);
                 // console.log("DARKMODE_SETTING-----", request);
-                darkmodeToggleStatus = request.status;
-                window.localStorage.setItem("stay_dakemode_toggle_status", darkmodeToggleStatus);
+                darkmodeConfigSetting["toggleStatus"] = request.status;
+                let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
+                let domain = request.domain;
                 let enabled = request.enabled;
-                darkmodeConfig.enabled = enabled;
-                handleToggleDarkmode();
+                if(enabled){
+                    if(siteListDisabled.includes(domain)){
+                        siteListDisabled.splice(siteListDisabled.indexOf(domain), 1);
+                    }
+                }else{
+                    if(!siteListDisabled.includes(domain)){
+                        siteListDisabled.push(domain)
+                    }
+                }
+                
+                darkmodeConfigSetting["siteListDisabled"] = siteListDisabled;
+                // console.log("addListener--DARKMODE_SETTING--darkmodeConfig--1--", darkmodeConfigSetting);
+                writeLocalStorage(darkmodeConfigSetting);
+
+                handleToggleDarkmode(darkmodeConfigSetting);
             }
             else if ("FETCH_DARKMODE_CONFIG" === operate) {
+                validateSettings(darkmodeConfigSetting)
+                // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--2--", darkmodeConfigSetting);
+                let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
+                const enabled = isArray(siteListDisabled)&&siteListDisabled.includes(browserDomain)?false:true;
+                // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--enabled--", enabled);
                 browser.runtime.sendMessage({ 
                     from: "darkmode", 
-                    isStayAround: isStayAround, 
-                    darkmodeToggleStatus: darkmodeToggleStatus, 
-                    darkmodeConfig: darkmodeConfig,
+                    isStayAround: darkmodeConfigSetting["isStayAround"], 
+                    darkmodeToggleStatus: darkmodeConfigSetting["toggleStatus"], 
+                    enabled: enabled,
                     operate: "giveDarkmodeConfig" 
                 });
             }
             return true;
         }
-    })
-
+    });
+   
 })();

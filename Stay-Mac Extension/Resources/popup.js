@@ -63,7 +63,7 @@ let browserLangurage = "",
             ].join(''),
     isStayAround='b',
     darkmodeToggleStatus="on",
-    darkmodeConfig={},
+    siteEnabled=true,
     logState = {error:"error-log", log:""};
 
 //https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
@@ -118,10 +118,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if("darkmode" === from){
         if (operate == "giveDarkmodeConfig"){
-            // console.log("giveDarkmodeConfig==res==", request);
+            console.log("giveDarkmodeConfig==res==", request);
             darkmodeToggleStatus = request.darkmodeToggleStatus;
             isStayAround = request.isStayAround;
-            darkmodeConfig = request.darkmodeConfig;
+            siteEnabled = request.enabled;
         }
     }
     return true;
@@ -235,7 +235,7 @@ window.onload=function(){
     scriptConsoleDom = document.getElementById('scriptConsole');
     darkmodeProDom = document.getElementById('darkmodeContainer');
     // load i18n properties
-    i18nProp = langMessage[browserLangurage] || langMessage["en_US"]
+    i18nProp = langMessage[browserLangurage] || langMessage["en_US"];
     try {
         let i18nDataAttrs = document.querySelectorAll("[data-i18n]");
         i18nDataAttrs.forEach(item => {
@@ -313,15 +313,6 @@ window.onload=function(){
     catch (err) {
         console.log("loadI18nProperties", err);
     }
-};
-
-/**
- * String原型对象方法
- * 将字符串的true/false 转为boolean基本数据类型
- * @returns boolean
- */
-String.prototype.bool = function () {
-    return (/^true$/i).test(this);
 };
 
 /**
@@ -557,10 +548,6 @@ function handleExecScriptManually(uuid, name) {
     }
 }
 
-
-
-
-
 /**
  * tab切换点击事件
  * @param {object} target   被点击的元素
@@ -594,9 +581,23 @@ function handleTabAction(target, type) {
 
 function hideDarkmodeTab() {
     darkmodeProDom.hide();
-    document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click");
-    document.getElementById("allowEnabled").removeEventListener("change");
-    document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click");
+    if(document.querySelector("#darkmodePro .darkmode-setting")){
+        document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click");
+    } 
+    if(document.getElementById("allowEnabled")){
+        document.getElementById("allowEnabled").removeEventListener("change");
+    } 
+    if(document.querySelector("#darkmodeUpgrade .upgrade-btn")){
+        document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click");
+    } 
+}
+
+function getDomain(url) {
+    try {
+        return new URL(url).hostname.toLowerCase();
+    } catch (error) {
+        return url.split("/")[0].toLowerCase();
+    }
 }
 
 function checkProAndRenderPannel(params) {
@@ -615,19 +616,20 @@ function checkProAndRenderPannel(params) {
         })
         // add Event Listener for whether enabled of website
         const allowEnabledDom = document.getElementById("allowEnabled");
-        allowEnabledDom.addEventListener('change', function (e) {
+        allowEnabledDom.addEventListener('click', function (e) {
             // console.log("allowEnabled  onchange value==== ", e, ",this.checked=", this.checked)
             if (darkmodeToggleStatus == "on" || "auto" == darkmodeToggleStatus) {
-                darkmodeConfig.enabled = this.checked
-                browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, enabled: darkmodeConfig.enabled }, (response) => {})
-                showDarkmodeAllowNote(darkmodeConfig.enabled);
+                siteEnabled = this.checked;
+                // console.log("allowEnabled  onchange value, siteEnabled=", siteEnabled)
+                browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {})
+                showDarkmodeAllowNote(siteEnabled);
             }
         });
     }else{
         document.getElementById("darkmodePro").hide();
         document.getElementById("darkmodeUpgrade").show();
         document.querySelector("#darkmodeUpgrade .upgrade-btn").addEventListener("click", function (e) {
-            console.log("darkmodeUpgrade");
+            // console.log("darkmodeUpgrade");
             window.open("stay://x-callback-url/pay?");
         })
     }
@@ -643,8 +645,9 @@ function darkmodeProSettingInit() {
             activePro.classList.remove("active"); // 删除之前已选中tab的样式
         }
         activeStatusDom.classList.add('active'); // 给当前选中tab添加样式
-        document.getElementById('allowEnabled').checked = darkmodeConfig.enabled;
-        showDarkmodeAllowNote(darkmodeConfig.enabled);
+        document.getElementById('allowEnabled').checked = siteEnabled;
+        document.getElementById("allowEnabled").disabled = false;
+        showDarkmodeAllowNote(siteEnabled);
     }
 }
 
@@ -665,14 +668,14 @@ function handleDarkmodeProSetting(target) {
         target.classList.add('active'); // 给当前选中tab添加样式
         darkmodeToggleStatus = target.getAttribute("status");
         // console.log("darkmodeStatus-----", darkmodeToggleStatus);
-        document.getElementById('allowEnabled').checked = darkmodeConfig.enabled;
+        document.getElementById('allowEnabled').checked = siteEnabled;
         if (darkmodeToggleStatus){
             if ("off" === darkmodeToggleStatus){
                 document.getElementById("allowEnabled").disabled = true;
             }else{
                 document.getElementById("allowEnabled").disabled = false;
             }
-            browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, enabled: darkmodeConfig.enabled }, (response) => {
+            browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {
                 console.log("DARKMODE_SETTING response----", response)
             })
         }

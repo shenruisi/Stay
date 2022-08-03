@@ -740,7 +740,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("DARKMODE_SETTING" == request.operate){
             const darkmodeStatus = request.status;
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus, enabled: request.enabled });
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus,  domain: request.domain, enabled: request.enabled });
             });
         }
         return true;
