@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UserDefaultsExRO : FCDisk<NSSecureCoding>
 
+@property (nonatomic, strong) NSString *deviceID;
 @property (nonatomic, assign) BOOL pro;
 @end
 

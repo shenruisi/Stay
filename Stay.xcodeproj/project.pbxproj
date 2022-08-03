@@ -233,6 +233,8 @@
 		58D1B45B28893D4C009BD608 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 58D1B45328893D4B009BD608 /* AppleIncRootCertificate.cer */; };
 		58D1B45D28893F31009BD608 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D1B45C28893F31009BD608 /* StoreKit.framework */; };
 		58D1B45E28893F3E009BD608 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D1B45C28893F31009BD608 /* StoreKit.framework */; };
+		58DF3FF52898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
+		58DF3FF62898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
@@ -564,6 +566,8 @@
 		58D1B45228893D4B009BD608 /* RMAppReceipt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMAppReceipt.m; sourceTree = "<group>"; };
 		58D1B45328893D4B009BD608 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		58D1B45C28893F31009BD608 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		58DF3FF32898D4810029E1AA /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
+		58DF3FF42898D4820029E1AA /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		58EA44432869BB5200BD6C4D /* ImportSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportSlideController.h; sourceTree = "<group>"; };
 		58EA44442869BB5200BD6C4D /* ImportSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportSlideController.m; sourceTree = "<group>"; };
 		58EA4447286A9B7D00BD6C4D /* ImportMenuModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportMenuModalViewController.h; sourceTree = "<group>"; };
@@ -903,6 +907,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				58DF3FF22898D4050029E1AA /* API */,
 				58D1B44D28893D27009BD608 /* IAP */,
 				58EA444B286AFB5400BD6C4D /* iCloud */,
 				584C05AA286179BB00E07DDF /* Helper */,
@@ -1103,6 +1108,15 @@
 				58D1B45228893D4B009BD608 /* RMAppReceipt.m */,
 			);
 			path = IAP;
+			sourceTree = "<group>";
+		};
+		58DF3FF22898D4050029E1AA /* API */ = {
+			isa = PBXGroup;
+			children = (
+				58DF3FF42898D4820029E1AA /* API.h */,
+				58DF3FF32898D4810029E1AA /* API.m */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 		58EA444B286AFB5400BD6C4D /* iCloud */ = {
@@ -2130,6 +2144,7 @@
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
+				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
 				84F48318273A739800217BB3 /* MainTabBarController.m in Sources */,
 				84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */,
@@ -2252,6 +2267,7 @@
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
 				588202672859E73900B2721A /* SYVersionUtils.m in Sources */,
 				588202682859E73900B2721A /* SYNotesViewController.m in Sources */,
+				58DF3FF62898D4820029E1AA /* API.m in Sources */,
 				588202692859E73900B2721A /* SharedStorageManager.m in Sources */,
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
@@ -2547,7 +2563,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2581,7 +2597,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2620,7 +2636,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2673,7 +2689,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";

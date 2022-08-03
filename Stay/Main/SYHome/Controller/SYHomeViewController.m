@@ -53,6 +53,8 @@
 #import "AlertHelper.h"
 #import "TimeHelper.h"
 
+#import "API.h"
+
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -702,6 +704,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self updateScriptWhen:array type:false];
     
     [self iCloudSyncIfNeeded];
+    
+//    [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
+//                   isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
+//             isExtension:NO];
 }
 
 - (void)iCloudSyncIfNeeded{
