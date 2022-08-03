@@ -2,7 +2,7 @@ const langMessage = {
     "en_US": {
         "matched_scripts_tab": "Matched",
         "console_tab": "Console",
-        "darkmode_tab": "Darkmode",
+        "darkmode_tab": "Dark Mode",
         "state_actived": "Activated",
         "state_manually": "Manually Executed",
         "state_stopped": "Stopped",
