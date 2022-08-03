@@ -579,7 +579,7 @@ function handleTabAction(target, type) {
             showLogNotify = false;
             logNotifyDom.hide()
             scriptStateListDom.hide();
-            scriptConsoleDom.show();
+            // scriptConsoleDom.show();
             hideDarkmodeTab();
             fetchAndRenderConsoleLog()
         }else if(type == 3){
