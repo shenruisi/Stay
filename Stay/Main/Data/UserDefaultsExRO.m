@@ -30,11 +30,13 @@
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.pro forKey:@"pro"];
+    [coder encodeObject:self.deviceID forKey:@"deviceID"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _pro = [coder decodeBoolForKey:@"pro"];
+        _deviceID = [coder decodeObjectForKey:@"deviceID"];
     }
     
     return self;
@@ -54,12 +56,17 @@
                                                                      fromData:data
                                                                         error:nil];
     _pro = userDefaults.pro;
+    _deviceID = userDefaults.deviceID;
 }
 
 - (void)setPro:(BOOL)pro{
     _pro = pro;
     [self flush];
-    
+}
+
+- (void)setDeviceID:(NSString *)deviceID{
+    _deviceID = deviceID;
+    [self flush];
 }
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {

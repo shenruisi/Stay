@@ -478,7 +478,9 @@
     [[DataManager shareManager] updateScriptConfigInjectInfo:inject numberId:self.script.uuid];
     self.script.injectInto = inject;
     [self initScrpitContent];
-    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:self.script.uuid];
+     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+          @"uuid":self.script.uuid
+     }];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
 

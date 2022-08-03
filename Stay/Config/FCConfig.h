@@ -15,7 +15,8 @@ typedef enum : NSInteger {
     GroupUserDefaultsKeyMacMainWindowFrame = 1000,
     GroupUserDefaultsKeyMacPrimaryWidth,
     GroupUserDefaultsKeySyncEnabled = 10000,
-    GroupUserDefaultsKeyLastSync
+    GroupUserDefaultsKeyLastSync,
+    GroupUserDefaultsKeyDeviceUUID
 } GroupUserDefaultsKey;
 
 @interface FCConfig : NSObject
