@@ -5987,7 +5987,7 @@
     let darkmodeConfig = {
         enabled: true,
     };
-    let isStayAround = "a";window.localStorage.getItem("stay_around");
+    let isStayAround = window.localStorage.getItem("stay_around");
     console.log("isStayAround--1---", isStayAround)
    if (!isStayAround || isStayAround == "undefined" || isStayAround == " "){
        // todo loop to fetch stayAround
@@ -5996,7 +5996,7 @@
        fetchStayAround()
    }else{
        checkStayAround();
-    //    asyncFetchStayAround();
+       asyncFetchStayAround();
    }
 
    async function asyncFetchStayAround(){
