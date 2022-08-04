@@ -6089,14 +6089,14 @@
     // 3、allow enabled for website [true/false]
     function checkStayAround(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround){
+        if ("b" !== isStayAround && "a" === isStayAround){
             handleToggleDarkmode(darkmodeConfig)
         }
     }
 
     function handleToggleDarkmode(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround) {
+        if ("b" !== isStayAround && "a" === isStayAround) {
             // writeLocalStorage(darkmodeConfig);
             let siteListDisabled = darkmodeConfig["siteListDisabled"];
             let darkmodeToggleStatus = darkmodeConfig["toggleStatus"];

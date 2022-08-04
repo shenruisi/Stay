@@ -6059,7 +6059,7 @@
             // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
         });
     }
@@ -6071,7 +6071,7 @@
             // console.log("fetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
             checkStayAround(darkmodeConfig);
         });
@@ -6089,14 +6089,14 @@
     // 3、allow enabled for website [true/false]
     function checkStayAround(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround){
+        if ("b" !== isStayAround && "a" === isStayAround){
             handleToggleDarkmode(darkmodeConfig)
         }
     }
 
     function handleToggleDarkmode(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround) {
+        if ("b" !== isStayAround && "a" === isStayAround) {
             // writeLocalStorage(darkmodeConfig);
             let siteListDisabled = darkmodeConfig["siteListDisabled"];
             let darkmodeToggleStatus = darkmodeConfig["toggleStatus"];
