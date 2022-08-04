@@ -34,7 +34,6 @@
         },
         {
             "js": [
-                "fallback.js",
                 "dark.user.js"
             ],
             "matches": [

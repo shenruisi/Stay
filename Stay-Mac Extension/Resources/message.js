@@ -16,7 +16,8 @@ const langMessage = {
         "darkmode_auto": "Auto",
         "darkmode_on": "On",
         "darkmode_enabled":"Enabled for current website",
-        "darkmode_disabled": "Disabled for current website"
+        "darkmode_disabled": "Disabled for current website",
+        "download_text":"User script manager"
     },
     "zh_CN": {
         "matched_scripts_tab": "已匹配脚本",
@@ -35,7 +36,8 @@ const langMessage = {
         "darkmode_auto": "自动",
         "darkmode_on": "开",
         "darkmode_enabled": "启用当前网站",
-        "darkmode_disabled": "禁用当前网站"
+        "darkmode_disabled": "禁用当前网站",
+        "download_text":"用户脚本管理"
     },
     "zh_HK": {
         "matched_scripts_tab": "已匹配腳本",
@@ -54,6 +56,7 @@ const langMessage = {
         "darkmode_auto":"自動",
         "darkmode_on":"開",
         "darkmode_enabled": "啟用當前網站",
-        "darkmode_disabled": "禁用當前網站"
+        "darkmode_disabled": "禁用當前網站",
+        "download_text":"用戶腳本管理"
     },
 }
