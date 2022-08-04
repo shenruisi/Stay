@@ -699,10 +699,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
-    //自动更新代码保留先注释
-    NSArray *array = [[DataManager shareManager] findScript:1];
-    [self updateScriptWhen:array type:false];
-    
+
     [self iCloudSyncIfNeeded];
     
     [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
@@ -719,6 +716,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             if (iCloudEnabled){
                 if (error){
                     [FCShared.iCloudService showError:error inCer:self];
+                    NSArray *array = [[DataManager shareManager] findScript:1];
+                    [self updateScriptWhen:array type:false];
                     return;
                 }
                 
@@ -763,6 +762,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 [[DataManager shareManager] deleteScriptInUserScriptByNumberId:deletedUUID];
                             }
                             
+                            
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 [self reloadTableView];
                                 [self.tableView reloadData];
@@ -774,6 +774,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                             [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
                         }
                         
+                        [self updateScriptWhen:array type:false];
                         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
                         [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
                                                                             object:nil
@@ -783,10 +784,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                         }];
                     }];
                 }
+                else{
+                    NSArray *array = [[DataManager shareManager] findScript:1];
+                    [self updateScriptWhen:array type:false];
+                }
+            }
+            else{
+                NSArray *array = [[DataManager shareManager] findScript:1];
+                [self updateScriptWhen:array type:false];
             }
             
         }];
         
+    }
+    else{
+        NSArray *array = [[DataManager shareManager] findScript:1];
+        [self updateScriptWhen:array type:false];
     }
 }
 
@@ -808,9 +821,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 if(userScript.content != nil && userScript.content.length > 0) {
                                     userScript.uuid = scrpit.uuid;
                                     userScript.active = scrpit.active;
+                                    userScript.updateSwitch = scrpit.updateSwitch;
+                                    userScript.whitelist = scrpit.whitelist;
+                                    userScript.blacklist = scrpit.blacklist;
+                                    userScript.injectInto = scrpit.injectInto;
+                                    userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                     [[DataManager shareManager] updateUserScript:userScript];
                                     [self refreshScript];
-                                    
+                                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":userScript.uuid}];
+                                            [[NSNotificationCenter defaultCenter]postNotification:notification];
                                 }
                             } else {
                                 [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
@@ -818,9 +837,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                         UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                                         userScript.uuid = scrpit.uuid;
                                         userScript.active = scrpit.active;
+                                        userScript.updateSwitch = scrpit.updateSwitch;
+                                        userScript.whitelist = scrpit.whitelist;
+                                        userScript.blacklist = scrpit.blacklist;
+                                        userScript.injectInto = scrpit.injectInto;
+                                        userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                             [[DataManager shareManager] updateUserScript:userScript];
                                             [self refreshScript];
+                                            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":userScript.uuid}];
+                                                    [[NSNotificationCenter defaultCenter]postNotification:notification];
                                         }
                                     }
                                 } failBlock:^(NSError * _Nonnull error) {
@@ -843,12 +869,19 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                         if(status == 1) {
                             userScript.uuid = scrpit.uuid;
                             userScript.active = scrpit.active;
+                            userScript.updateSwitch = scrpit.updateSwitch;
+                            userScript.whitelist = scrpit.whitelist;
+                            userScript.blacklist = scrpit.blacklist;
+                            userScript.injectInto = scrpit.injectInto;
+                            userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                             if(userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0) {
                                 userScript.downloadUrl = scrpit.downloadUrl;
                             }
                             if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                 [[DataManager shareManager] updateUserScript:userScript];
                                 [self refreshScript];
+                                NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":userScript.uuid}];
+                                        [[NSNotificationCenter defaultCenter]postNotification:notification];
                             }
                         }
                     }
