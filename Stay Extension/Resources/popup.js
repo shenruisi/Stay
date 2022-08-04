@@ -302,7 +302,7 @@ window.onload=function(){
                 return;
             }
         });
-        document.getElementById("mainIcon").addEventListener("click", (e)=>{
+        document.querySelector("#mainIcon img").addEventListener("click", (e)=>{
             window.open("stay://");
         })
         document.querySelector("#registerMenuPopup .close").addEventListener("click", function (e) {

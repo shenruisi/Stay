@@ -562,6 +562,7 @@ input {
     line-height: 24px;
     font-size: 12px;
     opacity:1;
+    border-radius:7px;
 }
 .check-box{
     position: absolute;

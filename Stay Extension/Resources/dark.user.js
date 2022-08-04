@@ -6058,6 +6058,8 @@
             let isStayAround = response.body;
             // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
+            // todo test
+            darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
         });
     }
@@ -6069,7 +6071,8 @@
             // console.log("fetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            // darkmodeConfig["isStayAround"] = "a";
+            darkmodeConfig["isStayAround"] = "a";
+            writeLocalStorage(darkmodeConfig);
             checkStayAround(darkmodeConfig);
         });
     }
@@ -6087,7 +6090,6 @@
     function checkStayAround(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
         if ("b" !== isStayAround){
-            writeLocalStorage(darkmodeConfig);
             handleToggleDarkmode(darkmodeConfig)
         }
     }
