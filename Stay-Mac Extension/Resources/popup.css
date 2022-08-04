@@ -596,6 +596,9 @@ input {
     box-sizing: border-box;
     border: 1px solid #B620E0;
 }
+input[type='checkbox']:disabled::after {
+    opacity: 0.4;
+}
 input[type='checkbox']:checked::after {
     content: '✓';
     font-size: 10px;
