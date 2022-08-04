@@ -515,17 +515,10 @@
 }
 
 - (void) updateSwitchAction:(UISwitch *) scriptSwitch {
-     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[self.script.uuid];
     if (scriptSwitch.on == YES) {
         [[DataManager shareManager] updateScriptConfigAutoupdate:1 numberId:self.script.uuid];
-         if(entity != nil) {
-           entity.needUpdate = false;
-         }
     } else {
         [[DataManager shareManager] updateScriptConfigAutoupdate:0 numberId:self.script.uuid];
-         if(entity != nil) {
-           entity.needUpdate = true;
-         }
     }
     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
