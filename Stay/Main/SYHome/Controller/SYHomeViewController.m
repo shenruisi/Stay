@@ -1074,7 +1074,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[model.uuid];
 
-    if(entity != nil && entity.needUpdate){
+    if(entity != nil && entity.needUpdate && !model.updateSwitch){
 
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 60, 20);
