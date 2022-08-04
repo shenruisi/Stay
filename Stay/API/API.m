@@ -7,8 +7,11 @@
 //
 
 #import "API.h"
-#import "AppDelegate.h"
-#import "FCConfig.h"
+#ifdef MacNative
+#else
+#import <UIKit/UIKit.h>
+#endif
+
 
 @interface API(){
     NSString *_deviceType;
@@ -20,8 +23,8 @@
 
 @implementation API
 
-//static NSString *END_POINT = @"https://fastclip.shenyin.name/";
-static NSString *END_POINT = @"http://localhost:8080/fc/";
+static NSString *END_POINT = @"https://api.shenyin.name/stay/";
+//static NSString *END_POINT = @"http://localhost:8080/stay/";
 static API *instance = nil;
 + (instancetype)shared{
  static dispatch_once_t onceToken;
@@ -35,12 +38,18 @@ static API *instance = nil;
 
 - (id)init{
     if (self = [super init]){
+#ifdef MacNative
+        _deviceType = @"mac";
+        _deviceName = [[NSHost currentHost] localizedName];
+#else
 #ifdef Mac
         _deviceType = @"mac";
 #else
         _deviceType = [[UIDevice currentDevice].model lowercaseString];
 #endif
         _deviceName = [UIDevice currentDevice].name;
+#endif
+        
         _osVersion = [NSString stringWithFormat:@"%ld.%ld",
                       [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion,
                       [[NSProcessInfo processInfo] operatingSystemVersion].minorVersion];
@@ -50,7 +59,8 @@ static API *instance = nil;
 }
 
 - (void)active:(NSString *)uuid isPro:(BOOL)isPro isExtension:(BOOL)isExtension{
-    NSString *reqUrl = [NSString stringWithFormat:@"%@/active",END_POINT];
+//    return;
+    NSString *reqUrl = [NSString stringWithFormat:@"%@active",END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
     NSDictionary *event = @{

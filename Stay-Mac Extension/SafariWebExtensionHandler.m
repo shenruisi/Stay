@@ -11,6 +11,7 @@
 #import "MatchPattern.h"
 #import "Stroge.h"
 #import "SharedStorageManager.h"
+#import "API.h"
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < 110000
 NSString * const SFExtensionMessageKey = @"message";
@@ -154,6 +155,9 @@ NSString * const SFExtensionMessageKey = @"message";
         }
        
         body = datas;
+        [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID
+                       isPro:[SharedStorageManager shared].userDefaultsExRO.pro
+                 isExtension:YES];
     }
     else if ([message[@"type"] isEqualToString:@"fetchTheScript"]){
         NSString *uuid = message[@"uuid"];

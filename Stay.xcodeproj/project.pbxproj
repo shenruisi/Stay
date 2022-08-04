@@ -235,6 +235,8 @@
 		58D1B45E28893F3E009BD608 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D1B45C28893F31009BD608 /* StoreKit.framework */; };
 		58DF3FF52898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58DF3FF62898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
+		58DF3FF8289A4C370029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
+		58DF3FF9289A50250029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA44442869BB5200BD6C4D /* ImportSlideController.m */; };
 		58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4448286A9B7D00BD6C4D /* ImportMenuModalViewController.m */; };
@@ -2087,6 +2089,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58DF3FF9289A50250029E1AA /* API.m in Sources */,
 				58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */,
 				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
@@ -2202,6 +2205,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58DF3FF8289A4C370029E1AA /* API.m in Sources */,
 				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
 				58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
@@ -2379,6 +2383,11 @@
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"MacNative=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay-Mac Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Stay-Mac Extension";
@@ -2414,6 +2423,7 @@
 				CURRENT_PROJECT_VERSION = 61;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "MacNative=1";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay-Mac Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Stay-Mac Extension";

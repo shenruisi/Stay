@@ -705,9 +705,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     [self iCloudSyncIfNeeded];
     
-//    [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
-//                   isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
-//             isExtension:NO];
+    [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
+                   isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
+             isExtension:NO];
 }
 
 - (void)iCloudSyncIfNeeded{
@@ -715,9 +715,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     FCPlan *plan = [[FCStore shared] getPlan:YES];
     if (plan != FCPlan.None){
         [self.customView refreshIcon];
-        if (iCloudEnabled){
-            [FCShared.iCloudService refreshWithCompletionHandler:^(NSError *error) {
-                
+        [FCShared.iCloudService refreshWithCompletionHandler:^(NSError *error) {
+            if (iCloudEnabled){
                 if (error){
                     [FCShared.iCloudService showError:error inCer:self];
                     return;
@@ -784,8 +783,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                         }];
                     }];
                 }
-            }];
-        }
+            }
+            
+        }];
+        
     }
 }
 
