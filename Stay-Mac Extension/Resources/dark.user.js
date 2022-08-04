@@ -6020,7 +6020,7 @@
     let darkmodeConfigSetting;
 
     const DARK_MODE_CONFIG = {
-        isStayAround: "",
+        isStayAround: "b",
         siteListDisabled: [],
         toggleStatus:"on", //on,off,auto
     };
@@ -6041,12 +6041,12 @@
         validateSettings(darkmodeConfig);
         // handleBrowserListenerMessage(darkmodeConfig);
         darkmodeConfigSetting = darkmodeConfig;
-        console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
+        // console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
         if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
-            console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
+            // console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
             fetchStayAround(darkmodeConfig);
         }else{
-            console.log("isStayAround is null-------");
+            // console.log("isStayAround is null-------");
             checkStayAround(darkmodeConfig);
             asyncFetchStayAround();
         }
@@ -6059,7 +6059,7 @@
             // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
         });
     }
@@ -6071,7 +6071,7 @@
             // console.log("fetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
             checkStayAround(darkmodeConfig);
         });
