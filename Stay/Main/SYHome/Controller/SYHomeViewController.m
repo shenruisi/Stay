@@ -767,14 +767,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 [self reloadTableView];
                                 [self.tableView reloadData];
                                 [self initScrpitContent];
+                                [self updateScriptWhen:array type:false];
                                 [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
                             });
                         }
                         else{
+                            [self updateScriptWhen:array type:false];
                             [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
                         }
                         
-                        [self updateScriptWhen:array type:false];
+                        
                         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
                         [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
                                                                             object:nil
