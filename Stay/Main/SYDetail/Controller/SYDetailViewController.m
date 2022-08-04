@@ -16,7 +16,8 @@
 #import "FCStyle.h"
 #import <objc/runtime.h>
 #import "SYTextInputViewController.h"
-
+#import "ScriptMananger.h"
+#import "ScriptEntity.h"
 
 
 #ifdef Mac
@@ -514,10 +515,17 @@
 }
 
 - (void) updateSwitchAction:(UISwitch *) scriptSwitch {
+     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[self.script.uuid];
     if (scriptSwitch.on == YES) {
         [[DataManager shareManager] updateScriptConfigAutoupdate:1 numberId:self.script.uuid];
+         if(entity != nil) {
+           entity.needUpdate = true;
+         }
     } else {
         [[DataManager shareManager] updateScriptConfigAutoupdate:0 numberId:self.script.uuid];
+         if(entity != nil) {
+           entity.needUpdate = false;
+         }
     }
     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":self.script.uuid}];
           [[NSNotificationCenter defaultCenter]postNotification:notification];
