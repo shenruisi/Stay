@@ -661,7 +661,8 @@
         NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
         NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
         sqlite3_bind_double(statement, 23, timeString.doubleValue);
-        sqlite3_bind_int(statement, 24, 0);
+        int updateSwitch= scrpitDetail.updateSwitch?1:0;
+        sqlite3_bind_int(statement, 24, updateSwitch);
         sqlite3_bind_text(statement, 25, [scrpitDetail.license UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 26, [scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
         sqlite3_bind_int(statement, 27, 0);
@@ -740,7 +741,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ?,iCloud_identifier = ?   where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ?,iCloud_identifier = ?,switch = ?   where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -808,7 +809,9 @@
         
         sqlite3_bind_text(statement, 23,[scrpitDetail.license UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 24,[scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
-        sqlite3_bind_text(statement, 25,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        int updateSwitch = scrpitDetail.updateSwitch ?1:0;
+        sqlite3_bind_int(statement, 25, updateSwitch);
+        sqlite3_bind_text(statement, 26,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
 
     }
     
