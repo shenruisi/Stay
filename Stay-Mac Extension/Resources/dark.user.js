@@ -6026,6 +6026,11 @@
     };
     
     async function writeLocalStorage(values) {
+        browser.runtime.sendMessage({ 
+            from: "darkmode", 
+            operate: "GIVEN_DARK_SETTING",
+            darkmodeSettingStr: JSON.stringify(values)
+        });
         return new Promise(async (resolve) => {
             browser.storage.local.set(values, () => {
                 resolve();
@@ -6091,7 +6096,7 @@
             // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            // darkmodeConfig["isStayAround"] = "a";
+            darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
         });
     }
@@ -6103,7 +6108,7 @@
             // console.log("fetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            // darkmodeConfig["isStayAround"] = "a";
+            darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
             checkStayAround(darkmodeConfig);
         });
