@@ -202,12 +202,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         }
         else if ("FETCH_DARK_SETTING" === request.operate){
-            let darkmodeSettingStr = window.localStorage.getItem("stay_dark_mode_setting");
-            if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
-                sendResponse({body: JSON.parse(darkmodeSettingStr)})
-            }else{
-                sendResponse({body: {}})
-            }
+            // let darkmodeSettingStr = window.localStorage.getItem("stay_dark_mode_setting");
+            // if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
+            //     sendResponse({body: JSON.parse(darkmodeSettingStr)})
+            // }else{
+            //     sendResponse({body: {}})
+            // }
+            sendResponse({body: {darkmodePro: "1231231"}})
         }
         else if ("GIVEN_DARK_SETTING" === request.operate){
             let darkmodeSettingStr = request.darkmodeSettingStr
