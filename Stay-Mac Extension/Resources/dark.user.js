@@ -6096,7 +6096,7 @@
             // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
         });
     }
@@ -6108,7 +6108,7 @@
             // console.log("fetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
             checkStayAround(darkmodeConfig);
         });
