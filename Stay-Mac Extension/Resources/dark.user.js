@@ -5940,26 +5940,34 @@
         ) {
             const css =
                 'html, body, body :not(iframe):not(div[style^="position:absolute;top:0;left:-"]) { background-color: #181a1b !important; border-color: #776e62 !important; color: #e8e6e3 !important; } html, body { opacity: 1 !important; transition: none !important; }';
-            const fallback = document.createElement("style");
-            fallback.classList.add("darkreader");
-            fallback.classList.add("darkreader--fallback");
-            fallback.media = "screen";
-            fallback.textContent = css;
-            if (document.head) {
-                document.head.append(fallback);
-            } else {
-                const root = document.documentElement;
-                root.append(fallback);
-                const observer = new MutationObserver(() => {
-                    if (document.head) {
-                        observer.disconnect();
-                        if (fallback.isConnected) {
-                            document.head.append(fallback);
+            
+            let fallback = document.querySelector(".darkreader--fallback");
+            if(fallback){
+                fallback.textContent = css;
+            }else{
+                fallback = document.createElement("style");
+                fallback.classList.add("darkreader");
+                fallback.classList.add("darkreader--fallback");
+                fallback.media = "screen";
+                fallback.textContent = css;
+                if (document.head) {
+                    document.head.append(fallback);
+                } else {
+                    const root = document.documentElement;
+                    root.append(fallback);
+                    const observer = new MutationObserver(() => {
+                        if (document.head) {
+                            observer.disconnect();
+                            if (fallback.isConnected) {
+                                document.head.append(fallback);
+                            }
                         }
-                    }
-                });
-                observer.observe(root, {childList: true});
+                    });
+                    observer.observe(root, {childList: true});
+                }
             }
+            
+            
         }
     }
     
@@ -5972,6 +5980,7 @@
     }
 
     function cleanupDarkmode() {
+        cleanFallbackStyle();
         removeStyle();
         removeSVGFilter();
         removeDynamicTheme();
@@ -6074,7 +6083,9 @@
     }
 
     async function handleStartDarkMode(){
+        console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
         let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
+        console.log("DARK_MODE_CONFIG_fetch---2---", new Date().getTime());
         validateSettings(darkmodeConfig);
         // handleBrowserListenerMessage(darkmodeConfig);
         darkmodeConfigSetting = darkmodeConfig;
@@ -6128,6 +6139,8 @@
         let isStayAround = darkmodeConfig["isStayAround"];
         if ("b" !== isStayAround && "a" === isStayAround){
             handleToggleDarkmode(darkmodeConfig)
+        }else{
+            cleanFallbackStyle();
         }
     }
 
@@ -6157,6 +6170,8 @@
                     }
                     break;
             }
+        }else{
+            cleanFallbackStyle();
         }
     }
 
