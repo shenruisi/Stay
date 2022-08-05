@@ -89,7 +89,7 @@
         }
 
         if (grants.includes('GM_openInTab')) {
-            source += GM_openInTab.toString() + '\n\n';
+            source += GM_openInTab.toString() + '\n\n window.GM_openInTab = GM_openInTab(); \n\n';
         }
         if (grants.includes('GM.openInTab')) {
             source += 'GM.openInTab = ' + GM_openInTab.toString() + '\n\n';
@@ -734,7 +734,7 @@
                 }
             }
             else if ("GM_openInTab" === grant && !gmFunName.includes("GM_openInTab")) {
-                api += `${GM_openInTab}\n`;
+                api += `${GM_openInTab}\n window.GM_openInTab = GM_openInTab();\n`;
                 gmFunName.push("GM_openInTab");
             }
             else if (("GM.closeTab" === grant || "GM_closeTab" === grant) && !gmFunName.includes("GM_closeTab")) {
