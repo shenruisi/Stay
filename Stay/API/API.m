@@ -63,6 +63,7 @@ static API *instance = nil;
     NSString *reqUrl = [NSString stringWithFormat:@"%@active",END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
+    NSLocale *locale = [NSLocale currentLocale];
     NSDictionary *event = @{
         @"uuid":uuid,
         @"device_type":_deviceType,
@@ -70,7 +71,8 @@ static API *instance = nil;
         @"os_version":_osVersion,
         @"app_version":_appVersion,
         @"pro":isPro ? @"lifetime":@"",
-        @"is_extension":@(isExtension)
+        @"is_extension":@(isExtension),
+        @"country":locale.countryCode
     };
     NSData *data = [NSJSONSerialization dataWithJSONObject:event
     options:NSJSONWritingPrettyPrinted
