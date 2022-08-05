@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1509C3A3288FFD71009BDB85 /* dark.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 1509C3A1288FFD70009BDB85 /* dark.user.js */; };
-		1509C3A4288FFD71009BDB85 /* fallback.js in Resources */ = {isa = PBXBuildFile; fileRef = 1509C3A2288FFD71009BDB85 /* fallback.js */; };
 		15C79AB327912BC600559EA5 /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 15C79AB227912BC600559EA5 /* message.js */; };
 		15CBFFE4289786B3000D708F /* dark.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 15CBFFE2289786B2000D708F /* dark.user.js */; };
-		15CBFFE5289786B3000D708F /* fallback.js in Resources */ = {isa = PBXBuildFile; fileRef = 15CBFFE3289786B2000D708F /* fallback.js */; };
 		15F20BD1281BD09300330A56 /* checkUserscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD0281BD09300330A56 /* checkUserscript.js */; };
 		15F20BD4281BD24800330A56 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD2281BD24800330A56 /* parse-user-script.js */; };
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
@@ -413,10 +411,8 @@
 
 /* Begin PBXFileReference section */
 		1509C3A1288FFD70009BDB85 /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
-		1509C3A2288FFD71009BDB85 /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = fallback.js; sourceTree = "<group>"; };
 		15C79AB227912BC600559EA5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		15CBFFE2289786B2000D708F /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
-		15CBFFE3289786B2000D708F /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = fallback.js; sourceTree = "<group>"; };
 		15F20BD0281BD09300330A56 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkUserscript.js; sourceTree = "<group>"; };
 		15F20BD2281BD24800330A56 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		15F20BD3281BD24800330A56 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-meta-line.js"; sourceTree = "<group>"; };
@@ -842,7 +838,6 @@
 			isa = PBXGroup;
 			children = (
 				1509C3A1288FFD70009BDB85 /* dark.user.js */,
-				1509C3A2288FFD71009BDB85 /* fallback.js */,
 				58CF689F286D91B200A52B2B /* bootstrap.js */,
 				58CF689D286D917800A52B2B /* message.js */,
 				58639D0928644B7E00AA80D5 /* checkUserscript.js */,
@@ -989,7 +984,6 @@
 			isa = PBXGroup;
 			children = (
 				15CBFFE2289786B2000D708F /* dark.user.js */,
-				15CBFFE3289786B2000D708F /* fallback.js */,
 				58639CF8286447F900AA80D5 /* convert2RegExp.js */,
 				15F20BD3281BD24800330A56 /* parse-meta-line.js */,
 				15F20BD2281BD24800330A56 /* parse-user-script.js */,
@@ -1836,7 +1830,6 @@
 				58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */,
 				58639D00286449D700AA80D5 /* jquery.cookie.min.js in Resources */,
 				58639CEF2864477D00AA80D5 /* popup.js in Resources */,
-				1509C3A4288FFD71009BDB85 /* fallback.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1936,7 +1929,6 @@
 				587689162719238000F834A4 /* _locales in Resources */,
 				582F9DE4276F32B900C88135 /* base64.min.js in Resources */,
 				587689242719238000F834A4 /* popup.js in Resources */,
-				15CBFFE5289786B3000D708F /* fallback.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2380,7 +2372,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2420,7 +2412,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "MacNative=1";
@@ -2573,7 +2565,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2607,7 +2599,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2646,7 +2638,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2699,7 +2691,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 62;
+				CURRENT_PROJECT_VERSION = 63;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2845,7 +2837,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2903,7 +2895,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";

@@ -133,6 +133,7 @@ function fetchDarkmodeConfig() {
 
 /**
  * 获取当前网页可匹配的脚本
+ * 初始化tab
  */
 function fetchMatchedScriptList(){
     browser.tabs.getSelected(null, (tab) => {
@@ -141,6 +142,10 @@ function fetchMatchedScriptList(){
             try{
                 scriptStateList = response.body;
                 renderScriptContent(scriptStateList);
+                let activeTab = window.localStorage.getItem("stay_popuo_active_tab") || 1;
+                const activeTabDom = document.querySelector(".header-box .header-tab .tab[tab='" + activeTab + "']");
+                handleTabAction(activeTabDom, activeTab);
+
                 fetchMatchedScriptConsole();
             }catch(e){
                 console.log(e);
@@ -251,6 +256,8 @@ window.onload=function(){
         })
         fetchMatchedScriptList();
         fetchDarkmodeConfig();
+        
+
         // 给header tab绑定事件
         const headerTabDOM = document.querySelector(".header-box .header-tab");
         headerTabDOM.addEventListener("click", function (e) {
@@ -349,7 +356,7 @@ function renderScriptContent(datas) {
     const scriptList = datas;
     scriptStateListDom.cleanInnerHTML();
     if (scriptList && scriptList.length>0){
-        scriptStateListDom.show()
+        // scriptStateListDom.show()
         document.getElementById("dataNull").hide()
         scriptList.forEach(function (item, idnex, array) {
             var data = item;
@@ -378,8 +385,6 @@ function renderScriptContent(datas) {
             _dom.innerHTML = scriptDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
             scriptStateListDom.appendChild(_dom);
         })
-    }else{
-        showNullData(i18nProp["null_scripts"]);
     }
 }
 
@@ -555,11 +560,18 @@ function handleExecScriptManually(uuid, name) {
  **/
 function handleTabAction(target, type) {
     if (typeof type != "undefined" && type > 0) {
-        document.getElementsByClassName("active-tab")[0].classList.remove("active-tab"); // 删除之前已选中tab的样式
+        const curActiveDom = document.querySelector(".header-box .header-tab .active-tab");
+        if(curActiveDom){
+            curActiveDom.classList.remove("active-tab"); // 删除之前已选中tab的样式
+        }
         target.classList.add('active-tab'); // 给当前选中tab添加样式
-        
+        window.localStorage.setItem("stay_popuo_active_tab", type);
         if(type == 1){
-            scriptStateListDom.show();
+            if(scriptStateList && scriptStateList.length>0){
+                scriptStateListDom.show();
+            }else{
+                showNullData(i18nProp["null_scripts"]);
+            }
             scriptConsoleDom.hide();
             hideDarkmodeTab();
         }else if(type == 2){
@@ -629,7 +641,7 @@ function checkProAndRenderPannel(params) {
         document.getElementById("darkmodePro").hide();
         document.getElementById("darkmodeUpgrade").show();
         document.querySelector("#darkmodeUpgrade .upgrade-btn").addEventListener("click", function (e) {
-            // console.log("darkmodeUpgrade");
+            console.log("darkmodeUpgrade");
             window.open("stay://x-callback-url/pay?");
         })
     }
@@ -646,7 +658,7 @@ function darkmodeProSettingInit() {
         }
         activeStatusDom.classList.add('active'); // 给当前选中tab添加样式
         document.getElementById('allowEnabled').checked = siteEnabled;
-        document.getElementById("allowEnabled").disabled = false;
+        document.getElementById("allowEnabled").disabled = "off" === darkmodeToggleStatus?true:false;
         showDarkmodeAllowNote(siteEnabled);
     }
 }
@@ -676,7 +688,7 @@ function handleDarkmodeProSetting(target) {
                 document.getElementById("allowEnabled").disabled = false;
             }
             browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {
-                console.log("DARKMODE_SETTING response----", response)
+                // console.log("DARKMODE_SETTING response----", response)
             })
         }
     }

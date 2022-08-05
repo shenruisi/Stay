@@ -1,7 +1,3 @@
-
-
-
-console.log("test checkUserscript")
 let userscriptText = document.body.textContent;
 function languageCode() {
     let lang = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0]

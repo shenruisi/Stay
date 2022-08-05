@@ -27,14 +27,13 @@
             "run_at": "document_start"
         },
         {
-            "js": [ "parse-meta-line.js","parse-user-script.js","checkUserscript.js", "message.js"],
+            "js": [ "parse-meta-line.js","parse-user-script.js","message.js","checkUserscript.js"],
             "matches": [ "*://*/*.js" ],
             "all_frames": false,
             "run_at": "document_end"
         },
         {
             "js": [
-                "fallback.js",
                 "dark.user.js"
             ],
             "matches": [

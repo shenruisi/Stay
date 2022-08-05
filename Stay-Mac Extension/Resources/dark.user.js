@@ -5686,6 +5686,7 @@
             return;
         }
     }
+
     let documentVisibilityListener = null;
     let didDocumentShowUp = !document.hidden;
     function watchForDocumentVisibility(callback) {
@@ -5930,8 +5931,40 @@
         stopWatchingForUpdates();
         cleanModificationCache();
     }
+
+    function darkModeInit(){
+        if (
+            document.documentElement instanceof HTMLHtmlElement &&
+            matchMedia("(prefers-color-scheme: dark)").matches &&
+            !document.querySelector(".darkreader--fallback")
+        ) {
+            const css =
+                'html, body, body :not(iframe):not(div[style^="position:absolute;top:0;left:-"]) { background-color: #181a1b !important; border-color: #776e62 !important; color: #e8e6e3 !important; } html, body { opacity: 1 !important; transition: none !important; }';
+            const fallback = document.createElement("style");
+            fallback.classList.add("darkreader");
+            fallback.classList.add("darkreader--fallback");
+            fallback.media = "screen";
+            fallback.textContent = css;
+            if (document.head) {
+                document.head.append(fallback);
+            } else {
+                const root = document.documentElement;
+                root.append(fallback);
+                const observer = new MutationObserver(() => {
+                    if (document.head) {
+                        observer.disconnect();
+                        if (fallback.isConnected) {
+                            document.head.append(fallback);
+                        }
+                    }
+                });
+                observer.observe(root, {childList: true});
+            }
+        }
+    }
     
     function setupDarkmode() {
+        darkModeInit();
         let fixesText = `%7B%22url%22%3A%5B%22*%22%5D%2C%22invert%22%3A%5B%22.jfk-bubble.gtx-bubble%22%2C%22.captcheck_answer_label%20%3E%20input%20%2B%20img%22%2C%22span%23closed_text%20%3E%20img%5Bsrc%5E%3D%5C%22https%3A%2F%2Fwww.gstatic.com%2Fimages%2Fbranding%2Fgooglelogo%5C%22%5D%22%2C%22span%5Bdata-href%5E%3D%5C%22https%3A%2F%2Fwww.hcaptcha.com%2F%5C%22%5D%20%3E%20%23icon%22%2C%22%23bit-notification-bar-iframe%22%2C%22%3A%3A-webkit-calendar-picker-indicator%22%5D%2C%22css%22%3A%22.vimvixen-hint%20%7B%5Cn%20%20%20%20background-color%3A%20%24%7B%23ffd76e%7D%20!important%3B%5Cn%20%20%20%20border-color%3A%20%24%7B%23c59d00%7D%20!important%3B%5Cn%20%20%20%20color%3A%20%24%7B%23302505%7D%20!important%3B%5Cn%7D%5Cn%3A%3Aplaceholder%20%7B%5Cn%20%20%20%20opacity%3A%200.5%20!important%3B%5Cn%7D%5Cna%5Bhref%3D%5C%22https%3A%2F%2Fcoinmarketcap.com%2F%5C%22%5D%20%3E%20svg%5Bwidth%3D%5C%2294%5C%22%5D%5Bheight%3D%5C%2216%5C%22%5D%20%3E%20path%20%7B%5Cn%20%20%20%20fill%3A%20var(--darkreader-neutral-text)%20!important%3B%5Cn%7D%5Cn%23edge-translate-panel-body%2C%5Cn.MuiTypography-body1%20%7B%5Cn%20%20%20%20color%3A%20var(--darkreader-neutral-text)%20!important%3B%5Cn%7D%5Cngr-main-header%20%7B%5Cn%20%20%20%20background-color%3A%20%24%7Blightblue%7D%20!important%3B%5Cn%7D%5Cnembed%5Btype%3D%5C%22application%2Fpdf%5C%22%5D%20%7B%20filter%3A%20invert(100%25)%20contrast(90%25)%3B%20%7D%22%2C%22ignoreInlineStyle%22%3A%5B%22.sr-wrapper%20*%22%2C%22.sr-reader%20*%22%2C%22.diigoHighlight%22%5D%2C%22ignoreImageAnalysis%22%3A%5B%5D%7D`;
         removeStyle();
         fixesText = decodeURIComponent(fixesText);
@@ -6014,13 +6047,12 @@
         });
     }
 
-    // console.log("window.location.href=", window.location.href);
     let browserDomain = getDomain(window.location.href);
 
     let darkmodeConfigSetting;
 
     const DARK_MODE_CONFIG = {
-        isStayAround: "",
+        isStayAround: "b",
         siteListDisabled: [],
         toggleStatus:"on", //on,off,auto
     };
@@ -6041,12 +6073,12 @@
         validateSettings(darkmodeConfig);
         // handleBrowserListenerMessage(darkmodeConfig);
         darkmodeConfigSetting = darkmodeConfig;
-        console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
+        // console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
         if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
-            console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
+            // console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
             fetchStayAround(darkmodeConfig);
         }else{
-            console.log("isStayAround is null-------");
+            // console.log("isStayAround is null-------");
             checkStayAround(darkmodeConfig);
             asyncFetchStayAround();
         }
@@ -6059,7 +6091,7 @@
             // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
         });
     }
@@ -6071,7 +6103,7 @@
             // console.log("fetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
-            darkmodeConfig["isStayAround"] = "a";
+            // darkmodeConfig["isStayAround"] = "a";
             writeLocalStorage(darkmodeConfig);
             checkStayAround(darkmodeConfig);
         });
@@ -6089,14 +6121,14 @@
     // 3、allow enabled for website [true/false]
     function checkStayAround(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround){
+        if ("b" !== isStayAround && "a" === isStayAround){
             handleToggleDarkmode(darkmodeConfig)
         }
     }
 
     function handleToggleDarkmode(darkmodeConfig) {
         let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround) {
+        if ("b" !== isStayAround && "a" === isStayAround) {
             // writeLocalStorage(darkmodeConfig);
             let siteListDisabled = darkmodeConfig["siteListDisabled"];
             let darkmodeToggleStatus = darkmodeConfig["toggleStatus"];
