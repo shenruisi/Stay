@@ -211,6 +211,14 @@ static FCStore *instance = nil;
     [productsRequest start];
 }
 
+- (BOOL)paymentQueue:(SKPaymentQueue *)queue shouldAddStorePayment:(SKPayment *)payment forProduct:(SKProduct *)product{
+    self.paymentOnChangedDic[payment] = ^(FCPaymentState state){
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"app.stay.notification.SYSubscibeChangeNotification"
+                                                            object:nil];
+    };
+    return YES;
+}
+
 - (void)productsRequest:(SKProductsRequest *)request
 didReceiveResponse:(SKProductsResponse *)response
 {

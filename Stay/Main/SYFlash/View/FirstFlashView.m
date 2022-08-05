@@ -63,7 +63,7 @@ UITableViewDataSource
     UIView *activiteView = [[UIView alloc] initWithFrame:CGRectMake(left, top, width, 45)];
     activiteView.backgroundColor = FCStyle.background;
     activiteView.layer.cornerRadius = 8;
-    UIImage *image = [UIImage imageNamed:self.activite?@"icon":@"noActIcon"];
+    UIImage *image = [UIImage imageNamed:self.activite?@"NavIcon":@"noActIcon"];
     UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,17,26,26)] ;
     imageview.image = image;
     imageview.centerY = 24;
