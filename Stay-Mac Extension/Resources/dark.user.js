@@ -6026,6 +6026,11 @@
     };
     
     async function writeLocalStorage(values) {
+        browser.runtime.sendMessage({ 
+            from: "darkmode", 
+            operate: "GIVEN_DARK_SETTING",
+            darkmodeSettingStr: JSON.stringify(values)
+        });
         return new Promise(async (resolve) => {
             browser.storage.local.set(values, () => {
                 resolve();

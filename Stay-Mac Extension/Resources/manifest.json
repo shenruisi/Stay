@@ -21,6 +21,14 @@
 
     "content_scripts": [
         {
+            "js": ["fallback.js","dark.user.js"],
+            "matches": [
+                "*://*/*"
+            ],
+            "all_frames": false,
+            "run_at": "document_start"
+        },
+        {
             "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
@@ -31,16 +39,6 @@
             "matches": [ "*://*/*.js" ],
             "all_frames": false,
             "run_at": "document_end"
-        },
-        {
-            "js": [
-                "dark.user.js"
-            ],
-            "matches": [
-                "*://*/*"
-            ],
-            "all_frames": false,
-            "run_at": "document_start"
         }
     ],
 

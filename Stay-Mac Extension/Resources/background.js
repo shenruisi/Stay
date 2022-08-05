@@ -201,6 +201,19 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ body: response.body })
             });
         }
+        else if ("FETCH_DARK_SETTING" === request.operate){
+            let darkmodeSettingStr = window.localStorage.getItem("stay_dark_mode_setting");
+            if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
+                sendResponse({body: JSON.parse(darkmodeSettingStr)})
+            }else{
+                sendResponse({body: {}})
+            }
+        }
+        else if ("GIVEN_DARK_SETTING" === request.operate){
+            let darkmodeSettingStr = request.darkmodeSettingStr
+            console.log("darkmodeSettingStr-------",darkmodeSettingStr);
+            window.localStorage.setItem("stay_dark_mode_setting", darkmodeSettingStr);
+        }
         return true;
     }
     else if ("bootstrap" == request.from || "iframe" == request.from) {
