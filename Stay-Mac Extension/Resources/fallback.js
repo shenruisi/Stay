@@ -19,7 +19,7 @@
     let darkStayAround = window.localStorage.getItem("is_stay_around");
     if(darkStayAround && darkStayAround !== "" && darkStayAround !== "null" && darkStayAround !== "undefined" && "a" === darkStayAround){
         darkModeInit(darkStayAround);
-        fetchDarkStay()
+        fetchDarkStayAround()
     }else{
         browser.runtime.sendMessage({from: "darkmode", operate: "FETCH_DARK_STAY"}, (response) => {
             darkStayAround = response.body;
@@ -29,7 +29,7 @@
         });
     }
    
-    async function fetchDarkStay(){
+    async function fetchDarkStayAround(){
         browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
             let isStayAround = response.body;
             console.log("cleanupDarkmode---2-", (new Date().getTime() - startTime), ",isStayAround=",isStayAround);
@@ -38,9 +38,9 @@
     }
 
     console.log("fallback---endTime-", new Date().getTime());
-    function darkModeInit(fetchDarkStay){
+    function darkModeInit(isStayAround){
         if (
-            fetchDarkStay !== "" && fetchDarkStay === "a" &&
+            isStayAround !== "" && isStayAround === "a" &&
             document.documentElement instanceof HTMLHtmlElement && 
             matchMedia("(prefers-color-scheme: dark)") &&
             !document.querySelector(".darkreader--fallback")
