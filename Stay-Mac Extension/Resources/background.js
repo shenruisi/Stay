@@ -208,7 +208,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }else{
                 sendResponse({body: {}})
             }
-            sendResponse({body: {darkmodePro: "1231231"}})
         }
         else if ("FETCH_DARK_STAY" === request.operate){
             let isStayAround = window.localStorage.getItem("is_stay_around");
@@ -217,7 +216,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }else{
                 sendResponse({body: ""})
             }
-            // sendResponse({body: {darkmodePro: "1231231"}})
         }
         else if ("GIVEN_DARK_SETTING" === request.operate){
             let darkmodeSettingStr = request.darkmodeSettingStr
