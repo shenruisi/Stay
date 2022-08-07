@@ -22,18 +22,19 @@
             return source;
         }
         source += 'let GM = {};\n\n';
-        source += 'let GM_info=' + GM_info(userscript, version) + '\n';
+        source += 'let GM_info=' + GM_info(userscript, version) + '\nwindow.GM_info = GM_info\n';
         source += 'GM.info = GM_info;\n';
         source += 'let __stroge = await _fillStroge();\n\n';
         source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
         source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge();\n\n';
         source += 'let __RMC_CONTEXT = {};\n\n';
-        source += GM_xmlhttpRequest.toString() + '\n\n';
+        source += GM_xmlhttpRequest.toString() + '\n\nwindow.GM_xmlhttpRequest = GM_xmlhttpRequest;\n';
         
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
 
         if (grants.includes('GM_listValues')) {
-            source += 'function GM_listValues (){ return __stroge}\n\n';
+            
+            source += 'function GM_listValues (){ return __stroge}\n\nwindow.GM_listValues = GM_listValues;\n';
         }
 
         if (grants.includes('GM.listValues')) {
@@ -41,7 +42,7 @@
         }
 
         if (grants.includes('GM_deleteValue')) {
-            source += GM_deleteValue.toString() + '\n\n';
+            source += GM_deleteValue.toString() + '\n\nwindow.GM_deleteValue = GM_deleteValue;\n';
         }
 
         if (grants.includes('GM.deleteValue')) {
@@ -49,7 +50,7 @@
         }
 
         if (grants.includes('GM_setValue')) {
-            source += GM_setValue.toString() + '\n\n';
+            source += GM_setValue.toString() + '\n\nwindow.GM_setValue = GM_setValue;\n';
         }
 
         if (grants.includes('GM.setValue')) {
@@ -57,7 +58,7 @@
         }
 
         if (grants.includes('GM_getValue')) {
-            source += GM_getValue.toString() + '\n\n';
+            source += GM_getValue.toString() + '\n\nwindow.GM_getValue = GM_getValue;\n';
         }
 
         if (grants.includes('GM.getValue')) {
@@ -69,7 +70,7 @@
         }
 
         if (grants.includes('GM_registerMenuCommand')) {
-            source += GM_registerMenuCommand.toString() + '\n\n';
+            source += GM_registerMenuCommand.toString() + '\n\nwindow.GM_registerMenuCommand = GM_registerMenuCommand;\n';
         }
 
         if (grants.includes('GM.unregisterMenuCommand')) {
@@ -77,11 +78,11 @@
         }
 
         if (grants.includes('GM_unregisterMenuCommand')) {
-            source += GM_unregisterMenuCommand.toString() + '\n\n';
+            source += GM_unregisterMenuCommand.toString() + '\n\nwindow.GM_unregisterMenuCommand = GM_unregisterMenuCommand;\n';
         }
 
         if (grants.includes('GM_addStyle')) {
-            source += GM_addStyle.toString() + '\n\n';
+            source += GM_addStyle.toString() + '\n\nwindow.GM_addStyle = GM_addStyle;\n';
         }
 
         if (grants.includes('GM.addStyle')) {
@@ -96,10 +97,10 @@
         }
 
         if (grants.includes('GM_getResourceURL')) {
-            source += GM_getResourceURL.toString() + '\n\n';
+            source += GM_getResourceURL.toString() + '\n\nwindow.GM_getResourceURL = GM_getResourceURL;\n';
         }
         if (grants.includes('GM_getResourceUrl')) {
-            source += 'GM_getResourceUrl =' + GM_getResourceURL.toString() + '\n\n';
+            source += 'GM_getResourceUrl =' + GM_getResourceURL.toString() + '\n\nwindow.GM_getResourceUrl = GM_getResourceUrl;\n';
         }
 
         if (grants.includes('GM.getResourceURL') || grants.includes('GM.getResourceUrl')) {
@@ -112,7 +113,7 @@
         }
 
         if (grants.includes('GM_getResourceText')) {
-            source += GM_getResourceText.toString() + '\n\n';
+            source += GM_getResourceText.toString() + '\n\nwindow.GM_getResourceText = GM_getResourceText;\n';
         }
 
         if (grants.includes('GM.xmlHttpRequest')) {
@@ -120,24 +121,24 @@
         }
 
         if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
-            source += GM_notification.toString() + '\n\n';
+            source += GM_notification.toString() + '\n\nwindow.GM_notification = GM_notification;\n';
             source += "GM.notification = " + GM_notification.toString() + '\n\n';
         }
         if (grants.includes('GM_cookie') || grants.includes('GM.cookie')) {
-            source += GM_cookie.toString() + '\n\n';
+            source += GM_cookie.toString() + '\n\nwindow.GM_cookie = GM_cookie;\n';
             source += "GM.cookie = " + GM_cookie.toString() + '\n\n';
         }
         if (grants.includes('GM_download') || grants.includes('GM.download')) {
-            source += GM_download.toString() + '\n\n';
+            source += GM_download.toString() + '\n\nwindow.GM_download = GM_download;\n';
             source += 'GM.download = GM_download\n\n';
         }
         if (grants.includes('GM_setClipboard') || grants.includes('GM.setClipboard')) {
-            source += GM_setClipboard.toString() + '\n\n';
+            source += GM_setClipboard.toString() + '\n\nwindow.GM_setClipboard = GM_setClipboard;\n';
             source += "GM.setClipboard = " + GM_setClipboard.toString() + '\n\n';
         }
 
         //add GM_log by default
-        source += GM_log.toString() + '\n\n';
+        source += GM_log.toString() + '\n\nwindow.GM_log = GM_log;\n';
 
         // source += injectJavaScript.toString() + ';\n\ninjectJavaScript();\n';
 
@@ -626,14 +627,14 @@
         let grants = userscript.grants;
         let resourceUrls = userscript.resourceUrls||{};
         let api = `${GM_listValues_Async}\n`;
-        api += `${GM_getAllResourceText}\n`;
+        api += `${GM_getAllResourceText}\nwindow.GM_getAllResourceText = GM_getAllResourceText;\n`;
         api += 'let __listValuesStroge = await GM_listValues_Async();\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
         api += `console.log("__resourceTextStroge==",__resourceTextStroge);\n`;
         api += 'let __RMC_CONTEXT = {};\n';
-        api += 'let GM_info =' + GM_info(userscript, version) + ';\n';
-        api += `${GM_log}\n`;
+        api += 'let GM_info =' + GM_info(userscript, version) + ';\nwindow.GM_info = GM_info;\n';
+        api += `${GM_log}\nwindow.GM_log = GM_log;\n`;
         api += `${clear_GM_log}\nclear_GM_log();\n`;
         api += `${__xhr}\n`
         gmFunVals.push("info: GM_info");
@@ -648,7 +649,7 @@
                 gmFunName.push("GM.listValues");
             } 
             else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
-                api += `function GM_listValues(){ return __listValuesStroge;}\n`;
+                api += `function GM_listValues(){ return __listValuesStroge;}\nwindow.GM_listValues = GM_listValues;\n`;
                 gmFunName.push("GM_listValues");
             }
             else if (grant === "GM.deleteValue" && !gmFunName.includes("GM_deleteValue_Async")) {
@@ -657,11 +658,11 @@
                 gmFunName.push("GM_deleteValue_Async");
             }
             else if (grant === "GM_deleteValue" && !gmFunName.includes("GM_deleteValue")){
-                api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\n`;
+                api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\nwindow.GM_deleteValue = GM_deleteValue;\n`;
                 gmFunName.push("GM_deleteValue");
             }
             else if (grant === "GM_addStyle" && !gmFunName.includes("GM_addStyle")) { //同步
-                api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\n`;
+                api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\nwindow.GM_addStyle = GM_addStyle;\n`;
                 gmFunName.push("GM_addStyle");
             } 
             else if (grant === "GM.addStyle" && !gmFunName.includes("GM_addStyle_Async")) {
@@ -675,7 +676,7 @@
                 gmFunName.push("GM_setValue_Async");
             }
             else if ("GM_setValue" === grant && !gmFunName.includes("GM_setValue")) {
-                api += `${GM_setValueSync}\nconst GM_setValue = GM_setValueSync;\n`;
+                api += `${GM_setValueSync}\nconst GM_setValue = GM_setValueSync;\nwindow.GM_setValue = GM_setValue;\n`;
                 gmFunName.push("GM_setValue");
             }
             else if ("GM.getValue" === grant && !gmFunName.includes("GM_getValueAsync")) {
@@ -684,19 +685,19 @@
                 gmFunName.push("GM_getValueAsync");
             }
             else if ("GM_getValue" === grant && !gmFunName.includes("GM_getValueSync")) {
-                api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\n`;
+                api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\nwindow.GM_getValue = GM_getValue;\n`;
                 gmFunName.push("GM_getValueSync");
             }
             else if (("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant) && 
                 (!gmFunName.includes("GM_registerMenuCommand") || !gmFunName.includes("GM.registerMenuCommand"))){
-                api += `${GM_registerMenuCommand}\n`;
+                api += `${GM_registerMenuCommand}\nwindow.GM_registerMenuCommand = GM_registerMenuCommand;\n`;
                 gmFunVals.push("registerMenuCommand: GM_registerMenuCommand");
                 gmFunName.push("GM_registerMenuCommand");
                 gmFunName.push("GM.registerMenuCommand");
             }
             else if (("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) && 
                 (!gmFunName.includes("GM_unregisterMenuCommand") || !gmFunName.includes("GM.unregisterMenuCommand"))) {
-                api += `${GM_unregisterMenuCommand}\n`;
+                api += `${GM_unregisterMenuCommand}\nwindow.GM_unregisterMenuCommand = GM_unregisterMenuCommand;\n`;
                 gmFunVals.push("unregisterMenuCommand: GM_unregisterMenuCommand");
                 gmFunName.push("GM_unregisterMenuCommand");
                 gmFunName.push("GM.unregisterMenuCommand");
@@ -738,42 +739,42 @@
                 gmFunName.push("GM_openInTab");
             }
             else if (("GM.closeTab" === grant || "GM_closeTab" === grant) && !gmFunName.includes("GM_closeTab")) {
-                api += `${GM_closeTab}\n`;
+                api += `${GM_closeTab}\nwindow.GM_closeTab = GM_closeTab;\n`;
                 gmFunVals.push("closeTab: GM_closeTab");
                 gmFunName.push("GM_closeTab");
             }
             else if (("GM.notification" === grant || "GM_notification" === grant) && !gmFunName.includes("GM_notification")) {
-                api += `${GM_notification}\n`;
+                api += `${GM_notification}\nwindow.GM_notification = GM_notification;\n`;
                 gmFunVals.push("notification: GM_notification");
                 gmFunName.push("GM_notification");
             }
             else if (("GM.addValueChangeListener" === grant || "GM_addValueChangeListener" === grant) && !gmFunName.includes("GM_addValueChangeListener")) {
-                api += `${GM_addValueChangeListener}\n`;
+                api += `${GM_addValueChangeListener}\nwindow.GM_addValueChangeListener = GM_addValueChangeListener;\n`;
                 gmFunVals.push("addValueChangeListener: GM_addValueChangeListener");
                 gmFunName.push("GM_addValueChangeListener");
             }
             else if (("GM.removeValueChangeListener" === grant || "GM_removeValueChangeListener" === grant) && !gmFunName.includes("GM_removeValueChangeListener")) {
-                api += `${GM_removeValueChangeListener}\n`;
+                api += `${GM_removeValueChangeListener}\nwindow.GM_removeValueChangeListener = GM_removeValueChangeListener;\n`;
                 gmFunVals.push("removeValueChangeListener: GM_removeValueChangeListener");
                 gmFunName.push("GM_removeValueChangeListener");
             }
             else if (("GM.setClipboard" === grant || "GM_setClipboard" === grant) && !gmFunName.includes("GM_setClipboard") ) {
-                api += `${GM_setClipboard}\n`;
+                api += `${GM_setClipboard}\nwindow.GM_setClipboard = GM_setClipboard;\n`;
                 gmFunVals.push("setClipboard: GM_setClipboard");
                 gmFunName.push("GM_setClipboard");
             }
             else if (("GM.download" === grant || "GM_download" === grant) && !gmFunName.includes("GM_download")) {
-                api += `${GM_download}\n`;
+                api += `${GM_download}\nwindow.GM_download = GM_download;\n`;
                 gmFunVals.push("download: GM_download");
                 gmFunName.push("GM_download");
             }
             else if (("GM.cookie" === grant || "GM_cookie" === grant) && !gmFunName.includes("GM_cookie")) {
-                api += `${GM_cookie}\n`;
+                api += `${GM_cookie}\nwindow.GM_cookie = GM_cookie;\n`;
                 gmFunVals.push("cookie: GM_cookie");
                 gmFunName.push("GM_cookie");
             }
             else if (grant === "GM_xmlhttpRequest" && !gmFunName.includes("GM_xmlhttpRequest")){
-                api += "\nconst GM_xmlhttpRequest = __xhr;\n";
+                api += "\nconst GM_xmlhttpRequest = __xhr;\nwindow.GM_xmlhttpRequest = GM_xmlhttpRequest;\n";
                 gmFunName.push("GM_xmlhttpRequest");
 
             }

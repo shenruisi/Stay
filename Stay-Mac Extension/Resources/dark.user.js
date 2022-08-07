@@ -6072,7 +6072,7 @@
         toggleStatus:"on", //on,off,auto
     };
     // let targetUrl = browser.runtime.getURL("cross-domain-ifream.html");
-    console.log("darkuser---startTime-2-handleStartDarkMode=",  new Date().getTime());
+    // console.log("darkuser---startTime-2-handleStartDarkMode=",  new Date().getTime());
    
     handleStartDarkMode();
 
