@@ -92,8 +92,8 @@ static FCStore *instance = nil;
 }
 
 - (FCPlan *)getPlan:(BOOL)refresh{
-//    [SharedStorageManager shared].userDefaultsExRO.pro = NO;
-//    return FCPlan.None;
+    [SharedStorageManager shared].userDefaultsExRO.pro = NO;
+    return FCPlan.None;
     RMAppReceipt *receipt = [RMAppReceipt bundleReceipt];
     FCPlan *plan = FCPlan.None;
     if (receipt && [receipt.bundleIdentifier isEqualToString:@"com.dajiu.stay.pro"]){

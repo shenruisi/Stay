@@ -102,7 +102,7 @@ UpgradeTo="Upgrade to Stay Pro";
 
 SYNC="SYNC";
 SyncNow="Sync now";
-FullResync="Full resync";
+FullResync="Restore";
 
 LifetimeSubscription="Lifetime";
 OneTimePayment="One-time payment";
