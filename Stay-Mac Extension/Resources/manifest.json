@@ -25,7 +25,7 @@
             "matches": [
                 "*://*/*"
             ],
-            "all_frames": false,
+            "all_frames": true,
             "run_at": "document_start"
         },
         {
@@ -53,5 +53,5 @@
     },
     
     "web_accessible_resources": ["*"],
-    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage"]
+    "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage","cookies"]
 }
