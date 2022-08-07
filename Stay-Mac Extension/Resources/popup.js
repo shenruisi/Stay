@@ -256,7 +256,6 @@ window.onload=function(){
         })
         fetchMatchedScriptList();
         fetchDarkmodeConfig();
-        
 
         // 给header tab绑定事件
         const headerTabDOM = document.querySelector(".header-box .header-tab");
@@ -315,6 +314,18 @@ window.onload=function(){
         document.querySelector("#registerMenuPopup .close").addEventListener("click", function (e) {
             closeMenuPopup(e)
         })
+
+        // document.querySelector("#saveFileTest").addEventListener("click", ()=>{
+        //     console.log("saveAs---targetUrl---start");
+        //     let targetUrl = browser.runtime.getURL("checkPro.js");
+        //     console.log("saveAs---targetUrl---",targetUrl);
+        //     // const blob = new Blob(["const isStayAround = a"],  {type: "text/plain;charset=utf-8"})
+        //     // saveAs(blob, targetUrl);
+
+        //     var file = new File(["const isStayAround = a"], targetUrl, {type: "text/plain;charset=utf-8"});
+        //     saveAs(file);
+        //     console.log("saveAs---targetUrl----end");
+        // })
        
     }
     catch (err) {

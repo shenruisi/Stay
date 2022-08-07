@@ -1,5 +1,7 @@
 (function () {
     "use strict";
+    let startTime = new Date().getTime();
+    console.log("fallback---startTime-", startTime);
     const DARK_MODE_CONFIG = {
         isStayAround: "b",
         siteListDisabled: [],
@@ -13,27 +15,28 @@
         }
     }
     let browserDomain = getDomain(window.location.href);
-    let startTime = new Date().getTime();
-    console.log("cleanupDarkmode---1-", startTime);
-    // browser.runtime.sendMessage({from: "darkmode", operate: "FETCH_DARK_SETTING"}, (response) => {
-    //     let darkmodeSetting = response.body;
-    //     if(!(typeof darkmodeSetting === "object" && darkmodeSetting != null && JSON.stringify(darkmodeSetting) !== '{}')){
-    //         darkmodeSetting = DARK_MODE_CONFIG
-    //     }
-    //     console.log("cleanupDarkmode---2-", (startTime - new Date().getTime()), ",darkmodeSetting=",darkmodeSetting);
-    //     // darkModeInit(darkmodeSetting);
+    
+    browser.runtime.sendMessage({from: "darkmode", operate: "FETCH_DARK_STAY"}, (response) => {
+        let fetchDarkStay = response.body;
+       
+        console.log("cleanupDarkmode---2-", (startTime - new Date().getTime()), ",fetchDarkStay=",fetchDarkStay);
+        darkModeInit(fetchDarkStay);
         
-    // });
+    });
 
+    // console.log("browser.cookies---",browser)
+    // let gettingStores = browser.cookies.getAllCookieStores();
 
+    // console.log("gettingStores---",gettingStores)
     // browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
     //     let isStayAround = response.body;
     //     console.log("cleanupDarkmode---2-", (new Date().getTime() - startTime), ",isStayAround=",isStayAround);
     //     isStayAround = "a";
     //     darkModeInit(isStayAround)
     // });
-    darkModeInit()
-    function darkModeInit(){
+    // darkModeInit()
+    console.log("fallback---endTime-", new Date().getTime());
+    function darkModeInit(fetchDarkStay){
         // let darkmodeConfig = DARK_MODE_CONFIG;
         // let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
         // (
@@ -42,7 +45,9 @@
         //     // 系统非暗黑模式，且stay dark Mode 开启状态且不屏蔽网站
         //     (!matchMedia("(prefers-color-scheme: dark)").matches && "on" === darkmodeConfig.toggleStatus && !darkmodeConfig.siteListDisabled.includes(browserDomain))
         // )
+        
         if (
+            fetchDarkStay !== "" && fetchDarkStay === "a" &&
             document.documentElement instanceof HTMLHtmlElement && 
             matchMedia("(prefers-color-scheme: dark)") &&
             !document.querySelector(".darkreader--fallback")

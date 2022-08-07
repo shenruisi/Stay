@@ -202,18 +202,29 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         }
         else if ("FETCH_DARK_SETTING" === request.operate){
-            // let darkmodeSettingStr = window.localStorage.getItem("stay_dark_mode_setting");
-            // if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
-            //     sendResponse({body: JSON.parse(darkmodeSettingStr)})
-            // }else{
-            //     sendResponse({body: {}})
-            // }
+            let darkmodeSettingStr = window.localStorage.getItem("stay_dark_mode_setting");
+            if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
+                sendResponse({body: JSON.parse(darkmodeSettingStr)})
+            }else{
+                sendResponse({body: {}})
+            }
             sendResponse({body: {darkmodePro: "1231231"}})
+        }
+        else if ("FETCH_DARK_STAY" === request.operate){
+            let isStayAround = window.localStorage.getItem("is_stay_around");
+            if(isStayAround && isStayAround !== "undefined" && isStayAround !== "null"){
+                sendResponse({body: isStayAround})
+            }else{
+                sendResponse({body: ""})
+            }
+            // sendResponse({body: {darkmodePro: "1231231"}})
         }
         else if ("GIVEN_DARK_SETTING" === request.operate){
             let darkmodeSettingStr = request.darkmodeSettingStr
             console.log("darkmodeSettingStr-------",darkmodeSettingStr);
             window.localStorage.setItem("stay_dark_mode_setting", darkmodeSettingStr);
+            let darkmodeSetting = JSON.parse(darkmodeSettingStr)
+            window.localStorage.setItem("is_stay_around", darkmodeSetting.isStayAround);
         }
         return true;
     }

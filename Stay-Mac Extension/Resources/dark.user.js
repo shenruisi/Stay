@@ -13,6 +13,7 @@
 
 (function () {
     "use strict";
+    console.log("darkUser---startTime-1=", new Date().getTime());
     /*! *****************************************************************************
     Dark Reader v4.9.42  https://darkreader.org/
     Copyright (c) Microsoft Corporation.
@@ -6041,7 +6042,7 @@
             darkmodeSettingStr: JSON.stringify(values)
         });
         return new Promise(async (resolve) => {
-            browser.storage.local.set(values, () => {
+            browser.storage.sync.set(values, () => {
                 resolve();
             });
         });
@@ -6049,7 +6050,7 @@
 
     async function readLocalStorage(defaults) {
         return new Promise((resolve) => {
-            browser.storage.local.get(defaults, (local) => {
+            browser.storage.sync.get(defaults, (local) => {
                 if (browser.runtime.lastError) {
                     console.error(browser.runtime.lastError.message);
                     resolve(defaults);
@@ -6070,7 +6071,9 @@
         siteListDisabled: [],
         toggleStatus:"on", //on,off,auto
     };
-
+    // let targetUrl = browser.runtime.getURL("cross-domain-ifream.html");
+    console.log("darkuser---startTime-2-handleStartDarkMode=",  new Date().getTime());
+   
     handleStartDarkMode();
 
     function validateSettings(darkmodeConfig) {
@@ -6082,12 +6085,13 @@
         }
     }
 
+    // window.localStorage.setItem("DARK_MODE_CONFIG", JSON.stringify(DARK_MODE_CONFIG))
     async function handleStartDarkMode(){
+        let fetchStart = new Date().getTime();
         console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
+        // let darkmodeConfig = JSON.parse(window.localStorage.getItem("DARK_MODE_CONFIG")); //DARK_MODE_CONFIG; // 
+
         let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
-        console.log("DARK_MODE_CONFIG_fetch---2---", new Date().getTime());
-        validateSettings(darkmodeConfig);
-        // handleBrowserListenerMessage(darkmodeConfig);
         darkmodeConfigSetting = darkmodeConfig;
         // console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
         if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
@@ -6098,6 +6102,24 @@
             checkStayAround(darkmodeConfig);
             asyncFetchStayAround();
         }
+
+        // let darkmodeConfig = DARK_MODE_CONFIG;
+        // browser.storage.sync.get(DARK_MODE_CONFIG, (local) => {
+        //     darkmodeConfig = local;
+        //     console.log("DARK_MODE_CONFIG_fetch---2---",darkmodeConfig, fetchStart - new Date().getTime());
+        //     validateSettings(darkmodeConfig);
+        //     darkmodeConfigSetting = darkmodeConfig;
+        //     // console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
+        //     if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
+        //         // console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
+        //         fetchStayAround(darkmodeConfig);
+        //     }else{
+        //         // console.log("isStayAround is null-------");
+        //         checkStayAround(darkmodeConfig);
+        //         asyncFetchStayAround();
+        //     }
+        // });
+       
     }
 
     async function asyncFetchStayAround(){

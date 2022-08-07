@@ -12,6 +12,8 @@
 		15CBFFE4289786B3000D708F /* dark.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 15CBFFE2289786B2000D708F /* dark.user.js */; };
 		15DA5B79289C1E07005CEF9E /* fallback.js in Resources */ = {isa = PBXBuildFile; fileRef = 15DA5B78289C1E07005CEF9E /* fallback.js */; };
 		15DA5B7B289C2384005CEF9E /* fallback.js in Resources */ = {isa = PBXBuildFile; fileRef = 15DA5B7A289C2384005CEF9E /* fallback.js */; };
+		15DA5B84289FB185005CEF9E /* vendor in Resources */ = {isa = PBXBuildFile; fileRef = 15DA5B80289FB185005CEF9E /* vendor */; };
+		15DA5B85289FB186005CEF9E /* images in Resources */ = {isa = PBXBuildFile; fileRef = 15DA5B81289FB185005CEF9E /* images */; };
 		15F20BD1281BD09300330A56 /* checkUserscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD0281BD09300330A56 /* checkUserscript.js */; };
 		15F20BD4281BD24800330A56 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD2281BD24800330A56 /* parse-user-script.js */; };
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
@@ -419,6 +421,8 @@
 		15CBFFE2289786B2000D708F /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
 		15DA5B78289C1E07005CEF9E /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = fallback.js; sourceTree = "<group>"; };
 		15DA5B7A289C2384005CEF9E /* fallback.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = fallback.js; sourceTree = "<group>"; };
+		15DA5B80289FB185005CEF9E /* vendor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = vendor; sourceTree = "<group>"; };
+		15DA5B81289FB185005CEF9E /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		15F20BD0281BD09300330A56 /* checkUserscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkUserscript.js; sourceTree = "<group>"; };
 		15F20BD2281BD24800330A56 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		15F20BD3281BD24800330A56 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-meta-line.js"; sourceTree = "<group>"; };
@@ -844,6 +848,8 @@
 		58639CDF2864477D00AA80D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				15DA5B81289FB185005CEF9E /* images */,
+				15DA5B80289FB185005CEF9E /* vendor */,
 				15DA5B7A289C2384005CEF9E /* fallback.js */,
 				1509C3A1288FFD70009BDB85 /* dark.user.js */,
 				58CF689F286D91B200A52B2B /* bootstrap.js */,
@@ -1818,6 +1824,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15DA5B85289FB186005CEF9E /* images in Resources */,
+				15DA5B84289FB185005CEF9E /* vendor in Resources */,
 				58639D0F28644B7E00AA80D5 /* parse-user-script.js in Resources */,
 				58639D0E28644B7E00AA80D5 /* parse-meta-line.js in Resources */,
 				58639D01286449D700AA80D5 /* gm-apis-gen.js in Resources */,
