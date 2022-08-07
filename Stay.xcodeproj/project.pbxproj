@@ -21,8 +21,6 @@
 		3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
-		58172BE6289D64F60004D6BF /* storage in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE5289D64F60004D6BF /* storage */; };
-		58172BE7289D64F60004D6BF /* storage in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE5289D64F60004D6BF /* storage */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
 		581F8D70287D65A000774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6F287D65A000774E2A /* jquery.min.js */; };
 		582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */; };
@@ -430,7 +428,6 @@
 		3C72260C288C243900FF0F68 /* SYSubscribeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYSubscribeController.swift; sourceTree = "<group>"; };
 		3C72260F288C315600FF0F68 /* Stay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stay-Bridging-Header.h"; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
-		58172BE5289D64F60004D6BF /* storage */ = {isa = PBXFileReference; lastKnownFileType = text; path = storage; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		581F8D6F287D65A000774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -867,7 +864,6 @@
 				58639CEA2864477D00AA80D5 /* popup.html */,
 				58639CEC2864477D00AA80D5 /* popup.css */,
 				58639CEE2864477D00AA80D5 /* popup.js */,
-				58172BE5289D64F60004D6BF /* storage */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1839,7 +1835,6 @@
 				58639D04286449D700AA80D5 /* jquery-3.5.1.min.js in Resources */,
 				58CF689E286D917900A52B2B /* message.js in Resources */,
 				58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */,
-				58172BE7289D64F60004D6BF /* storage in Resources */,
 				58639CEB2864477D00AA80D5 /* popup.html in Resources */,
 				589741C928645889008FB897 /* stay-taskloop.js in Resources */,
 				58639CE32864477D00AA80D5 /* images in Resources */,
@@ -1970,7 +1965,6 @@
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
 				588202892859E73900B2721A /* parse-meta-line.js in Resources */,
 				5882028A2859E73900B2721A /* Main.html in Resources */,
-				58172BE6289D64F60004D6BF /* storage in Resources */,
 				5882028B2859E73900B2721A /* editor.html in Resources */,
 				5882028C2859E73900B2721A /* codemirror.css in Resources */,
 				5882028D2859E73900B2721A /* webback@3x.png in Resources */,

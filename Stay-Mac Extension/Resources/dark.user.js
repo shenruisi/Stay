@@ -6126,7 +6126,7 @@
         let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
         browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
             let isStayAround = response.body;
-            // console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
+            console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
             darkmodeConfig["isStayAround"]= isStayAround;
             // todo test
             // darkmodeConfig["isStayAround"] = "a";
