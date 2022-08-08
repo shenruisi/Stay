@@ -43,8 +43,8 @@
         if (
             darkmodeSetting.isStayAround !== "" && darkmodeSetting.isStayAround === "a" &&
             document.documentElement instanceof HTMLHtmlElement && 
-            matchMedia("(prefers-color-scheme: dark)") &&
-            !document.querySelector(".darkreader--fallback").matches &&
+            matchMedia("(prefers-color-scheme: dark)").matches &&
+            !document.querySelector(".darkreader--fallback") &&
             darkmodeSetting.toggleStatus!="off" &&
             !darkmodeSetting.siteListDisabled.includes(browserDomain)
         ) {
