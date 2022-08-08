@@ -6034,6 +6034,7 @@
         enableContextMenus: false,
         detectDarkTheme: false
     };
+    let browserDomain = getDomain(window.location.href);
     
     async function writeLocalStorage(values) {
         browser.runtime.sendMessage({ 
@@ -6062,7 +6063,7 @@
         });
     }
 
-    let browserDomain = getDomain(window.location.href);
+    
 
     let darkmodeConfigSetting;
 
@@ -6239,6 +6240,12 @@
                 handleToggleDarkmode(darkmodeConfigSetting);
             }
             else if ("FETCH_DARKMODE_CONFIG" === operate) {
+
+                let isStayAround = request.isStayAround;
+                if(darkmodeConfigSetting["isStayAround"] !== isStayAround){
+                    darkmodeConfigSetting["isStayAround"] = isStayAround;
+                    writeLocalStorage(darkmodeConfigSetting);
+                }
                 validateSettings(darkmodeConfigSetting)
                 // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--2--", darkmodeConfigSetting);
                 let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
@@ -6246,7 +6253,7 @@
                 // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--enabled--", enabled);
                 browser.runtime.sendMessage({ 
                     from: "darkmode", 
-                    isStayAround: darkmodeConfigSetting["isStayAround"], 
+                    isStayAround: isStayAround,
                     darkmodeToggleStatus: darkmodeConfigSetting["toggleStatus"], 
                     enabled: enabled,
                     operate: "giveDarkmodeConfig" 

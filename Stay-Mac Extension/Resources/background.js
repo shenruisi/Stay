@@ -192,6 +192,11 @@ async function getUrlData({ url, responseType, mimeType, origin }) {
     cache.set(url, data);
     return data;
 }
+const DARK_MODE_CONFIG = {
+    isStayAround: "b",
+    siteListDisabled: [],
+    toggleStatus:"on", //on,off,auto
+};
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("darkmode" == request.from) {
@@ -206,13 +211,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
                 sendResponse({body: JSON.parse(darkmodeSettingStr)})
             }else{
-                sendResponse({body: {}})
+                sendResponse({body: DARK_MODE_CONFIG})
             }
         }
         else if ("FETCH_DARK_STAY" === request.operate){
             let isStayAround = window.localStorage.getItem("is_stay_around");
+            let toggleStatus = window.localStorage.getItem("stay_dark_toggle_status") || "on";
             if(isStayAround && isStayAround !== "undefined" && isStayAround !== "null"){
-                sendResponse({body: isStayAround})
+                sendResponse({isStayAround: isStayAround, toggleStatus: toggleStatus})
             }else{
                 sendResponse({body: ""})
             }
@@ -223,6 +229,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             window.localStorage.setItem("stay_dark_mode_setting", darkmodeSettingStr);
             let darkmodeSetting = JSON.parse(darkmodeSettingStr)
             window.localStorage.setItem("is_stay_around", darkmodeSetting.isStayAround);
+            window.localStorage.setItem("stay_dark_toggle_status", darkmodeSetting.toggleStatus);
         }
         return true;
     }
@@ -756,9 +763,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
             // console.log("background--fetchRegisterMenuCommand---", request);
-            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                console.log("GET_STAY_AROUND-----BG==", response);
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", isStayAround:response.body, operate: "FETCH_DARKMODE_CONFIG" });
+                });
             });
+            
         }
         else if ("DARKMODE_SETTING" == request.operate){
             const darkmodeStatus = request.status;
