@@ -1,7 +1,6 @@
 (function () {
     "use strict";
     let startTime = new Date().getTime();
-    alert("startTime--",startTime);
     // console.log("fallback---startTime-", startTime);
     function getDomain(url) {
         try {
