@@ -256,6 +256,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     error: err && err.message ? err.message : err
                 });
             }
+            return true;
         }
         else if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);

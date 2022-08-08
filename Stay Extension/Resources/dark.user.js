@@ -5945,8 +5945,7 @@
     function darkModeInit(){
         if (
             document.documentElement instanceof HTMLHtmlElement &&
-            matchMedia("(prefers-color-scheme: dark)").matches &&
-            !document.querySelector(".darkreader--fallback")
+            matchMedia("(prefers-color-scheme: dark)").matches 
         ) {
             const css =
                 'html, body, body :not(iframe):not(div[style^="position:absolute;top:0;left:-"]) { background-color: #181a1b !important; border-color: #776e62 !important; color: #e8e6e3 !important; } html, body { opacity: 1 !important; transition: none !important; }';
@@ -5990,7 +5989,7 @@
     let browserDomain = getDomain(window.location.href);
 
     function setupDarkmode() {
-        darkModeInit();
+        // darkModeInit();
         removeStyle();
         let fixesText = {
             css: ".vimvixen-hint {\n    background-color: ${#ffd76e} !important;\n    border-color: ${#c59d00} !important;\n    color: ${#302505} !important;\n}\n::placeholder {\n    opacity: 0.5 !important;\n}\n#edge-translate-panel-body,\n.MuiTypography-body1 {\n    color: var(--darkreader-neutral-text) !important;\n}\ngr-main-header {\n    background-color: ${lightblue} !important;\n}\n.tou-z65h9k,\n.tou-mignzq,\n.tou-1b6i2ox,\n.tou-lnqlqk {\n    background-color: var(--darkreader-neutral-background) !important;\n}\n.tou-75mvi {\n    background-color: ${rgb(207, 236, 245)} !important;\n}\n.tou-ta9e87,\n.tou-1w3fhi0,\n.tou-1b8t2us,\n.tou-py7lfi,\n.tou-1lpmd9d,\n.tou-1frrtv8,\n.tou-17ezmgn {\n    background-color: ${rgb(245, 245, 245)} !important;\n}\n.tou-uknfeu {\n    background-color: ${rgb(250, 237, 218)} !important;\n}\n.tou-6i3zyv {\n    background-color: ${rgb(133, 195, 216)} !important;\n}\nembed[type=\"application/pdf\"][src=\"about:blank\"] { filter: invert(100%) contrast(90%); }",
@@ -6042,10 +6041,34 @@
             }
         };
     }
+    // let unloaded = false;
+    // let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
+    //     try {
+    //         browser.runtime.sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}}, (response) => {
+    //             if (response === "unsupportedSender") {
+    //                 removeStyle();
+    //                 removeSVGFilter();
+    //                 removeDynamicTheme();
+    //                 cleanup();
+    //             }
+    //         });
+    //     } catch (e) {
+    //         cleanup();
+    //     }
+    // });
 
-    let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
-        sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}});
-    });
+    // function cleanup() {
+    //     unloaded = true;
+    //     removeEventListener("pagehide", onPageHide);
+    //     removeEventListener("freeze", onFreeze);
+    //     removeEventListener("resume", onResume);
+    //     cleanDynamicThemeCache();
+    //     stopDarkThemeDetector();
+    //     if (colorSchemeWatcher) {
+    //         colorSchemeWatcher.disconnect();
+    //         colorSchemeWatcher = null;
+    //     }
+    // }
 
     const DEFAULT_SETTINGS = {
         enabled: true,
@@ -6241,7 +6264,7 @@
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { type, data, error, id, from, operate} = request
 
-        if (type === MessageType.BG_FETCH_RESPONSE) {
+        if (MessageType.BG_FETCH_RESPONSE  === type) {
             const resolve = resolvers$1.get(id);
             const reject = rejectors.get(id);
             resolvers$1.delete(id);
@@ -6251,6 +6274,7 @@
             } else {
                 resolve && resolve(data);
             }
+            return true;
         }
 
         if (from == "background") {
