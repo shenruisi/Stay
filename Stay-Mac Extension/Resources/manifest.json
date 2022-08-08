@@ -23,10 +23,11 @@
         {
             "js": ["fallback.js","dark.user.js"],
             "matches": [
-                "*://*/*"
+                "<all_urls>"
             ],
-            "all_frames": false,
-            "run_at": "document_start"
+            "run_at": "document_start",
+            "all_frames": true,
+            "match_about_blank": true
         },
         {
             "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
