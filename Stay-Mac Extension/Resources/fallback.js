@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     let startTime = new Date().getTime();
-    console.log("fallback---startTime-", startTime);
+    // console.log("fallback---startTime-", startTime);
     function getDomain(url) {
         try {
             return new URL(url).hostname.toLowerCase();
@@ -10,8 +10,6 @@
         }
     }
     let browserDomain = getDomain(window.location.href);
-
-    let darkStayAround = window.localStorage.getItem("is_stay_around");
     let darkmodeSettingStr = window.localStorage.getItem("FETCH_DARK_SETTING");
     let darkmodeSetting;
     if(darkmodeSettingStr && darkmodeSettingStr!=="" && darkmodeSettingStr !== "null" && darkmodeSettingStr !== "undefined"  ){
@@ -25,7 +23,7 @@
                 window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
             }
             window.localStorage.setItem("stay_dark_toggle_status", toggleStatus);
-            console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=",darkStayAround);
+            // console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=",darkStayAround);
             darkModeInit(darkmodeSetting);
         });
     }
@@ -33,12 +31,12 @@
     async function fetchDarkStayAround(){
         browser.runtime.sendMessage({ from: "darkmode", operate: "FETCH_DARK_SETTING" }, function (response) {
             let darkmodeSetting = response.body;
-            console.log("cleanupDarkmode---2-", (new Date().getTime() - startTime), ",darkmodeSetting=",darkmodeSetting);
+            // console.log("cleanupDarkmode---2-", (new Date().getTime() - startTime), ",darkmodeSetting=",darkmodeSetting);
             window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
         });
     }
 
-    console.log("fallback---endTime-", new Date().getTime());
+    // console.log("fallback---endTime-", new Date().getTime());
     function darkModeInit(darkmodeSetting){
         if (
             darkmodeSetting.isStayAround !== "" && darkmodeSetting.isStayAround === "a" &&

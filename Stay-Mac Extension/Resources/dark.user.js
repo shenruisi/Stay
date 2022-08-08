@@ -6089,7 +6089,7 @@
     // window.localStorage.setItem("DARK_MODE_CONFIG", JSON.stringify(DARK_MODE_CONFIG))
     async function handleStartDarkMode(){
         let fetchStart = new Date().getTime();
-        console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
+        // console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
         // let darkmodeConfig = JSON.parse(window.localStorage.getItem("DARK_MODE_CONFIG")); //DARK_MODE_CONFIG; // 
 
         let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);

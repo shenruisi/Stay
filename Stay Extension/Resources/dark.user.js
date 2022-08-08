@@ -6034,6 +6034,7 @@
         enableContextMenus: false,
         detectDarkTheme: false
     };
+    let browserDomain = getDomain(window.location.href);
     
     async function writeLocalStorage(values) {
         browser.runtime.sendMessage({ 
@@ -6062,7 +6063,7 @@
         });
     }
 
-    let browserDomain = getDomain(window.location.href);
+    
 
     let darkmodeConfigSetting;
 
@@ -6088,7 +6089,7 @@
     // window.localStorage.setItem("DARK_MODE_CONFIG", JSON.stringify(DARK_MODE_CONFIG))
     async function handleStartDarkMode(){
         let fetchStart = new Date().getTime();
-        console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
+        // console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
         // let darkmodeConfig = JSON.parse(window.localStorage.getItem("DARK_MODE_CONFIG")); //DARK_MODE_CONFIG; // 
 
         let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
@@ -6239,6 +6240,12 @@
                 handleToggleDarkmode(darkmodeConfigSetting);
             }
             else if ("FETCH_DARKMODE_CONFIG" === operate) {
+
+                let isStayAround = request.isStayAround;
+                if(darkmodeConfigSetting["isStayAround"] !== isStayAround){
+                    darkmodeConfigSetting["isStayAround"] = isStayAround;
+                    writeLocalStorage(darkmodeConfigSetting);
+                }
                 validateSettings(darkmodeConfigSetting)
                 // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--2--", darkmodeConfigSetting);
                 let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
@@ -6246,7 +6253,7 @@
                 // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--enabled--", enabled);
                 browser.runtime.sendMessage({ 
                     from: "darkmode", 
-                    isStayAround: darkmodeConfigSetting["isStayAround"], 
+                    isStayAround: isStayAround,
                     darkmodeToggleStatus: darkmodeConfigSetting["toggleStatus"], 
                     enabled: enabled,
                     operate: "giveDarkmodeConfig" 

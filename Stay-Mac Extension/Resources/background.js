@@ -202,7 +202,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
-                console.log("GET_STAY_AROUND-----BG==", response);
                 sendResponse({ body: response.body })
             });
         }
@@ -225,7 +224,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("GIVEN_DARK_SETTING" === request.operate){
             let darkmodeSettingStr = request.darkmodeSettingStr
-            console.log("darkmodeSettingStr-------",darkmodeSettingStr);
+            // console.log("darkmodeSettingStr-------",darkmodeSettingStr);
             window.localStorage.setItem("stay_dark_mode_setting", darkmodeSettingStr);
             let darkmodeSetting = JSON.parse(darkmodeSettingStr)
             window.localStorage.setItem("is_stay_around", darkmodeSetting.isStayAround);
