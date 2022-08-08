@@ -44,7 +44,7 @@
             darkmodeSetting.isStayAround !== "" && darkmodeSetting.isStayAround === "a" &&
             document.documentElement instanceof HTMLHtmlElement && 
             matchMedia("(prefers-color-scheme: dark)") &&
-            !document.querySelector(".darkreader--fallback") &&
+            !document.querySelector(".darkreader--fallback").matches &&
             darkmodeSetting.toggleStatus!="off" &&
             !darkmodeSetting.siteListDisabled.includes(browserDomain)
         ) {
