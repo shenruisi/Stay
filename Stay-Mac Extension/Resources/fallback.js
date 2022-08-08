@@ -1,7 +1,7 @@
 (function () {
     "use strict";
     let startTime = new Date().getTime();
-    alert("startTime--",startTime);
+    alert("startTime--");
     // console.log("fallback---startTime-", startTime);
     function getDomain(url) {
         try {
@@ -47,6 +47,7 @@
             darkmodeSetting.toggleStatus!="off" &&
             !darkmodeSetting.siteListDisabled.includes(browserDomain)
         ) {
+            alert("insert CSS");
             const css =
                 'html, body, body :not(iframe):not(div[style^="position:absolute;top:0;left:-"]) { background-color: #181a1b !important; border-color: #776e62 !important; color: #e8e6e3 !important; } html, body { opacity: 1 !important; transition: none !important; }';
             const fallback = document.createElement("style");
