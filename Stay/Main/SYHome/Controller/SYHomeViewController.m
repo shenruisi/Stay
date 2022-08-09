@@ -443,7 +443,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidDeleteHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"]; 
         [FCShared.iCloudService removeUserscript:uuid
@@ -465,7 +466,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidActiveHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -487,7 +489,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidStopHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -509,7 +512,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidAddHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -532,7 +536,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidUpdateHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
