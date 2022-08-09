@@ -258,8 +258,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     error: err && err.message ? err.message : err
                 });
             }
+
+            return true;
         }
-        if ("fetchScripts" == request.operate) {
+        else if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
                 matchAppScriptList = response.body;
