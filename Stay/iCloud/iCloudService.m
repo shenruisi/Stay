@@ -254,6 +254,11 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
     return [NSString stringWithFormat:@"iCloudService.%@.firstInit2",self.identifier];
 }
 
+- (BOOL)localFirstInit{
+    NSNumber *n = [[NSUserDefaults standardUserDefaults] objectForKey:[self firstInitKey]];
+    return n && ![n boolValue];
+}
+
 - (void)checkFirstInit:(void (^)(BOOL firstInit, NSError *error))completionHandler{
     NSNumber *n = [[NSUserDefaults standardUserDefaults] objectForKey:[self firstInitKey]];
     if (n && ![n boolValue]){
@@ -377,6 +382,10 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
         operation.qualityOfService = NSQualityOfServiceUserInitiated;
         operation.modifyRecordsCompletionBlock = ^(NSArray<CKRecord *> * _Nullable savedRecords, NSArray<CKRecordID *> * _Nullable deletedRecordIDs, NSError * _Nullable operationError) {
             completionHandler(operationError);
+            if (nil == operationError){
+                [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:[self firstInitKey]];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
         };
         [self.database addOperation:operation];
         

@@ -16,6 +16,7 @@ extern NSNotificationName const _Nonnull iCloudServiceSyncEndNotification;
 @class UserScript,BaseRecord;
 @interface iCloudService : NSObject
 
+- (BOOL)localFirstInit;
 - (void)refreshWithCompletionHandler:(void(^)(NSError *error))completionHandler;
 - (void)loggedWithCompletionHandler:(void(^)(BOOL status,NSError *error))completionHandler;
 - (void)serviceIdentifierWithCompletionHandler:(void(^)(NSString *identifier,NSError *error))completionHandler;
