@@ -198,6 +198,22 @@ const DARK_MODE_CONFIG = {
     toggleStatus:"on", //on,off,auto
 };
 
+async function windowFetch(url, optionsParams) {
+    const response = await fetch(url, optionsParams);
+    console.log("windowFetch-----", response)
+    if (!response.ok) {
+        throw new Error(
+            `Unable to load ${url} ${response.status} ${response.statusText}`
+        );
+    }
+    return response;
+}
+
+async function loadAsPrimose(url, optionsParams){
+    let res = await windowFetch(url, optionsParams);
+    return new Promise((resolve)=>{resolve(res)});
+}
+
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
@@ -250,7 +266,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             try {
                 const { url, responseType, mimeType, origin } = request.data;
                 getUrlData({ url, responseType, mimeType, origin }).then(response=>{
-                    console.log("response11111---=-=-=-=-=-", response);
+                    // console.log("response11111---=-=-=-=-=-", response);
                     sendRes({ data: response });
                 })
             } catch (err) {
@@ -387,12 +403,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (responseState.readyState == 4 &&
                     responseState.status != 200 &&
                     responseState.status != 0) {
-                    console.log('api_create: error at onload, should not happen! -> retry :)')
+                    // console.log('api_create: error at onload, should not happen! -> retry :)')
                     return;
                 }else{
                     if (responseState.responseType === "blob" && responseState.response) {
                         let downLoadUrl = window.URL.createObjectURL(responseState.response);
-                        console.log("GM_xmlhttpRequest.BG___reader,base64data--start-downLoadUrl=", downLoadUrl)
+                        // console.log("GM_xmlhttpRequest.BG___reader,base64data--start-downLoadUrl=", downLoadUrl)
                         const reader = new FileReader();
                         reader.readAsDataURL(responseState.response);
                         reader.onloadend = function () {
@@ -401,7 +417,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 browser.tabs.sendMessage(tabs[0].id, 
                                     { from: "background", base64Data: base64Data, xhrId: xhrId, uuid: request.uuid, operate: "FETCH_BLOB_URL" }).then(
                                         (res) => {
-                                            console.log("FETCH_BLOB_URL---res---", res);
+                                            // console.log("FETCH_BLOB_URL---res---", res);
                                             if (xhrId === res.xhrId) {
                                                 let type = responseState.response.type;
                                                 responseState.response = {
@@ -427,7 +443,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (responseState.readyState == 4 &&
                     responseState.status != 200 &&
                     responseState.status != 0) {
-                    console.log('api_create: error at onerror, should not happen! -> retry')
+                    // console.log('api_create: error at onerror, should not happen! -> retry')
                     sendResponse({ onerror: responseState });
                 }
 
