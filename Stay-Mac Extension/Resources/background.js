@@ -192,12 +192,32 @@ async function getUrlData({ url, responseType, mimeType, origin }) {
     cache.set(url, data);
     return data;
 }
+const DARK_MODE_CONFIG = {
+    isStayAround: "b",
+    siteListDisabled: [],
+    toggleStatus:"on", //on,off,auto
+};
+
+async function windowFetch(url, optionsParams) {
+    const response = await fetch(url, optionsParams);
+    console.log("windowFetch-----", response)
+    if (!response.ok) {
+        throw new Error(
+            `Unable to load ${url} ${response.status} ${response.statusText}`
+        );
+    }
+    return response;
+}
+
+async function loadAsPrimose(url, optionsParams){
+    let res = await windowFetch(url, optionsParams);
+    return new Promise((resolve)=>{resolve(res)});
+}
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
-                console.log("GET_STAY_AROUND-----BG==", response);
                 sendResponse({ body: response.body })
             });
         }
@@ -206,23 +226,25 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
                 sendResponse({body: JSON.parse(darkmodeSettingStr)})
             }else{
-                sendResponse({body: {}})
+                sendResponse({body: DARK_MODE_CONFIG})
             }
         }
         else if ("FETCH_DARK_STAY" === request.operate){
             let isStayAround = window.localStorage.getItem("is_stay_around");
+            let toggleStatus = window.localStorage.getItem("stay_dark_toggle_status") || "on";
             if(isStayAround && isStayAround !== "undefined" && isStayAround !== "null"){
-                sendResponse({body: isStayAround})
+                sendResponse({isStayAround: isStayAround, toggleStatus: toggleStatus})
             }else{
                 sendResponse({body: ""})
             }
         }
         else if ("GIVEN_DARK_SETTING" === request.operate){
             let darkmodeSettingStr = request.darkmodeSettingStr
-            console.log("darkmodeSettingStr-------",darkmodeSettingStr);
+            // console.log("darkmodeSettingStr-------",darkmodeSettingStr);
             window.localStorage.setItem("stay_dark_mode_setting", darkmodeSettingStr);
             let darkmodeSetting = JSON.parse(darkmodeSettingStr)
             window.localStorage.setItem("is_stay_around", darkmodeSetting.isStayAround);
+            window.localStorage.setItem("stay_dark_toggle_status", darkmodeSetting.toggleStatus);
         }
         return true;
     }
@@ -244,7 +266,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             try {
                 const { url, responseType, mimeType, origin } = request.data;
                 getUrlData({ url, responseType, mimeType, origin }).then(response=>{
-                    console.log("response11111---=-=-=-=-=-", response);
+                    // console.log("response11111---=-=-=-=-=-", response);
                     sendRes({ data: response });
                 })
             } catch (err) {
@@ -252,8 +274,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     error: err && err.message ? err.message : err
                 });
             }
+
+            return true;
         }
-        if ("fetchScripts" == request.operate) {
+        else if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
                 matchAppScriptList = response.body;
@@ -379,12 +403,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (responseState.readyState == 4 &&
                     responseState.status != 200 &&
                     responseState.status != 0) {
-                    console.log('api_create: error at onload, should not happen! -> retry :)')
+                    // console.log('api_create: error at onload, should not happen! -> retry :)')
                     return;
                 }else{
                     if (responseState.responseType === "blob" && responseState.response) {
                         let downLoadUrl = window.URL.createObjectURL(responseState.response);
-                        console.log("GM_xmlhttpRequest.BG___reader,base64data--start-downLoadUrl=", downLoadUrl)
+                        // console.log("GM_xmlhttpRequest.BG___reader,base64data--start-downLoadUrl=", downLoadUrl)
                         const reader = new FileReader();
                         reader.readAsDataURL(responseState.response);
                         reader.onloadend = function () {
@@ -393,7 +417,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 browser.tabs.sendMessage(tabs[0].id, 
                                     { from: "background", base64Data: base64Data, xhrId: xhrId, uuid: request.uuid, operate: "FETCH_BLOB_URL" }).then(
                                         (res) => {
-                                            console.log("FETCH_BLOB_URL---res---", res);
+                                            // console.log("FETCH_BLOB_URL---res---", res);
                                             if (xhrId === res.xhrId) {
                                                 let type = responseState.response.type;
                                                 responseState.response = {
@@ -419,7 +443,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (responseState.readyState == 4 &&
                     responseState.status != 200 &&
                     responseState.status != 0) {
-                    console.log('api_create: error at onerror, should not happen! -> retry')
+                    // console.log('api_create: error at onerror, should not happen! -> retry')
                     sendResponse({ onerror: responseState });
                 }
 
@@ -756,9 +780,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
             // console.log("background--fetchRegisterMenuCommand---", request);
-            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                console.log("GET_STAY_AROUND-----BG==", response);
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", isStayAround:response.body, operate: "FETCH_DARKMODE_CONFIG" });
+                });
             });
+            
         }
         else if ("DARKMODE_SETTING" == request.operate){
             const darkmodeStatus = request.status;

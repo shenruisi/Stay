@@ -13,7 +13,7 @@
 
 (function () {
     "use strict";
-    console.log("darkUser---startTime-1=", new Date().getTime());
+    // console.log("darkUser---startTime-1=", new Date().getTime());
     /*! *****************************************************************************
     Dark Reader v4.9.42  https://darkreader.org/
     Copyright (c) Microsoft Corporation.
@@ -88,6 +88,7 @@
         styleSystemControls: true,
         lightColorScheme: 'Default',
         darkColorScheme: 'Default',
+        immediateModify: false
     };
     const MessageType = {
         UI_GET_DATA: "ui-get-data",
@@ -397,6 +398,9 @@
             iterator(node);
             iterateShadowHosts(node.shadowRoot, iterator);
         }
+    }
+    function setIsDOMReady(newFunc) {
+        isDOMReady = newFunc;
     }
     function isDOMReady() {
         return (
@@ -4474,7 +4478,7 @@
             syncStyle.classList.add("darkreader");
             syncStyle.classList.add("darkreader--sync");
             syncStyle.media = "screen";
-            if (!isChromium && element.title) {
+            if (element.title) {
                 syncStyle.title = element.title;
             }
             syncStyleSet.add(syncStyle);
@@ -5719,7 +5723,7 @@
             createDynamicStyleOverrides();
             watchForUpdates();
         }
-        if (document.hidden) {
+        if (document.hidden && !filter.immediateModify) {
             watchForDocumentVisibility(runDynamicStyle);
         } else {
             runDynamicStyle();
@@ -5853,6 +5857,11 @@
             ignoredImageAnalysisSelectors = [];
             ignoredInlineSelectors = [];
         }
+        if (filter.immediateModify) {
+            setIsDOMReady(() => {
+                return true;
+            });
+        }
         if (document.head) {
             if (isAnotherDarkReaderInstanceActive()) {
                 return;
@@ -5867,7 +5876,7 @@
             );
             createThemeAndWatchForUpdates();
         } else {
-            if (!isSafari) {
+            if (isSafari) {
                 const fallbackStyle = createOrUpdateStyle(
                     "darkreader--fallback"
                 );
@@ -5936,8 +5945,7 @@
     function darkModeInit(){
         if (
             document.documentElement instanceof HTMLHtmlElement &&
-            matchMedia("(prefers-color-scheme: dark)").matches &&
-            !document.querySelector(".darkreader--fallback")
+            matchMedia("(prefers-color-scheme: dark)").matches 
         ) {
             const css =
                 'html, body, body :not(iframe):not(div[style^="position:absolute;top:0;left:-"]) { background-color: #181a1b !important; border-color: #776e62 !important; color: #e8e6e3 !important; } html, body { opacity: 1 !important; transition: none !important; }';
@@ -5971,12 +5979,25 @@
             
         }
     }
-    
+    function getDomain(url) {
+        try {
+            return new URL(url).hostname.toLowerCase();
+        } catch (error) {
+            return url.split("/")[0].toLowerCase();
+        }
+    }
+    let browserDomain = getDomain(window.location.href);
+
     function setupDarkmode() {
-        darkModeInit();
-        let fixesText = `%7B%22url%22%3A%5B%22*%22%5D%2C%22invert%22%3A%5B%22.jfk-bubble.gtx-bubble%22%2C%22.captcheck_answer_label%20%3E%20input%20%2B%20img%22%2C%22span%23closed_text%20%3E%20img%5Bsrc%5E%3D%5C%22https%3A%2F%2Fwww.gstatic.com%2Fimages%2Fbranding%2Fgooglelogo%5C%22%5D%22%2C%22span%5Bdata-href%5E%3D%5C%22https%3A%2F%2Fwww.hcaptcha.com%2F%5C%22%5D%20%3E%20%23icon%22%2C%22%23bit-notification-bar-iframe%22%2C%22%3A%3A-webkit-calendar-picker-indicator%22%5D%2C%22css%22%3A%22.vimvixen-hint%20%7B%5Cn%20%20%20%20background-color%3A%20%24%7B%23ffd76e%7D%20!important%3B%5Cn%20%20%20%20border-color%3A%20%24%7B%23c59d00%7D%20!important%3B%5Cn%20%20%20%20color%3A%20%24%7B%23302505%7D%20!important%3B%5Cn%7D%5Cn%3A%3Aplaceholder%20%7B%5Cn%20%20%20%20opacity%3A%200.5%20!important%3B%5Cn%7D%5Cna%5Bhref%3D%5C%22https%3A%2F%2Fcoinmarketcap.com%2F%5C%22%5D%20%3E%20svg%5Bwidth%3D%5C%2294%5C%22%5D%5Bheight%3D%5C%2216%5C%22%5D%20%3E%20path%20%7B%5Cn%20%20%20%20fill%3A%20var(--darkreader-neutral-text)%20!important%3B%5Cn%7D%5Cn%23edge-translate-panel-body%2C%5Cn.MuiTypography-body1%20%7B%5Cn%20%20%20%20color%3A%20var(--darkreader-neutral-text)%20!important%3B%5Cn%7D%5Cngr-main-header%20%7B%5Cn%20%20%20%20background-color%3A%20%24%7Blightblue%7D%20!important%3B%5Cn%7D%5Cnembed%5Btype%3D%5C%22application%2Fpdf%5C%22%5D%20%7B%20filter%3A%20invert(100%25)%20contrast(90%25)%3B%20%7D%22%2C%22ignoreInlineStyle%22%3A%5B%22.sr-wrapper%20*%22%2C%22.sr-reader%20*%22%2C%22.diigoHighlight%22%5D%2C%22ignoreImageAnalysis%22%3A%5B%5D%7D`;
+        // darkModeInit();
         removeStyle();
-        fixesText = decodeURIComponent(fixesText);
+        let fixesText = {
+            css: ".vimvixen-hint {\n    background-color: ${#ffd76e} !important;\n    border-color: ${#c59d00} !important;\n    color: ${#302505} !important;\n}\n::placeholder {\n    opacity: 0.5 !important;\n}\n#edge-translate-panel-body,\n.MuiTypography-body1 {\n    color: var(--darkreader-neutral-text) !important;\n}\ngr-main-header {\n    background-color: ${lightblue} !important;\n}\n.tou-z65h9k,\n.tou-mignzq,\n.tou-1b6i2ox,\n.tou-lnqlqk {\n    background-color: var(--darkreader-neutral-background) !important;\n}\n.tou-75mvi {\n    background-color: ${rgb(207, 236, 245)} !important;\n}\n.tou-ta9e87,\n.tou-1w3fhi0,\n.tou-1b8t2us,\n.tou-py7lfi,\n.tou-1lpmd9d,\n.tou-1frrtv8,\n.tou-17ezmgn {\n    background-color: ${rgb(245, 245, 245)} !important;\n}\n.tou-uknfeu {\n    background-color: ${rgb(250, 237, 218)} !important;\n}\n.tou-6i3zyv {\n    background-color: ${rgb(133, 195, 216)} !important;\n}\nembed[type=\"application/pdf\"][src=\"about:blank\"] { filter: invert(100%) contrast(90%); }",
+            ignoreImageAnalysis: [],
+            ignoreInlineStyle: ['.sr-wrapper *', '.sr-reader *', '.diigoHighlight'],
+            invert: ['.jfk-bubble.gtx-bubble', '.captcheck_answer_label > input + img', 'span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"]', 'span[data-href^="https://www.hcaptcha.com/"] > #icon', '#bit-notification-bar-iframe', '::-webkit-calendar-picker-indicator', '.logo'],
+            url: [browserDomain]
+        };
         createOrUpdateDynamicTheme(DEFAULT_THEME, fixesText);
     }
 
@@ -6000,13 +6021,54 @@
         }
     }
 
-    function getDomain(url) {
-        try {
-            return new URL(url).hostname.toLowerCase();
-        } catch (error) {
-            return url.split("/")[0].toLowerCase();
+
+
+    function watchForColorSchemeChange(callback) {
+        const query = matchMedia("(prefers-color-scheme: dark)");
+        const onChange = () => callback({isDark: query.matches});
+        if (isMatchMediaChangeEventListenerSupported) {
+            query.addEventListener("change", onChange);
+        } else {
+            query.addListener(onChange);
         }
+        return {
+            disconnect() {
+                if (isMatchMediaChangeEventListenerSupported) {
+                    query.removeEventListener("change", onChange);
+                } else {
+                    query.removeListener(onChange);
+                }
+            }
+        };
     }
+    // let unloaded = false;
+    // let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
+    //     try {
+    //         browser.runtime.sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}}, (response) => {
+    //             if (response === "unsupportedSender") {
+    //                 removeStyle();
+    //                 removeSVGFilter();
+    //                 removeDynamicTheme();
+    //                 cleanup();
+    //             }
+    //         });
+    //     } catch (e) {
+    //         cleanup();
+    //     }
+    // });
+
+    // function cleanup() {
+    //     unloaded = true;
+    //     removeEventListener("pagehide", onPageHide);
+    //     removeEventListener("freeze", onFreeze);
+    //     removeEventListener("resume", onResume);
+    //     cleanDynamicThemeCache();
+    //     stopDarkThemeDetector();
+    //     if (colorSchemeWatcher) {
+    //         colorSchemeWatcher.disconnect();
+    //         colorSchemeWatcher = null;
+    //     }
+    // }
 
     const DEFAULT_SETTINGS = {
         enabled: true,
@@ -6035,6 +6097,7 @@
         detectDarkTheme: false
     };
     
+    
     async function writeLocalStorage(values) {
         browser.runtime.sendMessage({ 
             from: "darkmode", 
@@ -6062,7 +6125,7 @@
         });
     }
 
-    let browserDomain = getDomain(window.location.href);
+    
 
     let darkmodeConfigSetting;
 
@@ -6088,7 +6151,7 @@
     // window.localStorage.setItem("DARK_MODE_CONFIG", JSON.stringify(DARK_MODE_CONFIG))
     async function handleStartDarkMode(){
         let fetchStart = new Date().getTime();
-        console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
+        // console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
         // let darkmodeConfig = JSON.parse(window.localStorage.getItem("DARK_MODE_CONFIG")); //DARK_MODE_CONFIG; // 
 
         let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
@@ -6201,7 +6264,7 @@
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { type, data, error, id, from, operate} = request
 
-        if (type === MessageType.BG_FETCH_RESPONSE) {
+        if (MessageType.BG_FETCH_RESPONSE  === type) {
             const resolve = resolvers$1.get(id);
             const reject = rejectors.get(id);
             resolvers$1.delete(id);
@@ -6211,6 +6274,7 @@
             } else {
                 resolve && resolve(data);
             }
+            return true;
         }
 
         if (from == "background") {
@@ -6239,6 +6303,12 @@
                 handleToggleDarkmode(darkmodeConfigSetting);
             }
             else if ("FETCH_DARKMODE_CONFIG" === operate) {
+
+                let isStayAround = request.isStayAround;
+                if(darkmodeConfigSetting["isStayAround"] !== isStayAround){
+                    darkmodeConfigSetting["isStayAround"] = isStayAround;
+                    writeLocalStorage(darkmodeConfigSetting);
+                }
                 validateSettings(darkmodeConfigSetting)
                 // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--2--", darkmodeConfigSetting);
                 let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
@@ -6246,7 +6316,7 @@
                 // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--enabled--", enabled);
                 browser.runtime.sendMessage({ 
                     from: "darkmode", 
-                    isStayAround: darkmodeConfigSetting["isStayAround"], 
+                    isStayAround: isStayAround,
                     darkmodeToggleStatus: darkmodeConfigSetting["toggleStatus"], 
                     enabled: enabled,
                     operate: "giveDarkmodeConfig" 

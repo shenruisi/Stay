@@ -443,7 +443,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidDeleteHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"]; 
         [FCShared.iCloudService removeUserscript:uuid
@@ -465,7 +466,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidActiveHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -487,7 +489,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidStopHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -509,18 +512,55 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidAddHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
-        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
-        NSString *uuid = note.userInfo[@"uuid"];
-        UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
-        [FCShared.iCloudService addUserscript:userscript
-                            completionHandler:^(NSError *error) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+        [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * _Nonnull error) {
             if (error){
                 [FCShared.iCloudService showError:error inCer:self];
             }
             else{
-                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                if (firstInit){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iCloud"
+                                                                                   message:NSLocalizedString(@"icloud.firstInit", @"")
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"icloud.syncNow", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                        [FCShared.iCloudService initUserscripts:self.userscripts completionHandler:^(NSError * _Nonnull error) {
+                            if (error){
+                                [FCShared.iCloudService showError:error inCer:self];
+                            }
+                            else{
+                                [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                            }
+                        }];
+                    }];
+                    [alert addAction:conform];
+                    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                                                                      style:UIAlertActionStyleCancel
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }];
+                    [alert addAction:cancel];
+                    [self presentViewController:alert animated:YES completion:nil];
+                });
+                }
+                else{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
+                    NSString *uuid = note.userInfo[@"uuid"];
+                    UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
+                    [FCShared.iCloudService addUserscript:userscript
+                                        completionHandler:^(NSError *error) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+                        if (error){
+                            [FCShared.iCloudService showError:error inCer:self];
+                        }
+                        else{
+                            [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                        }
+                    }];
+                }
             }
         }];
     }
@@ -532,7 +572,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)userscriptDidUpdateHandler:(NSNotification *)note{
-    if ([[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
+    BOOL iCloudEnabled = [[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeySyncEnabled];
+    if (iCloudEnabled && [[FCStore shared] getPlan:NO] != FCPlan.None && FCShared.iCloudService.isLogin){
         [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
         NSString *uuid = note.userInfo[@"uuid"];
         UserScript *userscript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -724,66 +765,79 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                 if (FCShared.iCloudService.isLogin){
                     [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncStartNotification object:nil];
                     NSArray *array = [[DataManager shareManager] findScript:1];
-                    for (UserScript *userscriptInDB in array){
-                        if (![userscriptInDB.iCloudIdentifier isEqualToString:FCShared.iCloudService.identifier]){
-                            [[DataManager shareManager] deleteScriptInUserScriptByNumberId:userscriptInDB.uuid];
-                        }
-                    }
                     
-                    [FCShared.iCloudService fetchUserscriptWithCompletionHandler:
-                     ^(NSDictionary<NSString *,UserScript *> *changedUserscripts, NSArray<NSString *> *deletedUUIDs) {
-                        if (changedUserscripts.count > 0 || deletedUUIDs.count > 0){
-                            NSArray *changedUUIDs = [changedUserscripts allKeys];
-                            for (NSString *uuid in changedUUIDs){
-                                UserScript *changedUserscript = changedUserscripts[uuid];
-                                if (changedUserscript.name.length == 0){
-                                    continue;
-                                }
-                                UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
-                                if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
-                                    [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
-                                }
-                                else{
-                                    [[DataManager shareManager] updateUserScript:changedUserscript];
-                                }
-//                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-//
-//                                });
-                                
-                                UserScriptStatus status =  UserScriptStatusOK;
-                                [[UserscriptUpdateManager shareManager] saveIcon:changedUserscript];
-                                BOOL requireSucceed = [[UserscriptUpdateManager shareManager] saveRequireUrl:changedUserscript];
-                                status = status | (requireSucceed ? UserScriptStatusOK :  UserScriptStatusNeedRequire);
-                                BOOL resourceSucceed = [[UserscriptUpdateManager shareManager] saveResourceUrl:changedUserscript];
-                                status = status | (resourceSucceed ? UserScriptStatusOK :  UserScriptStatusNeedResource);
+                    [FCShared.iCloudService checkFirstInit:^(BOOL firstInit, NSError * _Nonnull error) {
+                        if (error || firstInit){
+                            if (error){
+                                [FCShared.iCloudService showError:error inCer:self];
                             }
-                            
-                            for (NSString *deletedUUID in deletedUUIDs){
-                                [[DataManager shareManager] deleteScriptInUserScriptByNumberId:deletedUUID];
-                            }
-                            
-                            
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [self reloadTableView];
-                                [self.tableView reloadData];
-                                [self initScrpitContent];
-                                [self updateScriptWhen:array type:false];
-                                [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
-                            });
-                        }
-                        else{
                             [self updateScriptWhen:array type:false];
                             [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+                            return;
                         }
                         
+                        for (UserScript *userscriptInDB in array){
+                            if (![userscriptInDB.iCloudIdentifier isEqualToString:FCShared.iCloudService.identifier]){
+                                [[DataManager shareManager] deleteScriptInUserScriptByNumberId:userscriptInDB.uuid];
+                            }
+                        }
                         
-                        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
-                                                                            object:nil
-                                                                          userInfo:@{
-                            @"section":@(1),
-                            @"row":@(0)
+                        [FCShared.iCloudService fetchUserscriptWithCompletionHandler:
+                         ^(NSDictionary<NSString *,UserScript *> *changedUserscripts, NSArray<NSString *> *deletedUUIDs) {
+                            if (changedUserscripts.count > 0 || deletedUUIDs.count > 0){
+                                NSArray *changedUUIDs = [changedUserscripts allKeys];
+                                for (NSString *uuid in changedUUIDs){
+                                    UserScript *changedUserscript = changedUserscripts[uuid];
+                                    if (changedUserscript.name.length == 0){
+                                        continue;
+                                    }
+                                    UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
+                                    if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
+                                        [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
+                                    }
+                                    else{
+                                        [[DataManager shareManager] updateUserScript:changedUserscript];
+                                    }
+    //                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+    //
+    //                                });
+                                    
+                                    UserScriptStatus status =  UserScriptStatusOK;
+                                    [[UserscriptUpdateManager shareManager] saveIcon:changedUserscript];
+                                    BOOL requireSucceed = [[UserscriptUpdateManager shareManager] saveRequireUrl:changedUserscript];
+                                    status = status | (requireSucceed ? UserScriptStatusOK :  UserScriptStatusNeedRequire);
+                                    BOOL resourceSucceed = [[UserscriptUpdateManager shareManager] saveResourceUrl:changedUserscript];
+                                    status = status | (resourceSucceed ? UserScriptStatusOK :  UserScriptStatusNeedResource);
+                                }
+                                
+                                for (NSString *deletedUUID in deletedUUIDs){
+                                    [[DataManager shareManager] deleteScriptInUserScriptByNumberId:deletedUUID];
+                                }
+                                
+                                
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [self reloadTableView];
+                                    [self.tableView reloadData];
+                                    [self initScrpitContent];
+                                    [self updateScriptWhen:array type:false];
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+                                });
+                            }
+                            else{
+                                [self updateScriptWhen:array type:false];
+                                [[NSNotificationCenter defaultCenter] postNotificationName:iCloudServiceSyncEndNotification object:nil];
+                            }
+                            
+                            
+                            [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyLastSync value:[TimeHelper current]];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:SYMoreViewReloadCellNotification
+                                                                                object:nil
+                                                                              userInfo:@{
+                                @"section":@(1),
+                                @"row":@(0)
+                            }];
                         }];
+                        
                     }];
                 }
                 else{

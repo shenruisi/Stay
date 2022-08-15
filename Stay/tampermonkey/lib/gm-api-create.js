@@ -88,6 +88,10 @@
         if (grants.includes('GM.addStyle')) {
             source += 'GM.addStyle = ' + GM_addStyle.toString() + '\n\n';
         }
+        if (grants.includes('GM_addElement') || grants.includes('GM.addElement')) {
+            source += 'GM_addElement = ' + GM_addElement.toString() + '\n\nwindow.GM_addElement = GM_addElement;\n';
+            source += 'GM.addElement = '+ GM_addElement_async.toString() + '\n\n';
+        }
 
         if (grants.includes('GM_openInTab')) {
             source += GM_openInTab.toString() + '\n\n window.GM_openInTab = GM_openInTab; \n\n';
@@ -304,7 +308,7 @@
         
     }
 
-    function GM_download(url, name) {
+    function GM_download(options, name) {
         let popToastTemp = [
             '<a id="GM_downloadLink" target="_blank" style="display:none">Allow</a>',
         ];
@@ -317,23 +321,51 @@
             document.body.appendChild(tempDom);
         }
         let downloadLinkDom = document.getElementById("GM_downloadLink");
-        downloadLinkDom.download = name
-        console.log("GM_downloadLink-------", url);
-        if (url.match(new RegExp("^data:.*;base64,"))){ //download image directly
-            downloadLinkDom.href = url;
-            downloadLinkDom.click()
+        let url;
+        if(typeof options === "string"){
+            downloadLinkDom.download = name;
+            url = options;
+            // console.log("GM_downloadLink-------", url);
+            if (url.match(new RegExp("^data:.*;base64,"))){ //download image directly
+                downloadLinkDom.href = url;
+                downloadLinkDom.click()
+            }else{
+                let gm_xhr = GM_xmlhttpRequest || __xhr;
+                gm_xhr({
+                    method: "GET",
+                    responseType: "blob",
+                    url: url,
+                    onload: res => {
+                        if (res.status === 200) {
+                            let downLoadUrl = res.response.blobUrl;
+                            // console.log("downLoadUrl----1----", downLoadUrl);
+                            downloadLinkDom.href = downLoadUrl
+                            downloadLinkDom.click()
+                        }
+                    }
+                });
+            }
         }else{
+            url = options.url;
+            name = options.name;
+            downloadLinkDom.download = name;
             let gm_xhr = GM_xmlhttpRequest || __xhr;
             gm_xhr({
                 method: "GET",
                 responseType: "blob",
+                headers: options.headers?options.headers:"",
+                timeout: options.timeout?options.timeout:"",
+                onerror:  options.onerror?options.onerror:()=>{},
+                ontimeout: options.ontimeout?options.ontimeout:()=>{},
+                onprogress: options.onprogress?options.onprogress:()=>{},
                 url: url,
                 onload: res => {
+                    options.onload(res);
                     if (res.status === 200) {
                         let downLoadUrl = res.response.blobUrl;
-                        console.log("downLoadUrl----1----", downLoadUrl);
+                        // console.log("downLoadUrl----1----", downLoadUrl);
                         downloadLinkDom.href = downLoadUrl
-                        downloadLinkDom.click()
+                        downloadLinkDom.click();
                     }
                 }
             });
@@ -519,6 +551,51 @@
         head.appendChild(style);
     }
 
+    function GM_addElement_async(parentElement, tagStr, attrObj){
+        return new Promise((resolve, reject)=>{
+            resolve(GM_addElement(parentElement, tagStr, attrObj));
+        })
+
+    }
+
+    function GM_addElement(parentElement, tagStr, attrObj){
+        if(typeof parentElement === "undefined"){
+            return;
+        }
+        if(typeof parentElement === "string"){
+            attrObj = tagStr;
+            tagStr = parentElement;
+            return createElementNode(tagStr, attrObj);
+        }
+        let tagDom = createElementNode(tagStr, attrObj);;
+       
+        parentElement.appendChild(tagDom);
+
+        function createElementNode(tagStr, attrObj){
+            if(!tagStr || tagStr === ""){
+                return;
+            }
+            let tagDom = document.createElement(tagStr);
+            if(typeof attrObj === "object"){
+                Object.keys(attrObj).forEach((key, index) => {
+                    tagDom[key] = attrObj[key];
+                })
+            }
+            const headTags = ["script", "link", "style", "meta"]
+            if(headTags.includes(tagStr.toLowerCase())){
+                document.head.append(tagDom)
+            }else{
+                document.body.appendChild(tagDom)
+            }
+            return tagDom;
+    
+        }
+
+        return tagDom;
+    }
+
+    
+
     function GM_getResourceText(name) {
         let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
         // let resourceText;
@@ -579,7 +656,7 @@
                 params.onerror(onerror)
             }
             if (params.onload && onload) {
-                console.log("GM_xmlhttpRequest.onload====",onload)
+                // console.log("GM_xmlhttpRequest.onload====",onload)
                 params.onload(onload)
             }
         });
@@ -669,6 +746,12 @@
                 api += `${GM_addStyle_Async}\n`;
                 gmFunVals.push("addStyle: GM_addStyle_Async");
                 gmFunName.push("GM_addStyle_Async");
+            } 
+            else if ((grant === "GM_addElement" || grant === "GM.addElement") && !gmFunName.includes("${GM_addElement}")) { //同步
+                api += `${GM_addElement}\nwindow.GM_addElement = GM_addElement;\n`;
+                api += `${GM_addElement_async}\n`;
+                gmFunName.push("GM_addElement");
+                gmFunVals.push("addElement: GM_addElement_async");
             } 
             else if ("GM.setValue" === grant && !gmFunName.includes("GM_setValue_Async")){
                 api += `${GM_setValue_Async}\n`;

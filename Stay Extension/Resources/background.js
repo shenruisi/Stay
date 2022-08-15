@@ -191,11 +191,15 @@ async function getUrlData({ url, responseType, mimeType, origin }) {
     return data;
 }
 let fileLoader = null;
+const DARK_MODE_CONFIG = {
+    isStayAround: "b",
+    siteListDisabled: [],
+    toggleStatus:"on", //on,off,auto
+};
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
-                console.log("GET_STAY_AROUND-----BG==", response);
                 sendResponse({ body: response.body })
             });
         }
@@ -204,21 +208,25 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if(darkmodeSettingStr && darkmodeSettingStr !== "undefined" && darkmodeSettingStr !== "null"){
                 sendResponse({body: JSON.parse(darkmodeSettingStr)})
             }else{
-                sendResponse({body: {}})
+                sendResponse({body: DARK_MODE_CONFIG})
             }
         }
         else if ("FETCH_DARK_STAY" === request.operate){
             let isStayAround = window.localStorage.getItem("is_stay_around");
+            let toggleStatus = window.localStorage.getItem("stay_dark_toggle_status") || "on";
             if(isStayAround && isStayAround !== "undefined" && isStayAround !== "null"){
-                sendResponse({body: isStayAround})
+                sendResponse({isStayAround: isStayAround, toggleStatus: toggleStatus})
             }else{
                 sendResponse({body: ""})
             }
         }
         else if ("GIVEN_DARK_SETTING" === request.operate){
             let darkmodeSettingStr = request.darkmodeSettingStr
-            console.log("darkmodeSettingStr-------",darkmodeSettingStr);
+            // console.log("darkmodeSettingStr-------",darkmodeSettingStr);
             window.localStorage.setItem("stay_dark_mode_setting", darkmodeSettingStr);
+            let darkmodeSetting = JSON.parse(darkmodeSettingStr)
+            window.localStorage.setItem("is_stay_around", darkmodeSetting.isStayAround);
+            window.localStorage.setItem("stay_dark_toggle_status", darkmodeSetting.toggleStatus);
         }
         return true;
     }
@@ -248,6 +256,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     error: err && err.message ? err.message : err
                 });
             }
+            return true;
         }
         else if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
@@ -750,12 +759,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
         }
-        else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
-            // console.log("background--fetchRegisterMenuCommand---", request);
-            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_DARKMODE_CONFIG" });
-            });
-        }
         else if ("DARKMODE_SETTING" == request.operate){
             console.log("background--DARKMODE_SETTING---", request);
             const darkmodeStatus = request.status;
@@ -763,6 +766,16 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log("background--DARKMODE_SETTING--tabs--", tabs);
                 browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus, domain: request.domain, enabled: request.enabled });
             });
+        }
+        else if ("FETCH_DARKMODE_CONFIG" == request.operate) {
+            // console.log("background--fetchRegisterMenuCommand---", request);
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                // console.log("GET_STAY_AROUND-----BG==", response);
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", isStayAround:response.body, operate: "FETCH_DARKMODE_CONFIG" });
+                });
+            });
+            
         }
         return true;
     }

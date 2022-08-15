@@ -23,10 +23,11 @@
         {
             "js": ["fallback.js","dark.user.js"],
             "matches": [
-                "*://*/*"
+                "<all_urls>"
             ],
+            "run_at": "document_start",
             "all_frames": true,
-            "run_at": "document_start"
+            "match_about_blank": true
         },
         {
             "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
@@ -51,7 +52,10 @@
             "38": "images/toolbar-icon-38.png"
         }
     },
-    
+    "host_permissions":[
+        "https://*/*",
+        "http://*/*"
+    ],
     "web_accessible_resources": ["*"],
     "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage","cookies"]
 }

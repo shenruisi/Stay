@@ -49,7 +49,10 @@
             "38": "images/toolbar-icon-38.png"
         }
     },
-    
+    "host_permissions":[
+        "https://*/*",
+        "http://*/*"
+    ],
     "web_accessible_resources": ["*"],
     "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage","cookies"]
 }
