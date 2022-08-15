@@ -129,7 +129,6 @@ UITableViewDataSource
         UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         [cell.contentView addSubview:[self createAboutHeaderView]];
         cell.contentView.backgroundColor = FCStyle.background;
-
         return cell;
     } else {
         _AbountTableViewCell *cell = nil;
@@ -144,7 +143,7 @@ UITableViewDataSource
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0) {
-        return 235;
+        return 225;
     }
 #ifdef Mac
     return 35.0;
@@ -152,6 +151,13 @@ UITableViewDataSource
     return 45.0;
 #endif
     
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if(section == 0) {
+        return 0.0F;
+    }
+    return 18;
 }
 
 
@@ -214,21 +220,21 @@ UITableViewDataSource
 }
 
 - (UIView *)createAboutHeaderView {
-    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 20, 225)];
+    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 225)];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 170, 170)];
     imageView.image = [UIImage imageNamed:@"stay-mac1024-1"];
-    imageView.centerX = (self.view.width - 20) / 2;
+    imageView.centerX = (self.view.width - 30) / 2;
     [backView addSubview:imageView];
     
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 20, 24)];
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 24)];
     title.text = @"Stay 2";
     title.font = FCStyle.title3Bold;
     title.top = imageView.bottom + 10;
     title.textAlignment = NSTextAlignmentCenter;
     [backView addSubview:title];
     
-    UILabel *build = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 20, 18)];
+    UILabel *build = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 18)];
     build.text = [NSString stringWithFormat:@"%@(%@)",[infoDictionary objectForKey:@"CFBundleShortVersionString"],[infoDictionary objectForKey:@"CFBundleVersion"]];
     
     build.font = FCStyle.body;
@@ -243,7 +249,7 @@ UITableViewDataSource
 - (UITableView *)tableView{
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
-        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+//        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;
