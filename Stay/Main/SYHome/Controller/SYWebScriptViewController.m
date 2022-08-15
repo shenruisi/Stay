@@ -81,7 +81,12 @@
         _wkwebView.navigationDelegate = self;
         [_wkwebView setOpaque:false];
         _wkwebView.allowsBackForwardNavigationGestures = YES;
-        NSURL *url = [NSURL URLWithString:@"https://greasyfork.org/en/scripts/"];
+        NSString *urlStr = @"https://greasyfork.org/zh-CN/scripts";
+        
+        if (![[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+            urlStr = @"https://greasyfork.org/en/scripts/";
+        }
+        NSURL *url = [NSURL URLWithString:urlStr];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [_wkwebView loadRequest:request];
     }

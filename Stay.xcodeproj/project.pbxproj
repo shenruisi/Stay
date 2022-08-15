@@ -309,6 +309,12 @@
 		84A15E05282CE1FC002E121D /* addScript@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84A15E03282CE1FC002E121D /* addScript@3x.png */; };
 		84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A15E07282DEB2C002E121D /* ScriptMananger.m */; };
 		84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A15E0A282DF0D2002E121D /* ScriptEntity.m */; };
+		84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932028A5F5F2003E3967 /* SYAboutViewController.m */; };
+		84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932028A5F5F2003E3967 /* SYAboutViewController.m */; };
+		84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
+		84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
+		84AA932828A9EB08003E3967 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AA932728A9EB07003E3967 /* stay-mac1024-1.png */; };
+		84AA932928A9EB08003E3967 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AA932728A9EB07003E3967 /* stay-mac1024-1.png */; };
 		84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AC68D027E434E500F356DF /* SYNotesViewController.m */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
@@ -677,6 +683,11 @@
 		84A15E07282DEB2C002E121D /* ScriptMananger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScriptMananger.m; sourceTree = "<group>"; };
 		84A15E09282DF0D2002E121D /* ScriptEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScriptEntity.h; sourceTree = "<group>"; };
 		84A15E0A282DF0D2002E121D /* ScriptEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScriptEntity.m; sourceTree = "<group>"; };
+		84AA931F28A5F5F2003E3967 /* SYAboutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYAboutViewController.h; sourceTree = "<group>"; };
+		84AA932028A5F5F2003E3967 /* SYAboutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAboutViewController.m; sourceTree = "<group>"; };
+		84AA932328A63440003E3967 /* SYAppearanceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYAppearanceViewController.h; sourceTree = "<group>"; };
+		84AA932428A63440003E3967 /* SYAppearanceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAppearanceViewController.m; sourceTree = "<group>"; };
+		84AA932728A9EB07003E3967 /* stay-mac1024-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stay-mac1024-1.png"; path = "Stay/Assets.xcassets/AppIcon.appiconset/stay-mac1024-1.png"; sourceTree = SOURCE_ROOT; };
 		84AC68CF27E434E500F356DF /* SYNotesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNotesViewController.h; sourceTree = "<group>"; };
 		84AC68D027E434E500F356DF /* SYNotesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNotesViewController.m; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
@@ -1063,6 +1074,7 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				84AA932728A9EB07003E3967 /* stay-mac1024-1.png */,
 				84C2B40C288E30CC002A0C1B /* flash@3x.png */,
 				84A15E02282CE1FC002E121D /* addedScript@3x.png */,
 				84A15E03282CE1FC002E121D /* addScript@3x.png */,
@@ -1607,6 +1619,10 @@
 			children = (
 				587688E52719237E00F834A4 /* SYMoreViewController.h */,
 				587688E62719237E00F834A4 /* SYMoreViewController.m */,
+				84AA931F28A5F5F2003E3967 /* SYAboutViewController.h */,
+				84AA932028A5F5F2003E3967 /* SYAboutViewController.m */,
+				84AA932328A63440003E3967 /* SYAppearanceViewController.h */,
+				84AA932428A63440003E3967 /* SYAppearanceViewController.m */,
 				3C72260C288C243900FF0F68 /* SYSubscribeController.swift */,
 			);
 			path = Controller;
@@ -1861,6 +1877,7 @@
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
 				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
+				84AA932828A9EB08003E3967 /* stay-mac1024-1.png in Resources */,
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
@@ -1961,6 +1978,7 @@
 				588202852859E73900B2721A /* Icon.png in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
 				588202862859E73900B2721A /* more@3x.png in Resources */,
+				84AA932928A9EB08003E3967 /* stay-mac1024-1.png in Resources */,
 				588202872859E73900B2721A /* typescript.html in Resources */,
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
 				588202892859E73900B2721A /* parse-meta-line.js in Resources */,
@@ -2134,6 +2152,7 @@
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
 				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
+				84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
@@ -2176,6 +2195,7 @@
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
 				84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */,
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
+				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
@@ -2271,6 +2291,7 @@
 				588202602859E73900B2721A /* ModalViewController.m in Sources */,
 				588202612859E73900B2721A /* FCDisk.m in Sources */,
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
+				84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
 				58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */,
 				588202642859E73900B2721A /* JSDetailEntity.m in Sources */,
@@ -2310,6 +2331,7 @@
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				58AC12F028607AB800875D6D /* FCToolbar.m in Sources */,
+				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,

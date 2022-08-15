@@ -834,7 +834,7 @@
     if (_slideView == nil) {
         CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
         _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 31)];
-        _slideView.backgroundColor = RGBA(182, 32, 224, 0.11);
+        _slideView.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.11];
         _slideView.layer.cornerRadius = 8;
         _slideView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
     }

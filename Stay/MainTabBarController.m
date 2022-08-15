@@ -11,6 +11,8 @@
 #import "NavigationController.h"
 #import "SYMoreViewController.h"
 #import "SYDetailViewController.h"
+#import "FCStyle.h"
+#import "ImageHelper.h"
 
 @interface MainTabBarController ()
 
@@ -33,24 +35,24 @@
 
 -(void)createTabbar
 {
-    NSArray *imgArray = @[@"js-lib.png",@"search.png",@"more.png"];
-    NSArray *imgSelectArray = @[@"homepage-selected",@"search-selected.png",@"more-selected.png"];
-
     NSArray *titleArray = @[NSLocalizedString(@"settings.library","Library"),NSLocalizedString(@"settings.search","search"),NSLocalizedString(@"settings.more","more")];
     
     SYHomeViewController *homeController = [[SYHomeViewController alloc] init];
     SYSearchViewController *searchController = [[SYSearchViewController alloc] init];
-    SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];
-    self.homeViewController = homeController;
-    [self setUpOneChildViewController:homeController image:[UIImage imageNamed:imgArray[0]] selectImage: [UIImage imageNamed:imgSelectArray[0]]  title:titleArray[0]];
-    [self setUpOneChildViewController:searchController image:[UIImage imageNamed:imgArray[1]] selectImage: [UIImage imageNamed:imgSelectArray[1]] title:titleArray[1]];
-    [self setUpOneChildViewController:syMoreController image:[UIImage imageNamed:imgArray[2]] selectImage: [UIImage imageNamed:imgSelectArray[2]] title:titleArray[2]];
+    SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];    
+    
+    UIColor *normalColor = RGB(144, 144, 144);
+    
+
+    [self setUpOneChildViewController:homeController image:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:22] color:normalColor] selectImage:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:22] color:FCStyle.accent]  title:titleArray[0]];
+    
+    [self setUpOneChildViewController:searchController image:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:22] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:22] color:FCStyle.accent]  title:titleArray[1]];
+    [self setUpOneChildViewController:syMoreController image:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:22] color:normalColor] selectImage:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:22] color:FCStyle.accent]  title:titleArray[2]];
 }
 
 
 - (void)setUpOneChildViewController:(UIViewController *)viewController image:(UIImage *)image selectImage:(UIImage *)selectImage  title:(NSString *)title{
     UINavigationController *navC = [[UINavigationController alloc]initWithRootViewController:viewController];
-    navC.title = title;
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     navC.tabBarItem.image = image;
 #ifdef Mac
@@ -58,26 +60,12 @@
 #endif
     selectImage = [selectImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [navC.tabBarItem setSelectedImage:selectImage];
-    navC.tabBarItem.title = title;
     viewController.navigationItem.title = title;
-    NSDictionary *dictHome = [NSDictionary dictionaryWithObject:UIColorWithRGBA(185,101,223,1)  forKey:NSForegroundColorAttributeName];
-    [navC.tabBarItem setTitleTextAttributes:dictHome forState:UIControlStateSelected];
-    navC.navigationBar.tintColor = RGB(182, 32, 224);
+    navC.navigationBar.tintColor = FCStyle.accent;
 //    navC.navigationBar.barTintColor = RGB(138, 138, 138);
     UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
     [appearance configureWithOpaqueBackground];
     appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    navC.navigationBar.standardAppearance = appearance;
-    navC.navigationBar.scrollEdgeAppearance = appearance;
-    UITabBarAppearance *tabbarAppearance = [[UITabBarAppearance alloc] init];
-    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
-       paraStyle.alignment = NSTextAlignmentLeft;
-    [tabbarAppearance.stackedLayoutAppearance.selected setTitleTextAttributes:@{NSForegroundColorAttributeName: RGB(182, 32, 224),NSParagraphStyleAttributeName : paraStyle}];
-
-    [tabbarAppearance.inlineLayoutAppearance.selected setTitleTextAttributes:@{NSForegroundColorAttributeName: RGB(182, 32, 224),NSParagraphStyleAttributeName : paraStyle}];
-    tabbarAppearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.tabBar.scrollEdgeAppearance = tabbarAppearance;
-    self.tabBar.standardAppearance = tabbarAppearance;
     [self addChildViewController:navC];
 }
 

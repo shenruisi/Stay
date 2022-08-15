@@ -10,7 +10,15 @@
 @implementation FCStyle
 
 + (UIColor *)accent {
-    return  [UIColor colorNamed: @"AccentClassicColor"];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *themeColor = [userDefaults objectForKey:@"themeColor"];
+
+    if(themeColor == nil ) {
+        return  [UIColor colorNamed: @"AccentClassicColor"];
+    } else {
+        return [FCStyle colorWithHexString:themeColor alpha:1];
+    }
+    
 }
 
 + (UIColor *)accentHighlight {
@@ -195,6 +203,31 @@
 #else
     return [UIFont systemFontOfSize:18];
 #endif
+}
+
++ (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha
+{
+    if ([string hasPrefix:@"#"])
+        string = [string substringFromIndex:1];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.length = 2;
+    
+    range.location = 0;
+    NSString *rString = [string substringWithRange:range];
+    
+    range.location = 2;
+    NSString *gString = [string substringWithRange:range];
+    
+    range.location = 4;
+    NSString *bString = [string substringWithRange:range];
+    
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    return [UIColor colorWithRed:((float)r/255.0f) green:((float)g/255.0f) blue:((float)b/255.0f) alpha:alpha];
 }
 
 @end
