@@ -52,6 +52,7 @@ settings.light="明亮";
 settings.sendFeedback="發送反饋";
 settings.termOfUse="使用條款";
 settings.privacyPolicy="隱私策略";
+settings.plan="開發計劃";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "確認";
@@ -146,3 +147,7 @@ GuidePage2Text2="步驟 2/2";
 GuidePage2Text3="選擇要運行的用戶腳本";
 GuidePage2Text4="查看更多安裝方式";
 GuidePage2Button="運行";
+
+AccentColor="主題色";
+SendFeedback="開發計劃與反饋";
+

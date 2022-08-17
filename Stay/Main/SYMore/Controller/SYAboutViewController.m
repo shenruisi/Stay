@@ -209,7 +209,7 @@ UITableViewDataSource
                 ]
             },
             @{
-                @"section":NSLocalizedString(@"SendFeedBack",@"SEND FEEDBACK"),
+                @"section":NSLocalizedString(@"SendFeedback",@"SEND FEEDBACK"),
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"settings.plan",@"plan")
                       ,@"url":[[NSString stringWithFormat:@"mailto:tigris.shin@gmail.com?subject=Feedback - %@/%@",

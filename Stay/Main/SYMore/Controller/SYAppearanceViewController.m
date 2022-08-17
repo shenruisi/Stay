@@ -134,7 +134,7 @@
 
 - (UIImageView *)accessory{
     if (nil == _accessory){
-        _accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 18, 18)];
+        _accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 17)];
         UIImage *image = [UIImage systemImageNamed:@"checkmark"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
         image = [image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -331,7 +331,7 @@ for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
                 ]
             },
             @{
-                @"section":NSLocalizedString(@"AccentColor",@"ACCEND COLOR"),
+                @"section":NSLocalizedString(@"AccentColor",@"ACCENT COLOR"),
                 @"cells":@[
                     @{@"colorList":@"#B620E0,#0091FF,#D91D06,#FA6400,#F7B500,#6236FF,#6D7278"
                     },

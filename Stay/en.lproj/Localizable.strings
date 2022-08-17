@@ -54,6 +54,7 @@ settings.light="Light";
 settings.sendFeedback="Send Feedback";
 settings.termOfUse="Term Of Use";
 settings.privacyPolicy="Privacy Policy";
+settings.plan="Plan";
 
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";
@@ -150,4 +151,5 @@ GuidePage2Text3="Select a userscript to run";
 GuidePage2Text4="View more installation methods";
 GuidePage2Button="Run";
 
-
+AccentColor="ACCENT COLOR";
+SendFeedback="PLAN & SEND FEEDBACK";
