@@ -566,9 +566,15 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             [self.navigationController pushViewController:[[SYAppearanceViewController alloc] init] animated:YES];
 #endif
         } else if ([type isEqualToString:@"getStarted"]) {
+#ifdef Mac
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYFlashViewController alloc] init]]
                                animated:YES completion:^{}];
+            
+#else
+            [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
+#endif
+
         }
     }
 }

@@ -119,7 +119,7 @@ UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     if (section == 0) {
-        return nil;
+        return @"";
     }
     return self.dataSource[section - 1][@"section"];
 }
@@ -144,7 +144,7 @@ UITableViewDataSource
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.section == 0) {
-        return 225;
+        return 215;
     }
 #ifdef Mac
     return 35.0;
@@ -156,7 +156,7 @@ UITableViewDataSource
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if(section == 0) {
-        return 0.0F;
+        return 1.0F;
     }
     return 18;
 }
@@ -233,9 +233,9 @@ UITableViewDataSource
 }
 
 - (UIView *)createAboutHeaderView {
-    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 225)];
+    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 215)];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 170, 170)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 170, 160)];
     imageView.image = [UIImage imageNamed:@"stay-mac1024-1"];
     imageView.centerX = (self.view.width - 30) / 2;
     [backView addSubview:imageView];
@@ -243,7 +243,7 @@ UITableViewDataSource
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 24)];
     title.text = @"Stay";
     title.font = FCStyle.title3Bold;
-    title.top = imageView.bottom + 10;
+    title.top = imageView.bottom + 5;
     title.textAlignment = NSTextAlignmentCenter;
     [backView addSubview:title];
     
