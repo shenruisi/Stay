@@ -35,7 +35,7 @@
 }
 
 + (nullable SYHomeViewController *)homeViewController{
-    return [self primaryController].viewControllers[0];
+    return [self primaryController].homeController;
 }
 
 
