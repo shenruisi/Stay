@@ -201,6 +201,17 @@ UITableViewDataSource
 #if Mac
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *type = [userDefaults objectForKey:@"themeType"];
+    
+    if([@"System" isEqual:type]) {
+        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+    } else if([@"Dark" isEqual:type]){
+        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+    }else if([@"Light" isEqual:type]){
+        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+    }
 }
 
 /*
@@ -259,16 +270,33 @@ UITableViewDataSource
                                            options:@{} completionHandler:^(BOOL succeed){}];
     } else if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+        
+#if Mac
+for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
+    [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+}
+#endif
+        
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults setObject:@"System" forKey:@"themeType"];
         [userDefaults synchronize];
     } else if([@"Dark" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+#if Mac
+for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
+    [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+}
+#endif
         [userDefaults setObject:@"Dark" forKey:@"themeType"];
         [userDefaults synchronize];
     }else if([@"Light" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+#if Mac
+for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
+    [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+}
+#endif
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults setObject:@"Light" forKey:@"themeType"];
         [userDefaults synchronize];
