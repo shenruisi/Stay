@@ -172,7 +172,7 @@ UITableViewDataSource
     if(section == 0) {
         return 1.0F;
     }
-    return 18;
+    return 20;
 }
 
 
@@ -285,6 +285,9 @@ UITableViewDataSource
 - (UITableView *)tableView{
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
+#if Mac
+        _tableView.width = 540;
+#endif
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;

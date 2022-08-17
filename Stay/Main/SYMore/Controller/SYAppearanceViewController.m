@@ -94,9 +94,9 @@
             btn.frame = CGRectMake(0, 0, 23, 23);
             btn.layer.cornerRadius = 11.5;
             
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
-            btn.centerY = 14;
-            btn.centerX = 14;
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 29, 29)];
+            btn.centerY = 14.5;
+            btn.centerX = 14.5;
 
     
 
@@ -312,7 +312,7 @@ for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
     if(section == 0) {
         return 0.0F;
     }
-    return 18;
+    return 20;
 }
 
 
@@ -377,6 +377,9 @@ for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
 //        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+#if Mac
+        _tableView.width = 540;
+#endif
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;
