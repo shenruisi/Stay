@@ -18,6 +18,8 @@
 #import "FCShared.h"
 #import "SYHomeViewController.h"
 #import "TimeHelper.h"
+#import "SYAboutViewController.h"
+#import "SYAppearanceViewController.h"
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
@@ -68,6 +70,32 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             
         }]];
     }
+    
+    NSString *type = entity[@"type"];
+    if (type.length > 0 && [@"appearance" isEqualToString:type]) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSString *themeType = [userDefaults objectForKey:@"themeType"];
+        if (themeType == nil) {
+            themeType = @"System";
+        }
+        
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@ / ",themeType] attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
+            NSFontAttributeName:FCStyle.footnote,
+            NSObliquenessAttributeName:@(0.2)
+            
+        }]];
+        
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:@"●۬" attributes:@{
+                    NSForegroundColorAttributeName:FCStyle.accent,
+                    NSFontAttributeName:FCStyle.footnote,
+                    NSObliquenessAttributeName:@(0.2)}]];
+            
+        
+//        [builder appendAttributedString:[NSAttributedString alloc] ]
+        
+    }
+    
     
     
     self.textLabel.attributedText = builder;
@@ -527,6 +555,22 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
 #endif
             
+        } else if([type isEqualToString:@"about"]) {
+#ifdef Mac
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYAboutViewController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController pushViewController:[[SYAboutViewController alloc] init] animated:YES];
+#endif
+        }  else if([type isEqualToString:@"appearance"]) {
+#ifdef Mac
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYAppearanceViewController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController pushViewController:[[SYAppearanceViewController alloc] init] animated:YES];
+#endif
         }
     }
 }
@@ -680,6 +724,8 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 - (NSArray *)dataSource{
     if (nil == _dataSource){
+        
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         _dataSource = @[
             @{
                 @"section":NSLocalizedString(@"Subscription",@""),
@@ -714,17 +760,15 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 ]
             },
             @{
-                @"section":NSLocalizedString(@"Social", @""),
+                @"section":NSLocalizedString(@"GENERAL", @"GENERAL"),
                 @"cells":@[
-                    @{@"title":NSLocalizedString(@"settings.joinTelegram",@"")
-                      ,@"url":@"https://t.me/fastclipchat",
-                      @"subtitle":@"t.me/fastclipchat",
+                    @{@"title":NSLocalizedString(@"settings.appearance",@"Appearance"),
+                      @"type":@"appearance"
                     },
-                    @{@"title":NSLocalizedString(@"settings.joinQQ",@""),@"url":@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=714147685&key=c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217&card_type=group&source=external&jump_from=webapi"},
-                    @{@"title":NSLocalizedString(@"settings.joinTwitter",@""),
-                      @"url":@"https://twitter.com/fastclip1",
-                      @"subtitle":@"@fastclip1"
-                    }
+                    @{@"title":NSLocalizedString(@"settings.about",@"About"),
+                      @"subtitle":[NSString stringWithFormat:@"%@(%@)",[infoDictionary objectForKey:@"CFBundleShortVersionString"],[infoDictionary objectForKey:@"CFBundleVersion"]],
+                      @"type":@"about"
+                    },
                 ]
             },
             @{

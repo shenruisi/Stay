@@ -1167,7 +1167,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 60, 20);
-        btn.backgroundColor = RGB(182,32,224);
+        btn.backgroundColor = FCStyle.accent;
         [btn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:12];

@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfFootnote;
 @property(class, nonatomic, readonly) UIFont *sfActbar;
 
++ (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
+
 @end
 
 NS_ASSUME_NONNULL_END

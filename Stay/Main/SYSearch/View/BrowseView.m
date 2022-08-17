@@ -155,7 +155,7 @@
 
         UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
-        image = [image imageWithTintColor: RGB(182,32,224) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        image = [image imageWithTintColor: FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
         [_rightBtn setBackgroundImage:image forState:UIControlStateNormal];
         
     }
@@ -168,7 +168,7 @@
         _addBtn.frame = CGRectMake(0, 0, 26, 24);
         UIImage *image =  [UIImage systemImageNamed:@"plus.circle.fill"
                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
-        image = [image imageWithTintColor: RGB(182,32,224) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        image = [image imageWithTintColor: FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
         [_addBtn setBackgroundImage:image forState:UIControlStateNormal];
         [_addBtn addTarget:self action:@selector(addScript:) forControlEvents:UIControlEventTouchUpInside];
     }

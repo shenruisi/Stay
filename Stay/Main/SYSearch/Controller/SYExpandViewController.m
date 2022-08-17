@@ -98,7 +98,7 @@
         
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 60, 25);
-    btn.backgroundColor = RGB(182,32,224);
+    btn.backgroundColor = FCStyle.accent;
     
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
