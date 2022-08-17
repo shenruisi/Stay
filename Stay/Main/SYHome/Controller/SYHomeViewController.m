@@ -1327,10 +1327,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         UserScript *model = _datas[indexPath.row];
         if (model.active) {
             stopAction.image = [UIImage imageNamed:@"stop"];
-            stopAction.backgroundColor = RGB(182, 32, 224);
+            stopAction.backgroundColor = FCStyle.accent;
         } else {
             stopAction.image = [UIImage imageNamed:@"play"];
-            stopAction.backgroundColor = RGB(182, 32, 224);;
+            stopAction.backgroundColor = FCStyle.accent;
         }
         
         UIImage *image = [UIImage systemImageNamed:@"square.and.arrow.up" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
