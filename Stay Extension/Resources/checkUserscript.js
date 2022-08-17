@@ -33,7 +33,7 @@ if(meta){
         '<a id="popImg" href="' + schemeUrl +'" style="text-decoration: none;width: 75px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;"><img src=' + stayImg +' style="width: 46px;height: 46px;"></img></a>',
         '<a id="popInstall" href="' + schemeUrl +'" style="font-family:Helvetica Neue;text-decoration: none;display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items:center;line-height:23px;">',
         '<div style="font-size: 17px; color: #B620E0;font-weight:700;">Tap to install</div>',
-        '<div style="font-size: 13px; ' + fontColor +' ">Stay 2 - ' + i18nProp["download_text"] + '</div>',
+        '<div style="font-size: 13px; ' + fontColor +' ">Stay - ' + i18nProp["download_text"] + '</div>',
         '</a>',
         '</div>'
     ];

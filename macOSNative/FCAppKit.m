@@ -175,7 +175,7 @@
 - (NSToolbarItem *)appName:(NSString *)identifier{
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
     _CursorTextView *textView = [[_CursorTextView alloc] initWithFrame:NSMakeRect(0, 0, 65-10, 18)];
-    [textView setString:@"Stay 2"];
+    [textView setString:@"Stay"];
     textView.font = [NSFont systemFontOfSize:14];
     textView.selectable = NO;
     textView.backgroundColor = [NSColor clearColor];

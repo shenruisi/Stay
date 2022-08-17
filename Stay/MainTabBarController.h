@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class SYDetailViewController;
 @interface MainTabBarController : UITabBarController
+@property (nonatomic, strong) SYHomeViewController *homeController;
 @end
 
 NS_ASSUME_NONNULL_END

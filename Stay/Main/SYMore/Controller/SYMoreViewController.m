@@ -66,7 +66,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",subtitle] attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
             NSFontAttributeName:FCStyle.footnote,
-            NSObliquenessAttributeName:@(0.2)
+//            NSObliquenessAttributeName:@(0.2)
             
         }]];
     }
@@ -82,18 +82,13 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@ / ",themeType] attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
             NSFontAttributeName:FCStyle.footnote,
-            NSObliquenessAttributeName:@(0.2)
+//            NSObliquenessAttributeName:@(0.2)
             
         }]];
         
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:@"●۬" attributes:@{
                     NSForegroundColorAttributeName:FCStyle.accent,
-                    NSFontAttributeName:FCStyle.footnote,
-                    NSObliquenessAttributeName:@(0.2)}]];
-            
-        
-//        [builder appendAttributedString:[NSAttributedString alloc] ]
-        
+                    NSFontAttributeName:[UIFont systemFontOfSize:10],}]];
     }
     
     
@@ -218,8 +213,6 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",subtitle] attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
             NSFontAttributeName:FCStyle.footnote,
-            NSObliquenessAttributeName:@(0.2)
-            
         }]];
     }
     
@@ -532,7 +525,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         cell = [[_MoreTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     cell.entity = entity;
-    NSLog(@"SYMoreViewController %ld,%ld",indexPath.row,((NSArray *)self.dataSource[indexPath.section][@"cells"]).count - 1);
+//    NSLog(@"SYMoreViewController %ld,%ld",indexPath.row,((NSArray *)self.dataSource[indexPath.section][@"cells"]).count - 1);
     return cell;
 }
 
@@ -751,7 +744,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"settings.rateApp",@""),
                       @"url":@"https://apps.apple.com/app/id1591620171?action=write-review",
-                      @"subtitle":@"Stay 2"
+                      @"subtitle":@"Stay"
                     },
                     @{@"title":NSLocalizedString(@"settings.openSource",@""),
                       @"url":@"https://github.com/shenruisi/Stay",

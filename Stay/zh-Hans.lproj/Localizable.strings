@@ -44,6 +44,14 @@ settings.close = "关闭";
 settings.scriptError = "脚本格式错误";
 settings.shareContent = "分享脚本";
 settings.shareUrl = "分享链接";
+settings.appearance="外观";
+settings.about="关于";
+settings.system="跟随系统";
+settings.dark="暗黑";
+settings.light="明亮";
+settings.sendFeedback="发送反馈";
+settings.termOfUse="使用条款";
+settings.privacyPolicy="隐私策略";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "确认";
@@ -74,7 +82,7 @@ mac.toolbar.forward.tip = "前进";
 
 Interaction="互动";
 Social="社交媒体";
-MoreApp="更多应用";
+MoreApp="我们的应用";
 
 TryAgainLater="请稍后重试。";
 
@@ -128,8 +136,8 @@ HomeEmptyTips2="添加用户脚本";
 
 GuidePage1Text1="尝试首次运行一个脚本";
 GuidePage1Text2="步骤 1/2";
-GuidePage1Text3="激活 Stay 2 Safari扩展";
-GuidePage1Text4="根据视频在Safari中操作，完成后返回Stay 2。";
+GuidePage1Text3="激活 Stay Safari扩展";
+GuidePage1Text4="根据视频在Safari中操作，完成后返回Stay。";
 GuidePage1Button="去激活";
 Next="下一步";
 Skip="跳过";

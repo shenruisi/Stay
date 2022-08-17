@@ -1,10 +1,10 @@
 {
     "extension_name": {
         "message": "Stay",
-        "description": "Stay 2 - 用户脚本管理器"
+        "description": "Stay - 用户脚本管理器"
     },
     "extension_description": {
-        "message": "Stay 2是在Safari上的新一代浏览器脚本管理器。",
+        "message": "Stay是在Safari上的新一代浏览器脚本管理器。",
         "description": "既支持了原生的脚本也兼容了油猴，暴力猴脚本。可用于 iPhone，iPad和Mac"
     }
 }

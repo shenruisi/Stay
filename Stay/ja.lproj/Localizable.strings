@@ -46,6 +46,14 @@ settings.close = "閉じる";
 settings.scriptError = "エラー";
 settings.shareContent = "Share script";
 settings.shareUrl = "Share link";
+settings.appearance="Appearance";
+settings.about="About";
+settings.system="System";
+settings.dark="Dark";
+settings.light="Light";
+settings.sendFeedback="Send Feedback";
+settings.termOfUse="Term Of Use";
+settings.privacyPolicy="Privacy Policy";
 
 unsupportedFileFormat = "対応していないファイルタイプ";
 ok = "OK";
@@ -77,7 +85,7 @@ mac.toolbar.forward.tip = "進む";
 
 Interaction="INTERACTION";
 Social="SOCIAL";
-MoreApp="MORE APP";
+MoreApp="OUR APP";
 
 
 TryAgainLater="Please try again later";
@@ -133,8 +141,8 @@ HomeEmptyTips2="in the upper right corner to add a userscript";
 
 GuidePage1Text1="Run a userscript";
 GuidePage1Text2="Step 1/2";
-GuidePage1Text3="Activate the Stay 2 Safari extension";
-GuidePage1Text4="Operate accroding to the video, back to Stay 2.";
+GuidePage1Text3="Activate the Stay Safari extension";
+GuidePage1Text4="Operate accroding to the video, back to Stay.";
 GuidePage1Button="Go & Activated";
 Next="Next";
 Skip="Skip";

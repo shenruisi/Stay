@@ -99,6 +99,10 @@ static Tampermonkey *kInstance = nil;
             userScript.grants = newGrants;
             userScript.installType = @"page";
         }
+        
+        if (![userScript.installType isEqualToString:@"page"] && [self isES6:scriptWithoutComment name:userScript.name]){
+            userScript.installType = @"page";
+        }
     }
     else{
         userScript.installType = [userScript.injectInto lowercaseString];
@@ -139,6 +143,11 @@ static Tampermonkey *kInstance = nil;
     return NO;
 }
 
+- (BOOL)isES6:(NSString *)script name:(NSString *)name{
+    NSRegularExpression *es6Expr = [[NSRegularExpression alloc] initWithPattern:@"(\\.\\.\\.\\w+)" options:0 error:nil];
+    NSArray<NSTextCheckingResult *> *results = [es6Expr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
+    return results.count > 0;
+}
 
 - (BOOL)containsUnsafeWindow:(NSString *)script name:(NSString *)name{
     NSRegularExpression *unsafeWindowExpr = [[NSRegularExpression alloc] initWithPattern:@"(unsafeWindow\\.[a-zA-z]+)\\(*" options:0 error:nil];
