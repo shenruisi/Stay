@@ -58,6 +58,10 @@ static API *instance = nil;
     return self;
 }
 
+- (NSString *)deviceInfo{
+    return [NSString stringWithFormat:@"%@ %@",_deviceType,_osVersion];
+}
+
 - (void)active:(NSString *)uuid isPro:(BOOL)isPro isExtension:(BOOL)isExtension{
 //    return;
     NSString *reqUrl = [NSString stringWithFormat:@"%@active",END_POINT];

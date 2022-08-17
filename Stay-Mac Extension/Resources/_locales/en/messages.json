@@ -1,10 +1,10 @@
 {
     "extension_name": {
-        "message": "Stay 2",
+        "message": "Stay",
         "description": "Userscript manager"
     },
     "extension_description": {
-        "message": "Stay 2 is a new generation browser script manager on Safari.",
+        "message": "Stay is a new generation browser script manager on Safari.",
         "description": "It supports both native scripts and tampermonkey and violentmonkey scripts. Available for iPhone, iPad, Mac."
     }
 }

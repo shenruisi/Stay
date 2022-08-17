@@ -8,6 +8,7 @@
 #import "SYAboutViewController.h"
 #import "FCStyle.h"
 #import "FCConfig.h"
+#import "API.h"
 
 @interface _AbountTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *entity;
@@ -51,8 +52,6 @@
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",subtitle] attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
             NSFontAttributeName:FCStyle.footnote,
-            NSObliquenessAttributeName:@(0.2)
-            
         }]];
     }
     
@@ -135,7 +134,6 @@ UITableViewDataSource
         NSDictionary *entity = self.dataSource[indexPath.section - 1][@"cells"][indexPath.row];
         cell = [[_AbountTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         cell.entity = entity;
-        NSLog(@"SYAboutViewController %ld,%ld",indexPath.row,((NSArray *)self.dataSource[indexPath.section - 1][@"cells"]).count - 1);
         return cell;
     }
 }
@@ -163,9 +161,6 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(indexPath.section == 0) {
-        return;
-    }
     NSDictionary *dict = self.dataSource[indexPath.section - 1][@"cells"][indexPath.row];
     NSString *url = dict[@"url"];
     if (url.length > 0){
@@ -197,8 +192,11 @@ UITableViewDataSource
                 @"section":NSLocalizedString(@"SendFeedBack",@"SEND FEEDBACK"),
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"settings.sendFeedback",@"SEND FEEDBACK")
-                      ,@"url":@"https://t.me/fastclipchat",
-                      @"subtitle":@"t.me/fastclipchat",
+                      ,@"url":[[NSString stringWithFormat:@"mailto:tigris.shin@gmail.com?subject=Feedback - %@/%@",
+                                [self appString],
+                                [[API shared] deviceInfo]]
+                               stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
+                      @"subtitle":@"tigris.shin@gmail.com",
                     },
                 ]
             },
@@ -206,10 +204,10 @@ UITableViewDataSource
                 @"section":NSLocalizedString(@"Legal",@"LEGAL"),
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"settings.termOfUse",@"Term Of User")
-                      ,@"url":@"https://t.me/fastclipchat",
+                      ,@"url":@"https://fastclip.app/policy/terms-stay.htm",
                     },
                     @{@"title":NSLocalizedString(@"settings.privacyPolicy",@"privacy policy")
-                      ,@"url":@"https://t.me/fastclipchat",
+                      ,@"url":@"https://www.privacypolicyonline.com/live.php?token=ZPXT0Jfv2diYUfbf5ciLDV9oYRgJ6Evc",
                     }
                 ]
             }
@@ -228,28 +226,36 @@ UITableViewDataSource
     [backView addSubview:imageView];
     
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 24)];
-    title.text = @"Stay 2";
+    title.text = @"Stay";
     title.font = FCStyle.title3Bold;
     title.top = imageView.bottom + 10;
     title.textAlignment = NSTextAlignmentCenter;
     [backView addSubview:title];
     
     UILabel *build = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 18)];
-    build.text = [NSString stringWithFormat:@"%@(%@)",[infoDictionary objectForKey:@"CFBundleShortVersionString"],[infoDictionary objectForKey:@"CFBundleVersion"]];
+    build.text = [NSString stringWithFormat:@"%@ (%@)",[infoDictionary objectForKey:@"CFBundleShortVersionString"],[infoDictionary objectForKey:@"CFBundleVersion"]];
     
     build.font = FCStyle.body;
     build.textAlignment = NSTextAlignmentCenter;
-    build.textColor = FCStyle.fcPlaceHolder;
+    build.textColor = FCStyle.fcSecondaryBlack;
     build.top = title.bottom + 5;
     [backView addSubview:build];
     return backView;
+}
+
+- (NSString *)appString{
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    return [NSString stringWithFormat:@"%@ %@ (%@)",
+            [infoDictionary objectForKey:@"CFBundleDisplayName"],
+            [infoDictionary objectForKey:@"CFBundleShortVersionString"],
+            [infoDictionary objectForKey:@"CFBundleVersion"]
+    ];
 }
 
 
 - (UITableView *)tableView{
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
-//        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;

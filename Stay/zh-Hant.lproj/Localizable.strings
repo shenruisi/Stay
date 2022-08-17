@@ -44,6 +44,14 @@ settings.close = "關閉";
 settings.scriptError = "腳本格式錯誤";
 settings.shareContent ="分享腳本";
 settings.shareUrl ="分享連結";
+settings.appearance="外觀";
+settings.about="關於";
+settings.system="跟隨系統";
+settings.dark="暗黑";
+settings.light="明亮";
+settings.sendFeedback="發送反饋";
+settings.termOfUse="使用條款";
+settings.privacyPolicy="隱私策略";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "確認";
@@ -74,7 +82,7 @@ mac.toolbar.forward.tip = "前進";
 
 Interaction="互動";
 Social="社交媒體";
-MoreApp="更多應用";
+MoreApp="我們的應用";
 
 TryAgainLater="請稍後重試。";
 
@@ -129,8 +137,8 @@ HomeEmptyTips2="添加用戶腳本";
 
 GuidePage1Text1="嘗試首次運行一個腳本";
 GuidePage1Text2="步驟 1/2";
-GuidePage1Text3="激活 Stay 2 Safari擴展";
-GuidePage1Text4="根據視頻在Safari中操作，完成後返回Stay 2。";
+GuidePage1Text3="激活 Stay Safari擴展";
+GuidePage1Text4="根據視頻在Safari中操作，完成後返回Stay。";
 GuidePage1Button="去激活";
 Next="下一步";
 Skip="跳過";

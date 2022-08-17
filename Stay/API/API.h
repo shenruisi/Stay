@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shared;
 - (void)active:(NSString *)uuid isPro:(BOOL)isPro isExtension:(BOOL)isExtension;
 - (void)event:(NSString *)content;
+- (NSString *)deviceInfo;
 @end
 
 NS_ASSUME_NONNULL_END
