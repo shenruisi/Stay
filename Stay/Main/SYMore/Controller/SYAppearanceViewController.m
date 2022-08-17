@@ -377,9 +377,9 @@ for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
 //        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
-#if Mac
-        _tableView.width = 540;
-#endif
+//#if Mac
+//        _tableView.width = 540;
+//#endif
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;
