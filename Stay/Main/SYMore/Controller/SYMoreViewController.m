@@ -20,6 +20,7 @@
 #import "TimeHelper.h"
 #import "SYAboutViewController.h"
 #import "SYAppearanceViewController.h"
+#import "SYFlashViewController.h"
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
@@ -564,6 +565,10 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 #else
             [self.navigationController pushViewController:[[SYAppearanceViewController alloc] init] animated:YES];
 #endif
+        } else if ([type isEqualToString:@"getStarted"]) {
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYFlashViewController alloc] init]]
+                               animated:YES completion:^{}];
         }
     }
 }
@@ -742,6 +747,9 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             @{
                 @"section":NSLocalizedString(@"Interaction",@""),
                 @"cells":@[
+                    @{@"title":NSLocalizedString(@"settings.getStarted",@""),
+                      @"type":@"getStarted",
+                    },
                     @{@"title":NSLocalizedString(@"settings.rateApp",@""),
                       @"url":@"https://apps.apple.com/app/id1591620171?action=write-review",
                       @"subtitle":@"Stay"

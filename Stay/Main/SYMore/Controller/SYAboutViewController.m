@@ -84,6 +84,7 @@ UITableViewDataSource
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
+@property (nonatomic, strong) UIBarButtonItem *closeBtn;
 
 
 @end
@@ -92,14 +93,16 @@ UITableViewDataSource
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
     self.view.backgroundColor = FCStyle.background;
 
     [self tableView];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.about",@"About");
+    
+#if Mac
+    self.navigationItem.leftBarButtonItem = self.closeBtn;
+#endif
+
     // Do any additional setup after loading the view.
 }
 
@@ -161,6 +164,10 @@ UITableViewDataSource
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if(indexPath.section == 0) {
+        return;
+    }
+    
     NSDictionary *dict = self.dataSource[indexPath.section - 1][@"cells"][indexPath.row];
     NSString *url = dict[@"url"];
     if (url.length > 0){
@@ -169,7 +176,9 @@ UITableViewDataSource
     }
 }
 
-
+- (void)clickClose:(id)sender{
+    [self dismissModalViewControllerAnimated:true];
+}
 
 - (NSArray *)dataSource{
     if (nil == _dataSource){
@@ -191,6 +200,12 @@ UITableViewDataSource
             @{
                 @"section":NSLocalizedString(@"SendFeedBack",@"SEND FEEDBACK"),
                 @"cells":@[
+                    @{@"title":NSLocalizedString(@"settings.plan",@"plan")
+                      ,@"url":[[NSString stringWithFormat:@"mailto:tigris.shin@gmail.com?subject=Feedback - %@/%@",
+                                [self appString],
+                                [[API shared] deviceInfo]]
+                               stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+                    },
                     @{@"title":NSLocalizedString(@"settings.sendFeedback",@"SEND FEEDBACK")
                       ,@"url":[[NSString stringWithFormat:@"mailto:tigris.shin@gmail.com?subject=Feedback - %@/%@",
                                 [self appString],
@@ -266,6 +281,14 @@ UITableViewDataSource
     }
     
     return _tableView;
+}
+
+- (UIBarButtonItem *)closeBtn {
+    if(_closeBtn == nil) {
+        _closeBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.close","close") style:UIBarButtonItemStylePlain target:self action:@selector(clickClose:)];
+        _closeBtn.tintColor = FCStyle.accent;
+    }
+    return _closeBtn;
 }
 
 /*

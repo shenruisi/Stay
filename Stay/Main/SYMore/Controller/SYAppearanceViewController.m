@@ -94,9 +94,12 @@
             btn.frame = CGRectMake(0, 0, 23, 23);
             btn.layer.cornerRadius = 11.5;
             
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 27, 27)];
-            btn.centerY = 13.5;
-            btn.centerX = 13.5;
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
+            btn.centerY = 14;
+            btn.centerX = 14;
+
+    
+
             [btn addTarget:self action:@selector(changeColor:) forControlEvents:UIControlEventTouchUpInside];
             objc_setAssociatedObject (btn , @"color", color, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
@@ -107,7 +110,13 @@
             }
             
             [view addSubview:btn];
-            view.top = 8;
+#ifdef Mac
+            view.centerY = 17.5;
+#else
+            view.centerY = 22.5;
+#endif
+    
+
             view.left = left;
             [self.contentView addSubview:view];
      
@@ -175,16 +184,13 @@ UITableViewDataSource
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
-
+@property (nonatomic, strong) UIBarButtonItem *closeBtn;
 @end
 
 @implementation SYAppearanceViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
     self.view.backgroundColor = FCStyle.background;
     [self tableView];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
@@ -192,6 +198,9 @@ UITableViewDataSource
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
     // Do any additional setup after loading the view.
+#if Mac
+    self.navigationItem.leftBarButtonItem = self.closeBtn;
+#endif
 }
 
 /*
@@ -233,6 +242,10 @@ UITableViewDataSource
     return 45.0;
 #endif
     
+}
+
+- (void)clickClose:(id)sender{
+    [self dismissModalViewControllerAnimated:true];
 }
 
 
@@ -308,7 +321,7 @@ UITableViewDataSource
     for(int i = 0; i < 3; i++){
         UITabBarItem *item =  self.navigationController.tabBarController.tabBar.items[i];
         NSString *imageName = list[i];
-        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:22] color:FCStyle.accent];
+        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
     }
     [self.tableView reloadData];
 //    [self.tableView reloadData];
@@ -336,6 +349,14 @@ UITableViewDataSource
     }
     
     return _tableView;
+}
+
+- (UIBarButtonItem *)closeBtn {
+    if(_closeBtn == nil) {
+        _closeBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.close","close") style:UIBarButtonItemStylePlain target:self action:@selector(clickClose:)];
+        _closeBtn.tintColor = FCStyle.accent;
+    }
+    return _closeBtn;
 }
 
 @end

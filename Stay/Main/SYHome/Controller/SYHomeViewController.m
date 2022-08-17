@@ -316,6 +316,17 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *type = [userDefaults objectForKey:@"themeType"];
+    
+    if([@"System" isEqual:type]) {
+        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+    } else if([@"Dark" isEqual:type]){
+        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+    }else if([@"Light" isEqual:type]){
+        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+    }
+    
     self.selectedRow = -1;
 //    [ScriptMananger shareManager];
 //    [SYCodeMirrorView shareCodeView];
