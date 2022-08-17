@@ -103,6 +103,12 @@ UITableViewDataSource
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
     
+
+    // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:true];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *type = [userDefaults objectForKey:@"themeType"];
     
@@ -113,10 +119,7 @@ UITableViewDataSource
     }else if([@"Light" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
     }
-
-    // Do any additional setup after loading the view.
 }
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return self.dataSource.count + 1;
 }

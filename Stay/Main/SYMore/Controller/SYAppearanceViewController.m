@@ -201,7 +201,10 @@ UITableViewDataSource
 #if Mac
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:true];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *type = [userDefaults objectForKey:@"themeType"];
     
