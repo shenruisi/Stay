@@ -42,7 +42,7 @@ settings.addScriptFromUrl="Import from link";
 settings.addScriptFromWeb="Import from GreasyFork";
 settings.importFromFile = "Import from file";
 settings.downloadScript = "Download script";
-settings.close = "close";
+settings.close = "Close";
 settings.scriptError = "script error";
 settings.shareContent = "Share script";
 settings.shareUrl = "Share link";
@@ -55,6 +55,7 @@ settings.sendFeedback="Send Feedback";
 settings.termOfUse="Term Of Use";
 settings.privacyPolicy="Privacy Policy";
 settings.plan="Plan";
+settings.getStarted="Get Started";
 
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";

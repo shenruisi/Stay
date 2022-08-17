@@ -55,6 +55,7 @@ settings.sendFeedback="Send Feedback";
 settings.termOfUse="Term Of Use";
 settings.privacyPolicy="Privacy Policy";
 settings.plan="Plan";
+settings.getStarted="Get Started";
 
 unsupportedFileFormat = "対応していないファイルタイプ";
 ok = "OK";

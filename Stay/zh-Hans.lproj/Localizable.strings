@@ -53,6 +53,7 @@ settings.sendFeedback="发送反馈";
 settings.termOfUse="使用条款";
 settings.privacyPolicy="隐私策略";
 settings.plan="开发计划";
+settings.getStarted="开始使用";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "确认";
