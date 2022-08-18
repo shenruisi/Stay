@@ -1075,8 +1075,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     } else {
         model = _datas[indexPath.row];
     }
-    cell.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-    cell.contentView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+    cell.backgroundColor = FCStyle.secondaryBackground;
+    cell.contentView.backgroundColor = FCStyle.secondaryBackground;
     
     CGFloat viewWidth = self.view.frame.size.width;
     
@@ -1093,6 +1093,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15 + titleLabelLeftSize , 15, leftWidth - titleLabelLeftSize, 45)];
     titleLabel.font = FCStyle.headlineBold;
+    titleLabel.textColor = FCStyle.fcBlack;
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
     titleLabel.numberOfLines = 2;
@@ -1108,11 +1109,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     descLabel.text = model.desc;
     descLabel.numberOfLines = 2;
     descLabel.bottom = 125;
-    descLabel.textColor = [UIColor grayColor];
+    descLabel.textColor = FCStyle.fcSecondaryBlack;
     [cell.contentView addSubview:descLabel];
     
     UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
     authorLabel.font = FCStyle.body;
+    authorLabel.textColor = FCStyle.fcBlack;
     authorLabel.textAlignment = NSTextAlignmentLeft;
     authorLabel.text = model.author;
     authorLabel.bottom = descLabel.top - 5;
@@ -1135,11 +1137,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UILabel *version= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
     version.text = NSLocalizedString(@"Version",@"");
     version.font = [UIFont systemFontOfSize:12];
-    version.textColor = RGB(138, 138, 138);
+    version.textColor = FCStyle.fcSecondaryBlack;
     [cell.contentView addSubview:version];
 
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, width, 21)];
     versionLabel.font = FCStyle.subHeadline;
+    versionLabel.textColor = FCStyle.fcBlack;
     versionLabel.textAlignment = NSTextAlignmentLeft;
     versionLabel.text = model.version;
     versionLabel.left = left;
@@ -1149,7 +1152,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UILabel *statusLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
     statusLab.text = NSLocalizedString(@"Status",@"");
     statusLab.font = FCStyle.footnote;
-    statusLab.textColor = RGB(138, 138, 138);
+    statusLab.textColor = FCStyle.fcSecondaryBlack;
     statusLab.top = versionLabel.bottom + 2;
     statusLab.left = left;
     [cell.contentView addSubview:statusLab];
@@ -1157,6 +1160,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
     UILabel *actLabel = [[UILabel alloc]init];
     actLabel.font = FCStyle.subHeadline;
+    actLabel.textColor = FCStyle.fcBlack;
     actLabel.text = model.active == 0 ? NSLocalizedString(@"Stopped", @"") : NSLocalizedString(@"Activated", @"");
     [actLabel sizeToFit];
     actLabel.top = statusLab.bottom + 2;
@@ -1167,7 +1171,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UILabel *updateLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
     updateLab.text = NSLocalizedString(@"UpdateTime", @"");
     updateLab.font = FCStyle.footnote;
-    updateLab.textColor = RGB(138, 138, 138);
+    updateLab.textColor = FCStyle.fcSecondaryBlack;
     updateLab.top = actLabel.bottom + 2;
     updateLab.left = left;
     [cell.contentView addSubview:updateLab];
@@ -1195,6 +1199,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     } else {
         UILabel *updateLabel = [[UILabel alloc]init];
         updateLabel.font = FCStyle.subHeadline;
+        updateLabel.textColor = FCStyle.fcBlack;
         updateLabel.text = [self timeWithTimeIntervalString:model.updateTime];
         [updateLabel sizeToFit];
         updateLabel.top = updateLab.bottom + 2;

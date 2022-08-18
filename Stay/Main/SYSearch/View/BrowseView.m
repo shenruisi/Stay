@@ -27,7 +27,7 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     self  = [super initWithFrame:frame];
     if (self){
-        self.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        self.backgroundColor = FCStyle.secondaryBackground;
         [self setupSubviews];
     }
     return self;
@@ -118,9 +118,9 @@
     if (_titleLabel == nil) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, 200, 32)];
         _titleLabel.font = FCStyle.headlineBold;
+        _titleLabel.textColor = FCStyle.fcBlack;
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         _titleLabel.numberOfLines = 2;
-        _titleLabel.textColor = DynamicColor([UIColor whiteColor],[UIColor blackColor]);
 
     }
     return _titleLabel;
@@ -131,8 +131,8 @@
     if(_authorLabel == nil) {
         _authorLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 200, 18)];
         _authorLabel.font = FCStyle.body;
+        _authorLabel.textColor = FCStyle.fcBlack;
         _authorLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-        _authorLabel.textColor = DynamicColor([UIColor whiteColor],[UIColor blackColor]);
     }
     return _authorLabel;
 }
@@ -143,7 +143,7 @@
         _descLabel.font = FCStyle.body;
         _descLabel.numberOfLines = 2;
         _descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-        _descLabel.textColor = RGB(138, 138, 138);
+        _descLabel.textColor = FCStyle.fcSecondaryBlack;
     }
     return _descLabel;
 }
