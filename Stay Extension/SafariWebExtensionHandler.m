@@ -139,12 +139,15 @@
             }
         }
         
-        body = datas;
-        [SharedStorageManager shared].userDefaultsExRO = nil;
+        body = datas;        
+        if (datas.count > 0){
+            [SharedStorageManager shared].userDefaultsExRO = nil;
+            [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID
+                           isPro:[SharedStorageManager shared].userDefaultsExRO.pro
+                     isExtension:YES];
+        }
         
-        [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID
-                       isPro:[SharedStorageManager shared].userDefaultsExRO.pro
-                 isExtension:YES];
+        
     }
     else if ([message[@"type"] isEqualToString:@"fetchTheScript"]){
         NSString *uuid = message[@"uuid"];

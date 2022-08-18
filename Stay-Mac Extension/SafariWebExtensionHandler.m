@@ -155,9 +155,13 @@ NSString * const SFExtensionMessageKey = @"message";
         }
        
         body = datas;
-        [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID
-                       isPro:[SharedStorageManager shared].userDefaultsExRO.pro
-                 isExtension:YES];
+        if (datas.count > 0){
+            [SharedStorageManager shared].userDefaultsExRO = nil;
+            [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID
+                           isPro:[SharedStorageManager shared].userDefaultsExRO.pro
+                     isExtension:YES];
+        }
+        
     }
     else if ([message[@"type"] isEqualToString:@"fetchTheScript"]){
         NSString *uuid = message[@"uuid"];
