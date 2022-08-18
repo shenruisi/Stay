@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfActbar;
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
-
++ (NSString *)appearance;
 @end
 
 NS_ASSUME_NONNULL_END

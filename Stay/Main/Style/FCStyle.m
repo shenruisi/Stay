@@ -21,6 +21,21 @@
     
 }
 
++ (NSString *)appearance{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *type = [userDefaults objectForKey:@"themeType"];
+    if (type.length == 0) return @"System";
+    else return type;
+}
+    
+//    if([@"System" isEqual:type]) {
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+//    } else if([@"Dark" isEqual:type]){
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+//    }else if([@"Light" isEqual:type]){
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+//    }
+
 + (UIColor *)accentHighlight {
     return [UIColor colorNamed: @"SecondaryAccentClassicColor"];
 }

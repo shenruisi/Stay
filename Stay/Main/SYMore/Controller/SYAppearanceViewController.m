@@ -10,6 +10,13 @@
 #import "FCConfig.h"
 #import <objc/runtime.h>
 #import "ImageHelper.h"
+#ifdef Mac
+#import "FCShared.h"
+#import "Plugin.h"
+#endif
+
+NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @"app.stay.notification.AppearanceDidChangeAccentColorNotification";
+
 
 @interface _AppearanceTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSDictionary<NSString *, NSString *> *entity;
@@ -53,16 +60,13 @@
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",subtitle] attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
             NSFontAttributeName:FCStyle.footnote,
-            NSObliquenessAttributeName:@(0.2)
-            
         }]];
     }
     
 
     NSString *type = entity[@"type"];
     if (type != nil && type.length > 0) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        NSString *themeType = [userDefaults objectForKey:@"themeType"];
+        NSString *themeType = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
         if (themeType == nil) {
             themeType = @"System";
         }
@@ -205,9 +209,7 @@ UITableViewDataSource
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:true];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *type = [userDefaults objectForKey:@"themeType"];
-    
+    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
     if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
     } else if([@"Dark" isEqual:type]){
@@ -243,7 +245,6 @@ UITableViewDataSource
     NSDictionary *entity = self.dataSource[indexPath.section][@"cells"][indexPath.row];
     cell = [[_AppearanceTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     cell.entity = entity;
-    NSLog(@"SYAppearanceViewController %ld,%ld",indexPath.row,((NSArray *)self.dataSource[indexPath.section][@"cells"]).count - 1);
     return cell;
     
 }
@@ -273,36 +274,32 @@ UITableViewDataSource
                                            options:@{} completionHandler:^(BOOL succeed){}];
     } else if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
-        
 #if Mac
-for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
-    [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
-}
+        for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
+            [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+        }
+        [FCShared.plugin.appKit appearanceChanged:type];
 #endif
-        
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setObject:@"System" forKey:@"themeType"];
-        [userDefaults synchronize];
+        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"System"];
     } else if([@"Dark" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 #if Mac
-for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
-    [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
-}
+        for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
+            [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+        }
+        [FCShared.plugin.appKit appearanceChanged:type];
 #endif
-        [userDefaults setObject:@"Dark" forKey:@"themeType"];
-        [userDefaults synchronize];
+        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"Dark"];
     }else if([@"Light" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
 #if Mac
-for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
-    [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
-}
+        for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
+            [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+        }
+        [FCShared.plugin.appKit appearanceChanged:type];
 #endif
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults setObject:@"Light" forKey:@"themeType"];
-        [userDefaults synchronize];
+        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"Light"];
     }
     
     [self.tableView reloadData];
@@ -362,7 +359,11 @@ for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
         item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
     }
     [self.tableView reloadData];
-//    [self.tableView reloadData];
+#ifdef Mac
+    [FCShared.plugin.appKit accentColorChanged:color];
+#endif
+    [[NSNotificationCenter defaultCenter] postNotificationName:AppearanceDidChangeAccentColorNotification object:nil];
+    
 }
 
 - (void)statusBarChange{

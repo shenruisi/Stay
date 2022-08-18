@@ -39,6 +39,11 @@
     if (self = [super init]){
         self.appDelegate = appDelegate;
         NSLog(@"appkit loaded.");
+        NSString *mode = [[NSUserDefaults standardUserDefaults] objectForKey:@"macOSNative.appearance"];
+        if (mode.length == 0){
+            mode = @"System";
+        }
+        [self appearanceChanged:mode];
     }
     
     return self;
@@ -153,7 +158,11 @@
     NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
     NSProgressIndicator *indicator = [[NSProgressIndicator alloc] initWithFrame:CGRectMake(5, 0, 20, 20)];
     CIFilter *colorFilter = [CIFilter filterWithName:@"CIColorClamp"];
-    NSColor *accentColor = [NSColor colorWithRed:182/255.0 green:32/255.0 blue:224/255.0 alpha:1];
+    NSString *colorString = [[NSUserDefaults standardUserDefaults] objectForKey:@"macOSNative.accentColor"];
+    if (colorString.length == 0){
+        colorString = @"#B620E0";
+    }
+    NSColor *accentColor = [self colorWithHexString:colorString alpha:1];
     NSColor *spaceColor = [accentColor colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];
     CGFloat redComponent = spaceColor.redComponent;
     CGFloat greenComponent = spaceColor.greenComponent;
@@ -243,5 +252,52 @@
     item.minSize = CGSizeMake(width, 10);
     item.maxSize = CGSizeMake(width, 10);
 }
+
+- (void)appearanceChanged:(NSString *)mode{
+    if ([mode isEqualToString:@"System"]){
+        NSAppearanceName appearanceName = [NSApp.effectiveAppearance bestMatchFromAppearancesWithNames:
+                        @[ NSAppearanceNameAqua, NSAppearanceNameDarkAqua ]];
+        [NSApplication sharedApplication].appearance = [NSAppearance appearanceNamed:appearanceName];
+    }
+    else if ([mode isEqualToString:@"Dark"]){
+        [NSApplication sharedApplication].appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    }
+    else if ([mode isEqualToString:@"Light"]){
+        [NSApplication sharedApplication].appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:mode forKey:@"macOSNative.appearance"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)accentColorChanged:(NSString *)colorString{
+    [[NSUserDefaults standardUserDefaults] setObject:colorString forKey:@"macOSNative.accentColor"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha
+{
+    if ([string hasPrefix:@"#"])
+        string = [string substringFromIndex:1];
+    
+    // Separate into r, g, b substrings
+    NSRange range;
+    range.length = 2;
+    
+    range.location = 0;
+    NSString *rString = [string substringWithRange:range];
+    
+    range.location = 2;
+    NSString *gString = [string substringWithRange:range];
+    
+    range.location = 4;
+    NSString *bString = [string substringWithRange:range];
+    
+    unsigned int r, g, b;
+    [[NSScanner scannerWithString:rString] scanHexInt:&r];
+    [[NSScanner scannerWithString:gString] scanHexInt:&g];
+    [[NSScanner scannerWithString:bString] scanHexInt:&b];
+    return [NSColor colorWithRed:((float)r/255.0f) green:((float)g/255.0f) blue:((float)b/255.0f) alpha:alpha];
+}
+
 
 @end

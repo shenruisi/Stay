@@ -23,6 +23,7 @@
 #import "ICloudSyncSlideController.h"
 #import "AlertHelper.h"
 #import "TimeHelper.h"
+#import "SYAppearanceViewController.h"
 
 static CGFloat MIN_PRIMARY_WIDTH = 310;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
@@ -90,6 +91,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(subscibeDidChangeHandler:)
                                                  name:@"app.stay.notification.SYSubscibeChangeNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appearanceDidChangeAccentColorHandler:)
+                                                 name:AppearanceDidChangeAccentColorNotification
                                                object:nil];
 }
 
@@ -456,6 +462,10 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 //    }
 }
 
+- (void)appearanceDidChangeAccentColorHandler:(NSNotification *)note{
+    
+}
+
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
     NSToolbarItem *item = [self _itemOfIdentifier:Toolbar_AppIcon];
     [FCShared.plugin.appKit changeAppIcon:item imageData:[[FCStore shared] getPlan:NO] == FCPlan.None ? [ImageHelper dataNamed:@"NavIcon"] : [ImageHelper dataNamed:@"NavProIcon"]];
@@ -662,6 +672,12 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"app.stay.notification.SYSubscibeChangeNotification"
                                                   object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AppearanceDidChangeAccentColorNotification
+                                                  object:nil];
+    
+    
     
 }
 

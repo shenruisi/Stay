@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)labelItemChanged:(NSToolbarItem *)item text:(NSString *)text fontSize:(CGFloat)fontSize;
 - (NSToolbarItem *)blockItem:(NSString *)identifier width:(CGFloat)width;
 - (void)slideTrackToolbarItemChanged:(NSToolbarItem *)item width:(CGFloat)width;
+- (void)appearanceChanged:(NSString *)mode;
+- (void)accentColorChanged:(NSString *)colorString;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -37,7 +37,8 @@ static FCConfig *k_config = nil;
         [self setStringValueOfKey:GroupUserDefaultsKeyLastSync value:@"" setWhenNil:YES];
         NSString *deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
         [self setStringValueOfKey:GroupUserDefaultsKeyDeviceUUID value:deviceID setWhenNil:YES];
-        [SharedStorageManager shared].userDefaultsExRO.deviceID = deviceID;   
+        [SharedStorageManager shared].userDefaultsExRO.deviceID = deviceID;
+        [self setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"System" setWhenNil:YES];
     }
     
     return self;
