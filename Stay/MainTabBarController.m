@@ -58,6 +58,8 @@
     navC.tabBarItem.image = image;
 #ifdef Mac
     navC.tabBarItem.imageInsets = UIEdgeInsetsMake(3, 3, 0, 3);
+#else
+    navC.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
 #endif
     selectImage = [selectImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [navC.tabBarItem setSelectedImage:selectImage];
@@ -79,8 +81,9 @@
     self.tabBar.scrollEdgeAppearance = tabbarAppearance;
     self.tabBar.standardAppearance = tabbarAppearance;
     NSDictionary *dictHome = [NSDictionary dictionaryWithObject:UIColorWithRGBA(185,101,223,1)  forKey:NSForegroundColorAttributeName];
+    
     [navC.tabBarItem setTitleTextAttributes:dictHome forState:UIControlStateSelected];
-
+    
     [self addChildViewController:navC];
 }
 
