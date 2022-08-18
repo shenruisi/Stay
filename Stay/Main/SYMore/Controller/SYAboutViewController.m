@@ -119,6 +119,7 @@ UITableViewDataSource
     }else if([@"Light" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
     }
+    [self.tableView setFrame:self.view.bounds];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return self.dataSource.count + 1;
@@ -249,7 +250,7 @@ UITableViewDataSource
 - (UIView *)createAboutHeaderView {
     UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 215)];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 170, 160)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 160, 160)];
     imageView.image = [UIImage imageNamed:@"stay-mac1024-1"];
     imageView.centerX = (self.view.width - 30) / 2;
     [backView addSubview:imageView];
@@ -289,7 +290,7 @@ UITableViewDataSource
 //        _tableView.width = 540;
 //#endif
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
+        _tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;

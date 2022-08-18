@@ -753,9 +753,11 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             @{
                 @"section":NSLocalizedString(@"Interaction",@""),
                 @"cells":@[
+#ifndef Mac
                     @{@"title":NSLocalizedString(@"settings.getStarted",@""),
                       @"type":@"getStarted",
                     },
+#endif
                     @{@"title":NSLocalizedString(@"settings.rateApp",@""),
                       @"url":@"https://apps.apple.com/app/id1591620171?action=write-review",
                       @"subtitle":@"Stay"
