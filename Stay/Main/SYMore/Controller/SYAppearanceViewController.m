@@ -91,6 +91,7 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
         }
 
         for (int i = 0; i < colorList.count; i++) {
+    
             
             NSString *color = colorList[i];
         
@@ -98,12 +99,21 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
             [btn setBackgroundColor:[self colorWithHexString:color alpha:1]];
             btn.frame = CGRectMake(0, 0, 23, 23);
             btn.layer.cornerRadius = 11.5;
-            
+#ifdef Mac
+            btn.frame = CGRectMake(0, 0, 18, 18);
+            btn.layer.cornerRadius = 9;
+#endif
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 29, 29)];
             btn.centerY = 14.5;
             btn.centerX = 14.5;
-
-    
+            
+#ifdef Mac
+            view.frame = CGRectMake(0, 0, 24, 24);
+            btn.centerY = 12;
+            btn.centerX = 12;
+#endif
+            
+            
 
             [btn addTarget:self action:@selector(changeColor:) forControlEvents:UIControlEventTouchUpInside];
             objc_setAssociatedObject (btn , @"color", color, OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -111,7 +121,12 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
             if([themeColor isEqualToString:color]) {
                 view.layer.borderWidth = 2;
                 view.layer.borderColor = [self colorWithHexString:color alpha:0.5].CGColor;
-                view.layer.cornerRadius = 13.5;
+                view.layer.cornerRadius = 14.5;
+
+#ifdef Mac
+                view.layer.cornerRadius = 12;
+#endif
+
             }
             
             [view addSubview:btn];
