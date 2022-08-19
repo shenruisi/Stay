@@ -13,6 +13,7 @@
 #ifdef Mac
 #import "FCShared.h"
 #import "Plugin.h"
+#import "QuickAccess.h"
 #endif
 
 NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @"app.stay.notification.AppearanceDidChangeAccentColorNotification";
@@ -362,6 +363,13 @@ UITableViewDataSource
     [self.tableView reloadData];
 #ifdef Mac
     [FCShared.plugin.appKit accentColorChanged:color];
+    for(int i = 0; i < 3; i++){
+        UITabBarItem *item = [QuickAccess  primaryController].tabBar.items[i];
+        NSString *imageName = list[i];
+        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
+    }
+    
+    self.navigationItem.leftBarButtonItem.tintColor = FCStyle.accent;
 #endif
     [[NSNotificationCenter defaultCenter] postNotificationName:AppearanceDidChangeAccentColorNotification object:nil];
     

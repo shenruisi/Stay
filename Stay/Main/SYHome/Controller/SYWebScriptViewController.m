@@ -81,10 +81,14 @@
         _wkwebView.navigationDelegate = self;
         [_wkwebView setOpaque:false];
         _wkwebView.allowsBackForwardNavigationGestures = YES;
-        NSString *urlStr = @"https://greasyfork.org/zh-CN/scripts";
+        NSString *urlStr =  @"https://greasyfork.org/en/scripts/";
         
-        if (![[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-            urlStr = @"https://greasyfork.org/en/scripts/";
+        NSArray *list = @[@"ar",@"bg",@"cs",@"da",@"de",@"el",@"en",@"eo",@"es",@"fi",@"fr",@"fr-CA",@"he",@"hu",@"id",@"it",@"ja",@"ko",@"pl",@"pt-BR",@"ro",@"ru",@"sk",@"sr",@"sv",@"th",@"tr",@"uk",@"ug",@"vi"];
+        
+        if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+            urlStr = @"https://greasyfork.org/zh-CN/scripts";
+        } else if ([list containsObject:[UserScript localeCodeLanguageCodeOnly]]) {
+            urlStr = [NSString stringWithFormat:@"https://greasyfork.org/%@/scripts",[UserScript localeCodeLanguageCodeOnly]];
         }
         NSURL *url = [NSURL URLWithString:urlStr];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];

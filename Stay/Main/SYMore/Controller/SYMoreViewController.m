@@ -87,7 +87,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             
         }]];
         
-        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:@"●۬" attributes:@{
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:@"●" attributes:@{
                     NSForegroundColorAttributeName:FCStyle.accent,
                     NSFontAttributeName:[UIFont systemFontOfSize:10],}]];
     }
