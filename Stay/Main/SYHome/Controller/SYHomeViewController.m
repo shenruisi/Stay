@@ -344,7 +344,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     self.searchController = search;
     self.searchController.delegate = self;
     self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar setTintColor:RGB(182, 32, 224)];
+    [self.searchController.searchBar setTintColor:FCStyle.accent];
     
     self.navigationItem.hidesSearchBarWhenScrolling = false;
 
