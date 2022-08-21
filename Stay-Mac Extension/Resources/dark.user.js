@@ -6136,11 +6136,15 @@
             
         }else if(MessageType.BG_ADD_DYNAMIC_THEME === type){
             // console.log("data==BG_ADD_DYNAMIC_THEME===",data, stayDarkSettings);
-            setupDarkmode(data);
+            if((document.querySelector(".noir") && document.querySelector(".noir-root"))){
+                cleanupDarkmode();
+            }else{
+                setupDarkmode(data);
+            }
             
         }else if(MessageType.BG_CLEAN_UP === type){
             // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
-            cleanupDarkmode(data);
+            cleanupDarkmode();
         }
         return true;
         
