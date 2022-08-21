@@ -16,7 +16,7 @@
 
     "background": {
         "scripts": [ "background.js" ],
-        "persistent": false
+        "persistent": true
     },
 
     "content_scripts": [
@@ -26,7 +26,7 @@
                 "<all_urls>"
             ],
             "run_at": "document_start",
-            "all_frames": true,
+            "all_frames": false,
             "match_about_blank": true
         },
         {

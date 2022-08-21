@@ -1,57 +1,35 @@
 (function () {
     "use strict";
-    let startTime = new Date().getTime();
-    // alert("startTime--");
-    // console.log("fallback---startTime-", startTime);
-    function getDomain(url) {
-        try {
-            return new URL(url).hostname.toLowerCase();
-        } catch (error) {
-            return url.split("/")[0].toLowerCase();
-        }
-    }
-    let browserDomain = getDomain(window.location.href);
-    let darkmodeSettingStr = window.localStorage.getItem("FETCH_DARK_SETTING");
-    let darkmodeSetting;
-    if(darkmodeSettingStr && darkmodeSettingStr!=="" && darkmodeSettingStr !== "null" && darkmodeSettingStr !== "undefined"  ){
-        darkmodeSetting = JSON.parse(darkmodeSettingStr);
+    let darkmodeSetting = window.localStorage.getItem("FETCH_DARK_SETTING");
+    if(darkmodeSetting && darkmodeSetting!=="" && darkmodeSetting !== "null" && darkmodeSetting !== "undefined"){
         darkModeInit(darkmodeSetting);
         fetchDarkStayAround();
     }else{
-        browser.runtime.sendMessage({from: "darkmode", operate: "FETCH_DARK_SETTING"}, (response) => {
-            if(response.body && JSON.stringify(response.body)!="{}"){
+        browser.runtime.sendMessage({type: "darkmode", operate: "FETCH_DARK_SETTING"}, (response) => {
+            // console.log("FETCH_DARK_SETTING----",response);
+            if(response && response.body){
                 darkmodeSetting = response.body;
-                window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
+                window.localStorage.setItem("FETCH_DARK_SETTING", darkmodeSetting);
             }
-            window.localStorage.setItem("stay_dark_toggle_status", toggleStatus);
-            // console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=",darkStayAround);
             darkModeInit(darkmodeSetting);
         });
     }
 
     async function fetchDarkStayAround(){
-        browser.runtime.sendMessage({ from: "darkmode", operate: "FETCH_DARK_SETTING" }, function (response) {
+        browser.runtime.sendMessage({ type: "darkmode", operate: "FETCH_DARK_SETTING" }, function (response) {
             let darkmodeSetting = response.body;
+            // console.log("FETCH_DARK_SETTING--darkmodeSetting--",response);
             // console.log("cleanupDarkmode---2-", (new Date().getTime() - startTime), ",darkmodeSetting=",darkmodeSetting);
-            window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
+            window.localStorage.setItem("FETCH_DARK_SETTING", darkmodeSetting);
         });
     }
 
     // console.log("fallback---endTime-", new Date().getTime());
     function darkModeInit(darkmodeSetting){
         if (
-            darkmodeSetting.isStayAround !== "" && darkmodeSetting.isStayAround === "a" &&
+            darkmodeSetting !== "" && darkmodeSetting === "dark_mode" &&
             !document.querySelector(".darkreader--fallback") &&
-            document.documentElement instanceof HTMLHtmlElement && 
-            (
-                (matchMedia("(prefers-color-scheme: dark)").matches &&
-                darkmodeSetting.toggleStatus!="off" &&
-                !darkmodeSetting.siteListDisabled.includes(browserDomain)) || 
-                (!matchMedia("(prefers-color-scheme: dark)").matches && 
-                darkmodeSetting.toggleStatus ==="on" && 
-                !darkmodeSetting.siteListDisabled.includes(browserDomain))
-            )
-            
+            document.documentElement instanceof HTMLHtmlElement 
         ) {
             // alert("insert CSS");
             const css =

@@ -206,6 +206,8 @@
                 version: userscript.version,
                 description: userscript.description,
                 namespace: userscript.namespace,
+                name: userscript.namespace,
+                scriptMetaStr: "",
                 resources: userscript.resourceUrls ? userscript.resourceUrls : [],
                 includes: userscript.includes ? userscript.includes : [],
                 excludes: userscript.excludes ? userscript.excludes : [],
@@ -867,22 +869,22 @@
             }
         })
 
-        function GM_info(userscript, version) {
-            let info = {
-                version: version,
-                scriptHandler: "Stay",
-                script: {
-                    version: userscript.version,
-                    description: userscript.description,
-                    namespace: userscript.namespace,
-                    resources: userscript.resourceUrls ? userscript.resourceUrls : [],
-                    includes: userscript.includes ? userscript.includes : [],
-                    excludes: userscript.excludes ? userscript.excludes : [],
-                    matches: userscript.matches ? userscript.matches : []
-                }
-            };
-            return JSON.stringify(info);
-        }
+        // function GM_info(userscript, version) {
+        //     let info = {
+        //         version: version,
+        //         scriptHandler: "Stay",
+        //         script: {
+        //             version: userscript.version,
+        //             description: userscript.description,
+        //             namespace: userscript.namespace,
+        //             resources: userscript.resourceUrls ? userscript.resourceUrls : [],
+        //             includes: userscript.includes ? userscript.includes : [],
+        //             excludes: userscript.excludes ? userscript.excludes : [],
+        //             matches: userscript.matches ? userscript.matches : []
+        //         }
+        //     };
+        //     return JSON.stringify(info);
+        // }
 
         function GM_listValues_Async() {
             const pid = Math.random().toString(36).substring(1, 9);

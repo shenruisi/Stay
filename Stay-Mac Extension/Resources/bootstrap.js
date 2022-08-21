@@ -8,7 +8,7 @@
  background.js passing message to content.js using browser.tabs.sendMessage.
  popup.js passing message to content.js should sendMessage to background.js first.
  */
-console.log("bootstrap inject");
+// console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
 
@@ -281,7 +281,7 @@ let RMC_CONTEXT = {};
                     });
                 }
                 
-                console.log("exeScriptManually",targetScript.name,targetScript.installType);
+                // console.log("exeScriptManually",targetScript.name,targetScript.installType);
                 if (pageInject){
                     let uuid = targetScript.uuid;
                     let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
@@ -338,7 +338,7 @@ let RMC_CONTEXT = {};
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         let injectedVendor = new Set();
         matchedScripts = response.body;
-        console.log("matchedScripts-", matchedScripts)
+        // console.log("matchedScripts-", matchedScripts)
         matchedScripts.forEach((script) => {
             var pageInject = script.installType === "page";
             if (script.requireUrls.length > 0 && script.active){
@@ -384,7 +384,7 @@ let RMC_CONTEXT = {};
             
             if (script.active){ //inject active script
                 console.log("injectScript---",script.name,script.installType,script.runAt);
-//                 console.log("injectScript---", script.content);
+                // console.log("injectScript---", script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
