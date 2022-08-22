@@ -139,7 +139,6 @@ static Tampermonkey *kInstance = nil;
         results = [requiredjQueryExpr  matchesInString:script options:0 range:NSMakeRange(0, script.length)];
         return results.count == 0;
     }
-    
     return NO;
 }
 

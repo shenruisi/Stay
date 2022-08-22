@@ -346,6 +346,7 @@ let RMC_CONTEXT = {};
                     if (injectedVendor.has(url)) return;
                     injectedVendor.add(url);
                     if (url.startsWith('stay://')){
+                        console.log("stay://",url);
                         if (pageInject){
                             var name = $_uri(url).pathname.substring(1);
                             $_injectRequiredInPageWithURL(name,$_res(name));
@@ -384,7 +385,7 @@ let RMC_CONTEXT = {};
             
             if (script.active){ //inject active script
                 console.log("injectScript---",script.name,script.installType,script.runAt);
-//                 console.log("injectScript---", script.content);
+                 console.log("injectScript---", script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
