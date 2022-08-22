@@ -127,9 +127,10 @@
         CS_FRAME_FREEZE: "cs-frame-freeze",
         CS_FRAME_RESUME: "cs-frame-resume",
         CS_EXPORT_CSS_RESPONSE: "cs-export-css-response",
-        CS_FETCH: "cs-fetch"
+        CS_FETCH: "cs-fetch",
+        CS_DARK_THEME_DETECTED: "cs-dark-theme-detected",
     };
-    var isIFrame = (function () {
+    let isIFrame = (function () {
         try {
             return window.self !== window.top;
         }
@@ -137,6 +138,14 @@
             console.warn(err);
             return true;
         }
+    })();
+    const isCSSColorSchemePropSupported = (() => {
+        if (typeof document === "undefined") {
+            return false;
+        }
+        const el = document.createElement("div");
+        el.setAttribute("style", "color-scheme: dark");
+        return el.style && el.style.colorScheme === "dark";
     })();
     function logInfo(...args) { }
     function logWarn(...args) { }
@@ -2223,52 +2232,69 @@
         }
         return null;
     }
-    function getModifiedUserAgentStyle(theme, styleSystemControls) {
+    function joinSelectors(...selectors) {
+        return selectors.filter(Boolean).join(", ");
+    }
+    function getModifiedUserAgentStyle(theme, isIFrame, styleSystemControls) {
         const lines = [];
         if (!isIFrame) {
             lines.push("html {");
             lines.push(
                 `    background-color: ${modifyBackgroundColor(
-                    { r: 255, g: 255, b: 255 },
+                    {r: 255, g: 255, b: 255},
                     theme
                 )} !important;`
             );
             lines.push("}");
         }
-        lines.push(
-            `${isIFrame ? "" : "html, body, "}${styleSystemControls ? "input, textarea, select, button" : ""
-            } {`
+        if (isCSSColorSchemePropSupported) {
+            lines.push("html {");
+            lines.push(
+                `    color-scheme: ${
+                    theme.mode === 1 ? "dark" : "dark light"
+                } !important;`
+            );
+            lines.push("}");
+        }
+        const bgSelectors = joinSelectors(
+            isIFrame ? "" : "html, body",
+            styleSystemControls ? "input, textarea, select, button" : ""
         );
+        if (bgSelectors) {
+            lines.push(`${bgSelectors} {`);
+            lines.push(
+                `    background-color: ${modifyBackgroundColor(
+                    {r: 255, g: 255, b: 255},
+                    theme
+                )};`
+            );
+            lines.push("}");
+        }
         lines.push(
-            `    background-color: ${modifyBackgroundColor(
-                { r: 255, g: 255, b: 255 },
-                theme
-            )};`
-        );
-        lines.push("}");
-        lines.push(
-            `html, body, ${styleSystemControls ? "input, textarea, select, button" : ""
-            } {`
+            `${joinSelectors(
+                "html, body",
+                styleSystemControls ? "input, textarea, select, button" : ""
+            )} {`
         );
         lines.push(
             `    border-color: ${modifyBorderColor(
-                { r: 76, g: 76, b: 76 },
+                {r: 76, g: 76, b: 76},
                 theme
             )};`
         );
         lines.push(
-            `    color: ${modifyForegroundColor({ r: 0, g: 0, b: 0 }, theme)};`
+            `    color: ${modifyForegroundColor({r: 0, g: 0, b: 0}, theme)};`
         );
         lines.push("}");
         lines.push("a {");
         lines.push(
-            `    color: ${modifyForegroundColor({ r: 0, g: 64, b: 255 }, theme)};`
+            `    color: ${modifyForegroundColor({r: 0, g: 64, b: 255}, theme)};`
         );
         lines.push("}");
         lines.push("table {");
         lines.push(
             `    border-color: ${modifyBorderColor(
-                { r: 128, g: 128, b: 128 },
+                {r: 128, g: 128, b: 128},
                 theme
             )};`
         );
@@ -2276,7 +2302,7 @@
         lines.push("::placeholder {");
         lines.push(
             `    color: ${modifyForegroundColor(
-                { r: 169, g: 169, b: 169 },
+                {r: 169, g: 169, b: 169},
                 theme
             )};`
         );
@@ -2286,13 +2312,13 @@
         lines.push("select:-webkit-autofill {");
         lines.push(
             `    background-color: ${modifyBackgroundColor(
-                { r: 250, g: 255, b: 189 },
+                {r: 250, g: 255, b: 189},
                 theme
             )} !important;`
         );
         lines.push(
             `    color: ${modifyForegroundColor(
-                { r: 0, g: 0, b: 0 },
+                {r: 0, g: 0, b: 0},
                 theme
             )} !important;`
         );
@@ -4072,15 +4098,15 @@
             }
             renderId++;
             function setRule(target, index, rule) {
+                // console.log("target=",target,",rule=",rule,",index=",index);
                 const { selector, declarations } = rule;
                 const getDeclarationText = (dec) => {
                     const { property, value, important, sourceValue } = dec;
                     return `${property}: ${value == null ? sourceValue : value
                         }${important ? " !important" : ""};`;
                 };
-                const ruleText = `${selector} { ${declarations
-                    .map(getDeclarationText)
-                    .join(" ")} }`;
+                const ruleText = `${selector} { ${declarations.map(getDeclarationText).join(" ")} }`;
+                // console.log("target=",target,",ruleText=",ruleText,",index=",index);
                 target.insertRule(ruleText, index);
             }
             const asyncDeclarations = new Map();
@@ -4305,6 +4331,7 @@
                 });
             }
             function rebuildAsyncRule(key) {
+                // console.log("key====",key,",asyncDeclarations====",asyncDeclarations);
                 const { rule, target, index } = asyncDeclarations.get(key);
                 target.deleteRule(index);
                 setRule(target, index, rule);
@@ -5450,6 +5477,7 @@
         const userAgentStyle = createOrUpdateStyle("darkreader--user-agent");
         userAgentStyle.textContent = getModifiedUserAgentStyle(
             filter,
+            isIFrame,
             filter.styleSystemControls
         );
         document.head.insertBefore(userAgentStyle, fallbackStyle.nextSibling);
@@ -5841,7 +5869,7 @@
         createDarkReaderInstanceMarker();
         return false;
     }
-    function createOrUpdateDynamicTheme(filterConfig, dynamicThemeFixes, isIFrame) {
+    function createOrUpdateDynamicTheme(filterConfig, dynamicThemeFixes, isIframe) {
         filter = filterConfig;
         fixes = dynamicThemeFixes;
         if (fixes) {
@@ -5857,6 +5885,7 @@
             ignoredImageAnalysisSelectors = [];
             ignoredInlineSelectors = [];
         }
+        isIFrame = isIframe;
         if (filter.immediateModify) {
             setIsDOMReady(() => {
                 return true;
@@ -5979,6 +6008,8 @@
             
         }
     }
+
+
     function getDomain(url) {
         try {
             return new URL(url).hostname.toLowerCase();
@@ -5988,17 +6019,23 @@
     }
     let browserDomain = getDomain(window.location.href);
 
-    function setupDarkmode() {
+    function setupDarkmode(data) {
         // darkModeInit();
+        const {theme, fixes, isIFrame, detectDarkTheme} = data;
         removeStyle();
-        let fixesText = {
-            css: ".vimvixen-hint {\n    background-color: ${#ffd76e} !important;\n    border-color: ${#c59d00} !important;\n    color: ${#302505} !important;\n}\n::placeholder {\n    opacity: 0.5 !important;\n}\n#edge-translate-panel-body,\n.MuiTypography-body1 {\n    color: var(--darkreader-neutral-text) !important;\n}\ngr-main-header {\n    background-color: ${lightblue} !important;\n}\n.tou-z65h9k,\n.tou-mignzq,\n.tou-1b6i2ox,\n.tou-lnqlqk {\n    background-color: var(--darkreader-neutral-background) !important;\n}\n.tou-75mvi {\n    background-color: ${rgb(207, 236, 245)} !important;\n}\n.tou-ta9e87,\n.tou-1w3fhi0,\n.tou-1b8t2us,\n.tou-py7lfi,\n.tou-1lpmd9d,\n.tou-1frrtv8,\n.tou-17ezmgn {\n    background-color: ${rgb(245, 245, 245)} !important;\n}\n.tou-uknfeu {\n    background-color: ${rgb(250, 237, 218)} !important;\n}\n.tou-6i3zyv {\n    background-color: ${rgb(133, 195, 216)} !important;\n}\nembed[type=\"application/pdf\"][src=\"about:blank\"] { filter: invert(100%) contrast(90%); }",
-            ignoreImageAnalysis: [],
-            ignoreInlineStyle: ['.sr-wrapper *', '.sr-reader *', '.diigoHighlight'],
-            invert: ['.jfk-bubble.gtx-bubble', '.captcheck_answer_label > input + img', 'span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"]', 'span[data-href^="https://www.hcaptcha.com/"] > #icon', '#bit-notification-bar-iframe', '::-webkit-calendar-picker-indicator', '.logo'],
-            url: [browserDomain]
-        };
-        createOrUpdateDynamicTheme(DEFAULT_THEME, fixesText);
+        createOrUpdateDynamicTheme(theme, fixes, isIFrame);
+        if (detectDarkTheme) {
+            runDarkThemeDetector((hasDarkTheme) => {
+                if (hasDarkTheme) {
+                    removeDynamicTheme();
+                    // onDarkThemeDetected();
+                }
+            });
+        }
+    }
+
+    function onDarkThemeDetected() {
+        sendMessage({type: MessageType.CS_DARK_THEME_DETECTED});
     }
 
     function cleanupDarkmode() {
@@ -6013,15 +6050,37 @@
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
 
-    function autoDarkmode() {
-        if (is_dark()){
-            setupDarkmode();
-        }else{
-            cleanupDarkmode();
-        }
+    let unloaded = false;
+    // let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
+    //     sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}});
+    // });
+    function cleanup() {
+        unloaded = true;
+        // removeEventListener("pagehide", onPageHide);
+        // removeEventListener("freeze", onFreeze);
+        // removeEventListener("resume", onResume);
+        cleanDynamicThemeCache();
+        stopDarkThemeDetector();
+        // if (colorSchemeWatcher) {
+        //     colorSchemeWatcher.disconnect();
+        //     colorSchemeWatcher = null;
+        // }
     }
 
-
+    function sendMessage(message) {
+        if (unloaded) {
+            return;
+        }
+        try {
+            browser.runtime.sendMessage(message, (response) => {
+                if (response === "unsupportedSender") {
+                    cleanupDarkmode();
+                }
+            });
+        } catch (e) {
+            cleanup();
+        }
+    }
 
     function watchForColorSchemeChange(callback) {
         const query = matchMedia("(prefers-color-scheme: dark)");
@@ -6041,229 +6100,29 @@
             }
         };
     }
-    // let unloaded = false;
-    // let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
-    //     try {
-    //         browser.runtime.sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}}, (response) => {
-    //             if (response === "unsupportedSender") {
-    //                 removeStyle();
-    //                 removeSVGFilter();
-    //                 removeDynamicTheme();
-    //                 cleanup();
-    //             }
-    //         });
-    //     } catch (e) {
-    //         cleanup();
-    //     }
-    // });
 
-    // function cleanup() {
-    //     unloaded = true;
-    //     removeEventListener("pagehide", onPageHide);
-    //     removeEventListener("freeze", onFreeze);
-    //     removeEventListener("resume", onResume);
-    //     cleanDynamicThemeCache();
-    //     stopDarkThemeDetector();
-    //     if (colorSchemeWatcher) {
-    //         colorSchemeWatcher.disconnect();
-    //         colorSchemeWatcher = null;
+    // function onPageHide(e) {
+    //     if (e.persisted === false) {
+    //         sendMessage({type: MessageType.CS_FRAME_FORGET});
     //     }
     // }
-
-    const DEFAULT_SETTINGS = {
-        enabled: true,
-        theme: DEFAULT_THEME,
-        presets: [],
-        customThemes: [],
-        siteList: [],
-        siteListEnabled: [],
-        applyToListedOnly: false,
-        changeBrowserTheme: false,
-        syncSettings: true,
-        syncSitesFixes: false,
-        automation: "",
-        automationBehaviour: "OnOff",
-        time: {
-            activation: "18:00",
-            deactivation: "9:00"
-        },
-        location: {
-            latitude: null,
-            longitude: null
-        },
-        enableForPDF: true,
-        enableForProtectedPages: false,
-        enableContextMenus: false,
-        detectDarkTheme: false
-    };
+    // function onFreeze() {
+    //     sendMessage({type: MessageType.CS_FRAME_FREEZE});
+    // }
+    // function onResume() {
+    //     sendMessage({type: MessageType.CS_FRAME_RESUME});
+    // }
+    // if(isSafari){
+    //     addEventListener("pagehide", onPageHide);
+    //     addEventListener("freeze", onFreeze);
+    //     addEventListener("resume", onResume);
+    // }
     
-    
-    async function writeLocalStorage(values) {
-        browser.runtime.sendMessage({ 
-            from: "darkmode", 
-            operate: "GIVEN_DARK_SETTING",
-            darkmodeSettingStr: JSON.stringify(values)
-        });
-        return new Promise(async (resolve) => {
-            browser.storage.sync.set(values, () => {
-                resolve();
-            });
-        });
-    }
-
-    async function readLocalStorage(defaults) {
-        return new Promise((resolve) => {
-            browser.storage.sync.get(defaults, (local) => {
-                if (browser.runtime.lastError) {
-                    console.error(browser.runtime.lastError.message);
-                    resolve(defaults);
-                    return;
-                }
-                resolve(local);
-            });
-            // resolve(defaults);
-        });
-    }
-
-    
-
-    let darkmodeConfigSetting;
-
-    const DARK_MODE_CONFIG = {
-        isStayAround: "b",
-        siteListDisabled: [],
-        toggleStatus:"on", //on,off,auto
-    };
-    // let targetUrl = browser.runtime.getURL("cross-domain-ifream.html");
-    // console.log("darkuser---startTime-2-handleStartDarkMode=",  new Date().getTime());
-   
-    handleStartDarkMode();
-
-    function validateSettings(darkmodeConfig) {
-        if (!isPlainObject(darkmodeConfig)) {
-            return {
-                errors: ["Settings are not a plain object"],
-                darkmodeConfig: DARK_MODE_CONFIG
-            };
-        }
-    }
-
-    // window.localStorage.setItem("DARK_MODE_CONFIG", JSON.stringify(DARK_MODE_CONFIG))
-    async function handleStartDarkMode(){
-        let fetchStart = new Date().getTime();
-        // console.log("DARK_MODE_CONFIG_fetch---1---", new Date().getTime());
-        // let darkmodeConfig = JSON.parse(window.localStorage.getItem("DARK_MODE_CONFIG")); //DARK_MODE_CONFIG; // 
-
-        let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
-        darkmodeConfigSetting = darkmodeConfig;
-        // console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
-        if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
-            // console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
-            fetchStayAround(darkmodeConfig);
-        }else{
-            // console.log("isStayAround is null-------");
-            checkStayAround(darkmodeConfig);
-            asyncFetchStayAround();
-        }
-
-        // let darkmodeConfig = DARK_MODE_CONFIG;
-        // browser.storage.sync.get(DARK_MODE_CONFIG, (local) => {
-        //     darkmodeConfig = local;
-        //     console.log("DARK_MODE_CONFIG_fetch---2---",darkmodeConfig, fetchStart - new Date().getTime());
-        //     validateSettings(darkmodeConfig);
-        //     darkmodeConfigSetting = darkmodeConfig;
-        //     // console.log("darkmodeConfig-----",darkmodeConfig, darkmodeConfigSetting);
-        //     if(!darkmodeConfig.hasOwnProperty("isStayAround") || !darkmodeConfig["isStayAround"] || darkmodeConfig["isStayAround"] == "undefined"){
-        //         // console.log("isStayAround is -------", darkmodeConfig["isStayAround"]);
-        //         fetchStayAround(darkmodeConfig);
-        //     }else{
-        //         // console.log("isStayAround is null-------");
-        //         checkStayAround(darkmodeConfig);
-        //         asyncFetchStayAround();
-        //     }
-        // });
-       
-    }
-
-    async function asyncFetchStayAround(){
-        let darkmodeConfig = await readLocalStorage(DARK_MODE_CONFIG);
-        browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
-            let isStayAround = response.body;
-            console.log("asyncFetchStayAround isStayAround--2--p-response=", response)
-            darkmodeConfig["isStayAround"]= isStayAround;
-            // todo test
-            // darkmodeConfig["isStayAround"] = "a";
-            writeLocalStorage(darkmodeConfig);
-        });
-    }
-
-    function fetchStayAround(darkmodeConfig){
-        // console.log("fetchStayAround isStayAround--2--p-start=", darkmodeConfig)
-        browser.runtime.sendMessage({ from: "darkmode", operate: "GET_STAY_AROUND" }, function (response) {
-            let isStayAround = response.body;
-            // console.log("fetchStayAround isStayAround--2--p-response=", response)
-            darkmodeConfig["isStayAround"]= isStayAround;
-            // todo test
-            // darkmodeConfig["isStayAround"] = "a";
-            writeLocalStorage(darkmodeConfig);
-            checkStayAround(darkmodeConfig);
-        });
-    }
-
-    function isPlainObject(x) {
-        return typeof x === "object" && x != null && !Array.isArray(x);
-    }
-    function isArray(x) {
-        return Array.isArray(x);
-    }
-    // check domain whether to darkmode
-    // 1、whether pro around
-    // 2、toggleStatus[on/auto/off]
-    // 3、allow enabled for website [true/false]
-    function checkStayAround(darkmodeConfig) {
-        let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround && "a" === isStayAround){
-            handleToggleDarkmode(darkmodeConfig)
-        }else{
-            cleanFallbackStyle();
-        }
-    }
-
-    function handleToggleDarkmode(darkmodeConfig) {
-        let isStayAround = darkmodeConfig["isStayAround"];
-        if ("b" !== isStayAround && "a" === isStayAround) {
-            // writeLocalStorage(darkmodeConfig);
-            let siteListDisabled = darkmodeConfig["siteListDisabled"];
-            let darkmodeToggleStatus = darkmodeConfig["toggleStatus"];
-            const enabled = isArray(siteListDisabled)&&siteListDisabled.includes(browserDomain)?false:true;
-            switch (darkmodeToggleStatus) {
-                case "on":
-                    if (enabled) {
-                        setupDarkmode();
-                    }else{
-                        cleanupDarkmode();
-                    }
-                    break;
-                case "off":
-                    cleanupDarkmode();
-                    break;
-                default:
-                    if (enabled) {
-                        autoDarkmode();
-                    } else {
-                        cleanupDarkmode();
-                    }
-                    break;
-            }
-        }else{
-            cleanFallbackStyle();
-        }
-    }
-
+    browser.runtime.sendMessage({type: "darkmode", operate: MessageType.CS_FRAME_CONNECT}, function (response) {});
 
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        const { type, data, error, id, from, operate} = request
-
+        const { type, data, stayDarkSettings, error, id, from, operate} = request
+        // console.log("data===request=",request);
         if (MessageType.BG_FETCH_RESPONSE  === type) {
             const resolve = resolvers$1.get(id);
             const reject = rejectors.get(id);
@@ -6274,56 +6133,21 @@
             } else {
                 resolve && resolve(data);
             }
-            return true;
-        }
-
-        if (from == "background") {
-            if ("DARKMODE_SETTING" === operate) {
-                validateSettings(darkmodeConfigSetting)
-                // console.log("addListener--DARKMODE_SETTING--darkmodeConfig--2--", darkmodeConfigSetting);
-                // console.log("DARKMODE_SETTING-----", request);
-                darkmodeConfigSetting["toggleStatus"] = request.status;
-                let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
-                let domain = request.domain;
-                let enabled = request.enabled;
-                if(enabled){
-                    if(siteListDisabled.includes(domain)){
-                        siteListDisabled.splice(siteListDisabled.indexOf(domain), 1);
-                    }
-                }else{
-                    if(!siteListDisabled.includes(domain)){
-                        siteListDisabled.push(domain)
-                    }
-                }
-                
-                darkmodeConfigSetting["siteListDisabled"] = siteListDisabled;
-                // console.log("addListener--DARKMODE_SETTING--darkmodeConfig--1--", darkmodeConfigSetting);
-                writeLocalStorage(darkmodeConfigSetting);
-
-                handleToggleDarkmode(darkmodeConfigSetting);
+            
+        }else if(MessageType.BG_ADD_DYNAMIC_THEME === type){
+            // console.log("data==BG_ADD_DYNAMIC_THEME===",data, stayDarkSettings);
+            if((document.querySelector(".noir") && document.querySelector(".noir-root"))){
+                cleanupDarkmode();
+            }else{
+                setupDarkmode(data);
             }
-            else if ("FETCH_DARKMODE_CONFIG" === operate) {
-
-                let isStayAround = request.isStayAround;
-                if(darkmodeConfigSetting["isStayAround"] !== isStayAround){
-                    darkmodeConfigSetting["isStayAround"] = isStayAround;
-                    writeLocalStorage(darkmodeConfigSetting);
-                }
-                validateSettings(darkmodeConfigSetting)
-                // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--2--", darkmodeConfigSetting);
-                let siteListDisabled = darkmodeConfigSetting["siteListDisabled"];
-                const enabled = isArray(siteListDisabled)&&siteListDisabled.includes(browserDomain)?false:true;
-                // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--enabled--", enabled);
-                browser.runtime.sendMessage({ 
-                    from: "darkmode", 
-                    isStayAround: isStayAround,
-                    darkmodeToggleStatus: darkmodeConfigSetting["toggleStatus"], 
-                    enabled: enabled,
-                    operate: "giveDarkmodeConfig" 
-                });
-            }
-            return true;
+            
+        }else if(MessageType.BG_CLEAN_UP === type){
+            // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
+            cleanupDarkmode();
         }
+        return true;
+        
     });
    
 })();

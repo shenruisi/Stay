@@ -116,19 +116,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let registerMenu = registerMenuMap[uuid]
         renderRegisterMenuContent(uuid, registerMenu)
     }
-    else if("darkmode" === from){
+    else if("background" === from){
         if (operate == "giveDarkmodeConfig"){
             console.log("giveDarkmodeConfig==res==", request);
             darkmodeToggleStatus = request.darkmodeToggleStatus;
             isStayAround = request.isStayAround;
             siteEnabled = request.enabled;
+            fetchMatchedScriptList();
         }
     }
     return true;
 });
 
 function fetchDarkmodeConfig() {
-    browser.runtime.sendMessage({ from: "popup", operate: "FETCH_DARKMODE_CONFIG"}, (response) => {})
+    browser.runtime.sendMessage({ type: "popup", operate: "FETCH_DARKMODE_CONFIG"}, (response) => {})
 }
 
 /**
@@ -139,13 +140,13 @@ function fetchMatchedScriptList(){
     browser.tabs.getSelected(null, (tab) => {
         browserRunUrl = tab.url;
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
+            console.log("response-----",response);
             try{
                 scriptStateList = response.body;
                 renderScriptContent(scriptStateList);
                 let activeTab = window.localStorage.getItem("stay_popuo_active_tab") || 1;
                 const activeTabDom = document.querySelector(".header-box .header-tab .tab[tab='" + activeTab + "']");
                 handleTabAction(activeTabDom, activeTab);
-
                 fetchMatchedScriptConsole();
             }catch(e){
                 console.log(e);
@@ -242,6 +243,7 @@ window.onload=function(){
     // load i18n properties
     i18nProp = langMessage[browserLangurage] || langMessage["en_US"];
     try {
+        fetchDarkmodeConfig();
         let i18nDataAttrs = document.querySelectorAll("[data-i18n]");
         i18nDataAttrs.forEach(item => {
             var htmlContent = item.html();
@@ -254,8 +256,8 @@ window.onload=function(){
                 item.setInnerHtml(i18nProp[item.dataset.i18n]);
             }
         })
-        fetchMatchedScriptList();
-        fetchDarkmodeConfig();
+        
+        
 
         // 给header tab绑定事件
         const headerTabDOM = document.querySelector(".header-box .header-tab");
@@ -396,6 +398,8 @@ function renderScriptContent(datas) {
             _dom.innerHTML = scriptDomTmp.replace(/(\{.+?\})/g, function ($1) { return data[$1.slice(1, $1.length - 1)] });
             scriptStateListDom.appendChild(_dom);
         })
+    }else{
+        showNullData()
     }
 }
 
@@ -586,6 +590,7 @@ function handleTabAction(target, type) {
             scriptConsoleDom.hide();
             hideDarkmodeTab();
         }else if(type == 2){
+            document.getElementById("dataNull").hide();
             showLogNotify = false;
             logNotifyDom.hide()
             scriptStateListDom.hide();
@@ -593,6 +598,7 @@ function handleTabAction(target, type) {
             hideDarkmodeTab();
             fetchAndRenderConsoleLog()
         }else if(type == 3){
+            document.getElementById("dataNull").hide();
             showLogNotify = false;
             darkmodeProDom.show();
             scriptStateListDom.hide();
@@ -605,13 +611,13 @@ function handleTabAction(target, type) {
 function hideDarkmodeTab() {
     darkmodeProDom.hide();
     if(document.querySelector("#darkmodePro .darkmode-setting")){
-        document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click");
+        document.querySelector("#darkmodePro .darkmode-setting").removeEventListener("click", ()=>{});
     } 
     if(document.getElementById("allowEnabled")){
-        document.getElementById("allowEnabled").removeEventListener("change");
+        document.getElementById("allowEnabled").removeEventListener("change", ()=>{});
     } 
     if(document.querySelector("#darkmodeUpgrade .upgrade-btn")){
-        document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click");
+        document.querySelector("#darkmodeUpgrade .upgrade-btn").removeEventListener("click", ()=>{});
     } 
 }
 
@@ -644,7 +650,7 @@ function checkProAndRenderPannel(params) {
             if (darkmodeToggleStatus == "on" || "auto" == darkmodeToggleStatus) {
                 siteEnabled = this.checked;
                 // console.log("allowEnabled  onchange value, siteEnabled=", siteEnabled)
-                browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {})
+                browser.runtime.sendMessage({ type: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {})
                 showDarkmodeAllowNote(siteEnabled);
             }
         });
@@ -698,7 +704,7 @@ function handleDarkmodeProSetting(target) {
             }else{
                 document.getElementById("allowEnabled").disabled = false;
             }
-            browser.runtime.sendMessage({ from: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {
+            browser.runtime.sendMessage({ type: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {
                 // console.log("DARKMODE_SETTING response----", response)
             })
         }
