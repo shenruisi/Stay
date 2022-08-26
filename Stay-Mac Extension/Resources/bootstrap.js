@@ -589,5 +589,32 @@ let RMC_CONTEXT = {};
             browser.runtime.sendMessage(message);
         }
     })
+
+
+
+    // let sourceUrl = browser.runtime.getURL("fallback.js");
+    // let requireFallbackJsDom = document.getElementById("Stay_Required_dark_mode_Inject_JS");
+    // if(!requireFallbackJsDom){
+    //     // const content = injectFallback.toString() + "\n\n injectFallback();";
+    //     if (document.readyState === "loading") {
+    //         document.addEventListener("readystatechange", function() {
+    //             if (document.readyState === "interactive") {
+    //                 var scriptTag = document.createElement('script');
+    //                 scriptTag.type = 'text/javascript';
+    //                 scriptTag.id = "Stay_Required_dark_mode_Inject_JS";
+    //                 scriptTag.src = sourceUrl;
+    //                 // scriptTag.appendChild(document.createTextNode(content));
+    //                 document.head.appendChild(scriptTag);
+    //             }
+    //         });
+    //     } else {
+    //         var scriptTag = document.createElement('script');
+    //         scriptTag.type = 'text/javascript';
+    //         scriptTag.id = "Stay_Required_dark_mode_Inject_JS";
+    //         // scriptTag.appendChild(document.createTextNode(content));
+    //         scriptTag.src = sourceUrl;
+    //         document.head.appendChild(scriptTag);
+    //     }
+    // }
     
 })();

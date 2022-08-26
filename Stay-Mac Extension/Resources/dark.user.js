@@ -6121,7 +6121,7 @@
     browser.runtime.sendMessage({type: "darkmode", operate: MessageType.CS_FRAME_CONNECT}, function (response) {});
 
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        const { type, data, stayDarkSettings, error, id, from, operate} = request
+        const { type, data, stayDarkSettings, darkSetings, error, id, from, operate} = request
         // console.log("data===request=",request);
         if (MessageType.BG_FETCH_RESPONSE  === type) {
             const resolve = resolvers$1.get(id);
@@ -6141,7 +6141,7 @@
             }else{
                 setupDarkmode(data);
             }
-            
+            handleDarkSettingsForStorage(darkSetings);
         }else if(MessageType.BG_CLEAN_UP === type){
             // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
             cleanupDarkmode();
@@ -6149,5 +6149,11 @@
         return true;
         
     });
+
+
+    async function handleDarkSettingsForStorage(darkSetings){
+        console.log("handleDarkSettingsForStorage-----", darkSetings);
+        window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkSetings));
+    }
    
 })();

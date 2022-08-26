@@ -167,11 +167,11 @@ function fetchAndRenderConsoleLog(){
 
 function fetchMatchedScriptConsole(){
     browser.runtime.sendMessage({ from: "popup", operate: "fetchLog" }, (response) => {
-        console.log("fetchLog response----", response)
+        // console.log("fetchLog response----", response)
     })
     browser.runtime.sendMessage({ from: "popup", operate: "fetchMatchedScriptLog" }, (response) => {
         logIsFetched = true;
-        console.log("fetchMatchedScriptLog response----", response)
+        // console.log("fetchMatchedScriptLog response----", response)
         if (response && response.body && response.body.length > 0) {
             response.body.forEach(item => {
                 if (item.logList && item.logList.length > 0) {
@@ -650,7 +650,7 @@ function checkProAndRenderPannel(params) {
             if (darkmodeToggleStatus == "on" || "auto" == darkmodeToggleStatus) {
                 siteEnabled = this.checked;
                 // console.log("allowEnabled  onchange value, siteEnabled=", siteEnabled)
-                browser.runtime.sendMessage({ type: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {})
+                browser.runtime.sendMessage({ type: "popup", operate: "DARKMODE_SETTING", isStayAround: isStayAround, status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {})
                 showDarkmodeAllowNote(siteEnabled);
             }
         });
@@ -704,7 +704,7 @@ function handleDarkmodeProSetting(target) {
             }else{
                 document.getElementById("allowEnabled").disabled = false;
             }
-            browser.runtime.sendMessage({ type: "popup", operate: "DARKMODE_SETTING", status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {
+            browser.runtime.sendMessage({ type: "popup", operate: "DARKMODE_SETTING", isStayAround, status: darkmodeToggleStatus, domain: getDomain(browserRunUrl), enabled: siteEnabled }, (response) => {
                 // console.log("DARKMODE_SETTING response----", response)
             })
         }
