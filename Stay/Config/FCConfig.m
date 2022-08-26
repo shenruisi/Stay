@@ -35,7 +35,10 @@ static FCConfig *k_config = nil;
         [self setValueOfKey:GroupUserDefaultsKeyMacMainWindowFrame value:@{@"x":@(-1),@"y":@(-1),@"width":@(850),@"height":@(550)} setWhenNil:YES];
         [self setBoolValueOfKey:GroupUserDefaultsKeySyncEnabled value:NO setWhenNil:YES];
         [self setStringValueOfKey:GroupUserDefaultsKeyLastSync value:@"" setWhenNil:YES];
-        NSString *deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+        NSString *deviceID = [self getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID];
+        if (deviceID.length == 0){
+            deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+        }
         [self setStringValueOfKey:GroupUserDefaultsKeyDeviceUUID value:deviceID setWhenNil:YES];
         [SharedStorageManager shared].userDefaultsExRO.deviceID = deviceID;
         [self setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"System" setWhenNil:YES];
