@@ -155,7 +155,7 @@ NSString * const SFExtensionMessageKey = @"message";
         }
        
         body = datas;
-        if (datas.count > 0){
+        if (!requireCompleteScript){
             [SharedStorageManager shared].userDefaultsExRO = nil;
             [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID
                            isPro:[SharedStorageManager shared].userDefaultsExRO.pro

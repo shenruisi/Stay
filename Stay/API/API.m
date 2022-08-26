@@ -24,7 +24,7 @@
 @implementation API
 
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
-//static NSString *END_POINT = @"http://localhost:8080/stay/";
+//static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
 static API *instance = nil;
 + (instancetype)shared{
  static dispatch_once_t onceToken;
@@ -63,10 +63,10 @@ static API *instance = nil;
 }
 
 - (void)active:(NSString *)uuid isPro:(BOOL)isPro isExtension:(BOOL)isExtension{
-//    return;
     NSString *reqUrl = [NSString stringWithFormat:@"%@active",END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     NSLocale *locale = [NSLocale currentLocale];
     NSDictionary *event = @{
         @"uuid":uuid,
@@ -79,8 +79,9 @@ static API *instance = nil;
         @"country":locale.countryCode
     };
     NSData *data = [NSJSONSerialization dataWithJSONObject:event
-    options:NSJSONWritingPrettyPrinted
+    options:0
       error:nil];
+    
     [request setHTTPBody:data];
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:request
