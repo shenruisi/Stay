@@ -335,9 +335,9 @@ function isURLEnabled(
         return true;
     }
     if (isPDF(url)) {
-        return userSettings.enableForPDF;
+        return userSettings.stay_enableForPDF;
     }
-    const isURLInUserList = isURLInList(url, userSettings.siteList);
+    const isURLInUserList = isURLInList(url, userSettings.siteListEnabled);
     const isURLInEnabledList = isURLInList(
         url,
         userSettings.siteListEnabled
@@ -350,7 +350,7 @@ function isURLEnabled(
     }
     if (
         isInDarkList ||
-        (userSettings.detectDarkTheme && isDarkThemeDetected)
+        (userSettings.stay_detectDarkTheme && isDarkThemeDetected)
     ) {
         return false;
     }
@@ -1206,25 +1206,26 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     const DEFAULT_SETTINGS = {
         isStayAround: "",
         siteListDisabled: [],
+        siteListEnabled:[], // 暂时没用
         toggleStatus:"on", //on,off,auto
         // 当toggleStatus=auto的时候，automation默认等于time
-        automation: "time",
+        stay_automation: "system",
         // 当toggleStatus=auto的时候, 如果选择系统配色方案，又分为跟随系统的OnOff,还是Scheme（暗黑/明亮模式）
-        automationBehaviour: "Scheme",
-        syncSettings: true,
-        time: {
+        stay_automationBehaviour: "Scheme",
+        stay_syncSettings: true,
+        auto_time: {
             activation: "18:00",
             deactivation: "9:00"
         },
-        location: {
+        auto_location: {
             latitude: null,
             longitude: null
         },
-        theme: DEFAULT_THEME,
-        presets: [],
-        customThemes: [],
-        detectDarkTheme: false,
-        enableForPDF: true,
+        stay_theme: DEFAULT_THEME,
+        stay_presets: [],
+        stay_customThemes: [],
+        stay_detectDarkTheme: false,
+        stay_enableForPDF: true,
         currentTabUrl:"",
         frameUrl:"",
     };
@@ -1806,7 +1807,11 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     function prepareSyncStorage(values) {
         for (const key in values) {
             const value = values[key];
-            const string = JSON.stringify(value);
+            console.log(value,",values---------", values)
+            if( !value || typeof value == "undefined" ){
+                continue;
+            }
+            const string = value && typeof value !== "undefined" ? JSON.stringify(value) : "";
             const totalLength = string.length + key.length;
             if (totalLength > browser.storage.sync.QUOTA_BYTES_PER_ITEM) {
                 const maxLength = browser.storage.sync.QUOTA_BYTES_PER_ITEM - key.length - 1 - 2;
@@ -2175,11 +2180,11 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         validateProperty(settings, "currentTabUrl", isString, DEFAULT_SETTINGS);
         validateProperty(settings, "frameUrl", isString, DEFAULT_SETTINGS);
         validateProperty(settings, "isStayAround", isString, DEFAULT_SETTINGS);
-        validateProperty(settings, "theme", isPlainObject, DEFAULT_SETTINGS);
-        const {errors: themeErrors} = validateTheme(settings.theme);
+        validateProperty(settings, "stay_theme", isPlainObject, DEFAULT_SETTINGS);
+        const {errors: themeErrors} = validateTheme(settings.stay_theme);
         errors.push(...themeErrors);
-        validateProperty(settings, "presets", isArray, DEFAULT_SETTINGS);
-        validateArray(settings, "presets", (preset) => {
+        validateProperty(settings, "stay_presets", isArray, DEFAULT_SETTINGS);
+        validateArray(settings, "stay_presets", (preset) => {
             const presetValidator = createValidator();
             if (
                 !(
@@ -2220,8 +2225,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             );
             return presetValidator.errors.length === 0;
         });
-        validateProperty(settings, "customThemes", isArray, DEFAULT_SETTINGS);
-        validateArray(settings, "customThemes", (custom) => {
+        validateProperty(settings, "stay_customThemes", isArray, DEFAULT_SETTINGS);
+        validateArray(settings, "stay_customThemes", (custom) => {
             if (
                 !(
                     isPlainObject(custom) &&
@@ -2239,32 +2244,32 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             );
             presetValidator.validateProperty(
                 custom,
-                "theme",
+                "stay_theme",
                 isValidPresetTheme,
                 custom
             );
             return presetValidator.errors.length === 0;
         });
 
-        validateProperty(settings, "syncSettings", isBoolean, DEFAULT_SETTINGS);
+        validateProperty(settings, "stay_syncSettings", isBoolean, DEFAULT_SETTINGS);
         validateProperty(settings, "siteListDisabled", isArray, DEFAULT_SETTINGS);
         validateArray(settings, "siteListDisabled", isNonEmptyString);
        
         validateProperty(
             settings,
-            "automation",
+            "stay_automation",
             isOneOf("", "time", "system", "location"),
             DEFAULT_SETTINGS
         );
         validateProperty(
             settings,
-            "automationBehaviour",
+            "stay_automationBehaviour",
             isOneOf("OnOff", "Scheme"),
             DEFAULT_SETTINGS
         );
         validateProperty(
             settings,
-            "time",
+            "auto_time",
             (time) => {
                 if (!isPlainObject(time)) {
                     return false;
@@ -2288,7 +2293,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         );
         validateProperty(
             settings,
-            "location",
+            "auto_location",
             (location) => {
                 if (!isPlainObject(location)) {
                     return false;
@@ -2313,7 +2318,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         );
         validateProperty(
             settings,
-            "detectDarkTheme",
+            "stay_detectDarkTheme",
             isBoolean,
             DEFAULT_SETTINGS
         );
@@ -2447,7 +2452,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.saveStorageBarrier = new PromiseBarrier();
                 const settings = this.settings;
                 
-                if (settings.syncSettings) {
+                if (settings.stay_syncSettings) {
                     try {
                         await writeSyncStorage(settings);
                     } catch (err) {
@@ -2455,7 +2460,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                             "Settings synchronization was disabled due to error:",
                             browser.runtime.lastError
                         );
-                        this.set({syncSettings: false});
+                        this.set({stay_syncSettings: false});
                         await this.saveSyncSetting(false);
                         await writeLocalStorage(settings);
                     }
@@ -2495,12 +2500,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         }
 
         fillDefaults(settings) {
-            settings.theme = {...DEFAULT_THEME, ...settings.theme};
-            settings.time = {...DEFAULT_SETTINGS.time, ...settings.time};
-            settings.presets.forEach((preset) => {
+            settings.stay_theme = {...DEFAULT_THEME, ...settings.stay_theme};
+            settings.auto_time = {...DEFAULT_SETTINGS.auto_time, ...settings.auto_time};
+            settings.stay_presets.forEach((preset) => {
                 preset.theme = {...DEFAULT_THEME, ...preset.theme};
             });
-            settings.customThemes.forEach((site) => {
+            settings.stay_customThemes.forEach((site) => {
                 site.theme = {...DEFAULT_THEME, ...site.theme};
             });
         }
@@ -2512,15 +2517,15 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             const local = await readLocalStorage(DEFAULT_SETTINGS);
             const {errors: localCfgErrors} = validateSettings(local);
             localCfgErrors.forEach((err) => logWarn(err));
-            if (!local.syncSettings) {
+            if (!local.stay_syncSettings) {
                 this.fillDefaults(local);
                 this.loadBarrier.resolve(local);
                 return local;
             }
             const $sync = await readSyncStorage(DEFAULT_SETTINGS);
             if (!$sync) {
-                local.syncSettings = false;
-                this.settings["syncSettings"] = false;
+                local.stay_syncSettings = false;
+                this.settings["stay_syncSettings"] = false;
                 this.saveSyncSetting(false);
                 this.loadBarrier.resolve(local);
                 return local;
@@ -2532,7 +2537,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             return $sync;
         }
         async saveSyncSetting(sync) {
-            const obj = {syncSettings: sync};
+            const obj = {stay_syncSettings: sync};
             await writeLocalStorage(obj);
             try {
                 await writeSyncStorage(obj);
@@ -2541,7 +2546,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     "Settings synchronization was disabled due to error:",
                     browser.runtime.lastError
                 );
-                this.settings["syncSettings"] = false;
+                this.settings["stay_syncSettings"] = false;
             }
         }
         async saveSettings() {
@@ -2762,7 +2767,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 if (isSafari) {
                     this.wasLastColorSchemeDark = isDark;
                 }
-                if (this.user.settings.automation !== "system") {
+                if (this.user.settings.stay_automation !== "system") {
                     return;
                 }
                 this.callWhenSettingsLoaded(() => {
@@ -2822,35 +2827,49 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 settings = {...settings, ...{currentTabUrl: url, frameUrl: frameUrl}}
                 this.user.set(settings);
                 const isStayAround = settings.isStayAround;
+                const toggleStatus = settings.toggleStatus;
+                const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
+                let darkState = "clean_up";
+                if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
+                    darkState = "dark_mode"
+                }
+                const darkSetings = {
+                    siteListDisabled: settings.siteListDisabled,
+                    toggleStatus: toggleStatus,
+                    isStayAround: isStayAround,
+                    darkState
+                }
+
                 let message = {
                     type: "bg-clean-up",
-                    stayDarkSettings: settings
+                    stayDarkSettings: settings,
+                    darkSetings
                 };
                 if(isStayAround && "a" === isStayAround){
                     const toggleStatus = settings.toggleStatus;
                     const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
                     if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
-                        const custom = settings.customThemes.find(
+                        const custom = settings.stay_customThemes.find(
                             ({url: urlList}) => isURLInList(url, urlList)
                         );
                         const preset = custom
                             ? null
-                            : settings.presets.find(({urls}) =>
+                            : settings.stay_presets.find(({urls}) =>
                                   isURLInList(url, urls)
                               );
-                        let theme = custom ? custom.theme : preset ? preset.theme : settings.theme;
+                        let theme = custom ? custom.theme : preset ? preset.theme : settings.stay_theme;
                         if ( this.autoState === "scheme-dark" || this.autoState === "scheme-light") {
                             const mode = this.autoState === "scheme-dark" ? 1 : 0;
                             theme = {...theme, mode};
                         }
                         const isIFrame = frameUrl != null;
-                        const detectDarkTheme = !isIFrame && settings.detectDarkTheme && !isPDF(url);
+                        const detectDarkTheme = !isIFrame && settings.stay_detectDarkTheme && !isPDF(url);
                         const fixes = getDynamicThemeFixesFor(
                             url,
                             frameUrl,
                             this.config.DYNAMIC_THEME_FIXES_RAW,
                             this.config.DYNAMIC_THEME_FIXES_INDEX,
-                            settings.enableForPDF
+                            settings.stay_enableForPDF
                         );
                         // console.log("this.user.settings==fixes===",fixes);
                         message = {
@@ -2861,7 +2880,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                                 isIFrame,
                                 detectDarkTheme
                             },
-                            stayDarkSettings: settings
+                            stayDarkSettings: settings,
+                            darkSetings
                         };
                     }
                 }
@@ -2950,12 +2970,19 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                             this.updateAutoState();
                             const tabURL = sender.tab.url;
                             const toggleStatus = settings.toggleStatus;
+                            const isStayAround = settings.isStayAround;
                             const urlIsEnabled = isEnabledUrlState(tabURL, settings.siteListDisabled);
-                            let FETCH_DARK_SETTING = "clean_up";
+                            let darkState = "clean_up";
                             if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
-                                FETCH_DARK_SETTING = "dark_mode"
+                                darkState = "dark_mode"
                             }
-                            sendResponse({body: FETCH_DARK_SETTING})
+                            const darkSetings = {
+                                siteListDisabled: settings.siteListDisabled,
+                                toggleStatus: toggleStatus,
+                                isStayAround: isStayAround,
+                                darkState
+                            }
+                            sendResponse({body: darkSetings})
                         })
                     }
                     return true;
@@ -2969,10 +2996,13 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     else if("DARKMODE_SETTING" === request.operate){
                         let setting = {...this.user.settings};
                         const toggleStatus = request.status;
+                        let isStayAround = request.isStayAround;
                         setting["toggleStatus"] = toggleStatus
+                        setting["isStayAround"] = isStayAround
                         let siteListDisabled = setting["siteListDisabled"];
                         let domain = request.domain;
                         let enabled = request.enabled;
+                        
                         if(enabled){
                             if(siteListDisabled.includes(domain)){
                                 siteListDisabled.splice(siteListDisabled.indexOf(domain), 1);
@@ -2983,8 +3013,10 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                             }
                         }
                         setting["siteListDisabled"] = siteListDisabled
-                        setting.automationBehaviour="Scheme";
-                        setting.automation="time";
+
+                        setting.stay_automationBehaviour="Scheme";
+                        // 默认跟随系统
+                        setting.stay_automation="system";
                         this.changeSettings(setting);
                     }
                     return true;
@@ -3001,36 +3033,39 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             ) && "a" === this.user.settings.isStayAround;
         }
         updateAutoState() {
-            const {automation, toggleStatus,time, automationBehaviour:behavior} = this.user.settings;
+            const {stay_automation, toggleStatus, auto_location, auto_time, stay_automationBehaviour:behavior} = this.user.settings;
             let isAutoDark;
             let nextCheck;
             if("auto" === toggleStatus){
                 // console.log("updateAutoState------",automation,time);
-                switch (automation) {
+                switch (stay_automation) {
                     // auto模式下根据【时间】来更换暗黑模式还是明亮模式
                     case "time":
                         isAutoDark = isInTimeIntervalLocal(
-                            time.activation,
-                            time.deactivation
+                            auto_time.activation,
+                            auto_time.deactivation
                         );
                         nextCheck = nextTimeInterval(
-                            time.activation,
-                            time.deactivation
+                            auto_time.activation,
+                            auto_time.deactivation
                         );
                         break;
                     // auto模式下跟随【系统模式】更换暗黑模式还是明亮模式
                     case "system":
-                        if (isSafari) {
-                            isAutoDark =
-                                this.wasLastColorSchemeDark == null
-                                    ? isSystemDarkModeEnabled()
-                                    : this.wasLastColorSchemeDark;
-                        } else {
-                            isAutoDark = isSystemDarkModeEnabled();
-                        }
+                        
+                        // if (isSafari) {
+                        //     isAutoDark =
+                        //         this.wasLastColorSchemeDark == null
+                        //             ? isSystemDarkModeEnabled()
+                        //             : this.wasLastColorSchemeDark;
+                        // } else {
+                        //     isAutoDark = isSystemDarkModeEnabled();
+                        // }
+                        isAutoDark = isSystemDarkModeEnabled();
+                        console.log("automation-----", stay_automation, isAutoDark);
                         break;
                     case "location": {
-                        const {latitude, longitude} = this.user.settings.location;
+                        const {latitude, longitude} = auto_location;
                         if (latitude != null && longitude != null) {
                             isAutoDark = isNightAtLocation(latitude, longitude);
                             nextCheck = nextTimeChangeAtLocation(
@@ -3042,13 +3077,10 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     }
                 }
                 let state = "";
-                console.log()
-                if (automation) {
+                if (stay_automation) {
                     if (behavior === "OnOff") {
                         state = isAutoDark ? "turn-on" : "turn-off";
-                        // console.log("hello-----behavior-OnOff-")
                     } else if (behavior === "Scheme") {
-                        // console.log("hello-----behavior-Scheme-")
                         state = isAutoDark ? "scheme-dark" : "scheme-light";
                     }
                 }
@@ -3111,7 +3143,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
 
         changeSettings(settings) {
             const prev = {...this.user.settings};
-            // console.log("settings=====",settings, "------prev==",prev);
+            console.log("settings=====",settings, "------prev==",prev);
             this.user.settings = {...settings}
             this.user.set(settings);
             if (
@@ -3126,8 +3158,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 // console.log("changeSettings-------",settings);
                 this.updateAutoState();
             }
-            if (prev.syncSettings !== settings.syncSettings) {
-                this.user.saveSyncSetting(settings.syncSettings);
+            if (prev.stay_syncSettings !== settings.stay_syncSettings) {
+                this.user.saveSyncSetting(settings.stay_syncSettings);
             }
             
             this.onSettingsChanged();
@@ -3137,11 +3169,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     }
     StayDarkModeExtension.ALARM_NAME = "auto-time-alarm";
     StayDarkModeExtension.LOCAL_STORAGE_KEY = "Stay-darkmode-state";
-
+    
     const stayDarkMode = new StayDarkModeExtension();
     stayDarkMode.start();
-
-
 })();
-
-
