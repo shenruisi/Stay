@@ -1,13 +1,9 @@
 (function () {
     "use strict";
-    // console.log(typeof browser)
-    
     injectFallback()
-
-
     function injectFallback(){
         let startTime = new Date().getTime();
-        console.log("fallback,startTime----",startTime);
+        // console.log("fallback,startTime----",startTime);
         function getDomain(url) {
             try {
                 return new URL(url).hostname.toLowerCase();
@@ -23,7 +19,7 @@
             && darkmodeSettingStr != "clean_up" && darkmodeSettingStr != "dark_mode"){
             darkmodeSetting = JSON.parse(darkmodeSettingStr);
             darkModeInit(darkmodeSetting);
-            console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=");
+            // console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=");
         }
         else{
             browser.runtime.sendMessage({from: "darkmode", operate: "FETCH_DARK_SETTING"}, (response) => {
@@ -31,7 +27,7 @@
                     darkmodeSetting = response.body;
                     window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
                 }
-                console.log("cleanupDarkmode---2-", (startTime - new Date().getTime()), ",darkStayAround=");
+                // console.log("cleanupDarkmode---2-", (startTime - new Date().getTime()), ",darkStayAround=");
                 darkModeInit(darkmodeSetting);
             });
         }

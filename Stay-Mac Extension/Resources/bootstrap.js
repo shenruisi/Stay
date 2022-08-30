@@ -384,9 +384,8 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.name,script.installType,script.runAt);
+                // console.log("injectScript---",script.name,script.installType,script.runAt);
                 // console.log("injectScript---", script.content);
-
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -413,7 +412,7 @@ let RMC_CONTEXT = {};
         if (name === "API_LIST_VALUES") {
             message.operate = "GM_listValues";
             browser.runtime.sendMessage(message, (response) => {
-                console.log("GM_listValues----response=", response);
+                // console.log("GM_listValues----response=", response);
                 window.postMessage({ id: __uuid, pid: pid, name: "RESP_LIST_VALUES", response: response });
             });
 
@@ -519,6 +518,7 @@ let RMC_CONTEXT = {};
             message.operate = "GM_setValue";
             message.key = e.data.key;
             message.value = e.data.value;
+            message.type = e.data.type;
             browser.runtime.sendMessage(message, response => {
                 if (name === "API_SET_VALUE") {
                     window.postMessage({ id: __uuid, pid: pid, name: "RESP_SET_VALUE", response: response });
@@ -529,6 +529,7 @@ let RMC_CONTEXT = {};
             message.operate = "GM_getValue";
             message.defaultValue = e.data.defaultValue;
             message.key = e.data.key;
+            message.type = e.data.type;
             browser.runtime.sendMessage(message, response => {
                 const resp = response === `undefined` ? undefined : response;
                 if (name === "API_GET_VALUE") {
@@ -589,32 +590,4 @@ let RMC_CONTEXT = {};
             browser.runtime.sendMessage(message);
         }
     })
-
-
-
-    // let sourceUrl = browser.runtime.getURL("fallback.js");
-    // let requireFallbackJsDom = document.getElementById("Stay_Required_dark_mode_Inject_JS");
-    // if(!requireFallbackJsDom){
-    //     // const content = injectFallback.toString() + "\n\n injectFallback();";
-    //     if (document.readyState === "loading") {
-    //         document.addEventListener("readystatechange", function() {
-    //             if (document.readyState === "interactive") {
-    //                 var scriptTag = document.createElement('script');
-    //                 scriptTag.type = 'text/javascript';
-    //                 scriptTag.id = "Stay_Required_dark_mode_Inject_JS";
-    //                 scriptTag.src = sourceUrl;
-    //                 // scriptTag.appendChild(document.createTextNode(content));
-    //                 document.head.appendChild(scriptTag);
-    //             }
-    //         });
-    //     } else {
-    //         var scriptTag = document.createElement('script');
-    //         scriptTag.type = 'text/javascript';
-    //         scriptTag.id = "Stay_Required_dark_mode_Inject_JS";
-    //         // scriptTag.appendChild(document.createTextNode(content));
-    //         scriptTag.src = sourceUrl;
-    //         document.head.appendChild(scriptTag);
-    //     }
-    // }
-    
 })();
