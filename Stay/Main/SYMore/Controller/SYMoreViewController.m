@@ -74,8 +74,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     
     NSString *type = entity[@"type"];
     if (type.length > 0 && [@"appearance" isEqualToString:type]) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        NSString *themeType = [userDefaults objectForKey:@"themeType"];
+        NSString *themeType = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
         if (themeType == nil) {
             themeType = @"System";
         }

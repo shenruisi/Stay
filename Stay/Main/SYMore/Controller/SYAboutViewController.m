@@ -207,8 +207,8 @@ UITableViewDataSource
                     },
                     @{@"title":NSLocalizedString(@"settings.joinQQ",@""),@"url":@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=714147685&key=c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217&card_type=group&source=external&jump_from=webapi"},
                     @{@"title":NSLocalizedString(@"settings.joinTwitter",@""),
-                      @"url":@"https://twitter.com/fastclip1",
-                      @"subtitle":@"@fastclip1"
+                      @"url":@"https://mobile.twitter.com/stayfork",
+                      @"subtitle":@"@stayfork"
                     }
                 ]
             },
@@ -216,17 +216,14 @@ UITableViewDataSource
                 @"section":NSLocalizedString(@"SendFeedback",@"SEND FEEDBACK"),
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"settings.plan",@"plan")
-                      ,@"url":[[NSString stringWithFormat:@"mailto:tigris.shin@gmail.com?subject=Feedback - %@/%@",
-                                [self appString],
-                                [[API shared] deviceInfo]]
-                               stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+                      ,@"url":@"https://www.craft.do/s/N2icWbhYff2c3K"
                     },
                     @{@"title":NSLocalizedString(@"settings.sendFeedback",@"SEND FEEDBACK")
-                      ,@"url":[[NSString stringWithFormat:@"mailto:tigris.shin@gmail.com?subject=Feedback - %@/%@",
+                      ,@"url":[[NSString stringWithFormat:@"mailto:feedback@fastclip.app?subject=Feedback - %@/%@",
                                 [self appString],
                                 [[API shared] deviceInfo]]
                                stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
-                      @"subtitle":@"tigris.shin@gmail.com",
+                      @"subtitle":@"feedback@fastclip.app",
                     },
                 ]
             },

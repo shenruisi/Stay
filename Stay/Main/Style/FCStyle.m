@@ -37,7 +37,7 @@
 //    }
 
 + (UIColor *)accentHighlight {
-    return [UIColor colorNamed: @"SecondaryAccentClassicColor"];
+    return [FCStyle.accent colorWithAlphaComponent:0.1];
 }
 
 + (UIColor *)accentHover {

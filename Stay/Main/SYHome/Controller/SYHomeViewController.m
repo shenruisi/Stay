@@ -87,6 +87,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)willMoveToSuperview:(UIView *)newSuperview{
     [super willMoveToSuperview:newSuperview];
 }
+
+- (void)updateConfigurationUsingState:(UICellConfigurationState *)state {
+    self.backgroundConfiguration = [UIBackgroundConfiguration clearConfiguration];
+}
+
 @end
 
 @interface _iCloudView : UIView
@@ -316,9 +321,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *type = [userDefaults objectForKey:@"themeType"];
-    
+    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
     if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
     } else if([@"Dark" isEqual:type]){
@@ -1075,7 +1078,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     } else {
         model = _datas[indexPath.row];
     }
+#ifndef Mac
     cell.backgroundColor = FCStyle.secondaryBackground;
+#endif
     cell.contentView.backgroundColor = FCStyle.secondaryBackground;
     
     CGFloat viewWidth = self.view.frame.size.width;
