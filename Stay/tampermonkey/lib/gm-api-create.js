@@ -33,7 +33,6 @@
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
 
         if (grants.includes('GM_listValues')) {
-            
             source += 'function GM_listValues (){ return __stroge}\n\nwindow.GM_listValues = GM_listValues;\n';
         }
 
@@ -65,6 +64,18 @@
             source += 'GM.getValue = ' + getValue_p.toString() + '\n\n';
         }
 
+        if (grants.includes("GM_addValueChangeListener")) {
+            source += GM_addValueChangeListener.toString() + '\n\nwindow.GM_addValueChangeListener = GM_addValueChangeListener;\n';
+        }
+        if (grants.includes("GM.addValueChangeListener")) {
+            source += 'GM.addValueChangeListener = ' + GM_addValueChangeListener_Async.toString() + '\n\n';
+        }
+        if (grants.includes("GM_removeValueChangeListener")) {
+            source += GM_removeValueChangeListener.toString() + '\n\nwindow.GM_removeValueChangeListener = GM_removeValueChangeListener;\n';
+        }
+        if (grants.includes("GM.removeValueChangeListener")) {
+            source += 'GM.removeValueChangeListener = ' + GM_removeValueChangeListener_Async.toString() + '\n\n';
+        }
         if (grants.includes('GM.registerMenuCommand')) {
             source += 'GM.registerMenuCommand = ' + GM_registerMenuCommand.toString() + '\n\n';
         }
@@ -155,11 +166,20 @@
         return source;
     }
 
-    function Stay_notifyValueChangeListeners (name, oldVal, newVal, remote) {
+    /**
+     * 
+     * @param {string} name  The name of the observed variable
+     * @param {any} oldVal   The old value of the observed variable (undefined if it was created)
+     * @param {any} newVal   The new value of the observed variable (undefined if it was deleted)
+     * @param {boolean} remote     true if modified by the userscript instance of another tab or false for this script instance. 
+     * Can be used by scripts of different browser tabs to communicate with each other. in Stay case, default false value.
+     * @returns 
+     */
+    function Stay_notifyValueChangeListeners(name, oldVal, newVal, remote) {
         if (oldVal == newVal) return;
         for (var i in Stay_storage_listeners) {
             if (!Stay_storage_listeners.hasOwnProperty(i)) continue;
-            var n = TM_storage_listeners[i];
+            var n = Stay_storage_listeners[i];
             if (n && n.key == name) {
                 if (n.cb) {
                     try {
@@ -172,12 +192,12 @@
         }
     }
 
-    function GM_addValueChangeListener (name, cb) {
+    function GM_addValueChangeListener(name, cb) {
         var id = 0;
         for (var n in Stay_storage_listeners) {
             if (!Stay_storage_listeners.hasOwnProperty(n)) continue;
             var i = Stay_storage_listeners[n];
-            if (n.id > id) {
+            if (i.id > id) {
                 id = n.id;
             }
         }
@@ -187,15 +207,33 @@
         return id;
     }
 
-    function GM_removeValueChangeListener(id) {
-        for (var n in Stay_storage_listeners) {
-            if (!Stay_storage_listeners.hasOwnProperty(n)) continue;
-            var i = Stay_storage_listeners[n];
-            if (n.id == id) {
-                delete Stay_storage_listeners[n];
-                return true;
+    function GM_addValueChangeListener_Async(name, cb) {
+        return new Promise((resolve, reject)=>{
+            var id = 0;
+            for (var n in Stay_storage_listeners) {
+                if (!Stay_storage_listeners.hasOwnProperty(n)) continue;
+                var i = Stay_storage_listeners[n];
+                if (i.id > id) {
+                    id = n.id;
+                }
             }
-        }
+            id++;
+            var s = { id: id, key: name, cb: cb };
+            Stay_storage_listeners.push(s);
+            resolve(id)
+        });
+    }
+
+    function GM_removeValueChangeListener(id) {
+        Stay_storage_listeners = Stay_storage_listeners.filter(item => item.id != id);
+    }
+
+    function GM_removeValueChangeListener_Async(id) {
+        return new Promise((resolve, reject)=>{
+            Stay_storage_listeners = Stay_storage_listeners.filter(item => item.id != id);
+            resolve()
+        });
+        
     }
 
     function GM_info(userscript, version) {
@@ -219,11 +257,27 @@
 
     function _fillStroge() {
         return new Promise((resolve, reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_listValues", uuid: _uuid }, (response) => {
-                resolve(response.body);
-            });
+            browser.storage.local.get(null, (res) => {
+                // console.log("GM_listValues====", res);
+                if(res){
+                    let resp = {};
+                    Object.keys(res).forEach((localKey) => {
+                        if(localKey.startsWith(_uuid)){
+                            let key = localKey.replace(_uuid+"_", "");
+                            resp[key] = res[localKey];
+                        }
+                    })
+                    // console.log("GM_listValues==-----------resp==", resp);
+                    resolve(resp)
+                }else{
+                    browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
+                        resolve(response.body);
+                    });
+                }
+            })
         });
     }
+
 
     function _fillAllResourceTextStroge() {
         return new Promise((resolve, reject) => {
@@ -243,46 +297,40 @@
             });
         });
     }
-
-    function GM_deleteValue(key) {
-        let old = __stroge[key];
-        __stroge[key] = null;
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid: _uuid });
-        Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
-    }
-
+   
     function GM_setValue(key, value) {
         let old = __stroge[key];
+        let type = "string";
         __stroge[key] = value;
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid });
+        if(typeof value === "object"){
+            value = JSON.stringify(value)
+            type = "object";
+        }
+        // console.log("GM_setValue-----typeof value =", typeof value );
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid, type: type });
         Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
-    }
-
-    function GM_getValue(key, defaultValue) {
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid });
-        return __stroge[key] == null ? defaultValue : __stroge[key];
-    }
-
-    function deleteValue_p(key) {
-        let old = __stroge[key];
-        return new Promise((resolve, reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid: _uuid }, (response) => {
-                __stroge[key] = null;
-                resolve(response.body);
-                Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
-            });
-        });
     }
 
     function setValue_p(key, value) {
+        // console.log("setValue_p-----typeof value =", typeof value );
         return new Promise((resolve, reject) => {
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid }, (response) => {
-                let old = __stroge[key];
-                __stroge[key] = value;
-                resolve(response.body);
+            let type = "string";
+            let old = __stroge[key];
+            __stroge[key] = value;
+            if(typeof value === "object"){
+                value = JSON.stringify(value)
+                type = "object";
+            }
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid, type: type }, (response) => {
                 Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
+                resolve(response.body);
             });
         });
+    }
+
+    function GM_getValue(key, defaultValue) {
+        // console.log("GM_getValue-----typeof value =", typeof key );
+        return !__stroge || typeof __stroge[key] === "undefined" || __stroge[key] == null ? defaultValue : __stroge[key];
     }
 
     function getValue_p(key, defaultValue) {
@@ -293,6 +341,24 @@
         });
     }
 
+    function deleteValue_p(key) {
+        let old = __stroge[key];
+        return new Promise((resolve, reject) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid: _uuid }, (response) => {
+                delete __stroge[key];
+                resolve(response.body);
+                Stay_notifyValueChangeListeners(key, old, undefined, false);
+            });
+        });
+    }
+
+    function GM_deleteValue(key) {
+        let old = __stroge[key];
+        delete __stroge[key];
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_deleteValue", key: key, uuid: _uuid });
+        Stay_notifyValueChangeListeners(key, old, undefined, false);
+    }
+
     function GM_log(message) {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_log", message: message, uuid: _uuid }, (response) => {
@@ -300,7 +366,6 @@
             });
         });
     }
-
 
     function GM_setClipboard(data, info) {
         
@@ -710,7 +775,6 @@
         api += 'let __listValuesStroge = await GM_listValues_Async();\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
-        api += `console.log("__resourceTextStroge==",__resourceTextStroge);\n`;
         api += 'let __RMC_CONTEXT = {};\n';
         api += 'let GM_info =' + GM_info(userscript, version) + ';\nwindow.GM_info = GM_info;\n';
         api += `${GM_log}\nwindow.GM_log = GM_log;\n`;
@@ -800,7 +864,7 @@
                 gmFunName.push("GM_getResourceURL_Async");
 
             }
-            else if ("GM.getResourceText" === grant && !gmFunName.includes("GM.GM_getResourceText_Async")) {
+            else if ("GM.getResourceText" === grant && !gmFunName.includes("GM_getResourceText_Async")) {
                 api += `${GM_getResourceText_Async}\n`;
                 gmFunVals.push("getResourceText: GM_getResourceText_Async");
                 gmFunName.push("GM_getResourceText_Async");
@@ -833,15 +897,24 @@
                 gmFunVals.push("notification: GM_notification");
                 gmFunName.push("GM_notification");
             }
-            else if (("GM.addValueChangeListener" === grant || "GM_addValueChangeListener" === grant) && !gmFunName.includes("GM_addValueChangeListener")) {
+            else if (("GM_addValueChangeListener" === grant) && !gmFunName.includes("GM_addValueChangeListener")) {
                 api += `${GM_addValueChangeListener}\nwindow.GM_addValueChangeListener = GM_addValueChangeListener;\n`;
-                gmFunVals.push("addValueChangeListener: GM_addValueChangeListener");
                 gmFunName.push("GM_addValueChangeListener");
             }
-            else if (("GM.removeValueChangeListener" === grant || "GM_removeValueChangeListener" === grant) && !gmFunName.includes("GM_removeValueChangeListener")) {
+            else if ("GM.addValueChangeListener" === grant && !gmFunName.includes("GM_addValueChangeListener_Async")) {
+                api += `${GM_addValueChangeListener_Async}\n`;
+                gmFunVals.push("addValueChangeListener: GM_addValueChangeListener_Async");
+                gmFunName.push("GM_addValueChangeListener_Async");
+            }
+            else if (("GM_removeValueChangeListener" === grant) && !gmFunName.includes("GM_removeValueChangeListener")) {
                 api += `${GM_removeValueChangeListener}\nwindow.GM_removeValueChangeListener = GM_removeValueChangeListener;\n`;
                 gmFunVals.push("removeValueChangeListener: GM_removeValueChangeListener");
                 gmFunName.push("GM_removeValueChangeListener");
+            }
+            else if ("GM.removeValueChangeListener" === grant && !gmFunName.includes("GM_removeValueChangeListener_Async")) {
+                api += `${GM_removeValueChangeListener_Async}\n`;
+                gmFunVals.push("removeValueChangeListener: GM_removeValueChangeListener_Async");
+                gmFunName.push("GM_removeValueChangeListener_Async");
             }
             else if (("GM.setClipboard" === grant || "GM_setClipboard" === grant) && !gmFunName.includes("GM_setClipboard") ) {
                 api += `${GM_setClipboard}\nwindow.GM_setClipboard = GM_setClipboard;\n`;
@@ -869,23 +942,6 @@
             }
         })
 
-        // function GM_info(userscript, version) {
-        //     let info = {
-        //         version: version,
-        //         scriptHandler: "Stay",
-        //         script: {
-        //             version: userscript.version,
-        //             description: userscript.description,
-        //             namespace: userscript.namespace,
-        //             resources: userscript.resourceUrls ? userscript.resourceUrls : [],
-        //             includes: userscript.includes ? userscript.includes : [],
-        //             excludes: userscript.excludes ? userscript.excludes : [],
-        //             matches: userscript.matches ? userscript.matches : []
-        //         }
-        //     };
-        //     return JSON.stringify(info);
-        // }
-
         function GM_listValues_Async() {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
@@ -903,45 +959,74 @@
         
 
         function GM_setValueSync(key, value) {
+            // console.log("GM_setValueSync-----key===", key,",value=",value, ",JSON.stringify(value)=",JSON.stringify(value));
+            let type = "string";
             let old = __listValuesStroge[key];
-            // console.log("GM_setValueSync-----key===", key,",value=",value);
             __listValuesStroge[key] = value;
-            window.postMessage({ id: _uuid, name: "API_SET_VALUE_SYNC", key: key, value: value });
+            if(typeof value === "object"){
+                value = JSON.stringify(value)
+                type = "object";
+            }
+            
+            window.postMessage({ id: _uuid, name: "API_SET_VALUE_SYNC", key: key, value: value, type: type });
             Stay_notifyValueChangeListeners(key, old, __listValuesStroge[key], false);
+            return key;
         }
 
         function GM_setValue_Async(key, value) {
+            // console.log("setValue_p-----typeof value =", typeof value );
             let old = __listValuesStroge[key];
             __listValuesStroge[key] = value;
+            let type = "string";
+            if(typeof value === "object"){
+                value = JSON.stringify(value)
+                type = "object";
+            }
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_SET_VALUE") return;
                     Stay_notifyValueChangeListeners(key, old, __listValuesStroge[key], false);
-                    resolve(e.data.response);
+                    // console.log("GM_setValue_Async----res", e.data);
+                    resolve(key);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
-                window.postMessage({ id: _uuid, pid: pid, name: "API_SET_VALUE", key: key, value: value });
+                window.postMessage({ id: _uuid, pid: pid, name: "API_SET_VALUE", key: key, value: value, type: type });
             });
         }
 
         function GM_getValueSync(key, defaultValue) {
+            // console.log("GM_getValueSync-----typeof key =", key, ", defaultValue=",defaultValue, typeof defaultValue, ",__listValuesStroge===",__listValuesStroge );
+            let type = "string";
+            let value = defaultValue
+            if(typeof value === "object"){
+                value = JSON.stringify(value)
+                type = "object";
+            }
             const pid = Math.random().toString(36).substring(1, 9);
-            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE_SYNC", key: key, defaultValue: defaultValue });
-            return __listValuesStroge[key] == null ? defaultValue : __listValuesStroge[key];
+            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE_SYNC", key: key, defaultValue: value, type: type });
+            return !__listValuesStroge || typeof __listValuesStroge[key] === "undefined" || __listValuesStroge[key] == null ? defaultValue : __listValuesStroge[key];
         }
 
         function GM_getValueAsync(key, defaultValue) {
+            // console.log("GM_getValueAsync-----typeof key =", typeof key, ", defaultValue=",defaultValue, typeof defaultValue );
             const pid = Math.random().toString(36).substring(1, 9);
+            let type = "string";
+            let value = defaultValue
+            if(typeof value === "object"){
+                value = JSON.stringify(value)
+                type = "object";
+            }
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
-                    resolve(e.data.response);
+                    // console.log("GM_getValueAsync----res----", e.data);
+                    resolve(e.data.response?e.data.response:defaultValue);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
-                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE", key: key, defaultValue: defaultValue });
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE", key: key, defaultValue: value, type: type });
             });
         }
 
@@ -1014,6 +1099,7 @@
         }
 
         function GM_getResourceTextSync(name) {
+            const pid = Math.random().toString(36).substring(1, 9);
             let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
             if (!resourceText || resourceText === "" || resourceText === undefined) {
                 window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT_SYNC", key: name, url: __resourceUrlStroge[name] });

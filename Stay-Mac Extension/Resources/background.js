@@ -36,7 +36,7 @@ const isThunderbird = userAgent.includes("thunderbird");
 const isSafari = userAgent.includes("safari") || isThunderbird;
 // const userAgentData = navigator.userAgent;
 const platform = navigator.platform;
-const isMacOS = platform.startsWith("mac");
+const isMacOS = platform.toLowerCase().startsWith("mac");
 const isCSSColorSchemePropSupported = (() => {
     if (typeof document === "undefined") {
         return false;
@@ -467,27 +467,77 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // sendResponse({ message: gm_console });
         }
         else if ("GM_getValue" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, defaultValue: request.defaultValue, uuid: request.uuid }, function (response) {
-                sendResponse(response);
+            let type = request.type;
+            let key = request.key;
+            let defaultValue = request.defaultValue;
+            if(type === "object"){
+                defaultValue = JSON.parse(defaultValue);
+            }
+            let uuid = request.uuid;
+            let localKey = uuid + "_" + key
+            browser.storage.local.get(localKey, (res) => {
+                // console.log("GM_getValue-------localKey=",localKey,",--------res=",res)
+                if(res){
+                    sendResponse(res[localKey]);
+                }else{
+                    browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, defaultValue: defaultValue, uuid: uuid }, function (response) {
+                        sendResponse(response?response:defaultValue);
+                    });
+                }
             });
+            
             return true;
         }
         else if ("GM_setValue" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, value: request.value, uuid: request.uuid }, function (response) {
+            let type = request.type;
+            let key = request.key;
+            let value = request.value;
+            if(type === "object" && value){
+                value = JSON.parse(value);
+            }
+            let uuid = request.uuid;
+            let defaultValue = {};
+            let localKey = uuid + "_" + key
+            defaultValue[localKey] = value
+            // console.log("GM_setValue------defaultValue-----", defaultValue);
+            browser.storage.local.set(defaultValue, (res) => {});
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, value: value, uuid: uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
         else if ("GM_deleteValue" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: request.key, uuid: request.uuid }, function (response) {
+            let uuid = request.uuid;
+            let key = request.key;
+            let localKey = uuid + "_" + key
+            browser.storage.local.remove(localKey, ()=>{})
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, uuid: uuid }, function (response) {
                 sendResponse(response);
             });
             return true;
         }
         else if ("GM_listValues" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-                sendResponse(response);
-            });
+            let uuid = request.uuid;
+            browser.storage.local.get(null, (res) => {
+                // console.log("GM_listValues==background==", res);
+                if(res){
+                    let resp = {};
+                    Object.keys(res).forEach((localKey) => {
+                        if(localKey.startsWith(uuid)){
+                            // console.log("GM_listValues==background====localKey====", localKey);
+                            let key = localKey.replace(uuid+"_", "");
+                            resp[key] = res[localKey];
+                        }
+                    })
+                    // console.log("GM_listValues==----background-------resp==", resp);
+                    sendResponse({body:resp});
+                }else{
+                    browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
+                        sendResponse(response?response:{body:{}});
+                    });
+                }
+            })
+            
             return true;
         }
         else if ("unsafeWindow" == request.operate) {
@@ -1046,9 +1096,11 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         return parseSitesFixesConfig(block, options)[0];
     }
     function getSitesFixesFor(url, text, index, options) {
+        console.log("getSitesFixesFor---text.size()===", text.length)
         const records = [];
         let recordIds = [];
         const domain = getDomain(url);
+
         for (const pattern of Object.keys(index.domainPatterns)) {
             if (isURLMatched(url, pattern)) {
                 recordIds = recordIds.concat(index.domainPatterns[pattern]);
@@ -1082,6 +1134,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         "IGNORE IMAGE ANALYSIS": "ignoreImageAnalysis"
     };
     function getDynamicThemeFixesFor(url, frameURL, text, index, enabledForPDF) {
+        // console.log("getDynamicThemeFixesFor---text.size()===", text.length, text)
         const fixes = getSitesFixesFor(frameURL || url, text, index, {
             commands: Object.keys(dynamicThemeFixesCommands),
             getCommandPropName: (command) => dynamicThemeFixesCommands[command],
@@ -1092,10 +1145,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 return parseArray(value);
             }
         });
+        // console.log("getDynamicThemeFixesFor-------fixes----",fixes);
         if (fixes.length === 0 || fixes[0].url[0] !== "*") {
             return null;
         }
         const genericFix = fixes[0];
+        // console.log("getDynamicThemeFixesFor-------genericFix.css----",genericFix.css);
         const common = {
             url: genericFix.url,
             invert: genericFix.invert || [],
@@ -1127,6 +1182,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         if (sortedBySpecificity.length === 0) {
             return common;
         }
+        // console.log("getDynamicThemeFixesFor-------sortedBySpecificity----",sortedBySpecificity);
         const match = sortedBySpecificity[0].theme;
         return {
             url: match.url,
@@ -1532,6 +1588,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             }
         });
     }
+    const REMOTE_TIMEOUT_MS = getDuration({seconds: 10});
     class ConfigManager {
         constructor() {
             this.raw = {
@@ -1594,6 +1651,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 localURL: CONFIG_URLs.dynamicThemeFixes.local,
                 remoteURL: CONFIG_URLs.dynamicThemeFixes.remote
             });
+            // console.log("loadDynamicThemeFixes-----",fixes.length, fixes);
             this.raw.dynamicThemeFixes = fixes;
             this.handleDynamicThemeFixes();
         }
@@ -1643,6 +1701,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             const $fixes =
                 this.overrides.dynamicThemeFixes || this.raw.dynamicThemeFixes;
             this.DYNAMIC_THEME_FIXES_INDEX = indexSitesFixesConfig($fixes);
+            // console.log("this.DYNAMIC_THEME_FIXES_INDEX-----", this.DYNAMIC_THEME_FIXES_INDEX);
             this.DYNAMIC_THEME_FIXES_RAW = $fixes;
         }
         handleInversionFixes() {
@@ -1807,7 +1866,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     function prepareSyncStorage(values) {
         for (const key in values) {
             const value = values[key];
-            console.log(value,",values---------", values)
+            // console.log(value,",values---------", values)
             if( !value || typeof value == "undefined" ){
                 continue;
             }
@@ -2481,6 +2540,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.settings.isStayAround = isStayAround;
             }
             this.writeStayAroundIntoStorage(this.settings);
+            return new Promise((resolve, reject) => {
+                resolve(this.settings);
+            });
         }
 
         // 获取isStayAround
@@ -2495,6 +2557,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         async writeStayAroundIntoStorage(settings){
             let isStayAround = await this.getStayAround();
             settings = { ...settings, isStayAround };
+            this.settings = settings
             writeSyncStorage(settings);
             writeLocalStorage(settings);
         }
@@ -2795,14 +2858,15 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
 
             this.config = new ConfigManager();
             this.user = new UserStorage();
-            this.getAndSentConnectionMessage = async (url, frameURL) => {
+            this.getAndSentConnectionMessage = (url, frameURL) => {
                 if (this.user.settings) {
                     // console.log("getAndSentConnectionMessage----settings-");
                     this.handleTabMessage(url, frameURL);
                 }else{
                     // console.log("getAndSentConnectionMessage----settings----else-----");
-                    await this.user.loadSettings();
-                    this.handleTabMessage(url, frameURL)
+                    this.user.loadSettings().then(()=>{
+                        this.handleTabMessage(url, frameURL)
+                    });
                 }
                 // return new Promise((resolve) => {
                 //     this.user
@@ -2932,7 +2996,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 const senderURL = sender.url;
                 let frameUrl = frameId === 0 ? null : senderURL;
                 // console.log("handleCSFrameConnect-----tabURL=",tabURL);
-                await this.getAndSentConnectionMessage(tabURL, frameUrl);
+                this.getAndSentConnectionMessage(tabURL, frameUrl);
                 this.stateManager.saveState();
             }
             this.handleDarkModeSettingForPopup = async () => {
@@ -3134,6 +3198,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             //     browser.tabs.sendMessage(tabs[0].id,message);
             // });
             this.saveUserSettings();
+            this.user.writeStayAroundIntoStorage(this.user.settings)
             this.stateManager.saveState();
         }
         async saveUserSettings() {
@@ -3143,7 +3208,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
 
         changeSettings(settings) {
             const prev = {...this.user.settings};
-            console.log("settings=====",settings, "------prev==",prev);
+            // console.log("settings=====",settings, "------prev==",prev);
             this.user.settings = {...settings}
             this.user.set(settings);
             if (
