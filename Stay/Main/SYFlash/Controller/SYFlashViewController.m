@@ -28,12 +28,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeFlash) name:@"closeFlash" object:nil];
-
-    // Do any additional setup after loading the view.
 }
 
 - (void)onBecomeActive{
-
     [SharedStorageManager shared].userDefaults = nil;
     if([SharedStorageManager shared].userDefaults.safariExtensionEnabled) {
         self.firstView.activite = YES;
@@ -59,6 +56,10 @@
         _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 2,  self.view.height)];
         _firstView.scrollEnabled = NO;
         _firstView.selectedCount = 0;
+        [SharedStorageManager shared].userDefaults = nil;
+        if([SharedStorageManager shared].userDefaults.safariExtensionEnabled) {
+            _firstView.activite = YES;
+        }
         [_firstView createFirstView];
     }
     
