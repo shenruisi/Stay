@@ -18,13 +18,14 @@
 #import "SYTextInputViewController.h"
 #import "ScriptMananger.h"
 #import "ScriptEntity.h"
+#import "UIImageView+WebCache.h"
 
 
 #ifdef Mac
 #import "QuickAccess.h"
 #endif
 
-@interface SYDetailViewController ()<UITextViewDelegate>
+@interface SYDetailViewController ()<UITextViewDelegate,UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
@@ -38,6 +39,7 @@
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
 @property (nonatomic, strong) UIView *navigationBarCover;
+@property (nonatomic, strong) UITableView *tableView;
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
@@ -53,7 +55,7 @@
 
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 #ifndef Mac
-    [self createDetailView];
+//    [self createDetailView];
 #endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];
@@ -72,7 +74,9 @@
 #ifdef Mac
     [super navigateViewDidLoad];
     [self navigationBarCover];
-    [self createDetailView];
+//    [self createDetailView];
+   [self.tableView reloadData];
+
 #endif
 }
 
@@ -95,11 +99,13 @@
     self.scrollView = nil;
     self.slideView = nil;
     self.slideLineView = nil;
-    for (UIView *subView in self.view.subviews) {
-        [subView removeFromSuperview];
-    }
+//    for (UIView *subView in self.view.subviews) {
+//        [subView removeFromSuperview];
+//    }
+//
+   [self.tableView reloadData];
     [self navigationBarCover];
-    [self createDetailView];
+//    [self createDetailView];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -115,7 +121,7 @@
 - (void)scriptSaveSuccess:(id)sender{
     self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self createDetailView];
+//    [self createDetailView];
 }
 
 - (void)buildBlackView {
@@ -201,6 +207,79 @@
     [self.whiteTableView addSubview:btn];
     top = btn.bottom + 20;
     self.whiteTableView.contentSize = CGSizeMake(self.view.width, top + _scrollerTop);
+}
+
+
+
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+     if(indexPath.row == 0) {
+          return 200;
+     } else {
+          return self.view.height - 200;
+     }
+
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *identifier = [NSString stringWithFormat:@"settings.%ld.cell",indexPath.section];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (nil == cell){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+     
+     if(indexPath.row == 0) {
+          CGFloat left = 15;
+          CGFloat titleLabelLeftSize = 0;
+          if(self.script.icon != NULL && self.script.icon.length > 0) {
+              UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(left,15,57,57)] ;
+              [imageview sd_setImageWithURL:[NSURL URLWithString:self.script.icon] ];
+              [cell.contentView addSubview:imageview];
+              titleLabelLeftSize = 15 + 57;
+          }
+          
+          UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 15, self.view.width - titleLabelLeftSize - left * 2, 21)];
+          titleLabel.font = FCStyle.headlineBold;
+          titleLabel.textColor = FCStyle.fcBlack;
+          titleLabel.textAlignment = NSTextAlignmentLeft;
+          titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+          titleLabel.numberOfLines = 2;
+          titleLabel.text = self.script.name;
+          [titleLabel sizeToFit];
+          [cell.contentView addSubview:titleLabel];
+          
+          if(self.script.active) {
+              [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
+              self.actBtn.backgroundColor = FCStyle.accent;
+              self.actBtn.layer.borderWidth = 1;
+              self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
+              [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+          } else {
+              [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
+              self.actBtn.backgroundColor = [UIColor whiteColor];
+              [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+              self.actBtn.layer.borderWidth = 1;
+              self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
+          }
+          
+          [cell.contentView addSubview:self.actBtn];
+          self.actBtn.left = titleLabel.left;
+          self.actBtn.top = titleLabel.bottom + 5;
+
+     } else {
+          
+     }
+    
+    return cell;
 }
 
 - (void)createDetailView{
@@ -808,8 +887,6 @@
         _actBtn.font = FCStyle.subHeadlineBold;
         _actBtn.layer.cornerRadius = 15;
         _actBtn.right = self.view.width - 12;
-        [self.view addSubview:_actBtn];
-        
         [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
 
     }
@@ -867,6 +944,42 @@
     }
     
     return _blackTableView;
+}
+
+- (UIScrollView *)createBaseInfoView {
+     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 60)];
+     
+     NSArray *array =  @[
+         @{
+             @"name":@"",
+             @"cells":@[
+                 @{@"title":NSLocalizedString(@"UpgradeTo",@""),
+                   @"type":@"subscription"
+                 }
+             ]
+         },];
+     
+     return scrollView;
+}
+
+
+- (UIView *)createBaseSiteView:(NSString *)name desc:(NSString *)desc color:(UIColor *)descColor {
+     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 58)];
+     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 15)];
+     title.text = name;
+     title.font = FCStyle.body;
+     title.textColor = FCStyle.fcPlaceHolder;
+     title.top = 12;
+     [view addSubview:title];
+     
+     UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 15)];
+     descLabel.font = FCStyle.bodyBold;
+     descLabel.textColor = descColor;
+     descLabel.text = desc;
+     descLabel.top = title.bottom + 6;
+     descLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+     [view addSubview:descLabel];
+     return view;
 }
 
 - (UIView *)creteSitesView:(NSString *)site type:(NSString *)type {
@@ -986,6 +1099,19 @@
     }
     
     return _navigationBarCover;
+}
+
+- (UITableView *)tableView {
+    if (_tableView == nil) {
+        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        [self.view addSubview:_tableView];
+    }
+    
+    return _tableView;
 }
 
 
