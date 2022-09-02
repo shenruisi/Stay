@@ -4332,15 +4332,19 @@
             }
             function rebuildAsyncRule(key) {
                 // console.log("key====",key,",asyncDeclarations====",asyncDeclarations);
-                const { rule, target, index } = asyncDeclarations.get(key);
-                target.deleteRule(index);
-                setRule(target, index, rule);
-                asyncDeclarations.delete(key);
+                if(varDeclarations && varDeclarations.get(key) && typeof varDeclarations.get(key) !== "undefined"){
+                    const { rule, target, index } = asyncDeclarations.get(key);
+                    target.deleteRule(index);
+                    setRule(target, index, rule);
+                    asyncDeclarations.delete(key);
+                }
             }
             function rebuildVarRule(key) {
-                const { rule, target, index } = varDeclarations.get(key);
-                target.deleteRule(index);
-                setRule(target, index, rule);
+                if(varDeclarations && varDeclarations.get(key) && typeof varDeclarations.get(key) !== "undefined"){
+                    const { rule, target, index } = varDeclarations.get(key);
+                    target.deleteRule(index);
+                    setRule(target, index, rule);
+                }
             }
             buildStyleSheet();
         }
@@ -6020,8 +6024,8 @@
     let browserDomain = getDomain(window.location.href);
 
     function setupDarkmode(data) {
-        // darkModeInit();
         const {theme, fixes, isIFrame, detectDarkTheme} = data;
+        // console.log("fixes===",fixes.css);
         removeStyle();
         createOrUpdateDynamicTheme(theme, fixes, isIFrame);
         if (detectDarkTheme) {
@@ -6051,9 +6055,9 @@
     }
 
     let unloaded = false;
-    // let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
-    //     sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}});
-    // });
+    let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
+        sendMessage({type:"darkmode", operate: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}});
+    });
     function cleanup() {
         unloaded = true;
         // removeEventListener("pagehide", onPageHide);
@@ -6061,10 +6065,10 @@
         // removeEventListener("resume", onResume);
         cleanDynamicThemeCache();
         stopDarkThemeDetector();
-        // if (colorSchemeWatcher) {
-        //     colorSchemeWatcher.disconnect();
-        //     colorSchemeWatcher = null;
-        // }
+        if (colorSchemeWatcher) {
+            colorSchemeWatcher.disconnect();
+            colorSchemeWatcher = null;
+        }
     }
 
     function sendMessage(message) {
@@ -6121,7 +6125,7 @@
     browser.runtime.sendMessage({type: "darkmode", operate: MessageType.CS_FRAME_CONNECT}, function (response) {});
 
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-        const { type, data, stayDarkSettings, error, id, from, operate} = request
+        const { type, data, stayDarkSettings, darkSetings, error, id, from, operate} = request
         // console.log("data===request=",request);
         if (MessageType.BG_FETCH_RESPONSE  === type) {
             const resolve = resolvers$1.get(id);
@@ -6141,7 +6145,7 @@
             }else{
                 setupDarkmode(data);
             }
-            
+            handleDarkSettingsForStorage(darkSetings);
         }else if(MessageType.BG_CLEAN_UP === type){
             // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
             cleanupDarkmode();
@@ -6149,5 +6153,11 @@
         return true;
         
     });
+
+
+    async function handleDarkSettingsForStorage(darkSetings){
+        // console.log("handleDarkSettingsForStorage-----", darkSetings);
+        window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkSetings));
+    }
    
 })();

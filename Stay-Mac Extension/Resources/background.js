@@ -446,7 +446,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if ("gm-apis" == request.from) {
         if ("clear_GM_log" == request.operate) {
-            console.log("clear_GM_log, ", request);
+            // console.log("clear_GM_log, ", request);
             gm_console[request.uuid] = [];
         }
         else if ("GM_error" == request.operate) {
@@ -1096,7 +1096,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         return parseSitesFixesConfig(block, options)[0];
     }
     function getSitesFixesFor(url, text, index, options) {
-        console.log("getSitesFixesFor---text.size()===", text.length)
+        // console.log("getSitesFixesFor---text.size()===", text.length)
         const records = [];
         let recordIds = [];
         const domain = getDomain(url);
@@ -3028,6 +3028,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     if("cs-frame-connect" === request.operate){
                         this.handleCSFrameConnect(sender);
                     }
+                    if("cs-color-scheme-change" === request.operate){
+                        this.onColorSchemeChange(request.data);
+                    }
                     else if ("FETCH_DARK_SETTING" === request.operate){
                         this.handleFetchSettingForFallback().then(settings=>{
                             // console.log("addListener____fetch----settings-----", settings);
@@ -3101,7 +3104,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             let isAutoDark;
             let nextCheck;
             if("auto" === toggleStatus){
-                // console.log("updateAutoState------",automation,time);
+                // console.log("updateAutoState------",stay_automation,behavior);
                 switch (stay_automation) {
                     // auto模式下根据【时间】来更换暗黑模式还是明亮模式
                     case "time":
@@ -3116,17 +3119,16 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         break;
                     // auto模式下跟随【系统模式】更换暗黑模式还是明亮模式
                     case "system":
-                        
-                        // if (isSafari) {
-                        //     isAutoDark =
-                        //         this.wasLastColorSchemeDark == null
-                        //             ? isSystemDarkModeEnabled()
-                        //             : this.wasLastColorSchemeDark;
-                        // } else {
-                        //     isAutoDark = isSystemDarkModeEnabled();
-                        // }
-                        isAutoDark = isSystemDarkModeEnabled();
-                        console.log("automation-----", stay_automation, isAutoDark);
+                        if (isSafari) {
+                            isAutoDark =
+                                this.wasLastColorSchemeDark == null
+                                    ? isSystemDarkModeEnabled()
+                                    : this.wasLastColorSchemeDark;
+                        } else {
+                            isAutoDark = isSystemDarkModeEnabled();
+                        }
+                        // isAutoDark = isSystemDarkModeEnabled();
+                        // console.log("automation-----", stay_automation, isAutoDark);
                         break;
                     case "location": {
                         const {latitude, longitude} = auto_location;
@@ -3237,4 +3239,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     
     const stayDarkMode = new StayDarkModeExtension();
     stayDarkMode.start();
+
+    // browser.storage.local.remove(["time","theme","syncSettings","detectDarkTheme","customThemes","automationBehaviour","automation","presets"])
+    // browser.storage.sync.remove(["time","theme","syncSettings","detectDarkTheme","customThemes","automationBehaviour","automation","presets"])
 })();
