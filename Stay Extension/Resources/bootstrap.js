@@ -346,7 +346,7 @@ let RMC_CONTEXT = {};
                     if (injectedVendor.has(url)) return;
                     injectedVendor.add(url);
                     if (url.startsWith('stay://')){
-                        console.log("stay://",url);
+                        // console.log("stay://",url);
                         if (pageInject){
                             var name = $_uri(url).pathname.substring(1);
                             $_injectRequiredInPageWithURL(name,$_res(name));

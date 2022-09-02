@@ -234,7 +234,7 @@ let RMC_CONTEXT = {};
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
         else if (request.from == "background" && "exeScriptManually" === operate){
-            console.log("exeScriptManually",request.script);
+            // console.log("exeScriptManually",request.script);
             let targetScript = request.script;
             if (targetScript){
                 var pageInject = targetScript.installType === "page";
@@ -346,7 +346,7 @@ let RMC_CONTEXT = {};
                     if (injectedVendor.has(url)) return;
                     injectedVendor.add(url);
                     if (url.startsWith('stay://')){
-                        console.log("stay://",url);
+                        // console.log("stay://",url);
                         if (pageInject){
                             var name = $_uri(url).pathname.substring(1);
                             $_injectRequiredInPageWithURL(name,$_res(name));

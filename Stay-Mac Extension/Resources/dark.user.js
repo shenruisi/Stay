@@ -6149,6 +6149,7 @@
         }else if(MessageType.BG_CLEAN_UP === type){
             // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
             cleanupDarkmode();
+            handleDarkSettingsForStorage(darkSetings);
         }
         return true;
         
