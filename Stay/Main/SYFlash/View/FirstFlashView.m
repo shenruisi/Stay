@@ -67,6 +67,8 @@ UITableViewDataSource
     UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,17,26,26)] ;
     imageview.image = image;
     imageview.centerY = 24;
+    imageview.layer.cornerRadius = 8;
+    imageview.layer.masksToBounds = YES;
     [activiteView addSubview:imageview];
     
     UILabel *activiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, 100, 22)];
