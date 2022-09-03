@@ -415,9 +415,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("fetchScripts" == request.operate) {
-            // console.log("background---fetchScripts request==", request);
+            console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
-                // console.log("background--fetchScripts---response==",response);
+                console.log("background--fetchScripts---response==",response);
                 matchAppScriptList = response.body;
                 // console.log("background--fetchScripts---matchAppScriptList==",matchAppScriptList);
                 sendResponse({body: matchAppScriptList});
