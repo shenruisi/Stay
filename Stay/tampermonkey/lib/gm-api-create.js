@@ -282,7 +282,7 @@
     function _fillAllResourceTextStroge() {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getAllResourceText", uuid: _uuid }, (response) => {
-                console.log("_fillAllResourceTextStroge", response);
+                // console.log("_fillAllResourceTextStroge", response);
                 // console.log("_fillAllResourceTextStroge-response.body", response);
                 resolve(response.body);
             });
@@ -1112,7 +1112,7 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_ALL_REXOURCE_TEXT") return;
-                    console.log("GM_getAllResourceText----", e);
+                    // console.log("GM_getAllResourceText----", e);
                     let res = e.data ? (e.data.response ? e.data.response.body : {}) : {};
                     resolve(res);
                     window.removeEventListener("message", callback);
