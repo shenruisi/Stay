@@ -2374,7 +2374,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2414,7 +2414,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "MacNative=1";
@@ -2567,7 +2567,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2601,7 +2601,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2640,7 +2640,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 75;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2693,7 +2693,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 75;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2839,7 +2839,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 75;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2863,7 +2863,6 @@
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
 				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2897,7 +2896,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 75;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2921,7 +2920,6 @@
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
 				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
