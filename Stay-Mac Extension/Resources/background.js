@@ -415,9 +415,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("fetchScripts" == request.operate) {
-            // console.log("background---fetchScripts request==", request);
+            console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
-                // console.log("background--fetchScripts---response==",response);
+                console.log("background--fetchScripts---response==",response);
                 matchAppScriptList = response.body;
                 // console.log("background--fetchScripts---matchAppScriptList==",matchAppScriptList);
                 sendResponse({body: matchAppScriptList});
@@ -2893,17 +2893,13 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 const isStayAround = settings.isStayAround;
                 const toggleStatus = settings.toggleStatus;
                 const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
-                let darkState = "clean_up";
-                if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
-                    darkState = "dark_mode"
-                }
-                const darkSetings = {
+                
+                let darkSetings = {
                     siteListDisabled: settings.siteListDisabled,
                     toggleStatus: toggleStatus,
                     isStayAround: isStayAround,
-                    darkState
+                    darkState:"clean_up"
                 }
-
                 let message = {
                     type: "bg-clean-up",
                     stayDarkSettings: settings,
@@ -2913,6 +2909,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     const toggleStatus = settings.toggleStatus;
                     const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
                     if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
+                        darkSetings.darkState = "dark_mode";
                         const custom = settings.stay_customThemes.find(
                             ({url: urlList}) => isURLInList(url, urlList)
                         );
@@ -2949,6 +2946,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         };
                     }
                 }
+
                 // return message;
                 // console.log("message======",message);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
