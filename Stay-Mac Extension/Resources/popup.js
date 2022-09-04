@@ -64,6 +64,7 @@ let browserLangurage = "",
     isStayAround='b',
     darkmodeToggleStatus="on",
     siteEnabled=true,
+    shouldToFetchScript = true,
     logState = {error:"error-log", log:""};
 
 //https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript
@@ -118,11 +119,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if("background" === from){
         if (operate == "giveDarkmodeConfig"){
-            console.log("giveDarkmodeConfig==res==", request);
+            // console.log("giveDarkmodeConfig==res==", request);
             darkmodeToggleStatus = request.darkmodeToggleStatus;
             isStayAround = request.isStayAround;
             siteEnabled = request.enabled;
-            fetchMatchedScriptList();
+            if(shouldToFetchScript){
+                fetchMatchedScriptList();
+            }
         }
     }
     return true;
@@ -140,7 +143,7 @@ function fetchMatchedScriptList(){
     browser.tabs.getSelected(null, (tab) => {
         browserRunUrl = tab.url;
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
-            console.log("response-----",response);
+            // console.log("response-----",response);
             try{
                 scriptStateList = response.body;
                 renderScriptContent(scriptStateList);
@@ -579,6 +582,8 @@ function handleTabAction(target, type) {
         if(curActiveDom){
             curActiveDom.classList.remove("active-tab"); // 删除之前已选中tab的样式
         }
+        shouldToFetchScript=false;
+        fetchDarkmodeConfig();
         target.classList.add('active-tab'); // 给当前选中tab添加样式
         window.localStorage.setItem("stay_popuo_active_tab", type);
         if(type == 1){
