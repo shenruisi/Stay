@@ -2534,11 +2534,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         }
         async loadSettings() {
             this.settings = await this.loadSettingsFromStorage();
-            let isStayAround = this.settings.isStayAround;
-            if(!isStayAround || typeof isStayAround === "undefined" || isStayAround === ""){
-                isStayAround = await this.getStayAround();
-                this.settings.isStayAround = isStayAround;
-            }
+            // let isStayAround = this.settings.isStayAround;
+            let isStayAround = await this.getStayAround();
+            this.settings.isStayAround = isStayAround;
             this.writeStayAroundIntoStorage(this.settings);
             return new Promise((resolve, reject) => {
                 resolve(this.settings);
@@ -2558,6 +2556,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             let isStayAround = await this.getStayAround();
             settings = { ...settings, isStayAround };
             this.settings = settings
+            // console.log("writeStayAroundIntoStorage=====", settings)
             writeSyncStorage(settings);
             writeLocalStorage(settings);
         }
@@ -2998,10 +2997,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.stateManager.saveState();
             }
             this.handleDarkModeSettingForPopup = async () => {
-                if (!this.user.settings) {
-                    // console.log("getAndSentConnectionMessage----settings-");
-                    await this.user.loadSettings();
-                }
+                await this.user.loadSettings();
                 const settings = this.user.settings;
                 // console.log("getAndSentConnectionMessage----settings-",settings);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {

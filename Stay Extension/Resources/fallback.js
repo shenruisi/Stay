@@ -14,10 +14,10 @@
         
         let browserDomain = getDomain(window.location.href);
         let darkmodeSettingStr = window.localStorage.getItem("FETCH_DARK_SETTING");
-        let darkmodeSetting;
         if(darkmodeSettingStr && darkmodeSettingStr!=="" && darkmodeSettingStr !== "null" && darkmodeSettingStr !== "undefined" 
             && darkmodeSettingStr != "clean_up" && darkmodeSettingStr != "dark_mode"){
-            darkmodeSetting = JSON.parse(darkmodeSettingStr);
+            let darkmodeSettingStorage = JSON.parse(darkmodeSettingStr);
+            let darkmodeSetting = {...darkmodeSettingStorage}
             darkModeInit(darkmodeSetting);
             // console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=");
         }
@@ -45,8 +45,8 @@
                 return true;
             }else{
                 if(typeof darkmodeSetting.isStayAround != "undefined" && darkmodeSetting.isStayAround !== "" && darkmodeSetting.isStayAround === "a"){
-                    if((matchesDarkTheme() && darkmodeSetting.toggleStatus!="off" && !darkmodeSetting.siteListDisabled.includes(browserDomain)) 
-                        || (!matchesDarkTheme() && darkmodeSetting.toggleStatus ==="on" && !darkmodeSetting.siteListDisabled.includes(browserDomain))){
+                    if((matchesDarkTheme() && darkmodeSetting.toggleStatus!="off" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain)) 
+                        || (!matchesDarkTheme() && darkmodeSetting.toggleStatus ==="on" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain))){
                         return true;
                     }
                 }
