@@ -76,7 +76,7 @@ static API *instance = nil;
         @"app_version":_appVersion,
         @"pro":isPro ? @"lifetime":@"",
         @"is_extension":@(isExtension),
-        @"country":locale.countryCode
+        @"country":locale.countryCode.length > 0 ? locale.countryCode : @"CN"
     };
     NSData *data = [NSJSONSerialization dataWithJSONObject:event
     options:0
