@@ -415,9 +415,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("fetchScripts" == request.operate) {
-            console.log("background---fetchScripts request==", request);
+            // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
-                console.log("background--fetchScripts---response==",response);
+                // console.log("background--fetchScripts---response==",response);
                 matchAppScriptList = response.body;
                 // console.log("background--fetchScripts---matchAppScriptList==",matchAppScriptList);
                 sendResponse({body: matchAppScriptList});
@@ -463,7 +463,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 gm_console[request.uuid] = [];
             }
             gm_console[request.uuid].push({ msg: request.message, msgType: "log", time: new Date().dateFormat() });
-            console.log("GM_log=", gm_console);
+            // console.log("GM_log=", gm_console);
             // sendResponse({ message: gm_console });
         }
         else if ("GM_getValue" == request.operate) {
@@ -1815,6 +1815,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     async function readLocalStorage(defaults) {
         return new Promise((resolve) => {
             browser.storage.local.get(defaults, (local) => {
+                // console.log("readLocalStorage--------------====defaults=",defaults, ",-----local=======", local);
                 if (browser.runtime.lastError) {
                     console.error(browser.runtime.lastError.message);
                     resolve(defaults);
@@ -2510,10 +2511,11 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 }
                 this.saveStorageBarrier = new PromiseBarrier();
                 const settings = this.settings;
-                
+                // console.log("saveSettingsIntoStorage===", settings);
                 if (settings.stay_syncSettings) {
                     try {
                         await writeSyncStorage(settings);
+                        await writeLocalStorage(settings);
                     } catch (err) {
                         logWarn(
                             "Settings synchronization was disabled due to error:",
@@ -2534,6 +2536,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         }
         async loadSettings() {
             this.settings = await this.loadSettingsFromStorage();
+            // console.log("loadSettings===",this.settings)
             // let isStayAround = this.settings.isStayAround;
             let isStayAround = await this.getStayAround();
             this.settings.isStayAround = isStayAround;
@@ -2572,11 +2575,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             });
         }
         async loadSettingsFromStorage() {
-            if (this.loadBarrier) {
-                return await this.loadBarrier.entry();
-            }
+            // if (this.loadBarrier) {
+            //     return await this.loadBarrier.entry();
+            // }
             this.loadBarrier = new PromiseBarrier();
             const local = await readLocalStorage(DEFAULT_SETTINGS);
+            // console.log("loadSettingsFromStorage-----", local);
             const {errors: localCfgErrors} = validateSettings(local);
             localCfgErrors.forEach((err) => logWarn(err));
             if (!local.stay_syncSettings) {
@@ -2997,9 +3001,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.stateManager.saveState();
             }
             this.handleDarkModeSettingForPopup = async () => {
-                await this.user.loadSettings();
-                const settings = this.user.settings;
-                // console.log("getAndSentConnectionMessage----settings-",settings);
+                // await this.user.loadSettings();
+                const settings = await this.user.loadSettings();
+                // console.log("getAndSentConnectionMessage----settings-",settings, this.user.settings);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     const tabURL = tabs[0].url;
                     let browserDomain = getDomain(tabURL);
@@ -3206,6 +3210,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             const prev = {...this.user.settings};
             // console.log("settings=====",settings, "------prev==",prev);
             this.user.settings = {...settings}
+            // console.log("this.user.settings=====",this.user.settings);
             this.user.set(settings);
             if (
                 prev.siteListDisabled.length !== settings.siteListDisabled.length || 
