@@ -32,10 +32,13 @@
             });
         }
 
-        const matchesMediaQuery = (query) => {
+        function matchesMediaQuery(query){
             return Boolean(window.matchMedia(query).matches);
-        };
-        const matchesDarkTheme = () => matchesMediaQuery("(prefers-color-scheme: dark)");
+        }
+        
+        function matchesDarkTheme () {
+            return matchesMediaQuery("(prefers-color-scheme: dark)");
+        } 
 
         function checkDarkState(darkmodeSetting){
             // console.log("darkmodeSetting.siteListDisabled ====", darkmodeSetting.siteListDisabled , !darkmodeSetting.siteListDisabled.includes(browserDomain))
