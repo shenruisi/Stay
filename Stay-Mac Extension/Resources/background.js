@@ -2511,11 +2511,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 }
                 this.saveStorageBarrier = new PromiseBarrier();
                 const settings = this.settings;
+                await writeLocalStorage(settings);
                 // console.log("saveSettingsIntoStorage===", settings);
                 if (settings.stay_syncSettings) {
                     try {
                         await writeSyncStorage(settings);
-                        await writeLocalStorage(settings);
+                        
                     } catch (err) {
                         logWarn(
                             "Settings synchronization was disabled due to error:",
@@ -2523,11 +2524,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         );
                         this.set({stay_syncSettings: false});
                         await this.saveSyncSetting(false);
-                        await writeLocalStorage(settings);
                     }
-                } else {
-                    await writeLocalStorage(settings);
-                }
+                } 
 
                 this.saveStorageBarrier.resolve();
                 this.saveStorageBarrier = null;
@@ -2576,7 +2574,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         }
         async loadSettingsFromStorage() {
             // if (this.loadBarrier) {
-            //     return await this.loadBarrier.entry();
+            //     const settings = await this.loadBarrier.entry();
+            //     console.log("settings--------", settings);
+            //     return settings;
             // }
             this.loadBarrier = new PromiseBarrier();
             const local = await readLocalStorage(DEFAULT_SETTINGS);
@@ -2688,6 +2688,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     }
 
     function logInfo(...args) {}
+    function logWarn(...args) {}
 
     async function queryTabs(query) {
         return new Promise((resolve) => {
@@ -2895,8 +2896,6 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.user.set(settings);
                 const isStayAround = settings.isStayAround;
                 const toggleStatus = settings.toggleStatus;
-                const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
-                
                 let darkSetings = {
                     siteListDisabled: settings.siteListDisabled,
                     toggleStatus: toggleStatus,
