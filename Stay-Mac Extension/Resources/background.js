@@ -419,6 +419,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
                 // console.log("background--fetchScripts---response==",response);
                 matchAppScriptList = response.body;
+                if (request.digest == "no"){
+                    if (matchAppScriptList.length > 0){
+                        browser.browserAction.setBadgeText({text: matchAppScriptList.length.toString()});
+                    }
+                    else{
+                        browser.browserAction.setBadgeText({text: ""});
+                    }
+                }
                 // console.log("background--fetchScripts---matchAppScriptList==",matchAppScriptList);
                 sendResponse({body: matchAppScriptList});
             });

@@ -146,6 +146,11 @@ const $_injectInPageWithTiming = (script, runAt) => {
 let matchedScripts;
 // {uuid_1: [], uuid_2:[]}
 let RMC_CONTEXT = {};
+
+let cspEnterLock = false;
+let injectInPageScripts = [];
+let injectedPageVendor = new Set();
+let injectedContentVendor = new Set();
 (function(){
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
@@ -343,15 +348,17 @@ let RMC_CONTEXT = {};
             var pageInject = script.installType === "page";
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
-                    if (injectedVendor.has(url)) return;
-                    injectedVendor.add(url);
                     if (url.startsWith('stay://')){
                         // console.log("stay://",url);
                         if (pageInject){
+                            if (injectedPageVendor.has(url)) return;
+                            injectedPageVendor.add(url);
                             var name = $_uri(url).pathname.substring(1);
                             $_injectRequiredInPageWithURL(name,$_res(name));
                         }
                         else{
+                            if (injectedContentVendor.has(url)) return;
+                            injectedContentVendor.add(url);
                             browser.runtime.sendMessage({
                                 from: "bootstrap",
                                 operate: "injectFile",
@@ -384,9 +391,8 @@ let RMC_CONTEXT = {};
             }
             
             if (script.active){ //inject active script
-                // console.log("injectScript---",script.name,script.installType,script.runAt);
-                console.log("injectScript---content---", script);
-                console.log("injectScript---", script.content);
+                console.log("injectScript---",script.name,script.installType,script.runAt);
+//                console.log("injectScript---", script.content);
                 if (script.installType === "page"){
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
@@ -403,6 +409,63 @@ let RMC_CONTEXT = {};
             }
         });
     });
+    
+    document.addEventListener("securitypolicyviolation", (e) => {
+        console.log("securitypolicyviolation");
+        if (!cspEnterLock){
+            console.log("securitypolicyviolation");
+            if (e.effectiveDirective === "script-src") {
+                injectInPageScripts.forEach((script) => {
+                    if (script.requireUrls.length > 0 && script.active){
+                        script.requireUrls.forEach((url)=>{
+                            if (url.startsWith('stay://')){
+                                if (injectedContentVendor.has(url)) return;
+                                injectedContentVendor.add(url);
+                                browser.runtime.sendMessage({
+                                    from: "bootstrap",
+                                    operate: "injectFile",
+                                    file:$_res($_uri(url).pathname.substring(1)),
+                                    allFrames:true,
+                                    runAt:"document_start"
+                                });
+                            }
+                            else{
+                                script.requireCodes.forEach((urlCodeDic)=>{
+                                    if (urlCodeDic.url == url){
+                                        browser.runtime.sendMessage({
+                                            from: "bootstrap",
+                                            operate: "injectScript",
+                                            code:urlCodeDic.code,
+                                            allFrames:true,
+                                            runAt:"document_start"
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    
+                    if (script.active){ //inject active script
+                         console.log("csp fallback injectScript---",script.name,script.installType,script.runAt);
+                        browser.runtime.sendMessage({
+                            from: "bootstrap",
+                            operate: "injectScript",
+                            code:script.otherContent,
+                            allFrames:!script.noFrames,
+                            runAt:"document_"+script.runAt
+                        });
+                    }
+                });
+            }
+//            console.log(e.blockedURI);
+//            console.log(e.violatedDirective);
+//            console.log(e.originalPolicy);
+//            console.log(e.effectiveDirective);
+            cspEnterLock = true;
+        }
+        
+    });
+    
     window.addEventListener('message', (e) => {
         // console.log("bootstrap---addEventListener====", e)
         if (!e || !e.data || !e.data.name) return;

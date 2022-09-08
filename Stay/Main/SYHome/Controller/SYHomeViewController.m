@@ -974,12 +974,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)initScrpitContent{
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     for(int i = 0; i < self.datas.count; i++) {
-        UserScript *scrpit = self.datas[i];
-        UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:scrpit.uuid];
-        info.content = [scrpit toDictionary];
+        UserScript *script = self.datas[i];
+        UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:script.uuid];
+        info.content = [script toDictionary];
         [info flush];
-        scrpit.parsedContent = @"";
-        [array addObject: [scrpit toDictionary]];
+        script.parsedContent = @"";
+        script.otherContent = @"";
+        [array addObject: [script toDictionary]];
     }
     [SharedStorageManager shared].userscriptHeaders.content = array;
     [[SharedStorageManager shared].userscriptHeaders flush];

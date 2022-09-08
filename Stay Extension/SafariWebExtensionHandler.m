@@ -134,7 +134,9 @@
                 if (requireUrlsAndCodes != nil) {
                     mulDic[@"requireCodes"] = requireUrlsAndCodes;
                 }
-                mulDic[@"content"] = [self getContentWithUUID:data[@"uuid"]];
+                UserscriptInfo *info = [self getInfoWithUUID:data[@"uuid"]];
+                mulDic[@"content"] = info.content[@"content"];
+                mulDic[@"otherContent"] = info.content[@"otherContent"];
                 [datas replaceObjectAtIndex:i withObject:mulDic];
             }
         }
@@ -293,6 +295,15 @@
 - (NSString *)getContentWithUUID:(NSString *)uuid{
     UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:uuid];
     return info.content[@"content"];
+}
+
+- (NSString *)getOtherContentWithUUID:(NSString *)uuid{
+    UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:uuid];
+    return info.content[@"otherContent"];
+}
+
+- (UserscriptInfo *)getInfoWithUUID:(NSString *)uuid{
+    return [[SharedStorageManager shared] getInfoOfUUID:uuid];
 }
 
 
