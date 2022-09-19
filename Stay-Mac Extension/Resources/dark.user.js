@@ -6055,9 +6055,9 @@
     }
 
     let unloaded = false;
-    // let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
-    //     sendMessage({type: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}});
-    // });
+    let colorSchemeWatcher = watchForColorSchemeChange(({isDark}) => {
+        sendMessage({type:"darkmode", operate: MessageType.CS_COLOR_SCHEME_CHANGE, data: {isDark}});
+    });
     function cleanup() {
         unloaded = true;
         // removeEventListener("pagehide", onPageHide);
@@ -6065,10 +6065,10 @@
         // removeEventListener("resume", onResume);
         cleanDynamicThemeCache();
         stopDarkThemeDetector();
-        // if (colorSchemeWatcher) {
-        //     colorSchemeWatcher.disconnect();
-        //     colorSchemeWatcher = null;
-        // }
+        if (colorSchemeWatcher) {
+            colorSchemeWatcher.disconnect();
+            colorSchemeWatcher = null;
+        }
     }
 
     function sendMessage(message) {
@@ -6149,6 +6149,7 @@
         }else if(MessageType.BG_CLEAN_UP === type){
             // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
             cleanupDarkmode();
+            handleDarkSettingsForStorage(darkSetings);
         }
         return true;
         

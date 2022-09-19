@@ -363,12 +363,13 @@ UITableViewDataSource
     NSArray *datas =  [[DataManager shareManager] findScript:1];
     if(datas.count > 0) {
         for(int i = 0; i < datas.count; i++) {
-            UserScript *scrpit = datas[i];
-            UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:scrpit.uuid];
-            info.content = [scrpit toDictionary];
+            UserScript *script = datas[i];
+            UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:script.uuid];
+            info.content = [script toDictionary];
             [info flush];
-            scrpit.parsedContent = @"";
-            [array addObject: [scrpit toDictionary]];
+            script.parsedContent = @"";
+            script.otherContent = @"";
+            [array addObject: [script toDictionary]];
         }
         [SharedStorageManager shared].userscriptHeaders.content = array;
         [[SharedStorageManager shared].userscriptHeaders flush];

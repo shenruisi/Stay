@@ -446,7 +446,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if ("gm-apis" == request.from) {
         if ("clear_GM_log" == request.operate) {
-            console.log("clear_GM_log, ", request);
+            // console.log("clear_GM_log, ", request);
             gm_console[request.uuid] = [];
         }
         else if ("GM_error" == request.operate) {
@@ -463,7 +463,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 gm_console[request.uuid] = [];
             }
             gm_console[request.uuid].push({ msg: request.message, msgType: "log", time: new Date().dateFormat() });
-            console.log("GM_log=", gm_console);
+            // console.log("GM_log=", gm_console);
             // sendResponse({ message: gm_console });
         }
         else if ("GM_getValue" == request.operate) {
@@ -1096,7 +1096,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         return parseSitesFixesConfig(block, options)[0];
     }
     function getSitesFixesFor(url, text, index, options) {
-        console.log("getSitesFixesFor---text.size()===", text.length)
+        // console.log("getSitesFixesFor---text.size()===", text.length)
         const records = [];
         let recordIds = [];
         const domain = getDomain(url);
@@ -1815,6 +1815,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     async function readLocalStorage(defaults) {
         return new Promise((resolve) => {
             browser.storage.local.get(defaults, (local) => {
+                // console.log("readLocalStorage--------------====defaults=",defaults, ",-----local=======", local);
                 if (browser.runtime.lastError) {
                     console.error(browser.runtime.lastError.message);
                     resolve(defaults);
@@ -2510,10 +2511,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 }
                 this.saveStorageBarrier = new PromiseBarrier();
                 const settings = this.settings;
-                
+                await writeLocalStorage(settings);
+                // console.log("saveSettingsIntoStorage===", settings);
                 if (settings.stay_syncSettings) {
                     try {
                         await writeSyncStorage(settings);
+                        
                     } catch (err) {
                         logWarn(
                             "Settings synchronization was disabled due to error:",
@@ -2521,11 +2524,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         );
                         this.set({stay_syncSettings: false});
                         await this.saveSyncSetting(false);
-                        await writeLocalStorage(settings);
                     }
-                } else {
-                    await writeLocalStorage(settings);
-                }
+                } 
 
                 this.saveStorageBarrier.resolve();
                 this.saveStorageBarrier = null;
@@ -2534,11 +2534,10 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         }
         async loadSettings() {
             this.settings = await this.loadSettingsFromStorage();
-            let isStayAround = this.settings.isStayAround;
-            if(!isStayAround || typeof isStayAround === "undefined" || isStayAround === ""){
-                isStayAround = await this.getStayAround();
-                this.settings.isStayAround = isStayAround;
-            }
+            // console.log("loadSettings===",this.settings)
+            // let isStayAround = this.settings.isStayAround;
+            let isStayAround = await this.getStayAround();
+            this.settings.isStayAround = isStayAround;
             this.writeStayAroundIntoStorage(this.settings);
             return new Promise((resolve, reject) => {
                 resolve(this.settings);
@@ -2558,6 +2557,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             let isStayAround = await this.getStayAround();
             settings = { ...settings, isStayAround };
             this.settings = settings
+            // console.log("writeStayAroundIntoStorage=====", settings)
             writeSyncStorage(settings);
             writeLocalStorage(settings);
         }
@@ -2573,11 +2573,14 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             });
         }
         async loadSettingsFromStorage() {
-            if (this.loadBarrier) {
-                return await this.loadBarrier.entry();
-            }
+            // if (this.loadBarrier) {
+            //     const settings = await this.loadBarrier.entry();
+            //     console.log("settings--------", settings);
+            //     return settings;
+            // }
             this.loadBarrier = new PromiseBarrier();
             const local = await readLocalStorage(DEFAULT_SETTINGS);
+            // console.log("loadSettingsFromStorage-----", local);
             const {errors: localCfgErrors} = validateSettings(local);
             localCfgErrors.forEach((err) => logWarn(err));
             if (!local.stay_syncSettings) {
@@ -2685,6 +2688,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     }
 
     function logInfo(...args) {}
+    function logWarn(...args) {}
 
     async function queryTabs(query) {
         return new Promise((resolve) => {
@@ -2892,18 +2896,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.user.set(settings);
                 const isStayAround = settings.isStayAround;
                 const toggleStatus = settings.toggleStatus;
-                const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
-                let darkState = "clean_up";
-                if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
-                    darkState = "dark_mode"
-                }
-                const darkSetings = {
+                let darkSetings = {
                     siteListDisabled: settings.siteListDisabled,
                     toggleStatus: toggleStatus,
                     isStayAround: isStayAround,
-                    darkState
+                    darkState:"clean_up"
                 }
-
                 let message = {
                     type: "bg-clean-up",
                     stayDarkSettings: settings,
@@ -2913,6 +2911,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     const toggleStatus = settings.toggleStatus;
                     const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
                     if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
+                        darkSetings.darkState = "dark_mode";
                         const custom = settings.stay_customThemes.find(
                             ({url: urlList}) => isURLInList(url, urlList)
                         );
@@ -2949,6 +2948,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         };
                     }
                 }
+
                 // return message;
                 // console.log("message======",message);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -3000,12 +3000,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.stateManager.saveState();
             }
             this.handleDarkModeSettingForPopup = async () => {
-                if (!this.user.settings) {
-                    // console.log("getAndSentConnectionMessage----settings-");
-                    await this.user.loadSettings();
-                }
-                const settings = this.user.settings;
-                // console.log("getAndSentConnectionMessage----settings-",settings);
+                // await this.user.loadSettings();
+                const settings = await this.user.loadSettings();
+                // console.log("getAndSentConnectionMessage----settings-",settings, this.user.settings);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     const tabURL = tabs[0].url;
                     let browserDomain = getDomain(tabURL);
@@ -3027,6 +3024,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 if ("darkmode" === request.type) {
                     if("cs-frame-connect" === request.operate){
                         this.handleCSFrameConnect(sender);
+                    }
+                    if("cs-color-scheme-change" === request.operate){
+                        this.onColorSchemeChange(request.data);
                     }
                     else if ("FETCH_DARK_SETTING" === request.operate){
                         this.handleFetchSettingForFallback().then(settings=>{
@@ -3101,7 +3101,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             let isAutoDark;
             let nextCheck;
             if("auto" === toggleStatus){
-                // console.log("updateAutoState------",automation,time);
+                // console.log("updateAutoState------",stay_automation,behavior);
                 switch (stay_automation) {
                     // auto模式下根据【时间】来更换暗黑模式还是明亮模式
                     case "time":
@@ -3116,17 +3116,16 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         break;
                     // auto模式下跟随【系统模式】更换暗黑模式还是明亮模式
                     case "system":
-                        
-                        // if (isSafari) {
-                        //     isAutoDark =
-                        //         this.wasLastColorSchemeDark == null
-                        //             ? isSystemDarkModeEnabled()
-                        //             : this.wasLastColorSchemeDark;
-                        // } else {
-                        //     isAutoDark = isSystemDarkModeEnabled();
-                        // }
-                        isAutoDark = isSystemDarkModeEnabled();
-                        console.log("automation-----", stay_automation, isAutoDark);
+                        if (isSafari) {
+                            isAutoDark =
+                                this.wasLastColorSchemeDark == null
+                                    ? isSystemDarkModeEnabled()
+                                    : this.wasLastColorSchemeDark;
+                        } else {
+                            isAutoDark = isSystemDarkModeEnabled();
+                        }
+                        // isAutoDark = isSystemDarkModeEnabled();
+                        // console.log("automation-----", stay_automation, isAutoDark);
                         break;
                     case "location": {
                         const {latitude, longitude} = auto_location;
@@ -3210,6 +3209,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             const prev = {...this.user.settings};
             // console.log("settings=====",settings, "------prev==",prev);
             this.user.settings = {...settings}
+            // console.log("this.user.settings=====",this.user.settings);
             this.user.set(settings);
             if (
                 prev.siteListDisabled.length !== settings.siteListDisabled.length || 
@@ -3237,4 +3237,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     
     const stayDarkMode = new StayDarkModeExtension();
     stayDarkMode.start();
+
+    // browser.storage.local.remove(["time","theme","syncSettings","detectDarkTheme","customThemes","automationBehaviour","automation","presets"])
+    // browser.storage.sync.remove(["time","theme","syncSettings","detectDarkTheme","customThemes","automationBehaviour","automation","presets"])
 })();

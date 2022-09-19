@@ -14,10 +14,10 @@
         
         let browserDomain = getDomain(window.location.href);
         let darkmodeSettingStr = window.localStorage.getItem("FETCH_DARK_SETTING");
-        let darkmodeSetting;
         if(darkmodeSettingStr && darkmodeSettingStr!=="" && darkmodeSettingStr !== "null" && darkmodeSettingStr !== "undefined" 
             && darkmodeSettingStr != "clean_up" && darkmodeSettingStr != "dark_mode"){
-            darkmodeSetting = JSON.parse(darkmodeSettingStr);
+            let darkmodeSettingStorage = JSON.parse(darkmodeSettingStr);
+            let darkmodeSetting = {...darkmodeSettingStorage}
             darkModeInit(darkmodeSetting);
             // console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=");
         }
@@ -32,21 +32,22 @@
             });
         }
 
-        const matchesMediaQuery = (query) => {
-            if ("window" in globalThis) {
-                return Boolean(window.matchMedia(query).matches);
-            }
-            return false;
-        };
-        const matchesDarkTheme = () => matchesMediaQuery("(prefers-color-scheme: dark)");
+        function matchesMediaQuery(query){
+            return Boolean(window.matchMedia(query).matches);
+        }
+        
+        function matchesDarkTheme () {
+            return matchesMediaQuery("(prefers-color-scheme: dark)");
+        } 
 
         function checkDarkState(darkmodeSetting){
+            // console.log("darkmodeSetting.siteListDisabled ====", darkmodeSetting.siteListDisabled , !darkmodeSetting.siteListDisabled.includes(browserDomain))
             if(typeof darkmodeSetting.darkState != "undefined" && darkmodeSetting.darkState !== "" && darkmodeSetting.darkState === "dark_mode"){
                 return true;
             }else{
                 if(typeof darkmodeSetting.isStayAround != "undefined" && darkmodeSetting.isStayAround !== "" && darkmodeSetting.isStayAround === "a"){
-                    if((matchesDarkTheme() && darkmodeSetting.toggleStatus!="off" && !darkmodeSetting.siteListDisabled.includes(browserDomain)) 
-                        || (!matchesDarkTheme() && darkmodeSetting.toggleStatus ==="on" && !darkmodeSetting.siteListDisabled.includes(browserDomain))){
+                    if((matchesDarkTheme() && darkmodeSetting.toggleStatus!="off" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled!=="[]" && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain)) 
+                        || (!matchesDarkTheme() && darkmodeSetting.toggleStatus ==="on" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled!=="[]" && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain))){
                         return true;
                     }
                 }
