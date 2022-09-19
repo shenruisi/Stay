@@ -430,7 +430,7 @@ UIPopoverPresentationControllerDelegate
 //    [self.view addSubview:self.segmentedControl];
     [self tableView];
     [self queryData];
-    self.tableView.tableHeaderView = nil;
+    self.tableView.sectionHeaderTopPadding = 0;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 }
 
@@ -696,7 +696,7 @@ UIPopoverPresentationControllerDelegate
         _segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
         _segmentedControl.selectedSegmentIndex = 0;
         CGFloat left = (self.view.width - 255) / 2;
-        _segmentedControl.frame =  CGRectMake(left, 0, 255, 35);
+        _segmentedControl.frame =  CGRectMake(left, 15, 255, 35);
         [_segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
     }
     return _segmentedControl;
