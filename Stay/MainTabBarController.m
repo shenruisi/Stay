@@ -6,7 +6,7 @@
 //
 
 #import "MainTabBarController.h"
-#import "SYSearchViewController.h"
+#import "SYBrowseViewController.h"
 #import "SYHomeViewController.h"
 #import "NavigationController.h"
 #import "SYMoreViewController.h"
@@ -38,7 +38,7 @@
     NSArray *titleArray = @[NSLocalizedString(@"settings.library","Library"),NSLocalizedString(@"settings.search","search"),NSLocalizedString(@"settings.more","more")];
     
     SYHomeViewController *homeController = [[SYHomeViewController alloc] init];
-    SYSearchViewController *searchController = [[SYSearchViewController alloc] init];
+    SYBrowseViewController *searchController = [[SYBrowseViewController alloc] init];
     SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];    
     
     UIColor *normalColor = RGB(144, 144, 144);
@@ -56,33 +56,25 @@
     UINavigationController *navC = [[UINavigationController alloc]initWithRootViewController:viewController];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     navC.tabBarItem.image = image;
+    selectImage = [selectImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [navC.tabBarItem setSelectedImage:selectImage];
 #ifdef Mac
     navC.tabBarItem.imageInsets = UIEdgeInsetsMake(3, 3, 0, 3);
 #else
     navC.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
 #endif
-    selectImage = [selectImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [navC.tabBarItem setSelectedImage:selectImage];
     viewController.navigationItem.title = title;
     navC.navigationBar.tintColor = FCStyle.accent;
-//    navC.navigationBar.barTintColor = RGB(138, 138, 138);
+////    navC.navigationBar.barTintColor = RGB(138, 138, 138);
     UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
     [appearance configureWithOpaqueBackground];
     appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     navC.navigationBar.standardAppearance = appearance;
     navC.navigationBar.scrollEdgeAppearance = appearance;
     UITabBarAppearance *tabbarAppearance = [[UITabBarAppearance alloc] init];
-    NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
-       paraStyle.alignment = NSTextAlignmentLeft;
-    [tabbarAppearance.stackedLayoutAppearance.selected setTitleTextAttributes:@{NSForegroundColorAttributeName: RGB(182, 32, 224),NSParagraphStyleAttributeName : paraStyle}];
-
-    [tabbarAppearance.inlineLayoutAppearance.selected setTitleTextAttributes:@{NSForegroundColorAttributeName: RGB(182, 32, 224),NSParagraphStyleAttributeName : paraStyle}];
     tabbarAppearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
     self.tabBar.scrollEdgeAppearance = tabbarAppearance;
     self.tabBar.standardAppearance = tabbarAppearance;
-    NSDictionary *dictHome = [NSDictionary dictionaryWithObject:UIColorWithRGBA(185,101,223,1)  forKey:NSForegroundColorAttributeName];
-    
-    [navC.tabBarItem setTitleTextAttributes:dictHome forState:UIControlStateSelected];
     
     [self addChildViewController:navC];
 }

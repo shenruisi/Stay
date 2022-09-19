@@ -57,6 +57,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *injectInto;
 @property (nonatomic, copy) NSString *license;
+@property (nonatomic, assign) NSInteger usedTimes;
+@property (nonatomic, copy) NSArray<NSString *> *plafroms;
+
 
 //Stay only
 @property (nonatomic, copy) NSString *stayEngine;

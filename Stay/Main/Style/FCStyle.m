@@ -108,6 +108,14 @@
     return [UIColor colorNamed:@"BorderGoldenColor"];
 }
 
++ (UIColor *)borderColor {
+    return [UIColor colorNamed:@"BorderColor"];
+}
++ (UIColor *)grayNoteColor {
+    return [UIColor colorNamed:@"GrayNote"];
+}
+
+
 + (UIFont *)title1{
 #ifdef iOS
     return [UIFont systemFontOfSize:28];

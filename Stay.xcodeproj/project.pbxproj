@@ -335,6 +335,17 @@
 		84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40C288E30CC002A0C1B /* flash@3x.png */; };
 		84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40C288E30CC002A0C1B /* flash@3x.png */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
+		84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
+		84CC9B5028C72C81002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
+		84CC9B5128C88E71002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
+		84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */; };
+		84CC9B5528D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */; };
+		84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5828D17DF5002EB493 /* BrowseDetailTableViewCell.m */; };
+		84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5828D17DF5002EB493 /* BrowseDetailTableViewCell.m */; };
+		84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */; };
+		84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */; };
+		84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
+		84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
 		84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4831D273AC51800217BB3 /* js-lib@3x.png */; };
 		84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48320273ACAC000217BB3 /* SYHomeViewController.m */; };
@@ -711,6 +722,16 @@
 		84C2B40C288E30CC002A0C1B /* flash@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flash@3x.png"; sourceTree = "<group>"; };
 		84C54CFA2753BDAF00A9F14C /* SYDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDetailViewController.h; sourceTree = "<group>"; };
 		84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.c.objc; path = SYDetailViewController.m; sourceTree = "<group>"; };
+		84CC9B4D28C72C80002EB493 /* SYBrowseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYBrowseViewController.h; sourceTree = "<group>"; };
+		84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYBrowseViewController.m; sourceTree = "<group>"; };
+		84CC9B5228D17C2E002EB493 /* SYBrowseExpandViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYBrowseExpandViewController.h; sourceTree = "<group>"; };
+		84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYBrowseExpandViewController.m; sourceTree = "<group>"; };
+		84CC9B5728D17DF5002EB493 /* BrowseDetailTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrowseDetailTableViewCell.h; sourceTree = "<group>"; };
+		84CC9B5828D17DF5002EB493 /* BrowseDetailTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrowseDetailTableViewCell.m; sourceTree = "<group>"; };
+		84CC9B5B28D1ADFA002EB493 /* HomeDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeDetailCell.h; sourceTree = "<group>"; };
+		84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeDetailCell.m; sourceTree = "<group>"; };
+		84CC9B5F28D1C290002EB493 /* SYNoDownLoadDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNoDownLoadDetailViewController.h; sourceTree = "<group>"; };
+		84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNoDownLoadDetailViewController.m; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		84F48317273A739800217BB3 /* MainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		84F4831D273AC51800217BB3 /* js-lib@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "js-lib@3x.png"; sourceTree = "<group>"; };
@@ -1460,15 +1481,47 @@
 			children = (
 				84C54CFA2753BDAF00A9F14C /* SYDetailViewController.h */,
 				84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */,
+				84CC9B5F28D1C290002EB493 /* SYNoDownLoadDetailViewController.h */,
+				84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */,
 				84AC68CF27E434E500F356DF /* SYNotesViewController.h */,
 				84AC68D027E434E500F356DF /* SYNotesViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		84CC9B4B28C72C35002EB493 /* SYBrowse */ = {
+			isa = PBXGroup;
+			children = (
+				84CC9B5628D17DA5002EB493 /* View */,
+				84CC9B4C28C72C46002EB493 /* Controller */,
+			);
+			path = SYBrowse;
+			sourceTree = "<group>";
+		};
+		84CC9B4C28C72C46002EB493 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				84CC9B4D28C72C80002EB493 /* SYBrowseViewController.h */,
+				84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */,
+				84CC9B5228D17C2E002EB493 /* SYBrowseExpandViewController.h */,
+				84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		84CC9B5628D17DA5002EB493 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				84CC9B5728D17DF5002EB493 /* BrowseDetailTableViewCell.h */,
+				84CC9B5828D17DF5002EB493 /* BrowseDetailTableViewCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		84F4830D273A69AA00217BB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				84CC9B4B28C72C35002EB493 /* SYBrowse */,
 				84C2B3FE288D82D2002A0C1B /* SYFlash */,
 				58FEB1E8283B57A400BC2A92 /* Style */,
 				58FEB1D9283B54C600BC2A92 /* Controls */,
@@ -1508,6 +1561,8 @@
 			children = (
 				84F48335273B709500217BB3 /* JSDetailCell.h */,
 				84F48336273B709500217BB3 /* JSDetailCell.m */,
+				84CC9B5B28D1ADFA002EB493 /* HomeDetailCell.h */,
+				84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2098,6 +2153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
+				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
@@ -2118,6 +2174,7 @@
 				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
 				84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
+				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
@@ -2127,6 +2184,7 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
@@ -2134,8 +2192,10 @@
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
+				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
+				84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
@@ -2190,6 +2250,7 @@
 			files = (
 				587689052719238000F834A4 /* StayUITests.m in Sources */,
 				587689072719238000F834A4 /* StayUITestsLaunchTests.m in Sources */,
+				84CC9B5128C88E71002EB493 /* SYBrowseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2239,6 +2300,7 @@
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
+				84CC9B5028C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
@@ -2257,8 +2319,11 @@
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
 				84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
+				84CC9B5528D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
 				58639C3D28631FB900AA80D5 /* EmptyViewController.m in Sources */,
 				588202642859E73900B2721A /* JSDetailEntity.m in Sources */,
+				84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
+				84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
@@ -2299,6 +2364,7 @@
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
+				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

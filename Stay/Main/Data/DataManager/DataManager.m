@@ -84,6 +84,9 @@
     if(![self isExitedColumn:@"status"]) {
         [self addColumn:@"user_config_script" column:@"status"];
     }
+    if(![self isExitedColumn:@"used"]) {
+        [self addColumn:@"user_config_script" column:@"used"];
+    }
     return;
 }
 
