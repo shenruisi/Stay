@@ -62,7 +62,7 @@
 //    [self createDetailView];
 #endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
-    self.navigationItem.rightBarButtonItem = [self rightIcon];
+//    self.navigationItem.rightBarButtonItem = [self rightIcon];
 #ifdef Mac
     self.navigationController.navigationBarHidden = YES;
 #endif
@@ -647,7 +647,7 @@
         _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 25)];
 #endif
         
-        _actBtn.font = FCStyle.subHeadlineBold;
+        _actBtn.font = FCStyle.footnoteBold;
         _actBtn.layer.cornerRadius = 12.5;
         _actBtn.right = self.view.width - 12;
         [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];

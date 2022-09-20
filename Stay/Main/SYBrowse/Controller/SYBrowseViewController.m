@@ -56,8 +56,8 @@
         [subView removeFromSuperview];
     }
     _entity = entity;
-//    NSArray *blocks = entity;
-    NSMutableArray *blocks = [NSMutableArray arrayWithObjects:entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0], nil];
+    NSArray *blocks = entity;
+//    NSMutableArray *blocks = [NSMutableArray arrayWithObjects:entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0], nil];
     if(blocks.count == 0 ) {
         return;
     }
@@ -144,8 +144,8 @@
     }
     
     _entity = entity;
-//    NSArray *blocks = entity;
-    NSMutableArray *blocks = [NSMutableArray arrayWithObjects:entity[1],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0], nil];
+    NSArray *blocks = entity;
+
     if(blocks.count == 0 ) {
         return;
     }
@@ -211,8 +211,8 @@
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
-//    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-    [imageView sd_setImageWithURL:[NSURL URLWithString: @"https://res.stayfork.app/scripts/8E61538B6D32E64E6F38BF2AB4416C73/icon.png"]];
+    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
+//    [imageView sd_setImageWithURL:[NSURL URLWithString: @"https://res.stayfork.app/scripts/8E61538B6D32E64E6F38BF2AB4416C73/icon.png"]];
 
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
@@ -274,6 +274,10 @@
     
     [view addSubview:btn];
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(noDownloadDetail:)];
+    if(entity != nil) {
+        tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.controller action:@selector(queryDetail:)];
+        objc_setAssociatedObject (tapGesture , @"uuid", uuid, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
     [tapGesture setName:uuid];
     
     [view addGestureRecognizer:tapGesture];
@@ -443,6 +447,11 @@ UIPopoverPresentationControllerDelegate
     return  view;
 }
 
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    self.tableView.frame = self.view.bounds;
+    [self.tableView reloadData];
+}
 
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
@@ -479,13 +488,11 @@ UIPopoverPresentationControllerDelegate
 
 #pragma mark - UITableViewDelegate
 
-
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     return [self createTableHeaderView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     if(_selectedIdx == 1) {
         return  self.allDatas.count;
     } else {
@@ -507,9 +514,10 @@ UIPopoverPresentationControllerDelegate
             _FeaturedAlubmTableViewCell *cell = [[_FeaturedAlubmTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
             cell.contentView.width = self.view.width;
             cell.width = self.view.width;
+            cell.controller = self;
+            cell.navigationController = self.navigationController;
             cell.headTitle = dic[@"title"];
             cell.entity = dic[@"userscripts"];
-            cell.navigationController = self.navigationController;
             cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         } else {
@@ -655,7 +663,7 @@ UIPopoverPresentationControllerDelegate
     });
 }
 
-- (void)queryDetail:(UIButton *)sender {
+- (void)queryDetail:(id )sender {
     NSString *uuid = objc_getAssociatedObject(sender,@"uuid");
     UserScript *model = [[DataManager shareManager] selectScriptByUuid:uuid];
     SYDetailViewController *cer = [[SYDetailViewController alloc] init];
@@ -708,6 +716,8 @@ UIPopoverPresentationControllerDelegate
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.separatorColor = FCStyle.fcSeparator;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.backgroundColor = FCStyle.secondaryBackground;
         [self.view addSubview:_tableView];
     }

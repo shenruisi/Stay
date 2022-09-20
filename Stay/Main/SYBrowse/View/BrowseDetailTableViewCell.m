@@ -52,8 +52,8 @@
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
-//    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-    [imageView sd_setImageWithURL:[NSURL URLWithString: @"https://res.stayfork.app/scripts/8E61538B6D32E64E6F38BF2AB4416C73/icon.png"]];
+    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
+//    [imageView sd_setImageWithURL:[NSURL URLWithString: @"https://res.stayfork.app/scripts/8E61538B6D32E64E6F38BF2AB4416C73/icon.png"]];
 
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
@@ -61,6 +61,7 @@
     [imageBox addSubview:imageView];
     [self.contentView addSubview:imageBox];
 //    view.backgroundColor = FCStyle.background;
+    
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 16)];
     headerLabel.font = FCStyle.body;
