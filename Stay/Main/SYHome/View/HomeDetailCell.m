@@ -70,15 +70,15 @@
     }
 //    view.backgroundColor = FCStyle.background;
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 234, 17)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 234, 19)];
     headerLabel.font = FCStyle.bodyBold;
-    headerLabel.textColor = dic.active == 0 ? [FCStyle.fcBlack colorWithAlphaComponent:0.7] : FCStyle.fcBlack;
+    headerLabel.textColor = dic.active == 0 ? [FCStyle.fcBlack colorWithAlphaComponent:0.5] : FCStyle.fcBlack;
     headerLabel.text = dic.name;
     [self.contentView addSubview:headerLabel];
     
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 234, 17)];
     subLabel.font = FCStyle.footnote;
-    subLabel.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.7] : FCStyle.fcSecondaryBlack;
+    subLabel.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.5] : FCStyle.fcSecondaryBlack;
     subLabel.text = dic.desc;
     subLabel.top = headerLabel.bottom + 5;
     [self.contentView addSubview:subLabel];
@@ -127,7 +127,7 @@
     
     UILabel *actLabel = [[UILabel alloc]init];
     actLabel.font = FCStyle.footnoteBold;
-    actLabel.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.7] : FCStyle.accent;
+    actLabel.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.accent;
     actLabel.text = dic.active == 0 ? NSLocalizedString(@"Stopped", @"") : NSLocalizedString(@"Activated", @"");
     [actLabel sizeToFit];
     actLabel.centerY = sImageView.centerY;
@@ -147,7 +147,7 @@
     UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 15)];
     version.font = FCStyle.footnoteBold;
     version.text = dic.version;
-    version.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.7] : FCStyle.grayNoteColor;
+    version.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor;
     version.centerY = sImageView.centerY;
     version.left = versionImageView.right + 5;
     [self.contentView addSubview:version];
