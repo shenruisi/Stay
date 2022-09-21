@@ -917,7 +917,7 @@
          @{
              @"name":@"VERSION",
              @"desc":self.script.version,
-             @"color":FCStyle.fcBlack,
+             @"color":FCStyle.grayNoteColor,
          }
      ];
      

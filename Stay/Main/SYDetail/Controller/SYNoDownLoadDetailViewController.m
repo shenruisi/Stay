@@ -789,7 +789,7 @@
          @{
              @"name":@"INSTALLS",
              @"desc": used,
-             @"color":FCStyle.fcBlack
+             @"color":FCStyle.grayNoteColor
          },
          @{
              @"name":@"SCRIPT",
@@ -805,7 +805,7 @@
          @{
              @"name":@"VERSION",
              @"desc":self.scriptDic[@"version"],
-             @"color":FCStyle.fcBlack,
+             @"color":FCStyle.grayNoteColor,
          }
      ];
      

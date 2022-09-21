@@ -61,7 +61,7 @@
     if(blocks.count == 0 ) {
         return;
     }
-    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 30 , 72 + (self.contentView.width - 40) / 2.25F)];
+    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 15, self.contentView.width - 30 , 72 + (self.contentView.width - 40) / 2.25F)];
     _bannerView.scrollEnabled = true;
     _bannerView.pagingEnabled = true;
     _bannerView.clipsToBounds = NO;
@@ -150,7 +150,7 @@
         return;
     }
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 15, 320, 19)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 19)];
     titleLabel.text = _headTitle;
     titleLabel.font = FCStyle.headlineBold;
     titleLabel.textColor = FCStyle.fcBlack;
@@ -176,9 +176,9 @@
     }
     CGFloat heigth = 174;
     if(blocks.count >= 3) {
-        heigth = 174;
+        heigth = 78 * 3;
     } else {
-        heigth = 58 * blocks.count;
+        heigth = 78 * blocks.count;
     }
     _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, titleLabel.bottom + 20, width , heigth)];
     _bannerView.scrollEnabled = true;
@@ -197,7 +197,7 @@
                 break;
             }
             UIView *cellView = [self createCellView:blocks[i + j]];
-            cellView.top = j * 58;
+            cellView.top = j * 78;
             [blockView addSubview:cellView];
         }
         blockView.left = (blockView.width + 10) * (i / 3) + 20 ;
@@ -210,10 +210,10 @@
 }
 
 - (UIView *)createCellView:(NSDictionary *)dic{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 58)];
-    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 48, 48)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 78)];
+    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 10, 48, 48)];
     imageBox.layer.cornerRadius = 10;
-    imageBox.layer.borderWidth = 2;
+    imageBox.layer.borderWidth = 1;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
@@ -235,7 +235,7 @@
         imageBox.hidden = true;
     }
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 8, 234, 16)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 234, 16)];
     headerLabel.font = FCStyle.body;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[@"name"];
@@ -252,8 +252,9 @@
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 40 - 40 - 10, 1)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  subLabel.bottom + 13;
-    line.left = imageBox.right + 10;
+    line.top =  subLabel.bottom + 23;
+    line.left = left;
+    line.width = self.contentView.width - 40 - 10 - left;
     [view addSubview:line];
     
     NSString *uuid = dic[@"uuid"];
@@ -282,7 +283,7 @@
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     
-    btn.centerY = imageBox.centerY;
+    btn.top = headerLabel.top;
     btn.right = self.contentView.width - 40 - 10;
     btn.layer.cornerRadius = 12.5;
     
@@ -603,9 +604,9 @@ UIPopoverPresentationControllerDelegate
         } else if([dic[@"type"] isEqualToString:@"album"]) {
             NSArray *array =  dic[@"userscripts"];
             if(array.count >= 3) {
-                return 230;
+                return 54 + 78 * 3;
             } else {
-                return 51 + 58 * array.count;
+                return 51 + 78 * array.count;
             }
         }
         

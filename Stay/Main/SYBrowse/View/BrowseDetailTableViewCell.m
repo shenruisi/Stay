@@ -67,12 +67,18 @@
 //    view.backgroundColor = FCStyle.background;
     
     NSString *icon = dic[@"icon_url"];
-    CGFloat left = 20;
+    CGFloat left = 15;
     if( icon != nil && icon.length > 0){
         left = imageBox.right + 10;
     } else {
         imageBox.hidden = true;
     }
+    
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 15, 1)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top =  138;
+    line.left = 15;
+    [self.contentView addSubview:line];
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 16)];
     headerLabel.font = FCStyle.body;
