@@ -176,6 +176,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    for (UIView *subView in cell.contentView.subviews) {
+        [subView removeFromSuperview];
+    }
     
     if(self.scriptDic == nil) {
         return cell;
@@ -260,16 +263,17 @@
      CGFloat top = descDetailLabel.bottom + 10;
     
     
-    NSArray *plafroms = self.scriptDic[@"plafroms"];
+    NSArray *plafroms = self.scriptDic[@"platforms"];
      if(plafroms != nil && plafroms.count > 0) {
           UIView *availableView =  [self createAvailableView];
           availableView.left = 15;
           availableView.top = top;
           [cell.contentView addSubview:availableView];
-          
           top = availableView.bottom + 10;
-          
      }
+    
+    NSArray *notes = self.scriptDic[@"notes"];
+    
         
      UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
      [cell.contentView addSubview:buttonView];
@@ -375,20 +379,20 @@
 
 - (UIView *)createAvailableView {
      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 21)];
-     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 81, 19)];
+     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 19)];
      label.text = @"Avaliable on";
-     label.font = FCStyle.subHeadline;
-     label.textColor =  FCStyle.fcPlaceHolder;
+     label.font = FCStyle.footnoteBold;
+     label.textColor =  FCStyle.fcSecondaryBlack;
      [view addSubview:label];
-     
+     [label sizeToFit];
      CGFloat imageLeft = label.right + 5;
-     NSArray *plafroms = self.scriptDic[@"plafroms"];
+     NSArray *plafroms = self.scriptDic[@"platforms"];
      for(int i = 0; i < plafroms.count; i++) {
          NSString *name = plafroms[i];
          if ([name isEqualToString:@"mac"]) {
              name = @"laptopcomputer";
          }
-         UIImageView *imageView = [[UIImageView alloc] initWithImage:[ImageHelper sfNamed:name font:FCStyle.body color:FCStyle.fcBlack]];
+         UIImageView *imageView = [[UIImageView alloc] initWithImage:[ImageHelper sfNamed:name font:FCStyle.body color:FCStyle.grayNoteColor]];
          imageView.size = imageView.image.size;
          imageView.bottom = label.bottom;
          imageView.left = imageLeft;

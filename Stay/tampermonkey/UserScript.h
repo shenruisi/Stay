@@ -70,6 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger status;
 
+@property (nonatomic, assign) BOOL stayOnly;
+
 + (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
 - (NSDictionary *)toDictionaryWithoutContent;

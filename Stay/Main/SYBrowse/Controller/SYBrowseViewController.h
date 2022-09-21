@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
 #import "NavigateViewController.h"
 @interface SYBrowseViewController : NavigateViewController
@@ -15,5 +14,3 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYBrowseViewController : UIViewController
 #endif
 @end
-
-NS_ASSUME_NONNULL_END

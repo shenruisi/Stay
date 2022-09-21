@@ -8,8 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 #ifdef Mac
 #import "NavigateViewController.h"
 @interface SYNoDownLoadDetailViewController : NavigateViewController
@@ -21,5 +19,3 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, assign) BOOL saveSuceess;
 @end
-
-NS_ASSUME_NONNULL_END

@@ -61,7 +61,7 @@
     if(blocks.count == 0 ) {
         return;
     }
-    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 30 , 230)];
+    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 30 , 72 + (self.contentView.width - 40) / 2.25F)];
     _bannerView.scrollEnabled = true;
     _bannerView.pagingEnabled = true;
     _bannerView.clipsToBounds = NO;
@@ -78,13 +78,13 @@
         left = banner.right;
     }
     
-    _bannerView.contentSize = CGSizeMake(left ,230);
+    _bannerView.contentSize = CGSizeMake(left ,72 + (self.contentView.width - 40) / 2.25F);
     
     [self.contentView addSubview:_bannerView];
 }
 
 - (UIView *)createBlockView:(NSDictionary *)dic{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 231)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 72 + (self.contentView.width - 40) / 2.25F)];
     view.clipsToBounds = YES;
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 18)];
     headerLabel.font = FCStyle.headlineBold;
@@ -99,7 +99,7 @@
     subLabel.top = headerLabel.bottom + 5;
     [view addSubview:subLabel];
     
-    UIImageView *bannerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 158)];
+    UIImageView *bannerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, (self.contentView.width - 40) / 2.25F)];
     [bannerImageView sd_setImageWithURL:[NSURL URLWithString: dic[@"imageUrl"]]];
     bannerImageView.layer.cornerRadius = 10;
     bannerImageView.clipsToBounds = YES;
@@ -150,7 +150,7 @@
         return;
     }
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, 320, 19)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 15, 320, 19)];
     titleLabel.text = _headTitle;
     titleLabel.font = FCStyle.headlineBold;
     titleLabel.textColor = FCStyle.fcBlack;
@@ -174,7 +174,13 @@
     if(rowSize >= 2) {
         width = self.contentView.width - 30;
     }
-    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, titleLabel.bottom + 20, width , 168)];
+    CGFloat heigth = 168;
+    if(blocks.count >= 3) {
+        heigth = 168;
+    } else {
+        heigth = 56 * blocks.count;
+    }
+    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, titleLabel.bottom + 20, width , heigth)];
     _bannerView.scrollEnabled = true;
     _bannerView.pagingEnabled = true;
     _bannerView.clipsToBounds = NO;
@@ -182,9 +188,9 @@
     _bannerView.showsHorizontalScrollIndicator = false;
     _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 0;
+  
     for (int i = 0; i < blocks.count; i+=3) {
-        
-        UIView *blockView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 168)];
+        UIView *blockView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, heigth)];
         blockView.clipsToBounds = YES;
         for(int j = 0; j <= 2; j++) {
             if(i + j >= blocks.count) {
@@ -199,7 +205,7 @@
         left = blockView.right;
     }
     
-    _bannerView.contentSize = CGSizeMake(left ,168);
+    _bannerView.contentSize = CGSizeMake(left ,heigth);
     [self.contentView addSubview:_bannerView];
 }
 
@@ -581,7 +587,19 @@ UIPopoverPresentationControllerDelegate
     }else if(_selectedIdx == 1) {
         return 138.0f;
     } else {
-        return 230.0f;
+        NSDictionary *dic = self.datas[indexPath.row];
+        if([dic[@"type"] isEqualToString:@"banner"]) {
+            return (self.view.width - 40) / 2.25f + 72.0f;
+        } else if([dic[@"type"] isEqualToString:@"album"]) {
+            NSArray *array =  dic[@"userscripts"];
+            if(array.count >= 3) {
+                return 230;
+            } else {
+                return 72 + 56 * array.count;
+            }
+        }
+        
+        return 1.0f;
     }
 }
 

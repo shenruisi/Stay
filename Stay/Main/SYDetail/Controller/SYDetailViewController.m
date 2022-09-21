@@ -232,6 +232,10 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+     
+     for (UIView *subView in cell.contentView.subviews) {
+         [subView removeFromSuperview];
+     }
 
      CGFloat left = 15;
      CGFloat titleLabelLeftSize = 0;
@@ -534,11 +538,12 @@
 
 - (UIView *)createAvailableView {
      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 21)];
-     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 81, 19)];
+     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 19)];
      label.text = @"Avaliable on";
-     label.font = FCStyle.subHeadline;
-     label.textColor =  FCStyle.fcPlaceHolder;
+     label.font = FCStyle.footnoteBold;
+     label.textColor =  FCStyle.fcSecondaryBlack;
      [view addSubview:label];
+     [label sizeToFit];
      
      CGFloat imageLeft = label.right + 5;
      for(int i = 0; i < self.script.plafroms.count; i++) {
@@ -546,7 +551,7 @@
          if ([name isEqualToString:@"mac"]) {
              name = @"laptopcomputer";
          }
-         UIImageView *imageView = [[UIImageView alloc] initWithImage:[ImageHelper sfNamed:name font:FCStyle.body color:FCStyle.fcBlack]];
+         UIImageView *imageView = [[UIImageView alloc] initWithImage:[ImageHelper sfNamed:name font:FCStyle.body color:FCStyle.grayNoteColor]];
          imageView.size = imageView.image.size;
          imageView.bottom = label.bottom;
          imageView.left = imageLeft;
