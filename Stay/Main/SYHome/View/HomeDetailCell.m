@@ -44,7 +44,7 @@
 }
 
 - (void )createCellView:(UserScript *)dic{
-    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(10, 12, 48, 48)];
+    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(20, 12, 48, 48)];
     imageBox.layer.cornerRadius = 10;
     imageBox.layer.borderWidth = 1;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
@@ -62,7 +62,7 @@
     imageView.centerY = 24;
     [imageBox addSubview:imageView];
     [self.contentView addSubview:imageBox];
-    CGFloat left = 10;
+    CGFloat left = 20;
     if (dic.icon != NULL && dic.icon.length > 0) {
         left = imageBox.right + 10;
     } else {
@@ -70,15 +70,15 @@
     }
 //    view.backgroundColor = FCStyle.background;
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 16)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 234, 17)];
     headerLabel.font = FCStyle.body;
-    headerLabel.textColor = FCStyle.fcBlack;
+    headerLabel.textColor = dic.active == 0 ? [FCStyle.fcBlack colorWithAlphaComponent:0.7] : FCStyle.fcBlack;
     headerLabel.text = dic.name;
     [self.contentView addSubview:headerLabel];
     
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 234, 17)];
     subLabel.font = FCStyle.footnote;
-    subLabel.textColor = FCStyle.fcSecondaryBlack;
+    subLabel.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.7] : FCStyle.fcSecondaryBlack;
     subLabel.text = dic.desc;
     subLabel.top = headerLabel.bottom + 5;
     [self.contentView addSubview:subLabel];
@@ -122,12 +122,12 @@
     UIImageView *sImageView = [[UIImageView alloc] initWithImage:simage];
     sImageView.frame = CGRectMake(0, 0, 15, 15);
     sImageView.top = imageBox.bottom + 10;
-    sImageView.left = 10;
+    sImageView.left = 20;
     [self.contentView addSubview:sImageView];
     
     UILabel *actLabel = [[UILabel alloc]init];
     actLabel.font = FCStyle.footnoteBold;
-    actLabel.textColor = dic.active == 0 ?FCStyle.grayNoteColor:FCStyle.accent;
+    actLabel.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.7] : FCStyle.accent;
     actLabel.text = dic.active == 0 ? NSLocalizedString(@"Stopped", @"") : NSLocalizedString(@"Activated", @"");
     [actLabel sizeToFit];
     actLabel.centerY = sImageView.centerY;
@@ -147,7 +147,7 @@
     UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 15)];
     version.font = FCStyle.footnoteBold;
     version.text = dic.version;
-    version.textColor = FCStyle.grayNoteColor;
+    version.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.7] : FCStyle.grayNoteColor;
     version.centerY = sImageView.centerY;
     version.left = versionImageView.right + 5;
     [self.contentView addSubview:version];

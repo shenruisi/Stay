@@ -41,7 +41,7 @@
     SYBrowseViewController *searchController = [[SYBrowseViewController alloc] init];
     SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];    
     
-    UIColor *normalColor = RGB(144, 144, 144);
+    UIColor *normalColor = FCStyle.grayNoteColor;
     
 
     [self setUpOneChildViewController:homeController image:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[0]];
