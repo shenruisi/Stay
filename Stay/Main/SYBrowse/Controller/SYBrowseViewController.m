@@ -81,7 +81,7 @@
     _bannerView.contentSize = CGSizeMake(left ,56 + (self.contentView.width - 40) / 2.25F);
     
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  (self.contentView.width - 40) / 2.25F + 71;
     line.left = 20;
@@ -93,7 +93,7 @@
 - (UIView *)createBlockView:(NSDictionary *)dic{
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 56 + (self.contentView.width - 40) / 2.25F)];
     view.clipsToBounds = YES;
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 18)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 21)];
     headerLabel.font = FCStyle.title3Bold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[@"title"];
@@ -164,7 +164,7 @@
         return;
     }
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 19)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 21)];
     titleLabel.text = _headTitle;
     titleLabel.font = FCStyle.title3Bold;
     titleLabel.textColor = FCStyle.fcBlack;
@@ -264,9 +264,9 @@
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 40 - 40 - 10, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 40 - 40 - 10, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  subLabel.bottom + 23;
+    line.top =  subLabel.bottom + 23.5;
     line.left = left;
     line.width = self.contentView.width - 40 - 10 - left;
     [view addSubview:line];
@@ -476,12 +476,12 @@ UIPopoverPresentationControllerDelegate
 
 
 - (UIView *)createTableHeaderView {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 16 + 15 + 35)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
     [view addSubview:self.segmentedControl];
     view.backgroundColor = FCStyle.background;
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top = 65;
+    line.top = 49.5;
     [view addSubview:line];
 //    self.tableView.tableHeaderView = view;
     return  view;
@@ -673,7 +673,7 @@ UIPopoverPresentationControllerDelegate
     if(_inSearch == TRUE) {
         return 0.1;
     }
-    return 65;
+    return 50;
 }
 
 - (void)queryAllData{
@@ -857,7 +857,7 @@ UIPopoverPresentationControllerDelegate
         _segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
         _segmentedControl.selectedSegmentIndex = 0;
         CGFloat left = (self.view.width - 200) / 2;
-        _segmentedControl.frame =  CGRectMake(left, 15, 200, 30);
+        _segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
         [_segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
     }
     return _segmentedControl;
