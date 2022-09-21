@@ -56,6 +56,7 @@
     }
     cell.contentView.width = self.view.width;
     cell.navigationController = self.navigationController;
+    cell.controller = self;
     cell.entity = self.data[indexPath.row];
     return cell;
 }
@@ -99,7 +100,6 @@
 }
 
 - (void)getDetail:(UIButton *)sender {
-    
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
 

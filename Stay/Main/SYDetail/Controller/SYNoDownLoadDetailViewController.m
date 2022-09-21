@@ -21,7 +21,7 @@
 #import "UIImageView+WebCache.h"
 #import "ImageHelper.h"
 #import "SYNetworkUtils.h"
-
+#import "LoadingSlideController.h"
 
 #ifdef Mac
 #import "QuickAccess.h"
@@ -42,6 +42,8 @@
 @property (nonatomic, assign) CGFloat scrollerTop;
 @property (nonatomic, strong) UIView *navigationBarCover;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
@@ -69,11 +71,14 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)scriptSaveSuccess:(id)sender{
+    _saveSuceess = true;
+//    [self createDetailView];
+}
+
 
 - (void)queryData{
-//    if (self.datas.count == 0){
-//        [self.simpleLoadingView start];
-//    }
+//    [self.simpleLoadingView start];
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
 
         
@@ -114,17 +119,18 @@
     [self reload];
 }
 
-//- (void)navigateViewWillAppear:(BOOL)animated{
-//    [self reload];
-//}
+- (void)navigateViewWillAppear:(BOOL)animated{
+    [self reload];
+}
 
 - (void)reload{
+    if(_saveSuceess) {
+        [self.navigationController popViewControllerAnimated:TRUE];
+    }
     self.navigationBarCover = nil;
     self.actBtn = nil;
     self.matchScrollView = nil;
     self.grantScrollView = nil;
-    self.whiteTableView = nil;
-    self.blackTableView = nil;
     self.scrollView = nil;
     self.slideView = nil;
     self.slideLineView = nil;
@@ -140,18 +146,15 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
+    if(_saveSuceess) {
+        [self.navigationController popViewControllerAnimated:TRUE];
+    }
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
 }
-
-
-
-
-
-
 
 
 #pragma mark - UITableViewDelegate
@@ -178,12 +181,23 @@
         return cell;
     }
 
-     CGFloat left = 15;
-     CGFloat titleLabelLeftSize = 0;
-     if(self.scriptDic[@"icon_url"] != NULL) {
-         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(left,15,57,57)] ;
-         [imageview sd_setImageWithURL:[NSURL URLWithString:self.scriptDic[@"icon_url"] ] ];
-         [cell.contentView addSubview:imageview];
+    CGFloat left = 15;
+    CGFloat titleLabelLeftSize = 0;
+    NSString *icon = self.scriptDic[@"icon_url"];
+    
+    if(icon != NULL && icon.length > 0) {
+         UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 57, 57)];
+         imageBox.layer.cornerRadius = 10;
+         imageBox.layer.borderWidth = 1;
+         imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+         [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
+         imageView.clipsToBounds = YES;
+         imageView.centerX = 28.5;
+         imageView.centerY = 28.5;
+         [imageBox addSubview:imageView];
+         [cell.contentView addSubview:imageBox];
+
          titleLabelLeftSize = 15 + 57;
      }
      
@@ -650,10 +664,53 @@
         _actBtn.font = FCStyle.footnoteBold;
         _actBtn.layer.cornerRadius = 12.5;
         _actBtn.right = self.view.width - 12;
-        [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_actBtn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
 
     }
     return _actBtn;
+}
+
+
+- (void)getDetail:(UIButton *)sender {
+
+    NSString *downloadUrl = self.scriptDic[@"hosting_url"];
+    NSString *name = objc_getAssociatedObject(sender,@"name");
+    self.loadingSlideController.originSubText = name;
+    [self.loadingSlideController show];
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+     [set addCharactersInString:@"#"];
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        dispatch_async(dispatch_get_main_queue(),^{
+            if(data != nil ) {
+
+                if (self.loadingSlideController.isShown){
+                    [self.loadingSlideController dismiss];
+                    self.loadingSlideController = nil;
+                }
+                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                SYEditViewController *cer = [[SYEditViewController alloc] init];
+                cer.content = str;
+                cer.downloadUrl = downloadUrl;
+#ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+#else
+                [self.navigationController pushViewController:cer animated:true];
+#endif
+
+            }
+            else{
+                [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                dispatch_get_main_queue(), ^{
+                    if (self.loadingSlideController.isShown){
+                        [self.loadingSlideController dismiss];
+                        self.loadingSlideController = nil;
+                    }
+                });
+            }
+        });
+    });
 }
 
 - (UIView *)baseNote:(NSString *)title{
@@ -726,7 +783,7 @@
      
      NSArray *array =  @[
          @{
-             @"name":@"USED",
+             @"name":@"INSTALLS",
              @"desc": used,
              @"color":FCStyle.fcBlack
          },
@@ -809,46 +866,6 @@
      return view;
 }
 
-- (UIView *)creteSitesView:(NSString *)site type:(NSString *)type {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 23, 48)];
-    view.backgroundColor = FCStyle.secondaryPopup;
-    view.layer.cornerRadius = 8;
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 323, 19)];
-    title.text = site;
-    title.font = FCStyle.body;
-    title.textColor = FCStyle.fcBlack;
-    title.centerY = 24;
-    title.left = 12;
-
-    [view addSubview:title];
-    
-    UIImage *image =  [UIImage systemImageNamed:@"minus.circle"
-                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
-    image = [image imageWithTintColor:FCStyle.fcBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, 0, 23, 23);
-    [btn setBackgroundImage:image forState:UIControlStateNormal];
-    btn.centerY = 24;
-    btn.right = self.view.width - 15 - 18;
-    [btn addTarget:self action:@selector(updateSite:) forControlEvents:UIControlEventTouchUpInside];
-    objc_setAssociatedObject (btn , @"site", site, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    objc_setAssociatedObject (btn , @"type", type, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [view addSubview:btn];
-    return view;
-}
-
-- (void)addBlackSite {
-    [self.sYTextInputViewController updateNotificationName:@"blackSiteNotification"];
-    [self.sYTextInputViewController show];
-}
-
-
-
-- (void)addWhiteSite {
-    [self.sYTextInputViewController updateNotificationName:@"whiteSiteNotification"];
-    [self.sYTextInputViewController show];
-}
 
 
 - (SYTextInputViewController *)sYTextInputViewController {
@@ -882,6 +899,14 @@
     return _tableView;
 }
 
+- (LoadingSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[LoadingSlideController alloc] init];
+        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+    }
+    
+    return _loadingSlideController;
+}
 
 
 @end

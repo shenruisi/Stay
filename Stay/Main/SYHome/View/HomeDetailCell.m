@@ -62,6 +62,12 @@
     imageView.centerY = 24;
     [imageBox addSubview:imageView];
     [self.contentView addSubview:imageBox];
+    CGFloat left = 20;
+    if (dic.icon != NULL && dic.icon.length > 0) {
+        left = imageBox.right + 10;
+    } else {
+        imageBox.hidden = true;
+    }
 //    view.backgroundColor = FCStyle.background;
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 16)];
@@ -76,7 +82,7 @@
     subLabel.text = dic.desc;
     subLabel.top = headerLabel.bottom + 5;
     [self.contentView addSubview:subLabel];
-    headerLabel.left = subLabel.left = imageBox.right + 10;
+    headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];

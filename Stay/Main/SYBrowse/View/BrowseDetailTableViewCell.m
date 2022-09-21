@@ -12,6 +12,10 @@
 #import "UIImageView+WebCache.h"
 #import <objc/runtime.h>
 #import "ImageHelper.h"
+#import "SYNoDownLoadDetailViewController.h"
+#ifdef Mac
+#import "QuickAccess.h"
+#endif
 @implementation BrowseDetailTableViewCell
 
 
@@ -62,6 +66,13 @@
     [self.contentView addSubview:imageBox];
 //    view.backgroundColor = FCStyle.background;
     
+    NSString *icon = dic[@"icon_url"];
+    CGFloat left = 20;
+    if( icon != nil && icon.length > 0){
+        left = imageBox.right + 10;
+    } else {
+        imageBox.hidden = true;
+    }
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 16)];
     headerLabel.font = FCStyle.body;
@@ -75,7 +86,7 @@
     subLabel.text = dic[@"desc"];
     subLabel.top = headerLabel.bottom + 5;
     [self.contentView addSubview:subLabel];
-    headerLabel.left = subLabel.left = imageBox.right + 10;
+    headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
 //
 //    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];
@@ -138,6 +149,13 @@
         top += 10;
     }
     
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(noDownloadDetail:)];
+    if(entity != nil) {
+        tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.controller action:@selector(queryDetail:)];
+        objc_setAssociatedObject (tapGesture , @"uuid", uuid, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    }
+    [tapGesture setName:uuid];
+    [self.contentView addGestureRecognizer:tapGesture];
     
     NSArray *tags = dic[@"tags"];
     
@@ -166,6 +184,18 @@
     
 }
 
+
+-(void)noDownloadDetail:(UITapGestureRecognizer *)tap {
+    NSString* uuid = tap.name;
+    SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
+    cer.uuid = uuid;
+#ifdef Mac
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
+    [self.navigationController pushViewController:cer animated:true];
+#endif
+    
+}
 
 
 

@@ -221,6 +221,14 @@
     [view addSubview:imageBox];
     view.backgroundColor = FCStyle.secondaryBackground;
     
+    CGFloat left = 0;
+    NSString *icon = dic[@"icon_url"];
+    if( icon != nil && icon.length > 0){
+        left = imageBox.right + 10;
+    } else {
+        imageBox.hidden = true;
+    }
+    
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 8, 234, 16)];
     headerLabel.font = FCStyle.body;
     headerLabel.textColor = FCStyle.fcBlack;
@@ -233,7 +241,7 @@
     subLabel.text = dic[@"desc"];
     subLabel.top = headerLabel.bottom + 5;
     [view addSubview:subLabel];
-    headerLabel.left = subLabel.left = imageBox.right + 10;
+    headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 40 - 40 - 10, 1)];
@@ -397,12 +405,14 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *datas; //featuredata
 @property (nonatomic, strong) NSMutableArray *allDatas;
+@property (nonatomic, strong) NSMutableArray *searchDatas;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) BroSimpleLoadingView *simpleLoadingView;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, assign) NSInteger pageNo;
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@property (nonatomic, assign) bool inSearch;
 
 
 @end
@@ -464,36 +474,44 @@ UIPopoverPresentationControllerDelegate
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 //    [searchBar resignFirstResponder];
     [self.searchController setActive:NO];
-//    [_results removeAllObjects];
-//    [self reloadTableView];
+    _inSearch = false;
+    [_searchDatas removeAllObjects];
+    [self.tableView reloadData];
 //    [self.tableView reloadData];
 
 }
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     [self.searchController setActive:YES];
-//    [_results removeAllObjects];
-//    [self.tableView reloadData];
+    _inSearch = true;
+    [self.tableView reloadData];
     return YES;
 }
 
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-//    [_results removeAllObjects];
-//    if(searchText.length > 0) {
+    [_searchDatas removeAllObjects];
+    if(searchText.length > 0) {
 //        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
-//    }
-//    [self.tableView reloadData];
+       [self querySearchData:searchText];
+    }
+    [self.tableView reloadData];
 }
 
 
 #pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return [self createTableHeaderView];
+    if(_inSearch == TRUE) {
+        return nil;
+    } else {
+        return [self createTableHeaderView];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(_selectedIdx == 1) {
+    if(_inSearch == TRUE) {
+        return self.searchDatas.count;
+    } else if(_selectedIdx == 1) {
         return  self.allDatas.count;
     } else {
         return  self.datas.count;
@@ -501,35 +519,48 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(_selectedIdx == 0) {
-        NSDictionary *dic = self.datas[indexPath.row];
-        if([dic[@"type"] isEqualToString:@"banner"]) {
-            _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
-            cell.contentView.width = self.view.width;
-            cell.width = self.view.width;
-            cell.entity = dic[@"blocks"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-            return cell;
-        } else if([dic[@"type"] isEqualToString:@"album"]){
-            _FeaturedAlubmTableViewCell *cell = [[_FeaturedAlubmTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
-            cell.contentView.width = self.view.width;
-            cell.width = self.view.width;
-            cell.controller = self;
-            cell.navigationController = self.navigationController;
-            cell.headTitle = dic[@"title"];
-            cell.entity = dic[@"userscripts"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-            return cell;
+    if(!_inSearch) {
+        if(_selectedIdx == 0) {
+            NSDictionary *dic = self.datas[indexPath.row];
+            if([dic[@"type"] isEqualToString:@"banner"]) {
+                _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+                cell.contentView.width = self.view.width;
+                cell.width = self.view.width;
+                cell.entity = dic[@"blocks"];
+                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+                return cell;
+            } else if([dic[@"type"] isEqualToString:@"album"]){
+                _FeaturedAlubmTableViewCell *cell = [[_FeaturedAlubmTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
+                cell.contentView.width = self.view.width;
+                cell.width = self.view.width;
+                cell.controller = self;
+                cell.navigationController = self.navigationController;
+                cell.headTitle = dic[@"title"];
+                cell.entity = dic[@"userscripts"];
+                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+                return cell;
+            } else {
+                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
+                if (cell == nil) {
+                    cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                }
+                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+                return cell;
+            }
+            
         } else {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
+            BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
             if (cell == nil) {
-                cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
+                cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.width = self.view.width;
+            cell.controller = self;
+            cell.navigationController = self.navigationController;
+            cell.entity = self.allDatas[indexPath.row];
             return cell;
         }
-        
     } else {
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
         if (cell == nil) {
@@ -537,14 +568,17 @@ UIPopoverPresentationControllerDelegate
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         cell.contentView.width = self.view.width;
+        cell.controller = self;
         cell.navigationController = self.navigationController;
-        cell.entity = self.allDatas[indexPath.row];
+        cell.entity = self.searchDatas[indexPath.row];
         return cell;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(_selectedIdx == 1) {
+    if(_inSearch == TRUE) {
+        return 138.0f;
+    }else if(_selectedIdx == 1) {
         return 138.0f;
     } else {
         return 230.0f;
@@ -554,6 +588,9 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if (_segmentedControl != NULL) {
+        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.subHeadlineBold} forState:UIControlStateSelected];
+    }
     [self.tableView reloadData];
 }
 
@@ -586,6 +623,9 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if(_inSearch == TRUE) {
+        return 0.1;
+    }
     return 65;
 }
 
@@ -617,6 +657,29 @@ UIPopoverPresentationControllerDelegate
                 }];
 
   
+    });
+}
+
+- (void)querySearchData:(NSString *)key{
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+        [[SYNetworkUtils shareInstance] requestPOST:[NSString stringWithFormat: @"https://api.shenyin.name/stay-fork/search?page=%d",_pageNo] params:@{@"biz":@{@"keywords":key}} successBlock:^(NSString * _Nonnull responseObject) {
+            
+            NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+            options:NSJSONReadingMutableContainers
+            error:nil];
+            if(_pageNo == 1) {
+                [self.searchDatas removeAllObjects];
+            }
+            [self.searchDatas addObjectsFromArray:dic[@"biz"]];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [self.tableView reloadData];
+                    });
+                } failBlock:^(NSError * _Nonnull error) {
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [self.tableView reloadData];
+                    });
+                }];
     });
 }
 
@@ -751,6 +814,14 @@ UIPopoverPresentationControllerDelegate
     }
     
     return _allDatas;
+}
+
+- (NSMutableArray *)searchDatas {
+    if (_searchDatas == nil) {
+        _searchDatas = [NSMutableArray arrayWithCapacity:0];
+    }
+    
+    return _searchDatas;
 }
 
 - (LoadingSlideController *)loadingSlideController{

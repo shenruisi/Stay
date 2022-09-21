@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSDictionary *scriptDic;
 @property (nonatomic, strong) NSString *uuid;
+@property (nonatomic, assign) BOOL saveSuceess;
 @end
 
 NS_ASSUME_NONNULL_END

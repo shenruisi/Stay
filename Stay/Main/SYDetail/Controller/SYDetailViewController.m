@@ -121,7 +121,7 @@
 
 - (void)scriptSaveSuccess:(id)sender{
     self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
-    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+     [self.tableView reloadData];
 //    [self createDetailView];
 }
 
@@ -266,20 +266,16 @@
      if(self.script.active) {
          [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
          self.actBtn.backgroundColor = FCStyle.accent;
-         self.actBtn.layer.borderWidth = 1;
-         self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
          [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
      } else {
          [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
-         self.actBtn.backgroundColor = [UIColor whiteColor];
-         [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-         self.actBtn.layer.borderWidth = 1;
-         self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
+          self.actBtn.backgroundColor = FCStyle.background;
+          [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
      }
      
      [cell.contentView addSubview:self.actBtn];
      self.actBtn.left = titleLabel.left;
-     self.actBtn.bottom = 57 + 15;
+     self.actBtn.top = titleLabel.bottom + 5;
      
      UIScrollView *scrollView =  [self createBaseInfoView];
      scrollView.left = left;
@@ -482,16 +478,11 @@
     if(self.script.active) {
         [self.actBtn setTitle:NSLocalizedString(@"Activated", @"")  forState:UIControlStateNormal];
         self.actBtn.backgroundColor = FCStyle.accent;
-        self.actBtn.layer.borderWidth = 1;
-        self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
         [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
-        self.actBtn.backgroundColor = [UIColor whiteColor];
-        [self.actBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        self.actBtn.layer.borderWidth = 1;
-        self.actBtn.layer.borderColor = [UIColor blackColor].CGColor;
-       
+         self.actBtn.backgroundColor = FCStyle.background;
+         [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     }
     
     if (self.script.active) {
