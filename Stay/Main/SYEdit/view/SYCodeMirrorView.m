@@ -148,6 +148,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                        self.uuid = uuid;
                        [[DataManager shareManager] updateUserScript:userScript];
                    } else {
+                       userScript.plafroms = self.platforms;
                        self.uuid = uuid;
                        [[DataManager shareManager] insertUserConfigByUserScript:userScript];
                    }

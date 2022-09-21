@@ -55,6 +55,43 @@
     }];
     [dataTask resume];
 }
+
+
+- (void)requestHTTPPostMethod:(NSString *)httpMenthod relativePath:(NSString *)relativePath params:(NSDictionary *)params successBlock:(SYResponseSuccessBlock)successBlock failBlock:(SYResponseFailBlock)failBlock
+{
+    
+    NSString *paramsString = nil;
+    if(params != nil) {
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error: nil];
+       paramsString  = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@", relativePath];
+    
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+     [set addCharactersInString:@"#"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[urlString stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+    request.HTTPMethod = httpMenthod;
+    request.HTTPBody = [paramsString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (!error) {
+            if (successBlock) {
+                
+                NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                successBlock(result);
+            }
+        } else {
+            if (failBlock) {
+                failBlock(error);
+            }
+        }
+    }];
+    [dataTask resume];
+}
+
+
 - (void)requestGET:(NSString *)relativePath params:(NSDictionary *)params successBlock:(SYResponseSuccessBlock)successBlock failBlock:(SYResponseFailBlock)failBlock
 {
     [self requestHTTPMethod:@"GET" relativePath:relativePath params:params successBlock:^(NSString * _Nonnull responseObject) {
@@ -70,7 +107,7 @@
 
 - (void)requestPOST:(NSString *)relativePath params:(NSDictionary *)params successBlock:(SYResponseSuccessBlock)successBlock failBlock:(SYResponseFailBlock)failBlock
 {
-    [self requestHTTPMethod:@"POST" relativePath:relativePath params:params successBlock:^(NSString * _Nonnull responseObject) {
+    [self requestHTTPPostMethod:@"POST" relativePath:relativePath params:params successBlock:^(NSString * _Nonnull responseObject) {
         if (successBlock) {
             return successBlock(responseObject);
         }

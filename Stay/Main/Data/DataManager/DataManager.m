@@ -84,6 +84,16 @@
     if(![self isExitedColumn:@"status"]) {
         [self addColumn:@"user_config_script" column:@"status"];
     }
+    if(![self isExitedColumn:@"used"]) {
+        [self addColumn:@"user_config_script" column:@"used"];
+    }
+    
+    if(![self isExitedColumn:@"platforms"]) {
+        [self addColumn:@"user_config_script" column:@"platforms"];
+        [self addColumn:@"user_config_script" column:@"stay_only"];
+
+    }
+   
     return;
 }
 
@@ -593,7 +603,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier,status) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier,status,platforms,stay_only) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -666,6 +676,15 @@
         sqlite3_bind_text(statement, 25, [scrpitDetail.license UTF8String], -1,NULL);
         sqlite3_bind_text(statement, 26, [scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
         sqlite3_bind_int(statement, 27, 0);
+        if(scrpitDetail.plafroms.count > 0) {
+            sqlite3_bind_text(statement, 28, [[scrpitDetail.plafroms componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 28,  NULL, -1,NULL);
+        }
+        int stayOnly= scrpitDetail.stayOnly?1:0;
+        //        sqlite3_bind_text(statement, 29, [scrpitDetail.plafroms UTF8String], -1,NULL);
+        sqlite3_bind_int(statement, 29, stayOnly);
+//        sqlite3_bind_text(statement, 29, [scrpitDetail.plafroms UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);

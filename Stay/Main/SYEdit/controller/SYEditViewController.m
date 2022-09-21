@@ -73,6 +73,7 @@
     
     [self.view addSubview:self.syCodeMirrorView];
     self.syCodeMirrorView.downloadUrl = self.downloadUrl;
+    self.syCodeMirrorView.platforms = self.platforms;
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {

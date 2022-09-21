@@ -18,6 +18,7 @@ extern NSNotificationName const _Nonnull CMVDidFinishContentNotification;
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, strong) NSString *downloadUrl;
+@property (nonatomic, strong) NSArray *platforms;
 @property (nonatomic, assign) BOOL active;
 
 

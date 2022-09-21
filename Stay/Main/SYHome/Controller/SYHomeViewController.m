@@ -54,6 +54,7 @@
 #import "TimeHelper.h"
 
 #import "API.h"
+#import "HomeDetailCell.h"
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -354,8 +355,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
-    
-    
 #ifdef Mac
 //    [self.view setFrame:CGRectMake(0, 0 + 60, self.view.frame.size.width, self.view.frame.size.height - 60)];
     self.navigationController.navigationBarHidden = YES;
@@ -1060,9 +1059,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    _SYHomeViewTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
+    HomeDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
-        cell = [[_SYHomeViewTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+        cell = [[HomeDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
 #ifndef Mac
 //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
 #endif
@@ -1083,149 +1082,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     cell.backgroundColor = FCStyle.secondaryBackground;
 #endif
     cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-    
-    CGFloat viewWidth = self.view.frame.size.width;
-    
-    CGFloat leftWidth = viewWidth * 0.6 - 15;
-        
-    CGFloat titleLabelLeftSize = 0;
-    if(model.icon != NULL && model.icon.length > 0) {
-        UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
-        [imageview sd_setImageWithURL:[NSURL URLWithString: model.icon] ];
-        [cell.contentView addSubview:imageview];
-        titleLabelLeftSize = 27;
-    }
-    
-    
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15 + titleLabelLeftSize , 15, leftWidth - titleLabelLeftSize, 45)];
-    titleLabel.font = FCStyle.headlineBold;
-    titleLabel.textColor = FCStyle.fcBlack;
-    titleLabel.textAlignment = NSTextAlignmentLeft;
-    titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-    titleLabel.numberOfLines = 2;
-    titleLabel.text = model.name;
-    [titleLabel sizeToFit];
-    [cell.contentView addSubview:titleLabel];
+    cell.contentView.width = self.view.width;
+    cell.controller = self;
+    cell.scrpit = model;
 
-    
-    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth, 40)];
-    descLabel.font = FCStyle.subHeadline;
-    descLabel.textAlignment = NSTextAlignmentLeft;
-    descLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-    descLabel.text = model.desc;
-    descLabel.numberOfLines = 2;
-    descLabel.bottom = 125;
-    descLabel.textColor = FCStyle.fcSecondaryBlack;
-    [cell.contentView addSubview:descLabel];
-    
-    UILabel *authorLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, leftWidth , 19)];
-    authorLabel.font = FCStyle.body;
-    authorLabel.textColor = FCStyle.fcBlack;
-    authorLabel.textAlignment = NSTextAlignmentLeft;
-    authorLabel.text = model.author;
-    authorLabel.bottom = descLabel.top - 5;
-    [authorLabel sizeToFit];
-    [cell.contentView addSubview:authorLabel];
-    
-    UIView *verticalLine = [[UIView alloc] initWithFrame:CGRectMake(0.62 * viewWidth, 14, 1, 113)];
-    verticalLine.backgroundColor =  [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-        if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-            return RGBA(216, 216, 216, 0.3);
-        }
-        else {
-            return RGBA(37, 37, 40, 1);
-        }
-    }];
-    [cell.contentView addSubview:verticalLine];
-    
-    CGFloat left = 0.65 * viewWidth;
-    CGFloat width = 0.3 * viewWidth;
-    UILabel *version= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
-    version.text = NSLocalizedString(@"Version",@"");
-    version.font = [UIFont systemFontOfSize:12];
-    version.textColor = FCStyle.fcSecondaryBlack;
-    [cell.contentView addSubview:version];
-
-    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, width, 21)];
-    versionLabel.font = FCStyle.subHeadline;
-    versionLabel.textColor = FCStyle.fcBlack;
-    versionLabel.textAlignment = NSTextAlignmentLeft;
-    versionLabel.text = model.version;
-    versionLabel.left = left;
-    versionLabel.top = version.bottom + 2;
-    [cell.contentView addSubview:versionLabel];
-    
-    UILabel *statusLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
-    statusLab.text = NSLocalizedString(@"Status",@"");
-    statusLab.font = FCStyle.footnote;
-    statusLab.textColor = FCStyle.fcSecondaryBlack;
-    statusLab.top = versionLabel.bottom + 2;
-    statusLab.left = left;
-    [cell.contentView addSubview:statusLab];
-
-
-    UILabel *actLabel = [[UILabel alloc]init];
-    actLabel.font = FCStyle.subHeadline;
-    actLabel.textColor = FCStyle.fcBlack;
-    actLabel.text = model.active == 0 ? NSLocalizedString(@"Stopped", @"") : NSLocalizedString(@"Activated", @"");
-    [actLabel sizeToFit];
-    actLabel.top = statusLab.bottom + 2;
-    actLabel.left = left;
-    [cell.contentView addSubview:actLabel];
-    
-    
-    UILabel *updateLab= [[UILabel alloc] initWithFrame:CGRectMake(left, 14,  width, 15)];
-    updateLab.text = NSLocalizedString(@"UpdateTime", @"");
-    updateLab.font = FCStyle.footnote;
-    updateLab.textColor = FCStyle.fcSecondaryBlack;
-    updateLab.top = actLabel.bottom + 2;
-    updateLab.left = left;
-    [cell.contentView addSubview:updateLab];
-    
-    ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[model.uuid];
-
-    if(entity != nil && entity.needUpdate && !model.updateSwitch){
-
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(0, 0, 60, 20);
-        btn.backgroundColor = FCStyle.accent;
-        [btn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        btn.titleLabel.font = [UIFont systemFontOfSize:12];
-        btn.layer.cornerRadius = 4;
-        btn.top = updateLab.bottom + 2;
-        btn.left = left;
-        [btn addTarget:self action:@selector(updateScript:) forControlEvents:UIControlEventTouchUpInside];
-        
-        objc_setAssociatedObject (btn , @"script", entity.updateScript.description, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        objc_setAssociatedObject (btn , @"scriptContent", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
-
-        [cell.contentView addSubview:btn];
-    } else {
-        UILabel *updateLabel = [[UILabel alloc]init];
-        updateLabel.font = FCStyle.subHeadline;
-        updateLabel.textColor = FCStyle.fcBlack;
-        updateLabel.text = [self timeWithTimeIntervalString:model.updateTime];
-        [updateLabel sizeToFit];
-        updateLabel.top = updateLab.bottom + 2;
-        updateLabel.left = left;
-        [cell.contentView addSubview:updateLabel];
-    }
-    
-    UIImageView *accessory =  [[UIImageView alloc] initWithFrame:CGRectMake(viewWidth - 10 - 15, (144.0 - 13)/2, 10, 13)];
-    UIImage *image = [UIImage systemImageNamed:@"chevron.right"
-                             withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
-    image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
-    [accessory setImage:image];
-    [cell.contentView addSubview:accessory];
-    
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(15,143,viewWidth - 10,1)];
-    line.backgroundColor = FCStyle.fcSeparator;
-    [cell.contentView addSubview:line];
-    
-   
-    
     return cell;
 }
 
@@ -1278,7 +1138,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 144.0f;
+    return 90.f;
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
