@@ -111,8 +111,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [self.contentView addSubview:btn];
     } else {
-        headerLabel.width = self.contentView.width - 40;
-        subLabel.width =  self.contentView.width - 40;
+        headerLabel.width = self.contentView.width - headerLabel.left - 10;
+        subLabel.width =  self.contentView.width - subLabel.left - 10;
     }
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
