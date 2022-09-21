@@ -61,7 +61,7 @@
     if(blocks.count == 0 ) {
         return;
     }
-    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 15, self.contentView.width - 30 , 72 + (self.contentView.width - 40) / 2.25F)];
+    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 15, self.contentView.width - 30 , 56 + (self.contentView.width - 40) / 2.25F)];
     _bannerView.scrollEnabled = true;
     _bannerView.pagingEnabled = true;
     _bannerView.clipsToBounds = NO;
@@ -78,16 +78,23 @@
         left = banner.right;
     }
     
-    _bannerView.contentSize = CGSizeMake(left ,72 + (self.contentView.width - 40) / 2.25F);
+    _bannerView.contentSize = CGSizeMake(left ,56 + (self.contentView.width - 40) / 2.25F);
+    
+    
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top =  (self.contentView.width - 40) / 2.25F + 71;
+    line.left = 20;
+    [self.contentView addSubview:line];
     
     [self.contentView addSubview:_bannerView];
 }
 
 - (UIView *)createBlockView:(NSDictionary *)dic{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 72 + (self.contentView.width - 40) / 2.25F)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 56 + (self.contentView.width - 40) / 2.25F)];
     view.clipsToBounds = YES;
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 18)];
-    headerLabel.font = FCStyle.headlineBold;
+    headerLabel.font = FCStyle.title3Bold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[@"title"];
     [view addSubview:headerLabel];
@@ -104,6 +111,13 @@
     bannerImageView.layer.cornerRadius = 10;
     bannerImageView.clipsToBounds = YES;
     bannerImageView.top = subLabel.bottom + 5;
+
+    bool border = dic[@"border"];
+    if (border) {
+        bannerImageView.layer.borderColor = FCStyle.borderColor.CGColor;
+        bannerImageView.layer.borderWidth = 1;
+    }
+    
     [view addSubview:bannerImageView];
     view.backgroundColor = FCStyle.secondaryBackground;
     return view;
@@ -152,7 +166,7 @@
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 19)];
     titleLabel.text = _headTitle;
-    titleLabel.font = FCStyle.headlineBold;
+    titleLabel.font = FCStyle.title3Bold;
     titleLabel.textColor = FCStyle.fcBlack;
     [self.contentView addSubview:titleLabel];
 //    titleLabel.
@@ -180,7 +194,7 @@
     } else {
         heigth = 78 * blocks.count;
     }
-    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, titleLabel.bottom + 20, width , heigth)];
+    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, titleLabel.bottom, width , heigth)];
     _bannerView.scrollEnabled = true;
     _bannerView.pagingEnabled = true;
     _bannerView.clipsToBounds = NO;
@@ -433,7 +447,7 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.secondaryBackground;
+    self.view.backgroundColor = FCStyle.background;
 #ifdef Mac
     self.navigationController.navigationBarHidden = YES;
 #endif
@@ -465,6 +479,10 @@ UIPopoverPresentationControllerDelegate
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 16 + 15 + 35)];
     [view addSubview:self.segmentedControl];
     view.backgroundColor = FCStyle.background;
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 1)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top = 65;
+    [view addSubview:line];
 //    self.tableView.tableHeaderView = view;
     return  view;
 }
@@ -604,9 +622,9 @@ UIPopoverPresentationControllerDelegate
         } else if([dic[@"type"] isEqualToString:@"album"]) {
             NSArray *array =  dic[@"userscripts"];
             if(array.count >= 3) {
-                return 54 + 78 * 3;
+                return 33 + 78 * 3;
             } else {
-                return 51 + 78 * array.count;
+                return 33 + 78 * array.count;
             }
         }
         
@@ -833,13 +851,13 @@ UIPopoverPresentationControllerDelegate
     if(_segmentedControl == nil) {
         NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Featured", @""),NSLocalizedString(@"All", @""),nil];
         _segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.subHeadlineBold} forState:UIControlStateSelected];
-        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.subHeadlineBold} forState:UIControlStateNormal];
+        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
+        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
         _segmentedControl.backgroundColor = FCStyle.secondaryPopup;
         _segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
         _segmentedControl.selectedSegmentIndex = 0;
-        CGFloat left = (self.view.width - 255) / 2;
-        _segmentedControl.frame =  CGRectMake(left, 15, 255, 35);
+        CGFloat left = (self.view.width - 200) / 2;
+        _segmentedControl.frame =  CGRectMake(left, 15, 200, 30);
         [_segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
     }
     return _segmentedControl;
@@ -851,9 +869,8 @@ UIPopoverPresentationControllerDelegate
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.separatorColor = FCStyle.fcSeparator;
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        _tableView.backgroundColor = FCStyle.secondaryBackground;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.backgroundColor = FCStyle.background;
         [self.view addSubview:_tableView];
     }
     

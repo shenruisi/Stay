@@ -165,9 +165,12 @@
     
     NSArray *tags = dic[@"tags"];
     
+    UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.contentView.width ,25)];
+//    tagScrollView.clipsToBounds = YES;
+    tagScrollView.showsVerticalScrollIndicator = false;
+    tagScrollView.showsHorizontalScrollIndicator = false;
     if(tags != nil && tags.count > 0) {
         CGFloat tagLeft = 16;
-
         for (int i = 0; i < tags.count; i++) {
             UILabel *tag = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 25)];
             tag.text = tags[i];
@@ -180,13 +183,16 @@
             [tag sizeToFit];
             tag.width += 40;
             tag.height = 25;
-            tag.top = top;
             tag.left = tagLeft;
-            tag.clipsToBounds = YES;
-            [self.contentView addSubview:tag];
+//            tag.clipsToBounds = YES;
+            tag.top = 0;
             tagLeft = tag.right + 5;
+            [tagScrollView addSubview:tag];
         }
+        
+        tagScrollView.contentSize = CGSizeMake(tagLeft, 25);
     }
+    [self.contentView addSubview:tagScrollView];
     
 }
 
