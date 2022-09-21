@@ -74,7 +74,7 @@
         imageBox.hidden = true;
     }
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 15, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 15, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  138;
     line.left = 15;

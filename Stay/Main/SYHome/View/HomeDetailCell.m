@@ -71,7 +71,7 @@
 //    view.backgroundColor = FCStyle.background;
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 234, 17)];
-    headerLabel.font = FCStyle.body;
+    headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = dic.active == 0 ? [FCStyle.fcBlack colorWithAlphaComponent:0.7] : FCStyle.fcBlack;
     headerLabel.text = dic.name;
     [self.contentView addSubview:headerLabel];
@@ -85,9 +85,9 @@
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  99;
+    line.top =  99.5;
     line.left = 20;
     [self.contentView addSubview:line];
     NSString *uuid = dic.uuid;
@@ -111,8 +111,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [self.contentView addSubview:btn];
     } else {
-        headerLabel.width = self.contentView.width - headerLabel.left - 10;
-        subLabel.width =  self.contentView.width - subLabel.left - 10;
+        headerLabel.width = self.contentView.width - headerLabel.left - 20;
+        subLabel.width =  self.contentView.width - subLabel.left - 20;
     }
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
