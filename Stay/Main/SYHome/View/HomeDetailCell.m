@@ -62,7 +62,7 @@
     imageView.centerY = 24;
     [imageBox addSubview:imageView];
     [self.contentView addSubview:imageBox];
-    CGFloat left = 20;
+    CGFloat left = 10;
     if (dic.icon != NULL && dic.icon.length > 0) {
         left = imageBox.right + 10;
     } else {
@@ -87,7 +87,7 @@
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  89;
+    line.top =  99;
     line.left = 20;
     [self.contentView addSubview:line];
     NSString *uuid = dic.uuid;
@@ -110,6 +110,9 @@
         objc_setAssociatedObject (btn , @"scriptContent", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [self.contentView addSubview:btn];
+    } else {
+        headerLabel.width = self.contentView.width - 40;
+        subLabel.width =  self.contentView.width - 40;
     }
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"

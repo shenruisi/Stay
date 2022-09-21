@@ -1138,7 +1138,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 90.f;
+    return 100.f;
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
