@@ -174,11 +174,11 @@
     if(rowSize >= 2) {
         width = self.contentView.width - 30;
     }
-    CGFloat heigth = 168;
+    CGFloat heigth = 174;
     if(blocks.count >= 3) {
-        heigth = 168;
+        heigth = 174;
     } else {
-        heigth = 56 * blocks.count;
+        heigth = 58 * blocks.count;
     }
     _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, titleLabel.bottom + 20, width , heigth)];
     _bannerView.scrollEnabled = true;
@@ -417,9 +417,14 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, strong) BroSimpleLoadingView *simpleLoadingView;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, assign) NSInteger pageNo;
+@property (nonatomic, assign) NSInteger searchPageNo;
+
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 @property (nonatomic, assign) bool inSearch;
-
+@property (nonatomic, assign) bool allDataEnd;
+@property (nonatomic, assign) bool allDataQuerying;
+@property (nonatomic, assign) bool searchDataEnd;
+@property (nonatomic, assign) bool searchDataQuerying;
 
 @end
 
@@ -488,6 +493,7 @@ UIPopoverPresentationControllerDelegate
 }
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
     [self.searchController setActive:YES];
+    _searchPageNo = 1;
     _inSearch = true;
     [self.tableView reloadData];
     return YES;
@@ -497,6 +503,7 @@ UIPopoverPresentationControllerDelegate
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     [_searchDatas removeAllObjects];
     if(searchText.length > 0) {
+        _searchPageNo = 1;
 //        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
        [self querySearchData:searchText];
     }
@@ -556,11 +563,14 @@ UIPopoverPresentationControllerDelegate
             }
             
         } else {
-            BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
-            if (cell == nil) {
-                cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
+//            BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
+//            if (cell == nil) {
+//                cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
+//                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            }
+            BrowseDetailTableViewCell * cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
             cell.contentView.width = self.view.width;
             cell.controller = self;
             cell.navigationController = self.navigationController;
@@ -595,7 +605,7 @@ UIPopoverPresentationControllerDelegate
             if(array.count >= 3) {
                 return 230;
             } else {
-                return 72 + 56 * array.count;
+                return 51 + 58 * array.count;
             }
         }
         
@@ -648,9 +658,15 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)queryAllData{
-    if (self.datas.count == 0){
+    if (self.allDatas.count == 0){
         [self.simpleLoadingView start];
     }
+    
+    if(_allDataQuerying) {
+        return;
+    }
+    
+    _allDataQuerying = true;
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
         
         [[SYNetworkUtils shareInstance] requestGET:[NSString stringWithFormat: @"https://api.shenyin.name/stay-fork/browse/all?page=%d",_pageNo] params:nil successBlock:^(NSString * _Nonnull responseObject) {
@@ -662,6 +678,11 @@ UIPopoverPresentationControllerDelegate
             if(_pageNo == 1) {
                 [self.allDatas removeAllObjects];
             }
+            _allDataQuerying = false;
+            NSArray *array = dic[@"biz"];
+            if(array.count == 0) {
+                _allDataEnd = true;
+            }
             [self.allDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self.simpleLoadingView stop];
@@ -672,6 +693,7 @@ UIPopoverPresentationControllerDelegate
                         [self.simpleLoadingView stop];
                         [self.tableView reloadData];
                     });
+                    _allDataQuerying = false;
                 }];
 
   
@@ -679,16 +701,24 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)querySearchData:(NSString *)key{
+    if(_searchDataQuerying) {
+        return;
+    }
+    
+    _searchDataQuerying = true;
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-        [[SYNetworkUtils shareInstance] requestPOST:[NSString stringWithFormat: @"https://api.shenyin.name/stay-fork/search?page=%d",_pageNo] params:@{@"biz":@{@"keywords":key}} successBlock:^(NSString * _Nonnull responseObject) {
+        [[SYNetworkUtils shareInstance] requestPOST:[NSString stringWithFormat: @"https://api.shenyin.name/stay-fork/search?page=%d",_searchPageNo] params:@{@"biz":@{@"keywords":key}} successBlock:^(NSString * _Nonnull responseObject) {
             
             NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
             options:NSJSONReadingMutableContainers
             error:nil];
-            if(_pageNo == 1) {
+            if(_searchPageNo == 1) {
                 [self.searchDatas removeAllObjects];
             }
+            _searchDataQuerying = false;
+            
+           
             [self.searchDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self.tableView reloadData];
@@ -697,6 +727,8 @@ UIPopoverPresentationControllerDelegate
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self.tableView reloadData];
                     });
+                    
+                    _searchDataQuerying = false;
                 }];
     });
 }
@@ -757,6 +789,25 @@ UIPopoverPresentationControllerDelegate
 #endif
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = scrollView.contentOffset;
+     CGRect bounds = scrollView.bounds;
+     CGSize size = scrollView.contentSize;
+     UIEdgeInsets inset = scrollView.contentInset;
+     float y = offset.y + bounds.size.height - inset.bottom;
+     float h = size.height;
+     float reload_distance = 10;
+     if(y > h + reload_distance) {
+         if (_inSearch) {
+             
+         } else if(self.selectedIdx == 1 && !_allDataEnd) {
+             _pageNo++;
+             [self queryAllData];
+         }
+         NSLog(@"load more rows");
+     }
+}
+
 - (void)segmentControllerAction:(UISegmentedControl *)segment
 {
     NSInteger index = segment.selectedSegmentIndex;
@@ -765,8 +816,10 @@ UIPopoverPresentationControllerDelegate
         if(self.allDatas.count > 0) {
             [self.tableView reloadData];
         } else {
-            _pageNo = 1;
-            [self queryAllData];
+            if(_allDatas.count == 0) {
+                _pageNo = 1;
+                [self queryAllData];
+            }
         }
     
     } else {
