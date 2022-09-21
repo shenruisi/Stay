@@ -297,6 +297,10 @@ NSString * const SFExtensionMessageKey = @"message";
         [SharedStorageManager shared].userDefaultsExRO = nil;
         body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
     }
+    else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
+        NSDictionary *details = message[@"details"];
+        body = [self xmlHttpRequestProxy:details];
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
@@ -304,6 +308,59 @@ NSString * const SFExtensionMessageKey = @"message";
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
 }
+
+- (NSDictionary *)xmlHttpRequestProxy:(NSDictionary *)details{
+    if (nil == details) return @{@"status":@(500), @"responseText":@""};
+    NSString *method = details[@"method"];
+    NSString *url = details[@"url"];
+    NSDictionary *headers = details[@"headers"];
+    NSString *data = details[@"data"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:method];
+    for (NSString *key in headers.allKeys){
+        [request setValue:headers[key] forHTTPHeaderField:key];
+    }
+    
+    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
+    __block NSInteger status = 200;
+    __block NSString *responseText = @"";
+    
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request
+                completionHandler:^(NSData *data,
+                                    NSURLResponse *response,
+                                    NSError *error) {
+        status = error == nil ? 200 : 500;
+        responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        dispatch_semaphore_signal(sem);
+
+        }] resume];
+    
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    
+    return @{@"status":@(status), @"responseText":responseText};
+}
+
+//- (void)xmlHttpRequestProxy{
+//    NSString *reqUrl = @"https://translate.google.com/_/TranslateWebserverUi/data/batchexecute";
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
+//    [request setHTTPMethod:@"POST"];
+//    [request setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+//    [request setValue:@"translate.google.com" forHTTPHeaderField:@"Host"];
+//    NSData *data = [@"f.req=%5B%5B%5B%22MkEWBc%22%2C%22%5B%5B%5C%22This%20is%20a%20special%20flight%20without%20passengers.%20After%20Chinese%20first%20Boeing%20747-8%20aircraft%20was%20delivered%20to%20Air%20China%2C%206%20captains%20took%20the%20747-8%20airplane%20back%20to%20China%2C%20took%20off%20from%20Seattle%20Everett%2C%20and%20flew%20straight%20to%20Beijing.%5C%22%2C%5C%22auto%5C%22%2C%5C%22zh-CN%5C%22%2Ctrue%5D%2C%5Bnull%5D%5D%22%2Cnull%2C%22generic%22%5D%5D%5D" dataUsingEncoding:NSUTF8StringEncoding];
+//
+//    [request setHTTPBody:data];
+//
+//    [[[NSURLSession sharedSession] dataTaskWithRequest:request
+//                completionHandler:^(NSData *data,
+//                                    NSURLResponse *response,
+//                                    NSError *error) {
+//        NSLog(@"%@ %@",response, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+//
+//        }] resume];
+//}
 
 
 - (NSString *)getContentWithUUID:(NSString *)uuid{

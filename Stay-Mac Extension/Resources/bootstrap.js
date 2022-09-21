@@ -287,7 +287,7 @@ let injectedContentVendor = new Set();
                     });
                 }
                 
-                // console.log("exeScriptManually",targetScript.name,targetScript.installType);
+                console.log("exeScriptManually",targetScript.name,targetScript.installType);
                 if (pageInject){
                     let uuid = targetScript.uuid;
                     let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);

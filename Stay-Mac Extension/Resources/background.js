@@ -867,6 +867,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
                 body = new Blob([arr], { type: "text/plain" });
             }
+            console.log(body);
             const xhr = new XMLHttpRequest();
             // push to global scoped array so it can be aborted
             xhrs.push({ xhr: xhr, xhrId: request.xhrId });

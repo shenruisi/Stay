@@ -54,7 +54,8 @@
     },
     "host_permissions":[
         "https://*/*",
-        "http://*/*"
+        "http://*/*",
+        "https://translate.google.com"
     ],
     "web_accessible_resources": ["*"],
     "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage","cookies"]
