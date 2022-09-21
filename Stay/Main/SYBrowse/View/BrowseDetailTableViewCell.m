@@ -80,8 +80,8 @@
     line.left = 15;
     [self.contentView addSubview:line];
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 16)];
-    headerLabel.font = FCStyle.body;
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 18)];
+    headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[@"name"];
     [self.contentView addSubview:headerLabel];

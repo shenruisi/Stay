@@ -93,7 +93,7 @@
 - (UIView *)createBlockView:(NSDictionary *)dic{
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 56 + (self.contentView.width - 40) / 2.25F)];
     view.clipsToBounds = YES;
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 21)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 22)];
     headerLabel.font = FCStyle.title3Bold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[@"title"];
@@ -164,7 +164,7 @@
         return;
     }
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 21)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 22)];
     titleLabel.text = _headTitle;
     titleLabel.font = FCStyle.title3Bold;
     titleLabel.textColor = FCStyle.fcBlack;
@@ -249,8 +249,8 @@
         imageBox.hidden = true;
     }
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 234, 16)];
-    headerLabel.font = FCStyle.body;
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 234, 18)];
+    headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[@"name"];
     [view addSubview:headerLabel];
