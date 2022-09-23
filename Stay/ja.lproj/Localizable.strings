@@ -24,7 +24,7 @@ settings.save="保存";
 
 settings.library="ライブラリー";
 settings.search="ブラウズ";
-settings.more="もっと";
+settings.more="その他";
 settings.author="作成者";
 settings.version="バージョン";
 settings.scriptContent="内容";
