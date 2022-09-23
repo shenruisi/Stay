@@ -95,10 +95,7 @@
             });
 
                 } failBlock:^(NSError * _Nonnull error) {
-                    dispatch_async(dispatch_get_main_queue(),^{
-//                        [self.simpleLoadingView stop];
-//                        [self.tableView reloadData];
-                    });
+                  
                 }];
     });
 }
@@ -192,11 +189,12 @@
          imageBox.layer.cornerRadius = 10;
          imageBox.layer.borderWidth = 1;
          imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 37, 37)];
          [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
          imageView.clipsToBounds = YES;
          imageView.centerX = 28.5;
          imageView.centerY = 28.5;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
          [imageBox addSubview:imageView];
          [cell.contentView addSubview:imageBox];
 
@@ -411,7 +409,7 @@
          [view addSubview:imageView];
      }
     
-    bool stayOnly = self.scriptDic[@"stay_only"];
+    bool stayOnly = [self.scriptDic[@"stay_only"] boolValue];
     if(stayOnly) {
         UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(0, 12, 1, 17)];
         splitline.backgroundColor = FCStyle.fcSeparator;
@@ -823,7 +821,7 @@
         @{
             @"name":@"AUTHOR",
             @"desc":self.scriptDic[@"author"],
-            @"color":FCStyle.accent,
+            @"color":FCStyle.grayNoteColor,
         },
         @{
             @"name":@"VERSION",

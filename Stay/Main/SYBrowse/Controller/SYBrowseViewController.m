@@ -119,7 +119,7 @@
     objc_setAssociatedObject (tapGesture , @"url",  dic[@"jumpUrl"], OBJC_ASSOCIATION_COPY_NONATOMIC);
     [view addGestureRecognizer:tapGesture];
     
-    bool border = dic[@"border"];
+    bool border = [dic[@"border"] boolValue];
     if (border) {
         bannerImageView.layer.borderColor = FCStyle.borderColor.CGColor;
         bannerImageView.layer.borderWidth = 1;
