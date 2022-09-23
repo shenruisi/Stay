@@ -938,7 +938,7 @@
           @{
               @"name":@"AUTHOR",
               @"desc":self.script.author,
-              @"color":FCStyle.accent,
+              @"color":FCStyle.grayNoteColor,
           },
           @{
               @"name":@"VERSION",

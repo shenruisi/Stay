@@ -11,6 +11,8 @@
 #import "NSString+Urlencode.h"
 #import "UserscriptUpdateManager.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "SYNetworkUtils.h"
+
 
 NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.notification.CMVDidFinishContentNotification";
 
@@ -135,7 +137,18 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                     if((userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0)&&(self.downloadUrl != NULL && self.downloadUrl.length >= 0)) {
                         userScript.downloadUrl = self.downloadUrl;
                     }
-                   
+                    
+                    
+        
+                    
+                    if(self.downloadUrl != NULL ) {
+                        NSURL *url = [NSURL URLWithString:self.downloadUrl];
+                        if([url.host isEqualToString:@"res.stayfork.app"]) {
+                            userScript.downloadUrl = self.downloadUrl;
+                            userScript.updateUrl = self.downloadUrl;
+                        }
+                    }
+        
                    [[UserscriptUpdateManager shareManager] saveIcon:userScript];
                    
                    UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:uuid];
@@ -151,6 +164,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                        userScript.plafroms = self.platforms;
                        self.uuid = uuid;
                        [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+                       [self queryData];
                    }
                    [self initScrpitContent:true];
                     [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
@@ -164,6 +178,19 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
             });
         }
     }];
+}
+
+- (void)queryData{
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+        NSString *url = [NSString stringWithFormat:@"%@%@",@"https://api.shenyin.name/stay-fork/install/",self.uuid];
+        
+        [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+     
+                } failBlock:^(NSError * _Nonnull error) {
+                  
+                }];
+    });
 }
 
 - (void)updateContent{
@@ -211,6 +238,13 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                     userScript.downloadUrl = self.downloadUrl;
                 }
             
+                if(tmpScript.downloadUrl != NULL ) {
+                    NSURL *url = [NSURL URLWithString:tmpScript.downloadUrl];
+                    if([url.host isEqualToString:@"res.stayfork.app"]) {
+                        userScript.downloadUrl = tmpScript.downloadUrl;
+                        userScript.updateUrl = tmpScript.downloadUrl;
+                    }
+                }
                 
                if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                    [[DataManager shareManager] updateUserScript:userScript];
