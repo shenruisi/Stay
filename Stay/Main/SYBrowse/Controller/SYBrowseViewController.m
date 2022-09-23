@@ -275,7 +275,7 @@
     NSString *name = @"name";
     NSString *desc = @"desc";
 
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 200, 18)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 200, 18)];
     headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[name];

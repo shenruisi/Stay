@@ -22,6 +22,7 @@
 #import "ImageHelper.h"
 #import "SYNetworkUtils.h"
 #import "LoadingSlideController.h"
+#import <SafariServices/SafariServices.h>
 
 #ifdef Mac
 #import "QuickAccess.h"
@@ -335,17 +336,9 @@
 }
 
 - (void)showScript:(id)sender {
-//    SYEditViewController *cer = [[SYEditViewController alloc] init];
-//    cer.content = self.script.content;
-//    cer.uuid = self.script.uuid;
-//    cer.userScript = self.script;
-//    cer.isEdit = true;
-//    cer.isSearch = NO;
-//#ifdef Mac
-//    [[QuickAccess secondaryController] pushViewController:cer];
-//#else
-//    [self.navigationController pushViewController:cer animated:true];
-//#endif
+    NSURL *url = [NSURL URLWithString:self.scriptDic[@"hosting_url"]];
+    SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:url];
+    [self presentViewController:safariVc animated:YES completion:nil];
 }
 
 - (void)showNotes:(id)sender {
@@ -391,7 +384,7 @@
      UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 19)];
      label.text = @"Avaliable on";
      label.font = FCStyle.footnoteBold;
-     label.textColor =  FCStyle.fcSecondaryBlack;
+     label.textColor =  FCStyle.grayNoteColor;
      [view addSubview:label];
      [label sizeToFit];
      CGFloat imageLeft = label.right + 5;
@@ -419,7 +412,7 @@
         UILabel *onlyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 19)];
         onlyLabel.text = @"Only on";
         onlyLabel.font = FCStyle.footnoteBold;
-        onlyLabel.textColor =  FCStyle.fcSecondaryBlack;
+        onlyLabel.textColor =  FCStyle.grayNoteColor;
         onlyLabel.left = splitline.right + 12;
         [view addSubview:onlyLabel];
         UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;

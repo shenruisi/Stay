@@ -84,7 +84,7 @@
     NSString *name = @"name";
     NSString *desc = @"desc";
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 18)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, 234, 18)];
     headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = FCStyle.fcBlack;
     headerLabel.text = dic[name];
@@ -164,6 +164,28 @@
             imageLeft += 5 + imageView.width;
             [self.contentView addSubview:imageView];
         }
+        
+        bool stayOnly = [dic[@"stay_only"] boolValue];
+        if(stayOnly) {
+            UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(0, 12, 1, 17)];
+            splitline.backgroundColor = FCStyle.fcSeparator;
+            splitline.bottom = top;
+            [self.contentView addSubview:splitline];
+            splitline.left = imageLeft + 10;
+            UILabel *onlyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 19)];
+            onlyLabel.text = @"Only on";
+            onlyLabel.font = FCStyle.footnoteBold;
+            onlyLabel.textColor =  FCStyle.grayNoteColor;
+            onlyLabel.bottom = top;
+            onlyLabel.left = splitline.right + 12;
+            [self.contentView addSubview:onlyLabel];
+            UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;
+            bzImageView.size = bzImageView.image.size;
+            bzImageView.bottom = top;
+            bzImageView.left = onlyLabel.right + 2;
+            [self.contentView addSubview:bzImageView];
+        }
+        
         
         top += 10;
     }

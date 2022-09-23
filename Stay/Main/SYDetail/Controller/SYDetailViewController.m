@@ -551,7 +551,7 @@
      UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 19)];
      label.text = @"Avaliable on";
      label.font = FCStyle.footnoteBold;
-     label.textColor =  FCStyle.fcSecondaryBlack;
+     label.textColor =  FCStyle.grayNoteColor;
      [view addSubview:label];
      [label sizeToFit];
      
@@ -579,7 +579,7 @@
          UILabel *onlyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 19)];
          onlyLabel.text = @"Only on";
          onlyLabel.font = FCStyle.footnoteBold;
-         onlyLabel.textColor =  FCStyle.fcSecondaryBlack;
+         onlyLabel.textColor =  FCStyle.grayNoteColor;
          onlyLabel.left = splitline.right + 12;
          [view addSubview:onlyLabel];
          UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;

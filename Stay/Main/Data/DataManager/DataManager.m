@@ -657,7 +657,7 @@
         }
         sqlite3_bind_int(statement, 14, scrpitDetail.noFrames?1:0);
         sqlite3_bind_text(statement, 15, [scrpitDetail.content UTF8String], -1,NULL);
-        sqlite3_bind_int(statement, 16, scrpitDetail.active?1:0);
+        sqlite3_bind_int(statement, 16, 1);
         if(scrpitDetail.requireUrls.count > 0) {
             sqlite3_bind_text(statement, 17, [[scrpitDetail.requireUrls componentsJoinedByString:@","] UTF8String], -1,NULL);
         } else {
