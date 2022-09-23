@@ -208,6 +208,8 @@
 		58A06D1728DAA49200983455 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */; };
 		58A06D1828DAA49200983455 /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1328DAA49200983455 /* jquery.min.js */; };
 		58A06D1928DAA49200983455 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1428DAA49200983455 /* gm-apis-gen.js */; };
+		58A06D1B28DDACBA00983455 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */; };
+		58A06D1C28DDACBA00983455 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */; };
 		58AC12E42860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
@@ -311,8 +313,6 @@
 		84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932028A5F5F2003E3967 /* SYAboutViewController.m */; };
 		84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
 		84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
-		84AA932828A9EB08003E3967 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AA932728A9EB07003E3967 /* stay-mac1024-1.png */; };
-		84AA932928A9EB08003E3967 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AA932728A9EB07003E3967 /* stay-mac1024-1.png */; };
 		84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AC68D027E434E500F356DF /* SYNotesViewController.m */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
@@ -559,6 +559,7 @@
 		58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
 		58A06D1328DAA49200983455 /* jquery.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		58A06D1428DAA49200983455 /* gm-apis-gen.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "gm-apis-gen.js"; sourceTree = "<group>"; };
+		58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stay-mac1024-1.png"; sourceTree = "<group>"; };
 		58AC12E22860750800875D6D /* FCShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCShared.h; sourceTree = "<group>"; };
 		58AC12E32860750800875D6D /* FCShared.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCShared.m; sourceTree = "<group>"; };
 		58AC12E62860752800875D6D /* Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
@@ -696,7 +697,6 @@
 		84AA932028A5F5F2003E3967 /* SYAboutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAboutViewController.m; sourceTree = "<group>"; };
 		84AA932328A63440003E3967 /* SYAppearanceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYAppearanceViewController.h; sourceTree = "<group>"; };
 		84AA932428A63440003E3967 /* SYAppearanceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAppearanceViewController.m; sourceTree = "<group>"; };
-		84AA932728A9EB07003E3967 /* stay-mac1024-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stay-mac1024-1.png"; path = "Stay/Assets.xcassets/AppIcon.appiconset/stay-mac1024-1.png"; sourceTree = SOURCE_ROOT; };
 		84AC68CF27E434E500F356DF /* SYNotesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNotesViewController.h; sourceTree = "<group>"; };
 		84AC68D027E434E500F356DF /* SYNotesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNotesViewController.m; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
@@ -1082,7 +1082,7 @@
 			isa = PBXGroup;
 			children = (
 				84CC9B6328DD8ACF002EB493 /* bz@3x.png */,
-				84AA932728A9EB07003E3967 /* stay-mac1024-1.png */,
+				58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */,
 				84C2B40C288E30CC002A0C1B /* flash@3x.png */,
 				84A15E02282CE1FC002E121D /* addedScript@3x.png */,
 				84A15E03282CE1FC002E121D /* addScript@3x.png */,
@@ -1928,7 +1928,6 @@
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
 				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
-				84AA932828A9EB08003E3967 /* stay-mac1024-1.png in Resources */,
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
@@ -1965,6 +1964,7 @@
 				8410C844275E028A005531EC /* javascript.js in Resources */,
 				84C1ED52277AE1B500651DF9 /* search-selected@3x.png in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
+				58A06D1B28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
 				84C1ED48276C637200651DF9 /* scriptManager.sqlite in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
 				84BDC853274CA4A5005367C6 /* stop@3x.png in Resources */,
@@ -2030,7 +2030,6 @@
 				588202852859E73900B2721A /* Icon.png in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
 				588202862859E73900B2721A /* more@3x.png in Resources */,
-				84AA932928A9EB08003E3967 /* stay-mac1024-1.png in Resources */,
 				588202872859E73900B2721A /* typescript.html in Resources */,
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
 				588202892859E73900B2721A /* parse-meta-line.js in Resources */,
@@ -2067,6 +2066,7 @@
 				588202A42859E73900B2721A /* javascript.js in Resources */,
 				588202A52859E73900B2721A /* search-selected@3x.png in Resources */,
 				588202A62859E73900B2721A /* Style.css in Resources */,
+				58A06D1C28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
 				588202A72859E73900B2721A /* scriptManager.sqlite in Resources */,
 				588202A82859E73900B2721A /* convert2RegExp.js in Resources */,
 				588202A92859E73900B2721A /* stop@3x.png in Resources */,
