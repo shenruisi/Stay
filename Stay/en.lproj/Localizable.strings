@@ -77,7 +77,7 @@ Status="Status";
 UpdateTime="Update time";
 SeeAll="See all";
 Detail="Detail";
-Get="Get";
+Get="Install";
 UpdateScript="Update script";
 ActivateForSafari="Activate for Safari";
 ExtensionGuide="Safari -> Preferences… -> Extensions";
@@ -154,3 +154,5 @@ GuidePage2Button="Run";
 
 AccentColor="ACCENT COLOR";
 SendFeedback="PLAN & SEND FEEDBACK";
+Featured="Featured";
+All="All";

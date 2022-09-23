@@ -74,7 +74,7 @@ Status="狀態";
 UpdateTime="更新時間";
 SeeAll = "查看全部";
 Detail="詳情";
-Get="獲取";
+Get="安裝";
 UpdateScript="更新腳本";
 ActivateForSafari="在Safari中激活擴展";
 ExtensionGuide="Safari瀏覽器 -> 偏好設定… -> 擴展";
@@ -151,4 +151,5 @@ GuidePage2Button="運行";
 
 AccentColor="主題色";
 SendFeedback="開發計劃與反饋";
-
+Featured="推薦";
+All="所有";
