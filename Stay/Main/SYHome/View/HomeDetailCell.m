@@ -54,7 +54,7 @@
     [imageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
     imageView.contentMode =  UIViewContentModeScaleAspectFit;
 
-    if(dic.active == 0) {
+    if(dic.active == 0 && dic.icon != NULL && dic.icon.length > 0) {
         imageView.image = [self makeGrayImage:imageView.image];
     }
 
@@ -112,8 +112,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
         [self.contentView addSubview:btn];
     } else {
-        headerLabel.width = self.contentView.width - headerLabel.left - 20;
-        subLabel.width =  self.contentView.width - subLabel.left - 20;
+        headerLabel.width = self.contentView.width - headerLabel.left - 30;
+        subLabel.width =  self.contentView.width - subLabel.left - 30;
     }
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"

@@ -94,12 +94,18 @@
 }
 
 - (UIView *)createBlockView:(NSDictionary *)dic{
+    NSString *title = @"title";
+    NSString *subtitle = @"subtitle";
+    if([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]){
+        title = @"title_cn";
+        subtitle = @"subtitle_cn";
+    }
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 56 + (self.contentView.width - 40) / 2.25F)];
     view.clipsToBounds = YES;
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 40, 22)];
     headerLabel.font = FCStyle.title3Bold;
     headerLabel.textColor = FCStyle.fcBlack;
-    headerLabel.text = dic[@"title"];
+    headerLabel.text = dic[title];
     [view addSubview:headerLabel];
     
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width- 40, 15)];
@@ -266,20 +272,36 @@
         imageBox.hidden = true;
     }
     
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 234, 18)];
+    NSString *name = @"name";
+    NSString *desc = @"desc";
+
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 18, 200, 18)];
     headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = FCStyle.fcBlack;
-    headerLabel.text = dic[@"name"];
+    headerLabel.text = dic[name];
     [view addSubview:headerLabel];
     
-    UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 234, 13)];
+    UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 13)];
     subLabel.font = FCStyle.footnote;
     subLabel.textColor = FCStyle.fcSecondaryBlack;
-    subLabel.text = dic[@"desc"];
+    subLabel.text = dic[desc];
     subLabel.top = headerLabel.bottom + 5;
     [view addSubview:subLabel];
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
+    if( icon == nil || icon.length <= 0){
+        headerLabel.width = 260;
+        subLabel.width = 260;
+    }
+    NSDictionary *locate = dic[@"locales"];
+    if(locate != NULL  && locate.count > 0) {
+        NSDictionary *localLanguage = locate[[UserScript localeCode]];
+        if (localLanguage != nil && localLanguage.count > 0) {
+            headerLabel.text = localLanguage[name];
+            subLabel.text = localLanguage[@"description"];
+        }
+    }
+    
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 40 - 40 - 10, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
@@ -582,12 +604,21 @@ UIPopoverPresentationControllerDelegate
                 cell.contentView.backgroundColor = FCStyle.secondaryBackground;
                 return cell;
             } else if([dic[@"type"] isEqualToString:@"album"]){
-                _FeaturedAlubmTableViewCell *cell = [[_FeaturedAlubmTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
+                _FeaturedAlubmTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellALBUM"];
+                if (cell == nil) {
+                    cell = [[_FeaturedAlubmTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                }
                 cell.contentView.width = self.view.width;
                 cell.width = self.view.width;
                 cell.controller = self;
                 cell.navigationController = self.navigationController;
-                cell.headTitle = dic[@"title"];
+                
+                NSString *title = @"title";
+                if([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]){
+                    title = @"title_cn";
+                }
+                cell.headTitle = dic[title];
                 cell.entity = dic[@"userscripts"];
                 cell.contentView.backgroundColor = FCStyle.secondaryBackground;
                 return cell;
@@ -602,13 +633,11 @@ UIPopoverPresentationControllerDelegate
             }
             
         } else {
-//            BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
-//            if (cell == nil) {
-//                cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
-//                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//            }
-            BrowseDetailTableViewCell * cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
+            if (cell == nil) {
+                cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
 
             cell.contentView.width = self.view.width;
             cell.controller = self;
@@ -846,7 +875,6 @@ UIPopoverPresentationControllerDelegate
              _pageNo++;
              [self queryAllData];
          }
-         NSLog(@"load more rows");
      }
 }
 

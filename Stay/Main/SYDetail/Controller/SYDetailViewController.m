@@ -289,12 +289,12 @@
      [cell.contentView addSubview:scrollView];
      
      
-     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 1)];
+     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(15, 0, self.view.width - 15, 1)];
      topline.backgroundColor = FCStyle.fcSeparator;
      topline.top = scrollView.top -1;
      [cell.contentView addSubview:topline];
 
-     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(0, 59, self.view.width, 1)];
+     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(15, 59, self.view.width - 15, 1)];
      bottomline.backgroundColor = FCStyle.fcSeparator;
      bottomline.bottom = scrollView.bottom + 1;
      [cell.contentView addSubview:bottomline];

@@ -81,16 +81,19 @@
     line.left = 15;
     [self.contentView addSubview:line];
     
+    NSString *name = @"name";
+    NSString *desc = @"desc";
+    
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 234, 18)];
     headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = FCStyle.fcBlack;
-    headerLabel.text = dic[@"name"];
+    headerLabel.text = dic[name];
     [self.contentView addSubview:headerLabel];
     
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 234, 13)];
     subLabel.font = FCStyle.footnote;
     subLabel.textColor = FCStyle.fcSecondaryBlack;
-    subLabel.text = dic[@"desc"];
+    subLabel.text = dic[desc];
     subLabel.top = headerLabel.bottom + 5;
     [self.contentView addSubview:subLabel];
     headerLabel.left = subLabel.left = left;
@@ -102,6 +105,15 @@
 //    line.left = 20;
 //    [self.contentView addSubview:line];
     
+    
+    NSDictionary *locate = dic[@"locales"];
+    if(locate != NULL  && locate.count > 0) {
+        NSDictionary *localLanguage = locate[[UserScript localeCode]];
+        if (localLanguage != nil && localLanguage.count > 0) {
+            headerLabel.text = localLanguage[name];
+            subLabel.text = localLanguage[@"description"];
+        }
+    }
     NSString *uuid = dic[@"uuid"];
     
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
