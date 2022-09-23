@@ -23,6 +23,7 @@
 #import "BrowseDetailTableViewCell.h"
 #import "SYEditViewController.h"
 #import "LoadingSlideController.h"
+#import <SafariServices/SafariServices.h>
 
 
 #ifdef Mac
@@ -34,6 +35,8 @@
 @interface _FeaturedBannerTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) UIScrollView *bannerView;
+@property (nonatomic, strong) UIViewController *controller;
+
 @end
 
 @implementation _FeaturedBannerTableViewCell
@@ -111,7 +114,11 @@
     bannerImageView.layer.cornerRadius = 10;
     bannerImageView.clipsToBounds = YES;
     bannerImageView.top = subLabel.bottom + 5;
-
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClick:)];
+    objc_setAssociatedObject (tapGesture , @"url",  dic[@"jumpUrl"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [view addGestureRecognizer:tapGesture];
+    
     bool border = dic[@"border"];
     if (border) {
         bannerImageView.layer.borderColor = FCStyle.borderColor.CGColor;
@@ -123,6 +130,16 @@
     return view;
 }
 
+-(void)bannerClick:(id)tap {
+    NSString *urlStr = objc_getAssociatedObject(tap,@"url");
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""]]];
+        [_controller presentViewController:safariVc animated:YES completion:nil];
+    } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
+        [[UIApplication sharedApplication] openURL:url];
+    }
+}
 
 
 @end
@@ -231,8 +248,8 @@
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+    imageView.contentMode =  UIViewContentModeScaleAspectFit;
     [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-//    [imageView sd_setImageWithURL:[NSURL URLWithString: @"https://res.stayfork.app/scripts/8E61538B6D32E64E6F38BF2AB4416C73/icon.png"]];
 
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
@@ -295,6 +312,8 @@
         [btn addTarget:self.controller action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+
     }
     
     btn.top = headerLabel.top;
@@ -559,6 +578,7 @@ UIPopoverPresentationControllerDelegate
                 cell.contentView.width = self.view.width;
                 cell.width = self.view.width;
                 cell.entity = dic[@"blocks"];
+                cell.controller = self;
                 cell.contentView.backgroundColor = FCStyle.secondaryBackground;
                 return cell;
             } else if([dic[@"type"] isEqualToString:@"album"]){
@@ -757,6 +777,8 @@ UIPopoverPresentationControllerDelegate
 
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
+    NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
+
     self.loadingSlideController.originSubText = name;
     [self.loadingSlideController show];
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -774,6 +796,7 @@ UIPopoverPresentationControllerDelegate
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
+                cer.platforms = platforms;
 #ifdef Mac
                 [[QuickAccess secondaryController] pushViewController:cer];
 #else

@@ -58,6 +58,7 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
     [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
 //    [imageView sd_setImageWithURL:[NSURL URLWithString: @"https://res.stayfork.app/scripts/8E61538B6D32E64E6F38BF2AB4416C73/icon.png"]];
+    imageView.contentMode =  UIViewContentModeScaleAspectFit;
 
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
@@ -125,7 +126,7 @@
         [btn addTarget:self.controller action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
-
+        objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
     }
     
     btn.top = headerLabel.top;
@@ -184,7 +185,7 @@
             tag.width += 40;
             tag.height = 25;
             tag.left = tagLeft;
-//            tag.clipsToBounds = YES;
+            tag.clipsToBounds = YES;
             tag.top = 0;
             tagLeft = tag.right + 5;
             [tagScrollView addSubview:tag];
