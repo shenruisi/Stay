@@ -41,6 +41,7 @@
 @property (nonatomic, assign) CGFloat scrollerTop;
 @property (nonatomic, strong) UIView *navigationBarCover;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, assign) bool needExpand;
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
@@ -274,46 +275,55 @@
      } else {
          [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
           self.actBtn.backgroundColor = FCStyle.background;
-          [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+          [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
      }
      
      [cell.contentView addSubview:self.actBtn];
      self.actBtn.left = titleLabel.left;
      self.actBtn.top = titleLabel.bottom + 5;
      
+
      UIScrollView *scrollView =  [self createBaseInfoView];
      scrollView.left = left;
      scrollView.top = self.actBtn.bottom + 15;
      [cell.contentView addSubview:scrollView];
      
      
-     UITextView *descDetailLabel = [[UITextView alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 ,30)];
-     descDetailLabel.delegate = self;
-     descDetailLabel.editable = NO;
+     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 1)];
+     topline.backgroundColor = FCStyle.fcSeparator;
+     topline.top = scrollView.top -1;
+     [cell.contentView addSubview:topline];
+
+     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(0, 59, self.view.width, 1)];
+     bottomline.backgroundColor = FCStyle.fcSeparator;
+     bottomline.bottom = scrollView.bottom + 1;
+     [cell.contentView addSubview:bottomline];
+     
+     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 ,200)];
      descDetailLabel.text = self.script.desc;
      descDetailLabel.textColor =  FCStyle.fcBlack;
      descDetailLabel.textAlignment = NSTextAlignmentLeft;
-     descDetailLabel.backgroundColor = UIColor.clearColor;
-     descDetailLabel.contentInset = UIEdgeInsetsMake(-5, -5, 0, 0);
-     descDetailLabel.font = FCStyle.body;
-     UILabel *heightLab = [[UILabel alloc] initWithFrame:CGRectMake(left,0,self.view.width - left * 2 ,20)];
-     heightLab.font = FCStyle.headline;
-     heightLab.lineBreakMode= NSLineBreakByTruncatingMiddle;
-     heightLab.textColor =  FCStyle.fcBlack;
-     heightLab.textAlignment = NSTextAlignmentLeft;
-     heightLab.numberOfLines = 0;
-     heightLab.text = self.script.desc;
-     [heightLab sizeToFit];
-     if(heightLab.height > 70) {
-         descDetailLabel.showsVerticalScrollIndicator = true;
- #ifdef Mac
-         descDetailLabel.height = 70;
- #else
-         descDetailLabel.height = 62;
- #endif
-         [descDetailLabel flashScrollIndicators];
-     } else {
-         descDetailLabel.scrollEnabled = NO;
+     descDetailLabel.lineBreakMode= NSLineBreakByTruncatingMiddle;
+     descDetailLabel.font = FCStyle.footnote;
+     descDetailLabel.numberOfLines = 0;
+     [descDetailLabel sizeToFit];
+
+     if(descDetailLabel.height > 70) {
+          if (!_needExpand) {
+      #ifdef Mac
+              descDetailLabel.height = 70;
+      #else
+              descDetailLabel.height = 62;
+      #endif
+               UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 15)];
+               [btn setTitle:NSLocalizedString(@"more", @"") forState:UIControlStateNormal];
+               [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+               btn.bottom = descDetailLabel.bottom - 8;
+               btn.font = FCStyle.footnote;
+               btn.right = self.view.width;
+               [btn addTarget:self action:@selector(expand) forControlEvents:UIControlEventTouchUpInside];
+               [cell.contentView addSubview:btn];
+          }
      }
      [cell.contentView addSubview:descDetailLabel];
           
@@ -486,7 +496,7 @@
     } else {
         [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
          self.actBtn.backgroundColor = FCStyle.background;
-         [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+         [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
     }
     
     if (self.script.active) {
@@ -559,6 +569,26 @@
          [view addSubview:imageView];
      }
      
+     bool stayOnly = self.script.stayOnly;
+     if(stayOnly) {
+         UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(0, 12, 1, 17)];
+         splitline.backgroundColor = FCStyle.fcSeparator;
+         splitline.bottom = label.bottom;
+         [view addSubview:splitline];
+         splitline.left = imageLeft + 10;
+         UILabel *onlyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 19)];
+         onlyLabel.text = @"Only on";
+         onlyLabel.font = FCStyle.footnoteBold;
+         onlyLabel.textColor =  FCStyle.fcSecondaryBlack;
+         onlyLabel.left = splitline.right + 12;
+         [view addSubview:onlyLabel];
+         UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;
+         bzImageView.size = bzImageView.image.size;
+         bzImageView.bottom = label.bottom;
+         bzImageView.left = onlyLabel.right + 2;
+         [view addSubview:bzImageView];
+     }
+     
      
      return view;
 }
@@ -580,6 +610,11 @@
         [[SharedStorageManager shared].userscriptHeaders flush];
         [[ScriptMananger shareManager] buildData];
     }
+}
+
+- (void)expand {
+     _needExpand = true;
+     [self.tableView reloadData];
 }
 
 - (void)switchTab:(UIButton *)btn {
@@ -884,55 +919,70 @@
 
 //基础信息view
 - (UIScrollView *)createBaseInfoView {
-     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 60)];
-     
-     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 1)];
-     topline.backgroundColor = FCStyle.fcSeparator;
-     [scrollView addSubview:topline];
-     
-     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(0, 59, self.view.width - 30, 1)];
-     bottomline.backgroundColor = FCStyle.fcSeparator;
-     [scrollView addSubview:bottomline];
-     
+     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 60)];
      
      NSString *used = self.script.usedTimes == nil? @"0": [NSString stringWithFormat:@"%@", self.script.usedTimes ];
      
-     NSArray *array =  @[
-         @{
-             @"name":@"USED",
-             @"desc": used,
-             @"color":FCStyle.grayNoteColor
-         },
-         @{
-             @"name":@"SCRIPT",
-             @"desc":@"edit",
-             @"color":FCStyle.accent,
-             @"type":@"edit"
-         },
-         @{
-             @"name":@"AUTHOR",
-             @"desc":self.script.author,
-             @"color":FCStyle.accent,
-         },
-         @{
-             @"name":@"VERSION",
-             @"desc":self.script.version,
-             @"color":FCStyle.grayNoteColor,
-         }
-     ];
+     NSMutableArray *array = [NSMutableArray arrayWithArray:  @[
+          @{
+              @"name":@"USED",
+              @"desc": used,
+              @"color":FCStyle.grayNoteColor
+          },
+          @{
+              @"name":@"SCRIPT",
+              @"desc":@"edit",
+              @"color":FCStyle.accent,
+              @"type":@"edit"
+          },
+          @{
+              @"name":@"AUTHOR",
+              @"desc":self.script.author,
+              @"color":FCStyle.accent,
+          },
+          @{
+              @"name":@"VERSION",
+              @"desc":self.script.version,
+              @"color":FCStyle.grayNoteColor,
+          },
+          @{
+               @"name":@"RUN AT",
+               @"desc":self.script.runAt,
+               @"color":FCStyle.grayNoteColor,
+          }
+         
+          
+      ]];
+     
+     if(self.script.license != NULL && self.script.license.length > 0) {
+          [array addObject:@{
+               @"name":@"LICENSE",
+               @"desc":self.script.license,
+               @"color":FCStyle.grayNoteColor,
+          }];
+     }
+     
+     if(self.script.homepage != NULL && self.script.homepage.length > 0) {
+          [array addObject:@{
+               @"name":@"HOMEPAGE",
+               @"desc":self.script.homepage,
+               @"color":FCStyle.grayNoteColor,
+          }];
+     }
+     
      
      
      for(int i = 0; i < array.count; i++) {
-          CGFloat left =  i * ((self.view.width - 30) / 4);
+          CGFloat left =  i * 90;
           UIView *view = [self createBaseSiteView:array[i]];
           view.left = left;
           view.top = 1;
           [scrollView addSubview:view];
           
+          scrollView.contentSize = CGSizeMake(view.right + 15, 60);
           if(i != 0) {
             UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(left, 12, 1, 37)];
             splitline.backgroundColor = FCStyle.fcSeparator;
-
             [scrollView addSubview:splitline];
           }
           
@@ -951,13 +1001,13 @@
      NSString *type = dic[@"type"];
 
      
-     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 58)];
-     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 15)];
+     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 58)];
+     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 90, 15)];
      title.text = name;
      title.font = FCStyle.footnote;
      title.textColor = FCStyle.fcSecondaryBlack;
-
      title.top = 12;
+     title.centerX = 45;
      title.textAlignment = NSTextAlignmentCenter;
      [view addSubview:title];
      
@@ -971,12 +1021,13 @@
           imageView.top = title.bottom + 6;
           [view addSubview:imageView];
      } else {
-          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 18)];
+          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 15)];
           descLabel.font = FCStyle.subHeadlineBold;
           descLabel.textColor = descColor;
           descLabel.text = desc;
+          descLabel.centerX = 45;
           descLabel.top = title.bottom + 6;
-          descLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+          descLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
           descLabel.textAlignment = NSTextAlignmentCenter;
           [view addSubview:descLabel];
      }

@@ -573,6 +573,21 @@
         
         scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
+        
+        int status = sqlite3_column_int(stmt, 30);
+        scrpitDetail.status = status;
+        
+        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 31)== NULL?"":(const char *)sqlite3_column_text(stmt, 31)];
+        if (platforms != NULL && platforms.length > 0) {
+            scrpitDetail.plafroms = [platforms componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.plafroms = @[];
+        }
+        
+        int stayOnly = sqlite3_column_int(stmt, 32);
+        scrpitDetail.stayOnly = stayOnly == 1? true:false;
+        
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -989,10 +1004,18 @@
         NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
         scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
-        
         int status = sqlite3_column_int(stmt, 30);
         scrpitDetail.status = status;
         
+        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 31)== NULL?"":(const char *)sqlite3_column_text(stmt, 31)];
+        if (platforms != NULL && platforms.length > 0) {
+            scrpitDetail.plafroms = [platforms componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.plafroms = @[];
+        }
+        
+        int stayOnly = sqlite3_column_int(stmt, 32);
+        scrpitDetail.stayOnly = stayOnly == 1? true:false;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }

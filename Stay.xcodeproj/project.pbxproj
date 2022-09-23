@@ -347,6 +347,8 @@
 		84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */; };
 		84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
 		84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
+		84CC9B6428DD8AD0002EB493 /* bz@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC9B6328DD8ACF002EB493 /* bz@3x.png */; };
+		84CC9B6528DD8AD0002EB493 /* bz@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CC9B6328DD8ACF002EB493 /* bz@3x.png */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
 		84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F4831D273AC51800217BB3 /* js-lib@3x.png */; };
 		84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48320273ACAC000217BB3 /* SYHomeViewController.m */; };
@@ -734,6 +736,7 @@
 		84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeDetailCell.m; sourceTree = "<group>"; };
 		84CC9B5F28D1C290002EB493 /* SYNoDownLoadDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNoDownLoadDetailViewController.h; sourceTree = "<group>"; };
 		84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNoDownLoadDetailViewController.m; sourceTree = "<group>"; };
+		84CC9B6328DD8ACF002EB493 /* bz@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bz@3x.png"; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		84F48317273A739800217BB3 /* MainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		84F4831D273AC51800217BB3 /* js-lib@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "js-lib@3x.png"; sourceTree = "<group>"; };
@@ -1070,6 +1073,7 @@
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				84CC9B6328DD8ACF002EB493 /* bz@3x.png */,
 				84AA932728A9EB07003E3967 /* stay-mac1024-1.png */,
 				84C2B40C288E30CC002A0C1B /* flash@3x.png */,
 				84A15E02282CE1FC002E121D /* addedScript@3x.png */,
@@ -1927,6 +1931,7 @@
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
+				84CC9B6428DD8AD0002EB493 /* bz@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
 				84C1ED50277AD93300651DF9 /* arrow-dark@3x.png in Resources */,
@@ -2028,6 +2033,7 @@
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
+				84CC9B6528DD8AD0002EB493 /* bz@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				5882029F2859E73900B2721A /* codemirror.js in Resources */,
 				588202A02859E73900B2721A /* arrow-dark@3x.png in Resources */,

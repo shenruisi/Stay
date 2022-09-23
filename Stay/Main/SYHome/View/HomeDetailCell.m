@@ -52,6 +52,7 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
 //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
     [imageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
+    imageView.contentMode =  UIViewContentModeScaleAspectFit;
 
     if(dic.active == 0) {
         imageView.image = [self makeGrayImage:imageView.image];
@@ -117,7 +118,7 @@
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
-    simage = [simage imageWithTintColor:dic.active == 0 ?FCStyle.grayNoteColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+    simage = [simage imageWithTintColor:dic.active == 0 ?[FCStyle.grayNoteColor colorWithAlphaComponent:0.5]:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
     
     UIImageView *sImageView = [[UIImageView alloc] initWithImage:simage];
     sImageView.frame = CGRectMake(0, 0, 15, 15);
@@ -136,7 +137,7 @@
     
     UIImage *image =  [UIImage systemImageNamed:@"v.circle.fill"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
-    image = [image imageWithTintColor:FCStyle.grayNoteColor renderingMode:UIImageRenderingModeAlwaysOriginal];
+    image = [image imageWithTintColor: dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor renderingMode:UIImageRenderingModeAlwaysOriginal];
     
     UIImageView *versionImageView = [[UIImageView alloc] initWithImage:image];
     versionImageView.frame = CGRectMake(0, 0, 15, 15);

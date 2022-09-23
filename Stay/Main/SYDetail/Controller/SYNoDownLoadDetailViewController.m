@@ -43,8 +43,7 @@
 @property (nonatomic, strong) UIView *navigationBarCover;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
-
-
+@property (nonatomic, assign) bool needExpand;
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 
 
@@ -228,36 +227,43 @@
      scrollView.left = left;
      scrollView.top = self.actBtn.bottom + 15;
      [cell.contentView addSubview:scrollView];
+    
+    UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 1)];
+    topline.backgroundColor = FCStyle.fcSeparator;
+    topline.top = scrollView.top -1;
+    [cell.contentView addSubview:topline];
+
+    UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(0, 59, self.view.width, 1)];
+    bottomline.backgroundColor = FCStyle.fcSeparator;
+    bottomline.bottom = scrollView.bottom + 1;
+    [cell.contentView addSubview:bottomline];
      
-     
-     UITextView *descDetailLabel = [[UITextView alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 ,30)];
-     descDetailLabel.delegate = self;
-     descDetailLabel.editable = NO;
-     descDetailLabel.text =self.scriptDic[@"desc"];
-     descDetailLabel.textColor =  FCStyle.fcBlack;
-     descDetailLabel.textAlignment = NSTextAlignmentLeft;
-     descDetailLabel.backgroundColor = UIColor.clearColor;
-     descDetailLabel.contentInset = UIEdgeInsetsMake(-5, -5, 0, 0);
-     descDetailLabel.font = FCStyle.body;
-     UILabel *heightLab = [[UILabel alloc] initWithFrame:CGRectMake(left,0,self.view.width - left * 2 ,20)];
-     heightLab.font = FCStyle.headline;
-     heightLab.lineBreakMode= NSLineBreakByTruncatingMiddle;
-     heightLab.textColor =  FCStyle.fcBlack;
-     heightLab.textAlignment = NSTextAlignmentLeft;
-     heightLab.numberOfLines = 0;
-     heightLab.text = self.scriptDic[@"desc"];
-     [heightLab sizeToFit];
-     if(heightLab.height > 70) {
-         descDetailLabel.showsVerticalScrollIndicator = true;
- #ifdef Mac
-         descDetailLabel.height = 70;
- #else
-         descDetailLabel.height = 62;
- #endif
-         [descDetailLabel flashScrollIndicators];
-     } else {
-         descDetailLabel.scrollEnabled = NO;
-     }
+    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 ,200)];
+    descDetailLabel.text = self.scriptDic[@"desc"];
+    descDetailLabel.textColor =  FCStyle.fcBlack;
+    descDetailLabel.textAlignment = NSTextAlignmentLeft;
+    descDetailLabel.lineBreakMode= NSLineBreakByTruncatingMiddle;
+    descDetailLabel.font = FCStyle.footnote;
+    descDetailLabel.numberOfLines = 0;
+    [descDetailLabel sizeToFit];
+
+    if(descDetailLabel.height > 70) {
+         if (!_needExpand) {
+     #ifdef Mac
+             descDetailLabel.height = 70;
+     #else
+             descDetailLabel.height = 62;
+     #endif
+              UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 15)];
+              [btn setTitle:NSLocalizedString(@"more", @"") forState:UIControlStateNormal];
+              [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+              btn.bottom = descDetailLabel.bottom - 8;
+              btn.font = FCStyle.footnote;
+              btn.right = self.view.width;
+              [btn addTarget:self action:@selector(expand) forControlEvents:UIControlEventTouchUpInside];
+              [cell.contentView addSubview:btn];
+         }
+    }
      [cell.contentView addSubview:descDetailLabel];
           
      CGFloat top = descDetailLabel.bottom + 10;
@@ -323,6 +329,11 @@
 - (void)deleteScript:(id)sender {
   
 
+}
+
+- (void)expand {
+     _needExpand = true;
+     [self.tableView reloadData];
 }
 
 - (void)showScript:(id)sender {
@@ -399,6 +410,26 @@
          imageLeft += 5 + imageView.width;
          [view addSubview:imageView];
      }
+    
+    bool stayOnly = self.scriptDic[@"stay_only"];
+    if(stayOnly) {
+        UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(0, 12, 1, 17)];
+        splitline.backgroundColor = FCStyle.fcSeparator;
+        splitline.bottom = label.bottom;
+        [view addSubview:splitline];
+        splitline.left = imageLeft + 10;
+        UILabel *onlyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 19)];
+        onlyLabel.text = @"Only on";
+        onlyLabel.font = FCStyle.footnoteBold;
+        onlyLabel.textColor =  FCStyle.fcSecondaryBlack;
+        onlyLabel.left = splitline.right + 12;
+        [view addSubview:onlyLabel];
+        UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;
+        bzImageView.size = bzImageView.image.size;
+        bzImageView.bottom = label.bottom;
+        bzImageView.left = onlyLabel.right + 2;
+        [view addSubview:bzImageView];
+    }
      
      
      return view;
@@ -492,7 +523,7 @@
             matchLabel.top = 13;
             matchLabel.left = baseLeft;
             matchLabel.textColor = FCStyle.fcSecondaryBlack;
-            matchLabel.font = FCStyle.subHeadline;
+            matchLabel.font = FCStyle.footnoteBold;
             top = matchLabel.bottom + 8;
             [_matchScrollView addSubview:matchLabel];
             for (int i = 0; i < matches.count; i++) {
@@ -772,50 +803,75 @@
 
 //基础信息view
 - (UIScrollView *)createBaseInfoView {
-     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 60)];
-     
-     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 1)];
-     topline.backgroundColor = FCStyle.fcSeparator;
-     [scrollView addSubview:topline];
-     
-     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(0, 59, self.view.width - 30, 1)];
-     bottomline.backgroundColor = FCStyle.fcSeparator;
-     [scrollView addSubview:bottomline];
+     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 60)];
      
      
      NSString *used = self.scriptDic[@"installs"] == nil? @"0": [NSString stringWithFormat:@"%@", self.scriptDic[@"installs"] ];
      
-     NSArray *array =  @[
-         @{
-             @"name":@"INSTALLS",
-             @"desc": used,
-             @"color":FCStyle.grayNoteColor
-         },
-         @{
-             @"name":@"SCRIPT",
-             @"desc":@"edit",
-             @"color":FCStyle.accent,
-             @"type":@"edit"
-         },
-         @{
-             @"name":@"AUTHOR",
-             @"desc":self.scriptDic[@"author"],
-             @"color":FCStyle.accent,
-         },
-         @{
-             @"name":@"VERSION",
-             @"desc":self.scriptDic[@"version"],
-             @"color":FCStyle.grayNoteColor,
-         }
-     ];
+     NSMutableArray *array = [NSMutableArray arrayWithArray: @[
+        @{
+            @"name":@"INSTALLS",
+            @"desc": used,
+            @"color":FCStyle.grayNoteColor
+        },
+        @{
+            @"name":@"SCRIPT",
+            @"desc":@"edit",
+            @"color":FCStyle.accent,
+            @"type":@"edit"
+        },
+        @{
+            @"name":@"AUTHOR",
+            @"desc":self.scriptDic[@"author"],
+            @"color":FCStyle.accent,
+        },
+        @{
+            @"name":@"VERSION",
+            @"desc":self.scriptDic[@"version"],
+            @"color":FCStyle.grayNoteColor,
+        }
+    ]];
+    
+    
+    NSString *runAt = self.scriptDic[@"run_at"];
+    if(runAt != NULL && runAt.length > 0) {
+         [array addObject:@{
+              @"name":@"RUNAT",
+              @"desc":runAt,
+              @"color":FCStyle.grayNoteColor,
+         }];
+    }
+    
+    
+    NSString *license = self.scriptDic[@"license"];
+    
+    if(license != NULL && license.length > 0) {
+         [array addObject:@{
+              @"name":@"LICENSE",
+              @"desc":license,
+              @"color":FCStyle.grayNoteColor,
+         }];
+    }
+    
+    NSString *homepage = self.scriptDic[@"homepage"];
+    if(homepage != NULL && homepage.length > 0) {
+         [array addObject:@{
+              @"name":@"HOMEPAGE",
+              @"desc":homepage,
+              @"color":FCStyle.grayNoteColor,
+         }];
+    }
+    
      
      
      for(int i = 0; i < array.count; i++) {
-          CGFloat left =  i * ((self.view.width - 30) / 4);
+          CGFloat left =  i * 90;
           UIView *view = [self createBaseSiteView:array[i]];
           view.left = left;
           view.top = 1;
           [scrollView addSubview:view];
+
+         scrollView.contentSize = CGSizeMake(view.right + 15, 60);
           
           if(i != 0) {
             UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(left, 12, 1, 37)];
@@ -839,31 +895,33 @@
      NSString *type = dic[@"type"];
 
      
-     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 58)];
-     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 15)];
+     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 58)];
+     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 15)];
      title.text = name;
      title.font = FCStyle.footnote;
      title.textColor = FCStyle.fcSecondaryBlack;
      title.top = 12;
+     title.centerX = 45;
      title.textAlignment = NSTextAlignmentCenter;
      [view addSubview:title];
      
      if([@"edit" isEqualToString:type]) {
           UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showScript:)];
           [view addGestureRecognizer:tapGesture];
-          UIImage *image = [ImageHelper sfNamed:@"pencil"font: FCStyle.subHeadline color:descColor];
+          UIImage *image = [ImageHelper sfNamed:@"link" font: FCStyle.subHeadline color:descColor];
           UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
           imageView.frame = CGRectMake(0, 0, 18, 18);
-          imageView.centerX = (self.view.width - 30) / 8;
+          imageView.centerX = title.centerX;
           imageView.top = title.bottom + 6;
           [view addSubview:imageView];
      } else {
-          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 30) / 4, 15)];
+          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 15)];
           descLabel.font = FCStyle.subHeadlineBold;
           descLabel.textColor = descColor;
           descLabel.text = desc;
+          descLabel.centerX = 45;
           descLabel.top = title.bottom + 6;
-          descLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+          descLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
           descLabel.textAlignment = NSTextAlignmentCenter;
           [view addSubview:descLabel];
      }
