@@ -98,13 +98,6 @@
     [self.contentView addSubview:subLabel];
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
-//
-//    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 1)];
-//    line.backgroundColor = FCStyle.fcSeparator;
-//    line.top =  127;
-//    line.left = 20;
-//    [self.contentView addSubview:line];
-    
     
     NSDictionary *locate = dic[@"locales"];
     if(locate != NULL  && locate.count > 0) {

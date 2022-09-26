@@ -468,8 +468,12 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, strong) NSMutableArray *datas; //featuredata
 @property (nonatomic, strong) NSMutableArray *allDatas;
 @property (nonatomic, strong) NSMutableArray *searchDatas;
-@property (nonatomic, strong) UISegmentedControl *segmentedControl;
+//@property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UITableView *allTableView;
+@property (nonatomic, strong) UITableView *searchTableView;
+
+
 @property (nonatomic, strong) BroSimpleLoadingView *simpleLoadingView;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, assign) NSInteger pageNo;
@@ -507,6 +511,7 @@ UIPopoverPresentationControllerDelegate
     self.searchController.delegate = self;
     self.searchController.searchBar.delegate = self;
     [self.searchController.searchBar setTintColor:FCStyle.accent];
+    [self.searchController.view addSubview:self.searchTableView];
     // Do any additional setup after loading the view.
 //    [self.view addSubview:self.segmentedControl];
     [self tableView];
@@ -518,20 +523,35 @@ UIPopoverPresentationControllerDelegate
 
 - (UIView *)createTableHeaderView {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
-    [view addSubview:self.segmentedControl];
+    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Featured", @""),NSLocalizedString(@"All", @""),nil];
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
+    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
+    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
+    segmentedControl.backgroundColor = FCStyle.secondaryPopup;
+    segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
+    segmentedControl.selectedSegmentIndex = _selectedIdx;
+    CGFloat left = (self.view.width - 200) / 2;
+    segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
+    [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
+    [view addSubview:segmentedControl];
     view.backgroundColor = FCStyle.background;
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top = 49.5;
     [view addSubview:line];
-//    self.tableView.tableHeaderView = view;
     return  view;
 }
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
     self.tableView.frame = self.view.bounds;
+    [self reloadAllTableview];
+}
+
+- (void)reloadAllTableview {
     [self.tableView reloadData];
+    [self.searchTableView reloadData];
+    [self.allTableView reloadData];
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -547,7 +567,7 @@ UIPopoverPresentationControllerDelegate
     [self.searchController setActive:NO];
     _inSearch = false;
     [_searchDatas removeAllObjects];
-    [self.tableView reloadData];
+    [self.searchTableView reloadData];
 //    [self.tableView reloadData];
 
 }
@@ -555,7 +575,7 @@ UIPopoverPresentationControllerDelegate
     [self.searchController setActive:YES];
     _searchPageNo = 1;
     _inSearch = true;
-    [self.tableView reloadData];
+    [self.searchTableView reloadData];
     return YES;
 }
 
@@ -567,14 +587,14 @@ UIPopoverPresentationControllerDelegate
 //        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
        [self querySearchData:searchText];
     }
-    [self.tableView reloadData];
+    [self.searchTableView reloadData];
 }
 
 
 #pragma mark - UITableViewDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if(_inSearch == TRUE) {
+    if([tableView isEqual:self.searchTableView]) {
         return nil;
     } else {
         return [self createTableHeaderView];
@@ -582,70 +602,57 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(_inSearch == TRUE) {
+    if([tableView isEqual:self.searchTableView]) {
         return self.searchDatas.count;
-    } else if(_selectedIdx == 1) {
+    } else if([tableView isEqual:self.allTableView]) {
         return  self.allDatas.count;
-    } else {
+    } else if([tableView isEqual:self.tableView]){
         return  self.datas.count;
     }
+    
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(!_inSearch) {
-        if(_selectedIdx == 0) {
-            NSDictionary *dic = self.datas[indexPath.row];
-            if([dic[@"type"] isEqualToString:@"banner"]) {
-                _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
-                cell.contentView.width = self.view.width;
-                cell.width = self.view.width;
-                cell.entity = dic[@"blocks"];
-                cell.controller = self;
-                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-                return cell;
-            } else if([dic[@"type"] isEqualToString:@"album"]){
-                _FeaturedAlubmTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellALBUM"];
-                if (cell == nil) {
-                    cell = [[_FeaturedAlubmTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
-                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                }
-                cell.contentView.width = self.view.width;
-                cell.width = self.view.width;
-                cell.controller = self;
-                cell.navigationController = self.navigationController;
-                
-                NSString *title = @"title";
-                if([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]){
-                    title = @"title_cn";
-                }
-                cell.headTitle = dic[title];
-                cell.entity = dic[@"userscripts"];
-                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-                return cell;
-            } else {
-                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
-                if (cell == nil) {
-                    cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
-                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                }
-                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-                return cell;
-            }
-            
-        } else {
-            BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
+    if([tableView isEqual:self.tableView]) {
+        NSDictionary *dic = self.datas[indexPath.row];
+        if([dic[@"type"] isEqualToString:@"banner"]) {
+            _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+            cell.contentView.width = self.view.width;
+            cell.width = self.view.width;
+            cell.entity = dic[@"blocks"];
+            cell.controller = self;
+            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            return cell;
+        } else if([dic[@"type"] isEqualToString:@"album"]){
+            _FeaturedAlubmTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellALBUM"];
             if (cell == nil) {
-                cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
+                cell = [[_FeaturedAlubmTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellALBUM"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-
             cell.contentView.width = self.view.width;
+            cell.width = self.view.width;
             cell.controller = self;
             cell.navigationController = self.navigationController;
-            cell.entity = self.allDatas[indexPath.row];
+            
+            NSString *title = @"title";
+            if([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]){
+                title = @"title_cn";
+            }
+            cell.headTitle = dic[title];
+            cell.entity = dic[@"userscripts"];
+            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            return cell;
+        } else {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }
-    } else {
+    } else if ([tableView isEqual:self.searchTableView]) {
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
         if (cell == nil) {
             cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
@@ -656,13 +663,33 @@ UIPopoverPresentationControllerDelegate
         cell.navigationController = self.navigationController;
         cell.entity = self.searchDatas[indexPath.row];
         return cell;
+    } else  if([tableView isEqual:self.allTableView]){
+        BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
+        if (cell == nil) {
+            cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+
+        cell.contentView.width = self.view.width;
+        cell.controller = self;
+        cell.navigationController = self.navigationController;
+        cell.entity = self.allDatas[indexPath.row];
+        return cell;
+    } else {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+        return cell;
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(_inSearch == TRUE) {
+    if([tableView isEqual:self.searchTableView]) {
         return 138.0f;
-    }else if(_selectedIdx == 1) {
+    }else if([tableView isEqual:self.allTableView]) {
         return 138.0f;
     } else {
         NSDictionary *dic = self.datas[indexPath.row];
@@ -684,10 +711,8 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (_segmentedControl != NULL) {
-        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.subHeadlineBold} forState:UIControlStateSelected];
-    }
-    [self.tableView reloadData];
+    [[ScriptMananger shareManager] refreshData];
+    [self reloadAllTableview];
 }
 
 - (void)queryData{
@@ -719,7 +744,7 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if(_inSearch == TRUE) {
+    if([tableView isEqual:self.searchTableView]) {
         return 0.1;
     }
     return 50;
@@ -754,12 +779,12 @@ UIPopoverPresentationControllerDelegate
             [self.allDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self.simpleLoadingView stop];
-                        [self.tableView reloadData];
+                        [self.allTableView reloadData];
                     });
                 } failBlock:^(NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self.simpleLoadingView stop];
-                        [self.tableView reloadData];
+                        [self.allTableView reloadData];
                     });
                     _allDataQuerying = false;
                 }];
@@ -789,11 +814,11 @@ UIPopoverPresentationControllerDelegate
            
             [self.searchDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self.tableView reloadData];
+                        [self.searchTableView reloadData];
                     });
                 } failBlock:^(NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self.tableView reloadData];
+                        [self.searchTableView reloadData];
                     });
                     
                     _searchDataQuerying = false;
@@ -884,35 +909,40 @@ UIPopoverPresentationControllerDelegate
     if(index == 1) {
         _selectedIdx = 1;
         if(self.allDatas.count > 0) {
-            [self.tableView reloadData];
+            [self.allTableView reloadData];
         } else {
             if(_allDatas.count == 0) {
                 _pageNo = 1;
                 [self queryAllData];
             }
         }
-    
+        self.allTableView.hidden = NO;
+        self.tableView.hidden = YES;
+
+
     } else {
         _selectedIdx = 0;
+        self.tableView.hidden = NO;
+        self.allTableView.hidden = YES;
         [self.tableView reloadData];
     }
 }
 
-- (UISegmentedControl *)segmentedControl {
-    if(_segmentedControl == nil) {
-        NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Featured", @""),NSLocalizedString(@"All", @""),nil];
-        _segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
-        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
-        _segmentedControl.backgroundColor = FCStyle.secondaryPopup;
-        _segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
-        _segmentedControl.selectedSegmentIndex = 0;
-        CGFloat left = (self.view.width - 200) / 2;
-        _segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
-        [_segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
-    }
-    return _segmentedControl;
-}
+//- (UISegmentedControl *)segmentedControl {
+//    if(_segmentedControl == nil) {
+//        NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Featured", @""),NSLocalizedString(@"All", @""),nil];
+//        _segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
+//        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
+//        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
+//        _segmentedControl.backgroundColor = FCStyle.secondaryPopup;
+//        _segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
+//        _segmentedControl.selectedSegmentIndex = 0;
+//        CGFloat left = (self.view.width - 200) / 2;
+//        _segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
+//        [_segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
+//    }
+//    return _segmentedControl;
+//}
 
 
 - (UITableView *)tableView {
@@ -926,6 +956,32 @@ UIPopoverPresentationControllerDelegate
     }
     
     return _tableView;
+}
+
+- (UITableView *)allTableView {
+    if (_allTableView == nil) {
+        _allTableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _allTableView.delegate = self;
+        _allTableView.dataSource = self;
+        _allTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _allTableView.backgroundColor = FCStyle.background;
+        _allTableView.sectionHeaderTopPadding = 0;
+        _allTableView.hidden = true;
+        [self.view addSubview:_allTableView];
+    }
+    return _allTableView;
+}
+
+- (UITableView *)searchTableView {
+    if (_searchTableView == nil) {
+        _searchTableView = [[UITableView alloc]initWithFrame:self.searchController.view.bounds style:UITableViewStylePlain];
+        _searchTableView.delegate = self;
+        _searchTableView.dataSource = self;
+        _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _searchTableView.sectionHeaderTopPadding = 0;
+        _searchTableView.backgroundColor = FCStyle.background;
+    }
+    return _searchTableView;
 }
 
 - (BroSimpleLoadingView *)simpleLoadingView{

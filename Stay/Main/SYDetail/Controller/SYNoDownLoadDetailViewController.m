@@ -237,7 +237,7 @@
     bottomline.bottom = scrollView.bottom + 1;
     [cell.contentView addSubview:bottomline];
      
-    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 ,200)];
+    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 - 15 ,200)];
     descDetailLabel.text = self.scriptDic[@"desc"];
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
@@ -412,6 +412,7 @@
         UILabel *onlyLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 19)];
         onlyLabel.text = @"Only on";
         onlyLabel.font = FCStyle.footnoteBold;
+        onlyLabel.bottom = label.bottom;
         onlyLabel.textColor =  FCStyle.grayNoteColor;
         onlyLabel.left = splitline.right + 12;
         [view addSubview:onlyLabel];
@@ -795,7 +796,8 @@
 //基础信息view
 - (UIScrollView *)createBaseInfoView {
      UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 60)];
-     
+    scrollView.showsVerticalScrollIndicator = false;
+    scrollView.showsHorizontalScrollIndicator = false;
      
      NSString *used = self.scriptDic[@"installs"] == nil? @"0": [NSString stringWithFormat:@"%@", self.scriptDic[@"installs"] ];
      
