@@ -31,6 +31,7 @@
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		584C05AE286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
+		58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
 		5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */; };
 		58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C312862E6DA00AA80D5 /* SegmentViewController.m */; };
 		58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C352863040700AA80D5 /* ToolbarTrackView.m */; };
@@ -2335,6 +2336,7 @@
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
+				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
