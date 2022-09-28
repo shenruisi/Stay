@@ -7,12 +7,14 @@
 
 #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
+#ifdef Mac
+#import "NavigateViewController.h"
+@interface SYNotesViewController : NavigateViewController
+#else
 @interface SYNotesViewController : UIViewController
+#endif
 
 @property (nonatomic, copy) NSArray<NSString*> *notes;
 
 @end
 
-NS_ASSUME_NONNULL_END

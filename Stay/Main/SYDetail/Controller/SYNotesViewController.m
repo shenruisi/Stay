@@ -6,6 +6,7 @@
 //
 
 #import "SYNotesViewController.h"
+#import "FCStyle.h"
 
 @interface SYNotesViewController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -45,14 +46,13 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (nil == cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;        
     }
     
     cell.textLabel.text = self.notes[indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:15];
     cell.textLabel.numberOfLines = 0;
+
     return cell;
 }
 
@@ -63,6 +63,9 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
+        _tableView.separatorColor = FCStyle.fcSeparator;
         [self.view addSubview:_tableView];
     }
     

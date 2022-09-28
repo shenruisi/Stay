@@ -792,9 +792,8 @@ UIPopoverPresentationControllerDelegate
     }
     
     if(_allDataQuerying) {
-        return;
+            return;
     }
-    
     _allDataQuerying = true;
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
         
@@ -933,8 +932,11 @@ UIPopoverPresentationControllerDelegate
          if (_inSearch) {
              
          } else if(self.selectedIdx == 1 && !_allDataEnd) {
+             if(_allDataQuerying) {
+                     return;
+             }
              _pageNo++;
-             [self queryAllData];
+            [self queryAllData];
          }
      }
 }

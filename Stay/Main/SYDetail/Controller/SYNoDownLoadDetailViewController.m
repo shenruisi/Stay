@@ -237,10 +237,67 @@
     bottomline.bottom = scrollView.bottom + 1;
     [cell.contentView addSubview:bottomline];
      
+    CGFloat top = bottomline.bottom + 13;
+
+    NSArray *notes = self.scriptDic[@"notes"];
+    if(notes != nil && notes.count > 0) {
+        UIView *notesView = [self createNoteView:notes];
+        notesView.top = scrollView.bottom + 1;
+        [cell.contentView addSubview:notesView];
+        top = notesView.bottom + 13;
+    }
     
-//    NSArray *notes = dic[@""];
+    NSArray *plafroms = self.scriptDic[@"platforms"];
+     if(plafroms != nil && plafroms.count > 0) {
+          UIView *availableView =  [self createAvailableView];
+          availableView.left = 15;
+          availableView.top = top;
+          [cell.contentView addSubview:availableView];
+         
+         NSArray *tags = self.scriptDic[@"tags"];
+         
+         UIScrollView *tagScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, top, self.view.width ,25)];
+     //    tagScrollView.clipsToBounds = YES;
+         tagScrollView.showsVerticalScrollIndicator = false;
+         tagScrollView.showsHorizontalScrollIndicator = false;
+         if(tags != nil && tags.count > 0) {
+             CGFloat tagLeft = 16;
+             for (int i = 0; i < tags.count; i++) {
+                 UILabel *tag = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 25)];
+                 tag.text = tags[i];
+                 tag.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
+                 tag.font = FCStyle.footnote;
+                 tag.layer.cornerRadius = 8;
+                 tag.layer.borderColor = FCStyle.accent.CGColor;
+                 tag.layer.borderWidth = 1;
+                 tag.textAlignment = NSTextAlignmentCenter;
+                 [tag sizeToFit];
+                 tag.width += 40;
+                 tag.height = 25;
+                 tag.left = tagLeft;
+                 tag.clipsToBounds = YES;
+                 tag.top = 0;
+                 tagLeft = tag.right + 5;
+                 [tagScrollView addSubview:tag];
+             }
+             
+             tagScrollView.contentSize = CGSizeMake(tagLeft, 25);
+         }
+         [cell.contentView addSubview:tagScrollView];
+         
+         tagScrollView.top = availableView.bottom + 7;
+         
+         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 1)];
+         line.backgroundColor = FCStyle.fcSeparator;
+         line.top =  tagScrollView.bottom + 13;
+         line.left = 15;
+         [cell.contentView addSubview:line];
+         top = line.bottom + 15;
+     }
     
-    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 - 15 ,200)];
+    
+    
+    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 - 15 ,200)];
     descDetailLabel.text = self.scriptDic[@"desc"];
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
@@ -266,23 +323,14 @@
               [cell.contentView addSubview:btn];
          }
     }
-     [cell.contentView addSubview:descDetailLabel];
-          
-     CGFloat top = descDetailLabel.bottom + 10;
-    
-    
-    NSArray *plafroms = self.scriptDic[@"platforms"];
-     if(plafroms != nil && plafroms.count > 0) {
-          UIView *availableView =  [self createAvailableView];
-          availableView.left = 15;
-          availableView.top = top;
-          [cell.contentView addSubview:availableView];
-          top = availableView.bottom + 10;
-     }
-    
-    NSArray *notes = self.scriptDic[@"notes"];
-    
-        
+    [cell.contentView addSubview:descDetailLabel];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 1)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top =  descDetailLabel.bottom + 10;
+    line.left = 15;
+    [cell.contentView addSubview:line];
+    top = line.bottom + 15;
+            
      UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
      [cell.contentView addSubview:buttonView];
      
@@ -347,7 +395,11 @@
 - (void)showNotes:(id)sender {
     SYNotesViewController *cer = [[SYNotesViewController alloc] init];
     cer.notes = self.scriptDic[@"notes"];
+#ifdef Mac
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
     [self.navigationController pushViewController:cer animated:true];
+#endif
 }
 
 
@@ -355,6 +407,46 @@
    
 }
 
+- (UIView *)createNoteView:(NSArray *)notes{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 71)];
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100,19)];
+    title.text = @"What’s New";
+    title.textColor = FCStyle.fcBlack;
+    title.font = FCStyle.headlineBold;
+    title.top = 13;
+    title.left = 15;
+    [view addSubview:title];
+    
+    
+    UILabel *notesView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100,19)];
+    notesView.text = @"Version Notes";
+    notesView.textColor = FCStyle.accent;
+    notesView.font = FCStyle.footnote;
+    notesView.top = 13;
+    notesView.right = self.view.width - 15;
+    notesView.userInteractionEnabled = YES;
+    [view addSubview:notesView];
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showNotes:)];
+    [notesView addGestureRecognizer:tapGesture];
+    
+    
+    UILabel *note = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30,19)];
+    note.text = notes[0];
+    note.textColor = FCStyle.fcBlack;
+    note.font = FCStyle.footnote;
+    note.top = title.bottom + 10;
+    note.left = 15;
+    [view addSubview:note];
+    
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 1)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top =  70;
+    line.left = 15;
+    [view addSubview:line];
+    
+    return view;
+}
 
 
 - (UIView *)createLine{
