@@ -19,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"Version Notes";
     [self tableView];
     // Do any additional setup after loading the view.
 }

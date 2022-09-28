@@ -929,8 +929,8 @@ UIPopoverPresentationControllerDelegate
      float h = size.height;
      float reload_distance = 10;
      if(y > h + reload_distance) {
-         if (_inSearch) {
-             
+         if ([scrollView isEqual:self.searchTableView]) {
+          
          } else if(self.selectedIdx == 1 && !_allDataEnd) {
              if(_allDataQuerying) {
                      return;

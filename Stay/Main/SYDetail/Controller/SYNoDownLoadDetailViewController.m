@@ -227,12 +227,12 @@
      scrollView.top = self.actBtn.bottom + 15;
      [cell.contentView addSubview:scrollView];
     
-    UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(15, 0, self.view.width - 15, 1)];
+    UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(15, 0, self.view.width - 15, 0.5)];
     topline.backgroundColor = FCStyle.fcSeparator;
     topline.top = scrollView.top -1;
     [cell.contentView addSubview:topline];
 
-    UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(15, 59, self.view.width - 15, 1)];
+    UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(15, 59, self.view.width - 15, 0.5)];
     bottomline.backgroundColor = FCStyle.fcSeparator;
     bottomline.bottom = scrollView.bottom + 1;
     [cell.contentView addSubview:bottomline];
@@ -287,17 +287,15 @@
          
          tagScrollView.top = availableView.bottom + 7;
          
-         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 1)];
+         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
          line.backgroundColor = FCStyle.fcSeparator;
          line.top =  tagScrollView.bottom + 13;
          line.left = 15;
          [cell.contentView addSubview:line];
-         top = line.bottom + 15;
+         top = line.bottom + 10;
      }
     
-    
-    
-    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 - 15 ,200)];
+    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 - 20 ,200)];
     descDetailLabel.text = self.scriptDic[@"desc"];
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
@@ -318,15 +316,15 @@
               [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
               btn.bottom = descDetailLabel.bottom - 8;
               btn.font = FCStyle.footnote;
-              btn.right = self.view.width;
+              btn.right = self.view.width - 8;
               [btn addTarget:self action:@selector(expand) forControlEvents:UIControlEventTouchUpInside];
               [cell.contentView addSubview:btn];
          }
     }
     [cell.contentView addSubview:descDetailLabel];
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  descDetailLabel.bottom + 10;
+    line.top =  descDetailLabel.bottom + 15;
     line.left = 15;
     [cell.contentView addSubview:line];
     top = line.bottom + 15;
@@ -439,7 +437,7 @@
     note.left = 15;
     [view addSubview:note];
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 1)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  70;
     line.left = 15;
@@ -852,7 +850,7 @@
 - (UIView *)slideView {
     if (_slideView == nil) {
         CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 2.0;
-        _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 31)];
+        _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 34)];
         _slideView.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
         _slideView.layer.cornerRadius = 8;
         _slideView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
@@ -962,7 +960,7 @@
          scrollView.contentSize = CGSizeMake(view.right + 15, 60);
           
           if(i != 0) {
-            UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(left, 12, 1, 37)];
+            UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(left, 12, 0.5, 37)];
             splitline.backgroundColor = FCStyle.fcSeparator;
 
             [scrollView addSubview:splitline];

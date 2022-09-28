@@ -289,17 +289,17 @@
      [cell.contentView addSubview:scrollView];
      
      
-     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(15, 0, self.view.width - 15, 1)];
+     UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(15, 0, self.view.width - 15, 0.5)];
      topline.backgroundColor = FCStyle.fcSeparator;
      topline.top = scrollView.top -1;
      [cell.contentView addSubview:topline];
 
-     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(15, 59, self.view.width - 15, 1)];
+     UIView *bottomline = [[UIView alloc] initWithFrame:CGRectMake(15, 59, self.view.width - 15, 0.5)];
      bottomline.backgroundColor = FCStyle.fcSeparator;
      bottomline.bottom = scrollView.bottom + 1;
      [cell.contentView addSubview:bottomline];
      
-     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 - 15 ,200)];
+     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,bottomline.bottom + 13,self.view.width - left * 2 - 15 ,200)];
      descDetailLabel.text = self.script.desc;
      descDetailLabel.textColor =  FCStyle.fcBlack;
      descDetailLabel.textAlignment = NSTextAlignmentLeft;
@@ -325,9 +325,16 @@
                [cell.contentView addSubview:btn];
           }
      }
+     
+     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+     line.backgroundColor = FCStyle.fcSeparator;
+     line.top =  descDetailLabel.bottom + 15;
+     line.left = 15;
+     [cell.contentView addSubview:line];
+     
      [cell.contentView addSubview:descDetailLabel];
           
-     CGFloat top = descDetailLabel.bottom + 10;
+     CGFloat top = line.bottom + 10;
      if(self.script.plafroms != nil && self.script.plafroms.count > 0) {
           UIView *availableView =  [self createAvailableView];
           availableView.left = 15;
@@ -882,7 +889,7 @@
 - (UIView *)slideView {
     if (_slideView == nil) {
         CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
-        _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 31)];
+        _slideView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, btnWidth, 34)];
         _slideView.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
         _slideView.layer.cornerRadius = 8;
         _slideView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
@@ -983,7 +990,7 @@
           
           scrollView.contentSize = CGSizeMake(view.right + 15, 60);
           if(i != 0) {
-            UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(left, 12, 1, 37)];
+            UIView *splitline = [[UIView alloc] initWithFrame:CGRectMake(left, 12, 0.5, 37)];
             splitline.backgroundColor = FCStyle.fcSeparator;
             [scrollView addSubview:splitline];
           }
