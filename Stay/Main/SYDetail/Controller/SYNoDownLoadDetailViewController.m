@@ -237,6 +237,9 @@
     bottomline.bottom = scrollView.bottom + 1;
     [cell.contentView addSubview:bottomline];
      
+    
+//    NSArray *notes = dic[@""];
+    
     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,scrollView.bottom + 13,self.view.width - left * 2 - 15 ,200)];
     descDetailLabel.text = self.scriptDic[@"desc"];
     descDetailLabel.textColor =  FCStyle.fcBlack;
