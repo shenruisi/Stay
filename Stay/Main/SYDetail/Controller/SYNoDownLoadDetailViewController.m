@@ -242,9 +242,9 @@
     NSArray *notes = self.scriptDic[@"notes"];
     if(notes != nil && notes.count > 0) {
         UIView *notesView = [self createNoteView:notes];
-        notesView.top = scrollView.bottom + 1;
+        notesView.top = bottomline.bottom + 1;
         [cell.contentView addSubview:notesView];
-        top = notesView.bottom + 13;
+        top = notesView.bottom + 10;
     }
     
     NSArray *plafroms = self.scriptDic[@"platforms"];
@@ -289,13 +289,13 @@
          
          UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
          line.backgroundColor = FCStyle.fcSeparator;
-         line.top =  tagScrollView.bottom + 13;
+         line.top =  tagScrollView.bottom + 20;
          line.left = 15;
          [cell.contentView addSubview:line];
          top = line.bottom + 10;
      }
     
-    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 - 20 ,200)];
+    UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 - 25 ,200)];
     descDetailLabel.text = self.scriptDic[@"desc"];
     descDetailLabel.textColor =  FCStyle.fcBlack;
     descDetailLabel.textAlignment = NSTextAlignmentLeft;
@@ -406,12 +406,12 @@
 }
 
 - (UIView *)createNoteView:(NSArray *)notes{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 71)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 78)];
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100,19)];
     title.text = @"What’s New";
     title.textColor = FCStyle.fcBlack;
     title.font = FCStyle.headlineBold;
-    title.top = 13;
+    title.top = 10;
     title.left = 15;
     [view addSubview:title];
     
@@ -439,7 +439,7 @@
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  70;
+    line.top =  77;
     line.left = 15;
     [view addSubview:line];
     
