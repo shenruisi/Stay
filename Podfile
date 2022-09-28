@@ -6,10 +6,13 @@ target 'Stay' do
  pod 'SDWebImage'
  pod 'UMCommon'
  pod 'UMDevice'
+ pod 'SDWebImageSVGKitPlugin'
+
 end
 
 target 'Stay-Mac' do
  pod 'OpenSSL-Universal'
  pod 'InterAppCommunication'
  pod 'SDWebImage'
+ pod 'SDWebImageSVGKitPlugin'
 end

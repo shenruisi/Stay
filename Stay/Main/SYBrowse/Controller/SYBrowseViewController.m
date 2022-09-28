@@ -157,15 +157,27 @@
             #else
                 [self.navigationController pushViewController:cer animated:true];
             #endif
-        } else if([url.scheme isEqualToString:@"userscript"]) {
+        } else if([url.host isEqualToString:@"userscript"]) {
             NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
-            SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
-            cer.uuid = str;
-            #ifdef Mac
-                [[QuickAccess secondaryController] pushViewController:cer];
-            #else
-                [self.navigationController pushViewController:cer animated:true];
-            #endif
+            ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[str];
+
+            if(entity == nil) {
+                SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
+                cer.uuid = str;
+                #ifdef Mac
+                    [[QuickAccess secondaryController] pushViewController:cer];
+                #else
+                    [self.navigationController pushViewController:cer animated:true];
+                #endif
+            } else {
+                SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+                cer.script = [[DataManager shareManager] selectScriptByUuid:str];
+                #ifdef Mac
+                    [[QuickAccess secondaryController] pushViewController:cer];
+                #else
+                    [self.navigationController pushViewController:cer animated:true];
+                #endif
+            }
         }
     }
 }

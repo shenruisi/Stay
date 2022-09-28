@@ -139,6 +139,17 @@
     btn.layer.cornerRadius = 12.5;
     [self.contentView addSubview:btn];
     
+    UILabel *installLabel = [[UILabel alloc] init];
+    NSNumber *install = dic[@"installs"];
+    NSString *installs = [install stringValue];
+    installLabel.text = installs;
+    installLabel.textColor = FCStyle.fcSecondaryBlack;
+    installLabel.font = FCStyle.footnote;
+    [installLabel sizeToFit];
+    installLabel.centerX = btn.centerX;
+    installLabel.top = btn.bottom + 5;
+    [self.contentView addSubview:installLabel];
+    
     CGFloat top = imageBox.bottom + 10;
     NSArray *platforms = dic[@"platforms"];
     if(platforms != nil && platforms.count > 0) {
@@ -173,7 +184,7 @@
             onlyLabel.left = splitline.right + 12;
             [self.contentView addSubview:onlyLabel];
             UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;
-            bzImageView.size = bzImageView.image.size;
+            bzImageView.size = CGSizeMake(20, 20);
             bzImageView.bottom = top;
             bzImageView.left = onlyLabel.right + 2;
             [self.contentView addSubview:bzImageView];

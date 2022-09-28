@@ -18,6 +18,12 @@
 #import "FCShared.h"
 #import "SYBrowseExpandViewController.h"
 #import "SYNoDownLoadDetailViewController.h"
+#import "SYDetailViewController.h"
+#import "ScriptMananger.h"
+#import "ScriptEntity.h"
+#import <SDWebImageSVGKitPlugin/SDWebImageSVGKitPlugin.h>
+#import <SVGKit/SVGKit.h>
+
 #ifdef Mac
 #import "QuickAccess.h"
 #import "Plugin.h"
@@ -45,6 +51,8 @@
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
 #endif
     
+    SDImageSVGKCoder *SVGCoder = [SDImageSVGKCoder sharedCoder];
+    [[SDImageCodersManager sharedManager] addCoder:SVGCoder];
     [IACManager sharedManager].callbackURLScheme = @"stay";
     [[IACManager sharedManager] handleAction:@"install" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
         [self.loadingSlideController show];
@@ -126,14 +134,26 @@
     
     [[IACManager sharedManager] handleAction:@"userscript" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
         NSString *uuid = inputParameters[@"id"];
-        SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
-        cer.uuid = uuid;
-        #ifdef Mac
-            [[QuickAccess secondaryController] pushViewController:cer];
-        #else
-            UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
-            [nav pushViewController:cer animated:true];
-        #endif
+        ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
+        if(entity == nil) {
+            SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
+            cer.uuid = uuid;
+            #ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+            #else
+                UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                [nav pushViewController:cer animated:true];
+            #endif
+        } else {
+            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+            cer.script = [[DataManager shareManager] selectScriptByUuid:uuid];
+            #ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+            #else
+                UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                [nav pushViewController:cer animated:true];
+            #endif
+        }
         
     }];
     

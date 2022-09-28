@@ -417,7 +417,7 @@
         onlyLabel.left = splitline.right + 12;
         [view addSubview:onlyLabel];
         UIImageView *bzImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bz"]]; ;
-        bzImageView.size = bzImageView.image.size;
+        bzImageView.size = CGSizeMake(20, 20);
         bzImageView.bottom = label.bottom;
         bzImageView.left = onlyLabel.right + 2;
         [view addSubview:bzImageView];
