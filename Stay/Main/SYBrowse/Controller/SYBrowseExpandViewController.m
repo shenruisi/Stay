@@ -16,6 +16,7 @@
 #import <objc/runtime.h>
 #import "FCStyle.h"
 #import "BrowseDetailTableViewCell.h"
+#import "SYNetworkUtils.h"
 #ifdef Mac
 #import "QuickAccess.h"
 #endif
@@ -27,10 +28,90 @@
 
 @end
 
+@interface BroExpandSimpleLoadingView : UIView
+
+@property (nonatomic, strong) UIActivityIndicatorView *indicator;
+@property (nonatomic, strong) UILabel *label;
+- (void)start;
+- (void)stop;
+@end
+
+@implementation BroExpandSimpleLoadingView
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]){
+        [self indicator];
+        [self label];
+    }
+
+    return self;
+}
+
+- (void)start{
+    [self.superview bringSubviewToFront:self];
+    self.hidden = NO;
+    [self.indicator startAnimating];
+}
+
+- (void)stop{
+    [self.superview sendSubviewToBack:self];
+    self.hidden = YES;
+    [self.indicator stopAnimating];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    [self.label sizeToFit];
+    CGFloat width = self.indicator.frame.size.width + self.label.frame.size.width;
+    CGFloat left = (self.frame.size.width - width) / 2;
+    [self.indicator setFrame:CGRectMake(left,
+                                        (self.frame.size.height - self.indicator.frame.size.height)/2,
+                                        self.indicator.frame.size.width,
+                                        self.indicator.frame.size.height)];
+    [self.label setFrame:CGRectMake(self.indicator.frame.origin.x + self.indicator.frame.size.width + 15,
+                                    (self.frame.size.height - self.label.frame.size.height)/2,
+                                    self.label.frame.size.width,
+                                    self.label.frame.size.height)];
+    [self.indicator startAnimating];
+}
+
+- (UIActivityIndicatorView *)indicator{
+    if (nil == _indicator){
+        _indicator = [[UIActivityIndicatorView alloc] init];
+        [self addSubview:_indicator];
+    }
+    return _indicator;
+}
+
+- (UILabel *)label{
+    if (nil == _label){
+        _label = [[UILabel alloc] initWithFrame:CGRectZero];
+        _label.font = FCStyle.body;
+        _label.textColor = FCStyle.fcBlack;
+        _label.text = NSLocalizedString(@"Loading", @"");
+        [self addSubview:_label];
+    }
+
+    return _label;
+}
+
+
+- (void)setHidden:(BOOL)hidden{
+    [super setHidden:hidden];
+
+}
+
+@end
+
 @implementation SYBrowseExpandViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (self.url != nil && self.url.length > 0) {
+        [self queryData];
+    }
+    
     [self.tableView reloadData];
 //    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
@@ -38,6 +119,27 @@
 #ifdef Mac
     self.navigationController.navigationBarHidden = YES;
 #endif
+}
+
+- (void)queryData{
+//    [self.simpleLoadingView start];
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+
+        [[SYNetworkUtils shareInstance] requestGET:_url params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+            options:NSJSONReadingMutableContainers
+            error:nil];
+            self.data = dic[@"biz"];
+            dispatch_async(dispatch_get_main_queue(),^{
+//                        [self.simpleLoadingView stop];
+                        [self.tableView reloadData];
+            });
+
+            } failBlock:^(NSError * _Nonnull error) {
+                  
+            }];
+    });
 }
 
 
@@ -65,20 +167,10 @@
     return 138;
 }
 
-- (NSString* )md5HexDigest:(NSString* )input {
-    const char *cStr = [input UTF8String];
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
-    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [result appendFormat:@"%02X", digest[i]];
-    }
-    return result;
-}
-
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
+    [self.tableView reloadData];
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
@@ -164,7 +256,12 @@
 }
 
 
-
+- (NSArray *)data {
+    if (_data == nil) {
+        _data = [NSArray array];
+    }
+    return _data;
+}
 
 /*
 #pragma mark - Navigation

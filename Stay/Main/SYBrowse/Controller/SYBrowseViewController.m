@@ -36,6 +36,7 @@
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) UIScrollView *bannerView;
 @property (nonatomic, strong) UIViewController *controller;
+@property (nonatomic, strong) UINavigationController *navigationController;
 
 @end
 
@@ -144,6 +145,28 @@
         [_controller presentViewController:safariVc animated:YES completion:nil];
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
         [[UIApplication sharedApplication] openURL:url];
+    } else if([url.scheme isEqualToString:@"stay"]) {
+        if([url.host isEqualToString:@"album"]) {
+            SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
+            
+            NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
+
+            cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",str];
+            #ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+            #else
+                [self.navigationController pushViewController:cer animated:true];
+            #endif
+        } else if([url.scheme isEqualToString:@"userscript"]) {
+            NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
+            SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
+            cer.uuid = str;
+            #ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+            #else
+                [self.navigationController pushViewController:cer animated:true];
+            #endif
+        }
     }
 }
 
@@ -620,8 +643,9 @@ UIPopoverPresentationControllerDelegate
             _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
             cell.contentView.width = self.view.width;
             cell.width = self.view.width;
-            cell.entity = dic[@"blocks"];
             cell.controller = self;
+            cell.navigationController = self.navigationController;
+            cell.entity = dic[@"blocks"];
             cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         } else if([dic[@"type"] isEqualToString:@"album"]){

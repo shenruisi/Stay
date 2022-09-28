@@ -341,7 +341,6 @@
 		84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40C288E30CC002A0C1B /* flash@3x.png */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
 		84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
-		84CC9B5028C72C81002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
 		84CC9B5128C88E71002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
 		84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */; };
 		84CC9B5528D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */; };
@@ -2334,7 +2333,6 @@
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
-				84CC9B5028C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,

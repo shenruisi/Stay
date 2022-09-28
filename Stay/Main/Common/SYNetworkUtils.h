@@ -24,6 +24,8 @@ typedef void(^SYResponseFailBlock)(NSError *error);
 
 - (void)requestPOST:(NSString *)relativePath params:(NSDictionary *)params successBlock:(SYResponseSuccessBlock)successBlock failBlock:(SYResponseFailBlock)failBlock;
 
++ (NSString *)getParamByName:(NSString *)name URLString:(NSString *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

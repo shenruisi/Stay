@@ -16,4 +16,5 @@
 #endif
 
 @property (nonatomic, strong) NSArray *data;
+@property (nonatomic, strong) NSString *url;
 @end

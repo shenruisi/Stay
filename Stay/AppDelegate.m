@@ -16,6 +16,8 @@
 #import "SYEditViewController.h"
 #import "LoadingSlideController.h"
 #import "FCShared.h"
+#import "SYBrowseExpandViewController.h"
+#import "SYNoDownLoadDetailViewController.h"
 #ifdef Mac
 #import "QuickAccess.h"
 #import "Plugin.h"
@@ -106,6 +108,36 @@
         
     }];
      
+    
+    
+    [[IACManager sharedManager] handleAction:@"album" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        
+        NSString *themeId = inputParameters[@"id"];
+        SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
+        cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",themeId];
+        #ifdef Mac
+            [[QuickAccess secondaryController] pushViewController:cer];
+        #else
+            UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+            [nav pushViewController:cer animated:true];
+        #endif
+            
+    }];
+    
+    [[IACManager sharedManager] handleAction:@"userscript" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        NSString *uuid = inputParameters[@"id"];
+        SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
+        cer.uuid = uuid;
+        #ifdef Mac
+            [[QuickAccess secondaryController] pushViewController:cer];
+        #else
+            UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+            [nav pushViewController:cer animated:true];
+        #endif
+        
+    }];
+    
+    
     return YES;
 }
 
