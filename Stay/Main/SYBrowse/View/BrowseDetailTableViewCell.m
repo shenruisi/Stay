@@ -99,6 +99,11 @@
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
     
+    
+    headerLabel.width = self.contentView.width - headerLabel.left - 100;
+    subLabel.width =  self.contentView.width - subLabel.left - 100;
+    
+    
     NSDictionary *locate = dic[@"locales"];
     if(locate != NULL  && locate.count > 0) {
         NSDictionary *localLanguage = locate[[UserScript localeCode]];
