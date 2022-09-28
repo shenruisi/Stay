@@ -144,7 +144,7 @@
         SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""]]];
         [_controller presentViewController:safariVc animated:YES completion:nil];
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
-        [[UIApplication sharedApplication] openURL:url];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""]]];
     } else if([url.scheme isEqualToString:@"stay"]) {
         if([url.host isEqualToString:@"album"]) {
             SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
