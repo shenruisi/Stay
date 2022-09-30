@@ -115,4 +115,21 @@ static API *instance = nil;
 //        }] resume];
 }
 
+- (NSString *)queryDeviceType {
+    
+    NSString *type = @"mac";
+    
+#ifdef MacNative
+    type = @"mac";
+#else
+#ifdef Mac
+    type = @"mac";
+#else
+    type = [[UIDevice currentDevice].model lowercaseString];
+#endif
+    
+#endif
+    return type;
+}
+
 @end

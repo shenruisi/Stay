@@ -23,6 +23,7 @@
 #import "SYNetworkUtils.h"
 #import "LoadingSlideController.h"
 #import <SafariServices/SafariServices.h>
+#import "API.h"
 
 #ifdef Mac
 #import "QuickAccess.h"
@@ -216,7 +217,17 @@
      [self.actBtn setTitle:NSLocalizedString(@"Get", @"")  forState:UIControlStateNormal];
      self.actBtn.backgroundColor = FCStyle.background;
      [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
- 
+    
+    NSArray *plafroms = self.scriptDic[@"platforms"];
+
+    if (plafroms != NULL && ![plafroms containsObject:[[API shared] queryDeviceType]] ) {
+        [self.actBtn setTitle:NSLocalizedString(@"Not supported on this device", @"")  forState:UIControlStateNormal];
+        [self.actBtn setTitleColor:FCStyle.fcSecondaryBlack forState:UIControlStateNormal];
+        [self.actBtn sizeToFit];
+        self.actBtn.userInteractionEnabled = NO;
+        self.actBtn.width =  self.actBtn.width + 20;
+    }
+    
      
      [cell.contentView addSubview:self.actBtn];
      self.actBtn.left = titleLabel.left;
@@ -247,7 +258,6 @@
         top = notesView.bottom + 10;
     }
     
-    NSArray *plafroms = self.scriptDic[@"platforms"];
      if(plafroms != nil && plafroms.count > 0) {
           UIView *availableView =  [self createAvailableView];
           availableView.left = 15;

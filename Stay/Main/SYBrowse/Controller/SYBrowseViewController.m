@@ -24,7 +24,7 @@
 #import "SYEditViewController.h"
 #import "LoadingSlideController.h"
 #import <SafariServices/SafariServices.h>
-
+#import "API.h"
 
 #ifdef Mac
 #import "ToolbarTrackView.h"
@@ -374,7 +374,12 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
-
+        
+        NSArray *plafroms = dic[@"platforms"];
+        if (plafroms != NULL && ![plafroms containsObject:[[API shared] queryDeviceType]] ) {
+            [btn addTarget:self.controller action:@selector(notSupport:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        
     }
     
     btn.top = headerLabel.top;
@@ -558,7 +563,6 @@ UIPopoverPresentationControllerDelegate
     self.tableView.sectionHeaderTopPadding = 0;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 
@@ -614,13 +618,6 @@ UIPopoverPresentationControllerDelegate
     [self.tableView reloadData];
     [self.searchTableView reloadData];
     [self.allTableView reloadData];
-}
-
-
-- (void)onBecomeActive{
-    [self queryData];
-    _pageNo = 1;
-    [self queryAllData];
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -941,7 +938,7 @@ UIPopoverPresentationControllerDelegate
     });
 }
 
-- (void)queryDetail:(id )sender {
+- (void)queryDetail:(id)sender {
     NSString *uuid = objc_getAssociatedObject(sender,@"uuid");
     UserScript *model = [[DataManager shareManager] selectScriptByUuid:uuid];
     SYDetailViewController *cer = [[SYDetailViewController alloc] init];
@@ -952,6 +949,18 @@ UIPopoverPresentationControllerDelegate
 #else
     [self.navigationController pushViewController:cer animated:true];
 #endif
+}
+
+- (void)notSupport:(id)sender {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"install.error", @"")
+                                                                   message:NSLocalizedString(@"Not supported on this device", @"")
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * _Nonnull action) {
+        }];
+    [alert addAction:conform];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -981,6 +990,8 @@ UIPopoverPresentationControllerDelegate
     if(index == 1) {
         _selectedIdx = 1;
         if(self.allDatas.count > 0) {
+            _pageNo = 1;
+            [self queryAllData];
             [self.allTableView reloadData];
         } else {
             if(_allDatas.count == 0) {
@@ -990,9 +1001,8 @@ UIPopoverPresentationControllerDelegate
         }
         self.allTableView.hidden = NO;
         self.tableView.hidden = YES;
-
-
     } else {
+        [self queryData];
         _selectedIdx = 0;
         self.tableView.hidden = NO;
         self.allTableView.hidden = YES;

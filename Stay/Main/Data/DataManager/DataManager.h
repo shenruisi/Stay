@@ -39,7 +39,7 @@
 
 - (void)updateScriptConfigStatus:(int)status numberId:(NSString *)uuid;
 
-- (void)updateUsedTimesByUuid:(NSString *)uuid;
+- (void)updateUsedTimesByUuid:(NSString *)uuid count:(int)count;
 
 
 @end

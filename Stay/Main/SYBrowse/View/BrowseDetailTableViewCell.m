@@ -13,6 +13,7 @@
 #import <objc/runtime.h>
 #import "ImageHelper.h"
 #import "SYNoDownLoadDetailViewController.h"
+#import "API.h"
 #ifdef Mac
 #import "QuickAccess.h"
 #endif
@@ -137,6 +138,11 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+        
+        NSArray *plafroms = dic[@"platforms"];
+        if (plafroms != NULL && ![plafroms containsObject:[[API shared] queryDeviceType]] ) {
+            [btn addTarget:self.controller action:@selector(notSupport:) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
     btn.top = headerLabel.top;

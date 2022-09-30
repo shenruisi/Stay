@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)active:(NSString *)uuid isPro:(BOOL)isPro isExtension:(BOOL)isExtension;
 - (void)event:(NSString *)content;
 - (NSString *)deviceInfo;
+- (NSString *)queryDeviceType;
 @end
 
 NS_ASSUME_NONNULL_END

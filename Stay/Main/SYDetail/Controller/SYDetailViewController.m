@@ -340,8 +340,12 @@
           availableView.top = top;
           [cell.contentView addSubview:availableView];
           
-          top = availableView.bottom + 10;
-          
+          UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+          line.backgroundColor = FCStyle.fcSeparator;
+          line.top =  availableView.bottom + 20;
+          line.left = 15;
+          [cell.contentView addSubview:line];
+          top = line.bottom + 10;
      }
         
      if(self.script.downloadUrl != nil && self.script.downloadUrl.length > 0){
@@ -360,7 +364,13 @@
            [cell.contentView addSubview:autoUpdateSwitch];
            [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
           autoUpdateLabel.centerY = autoUpdateSwitch.centerY;
-          top = autoUpdateSwitch.bottom + 25;
+          
+          UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+          line.backgroundColor = FCStyle.fcSeparator;
+          line.top =  autoUpdateLabel.bottom + 20;
+          line.left = 15;
+          [cell.contentView addSubview:line];
+          top = line.bottom + 10;
      }
      
      
@@ -384,10 +394,19 @@
          segmentedControl.selectedSegmentIndex = 0;
      }
      segmentedControl.right = self.view.width - 13;
-     segmentedControl.centerY = injectLabel.centerY;
+     segmentedControl.top = top;
      [cell.contentView addSubview:segmentedControl];
      
-     top = injectLabel.bottom + 25;
+     injectLabel.centerY = segmentedControl.centerY;
+     
+     UIView *injectLine = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+     injectLine.backgroundColor = FCStyle.fcSeparator;
+     injectLine.top =  segmentedControl.bottom + 20;
+     injectLine.left = 15;
+     [cell.contentView addSubview:injectLine];
+     top = injectLine.bottom + 10;
+     
+//     top = injectLabel.bottom + 25;
      UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
      [cell.contentView addSubview:buttonView];
      

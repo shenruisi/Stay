@@ -159,6 +159,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                            userScript.downloadUrl = tmpScript.downloadUrl;
                        }
                        self.uuid = uuid;
+                       userScript.active = tmpScript.active;
                        [[DataManager shareManager] updateUserScript:userScript];
                    } else {
                        userScript.plafroms = self.platforms;

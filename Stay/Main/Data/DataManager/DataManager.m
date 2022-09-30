@@ -1374,7 +1374,7 @@
     sqlite3_close(sqliteHandle);
 }
 
-- (void)updateUsedTimesByUuid:(NSString *)uuid {
+- (void)updateUsedTimesByUuid:(NSString *)uuid count:(int)count {
     
     //打开数据库
     sqlite3 *sqliteHandle = NULL;
@@ -1398,7 +1398,7 @@
     
     //构造SQL语句
 
-    NSString *sql = @"UPDATE user_config_script SET usedTimes = usedTimes + 1 WHERE uuid = ? ";
+    NSString *sql = @"UPDATE user_config_script SET usedTimes = usedTimes + ? WHERE uuid = ? ";
     
     sqlite3_stmt *stmt = NULL;
     result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -1408,7 +1408,9 @@
         sqlite3_close(sqliteHandle);
         return;
     }
-    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
+    sqlite3_bind_int(stmt, 1, count);
+
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
