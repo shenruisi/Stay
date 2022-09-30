@@ -94,6 +94,9 @@
     NSString *uuid = dic.uuid;
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
     
+    
+    CGFloat rightWidth = 0;
+    
     if(entity != nil && entity.needUpdate && !dic.updateSwitch){
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 60, 25);
@@ -117,10 +120,14 @@
         btn.right = self.contentView.width - 19;
         btn.top = 20;
         [self.contentView addSubview:btn];
-    } else {
-        headerLabel.width = self.contentView.width - headerLabel.left - 30;
-        subLabel.width =  self.contentView.width - subLabel.left - 30;
+        
+        rightWidth = btn.width;
     }
+    
+    
+    headerLabel.width = self.contentView.width - headerLabel.left - 30 - rightWidth;
+    subLabel.width =  self.contentView.width - subLabel.left - 30 - rightWidth;
+    
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
