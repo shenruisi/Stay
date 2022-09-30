@@ -323,7 +323,7 @@ NSString * const SFExtensionMessageKey = @"message";
     NSString *data = details[@"data"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:method];
-    if (headers != nil){
+    if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
         for (NSString *key in headers.allKeys){
             [request setValue:headers[key] forHTTPHeaderField:key];
         }
