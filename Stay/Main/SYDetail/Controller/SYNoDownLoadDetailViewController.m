@@ -607,7 +607,7 @@
         CGFloat top = 13;
         NSArray *matches = self.scriptDic[@"matches"];
         if (matches.count > 0) {
-            UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
+            UILabel *matchLabel = [self createDefaultLabelWithText:@"MATCHES"];
             matchLabel.top = 13;
             matchLabel.left = baseLeft;
             matchLabel.textColor = FCStyle.fcSecondaryBlack;
@@ -647,7 +647,7 @@
         if (includes.count > 0) {
             if(top >13) {
               top += 35;
-            }            UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
+            }            UILabel *includesLabel = [self createDefaultLabelWithText:@"INCLUDES"];
             includesLabel.top = top;
             includesLabel.left = baseLeft;
             includesLabel.textColor = FCStyle.fcSecondaryBlack;
@@ -692,7 +692,7 @@
             if(top >13) {
               top += 35;
             }
-            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
+            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"EXCLUDES"];
             excludesLabel.top = top;
             excludesLabel.left = baseLeft;
             excludesLabel.textColor = FCStyle.fcSecondaryBlack;
@@ -842,7 +842,7 @@
 - (UIView *)baseNote:(NSString *)title{
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 24, 48)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width  - 24 - 23, 18)];
-    label.font = FCStyle.body;
+    label.font = FCStyle.footnote;
     label.text = title;
     label.textColor = FCStyle.fcBlack;
     label.left = 23;

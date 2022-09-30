@@ -52,7 +52,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     self.view.backgroundColor = FCStyle.popup;
 
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
@@ -299,7 +298,7 @@
      bottomline.bottom = scrollView.bottom + 1;
      [cell.contentView addSubview:bottomline];
      
-     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,bottomline.bottom + 13,self.view.width - left * 2 - 15 ,200)];
+     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,bottomline.bottom + 13,self.view.width - left * 2 -25 ,200)];
      descDetailLabel.text = self.script.desc;
      descDetailLabel.textColor =  FCStyle.fcBlack;
      descDetailLabel.textAlignment = NSTextAlignmentLeft;
@@ -320,7 +319,7 @@
                [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
                btn.bottom = descDetailLabel.bottom - 8;
                btn.font = FCStyle.footnote;
-               btn.right = self.view.width;
+               btn.right = self.view.width - 8;
                [btn addTarget:self action:@selector(expand) forControlEvents:UIControlEventTouchUpInside];
                [cell.contentView addSubview:btn];
           }
@@ -354,14 +353,17 @@
            [cell.contentView  addSubview:autoUpdateLabel];
          
            UISwitch *autoUpdateSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10,99,42 ,31)];
-           autoUpdateSwitch.centerY = autoUpdateLabel.centerY;
+           autoUpdateSwitch.top = top;
            autoUpdateSwitch.right = self.view.width - left;
            [autoUpdateSwitch setOnTintColor:FCStyle.accent];
            [autoUpdateSwitch setOn: self.script.updateSwitch];
            [cell.contentView addSubview:autoUpdateSwitch];
            [autoUpdateSwitch addTarget:self action:@selector(updateSwitchAction:) forControlEvents:UIControlEventValueChanged];
+          autoUpdateLabel.centerY = autoUpdateSwitch.centerY;
           top = autoUpdateSwitch.bottom + 25;
      }
+     
+     
      UILabel *injectLabel = [self createDefaultLabelWithText:NSLocalizedString(@"settings.injectMode","Inject Mode")];
      injectLabel.font = FCStyle.bodyBold;
      injectLabel.width = 200;
@@ -692,7 +694,7 @@
         _matchScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height)];
         CGFloat top = 13;
         if (self.script.matches.count > 0) {
-            UILabel *matchLabel = [self createDefaultLabelWithText:@"Matches"];
+            UILabel *matchLabel = [self createDefaultLabelWithText:@"MATCHES"];
             matchLabel.top = 13;
             matchLabel.left = baseLeft;
             matchLabel.textColor = FCStyle.fcSecondaryBlack;
@@ -732,7 +734,7 @@
              if(top >13) {
                top += 35;
              }
-            UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
+            UILabel *includesLabel = [self createDefaultLabelWithText:@"INCLUDES"];
             includesLabel.top = top;
             includesLabel.left = baseLeft;
             includesLabel.textColor = FCStyle.fcSecondaryBlack;
@@ -773,7 +775,7 @@
         if (self.script.excludes.count > 0) {
              if(top >13) {
                top += 35;
-             }            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
+             }            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"EXCLUDES"];
             excludesLabel.top = top;
             excludesLabel.left = baseLeft;
             excludesLabel.textColor = FCStyle.fcSecondaryBlack;
@@ -878,7 +880,7 @@
 - (UIView *)baseNote:(NSString *)title{
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 24, 48)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width  - 24 - 23, 18)];
-    label.font = FCStyle.body;
+    label.font = FCStyle.footnote;
     label.text = title;
     label.textColor = FCStyle.fcBlack;
     label.left = 23;

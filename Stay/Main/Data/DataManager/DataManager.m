@@ -93,6 +93,10 @@
         [self addColumn:@"user_config_script" column:@"stay_only"];
 
     }
+    
+    if(![self isExitedColumn:@"usedTimes"]) {
+        [self addColumn:@"user_config_script" column:@"usedTimes" type:@"INTEGER"];
+    }
    
     return;
 }
@@ -165,6 +169,42 @@
     return ;
     
 }
+
+
+- (void)addColumn:(NSString *)tableName column:(NSString *)columnName type:(NSString *)type{
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return;
+    }
+    NSString *sql = [NSString stringWithFormat:@"alter table '%@' add '%@' %@ default 0 ",tableName,columnName,type];
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return ;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return ;
+    
+}
+
 
 - (BOOL)isExitedColumn:(NSString *)column {
     //打开数据库
@@ -364,10 +404,23 @@
         NSString * iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 29)== NULL?"":(const char *)sqlite3_column_text(stmt, 29)];
         scrpitDetail.iCloudIdentifier = iCloudIdentifier;
         
-        
         int status = sqlite3_column_int(stmt, 30);
         scrpitDetail.status = status;
+
         
+        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 32)== NULL?"":(const char *)sqlite3_column_text(stmt, 32)];
+        if (platforms != NULL && platforms.length > 0) {
+            scrpitDetail.plafroms = [platforms componentsSeparatedByString:@","];
+        } else {
+            scrpitDetail.plafroms = @[];
+        }
+        
+        int stayOnly = sqlite3_column_int(stmt, 33);
+        scrpitDetail.stayOnly = stayOnly == 1? true:false;
+        
+        
+        int usedTimes = sqlite3_column_int(stmt, 34);
+        scrpitDetail.usedTimes = usedTimes;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -577,16 +630,18 @@
         int status = sqlite3_column_int(stmt, 30);
         scrpitDetail.status = status;
         
-        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 31)== NULL?"":(const char *)sqlite3_column_text(stmt, 31)];
+        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 32)== NULL?"":(const char *)sqlite3_column_text(stmt, 32)];
         if (platforms != NULL && platforms.length > 0) {
             scrpitDetail.plafroms = [platforms componentsSeparatedByString:@","];
         } else {
             scrpitDetail.plafroms = @[];
         }
         
-        int stayOnly = sqlite3_column_int(stmt, 32);
+        int stayOnly = sqlite3_column_int(stmt, 33);
         scrpitDetail.stayOnly = stayOnly == 1? true:false;
         
+        int usedTimes = sqlite3_column_int(stmt, 34);
+        scrpitDetail.usedTimes = usedTimes;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
@@ -1007,15 +1062,18 @@
         int status = sqlite3_column_int(stmt, 30);
         scrpitDetail.status = status;
         
-        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 31)== NULL?"":(const char *)sqlite3_column_text(stmt, 31)];
+        NSString * platforms = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 32)== NULL?"":(const char *)sqlite3_column_text(stmt, 32)];
         if (platforms != NULL && platforms.length > 0) {
             scrpitDetail.plafroms = [platforms componentsSeparatedByString:@","];
         } else {
             scrpitDetail.plafroms = @[];
         }
         
-        int stayOnly = sqlite3_column_int(stmt, 32);
+        int stayOnly = sqlite3_column_int(stmt, 33);
         scrpitDetail.stayOnly = stayOnly == 1? true:false;
+        
+        int usedTimes = sqlite3_column_int(stmt, 34);
+        scrpitDetail.usedTimes = usedTimes;
         
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
@@ -1309,6 +1367,48 @@
     }
     sqlite3_bind_int(stmt, 1, status);
     sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateUsedTimesByUuid:(NSString *)uuid {
+    
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE user_config_script SET usedTimes = usedTimes + 1 WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
