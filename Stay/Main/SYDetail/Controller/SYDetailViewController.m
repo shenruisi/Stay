@@ -957,7 +957,7 @@
      NSString *used = self.script.usedTimes == nil? @"0": [NSString stringWithFormat:@"%ld", self.script.usedTimes ];
      NSMutableArray *array = [NSMutableArray arrayWithArray:  @[
           @{
-              @"name":@"USED",
+              @"name":@"RUNS",
               @"desc": used,
               @"color":FCStyle.grayNoteColor
           },
