@@ -329,6 +329,7 @@ let injectedContentVendor = new Set();
                 }
                 // blob responses had their data converted, convert it back to blob
             } else if (resp.responseType === "blob" && resp.response && resp.response.data) {
+                console.log("resp.response.data=====",resp.response.data);
                 fetch(resp.response.data)
                     .then(res => res.blob())
                     .then(b => {

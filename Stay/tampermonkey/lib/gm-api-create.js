@@ -426,7 +426,7 @@
             gm_xhr({
                 method: "GET",
                 responseType: "blob",
-                headers: options.headers?options.headers:"",
+                headers: options.headers?options.headers:{},
                 timeout: options.timeout?options.timeout:"",
                 onerror:  options.onerror?options.onerror:()=>{},
                 ontimeout: options.ontimeout?options.ontimeout:()=>{},
@@ -759,7 +759,7 @@
 
         }
 
-        if(shouldSendRequestToStay || true){
+        if(shouldSendRequestToStay){
             console.log("shouldSendRequestToStay===GM_xmlhttpRequestGM_xmlhttpRequest===",shouldSendRequestToStay)
             // if (details.onabort) {
             //     details.onabort(response);
@@ -1419,7 +1419,7 @@
             };
             let shouldSendRequestToStay = false;
             // console.log("XHR==request=", details);
-            if (params.headers && JSON.stringify(params.headers) != '{}') {
+            if (details.headers && JSON.stringify(details.headers) != '{}') {
                 const unsafeHeaders = ["accept-charset",
                 "accept-encoding",
                 "access-control-request-headers",
@@ -1442,7 +1442,7 @@
                 "transfer-encoding",
                 "upgrade",
                 "via"];
-                let headers = params.headers;
+                let headers = details.headers;
                 try{
                     Object.keys(headers).forEach((key) => {
                         let lowerKey = key.toLocaleLowerCase();
