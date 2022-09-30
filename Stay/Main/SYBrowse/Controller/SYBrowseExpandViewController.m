@@ -169,7 +169,9 @@
 
 
 - (void)notSupport:(id)sender {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+    NSString *name = objc_getAssociatedObject(sender,@"name");
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:name
                                                                    message:NSLocalizedString(@"Not supported on this device", @"")
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
