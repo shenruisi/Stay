@@ -140,7 +140,9 @@
                 mulDic[@"otherContent"] = info.content[@"otherContent"];
                 [datas replaceObjectAtIndex:i withObject:mulDic];
             }
-              data[@"uuid"];
+            NSNumber *number = [SharedStorageManager shared].runsRecord.contentDic[data[@"uuid"]];
+            [SharedStorageManager shared].runsRecord.contentDic[data[@"uuid"]] = number ? @(number.integerValue+1) : @(1);
+            [[SharedStorageManager shared].runsRecord flush];
         }
         
         body = datas;        
