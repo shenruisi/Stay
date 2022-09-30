@@ -8,7 +8,7 @@
 #import "UserDefaultsExRO.h"
 
 @interface UserDefaultsExRO(){
-    dispatch_queue_t _userDefaultsExROtQueue;
+    dispatch_queue_t _userDefaultsExROQueue;
 }
 
 @end
@@ -17,7 +17,7 @@
 
 - (instancetype)initWithPath:(NSString *)path isDirectory:(BOOL)isDirectory{
     if (self = [super initWithPath:path isDirectory:isDirectory]){
-        _userDefaultsExROtQueue = dispatch_queue_create([[self queueName:@"userDefaultsExROtQueue"] UTF8String],
+        _userDefaultsExROQueue = dispatch_queue_create([[self queueName:@"userDefaultsExROQueue"] UTF8String],
                                               DISPATCH_QUEUE_SERIAL);
     }
     
@@ -70,6 +70,6 @@
 }
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {
-    return  _userDefaultsExROtQueue;
+    return  _userDefaultsExROQueue;
 }
 @end

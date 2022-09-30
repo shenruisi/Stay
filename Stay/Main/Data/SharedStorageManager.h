@@ -11,6 +11,7 @@
 #import "ActivateChanged.h"
 #import "UserDefaults.h"
 #import "UserDefaultsExRO.h"
+#import "RunsRecord.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,7 @@ static inline NSString * _Nonnull FCDataDirectory(void){
 @property (nonatomic, strong, nullable) ActivateChanged *activateChanged;
 @property (nonatomic, strong, nullable) UserDefaults *userDefaults;
 @property (nonatomic, strong, nullable) UserDefaultsExRO *userDefaultsExRO;
+@property (nonatomic, strong, nullable) RunsRecord *runsRecord;
 - (UserscriptInfo *)getInfoOfUUID:(NSString *)uuid;
 @end
 

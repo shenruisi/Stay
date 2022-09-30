@@ -118,6 +118,7 @@
         NSString *digest = message[@"digest"];
         BOOL requireCompleteScript = digest.length == 0 || [digest isEqualToString:@"no"];
         [SharedStorageManager shared].userscriptHeaders = nil;
+        [SharedStorageManager shared].runsRecord = nil;
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         
         for(int i = 0;i < datas.count; i++) {
@@ -139,6 +140,7 @@
                 mulDic[@"otherContent"] = info.content[@"otherContent"];
                 [datas replaceObjectAtIndex:i withObject:mulDic];
             }
+              data[@"uuid"];
         }
         
         body = datas;        
