@@ -750,6 +750,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].activateChanged.content = @{};
     [[SharedStorageManager shared].activateChanged flush];
+    
+    [SharedStorageManager shared].runsRecord = nil;
+    for (NSString *uuid in [SharedStorageManager shared].runsRecord.contentDic.allKeys){
+        [[DataManager shareManager] updateUsedTimesByUuid:uuid count:[SharedStorageManager shared].runsRecord.contentDic[uuid].intValue];
+    }
+    [SharedStorageManager shared].runsRecord.contentDic = [NSMutableDictionary dictionary];
+    [[SharedStorageManager shared].runsRecord flush];
+    
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
