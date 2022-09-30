@@ -490,7 +490,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     sendResponse(res[localKey]);
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, defaultValue: defaultValue, uuid: uuid }, function (response) {
-                        sendResponse(response?response:defaultValue);
+                        // console.log("GM_getValue---stay_app--response--------",response);
+                        sendResponse(response?response.body:defaultValue);
                     });
                 }
             });
@@ -511,6 +512,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("GM_setValue------defaultValue-----", defaultValue);
             browser.storage.local.set(defaultValue, (res) => {});
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, value: value, uuid: uuid }, function (response) {
+                // console.log("GM_setValue------stay_app-----", response);
                 sendResponse(response);
             });
             return true;
@@ -780,6 +782,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("GM_getResourceText" == request.operate) {
+            // console.log("BG-----GM_getResourceText-request-----", request);
             var url = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
             url = request.url
             var reqXHR = new XMLHttpRequest();
@@ -796,8 +799,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("GM_getResourceUrl" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-                // console.log("GM_getResourceUrl----", response);
+            let key = request.key;
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate,key, uuid: request.uuid }, function (response) {
+                // console.log("-----background----GM_getResourceUrl--response--", response);
                 sendResponse(response);
             });
             return true;
@@ -855,12 +859,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if (request.operate === "HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
             const details = request.details;
             const reqType = request.type;
+            const xhrId = request.xhrId;
             // console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
             browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
-                console.log("GM_xmlhttpRequest----response---", response);
+                // console.log("GM_xmlhttpRequest----response---", response);
                 let resp = response.body
-                console.log("resp.response =====",resp )
-                if (resp.responseType === "arraybuffer" && resp) {
+                if (resp.responseType && resp.responseType === "arraybuffer" && resp) {
                     try {
                         const r = new Uint8Array(resp.data).buffer;
                         resp.response = r;
@@ -868,13 +872,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         console.error("error parsing xhr arraybuffer response", error);
                     }
                     // blob responses had their data converted, convert it back to blob
-                } else if (resp.responseType === "blob") {
+                } else if (resp.responseType && resp.responseType === "blob") {
                     browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                         browser.tabs.sendMessage(tabs[0].id, 
-                            { from: "background", base64Data: resp.data, xhrId: request.xhrId, uuid: request.uuid, operate: "FETCH_BLOB_URL" }).then(
+                            { from: "background", base64Data: resp.data, xhrId, uuid: request.uuid, operate: "FETCH_BLOB_URL" }).then(
                                 (res) => {
-                                    console.log("FETCH_BLOB_URL---res---", res);
-                                    if (request.xhrId === res.xhrId) {
+                                    // console.log("FETCH_BLOB_URL---res---", res);
+                                    if (xhrId === res.xhrId) {
                                         let type = resp.type;
                                         resp.response = {
                                             blob: res.body.blob,
@@ -887,7 +891,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                             sendResponse(resp);
                                         }else{
                                             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                                                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: resp });
+                                                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", xhrId, response: resp });
                                             });
                                         }
                                     }
@@ -895,11 +899,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             );
                     });
                 }else{
+                    // console.log("resp.response ===else==",resp )
                     if(reqType !=="undefined" && reqType == "content"){
                         sendResponse(resp);
                     }else{
                         browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                            browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: resp });
+                            browser.tabs.sendMessage(tabs[0].id, { from: "background", xhrId, operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: resp });
                         });
                     }
                 }
