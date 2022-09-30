@@ -129,6 +129,12 @@ NSString * const SFExtensionMessageKey = @"message";
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+//        [self xmlHttpRequestProxy:@{
+////            @"url":@"http://pbs.twimg.com/media/Fdy6zTWakAAWB2Z.jpg:orig",
+//            @"url":@"https://video.twimg.com/ext_tw_video/1575718530816745472/pu/vid/720x1280/bkX6OmiU8MbKP4vr.mp4?tag=12",
+//            @"method":@"GET",
+//            @"headers":@{}
+//        }];
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
         BOOL requireCompleteScript = digest.length == 0 || [digest isEqualToString:@"no"];
@@ -326,20 +332,42 @@ NSString * const SFExtensionMessageKey = @"message";
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     
     __block NSInteger status = 200;
+    __block NSString *statusText = @"";
     __block NSString *responseText = @"";
+    __block NSString *type = @"";
+    __block NSString *responseData = @"";
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:request
                 completionHandler:^(NSData *data,
                                     NSURLResponse *response,
                                     NSError *error) {
-        status = error == nil ? 200 : 500;
-        responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        status = httpResponse.statusCode;
+        statusText = [NSHTTPURLResponse localizedStringForStatusCode:status];
+        if (nil == error){
+            type = [httpResponse allHeaderFields][@"Content-Type"];
+            if ([type hasPrefix:@"image/"]
+                ||[type hasPrefix:@"video/"]){
+                NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
+                responseData = [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded];
+            }
+            else{
+                responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
+        
         dispatch_semaphore_signal(sem);
 
         }] resume];
     
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-    return @{@"status":@(status), @"responseText":responseText};
+    return @{
+        @"status":@(status),
+        @"statusText":statusText,
+        @"responseText":responseText,
+        @"data":responseData,
+        @"type":type
+    };
 }
 
 - (NSString *)getContentWithUUID:(NSString *)uuid{
