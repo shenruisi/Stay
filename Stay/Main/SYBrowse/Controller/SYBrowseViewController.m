@@ -141,10 +141,14 @@
     NSString *urlStr = objc_getAssociatedObject(tap,@"url");
     NSURL *url = [NSURL URLWithString:urlStr];
     if([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
-        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""]]];
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
         [_controller presentViewController:safariVc animated:YES completion:nil];
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""]]];
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
     } else if([url.scheme isEqualToString:@"stay"]) {
         if([url.host isEqualToString:@"album"]) {
             SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
@@ -553,6 +557,29 @@ UIPopoverPresentationControllerDelegate
     [self queryData];
     self.tableView.sectionHeaderTopPadding = 0;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+
+      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+}
+
+
+
+- (void)keyboardWillShow:(NSNotification *)notification{
+
+ //会有人问为什么是tableview而不是view，因为tableview是最外层，你的textField也是加在tableview上
+
+   CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//获取键盘高度
+   CGFloat keyboardTop = keyboardRect.size.height;//用于跟textField的y比较
+
+    self.searchTableView.height = self.searchTableView.height - keyboardTop;
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification{
+    self.searchTableView.height = self.searchController.view.height;
 }
 
 
@@ -587,6 +614,13 @@ UIPopoverPresentationControllerDelegate
     [self.tableView reloadData];
     [self.searchTableView reloadData];
     [self.allTableView reloadData];
+}
+
+
+- (void)onBecomeActive{
+    [self queryData];
+    _pageNo = 1;
+    [self queryAllData];
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -797,7 +831,7 @@ UIPopoverPresentationControllerDelegate
     _allDataQuerying = true;
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
         
-        [[SYNetworkUtils shareInstance] requestGET:[NSString stringWithFormat: @"https://api.shenyin.name/stay-fork/browse/all?page=%d",_pageNo] params:nil successBlock:^(NSString * _Nonnull responseObject) {
+        [[SYNetworkUtils shareInstance] requestGET:[NSString stringWithFormat: @"https://api.shenyin.name/stay-fork/browse/all?page=%ld",_pageNo] params:nil successBlock:^(NSString * _Nonnull responseObject) {
             
             NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
@@ -1065,6 +1099,13 @@ UIPopoverPresentationControllerDelegate
     }
     
     return _loadingSlideController;
+}
+
+
+- (void)dealloc{
+  
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 /*

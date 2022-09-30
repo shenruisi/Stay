@@ -385,7 +385,10 @@
 }
 
 - (void)showScript:(id)sender {
-    NSURL *url = [NSURL URLWithString:self.scriptDic[@"hosting_url"]];
+    
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+     [set addCharactersInString:@"#"];
+    NSURL *url = [NSURL URLWithString:[self.scriptDic[@"hosting_url"] stringByAddingPercentEncodingWithAllowedCharacters:set]];
     SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:url];
     [self presentViewController:safariVc animated:YES completion:nil];
 }
@@ -642,12 +645,13 @@
         NSArray *includes = self.scriptDic[@"includes"];
 
         if (includes.count > 0) {
-            
-            top += 35;
-            UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
+            if(top >13) {
+              top += 35;
+            }            UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
             includesLabel.top = top;
             includesLabel.left = baseLeft;
-            includesLabel.textColor = FCStyle.fcPlaceHolder;
+            includesLabel.textColor = FCStyle.fcSecondaryBlack;
+            includesLabel.font = FCStyle.footnoteBold;
             [_matchScrollView addSubview:includesLabel];
             top = includesLabel.bottom + 8;
             
@@ -685,12 +689,14 @@
 
 
         if (excludes.count > 0) {
-            top += 35;
-
+            if(top >13) {
+              top += 35;
+            }
             UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
             excludesLabel.top = top;
             excludesLabel.left = baseLeft;
-            excludesLabel.textColor = FCStyle.fcPlaceHolder;
+            excludesLabel.textColor = FCStyle.fcSecondaryBlack;
+            excludesLabel.font = FCStyle.footnoteBold;
             [_matchScrollView addSubview:excludesLabel];
             
             top = excludesLabel.bottom + 8;

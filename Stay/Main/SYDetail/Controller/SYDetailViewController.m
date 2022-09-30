@@ -696,7 +696,7 @@
             matchLabel.top = 13;
             matchLabel.left = baseLeft;
             matchLabel.textColor = FCStyle.fcSecondaryBlack;
-            matchLabel.font = FCStyle.subHeadline;
+            matchLabel.font = FCStyle.footnoteBold;
             top = matchLabel.bottom + 8;
             [_matchScrollView addSubview:matchLabel];
             for (int i = 0; i < self.script.matches.count; i++) {
@@ -729,12 +729,14 @@
         
         
         if (self.script.includes.count > 0) {
-            
-            top += 35;
+             if(top >13) {
+               top += 35;
+             }
             UILabel *includesLabel = [self createDefaultLabelWithText:@"includes"];
             includesLabel.top = top;
             includesLabel.left = baseLeft;
-            includesLabel.textColor = FCStyle.fcPlaceHolder;
+            includesLabel.textColor = FCStyle.fcSecondaryBlack;
+             includesLabel.font = FCStyle.footnoteBold;
             [_matchScrollView addSubview:includesLabel];
             top = includesLabel.bottom + 8;
             
@@ -769,12 +771,13 @@
         
 
         if (self.script.excludes.count > 0) {
-            top += 35;
-
-            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
+             if(top >13) {
+               top += 35;
+             }            UILabel *excludesLabel =  [self createDefaultLabelWithText:@"excludes"];
             excludesLabel.top = top;
             excludesLabel.left = baseLeft;
-            excludesLabel.textColor = FCStyle.fcPlaceHolder;
+            excludesLabel.textColor = FCStyle.fcSecondaryBlack;
+            excludesLabel.font =  FCStyle.footnoteBold;
             [_matchScrollView addSubview:excludesLabel];
             
             top = excludesLabel.bottom + 8;
@@ -930,8 +933,7 @@
      UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 60)];
      scrollView.showsVerticalScrollIndicator = false;
      scrollView.showsHorizontalScrollIndicator = false;
-     NSString *used = self.script.usedTimes == nil? @"0": [NSString stringWithFormat:@"%@", self.script.usedTimes ];
-     
+     NSString *used = self.script.usedTimes == nil? @"0": [NSString stringWithFormat:@"%ld", self.script.usedTimes ];
      NSMutableArray *array = [NSMutableArray arrayWithArray:  @[
           @{
               @"name":@"USED",
@@ -1026,7 +1028,7 @@
           UIImage *image = [ImageHelper sfNamed:@"pencil"font: FCStyle.subHeadline color:descColor];
           UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
           imageView.frame = CGRectMake(0, 0, 18, 18);
-          imageView.centerX = (self.view.width - 30) / 8;
+          imageView.centerX = title.centerX;
           imageView.top = title.bottom + 6;
           [view addSubview:imageView];
      } else {
