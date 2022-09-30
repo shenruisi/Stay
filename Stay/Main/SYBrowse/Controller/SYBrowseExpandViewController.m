@@ -169,7 +169,7 @@
 
 
 - (void)notSupport:(id)sender {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"install.error", @"")
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                    message:NSLocalizedString(@"Not supported on this device", @"")
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")

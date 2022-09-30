@@ -141,7 +141,6 @@
             NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.footnoteBold
         }] forState:UIControlStateNormal];
-        [btn addTarget:self.controller action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -154,6 +153,8 @@
         NSArray *plafroms = dic[@"platforms"];
         if (plafroms != NULL && ![plafroms containsObject:[[API shared] queryDeviceType]] ) {
             [btn addTarget:self.controller action:@selector(notSupport:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [btn addTarget:self.controller action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     
