@@ -635,9 +635,9 @@
                 view.left = baseLeft;
                 [_matchScrollView addSubview:view];
                 if (i != matches.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 0.5)];
                     line.backgroundColor = FCStyle.fcSeparator;
-                    line.top = top + 47;
+                    line.top = top + 47.5;
                     line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 } else {
@@ -676,9 +676,9 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != includes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 0.5)];
                     line.backgroundColor = FCStyle.fcSeparator;
-                    line.top = top + 47;
+                    line.top = top + 47.5;
                     line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 }else {
@@ -722,9 +722,9 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != excludes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 0.5)];
                     line.backgroundColor = FCStyle.fcSeparator;
-                    line.top = top + 47;
+                    line.top = top + 47.5;
                     line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 }else {

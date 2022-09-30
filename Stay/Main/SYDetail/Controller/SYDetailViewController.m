@@ -731,9 +731,9 @@
                 view.left = baseLeft;
                 [_matchScrollView addSubview:view];
                 if (i != self.script.matches.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 0.5)];
                     line.backgroundColor = FCStyle.fcSeparator;
-                    line.top = top + 47;
+                    line.top = top + 47.5;
                     line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 } else {
@@ -772,9 +772,9 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != self.script.includes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 0.5)];
                     line.backgroundColor = FCStyle.fcSeparator;
-                    line.top = top + 47;
+                    line.top = top + 47.5;
                     line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 }else {
@@ -814,9 +814,9 @@
                     view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
                 }
                 if (i != self.script.excludes.count -1) {
-                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 0.5)];
                     line.backgroundColor = FCStyle.fcSeparator;
-                    line.top = top + 47;
+                    line.top = top + 47.5;
                     line.left = baseLeft + 23;
                     [_matchScrollView addSubview:line];
                 }else {

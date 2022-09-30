@@ -97,8 +97,7 @@
     if(entity != nil && entity.needUpdate && !dic.updateSwitch){
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 60, 25);
-        btn.right = self.contentView.width - 19;
-        btn.top = 20;
+  
         [btn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
         [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         btn.titleLabel.font = FCStyle.footnoteBold;
@@ -110,6 +109,13 @@
         objc_setAssociatedObject (btn , @"script", entity.updateScript.description, OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"scriptContent", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        [btn sizeToFit];
+        btn.width = btn.width + 20;
+        if(btn.width < 60) {
+            btn.width = 60;
+        }
+        btn.right = self.contentView.width - 19;
+        btn.top = 20;
         [self.contentView addSubview:btn];
     } else {
         headerLabel.width = self.contentView.width - headerLabel.left - 30;
