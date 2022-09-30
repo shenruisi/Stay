@@ -705,6 +705,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     method = params.method;
                 }
                 // username：可选参数，如果服务器需要验证，该参数指定用户名，如果未指定，当服务器需要验证时，会弹出验证窗口。
+                xhr.withCredentials = (params.user && params.password);
 
                 if (typeof params.user !== "undefined" && typeof params.password !== "undefined") {
                     xhr.open(method, params.url, asyncT, params.user, params.password); // 建立连接
@@ -728,6 +729,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         }
                         xhr.setRequestHeader(p, params.headers[key]);
                     });
+                    // 设置cookie
+                    // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
+                    // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
+                    if (typeof (params.headers.cookie) !== 'undefined') {
+                        xhr.withCredentials = true;
+                    }
                 }
                 if (typeof (params.overrideMimeType) !== 'undefined') {
                     xhr.overrideMimeType(params.overrideMimeType);
@@ -738,13 +745,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (typeof (params.nocache) !== 'undefined') {
                     xhr.setRequestHeader('Cache-Control', 'no-cache');
                 }
-                // 设置cookie
-                // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
-                // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
-                if (typeof (params.cookie) !== 'undefined') {
-                    xhr.withCredentials = true;
-                    // xhr.setRequestHeader('Cookie', params.cookie);
-                }
+                
                 xhr.ontimeout = function (e) {
                     console.error('Timeout!!')
                     if (params.ontimeout) {
@@ -850,6 +851,22 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
+        else if (request.operate === "HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
+            const details = request.details;
+            const type = request.type;
+            console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
+            browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
+                console.log("GM_xmlhttpRequest----response---", response);
+                if(type !=="undefined" && type == "content"){
+                    sendResponse(response);
+                }else{
+                    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                        browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: response.body });
+                    });
+                }
+            });
+            return true;
+        }
         else if (request.operate === "API_XHR_FROM_BOOTSTRAP") {
             // https://jsonplaceholder.typicode.com/posts
             // get tab id and respond only to the content script that sent message
@@ -867,7 +884,6 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
                 body = new Blob([arr], { type: "text/plain" });
             }
-            console.log(body);
             const xhr = new XMLHttpRequest();
             // push to global scoped array so it can be aborted
             xhrs.push({ xhr: xhr, xhrId: request.xhrId });
@@ -1013,7 +1029,7 @@ function xhrHandleEvent(e, xhr, tab, id, xhrId) {
         reader.readAsDataURL(xhr.response);
         reader.onloadend = function () {
             const base64data = reader.result;
-            console.log("window.URL.createObjectURL(xhr.response)=", window.URL.createObjectURL(xhr.response), ",base64data---", base64data)
+            // console.log("window.URL.createObjectURL(xhr.response)=", window.URL.createObjectURL(xhr.response), ",base64data---", base64data)
             x.response = {
                 data: base64data,
                 type: xhr.response.type

@@ -130,9 +130,13 @@
         if (grants.includes('GM_getResourceText')) {
             source += GM_getResourceText.toString() + '\n\nwindow.GM_getResourceText = GM_getResourceText;\n';
         }
+        if (grants.includes('GM_xmlHttpRequest')) {
+            source +=  'GM_xmlHttpRequest=GM_xmlhttpRequest \n\nwindow.GM_xmlHttpRequest = GM_xmlHttpRequest;\n';
+        }
 
-        if (grants.includes('GM.xmlHttpRequest')) {
+        if (grants.includes('GM.xmlHttpRequest') || grants.includes('GM.xmlhttpRequest')) {
             source += 'GM.xmlHttpRequest = GM_xmlhttpRequest\n\n';
+            source += 'GM.xmlhttpRequest = GM_xmlhttpRequest\n\n';
         }
 
         if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
@@ -403,6 +407,7 @@
                     responseType: "blob",
                     url: url,
                     onload: res => {
+                        // console.log("download====",res);
                         if (res.status === 200) {
                             let downLoadUrl = res.response.blobUrl;
                             // console.log("downLoadUrl----1----", downLoadUrl);
@@ -414,6 +419,7 @@
             }
         }else{
             url = options.url;
+            console.log("options.url-------", url);
             name = options.name;
             downloadLinkDom.download = name;
             let gm_xhr = GM_xmlhttpRequest || __xhr;
@@ -428,6 +434,7 @@
                 url: url,
                 onload: res => {
                     options.onload(res);
+                    console.log("res-------",res)
                     if (res.status === 200) {
                         let downLoadUrl = res.response.blobUrl;
                         // console.log("downLoadUrl----1----", downLoadUrl);
@@ -712,21 +719,89 @@
 
     function GM_xmlhttpRequest(params) {
         const xhrId = Math.random().toString(36).substring(1, 9);
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_xmlhttpRequest", params: params, uuid: _uuid, xhrId: xhrId }, (response) => {
-            var onreadystatechange = response.onreadystatechange;
-            var onerror = response.onerror;
-            var onload = response.onload;
-            if (params.onreadystatechange && onreadystatechange) {
-                params.onreadystatechange(onreadystatechange)
+        let shouldSendRequestToStay = false;
+        if (params.headers && JSON.stringify(params.headers) != '{}') {
+            const unsafeHeaders = ["accept-charset",
+            "accept-encoding",
+            "access-control-request-headers",
+            "access-control-request-method",
+            "connection",
+            "content-length",
+            "cookie",
+            "cookie2",
+            "date",
+            "dnt",
+            "expect",
+            "host",
+            "keep-alive",
+            "origin",
+            "proxy-",
+            "sec-",
+            "referer",
+            "te",
+            "trailer",
+            "transfer-encoding",
+            "upgrade",
+            "via"];
+            let headers = params.headers;
+            try{
+                Object.keys(headers).forEach((key) => {
+                    let lowerKey = key.toLocaleLowerCase();
+                    if(unsafeHeaders.includes(lowerKey) || lowerKey.startsWith("proxy-") || lowerKey.startsWith("sec-")){
+                        // console.log("lowerKey======",lowerKey)
+                        shouldSendRequestToStay = true;
+                        throw new Error("endLoop");
+                    }
+                });
+            }catch(e){
+                if(e.message !== 'endLoop') throw e
             }
-            if (params.onerror && onerror) {
-                params.onerror(onerror)
-            }
-            if (params.onload && onload) {
-                // console.log("GM_xmlhttpRequest.onload====",onload)
-                params.onload(onload)
-            }
-        });
+
+        }
+
+        if(shouldSendRequestToStay || true){
+            console.log("shouldSendRequestToStay===GM_xmlhttpRequestGM_xmlhttpRequest===",shouldSendRequestToStay)
+            // if (details.onabort) {
+            //     details.onabort(response);
+            // } else if (details.onerror) {
+            //     details.onerror(response);
+            // } else if (details.onload) {
+            //     details.onload(response);
+            // } else if (details.onloadend) {
+            //     details.onloadend(response);
+            //     // remove event listener when xhr is complete
+            //     window.removeEventListener("message", ()=>{});
+            // } else if (details.onloadstart) {
+            //     details.onloadtstart(response);
+            // } else if (details.onprogress) {
+            //     details.onprogress(response);
+            // } else if (details.onreadystatechange) {
+            //     details.onreadystatechange(response);
+            // } else if (details.ontimeout) {
+            //     details.ontimeout(response);
+            // }
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", type:"content", details: params, uuid: _uuid, xhrId: xhrId }, (response) => {
+                console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP----response=====", response)
+
+            })
+        }else{
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_xmlhttpRequest", params: params, uuid: _uuid, xhrId: xhrId }, (response) => {
+                var onreadystatechange = response.onreadystatechange;
+                var onerror = response.onerror;
+                var onload = response.onload;
+                if (params.onreadystatechange && onreadystatechange) {
+                    params.onreadystatechange(onreadystatechange)
+                }
+                if (params.onerror && onerror) {
+                    params.onerror(onerror)
+                }
+                if (params.onload && onload) {
+                    // console.log("GM_xmlhttpRequest.onload====",onload)
+                    params.onload(onload)
+                }
+            });
+        }
+
     }
 
     /**
@@ -936,9 +1011,18 @@
                 gmFunName.push("GM_xmlhttpRequest");
 
             }
+            else if (grant === "GM_xmlHttpRequest" && !gmFunName.includes("GM_xmlHttpRequest")){
+                api += "\nconst GM_xmlHttpRequest = __xhr;\nwindow.GM_xmlHttpRequest = GM_xmlhttpRequest;\n";
+                gmFunName.push("GM_xmlHttpRequest");
+
+            }
             else if (grant === "GM.xmlHttpRequest" && !gmFunName.includes("GM.xmlHttpRequest")) {
                 gmFunVals.push("xmlHttpRequest: __xhr");
                 gmFunName.push("GM.xmlHttpRequest");
+            }
+            else if (grant === "GM.xmlhttpRequest" && !gmFunName.includes("GM.xmlhttpRequest")) {
+                gmFunVals.push("xmlhttpRequest: __xhr");
+                gmFunName.push("GM.xmlhttpRequest");
             }
         })
 
@@ -1333,43 +1417,117 @@
             const abort = () => {
                 window.postMessage({ id: _uuid, name: "API_XHR_ABORT_INJ_FROM_CREATE", xhrId: xhrId });
             };
+            let shouldSendRequestToStay = false;
             // console.log("XHR==request=", details);
-            const callback = e => {
-                const name = e.data.name;
-                const response = e.data.response;
-                // ensure callback is responding to the proper message
-                if (
-                    e.data.id !== _uuid
-                    || e.data.xhrId !== xhrId
-                    || !name
-                    || !name.startsWith("RESP_API_XHR_TO_CREATE")
-                ) return;
-                // console.log("XHR==response=", response);
-                if (name === "RESP_API_XHR_TO_CREATE") {
-                    console.log("RESP_API_XHR_TO_CREATE----");
-                    // ignore
-                } else if (name.includes("ABORT") && details.onabort) {
-                    details.onabort(response);
-                } else if (name.includes("ERROR") && details.onerror) {
-                    details.onerror(response);
-                } else if (name === "RESP_API_XHR_TO_CREATE_LOAD" && details.onload) {
-                    details.onload(response);
-                } else if (name.includes("LOADEND") && details.onloadend) {
-                    details.onloadend(response);
-                    // remove event listener when xhr is complete
-                    window.removeEventListener("message", callback);
-                } else if (name.includes("LOADSTART") && details.onloadstart) {
-                    details.onloadtstart(response);
-                } else if (name.includes("PROGRESS") && details.onprogress) {
-                    details.onprogress(response);
-                } else if (name.includes("READYSTATECHANGE") && details.onreadystatechange) {
-                    details.onreadystatechange(response);
-                } else if (name.includes("TIMEOUT") && details.ontimeout) {
-                    details.ontimeout(response);
+            if (params.headers && JSON.stringify(params.headers) != '{}') {
+                const unsafeHeaders = ["accept-charset",
+                "accept-encoding",
+                "access-control-request-headers",
+                "access-control-request-method",
+                "connection",
+                "content-length",
+                "cookie",
+                "cookie2",
+                "date",
+                "dnt",
+                "expect",
+                "host",
+                "keep-alive",
+                "origin",
+                "proxy-",
+                "sec-",
+                "referer",
+                "te",
+                "trailer",
+                "transfer-encoding",
+                "upgrade",
+                "via"];
+                let headers = params.headers;
+                try{
+                    Object.keys(headers).forEach((key) => {
+                        let lowerKey = key.toLocaleLowerCase();
+                        if(unsafeHeaders.includes(lowerKey) || lowerKey.startsWith("proxy-") || lowerKey.startsWith("sec-")){
+                            // console.log("lowerKey======",lowerKey)
+                            shouldSendRequestToStay = true;
+                            throw new Error("endLoop");
+                        }
+                    });
+                }catch(e){
+                    if(e.message !== 'endLoop') throw e
                 }
-            };
-            window.addEventListener("message", callback);
-            window.postMessage({ id: _uuid, name: "API_XHR_FROM_CREATE", details: JSON.stringify(detailsParsed), xhrId: xhrId });
+
+            }
+
+            if(shouldSendRequestToStay || true){
+                console.log("shouldSendRequestToStay==__xhr__xhr__xhr__xhr====",shouldSendRequestToStay)
+                window.addEventListener("message", (e)=>{
+                    const response = e.data.response;
+                    const name = e.data.name;
+                    console.log("name===",name,"response===",response);
+                    if( e.data.xhrId !== xhrId
+                        || !name
+                        || name !== "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
+                            return;
+                    }
+                    if (details.onabort) {
+                        details.onabort(response);
+                    } else if (details.onerror) {
+                        details.onerror(response);
+                    } else if (details.onload) {
+                        details.onload(response);
+                    } else if (details.onloadend) {
+                        details.onloadend(response);
+                        // remove event listener when xhr is complete
+                        window.removeEventListener("message", ()=>{});
+                    } else if (details.onloadstart) {
+                        details.onloadtstart(response);
+                    } else if (details.onprogress) {
+                        details.onprogress(response);
+                    } else if (details.onreadystatechange) {
+                        details.onreadystatechange(response);
+                    } else if (details.ontimeout) {
+                        details.ontimeout(response);
+                    }
+                });
+                window.postMessage({ id: _uuid, name: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", details: JSON.stringify(detailsParsed), xhrId: xhrId });
+            }else{
+                const callback = e => {
+                    const name = e.data.name;
+                    const response = e.data.response;
+                    // ensure callback is responding to the proper message
+                    if (
+                        e.data.id !== _uuid
+                        || e.data.xhrId !== xhrId
+                        || !name
+                        || !name.startsWith("RESP_API_XHR_TO_CREATE")
+                    ) return;
+                    // console.log("XHR==response=", response);
+                    if (name === "RESP_API_XHR_TO_CREATE") {
+                        console.log("RESP_API_XHR_TO_CREATE----");
+                        // ignore
+                    } else if (name.includes("ABORT") && details.onabort) {
+                        details.onabort(response);
+                    } else if (name.includes("ERROR") && details.onerror) {
+                        details.onerror(response);
+                    } else if (name === "RESP_API_XHR_TO_CREATE_LOAD" && details.onload) {
+                        details.onload(response);
+                    } else if (name.includes("LOADEND") && details.onloadend) {
+                        details.onloadend(response);
+                        // remove event listener when xhr is complete
+                        window.removeEventListener("message", callback);
+                    } else if (name.includes("LOADSTART") && details.onloadstart) {
+                        details.onloadtstart(response);
+                    } else if (name.includes("PROGRESS") && details.onprogress) {
+                        details.onprogress(response);
+                    } else if (name.includes("READYSTATECHANGE") && details.onreadystatechange) {
+                        details.onreadystatechange(response);
+                    } else if (name.includes("TIMEOUT") && details.ontimeout) {
+                        details.ontimeout(response);
+                    }
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, name: "API_XHR_FROM_CREATE", details: JSON.stringify(detailsParsed), xhrId: xhrId });
+            }
             return { abort: abort };
         }
 

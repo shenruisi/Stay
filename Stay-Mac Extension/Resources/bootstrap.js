@@ -239,6 +239,11 @@ let injectedContentVendor = new Set();
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
+        else if (request.from == "background" && "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP" === operate) {
+            // console.log("bootstrap--execRegisterMenuCommand---", request);
+            let xhrId = request.id; 
+            window.postMessage({ name: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", xhrId: xhrId, response: request.response });
+        }
         else if (request.from == "background" && "exeScriptManually" === operate){
             // console.log("exeScriptManually",request.script);
             let targetScript = request.script;
@@ -653,6 +658,13 @@ let injectedContentVendor = new Set();
             message.operate = "API_XHR_ABORT_FROM_BOOTSTRAP";
             message.xhrId = e.data.xhrId
             browser.runtime.sendMessage(message);
-        }
+        }else if (name === "HTTP_REQUEST_API_FROM_CREATE_TO_APP") {
+            message.operate = "HTTP_REQUEST_API_FROM_CREATE_TO_APP";
+            message.details = JSON.parse(e.data.details)
+            message.xhrId = e.data.xhrId
+            message.type = "page"
+            message.uuid = __uuid
+            browser.runtime.sendMessage(message);
+        } 
     })
 })();
