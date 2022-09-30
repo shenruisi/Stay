@@ -353,7 +353,7 @@ NSString * const SFExtensionMessageKey = @"message";
             if ([type hasPrefix:@"image/"]
                 ||[type hasPrefix:@"video/"]){
                 NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
-                responseData = [NSString stringWithFormat:@"%@",base64Encoded];
+                responseData = [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded];
                 responseType = @"blob";
             }
             else{
