@@ -380,6 +380,7 @@
     }
 
     function GM_download(options, name) {
+        console.log("options.111-------", options);
         let popToastTemp = [
             '<a id="GM_downloadLink" target="_blank" style="display:none">Allow</a>',
         ];
@@ -392,6 +393,10 @@
             document.body.appendChild(tempDom);
         }
         let downloadLinkDom = document.getElementById("GM_downloadLink");
+        // downloadLinkDom.addEventListener("click", function (e) {
+        //     tempDom.remove();
+        // })
+        console.log("options.222-------", options);
         let url;
         if(typeof options === "string"){
             downloadLinkDom.download = name;
@@ -419,19 +424,19 @@
             }
         }else{
             url = options.url;
-            console.log("options.url-------", url);
+            console.log("options.-------", options);
             name = options.name;
             downloadLinkDom.download = name;
             let gm_xhr = GM_xmlhttpRequest || __xhr;
             gm_xhr({
                 method: "GET",
                 responseType: "blob",
-                headers: options.headers?options.headers:{},
-                timeout: options.timeout?options.timeout:"",
-                onerror:  options.onerror?options.onerror:()=>{},
-                ontimeout: options.ontimeout?options.ontimeout:()=>{},
-                onprogress: options.onprogress?options.onprogress:()=>{},
                 url: url,
+                headers: options.headers?options.headers:{},
+                timeout: options.timeout,
+                onerror:  options.onerror,
+                ontimeout: options.ontimeout,
+                onprogress: options.onprogress,
                 onload: res => {
                     options.onload(res);
                     console.log("res-------",res)
@@ -445,9 +450,7 @@
             });
         }
 
-        downloadLinkDom.addEventListener("click", function (e) {
-            tempDom.remove();
-        })
+       
     }
 
     /**
@@ -759,30 +762,45 @@
 
         }
 
-        if(shouldSendRequestToStay){
+        if(shouldSendRequestToStay || true){
             console.log("shouldSendRequestToStay===GM_xmlhttpRequestGM_xmlhttpRequest===",shouldSendRequestToStay)
-            // if (details.onabort) {
-            //     details.onabort(response);
-            // } else if (details.onerror) {
-            //     details.onerror(response);
-            // } else if (details.onload) {
-            //     details.onload(response);
-            // } else if (details.onloadend) {
-            //     details.onloadend(response);
-            //     // remove event listener when xhr is complete
-            //     window.removeEventListener("message", ()=>{});
-            // } else if (details.onloadstart) {
-            //     details.onloadtstart(response);
-            // } else if (details.onprogress) {
-            //     details.onprogress(response);
-            // } else if (details.onreadystatechange) {
-            //     details.onreadystatechange(response);
-            // } else if (details.ontimeout) {
-            //     details.ontimeout(response);
-            // }
             browser.runtime.sendMessage({ from: "gm-apis", operate: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", type:"content", details: params, uuid: _uuid, xhrId: xhrId }, (response) => {
                 console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP----response=====", response)
-
+                if(response){
+                    const { status } = response
+                    if( status >= 200 && status < 400){
+                        if (params.onload) {
+                            params.onload(response);
+                        } 
+                        if (params.onloadend) {
+                            params.onloadend(response);
+                        } 
+                        if (params.onloadstart) {
+                            params.onloadtstart(response);
+                        } 
+                        if (params.onprogress) {
+                            params.onprogress(response);
+                        } 
+                        if (params.onreadystatechange) {
+                            params.onreadystatechange(response);
+                        } 
+                    }else if(status == 504){
+                        if (params.ontimeout) {
+                            params.ontimeout(response);
+                        }
+                    }else{
+                        if (params.onerror) {
+                            params.onerror(response);
+                        } 
+                    }
+                }else{
+                    if (params.onerror) {
+                        params.onerror({});
+                    } 
+                }
+                // if (params.onabort) {
+                //     params.onabort(response);
+                // } 
             })
         }else{
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_xmlhttpRequest", params: params, uuid: _uuid, xhrId: xhrId }, (response) => {
@@ -1469,24 +1487,38 @@
                         || name !== "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
                             return;
                     }
-                    if (details.onabort) {
-                        details.onabort(response);
-                    } else if (details.onerror) {
-                        details.onerror(response);
-                    } else if (details.onload) {
-                        details.onload(response);
-                    } else if (details.onloadend) {
-                        details.onloadend(response);
-                        // remove event listener when xhr is complete
-                        window.removeEventListener("message", ()=>{});
-                    } else if (details.onloadstart) {
-                        details.onloadtstart(response);
-                    } else if (details.onprogress) {
-                        details.onprogress(response);
-                    } else if (details.onreadystatechange) {
-                        details.onreadystatechange(response);
-                    } else if (details.ontimeout) {
-                        details.ontimeout(response);
+                    if(response){
+                        const { status } = response
+                        if( status >= 200 && status < 400){
+                            if (details.onload) {
+                                details.onload(response);
+                            } 
+                            if (details.onloadend) {
+                                details.onloadend(response);
+                                window.removeEventListener("message", ()=>{});
+                            } 
+                            if (details.onloadstart) {
+                                details.onloadtstart(response);
+                            } 
+                            if (details.onprogress) {
+                                details.onprogress(response);
+                            } 
+                            if (details.onreadystatechange) {
+                                details.onreadystatechange(response);
+                            } 
+                        }else if(status == 504){
+                            if (details.ontimeout) {
+                                details.ontimeout(response);
+                            }
+                        }else{
+                            if (details.onerror) {
+                                details.onerror(response);
+                            } 
+                        }
+                    }else{
+                        if (details.onerror) {
+                            details.onerror({});
+                        } 
                     }
                 });
                 window.postMessage({ id: _uuid, name: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", details: JSON.stringify(detailsParsed), xhrId: xhrId });
