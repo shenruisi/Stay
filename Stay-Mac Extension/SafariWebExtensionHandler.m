@@ -339,6 +339,7 @@ NSString * const SFExtensionMessageKey = @"message";
     __block NSString *responseText = @"";
     __block NSString *type = @"";
     __block NSString *responseData = @"";
+    _block NSString *responseType = @"";
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:request
                 completionHandler:^(NSData *data,
@@ -352,7 +353,8 @@ NSString * const SFExtensionMessageKey = @"message";
             if ([type hasPrefix:@"image/"]
                 ||[type hasPrefix:@"video/"]){
                 NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
-                responseData = [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded];
+                responseData = [NSString stringWithFormat:@"%@",base64Encoded];
+                responseType = @"blob";
             }
             else{
                 responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -369,7 +371,8 @@ NSString * const SFExtensionMessageKey = @"message";
         @"statusText":statusText,
         @"responseText":responseText,
         @"data":responseData,
-        @"type":type
+        @"type":type,
+        @"responseType":responseType
     };
 }
 
