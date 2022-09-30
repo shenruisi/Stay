@@ -32,6 +32,10 @@
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		584C05AE286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
 		58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
+		58561F5528E6E50400D0913A /* RunsRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58561F5428E6E50400D0913A /* RunsRecord.m */; };
+		58561F5628E6E50400D0913A /* RunsRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58561F5428E6E50400D0913A /* RunsRecord.m */; };
+		58561F5728E6E50400D0913A /* RunsRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58561F5428E6E50400D0913A /* RunsRecord.m */; };
+		58561F5828E6E50400D0913A /* RunsRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58561F5428E6E50400D0913A /* RunsRecord.m */; };
 		5862157E277EE75C00AF8B11 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */; };
 		58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C312862E6DA00AA80D5 /* SegmentViewController.m */; };
 		58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C352863040700AA80D5 /* ToolbarTrackView.m */; };
@@ -453,6 +457,8 @@
 		584C05A728607F4E00E07DDF /* NavigateCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateCollectionController.m; sourceTree = "<group>"; };
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
 		584C05AC286179D000E07DDF /* ImageHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageHelper.m; sourceTree = "<group>"; };
+		58561F5328E6E50400D0913A /* RunsRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunsRecord.h; sourceTree = "<group>"; };
+		58561F5428E6E50400D0913A /* RunsRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RunsRecord.m; sourceTree = "<group>"; };
 		5862157D277EE75C00AF8B11 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		58639C302862E6DA00AA80D5 /* SegmentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SegmentViewController.h; sourceTree = "<group>"; };
 		58639C312862E6DA00AA80D5 /* SegmentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SegmentViewController.m; sourceTree = "<group>"; };
@@ -1435,6 +1441,8 @@
 				58D1B4482888EBB3009BD608 /* UserDefaults.m */,
 				5867D16028920E4B00EC822B /* UserDefaultsExRO.h */,
 				5867D16128920E4B00EC822B /* UserDefaultsExRO.m */,
+				58561F5328E6E50400D0913A /* RunsRecord.h */,
+				58561F5428E6E50400D0913A /* RunsRecord.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -2170,6 +2178,7 @@
 			files = (
 				58DF3FF9289A50250029E1AA /* API.m in Sources */,
 				58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */,
+				58561F5828E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
 				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
@@ -2244,6 +2253,7 @@
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
+				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
@@ -2294,6 +2304,7 @@
 			files = (
 				58DF3FF8289A4C370029E1AA /* API.m in Sources */,
 				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
+				58561F5628E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
@@ -2338,6 +2349,7 @@
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
+				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
 				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,

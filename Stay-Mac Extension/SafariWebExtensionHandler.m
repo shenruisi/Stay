@@ -339,7 +339,7 @@ NSString * const SFExtensionMessageKey = @"message";
     __block NSString *responseText = @"";
     __block NSString *type = @"";
     __block NSString *responseData = @"";
-    _block NSString *responseType = @"";
+    __block NSString *responseType = @"";
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:request
                 completionHandler:^(NSData *data,

@@ -67,4 +67,14 @@ static SharedStorageManager *_instance = nil;
     return _userDefaultsExRO;
 }
 
+- (RunsRecord *)runsRecord{
+    if (nil == _runsRecord){
+        _runsRecord = [[RunsRecord alloc] initWithPath:[FCDataDirectory()
+                                                        stringByAppendingPathComponent:@"runsRecord"]
+                                           isDirectory:NO];
+    }
+    
+    return _runsRecord;
+}
+
 @end
