@@ -954,7 +954,7 @@
      UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 60)];
      scrollView.showsVerticalScrollIndicator = false;
      scrollView.showsHorizontalScrollIndicator = false;
-     NSString *used = self.script.usedTimes == nil? @"0": [NSString stringWithFormat:@"%ld", self.script.usedTimes ];
+     NSString *used =[NSString stringWithFormat:@"%ld", self.script.usedTimes ];
      NSMutableArray *array = [NSMutableArray arrayWithArray:  @[
           @{
               @"name":@"RUNS",
