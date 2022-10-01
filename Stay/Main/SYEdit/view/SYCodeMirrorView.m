@@ -160,6 +160,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                        }
                        self.uuid = uuid;
                        userScript.active = tmpScript.active;
+                       userScript.iCloudIdentifier = tmpScript.iCloudIdentifier;
                        [[DataManager shareManager] updateUserScript:userScript];
                    } else {
                        userScript.plafroms = self.platforms;
@@ -246,6 +247,8 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                         userScript.updateUrl = tmpScript.downloadUrl;
                     }
                 }
+                
+                userScript.iCloudIdentifier = tmpScript.iCloudIdentifier;
                 
                if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                    [[DataManager shareManager] updateUserScript:userScript];
