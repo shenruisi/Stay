@@ -296,7 +296,7 @@
     function _fillAllResourceUrlStroge() {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getAllResourceUrl", uuid: _uuid }, (response) => {
-                console.log("_fillAllResourceUrlStroge", response);
+                // console.log("_fillAllResourceUrlStroge", response);
                 resolve(response.body);
             });
         });
@@ -311,8 +311,13 @@
             type = "object";
         }
         // console.log("GM_setValue-----typeof value =", typeof value );
-        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid, type: type });
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid, type: type }, (response) => {
+            Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
+            // console.log("GM_setValue=====----content-----==", response);
+            // resolve(response.body);
+        });
         Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
+        return key
     }
 
     function setValue_p(key, value) {
@@ -327,20 +332,27 @@
             }
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_setValue", key: key, value: value, uuid: _uuid, type: type }, (response) => {
                 Stay_notifyValueChangeListeners(key, old, __stroge[key], false);
-                resolve(response.body);
+                // console.log("setValue_p====content----------------===", response);
+                resolve(key);
             });
         });
     }
 
     function GM_getValue(key, defaultValue) {
         // console.log("GM_getValue-----typeof value =", typeof key );
+        browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid }, (response) => {
+            __stroge[key]=response.body
+            // console.log("GM_getValue-----value -----=====", response);
+        });
         return !__stroge || typeof __stroge[key] === "undefined" || __stroge[key] == null ? defaultValue : __stroge[key];
     }
 
     function getValue_p(key, defaultValue) {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid }, (response) => {
-                resolve(response.body);
+                // console.log("getValue_p-----typeof response------ =",response );
+                resolve(response);
+                __stroge[key]=response.body
             });
         });
     }
@@ -380,6 +392,7 @@
     }
 
     function GM_download(options, name) {
+        // console.log("options.111-------", options);
         let popToastTemp = [
             '<a id="GM_downloadLink" target="_blank" style="display:none">Allow</a>',
         ];
@@ -392,6 +405,10 @@
             document.body.appendChild(tempDom);
         }
         let downloadLinkDom = document.getElementById("GM_downloadLink");
+        downloadLinkDom.addEventListener("click", function (e) {
+            tempDom.remove();
+        })
+        // console.log("options.222-------", options);
         let url;
         if(typeof options === "string"){
             downloadLinkDom.download = name;
@@ -419,22 +436,22 @@
             }
         }else{
             url = options.url;
-            console.log("options.url-------", url);
+            // console.log("options.-------", options);
             name = options.name;
             downloadLinkDom.download = name;
             let gm_xhr = GM_xmlhttpRequest || __xhr;
             gm_xhr({
                 method: "GET",
                 responseType: "blob",
-                headers: options.headers?options.headers:{},
-                timeout: options.timeout?options.timeout:"",
-                onerror:  options.onerror?options.onerror:()=>{},
-                ontimeout: options.ontimeout?options.ontimeout:()=>{},
-                onprogress: options.onprogress?options.onprogress:()=>{},
                 url: url,
+                headers: options.headers?options.headers:{},
+                timeout: options.timeout,
+                onerror:  options.onerror,
+                ontimeout: options.ontimeout,
+                onprogress: options.onprogress,
                 onload: res => {
                     options.onload(res);
-                    console.log("res-------",res)
+                    // console.log("res-------",res)
                     if (res.status === 200) {
                         let downLoadUrl = res.response.blobUrl;
                         // console.log("downLoadUrl----1----", downLoadUrl);
@@ -444,10 +461,6 @@
                 }
             });
         }
-
-        downloadLinkDom.addEventListener("click", function (e) {
-            tempDom.remove();
-        })
     }
 
     /**
@@ -759,30 +772,45 @@
 
         }
 
-        if(shouldSendRequestToStay){
+        if(shouldSendRequestToStay || true){
             console.log("shouldSendRequestToStay===GM_xmlhttpRequestGM_xmlhttpRequest===",shouldSendRequestToStay)
-            // if (details.onabort) {
-            //     details.onabort(response);
-            // } else if (details.onerror) {
-            //     details.onerror(response);
-            // } else if (details.onload) {
-            //     details.onload(response);
-            // } else if (details.onloadend) {
-            //     details.onloadend(response);
-            //     // remove event listener when xhr is complete
-            //     window.removeEventListener("message", ()=>{});
-            // } else if (details.onloadstart) {
-            //     details.onloadtstart(response);
-            // } else if (details.onprogress) {
-            //     details.onprogress(response);
-            // } else if (details.onreadystatechange) {
-            //     details.onreadystatechange(response);
-            // } else if (details.ontimeout) {
-            //     details.ontimeout(response);
-            // }
             browser.runtime.sendMessage({ from: "gm-apis", operate: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", type:"content", details: params, uuid: _uuid, xhrId: xhrId }, (response) => {
                 console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP----response=====", response)
-
+                if(response){
+                    const { status } = response
+                    if( status >= 200 && status < 400){
+                        if (params.onload) {
+                            params.onload(response);
+                        } 
+                        if (params.onloadend) {
+                            params.onloadend(response);
+                        } 
+                        if (params.onloadstart) {
+                            params.onloadtstart(response);
+                        } 
+                        if (params.onprogress) {
+                            params.onprogress(response);
+                        } 
+                        if (params.onreadystatechange) {
+                            params.onreadystatechange(response);
+                        } 
+                    }else if(status == 504){
+                        if (params.ontimeout) {
+                            params.ontimeout(response);
+                        }
+                    }else{
+                        if (params.onerror) {
+                            params.onerror(response);
+                        } 
+                    }
+                }else{
+                    if (params.onerror) {
+                        params.onerror({});
+                    } 
+                }
+                // if (params.onabort) {
+                //     params.onabort(response);
+                // } 
             })
         }else{
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_xmlhttpRequest", params: params, uuid: _uuid, xhrId: xhrId }, (response) => {
@@ -1051,9 +1079,16 @@
                 value = JSON.stringify(value)
                 type = "object";
             }
-            
-            window.postMessage({ id: _uuid, name: "API_SET_VALUE_SYNC", key: key, value: value, type: type });
-            Stay_notifyValueChangeListeners(key, old, __listValuesStroge[key], false);
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_SET_VALUE") return;
+                Stay_notifyValueChangeListeners(key, old, __listValuesStroge[key], false);
+                // console.log("GM_setValue_Async----res", e.data);
+                
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ id: _uuid, pid: pid, name: "API_SET_VALUE", key: key, value: value, type: type });
             return key;
         }
 
@@ -1089,7 +1124,15 @@
                 type = "object";
             }
             const pid = Math.random().toString(36).substring(1, 9);
-            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE_SYNC", key: key, defaultValue: value, type: type });
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
+                // console.log("---api-----GM_getValueSync----res----", e.data);
+                __listValuesStroge[key] = e.data.response
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE", key: key, defaultValue: value, type: type });
+            // window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE_SYNC", key: key, defaultValue: value, type: type });
             return !__listValuesStroge || typeof __listValuesStroge[key] === "undefined" || __listValuesStroge[key] == null ? defaultValue : __listValuesStroge[key];
         }
 
@@ -1105,7 +1148,7 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
-                    // console.log("GM_getValueAsync----res----", e.data);
+                    console.log("GM_getValueAsync----res----", e.data);
                     resolve(e.data.response?e.data.response:defaultValue);
                     window.removeEventListener("message", callback);
                 };
@@ -1150,9 +1193,18 @@
 
         function GM_getResourceURLSync(name) {
             let resourceUrl = typeof __resourceUrlStroge !== undefined ? __resourceUrlStroge[name] : "";
-            if (!resourceText || resourceText === "" || resourceText === undefined) {
-                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_URL_SYNC", key: name });
-            }
+            // if (!resourceText || resourceText === "" || resourceText === undefined) {
+            //     window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_URL_SYNC", key: name });
+            // }
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_URL") return;
+                // console.log("GM_getResourceURLSync------",e);
+                __resourceUrlStroge[name] = e.data.response.body
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_URL", key: name });
             return resourceUrl;
         }
 
@@ -1161,7 +1213,8 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_URL") return;
-                    resolve(e.data.response);
+                    // console.log("GM_getResourceURL_Async------",e);
+                    resolve(e.data.response.body);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
@@ -1174,10 +1227,12 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_TEXT") return;
-                    resolve(e.data.response);
+                    // console.log("GM_getResourceText_Async------",e)
+                    resolve(e.data.response.body);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
+                // console.log(" __resourceUrlStroge[name]----", __resourceUrlStroge[name])
                 window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: __resourceUrlStroge[name] });
             });
         }
@@ -1185,9 +1240,14 @@
         function GM_getResourceTextSync(name) {
             const pid = Math.random().toString(36).substring(1, 9);
             let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
-            if (!resourceText || resourceText === "" || resourceText === undefined) {
-                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT_SYNC", key: name, url: __resourceUrlStroge[name] });
-            }
+            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: __resourceUrlStroge[name] });
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_TEXT") return;
+                // console.log("GM_getResourceTextSync------",e)
+                __resourceTextStroge[name] = e.data.response.body;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
             return resourceText;
         }
 
@@ -1459,34 +1519,49 @@
             }
 
             if(shouldSendRequestToStay || true){
-                console.log("shouldSendRequestToStay==__xhr__xhr__xhr__xhr====",shouldSendRequestToStay)
+                // console.log("shouldSendRequestToStay==__xhr__xhr__xhr__xhr====",shouldSendRequestToStay)
                 window.addEventListener("message", (e)=>{
                     const response = e.data.response;
                     const name = e.data.name;
-                    console.log("name===",name,"response===",response);
+                    
                     if( e.data.xhrId !== xhrId
                         || !name
                         || name !== "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
                             return;
                     }
-                    if (details.onabort) {
-                        details.onabort(response);
-                    } else if (details.onerror) {
-                        details.onerror(response);
-                    } else if (details.onload) {
-                        details.onload(response);
-                    } else if (details.onloadend) {
-                        details.onloadend(response);
-                        // remove event listener when xhr is complete
-                        window.removeEventListener("message", ()=>{});
-                    } else if (details.onloadstart) {
-                        details.onloadtstart(response);
-                    } else if (details.onprogress) {
-                        details.onprogress(response);
-                    } else if (details.onreadystatechange) {
-                        details.onreadystatechange(response);
-                    } else if (details.ontimeout) {
-                        details.ontimeout(response);
+                    // console.log("name===",name,"response===",response);
+                    if(response){
+                        const { status } = response
+                        if( status >= 200 && status < 400){
+                            if (details.onload) {
+                                details.onload(response);
+                            } 
+                            if (details.onloadend) {
+                                details.onloadend(response);
+                                window.removeEventListener("message", ()=>{});
+                            } 
+                            if (details.onloadstart) {
+                                details.onloadtstart(response);
+                            } 
+                            if (details.onprogress) {
+                                details.onprogress(response);
+                            } 
+                            if (details.onreadystatechange) {
+                                details.onreadystatechange(response);
+                            } 
+                        }else if(status == 504){
+                            if (details.ontimeout) {
+                                details.ontimeout(response);
+                            }
+                        }else{
+                            if (details.onerror) {
+                                details.onerror(response);
+                            } 
+                        }
+                    }else{
+                        if (details.onerror) {
+                            details.onerror({});
+                        } 
                     }
                 });
                 window.postMessage({ id: _uuid, name: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", details: JSON.stringify(detailsParsed), xhrId: xhrId });

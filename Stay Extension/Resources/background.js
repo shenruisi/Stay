@@ -21,6 +21,7 @@ Date.prototype.dateFormat = function (fmt) {
     };
     return fmt;
 }
+
 let matchAppScriptList = [];
 let matchAppScriptConsole = [];
 let gm_console = {};
@@ -419,6 +420,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
                 // console.log("background--fetchScripts---response==",response);
                 matchAppScriptList = response.body;
+                if (request.digest == "no"){
+                    if (matchAppScriptList.length > 0){
+                        browser.browserAction.setBadgeText({text: matchAppScriptList.length.toString()});
+                    }
+                    else{
+                        browser.browserAction.setBadgeText({text: ""});
+                    }
+                }
                 // console.log("background--fetchScripts---matchAppScriptList==",matchAppScriptList);
                 sendResponse({body: matchAppScriptList});
             });
@@ -481,7 +490,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     sendResponse(res[localKey]);
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, defaultValue: defaultValue, uuid: uuid }, function (response) {
-                        sendResponse(response?response:defaultValue);
+                        // console.log("GM_getValue---stay_app--response--------",response);
+                        sendResponse(response?response.body:defaultValue);
                     });
                 }
             });
@@ -502,6 +512,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("GM_setValue------defaultValue-----", defaultValue);
             browser.storage.local.set(defaultValue, (res) => {});
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, key: key, value: value, uuid: uuid }, function (response) {
+                // console.log("GM_setValue------stay_app-----", response);
                 sendResponse(response);
             });
             return true;
@@ -697,6 +708,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     method = params.method;
                 }
                 // username：可选参数，如果服务器需要验证，该参数指定用户名，如果未指定，当服务器需要验证时，会弹出验证窗口。
+                xhr.withCredentials = (params.user && params.password);
 
                 if (typeof params.user !== "undefined" && typeof params.password !== "undefined") {
                     xhr.open(method, params.url, asyncT, params.user, params.password); // 建立连接
@@ -720,6 +732,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         }
                         xhr.setRequestHeader(p, params.headers[key]);
                     });
+                    // 设置cookie
+                    // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
+                    // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
+                    if (typeof (params.headers.cookie) !== 'undefined') {
+                        xhr.withCredentials = true;
+                    }
                 }
                 if (typeof (params.overrideMimeType) !== 'undefined') {
                     xhr.overrideMimeType(params.overrideMimeType);
@@ -730,13 +748,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (typeof (params.nocache) !== 'undefined') {
                     xhr.setRequestHeader('Cache-Control', 'no-cache');
                 }
-                // 设置cookie
-                // 在发送来自其他域的XMLHttpRequest请求之前，未设置withCredentials 为true，那么就不能为它自己的域设置cookie值。
-                // 而通过设置withCredentials 为true获得的第三方cookies，将会依旧享受同源策略，因此不能被通过document.cookie或者从头部相应请求的脚本等访问。
-                if (typeof (params.cookie) !== 'undefined') {
-                    xhr.withCredentials = true;
-                    // xhr.setRequestHeader('Cookie', params.cookie);
-                }
+                
                 xhr.ontimeout = function (e) {
                     console.error('Timeout!!')
                     if (params.ontimeout) {
@@ -770,6 +782,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("GM_getResourceText" == request.operate) {
+            // console.log("BG-----GM_getResourceText-request-----", request);
             var url = "https://dump.ventero.de/greasemonkey/resource";/*json文件url*/
             url = request.url
             var reqXHR = new XMLHttpRequest();
@@ -786,8 +799,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if ("GM_getResourceUrl" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid }, function (response) {
-                // console.log("GM_getResourceUrl----", response);
+            let key = request.key;
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate,key, uuid: request.uuid }, function (response) {
+                // console.log("-----background----GM_getResourceUrl--response--", response);
                 sendResponse(response);
             });
             return true;
@@ -839,6 +853,61 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const tabId = sender.tab.id;
             browser.tabs.insertCSS(tabId, { code: request.css }, () => {
                 if (request.operate === "API_ADD_STYLE") sendResponse(request.css);
+            });
+            return true;
+        }
+        else if (request.operate === "HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
+            const details = request.details;
+            const reqType = request.type;
+            const xhrId = request.xhrId;
+            // console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
+            browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
+                // console.log("GM_xmlhttpRequest----response---", response);
+                let resp = response.body
+                if (resp.responseType && resp.responseType === "arraybuffer" && resp) {
+                    try {
+                        const r = new Uint8Array(resp.data).buffer;
+                        resp.response = r;
+                    } catch (error) {
+                        console.error("error parsing xhr arraybuffer response", error);
+                    }
+                    // blob responses had their data converted, convert it back to blob
+                } else if (resp.responseType && resp.responseType === "blob") {
+                    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                        browser.tabs.sendMessage(tabs[0].id, 
+                            { from: "background", base64Data: resp.data, xhrId, uuid: request.uuid, operate: "FETCH_BLOB_URL" }).then(
+                                (res) => {
+                                    // console.log("FETCH_BLOB_URL---res---", res);
+                                    if (xhrId === res.xhrId) {
+                                        let type = resp.type;
+                                        resp.response = {
+                                            blob: res.body.blob,
+                                            blobUrl: res.body.blobUrl,
+                                            data: resp.data,
+                                            type: type
+                                        };
+                                        
+                                        if(reqType !=="undefined" && reqType == "content"){
+                                            sendResponse(resp);
+                                        }else{
+                                            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                                                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", xhrId, response: resp });
+                                            });
+                                        }
+                                    }
+                                }
+                            );
+                    });
+                }else{
+                    // console.log("resp.response ===else==",resp )
+                    if(reqType !=="undefined" && reqType == "content"){
+                        sendResponse(resp);
+                    }else{
+                        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                            browser.tabs.sendMessage(tabs[0].id, { from: "background", xhrId, operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: resp });
+                        });
+                    }
+                }
             });
             return true;
         }
@@ -1004,7 +1073,7 @@ function xhrHandleEvent(e, xhr, tab, id, xhrId) {
         reader.readAsDataURL(xhr.response);
         reader.onloadend = function () {
             const base64data = reader.result;
-            console.log("window.URL.createObjectURL(xhr.response)=", window.URL.createObjectURL(xhr.response), ",base64data---", base64data)
+            // console.log("window.URL.createObjectURL(xhr.response)=", window.URL.createObjectURL(xhr.response), ",base64data---", base64data)
             x.response = {
                 data: base64data,
                 type: xhr.response.type

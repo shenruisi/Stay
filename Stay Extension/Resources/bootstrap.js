@@ -151,6 +151,7 @@ let cspEnterLock = false;
 let injectInPageScripts = [];
 let injectedPageVendor = new Set();
 let injectedContentVendor = new Set();
+
 (function(){
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         let operate = request.operate;
@@ -238,8 +239,13 @@ let injectedContentVendor = new Set();
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
+        else if (request.from == "background" && "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP" === operate) {
+            // console.log("bootstrap--RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP---", request);
+            let xhrId = request.xhrId; 
+            window.postMessage({ name: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", xhrId, response: request.response });
+        }
         else if (request.from == "background" && "exeScriptManually" === operate){
-            console.log("exeScriptManually",request.script);
+            // console.log("exeScriptManually",request.script);
             let targetScript = request.script;
             if (targetScript){
                 var pageInject = targetScript.installType === "page";
@@ -286,7 +292,7 @@ let injectedContentVendor = new Set();
                     });
                 }
                 
-                // console.log("exeScriptManually",targetScript.name,targetScript.installType);
+                console.log("exeScriptManually",targetScript.name,targetScript.installType);
                 if (pageInject){
                     let uuid = targetScript.uuid;
                     let pageJSDom = document.getElementById("Stay_Inject_JS_" + uuid);
@@ -323,6 +329,7 @@ let injectedContentVendor = new Set();
                 }
                 // blob responses had their data converted, convert it back to blob
             } else if (resp.responseType === "blob" && resp.response && resp.response.data) {
+                console.log("resp.response.data=====",resp.response.data);
                 fetch(resp.response.data)
                     .then(res => res.blob())
                     .then(b => {
@@ -341,15 +348,14 @@ let injectedContentVendor = new Set();
     });
     
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
-        let injectedVendor = new Set();
         matchedScripts = response.body;
         // console.log("matchedScripts-", matchedScripts)
+        let activeCount = 0;
         matchedScripts.forEach((script) => {
             var pageInject = script.installType === "page";
             if (script.requireUrls.length > 0 && script.active){
                 script.requireUrls.forEach((url)=>{
                     if (url.startsWith('stay://')){
-                        // console.log("stay://",url);
                         if (pageInject){
                             if (injectedPageVendor.has(url)) return;
                             injectedPageVendor.add(url);
@@ -391,9 +397,10 @@ let injectedContentVendor = new Set();
             }
             
             if (script.active){ //inject active script
-                console.log("injectScript---",script.name,script.installType,script.runAt);
-//                console.log("injectScript---", script.content);
+                 console.log("injectScript---",script.name,script.installType,script.runAt);
+                // console.log("injectScript---", script.content);
                 if (script.installType === "page"){
+                    injectInPageScripts.push(script);
                     $_injectInPageWithTiming(script,"document_"+script.runAt);
                 }
                 else{
@@ -405,10 +412,10 @@ let injectedContentVendor = new Set();
                         runAt:"document_"+script.runAt
                     });
                 }
-                
             }
         });
     });
+    
     
     document.addEventListener("securitypolicyviolation", (e) => {
         console.log("securitypolicyviolation");
@@ -608,8 +615,11 @@ let injectedContentVendor = new Set();
             });
         }
         else if ("API_GET_REXOURCE_TEXT_SYNC" === name || "API_GET_REXOURCE_TEXT" === name) {
+            // console.log("API_GET_REXOURCE_TEXT e.data=========",  e);
             message.operate = "GM_getResourceText";
+            message.url = e.data.url;
             browser.runtime.sendMessage(message, (response) => {
+                // console.log("background---API_GET_REXOURCE_TEXT---", response)
                 if ("API_GET_REXOURCE_TEXT" === name) {
                     window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_REXOURCE_TEXT", response: response });
                 }
@@ -652,6 +662,13 @@ let injectedContentVendor = new Set();
             message.operate = "API_XHR_ABORT_FROM_BOOTSTRAP";
             message.xhrId = e.data.xhrId
             browser.runtime.sendMessage(message);
-        }
+        }else if (name === "HTTP_REQUEST_API_FROM_CREATE_TO_APP") {
+            message.operate = "HTTP_REQUEST_API_FROM_CREATE_TO_APP";
+            message.details = JSON.parse(e.data.details)
+            message.xhrId = e.data.xhrId
+            message.type = "page"
+            message.uuid = __uuid
+            browser.runtime.sendMessage(message);
+        } 
     })
 })();
