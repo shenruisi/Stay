@@ -286,13 +286,77 @@
         [SharedStorageManager shared].userDefaultsExRO = nil;
         body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
     }
-
+    else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
+        NSDictionary *details = message[@"details"];
+        body = [self xmlHttpRequestProxy:details];
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
                                                     }
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
+}
+
+- (NSDictionary *)xmlHttpRequestProxy:(NSDictionary *)details{
+    if (nil == details) return @{@"status":@(500), @"responseText":@""};
+    NSString *method = details[@"method"];
+    NSString *url = details[@"url"];
+    NSDictionary *headers = details[@"headers"];
+    NSString *data = details[@"data"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:method];
+    if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
+        for (NSString *key in headers.allKeys){
+            [request setValue:headers[key] forHTTPHeaderField:key];
+        }
+    }
+    
+    
+    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
+    __block NSInteger status = 200;
+    __block NSString *statusText = @"";
+    __block NSString *responseText = @"";
+    __block NSString *type = @"";
+    __block NSString *responseData = @"";
+    __block NSString *responseType = @"";
+    
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request
+                completionHandler:^(NSData *data,
+                                    NSURLResponse *response,
+                                    NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        status = httpResponse.statusCode;
+        statusText = [NSHTTPURLResponse localizedStringForStatusCode:status];
+        if (nil == error){
+            type = [httpResponse allHeaderFields][@"Content-Type"];
+            if ([type hasPrefix:@"image/"]
+                ||[type hasPrefix:@"video/"]){
+                NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
+                responseData = [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded];
+                responseType = @"blob";
+            }
+            else{
+                responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
+        
+        dispatch_semaphore_signal(sem);
+
+        }] resume];
+    
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    return @{
+        @"status":@(status),
+        @"statusText":statusText,
+        @"responseText":responseText,
+        @"data":responseData,
+        @"type":type,
+        @"responseType":responseType
+    };
 }
 
 
