@@ -576,27 +576,27 @@ UIPopoverPresentationControllerDelegate
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-
-      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+//
+//      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 }
 
 
 
-- (void)keyboardWillShow:(NSNotification *)notification{
-
- //会有人问为什么是tableview而不是view，因为tableview是最外层，你的textField也是加在tableview上
-
-   CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//获取键盘高度
-   CGFloat keyboardTop = keyboardRect.size.height;//用于跟textField的y比较
-
-    self.searchTableView.height = self.searchTableView.height - keyboardTop;
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification{
-    self.searchTableView.height = self.searchController.view.height;
-}
+//- (void)keyboardWillShow:(NSNotification *)notification{
+//
+// //会有人问为什么是tableview而不是view，因为tableview是最外层，你的textField也是加在tableview上
+//
+//   CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//获取键盘高度
+//   CGFloat keyboardTop = keyboardRect.size.height;//用于跟textField的y比较
+//
+//    self.searchTableView.height = self.searchTableView.height - keyboardTop;
+//}
+//
+//- (void)keyboardWillHide:(NSNotification *)notification{
+//    self.searchTableView.height = self.searchController.view.height;
+//}
 
 
 - (UIView *)createTableHeaderView {
@@ -985,10 +985,11 @@ UIPopoverPresentationControllerDelegate
      float y = offset.y + bounds.size.height - inset.bottom;
      float h = size.height;
      float reload_distance = 10;
+    if ([scrollView isEqual:self.searchTableView]) {
+        [self.searchController.searchBar.searchTextField resignFirstResponder];
+    }
      if(y > h + reload_distance) {
-         if ([scrollView isEqual:self.searchTableView]) {
-          
-         } else if(self.selectedIdx == 1 && !_allDataEnd) {
+        if(self.selectedIdx == 1 && !_allDataEnd) {
              if(_allDataQuerying) {
                      return;
              }
@@ -1128,8 +1129,8 @@ UIPopoverPresentationControllerDelegate
 
 - (void)dealloc{
   
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 /*
