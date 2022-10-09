@@ -84,7 +84,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         }
         
         
-        MacSplitViewController *splitViewController = [[MacSplitViewController alloc] init];
+        FCSplitViewController *splitViewController = [[FCSplitViewController alloc] init];
         MainTabBarController *primaryController = [[MainTabBarController alloc] init];
         UserScript *userscript = [[UserScript alloc] init];
         userscript.uuid = @"123";
