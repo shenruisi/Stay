@@ -16,6 +16,7 @@
 #import "NavigateCollectionController.h"
 #import "SegmentViewController.h"
 #import "EmptyViewController.h"
+#import "MacSplitViewController.h"
 
 FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
 
@@ -68,13 +69,8 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
     UIWindow *window = nil;
     if ([sceneIdentifier isEqualToString:SCENE_Main]){
         fcScene.sizeable = YES;
-        UITitlebar *titlebar = windowScene.titlebar;
-        titlebar.titleVisibility = UITitlebarTitleVisibilityHidden;
-        titlebar.toolbar = [[FCToolbar alloc] initWithIdentifier:@"main"];
-        titlebar.toolbar.displayMode = NSToolbarDisplayModeIconOnly;
-        titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
         
-        
+        windowScene.title = @"Stay for Mac";
         window = [[UIWindow alloc] initWithWindowScene:windowScene];
         window.backgroundColor = FCStyle.background;
         windowScene.sizeRestrictions.minimumSize = CGSizeMake(425, 480);
@@ -88,12 +84,8 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         }
         
         
-        FCSplitViewController *splitViewController = [[FCSplitViewController alloc] init];
-        splitViewController.toolbar = titlebar.toolbar;
-        
+        MacSplitViewController *splitViewController = [[MacSplitViewController alloc] init];
         MainTabBarController *primaryController = [[MainTabBarController alloc] init];
-//        [splitViewController setViewController:primaryController forColumn:UISplitViewControllerColumnPrimary];
-        
         UserScript *userscript = [[UserScript alloc] init];
         userscript.uuid = @"123";
         NavigateCollectionController *secondaryController = [[NavigateCollectionController alloc]

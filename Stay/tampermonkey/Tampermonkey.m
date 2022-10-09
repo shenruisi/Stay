@@ -108,7 +108,7 @@ static Tampermonkey *kInstance = nil;
         userScript.installType = [userScript.injectInto lowercaseString];
     }
     
-    if ([self needInjectBuiltinJQuery:scriptWithoutComment name:userScript.name]){
+    if ([self needInjectBuiltinJQuery:scriptWithoutComment name:userScript.name uuid:userScript.uuid]){
         if (![userScript.requireUrls containsObject:@"stay://vendor/jquery.min.js"]){
             NSMutableArray *newRequireUrls = [[NSMutableArray alloc] initWithArray:userScript.requireUrls];
             [newRequireUrls insertObject:@"stay://vendor/jquery.min.js" atIndex:0];
@@ -134,7 +134,10 @@ static Tampermonkey *kInstance = nil;
     }
 }
 
-- (BOOL)needInjectBuiltinJQuery:(NSString *)script name:(NSString *)name{
+- (BOOL)needInjectBuiltinJQuery:(NSString *)script name:(NSString *)name uuid:(NSString *)uuid{
+    if ([[self explictNotInjectJQueryList] containsObject:uuid]){
+        return NO;
+    }
     NSRegularExpression *jqueryExpr = [[NSRegularExpression alloc] initWithPattern:@"(\\$[\\.a-zA-z]*)\\(+" options:0 error:nil];
     NSArray<NSTextCheckingResult *> *results = [jqueryExpr matchesInString:script options:0 range:NSMakeRange(0, script.length)];
     if (results.count > 0){
@@ -143,6 +146,10 @@ static Tampermonkey *kInstance = nil;
         return results.count == 0;
     }
     return NO;
+}
+
+- (NSArray *)explictNotInjectJQueryList{
+    return @[@"70178DD295CDA688CD996F65C573FF3C"];
 }
 
 - (BOOL)isES6:(NSString *)script name:(NSString *)name{
