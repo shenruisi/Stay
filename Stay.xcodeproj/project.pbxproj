@@ -224,6 +224,7 @@
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
 		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
+		58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */; };
 		58D0C3C928A1FA2500DB1358 /* fallback.css in Resources */ = {isa = PBXBuildFile; fileRef = 58D0C3C828A1FA2500DB1358 /* fallback.css */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
@@ -581,6 +582,8 @@
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
 		58CF689D286D917800A52B2B /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		58CF689F286D91B200A52B2B /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
+		58CFA5C728F2CC79004C5140 /* MacSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacSplitViewController.h; sourceTree = "<group>"; };
+		58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacSplitViewController.m; sourceTree = "<group>"; };
 		58D0C3C828A1FA2500DB1358 /* fallback.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = fallback.css; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
@@ -1057,6 +1060,8 @@
 				58639C352863040700AA80D5 /* ToolbarTrackView.m */,
 				58639C37286312B100AA80D5 /* QuickAccess.h */,
 				58639C38286312B100AA80D5 /* QuickAccess.m */,
+				58CFA5C728F2CC79004C5140 /* MacSplitViewController.h */,
+				58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -2324,6 +2329,7 @@
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
+				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
 				5867D151288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
