@@ -2932,12 +2932,16 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             this.config = new ConfigManager();
             this.user = new UserStorage();
             this.getAndSentConnectionMessage = (url, frameURL) => {
+                console.log("getAndSentConnectionMessage----settings-",this.user.settings);
+
                 if (this.user.settings) {
+                    this.updateAutoState();
                     // console.log("getAndSentConnectionMessage----settings-");
                     this.handleTabMessage(url, frameURL);
                 }else{
                     // console.log("getAndSentConnectionMessage----settings----else-----");
                     this.user.loadSettings().then(()=>{
+                        this.updateAutoState();
                         this.handleTabMessage(url, frameURL)
                     });
                 }
@@ -2957,7 +2961,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             }
             this.handleTabMessage = (url, frameUrl=null) => {
                 // console.log("this.config====", this.config)
-                // console.log("handleTabMessage---this.user.settings=====",this.user.settings);
+                // console.log("handleTabMessage---this.user.settings=====",this.user.settings, this.autoState);
                 let settings = this.user.settings;
                 url = url&&url!=null?url:settings.currentTabUrl;
                 frameUrl = frameUrl&&frameUrl!=null?frameUrl:settings.frameUrl
@@ -3069,15 +3073,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.stateManager.saveState();
             }
             this.handleDarkModeSettingForPopup = async () => {
-                // await this.user.loadSettings();
                 const settings = await this.user.loadSettings();
-                // console.log("getAndSentConnectionMessage----settings-",settings, this.user.settings);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     const tabURL = tabs[0].url;
                     let browserDomain = getDomain(tabURL);
                     let siteListDisabled = settings["siteListDisabled"];
                     const enabled = isArray(siteListDisabled)&&siteListDisabled.includes(browserDomain)?false:true;
-                    // console.log("addListener--FETCH_DARKMODE_CONFIG--darkmodeConfig--enabled--", enabled);
                     browser.runtime.sendMessage({ 
                         from: "background", 
                         isStayAround: settings["isStayAround"],
@@ -3235,6 +3236,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         async start() {
             await this.config.load({local: true});
             await this.user.loadSettings();
+            console.log(" this.user.settings = ",  this.user.settings);
             this.updateAutoState();
             
             logInfo("loaded", this.user.settings);
