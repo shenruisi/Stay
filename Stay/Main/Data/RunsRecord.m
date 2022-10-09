@@ -34,6 +34,10 @@
     
 }
 
+- (void)initOnEmpty{
+    self.contentDic = [[NSMutableDictionary alloc] init];
+}
+
 - (NSData *)archiveData{
     return [NSJSONSerialization dataWithJSONObject:self.contentDic options:0 error:nil];
 }
