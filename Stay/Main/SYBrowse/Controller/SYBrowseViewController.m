@@ -985,7 +985,7 @@ UIPopoverPresentationControllerDelegate
      float y = offset.y + bounds.size.height - inset.bottom;
      float h = size.height;
      float reload_distance = 10;
-    if ([scrollView isEqual:self.searchTableView]) {
+    if ([scrollView isEqual:self.searchTableView] && self.searchController.searchBar.text.length > 0) {
         [self.searchController.searchBar.searchTextField resignFirstResponder];
     }
      if(y > h + reload_distance) {
