@@ -30,6 +30,8 @@
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
 #import "QuickAccess.h"
+#import "FCShared.h"
+#import "Plugin.h"
 #endif
 
 @interface _FeaturedBannerTableViewCell : UITableViewCell
@@ -143,12 +145,22 @@
     if([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
+#ifdef Mac
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
         SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
         [_controller presentViewController:safariVc animated:YES completion:nil];
+#endif
+
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
+#ifdef Mac
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#endif
+
     } else if([url.scheme isEqualToString:@"stay"]) {
         if([url.host isEqualToString:@"album"]) {
             SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
@@ -662,6 +674,7 @@ UIPopoverPresentationControllerDelegate
     [_searchDatas removeAllObjects];
     if(searchText.length > 0) {
         _searchPageNo = 1;
+        _searchDataEnd = false;
 //        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
        [self querySearchData:searchText];
     }
@@ -889,7 +902,11 @@ UIPopoverPresentationControllerDelegate
             }
             _searchDataQuerying = false;
             
-           
+            NSArray *array = dic[@"biz"];
+            if(array.count == 0) {
+                _searchDataEnd = true;
+            }
+            
             [self.searchDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self.searchTableView reloadData];
@@ -986,16 +1003,23 @@ UIPopoverPresentationControllerDelegate
      float h = size.height;
      float reload_distance = 10;
     if ([scrollView isEqual:self.searchTableView] && self.searchController.searchBar.text.length > 0) {
+        
         [self.searchController.searchBar.searchTextField resignFirstResponder];
     }
      if(y > h + reload_distance) {
-        if(self.selectedIdx == 1 && !_allDataEnd) {
+        if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:self.allTableView]) {
              if(_allDataQuerying) {
                      return;
              }
              _pageNo++;
             [self queryAllData];
-         }
+        } else if([scrollView isEqual:self.searchTableView] && !_searchDataEnd  && self.searchController.searchBar.text.length > 0) {
+            if(_searchDataQuerying) {
+                return;
+            }
+            _searchPageNo++;
+            [self querySearchData:self.searchController.searchBar.text];
+        }
      }
 }
 
