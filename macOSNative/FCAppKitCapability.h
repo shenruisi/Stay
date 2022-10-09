@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)slideTrackToolbarItemChanged:(NSToolbarItem *)item width:(CGFloat)width;
 - (void)appearanceChanged:(NSString *)mode;
 - (void)accentColorChanged:(NSString *)colorString;
+- (void)openUrl:(NSURL *)url;
+
 @end
 
 NS_ASSUME_NONNULL_END

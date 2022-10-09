@@ -299,5 +299,13 @@
     return [NSColor colorWithRed:((float)r/255.0f) green:((float)g/255.0f) blue:((float)b/255.0f) alpha:alpha];
 }
 
+- (void)openUrl:(NSURL *)url {
+    NSWorkspace * ws = [NSWorkspace sharedWorkspace];
+    [ws openURLs: @[url] withAppBundleIdentifier:@"com.apple.Safari"
+         options: NSWorkspaceLaunchDefault
+    additionalEventParamDescriptor: NULL
+    launchIdentifiers: NULL];
+}
+
 
 @end

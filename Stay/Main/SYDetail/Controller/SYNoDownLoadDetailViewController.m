@@ -27,6 +27,8 @@
 
 #ifdef Mac
 #import "QuickAccess.h"
+#import "FCShared.h"
+#import "Plugin.h"
 #endif
 
 @interface SYNoDownLoadDetailViewController ()<UITextViewDelegate,UITableViewDelegate, UITableViewDataSource>
@@ -395,12 +397,20 @@
 }
 
 - (void)showScript:(id)sender {
+#ifdef Mac
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+     [set addCharactersInString:@"#"];
+    NSURL *url = [NSURL URLWithString:[self.scriptDic[@"hosting_url"] stringByAddingPercentEncodingWithAllowedCharacters:set]];
     
+    [FCShared.plugin.appKit openUrl:url];
+#else
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
      [set addCharactersInString:@"#"];
     NSURL *url = [NSURL URLWithString:[self.scriptDic[@"hosting_url"] stringByAddingPercentEncodingWithAllowedCharacters:set]];
     SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:url];
     [self presentViewController:safariVc animated:YES completion:nil];
+#endif
+
 }
 
 - (void)showNotes:(id)sender {
