@@ -16,7 +16,7 @@
         native.nslog("createGMApisWithUserScripte-- " + installType);
         if (grants.includes('unsafeWindow') || installType == 'page') {
             native.nslog("page create");
-            source += 'const _userscript = ' + JSON.stringify(userscript) +';\n';
+            source += 'const _userscript = ' + JSON.stringify(userscript) + ';\n';
             source += injectJavaScript(userscript, version);
             return source;
         }
@@ -133,7 +133,7 @@
             source += 'GM.xmlHttpRequest = ' + GM_xmlhttpRequest.toString() + '\n\n';
         }
 
-        if (grants.includes('GM_notification') || grants.includes('GM.notification') ) {
+        if (grants.includes('GM_notification') || grants.includes('GM.notification')) {
             source += GM_notification.toString() + '\n\n';
             source += "GM.notification = " + GM_notification.toString() + '\n\n';
         }
@@ -156,7 +156,7 @@
         source += _fillAllResourceTextStroge.toString() + '\n\n';
 
         source += _fillAllResourceUrlStroge.toString() + '\n\n';
-//        native.nslog("native-source" + source);
+        //        native.nslog("native-source" + source);
         return source;
     }
 
@@ -165,7 +165,9 @@
             version: version,
             scriptHandler: "Stay",
             script: {
+                author: userscript.author,
                 version: userscript.version,
+
                 description: userscript.description,
                 namespace: userscript.namespace,
                 resources: userscript.resourceUrls ? userscript.resourceUrls : [],
@@ -253,7 +255,7 @@
 
 
     function GM_setClipboard(data, info) {
-        
+
     }
 
     function GM_download(url, name) {
@@ -272,17 +274,17 @@
             rightLine = " border-right:1px solid #565656;"
         }
         let iconDom = "";
-        if (iconUrl){
+        if (iconUrl) {
             iconDom = '<img src=' + iconUrl + ' style="width: 20px;height: 20px;">'
         }
-        let text = 'Allow to download "' + name+ '"';
+        let text = 'Allow to download "' + name + '"';
         let popToastTemp = [
             '<div id="downloadPop" style="' + downloadStyle + ' transform: translate(-50%, -50%);left: 50%; top: 50%; border-radius: 10px; ' + bg + ' position: fixed;z-index:999; box-shadow: 0 12px 32px rgba(0, 0, 0, .1), 0 2px 6px rgba(0, 0, 0, .6);padding-top: 6px;">',
-            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;">' + iconDom +'<div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor +'">' + usName+'</div></div>',
-            '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text +'</div>',
+            '<div id="gm_popTitle"  style="display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center; padding: 4px;">' + iconDom + '<div style="padding-left:4px;font-weight:600;font-size:16px;line-height:17px; ' + fontColor + '">' + usName + '</div></div>',
+            '<div id="gm_popCon" style="padding:4px 8px;font-size:15px; ' + fontColor + ' line-height: 20px;">' + text + '</div>',
             '<div id="gm_popCon" style="padding:4px 8px;font-size:13px; ' + fontColor + ' line-height:17px;text-overflow:ellipsis;overflow:hidden; -webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;">' + url + '</div>',
             '<div style="' + fontColor + topLine + ' font-size: 14px;margin-top:10px; line-height: 20px;display: flex;flex-direction: row;align-items:center;justify-content: center;justify-items: center;">',
-            '<div id="gm_downloadCancel" style=" ' + rightLine +' font-size:16px;font-weight:600;color: #B620E0;width:50%;padding: 8px;text-align:center;">Cancel</div>',
+            '<div id="gm_downloadCancel" style=" ' + rightLine + ' font-size:16px;font-weight:600;color: #B620E0;width:50%;padding: 8px;text-align:center;">Cancel</div>',
             '<a id="downloadLink" target="_blank" style="font-size:16px;font-weight:600;  color: #B620E0;width:50%;padding: 8px;text-align:center;">Allow</a>',
             '</div>',
             '</div>'
@@ -300,11 +302,11 @@
         })
 
         let downloadLinkDom = document.getElementById("downloadLink");
-        console.log("downloadLinkDom",url);
-        if (url.match(new RegExp("^data:image\/.*;base64,"))){ //download image directly
+        console.log("downloadLinkDom", url);
+        if (url.match(new RegExp("^data:image\/.*;base64,"))) { //download image directly
             downloadLinkDom.href = url;
         }
-        else{
+        else {
             downloadLinkDom.href = "data:application/octet-stream," + encodeURIComponent(url);
         }
 
@@ -422,7 +424,7 @@
         userInfo["commandFunc"] = commandFunc;
         userInfo["accessKey"] = accessKey;
         userInfo["id"] = pid;
-        
+
         let UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
         if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
             UUID_RMC_CONTEXT = [];
@@ -433,7 +435,7 @@
         console.log("gm-api-----GM_registerMenuCommand");
 
         // browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, command_content: userInfo,  operate: "REGISTER_MENU_COMMAND_CONTEXT" });
-         
+
         return pid;
     }
 
@@ -477,7 +479,7 @@
         if (!resourceText || typeof resourceText === undefined) {
             // 通过name获取resource
             // resourceText = await GM_getResourceText_p(name);
-            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name],  uuid: _uuid }, (response) => {
+            browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getResourceText", key: name, url: __resourceUrlStroge[name], uuid: _uuid }, (response) => {
                 console.log("GM_getResourceText send to background-----", response);
                 __resourceTextStroge[name] = response.body;
                 resourceText = response.body;
@@ -577,11 +579,11 @@
     function injectJavaScript(userscript, version) {
         let gmFunVals = [];
         let grants = userscript.grants;
-        let resourceUrls = userscript.resourceUrls||{};
+        let resourceUrls = userscript.resourceUrls || {};
         let api = `${GM_listValues_Async}\n`;
         api += `${GM_getAllResourceText}\n`;
         api += 'let __listValuesStroge = await GM_listValues_Async();\n';
-        api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
+        api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls) + ';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
         api += `console.log("__resourceTextStroge==",__resourceTextStroge);\n`;
         api += 'let __RMC_CONTEXT = {};\n';
@@ -595,12 +597,12 @@
             if (grant === "unsafeWindow" && !gmFunName.includes("unsafeWindow")) {
                 api += `const unsafeWindow = window;\n`;
                 gmFunName.push("unsafeWindow");
-            } 
+            }
             else if (grant === "GM.listValues" && !gmFunName.includes("GM.listValues")) {
                 gmFunVals.push("listValues: GM_listValues_Async");
                 gmFunName.push("GM.listValues");
-            } 
-            else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
+            }
+            else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")) {
                 api += `function GM_listValues(){ return __listValuesStroge;}\n`;
                 gmFunName.push("GM_listValues");
             }
@@ -609,20 +611,20 @@
                 gmFunVals.push("deleteValue: GM_deleteValue_Async");
                 gmFunName.push("GM_deleteValue_Async");
             }
-            else if (grant === "GM_deleteValue" && !gmFunName.includes("GM_deleteValue")){
+            else if (grant === "GM_deleteValue" && !gmFunName.includes("GM_deleteValue")) {
                 api += `${GM_deleteValue_sync}\nconst GM_deleteValue = GM_deleteValue_sync;\n`;
                 gmFunName.push("GM_deleteValue");
             }
             else if (grant === "GM_addStyle" && !gmFunName.includes("GM_addStyle")) { //同步
                 api += `${GM_addStyleSync}\nconst GM_addStyle = GM_addStyleSync;\n`;
                 gmFunName.push("GM_addStyle");
-            } 
+            }
             else if (grant === "GM.addStyle" && !gmFunName.includes("GM_addStyle_Async")) {
                 api += `${GM_addStyle_Async}\n`;
                 gmFunVals.push("addStyle: GM_addStyle_Async");
                 gmFunName.push("GM_addStyle_Async");
-            } 
-            else if ("GM.setValue" === grant && !gmFunName.includes("GM_setValue_Async")){
+            }
+            else if ("GM.setValue" === grant && !gmFunName.includes("GM_setValue_Async")) {
                 api += `${GM_setValue_Async}\n`;
                 gmFunVals.push("setValue:  GM_setValue_Async");
                 gmFunName.push("GM_setValue_Async");
@@ -640,27 +642,27 @@
                 api += `${GM_getValueSync}\nconst GM_getValue = GM_getValueSync;\n`;
                 gmFunName.push("GM_getValueSync");
             }
-            else if (("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant) && 
-                (!gmFunName.includes("GM_registerMenuCommand") || !gmFunName.includes("GM.registerMenuCommand"))){
+            else if (("GM_registerMenuCommand" === grant || "GM.registerMenuCommand" === grant) &&
+                (!gmFunName.includes("GM_registerMenuCommand") || !gmFunName.includes("GM.registerMenuCommand"))) {
                 api += `${GM_registerMenuCommand}\n`;
                 gmFunVals.push("registerMenuCommand: GM_registerMenuCommand");
                 gmFunName.push("GM_registerMenuCommand");
                 gmFunName.push("GM.registerMenuCommand");
             }
-            else if (("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) && 
+            else if (("GM_unregisterMenuCommand" === grant || "GM.unregisterMenuCommand" === grant) &&
                 (!gmFunName.includes("GM_unregisterMenuCommand") || !gmFunName.includes("GM.unregisterMenuCommand"))) {
                 api += `${GM_unregisterMenuCommand}\n`;
                 gmFunVals.push("unregisterMenuCommand: GM_unregisterMenuCommand");
                 gmFunName.push("GM_unregisterMenuCommand");
                 gmFunName.push("GM.unregisterMenuCommand");
             }
-            else if (("GM_getResourceUrl" === grant || "GM_getResourceURL" === grant) && !gmFunName.includes("GM_getResourceURLSync")){
+            else if (("GM_getResourceUrl" === grant || "GM_getResourceURL" === grant) && !gmFunName.includes("GM_getResourceURLSync")) {
                 api += `${GM_getResourceURLSync}\n`;
                 gmFunName.push("GM_getResourceURLSync");
                 api += `const GM_getResourceURL=GM_getResourceURLSync;\n`;
                 api += `const GM_getResourceUrl=GM_getResourceURLSync;\n`;
             }
-            else if (("GM.getResourceURL" === grant || "GM.getResourceUrl" === grant) && !gmFunName.includes("GM_getResourceURL_Async")){
+            else if (("GM.getResourceURL" === grant || "GM.getResourceUrl" === grant) && !gmFunName.includes("GM_getResourceURL_Async")) {
                 api += `${GM_getResourceURL_Async}\n`;
                 gmFunVals.push("getResourceURL: GM_getResourceURL_Async");
                 gmFunVals.push("getResourceUrl: GM_getResourceURL_Async");
@@ -678,10 +680,10 @@
             }
             else if ("GM.openInTab" === grant && !gmFunName.includes("GM_openInTab_async")) {
                 api += `${GM_openInTab_async}\n`;
-                
+
                 gmFunVals.push("openInTab: GM_openInTab_async");
                 gmFunName.push("GM_openInTab_async");
-                if (!gmFunName.includes("GM_closeTab")){
+                if (!gmFunName.includes("GM_closeTab")) {
                     api += `${GM_closeTab}\n`;
                     gmFunVals.push("closeTab: GM_closeTab");
                     gmFunName.push("GM_closeTab");
@@ -701,7 +703,7 @@
                 gmFunVals.push("notification: GM_notification");
                 gmFunName.push("GM_notification");
             }
-            else if (("GM.setClipboard" === grant || "GM_setClipboard" === grant) && !gmFunName.includes("GM_setClipboard") ) {
+            else if (("GM.setClipboard" === grant || "GM_setClipboard" === grant) && !gmFunName.includes("GM_setClipboard")) {
                 api += `${GM_setClipboard}\n`;
                 gmFunVals.push("setClipboard: GM_setClipboard");
                 gmFunName.push("GM_setClipboard");
@@ -711,7 +713,7 @@
                 gmFunVals.push("download: GM_download");
                 gmFunName.push("GM_download");
             }
-            else if (grant === "GM_xmlhttpRequest" && !gmFunName.includes("GM_xmlhttpRequest")){
+            else if (grant === "GM_xmlhttpRequest" && !gmFunName.includes("GM_xmlhttpRequest")) {
                 api += "\nconst GM_xmlhttpRequest = __xhr;\n";
                 gmFunName.push("GM_xmlhttpRequest");
 
@@ -724,17 +726,19 @@
 
         function GM_info(userscript, version) {
             let info = {
-                version: version,
-                scriptHandler: "Stay",
                 script: {
-                    version: userscript.version,
+                    author: userscript.author,
                     description: userscript.description,
+                    excludes: userscript.excludes ? userscript.excludes : [],
+                    includes: userscript.includes ? userscript.includes : [],
+                    matches: userscript.matches ? userscript.matches : [],
                     namespace: userscript.namespace,
                     resources: userscript.resourceUrls ? userscript.resourceUrls : [],
-                    includes: userscript.includes ? userscript.includes : [],
-                    excludes: userscript.excludes ? userscript.excludes : [],
-                    matches: userscript.matches ? userscript.matches : []
-                }
+                    version: userscript.version,
+                },
+                scriptMetaStr: "", // TODO: populate with meta data between // ==UserScript== and // ==/UserScript==
+                scriptHandler: "Stay",
+                version: version,
             };
             return JSON.stringify(info);
         }
@@ -751,7 +755,7 @@
                 window.postMessage({ id: _uuid, pid: pid, name: "API_LIST_VALUES" });
             });
         }
-        
+
 
         function GM_setValueSync(key, value) {
             __listValuesStroge[key] = value;
@@ -923,18 +927,18 @@
             console.log("GM_registerMenuCommand----", userInfo);
             window.postMessage({ id: _uuid, pid: pid, name: "REGISTER_MENU_COMMAND_CONTEXT", rmc_context: JSON.stringify(userInfo) });
             let UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
-            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]"){
+            if (!UUID_RMC_CONTEXT || UUID_RMC_CONTEXT == "" || UUID_RMC_CONTEXT == "[]") {
                 UUID_RMC_CONTEXT = [];
             }
             UUID_RMC_CONTEXT.push(userInfo);
             __RMC_CONTEXT[_uuid] = UUID_RMC_CONTEXT;
             // __RMC_CONTEXT.push(userInfo);
-           
+
             window.addEventListener('message', (e) => {
                 if (!e || !e.data || !e.data.name) return;
                 let uuid = e.data.uuid;
                 const name = e.data.name;
-                if ("execRegisterMenuCommand" === name && uuid == _uuid){
+                if ("execRegisterMenuCommand" === name && uuid == _uuid) {
                     let menuId = e.data.menuId;
                     let place = -1;
                     let __UUID_RMC_CONTEXT = __RMC_CONTEXT[uuid]
@@ -950,24 +954,24 @@
                         }
                     }
                 }
-            
+
             });
             return pid;
         }
 
         function GM_unregisterMenuCommand(menuId) {
             let __UUID_RMC_CONTEXT = __RMC_CONTEXT[_uuid]
-            if (!menuId || __UUID_RMC_CONTEXT.length<=0){
+            if (!menuId || __UUID_RMC_CONTEXT.length <= 0) {
                 return;
             }
             let place = -1;
-            __UUID_RMC_CONTEXT.forEach((item, index)=>{
-                if (item.id == menuId && item.uuid == _uuid){
+            __UUID_RMC_CONTEXT.forEach((item, index) => {
+                if (item.id == menuId && item.uuid == _uuid) {
                     place = index;
                     return false;
                 }
             });
-            if (place>=0){
+            if (place >= 0) {
                 let pid = __UUID_RMC_CONTEXT[place].id
                 __UUID_RMC_CONTEXT.splice(place, 1);
                 __RMC_CONTEXT[_uuid] = __UUID_RMC_CONTEXT;
@@ -976,7 +980,7 @@
         }
 
         function browserAddListener() {
-            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER"});
+            window.postMessage({ id: _uuid, name: "BROWSER_ADD_LISTENER" });
         }
 
         function GM_closeTab(tabId) {
@@ -1010,7 +1014,7 @@
             if (url && url.search(/^\/\//) == 0) {
                 url = location.protocol + url;
             }
-            window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options ? JSON.stringify(options):"{}" });
+            window.postMessage({ id: _uuid, pid: pid, name: "API_OPEN_IN_TAB", url: url, options: options ? JSON.stringify(options) : "{}" });
             const callback = e => {
                 // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
                 if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_OPEN_IN_TAB") return;
@@ -1018,8 +1022,8 @@
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
-            return { close: close};
-        } 
+            return { close: close };
+        }
 
         /**
          * 打开标签页
@@ -1047,7 +1051,7 @@
                         }
                     }
                     resolve(resp);
-                    window.removeEventListener("message", ()=>{});
+                    window.removeEventListener("message", () => { });
                 };
                 window.addEventListener("message", callback);
                 // eslint-disable-next-line no-undef -- filename var accessible to the function at runtime
@@ -1121,7 +1125,7 @@
         const GM = `const GM = {${gmFunVals.join(",")}};`;
         return `\n${api}\n${GM}\n`;
     }
-    
+
     window.createGMApisWithUserScript = createGMApisWithUserScript;
 
 })();
