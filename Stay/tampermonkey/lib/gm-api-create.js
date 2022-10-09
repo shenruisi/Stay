@@ -769,13 +769,12 @@
             }catch(e){
                 if(e.message !== 'endLoop') throw e
             }
-
         }
 
-        if(shouldSendRequestToStay || true){
-            console.log("shouldSendRequestToStay===GM_xmlhttpRequestGM_xmlhttpRequest===",shouldSendRequestToStay)
+        if(shouldSendRequestToStay){
+            // console.log("shouldSendRequestToStay===GM_xmlhttpRequestGM_xmlhttpRequest===",shouldSendRequestToStay)
             browser.runtime.sendMessage({ from: "gm-apis", operate: "HTTP_REQUEST_API_FROM_CREATE_TO_APP", type:"content", details: params, uuid: _uuid, xhrId: xhrId }, (response) => {
-                console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP----response=====", response)
+                // console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP----response=====", response)
                 if(response){
                     const { status } = response
                     if( status >= 200 && status < 400){
@@ -1148,7 +1147,7 @@
             return new Promise(resolve => {
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
-                    console.log("GM_getValueAsync----res----", e.data);
+                    // console.log("GM_getValueAsync----res----", e.data);
                     resolve(e.data.response?e.data.response:defaultValue);
                     window.removeEventListener("message", callback);
                 };
@@ -1515,10 +1514,9 @@
                 }catch(e){
                     if(e.message !== 'endLoop') throw e
                 }
-
             }
 
-            if(shouldSendRequestToStay || true){
+            if(shouldSendRequestToStay){
                 // console.log("shouldSendRequestToStay==__xhr__xhr__xhr__xhr====",shouldSendRequestToStay)
                 window.addEventListener("message", (e)=>{
                     const response = e.data.response;
@@ -1529,7 +1527,7 @@
                         || name !== "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
                             return;
                     }
-                    // console.log("name===",name,"response===",response);
+                    console.log("name===",name,"response===",response);
                     if(response){
                         const { status } = response
                         if( status >= 200 && status < 400){
