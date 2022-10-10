@@ -34,6 +34,7 @@ class SYSubscribeController: UIViewController {
             FeatureItem(icon: UIImage(systemName: "icloud.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))!.withTintColor(FCStyle.accent).withRenderingMode(.alwaysOriginal), title: NSLocalizedString("iCloudFeature", comment: ""), desc: NSLocalizedString("iCloudFeatureDesc", comment: "")),
             FeatureItem(icon: UIImage(systemName: "moon.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))!.withTintColor(FCStyle.accent).withRenderingMode(.alwaysOriginal), title: NSLocalizedString("DarkModeFeature", comment: ""), desc: NSLocalizedString("DarkModeFeatureDesc", comment: "")),
             FeatureItem(icon: UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))!.withTintColor(FCStyle.accent).withRenderingMode(.alwaysOriginal), title: NSLocalizedString("IndieFeature", comment: ""), desc: NSLocalizedString("IndieFeatureDesc", comment: "")),
+            FeatureItem(icon: UIImage(systemName: "arrow.up.forward.square.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))!.withTintColor(FCStyle.accent).withRenderingMode(.alwaysOriginal), title: NSLocalizedString("PromotFeature", comment: ""), desc: NSLocalizedString("PromotFeatureDesc", comment: "")),
         ]
         let featureView = FeatureView(frame: .zero, features: features)
         view.addSubview(featureView)
@@ -133,7 +134,7 @@ class SYSubscribeController: UIViewController {
             featureView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             featureView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             featureView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            featureView.heightAnchor.constraint(equalToConstant: 66 * 3),
+            featureView.heightAnchor.constraint(equalToConstant: 66 * 4),
             
             lifeBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 22),
             lifeBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -14),
