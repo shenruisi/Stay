@@ -68,9 +68,7 @@
 #endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
 //    self.navigationItem.rightBarButtonItem = [self rightIcon];
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
+
     // Do any additional setup after loading the view.
 }
 

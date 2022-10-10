@@ -561,9 +561,6 @@ UIPopoverPresentationControllerDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = FCStyle.background;
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
     _selectedIdx = 0;
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理

@@ -70,7 +70,7 @@ typedef enum  {
     self.view.backgroundColor = FCStyle.background;
     [self gestureLoad];
     [self shadowBorder];
-    self.navigationController.navigationBarHidden = YES;
+//    self.navigationController.navigationBarHidden = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(displayModeDidChange:)
                                                      name:SVCDisplayModeDidChangeNotification
@@ -232,19 +232,19 @@ typedef enum  {
 }
 
 - (void)freshBackForwadItem{
-    if (self.viewControllers.count > 1){
-        [[QuickAccess splitController] enableToolbarItem:Toolbar_Back];
-    }
-    else{
-        [[QuickAccess splitController] disableToolbarItem:Toolbar_Back];
-    }
-    
-    if (self.forwardViewControllers.count > 0){
-        [[QuickAccess splitController] enableToolbarItem:Toolbar_Forward];
-    }
-    else{
-        [[QuickAccess splitController] disableToolbarItem:Toolbar_Forward];
-    }
+//    if (self.viewControllers.count > 1){
+//        [[QuickAccess splitController] enableToolbarItem:Toolbar_Back];
+//    }
+//    else{
+//        [[QuickAccess splitController] disableToolbarItem:Toolbar_Back];
+//    }
+//
+//    if (self.forwardViewControllers.count > 0){
+//        [[QuickAccess splitController] enableToolbarItem:Toolbar_Forward];
+//    }
+//    else{
+//        [[QuickAccess splitController] disableToolbarItem:Toolbar_Forward];
+//    }
 }
 
 

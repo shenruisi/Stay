@@ -17,6 +17,7 @@
 #import "SegmentViewController.h"
 #import "EmptyViewController.h"
 #import "MacSplitViewController.h"
+#import "SYNavigationController.h"
 
 FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
 
@@ -69,15 +70,10 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
     UIWindow *window = nil;
     if ([sceneIdentifier isEqualToString:SCENE_Main]){
         fcScene.sizeable = YES;
-        UITitlebar *titlebar = windowScene.titlebar;
-        titlebar.titleVisibility = UITitlebarTitleVisibilityHidden;
-        titlebar.toolbar = [[FCToolbar alloc] initWithIdentifier:@"main"];
-        titlebar.toolbar.displayMode = NSToolbarDisplayModeIconOnly;
-        titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
-        
         
         window = [[UIWindow alloc] initWithWindowScene:windowScene];
-        window.backgroundColor = FCStyle.background;
+        
+        windowScene.title = @"Stay for Mac";
         windowScene.sizeRestrictions.minimumSize = CGSizeMake(425, 480);
         NSDictionary *frame = [[FCConfig shared] getValueOfKey:GroupUserDefaultsKeyMacMainWindowFrame];
         
@@ -89,17 +85,10 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         }
         
         
-        FCSplitViewController *splitViewController = [[FCSplitViewController alloc] init];
-        splitViewController.toolbar = titlebar.toolbar;
-        
+        MacSplitViewController *splitViewController = [[MacSplitViewController alloc] init];
         MainTabBarController *primaryController = [[MainTabBarController alloc] init];
-//        [splitViewController setViewController:primaryController forColumn:UISplitViewControllerColumnPrimary];
-        
-        UserScript *userscript = [[UserScript alloc] init];
-        userscript.uuid = @"123";
-        NavigateCollectionController *secondaryController = [[NavigateCollectionController alloc]
-                                                                      initWithRootViewController:[[EmptyViewController alloc] init]];
-//        [splitViewController setViewController:secondaryController forColumn:UISplitViewControllerColumnSecondary];
+        SYNavigationController *secondaryController = [[SYNavigationController alloc]
+                                                             initWithRootViewController:[[EmptyViewController alloc] init]];
         splitViewController.viewControllers = @[
             primaryController,secondaryController
         ];

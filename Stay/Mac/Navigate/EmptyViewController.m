@@ -21,18 +21,30 @@
 
 @implementation EmptyViewController
 
-- (void)navigateViewDidLoad {
-    [super navigateViewDidLoad];
+- (void)viewDidLoad{
+    [super viewDidLoad];
     self.view.backgroundColor = FCStyle.background;
     [self label];
     [self button];
     [self guide];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ffas" menu:nil];
     NSLog(@"EmptyViewController view %@",self.view);
+//    self.navigationController.navigationBarHidden = NO;
 }
 
-- (void)navigateViewWillAppear:(BOOL)animated{
-    [super navigateViewWillAppear:animated];
-}
+//- (void)navigateViewDidLoad {
+//    [super navigateViewDidLoad];
+//    self.view.backgroundColor = FCStyle.background;
+//    [self label];
+//    [self button];
+//    [self guide];
+////    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ffas" menu:nil];
+//    NSLog(@"EmptyViewController view %@",self.view);
+//}
+//
+//- (void)navigateViewWillAppear:(BOOL)animated{
+//    [super navigateViewWillAppear:animated];
+//}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];

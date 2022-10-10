@@ -31,12 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.tableView reloadData];
-//    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    // Do any additional setup after loading the view.
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
+
 }
 
 

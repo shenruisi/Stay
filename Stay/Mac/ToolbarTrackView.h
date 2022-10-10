@@ -11,8 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ToolbarTrackView : UIView
-
-@property (nonatomic, strong) FCToolbar *toolbar;
 @end
 
 NS_ASSUME_NONNULL_END

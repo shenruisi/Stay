@@ -1,6 +1,6 @@
 //
-//  MacSplitViewController.h
-//  Stay-Mac
+//  SYNavigationController.h
+//  Stay
 //
 //  Created by ris on 2022/10/9.
 //
@@ -9,9 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MacSplitViewController : UISplitViewController
+@interface SYNavigationController : UINavigationController
 
-- (id)toolbar;
 @end
 
 NS_ASSUME_NONNULL_END

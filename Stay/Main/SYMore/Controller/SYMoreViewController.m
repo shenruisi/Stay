@@ -457,9 +457,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
+
     self.view.backgroundColor = FCStyle.background;
     [self tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];

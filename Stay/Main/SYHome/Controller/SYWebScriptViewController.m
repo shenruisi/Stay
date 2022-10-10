@@ -32,7 +32,6 @@
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self.view addSubview:self.wkwebView];
 #ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 43,self.view.frame.size.width, 0.5f)];
 #else
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82,self.view.frame.size.width, 0.5f)];

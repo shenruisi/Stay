@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface EmptyViewController : NavigateViewController
+@interface EmptyViewController : UIViewController
 
 @end
 

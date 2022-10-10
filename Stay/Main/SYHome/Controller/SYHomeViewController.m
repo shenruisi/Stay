@@ -310,7 +310,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)loadView{
 #ifdef Mac
     ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
-    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
+//    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
     self.view = view;
 #else
     self.view = [[UIView alloc] init];
@@ -356,8 +356,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
 #ifdef Mac
-//    [self.view setFrame:CGRectMake(0, 0 + 60, self.view.frame.size.width, self.view.frame.size.height - 60)];
-    self.navigationController.navigationBarHidden = YES;
     [self line];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigateViewDidShow:)
@@ -1126,8 +1124,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UserScript *userscript = _datas[indexPath.row];
     self.selectedRow = indexPath.row;
 //    self.selectedUUID = userscript.uuid;
-    [[QuickAccess secondaryController] pushViewController:
-     [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];
+//    [[QuickAccess secondaryController] pushViewController:
+//     [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];
 #else
     if (self.searchController.active) {
         UserScript *model = _results[indexPath.row];

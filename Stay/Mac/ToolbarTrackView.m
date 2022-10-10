@@ -20,17 +20,17 @@
 - (void)setFrame:(CGRect)frame{
     [super setFrame:frame];
     
-    if (self.lastRect.size.width != frame.size.width){
-        
-        for(NSToolbarItem *item in self.toolbar.items){
-            if ([item.itemIdentifier isEqualToString:Toolbar_SlideTrackInPrimary]){
-                [FCShared.plugin.appKit slideTrackToolbarItemChanged:item width:self.frame.size.width - 310];
-            }
-        }
-        
-        [[FCConfig shared] setIntegerValueOfKey:GroupUserDefaultsKeyMacPrimaryWidth value:self.frame.size.width];
-    }
-   
-    self.lastRect = frame;
+//    if (self.lastRect.size.width != frame.size.width){
+//        
+//        for(NSToolbarItem *item in self.toolbar.items){
+//            if ([item.itemIdentifier isEqualToString:Toolbar_SlideTrackInPrimary]){
+//                [FCShared.plugin.appKit slideTrackToolbarItemChanged:item width:self.frame.size.width - 310];
+//            }
+//        }
+//        
+//        [[FCConfig shared] setIntegerValueOfKey:GroupUserDefaultsKeyMacPrimaryWidth value:self.frame.size.width];
+//    }
+//   
+//    self.lastRect = frame;
 }
 @end

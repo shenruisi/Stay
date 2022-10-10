@@ -80,16 +80,14 @@
         self.navigationItem.rightBarButtonItem = [self rightIcon];
     }
     
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
+
     // Do any additional setup after loading the view.
 }
 
 - (void)navigateViewDidLoad{
 #ifdef Mac
     [super navigateViewDidLoad];
-    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
+//    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
     self.componetView.hidden = YES;
 #endif
 }
@@ -97,7 +95,7 @@
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef Mac
-    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
+//    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
     [self.syCodeMirrorView reload];
     NSLog(@"self.syCodeMirrorView %@",NSStringFromCGRect(self.syCodeMirrorView.frame));
 #endif

@@ -6,16 +6,54 @@
 //
 
 #import "MacSplitViewController.h"
+#import "FCStyle.h"
+#import "FCConfig.h"
+
+static CGFloat MIN_PRIMARY_WIDTH = 310;
+static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 @interface MacSplitViewController ()
 
+@property (nonatomic, strong) UIView *placeHolderTitleView;
 @end
 
 @implementation MacSplitViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    [self placeHolderTitleView];
+    self.view.backgroundColor = FCStyle.fcSeparator;
+    self.minimumPrimaryColumnWidth = MIN_PRIMARY_WIDTH;
+    self.maximumPrimaryColumnWidth = MAX_PRIMARY_WIDTH;
+    NSInteger preferredWidth = [[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyMacPrimaryWidth];
+    if (preferredWidth > 0){
+        self.preferredPrimaryColumnWidth = preferredWidth;
+    }
 }
+
+- (id)toolbar{
+    return nil;
+}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    [self layout];
+}
+
+- (UIView *)placeHolderTitleView{
+    if (nil == _placeHolderTitleView){
+        _placeHolderTitleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 25)];
+        _placeHolderTitleView.backgroundColor = UIColor.secondarySystemBackgroundColor;
+        _placeHolderTitleView.layer.zPosition = MAXFLOAT;
+        [self.view addSubview:_placeHolderTitleView];
+    }
+    
+    return _placeHolderTitleView;
+}
+
+- (void)layout{
+    [self.placeHolderTitleView setFrame:CGRectMake(0, 0, self.view.frame.size.width, 25)];
+}
+
 
 @end

@@ -10,10 +10,10 @@
 
 @implementation QuickAccess
 
-+ (nullable FCSplitViewController *)splitController{
++ (nullable MacSplitViewController *)splitController{
     UIWindowScene *windowScene = [[SceneCenter shared] sceneForIdentifier:SCENE_Main];
     if (windowScene){
-        return (FCSplitViewController *)windowScene.windows[0].rootViewController;
+        return (MacSplitViewController *)windowScene.windows[0].rootViewController;
     }
     return nil;
 }

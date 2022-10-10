@@ -136,7 +136,7 @@
 #ifdef iOS
     return [UIFont systemFontOfSize:20];
 #else
-    return [UIFont systemFontOfSize:18];
+    return [UIFont systemFontOfSize:16];
 #endif
 }
 
@@ -144,7 +144,7 @@
 #ifdef iOS
     return [UIFont boldSystemFontOfSize:20];
 #else
-    return [UIFont boldSystemFontOfSize:18];
+    return [UIFont boldSystemFontOfSize:16];
 #endif
 }
 

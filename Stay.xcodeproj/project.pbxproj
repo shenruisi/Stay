@@ -225,6 +225,8 @@
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
 		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
 		58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */; };
+		58CFA5CC28F30668004C5140 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
+		58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
 		58D0C3C928A1FA2500DB1358 /* fallback.css in Resources */ = {isa = PBXBuildFile; fileRef = 58D0C3C828A1FA2500DB1358 /* fallback.css */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
@@ -584,6 +586,8 @@
 		58CF689F286D91B200A52B2B /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58CFA5C728F2CC79004C5140 /* MacSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacSplitViewController.h; sourceTree = "<group>"; };
 		58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacSplitViewController.m; sourceTree = "<group>"; };
+		58CFA5CA28F30668004C5140 /* SYNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNavigationController.h; sourceTree = "<group>"; };
+		58CFA5CB28F30668004C5140 /* SYNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNavigationController.m; sourceTree = "<group>"; };
 		58D0C3C828A1FA2500DB1358 /* fallback.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = fallback.css; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
@@ -1287,6 +1291,8 @@
 				58FEB1E3283B561B00BC2A92 /* FCView.h */,
 				58FEB1E2283B561A00BC2A92 /* FCView.m */,
 				58FEB1DA283B559D00BC2A92 /* SlideController */,
+				58CFA5CA28F30668004C5140 /* SYNavigationController.h */,
+				58CFA5CB28F30668004C5140 /* SYNavigationController.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -2203,6 +2209,7 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
+				58CFA5CC28F30668004C5140 /* SYNavigationController.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
@@ -2399,6 +2406,7 @@
 				5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
+				58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
@@ -2685,7 +2693,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2719,7 +2727,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2758,7 +2766,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2811,7 +2819,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";

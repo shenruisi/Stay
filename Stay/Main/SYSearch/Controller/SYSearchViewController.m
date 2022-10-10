@@ -115,7 +115,6 @@ CGFloat kMacToolbar = 50.0;
 - (void)loadView{
 #ifdef Mac
     ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
-    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
     self.view = view;
 #else
     self.view = [[UIView alloc] init];
@@ -129,9 +128,7 @@ CGFloat kMacToolbar = 50.0;
 //    [self simpleLoadingView];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = FCStyle.background;
-#ifdef Mac
-    self.navigationController.navigationBarHidden = YES;
-#endif
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(statusBarChange) name:@"scriptSaveSuccess" object:nil];
