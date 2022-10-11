@@ -6,13 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SYSecondaryViewController.h"
 
-#ifdef Mac
-#import "NavigateViewController.h"
-@interface SYWebScriptViewController : NavigateViewController
-#else
-@interface SYWebScriptViewController : UIViewController
-#endif
+@interface SYWebScriptViewController : SYSecondaryViewController
 
 - (BOOL)canGoback;
 - (void)goback;

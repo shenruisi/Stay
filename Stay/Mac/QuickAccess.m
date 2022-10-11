@@ -26,7 +26,7 @@
     return nil;
 }
 
-+ (nullable NavigateCollectionController *)secondaryController{
++ (nullable SYNavigationController *)secondaryController{
     UISplitViewController *splitViewController = [self splitController];
     if (splitViewController){
         return splitViewController.viewControllers[1];

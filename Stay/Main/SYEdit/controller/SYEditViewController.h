@@ -7,14 +7,10 @@
 
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
+#import "SYSecondaryViewController.h"
 
 
-#ifdef Mac
-#import "NavigateViewController.h"
-@interface SYEditViewController : NavigateViewController
-#else
-@interface SYEditViewController : UIViewController
-#endif
+@interface SYEditViewController : SYSecondaryViewController
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;

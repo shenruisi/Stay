@@ -255,11 +255,11 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
             [self.holdWebScriptViewController goback];
         }
         else{
-            [[QuickAccess secondaryController] popViewController];
+//            [[QuickAccess secondaryController] popViewController];
         }
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Forward]){
-        [[QuickAccess secondaryController] forward];
+//        [[QuickAccess secondaryController] forward];
     }
     else if ([sender.itemIdentifier isEqualToString:Toolbar_Collapse]){
         if (self.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
@@ -611,7 +611,7 @@ NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.no
 - (void)codeMirrorViewDidFinishContent:(NSNotification *)note{
     if (self.holdEditViewController){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[QuickAccess secondaryController] popViewController];
+//            [[QuickAccess secondaryController] popViewController];
             [[NSNotificationCenter defaultCenter] postNotificationName:HomeViewShouldReloadDataNotification
                                                                 object:nil];
         });

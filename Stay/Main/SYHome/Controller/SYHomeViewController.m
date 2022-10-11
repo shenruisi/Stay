@@ -56,44 +56,10 @@
 #import "API.h"
 #import "HomeDetailCell.h"
 
+
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
-@interface _SYHomeViewTableViewCell : UITableViewCell
-@end
-
-@implementation _SYHomeViewTableViewCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
-    }
-    
-    return self;
-}
-
-- (void)setSelected:(BOOL)selected{
-    [super setSelected:selected];
-#ifdef Mac
-    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
-#endif
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated{
-    [super setSelected:selected animated:animated];
-#ifdef Mac
-    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
-#endif
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    [super willMoveToSuperview:newSuperview];
-}
-
-- (void)updateConfigurationUsingState:(UICellConfigurationState *)state {
-    self.backgroundConfiguration = [UIBackgroundConfiguration clearConfiguration];
-}
-
-@end
 
 @interface _iCloudView : UIView
 
@@ -110,7 +76,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)startAnimate{
     self.sfName = @"icloud";
-    self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:[UIFont systemFontOfSize:22]];
+    self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:FCStyle.sfNavigationBar color:FCStyle.fcMacIcon];
     self.syncImageView.hidden = NO;
     [self.syncImageView rotateWithDuration:1];
 }
@@ -119,7 +85,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     self.sfName = @"checkmark.icloud";
     [self.syncImageView stopRotating];
     self.syncImageView.hidden = YES;
-    self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:[UIFont systemFontOfSize:22]];
+    self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:FCStyle.sfNavigationBar color:FCStyle.fcMacIcon];
+    
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview{
@@ -143,8 +110,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                 if (nil == error){
                     self.sfName = FCShared.iCloudService.isLogin ?  @"checkmark.icloud" : @"person.icloud";
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        self.sfImageView.image = [ImageHelper sfNamed:self.sfName
-                                            font:[UIFont systemFontOfSize:22]];
+                        self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:FCStyle.sfNavigationBar color:FCStyle.fcMacIcon];
                     });
                 }
             }];
@@ -152,8 +118,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }
         else{
             self.sfName = @"icloud.slash";
-            self.sfImageView.image = [ImageHelper sfNamed:self.sfName
-                                font:[UIFont systemFontOfSize:22]];
+            self.sfImageView.image = [ImageHelper sfNamed:self.sfName font:FCStyle.sfNavigationBar color:FCStyle.fcMacIcon];
         }
         
     }
@@ -172,7 +137,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     if (nil == _syncImageView){
         _syncImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 13, 13)];
         _syncImageView.contentMode = UIViewContentModeScaleAspectFit;
-        _syncImageView.image = [ImageHelper sfNamed:@"arrow.2.circlepath" font:[UIFont boldSystemFontOfSize:13]];
+        _syncImageView.image = [ImageHelper sfNamed:@"arrow.2.circlepath" font:[UIFont boldSystemFontOfSize:13] color:FCStyle.fcMacIcon];
         [self.sfImageView addSubview:_syncImageView];
         _syncImageView.hidden = YES;
         [self addSubview:_syncImageView];
@@ -322,6 +287,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
     NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
     if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
@@ -359,7 +325,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self line];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigateViewDidShow:)
-                                                 name:NCCDidShowViewControllerNotification
+                                                 name:@"app.stay.notification.NCCDidShowViewControllerNotification"
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1046,8 +1012,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef Mac
-    [self.line setFrame:CGRectMake(0,kMacToolbar-1,self.view.frame.size.width,1)];
-    [self.tableView setFrame:CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar)];
+//    [self.line setFrame:CGRectMake(0,kMacToolbar-1,self.view.frame.size.width,1)];
+    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [self.tableView reloadData];
 #endif
 }
@@ -1116,16 +1082,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #ifdef Mac
-    if (self.selectedRow >= 0){
+    if (self.selectedRow != indexPath.row){
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
         cell.selected = NO;
     }
-//    NSLog(@"selectedRow didSelectRowAtIndexPath %ld %ld",self.selectedRow,indexPath.row);
     UserScript *userscript = _datas[indexPath.row];
     self.selectedRow = indexPath.row;
-//    self.selectedUUID = userscript.uuid;
-//    [[QuickAccess secondaryController] pushViewController:
-//     [[QuickAccess splitController] produceDetailViewControllerWithUserScript:userscript]];
+    self.selectedUUID = userscript.uuid;
+    [[QuickAccess secondaryController] pushViewController:
+     [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
 #else
     if (self.searchController.active) {
         UserScript *model = _results[indexPath.row];
@@ -1355,7 +1320,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [imageView setImage:[[FCStore shared] getPlan:NO] != FCPlan.None ? [UIImage imageNamed:@"NavProIcon"] : [UIImage imageNamed:@"NavIcon"]];
         imageView.layer.cornerRadius = 6;
         imageView.layer.masksToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.contentMode = UIViewContentModeCenter;
         _leftIcon = [[UIBarButtonItem alloc] initWithCustomView:imageView];
     }
     return _leftIcon;
@@ -1363,14 +1328,23 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        _rightIcon = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBtnClick:)];
+        _rightIcon = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"plus"
+                                                                            font:FCStyle.sfNavigationBar
+                                                                           color:FCStyle.fcMacIcon]
+                                                      style:UIBarButtonItemStylePlain
+                                                     target:self
+                                                     action:@selector(addBtnClick:)];
     }
     return _rightIcon;
 }
 
 - (_iCloudView *)customView{
     if (nil == _customView){
+#ifdef Mac
+        _customView = [[_iCloudView alloc] initWithFrame:CGRectMake(0, 0, 25, 18)];
+#else
         _customView = [[_iCloudView alloc] initWithFrame:CGRectMake(0, 0, 30, 22)];
+#endif
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(iCloudAction:)];
         [_customView addGestureRecognizer:tapGesture];
     }
@@ -1523,7 +1497,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 #ifdef Mac
 - (void)navigateViewDidShow:(NSNotification *)note{
-    NavigateViewController *viewController = note.object;
+    UIViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
 //        SYDetailViewController *detailViewController = (SYDetailViewController *)viewController;
 //        self.selectedUUID = detailViewController.script.uuid;
@@ -1616,7 +1590,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
 #ifdef Mac
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:NCCDidShowViewControllerNotification
+                                                    name:@"app.stay.notification.NCCDidShowViewControllerNotification"
                                                   object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self

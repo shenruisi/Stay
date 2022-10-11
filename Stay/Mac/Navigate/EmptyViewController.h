@@ -6,12 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavigateViewController.h"
+#import "SYSecondaryViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 
-@interface EmptyViewController : UIViewController
+@interface EmptyViewController : SYSecondaryViewController
 
 @end
 

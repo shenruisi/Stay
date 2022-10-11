@@ -7,13 +7,9 @@
 
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
+#import "SYSecondaryViewController.h"
 
-#ifdef Mac
-#import "NavigateViewController.h"
-@interface SYDetailViewController : NavigateViewController
-#else
-@interface SYDetailViewController : UIViewController
-#endif
+@interface SYDetailViewController : SYSecondaryViewController
 
 @property (nonatomic, strong) UserScript *script;
 @property (nonatomic, assign) BOOL isSearch;

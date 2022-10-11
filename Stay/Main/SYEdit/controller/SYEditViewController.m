@@ -77,27 +77,25 @@
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {
+#ifdef Mac
+        self.rightBarButtonItems = @[[self rightIcon]];
+#else
         self.navigationItem.rightBarButtonItem = [self rightIcon];
+#endif
+        
     }
     
 
     // Do any additional setup after loading the view.
 }
 
-- (void)navigateViewDidLoad{
-#ifdef Mac
-    [super navigateViewDidLoad];
-//    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
-    self.componetView.hidden = YES;
-#endif
-}
-
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef Mac
+    self.syCodeMirrorView.frame = self.view.bounds;
 //    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
-    [self.syCodeMirrorView reload];
-    NSLog(@"self.syCodeMirrorView %@",NSStringFromCGRect(self.syCodeMirrorView.frame));
+//    [self.syCodeMirrorView reload];
+//    NSLog(@"self.syCodeMirrorView %@",NSStringFromCGRect(self.syCodeMirrorView.frame));
 #endif
 }
 
@@ -182,7 +180,12 @@
     NSString *content = _isEdit? NSLocalizedString(@"Saved", @"") :  NSLocalizedString(@"Created", @"");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+#ifdef Mac
+        [[QuickAccess secondaryController] popViewController];
+#else
         [self.navigationController popViewControllerAnimated:YES];
+#endif
+        
         }];
     [alert addAction:conform];
     [self initScrpitContent];

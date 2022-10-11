@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *borderGolden;
 @property(class, nonatomic, readonly) UIColor *borderColor;
 @property(class, nonatomic, readonly) UIColor *grayNoteColor;
+@property(class, nonatomic, readonly) UIColor *fcMacIcon;
+@property(class, nonatomic, readonly) UIColor *fcNavigationLineColor; 
 
 @property(class, nonatomic, readonly) UIFont *headline;
 @property(class, nonatomic, readonly) UIFont *headlineBold;
@@ -49,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *fcShadowLine;
 @property(class, nonatomic, readonly) UIFont *sfFootnote;
 @property(class, nonatomic, readonly) UIFont *sfActbar;
+@property(class, nonatomic, readonly) UIFont *sfNavigationBar;
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
 + (NSString *)appearance;

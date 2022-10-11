@@ -115,6 +115,19 @@
     return [UIColor colorNamed:@"GrayNote"];
 }
 
++ (UIColor *)fcMacIcon{
+#ifdef iOS
+    return [self accent];
+#else
+    return [UIColor colorNamed:@"FCMacIconColor"];
+#endif
+    
+}
+
++ (UIColor *)fcNavigationLineColor{
+    return [UIColor colorNamed:@"FCNavigationLineColor"];
+}
+
 
 + (UIFont *)title1{
 #ifdef iOS
@@ -225,6 +238,14 @@
     return [UIFont systemFontOfSize:17];
 #else
     return [UIFont systemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)sfNavigationBar {
+#ifdef iOS
+    return [UIFont systemFontOfSize:17];
+#else
+    return [UIFont systemFontOfSize:13];
 #endif
 }
 

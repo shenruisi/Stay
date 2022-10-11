@@ -44,8 +44,7 @@
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
-@property (nonatomic, strong) UIView *navigationBarCover;
-@property (nonatomic, strong) UITableView *tableView;
+
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 @property (nonatomic, assign) bool needExpand;
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
@@ -67,7 +66,6 @@
 //    [self createDetailView];
 #endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
-//    self.navigationItem.rightBarButtonItem = [self rightIcon];
 
     // Do any additional setup after loading the view.
 }
@@ -102,30 +100,18 @@
     });
 }
 
-- (void)navigateViewDidLoad{
-#ifdef Mac
-    [super navigateViewDidLoad];
-    [self navigationBarCover];
-//    [self createDetailView];
-   [self.tableView reloadData];
-
-#endif
-}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
+    self.tableView.frame = self.view.bounds;
     [self reload];
 }
 
-- (void)navigateViewWillAppear:(BOOL)animated{
-    [self reload];
-}
 
 - (void)reload{
     if(_saveSuceess) {
         [self.navigationController popViewControllerAnimated:TRUE];
     }
-    self.navigationBarCover = nil;
     self.actBtn = nil;
     self.matchScrollView = nil;
     self.grantScrollView = nil;
@@ -137,7 +123,6 @@
 //    }
 //
    [self.tableView reloadData];
-    [self navigationBarCover];
 //    [self createDetailView];
 }
 
@@ -1046,16 +1031,6 @@
         _sYTextInputViewController.uuid = self.uuid;
     }
     return _sYTextInputViewController;
-}
-
-- (UIView *)navigationBarCover{
-    if (nil == _navigationBarCover){
-        _navigationBarCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
-        _navigationBarCover.backgroundColor = FCStyle.background;
-        [self.view addSubview:_navigationBarCover];
-    }
-    
-    return _navigationBarCover;
 }
 
 - (UITableView *)tableView {

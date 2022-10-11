@@ -227,6 +227,9 @@
 		58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */; };
 		58CFA5CC28F30668004C5140 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
 		58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
+		58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
+		58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
+		58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
 		58D0C3C928A1FA2500DB1358 /* fallback.css in Resources */ = {isa = PBXBuildFile; fileRef = 58D0C3C828A1FA2500DB1358 /* fallback.css */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
@@ -588,6 +591,8 @@
 		58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacSplitViewController.m; sourceTree = "<group>"; };
 		58CFA5CA28F30668004C5140 /* SYNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNavigationController.h; sourceTree = "<group>"; };
 		58CFA5CB28F30668004C5140 /* SYNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNavigationController.m; sourceTree = "<group>"; };
+		58CFA5CF28F426F9004C5140 /* SYSecondaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSecondaryViewController.h; sourceTree = "<group>"; };
+		58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSecondaryViewController.m; sourceTree = "<group>"; };
 		58D0C3C828A1FA2500DB1358 /* fallback.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = fallback.css; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
@@ -1293,6 +1298,8 @@
 				58FEB1DA283B559D00BC2A92 /* SlideController */,
 				58CFA5CA28F30668004C5140 /* SYNavigationController.h */,
 				58CFA5CB28F30668004C5140 /* SYNavigationController.m */,
+				58CFA5CF28F426F9004C5140 /* SYSecondaryViewController.h */,
+				58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -2206,6 +2213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
@@ -2383,6 +2391,7 @@
 				588202642859E73900B2721A /* JSDetailEntity.m in Sources */,
 				84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
+				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
@@ -2397,6 +2406,7 @@
 				58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */,
 				588202B82859F9FD00B2721A /* SceneCenter.m in Sources */,
 				5882026C2859E73900B2721A /* SYHomeViewController.m in Sources */,
+				58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */,
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
 				5882026E2859E73900B2721A /* main.m in Sources */,
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,

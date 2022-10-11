@@ -7,15 +7,12 @@
 
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
+#import "SYSecondaryViewController.h"
 
-#ifdef Mac
-#import "NavigateViewController.h"
-@interface SYNoDownLoadDetailViewController : NavigateViewController
-#else
-@interface SYNoDownLoadDetailViewController : UIViewController
-#endif
+@interface SYNoDownLoadDetailViewController : SYSecondaryViewController
 
 @property (nonatomic, strong) NSDictionary *scriptDic;
 @property (nonatomic, strong) NSString *uuid;
 @property (nonatomic, assign) BOOL saveSuceess;
+@property (nonatomic, strong) UITableView *tableView;
 @end

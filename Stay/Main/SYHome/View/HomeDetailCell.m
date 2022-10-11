@@ -28,11 +28,28 @@
     return self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+#ifdef Mac
+    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#endif
 }
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated{
+    [super setSelected:selected animated:animated];
+#ifdef Mac
+    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#endif
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+}
+
+- (void)updateConfigurationUsingState:(UICellConfigurationState *)state {
+    self.backgroundConfiguration = [UIBackgroundConfiguration clearConfiguration];
+}
+
 
 - (void)setScrpit:(UserScript *)scrpit {
     for (UIView *subView in self.contentView.subviews) {

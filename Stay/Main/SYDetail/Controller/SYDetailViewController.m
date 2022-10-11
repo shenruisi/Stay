@@ -39,7 +39,6 @@
 @property (nonatomic, strong) UIView *slideView;
 @property (nonatomic, strong) UIView *slideLineView;
 @property (nonatomic, assign) CGFloat scrollerTop;
-@property (nonatomic, strong) UIView *navigationBarCover;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, assign) bool needExpand;
 
@@ -55,41 +54,28 @@
     self.view.backgroundColor = FCStyle.popup;
 
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-#ifndef Mac
-//    [self createDetailView];
-#endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(whiteSiteNotification:) name:@"whiteSiteNotification" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blackSiteNotification:) name:@"blackSiteNotification" object:nil];
-
-    self.navigationItem.rightBarButtonItem = [self rightIcon];
+#ifdef Mac
+     self.rightBarButtonItems = @[[self rightIcon]];
+#else
+     self.navigationItem.rightBarButtonItem = [self rightIcon];
+#endif
+    
 
     // Do any additional setup after loading the view.
 }
 
-- (void)navigateViewDidLoad{
-#ifdef Mac
-    [super navigateViewDidLoad];
-    [self navigationBarCover];
-//    [self createDetailView];
-   [self.tableView reloadData];
-
-#endif
-}
-
 - (void)viewWillLayoutSubviews{
-    [super viewWillLayoutSubviews];
-    [self reload];
+     [super viewWillLayoutSubviews];
+     self.tableView.frame = self.view.bounds;
+     [self reload];
 }
-
-//- (void)navigateViewWillAppear:(BOOL)animated{
-//    [self reload];
-//}
 
 - (void)reload{
-    self.navigationBarCover = nil;
     self.actBtn = nil;
     self.matchScrollView = nil;
     self.grantScrollView = nil;
@@ -98,13 +84,8 @@
     self.scrollView = nil;
     self.slideView = nil;
     self.slideLineView = nil;
-//    for (UIView *subView in self.view.subviews) {
-//        [subView removeFromSuperview];
-//    }
-//
+
    [self.tableView reloadData];
-    [self navigationBarCover];
-//    [self createDetailView];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -669,9 +650,10 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        UIImage *image = [UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:17]]];
-
-        _rightIcon = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(shareBtnClick)];
+        _rightIcon = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"ellipsis.circle.fill"
+                                                                            font:FCStyle.sfNavigationBar
+                                                                           color:FCStyle.fcMacIcon]
+                                                      style:UIBarButtonItemStylePlain target:self action:@selector(shareBtnClick)];
     }
     return _rightIcon;
 }
@@ -682,15 +664,7 @@
     }
     return _sYSelectTabViewController;
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (UIColor *)createBgColor {
     UIColor *viewBgColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
@@ -1173,15 +1147,6 @@
     return _sYTextInputViewController;
 }
 
-- (UIView *)navigationBarCover{
-    if (nil == _navigationBarCover){
-        _navigationBarCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 50)];
-        _navigationBarCover.backgroundColor = FCStyle.background;
-        [self.view addSubview:_navigationBarCover];
-    }
-    
-    return _navigationBarCover;
-}
 
 - (UITableView *)tableView {
     if (_tableView == nil) {

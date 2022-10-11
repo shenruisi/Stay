@@ -27,24 +27,8 @@
     [self label];
     [self button];
     [self guide];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ffas" menu:nil];
-    NSLog(@"EmptyViewController view %@",self.view);
-//    self.navigationController.navigationBarHidden = NO;
 }
 
-//- (void)navigateViewDidLoad {
-//    [super navigateViewDidLoad];
-//    self.view.backgroundColor = FCStyle.background;
-//    [self label];
-//    [self button];
-//    [self guide];
-////    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ffas" menu:nil];
-//    NSLog(@"EmptyViewController view %@",self.view);
-//}
-//
-//- (void)navigateViewWillAppear:(BOOL)animated{
-//    [super navigateViewWillAppear:animated];
-//}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];

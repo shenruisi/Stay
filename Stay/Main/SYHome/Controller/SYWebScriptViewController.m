@@ -31,11 +31,12 @@
     self.view.backgroundColor = FCStyle.background;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self.view addSubview:self.wkwebView];
-#ifdef Mac
-    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 43,self.view.frame.size.width, 0.5f)];
-#else
+#ifdef iOS
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82,self.view.frame.size.width, 0.5f)];
+#else
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0,self.view.frame.size.width, 0.5f)];
 #endif
+    
     
     self.progressView.backgroundColor =  FCStyle.background;
     //设置进度条的高度，下面这句代码表示进度条的宽度变为原来的1倍，高度变为原来的1.5倍.
@@ -44,13 +45,17 @@
     [self.progressView setProgressTintColor:RGB(185,101,223)];
     [self.view addSubview:self.progressView];
     [self.wkwebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
+    
+#ifdef iOS
     self.navigationItem.leftBarButtonItems = @[self.backBtn,self.closeBtn];
+#endif
+    
 
 }
 
-- (void)navigateViewDidLoad{
-    self.progressView.frame = CGRectMake(0, 43,self.view.frame.size.width, 0.5f);
-    self.wkwebView.frame = CGRectMake(0,50,self.view.width,self.view.height-43);
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    self.wkwebView.frame = self.view.bounds;
 }
 
 - (void)viewWillAppear:(BOOL)animated{

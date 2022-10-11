@@ -11,13 +11,15 @@
 #import "MainTabBarController.h"
 #import "SYHomeViewController.h"
 #import "MacSplitViewController.h"
+#import "SYNavigationController.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QuickAccess : NSObject
 
 + (nullable MacSplitViewController *)splitController;
 + (nullable MainTabBarController *)primaryController;
-+ (nullable NavigateCollectionController *)secondaryController;
++ (nullable SYNavigationController *)secondaryController;
 + (nullable SYHomeViewController *)homeViewController;
 @end
 
