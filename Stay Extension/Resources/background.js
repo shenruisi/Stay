@@ -2932,7 +2932,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             this.config = new ConfigManager();
             this.user = new UserStorage();
             this.getAndSentConnectionMessage = (url, frameURL) => {
-                console.log("getAndSentConnectionMessage----settings-",this.user.settings);
+                // console.log("getAndSentConnectionMessage----settings-",this.user.settings);
 
                 if (this.user.settings) {
                     this.updateAutoState();
@@ -2981,9 +2981,11 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     darkSetings
                 };
                 if(isStayAround && "a" === isStayAround){
+                    // console.log("handleTabMessage---isStayAround=====",isStayAround, this.autoState);
                     const toggleStatus = settings.toggleStatus;
                     const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
                     if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
+                        // console.log("handleTabMessage---toggleStatus=====",toggleStatus, urlIsEnabled);
                         darkSetings.darkState = "dark_mode";
                         const custom = settings.stay_customThemes.find(
                             ({url: urlList}) => isURLInList(url, urlList)
@@ -3194,8 +3196,6 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         } else {
                             isAutoDark = isSystemDarkModeEnabled();
                         }
-                        // isAutoDark = isSystemDarkModeEnabled();
-                        // console.log("automation-----", stay_automation, isAutoDark);
                         break;
                     case "location": {
                         const {latitude, longitude} = auto_location;
@@ -3236,7 +3236,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         async start() {
             await this.config.load({local: true});
             await this.user.loadSettings();
-            console.log(" this.user.settings = ",  this.user.settings);
+            // console.log(" this.user.settings = ",  this.user.settings);
             this.updateAutoState();
             
             logInfo("loaded", this.user.settings);
