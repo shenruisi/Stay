@@ -44,15 +44,22 @@
     UIColor *normalColor = FCStyle.grayNoteColor;
     
 
-    [self setUpOneChildViewController:homeController image:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[0]];
+    [self setUpOneChildViewController:homeController image:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[0] tag:1];
     
-    [self setUpOneChildViewController:searchController image:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[1]];
-    [self setUpOneChildViewController:syMoreController image:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[2]];
+    [self setUpOneChildViewController:searchController image:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[1] tag:2];
+    [self setUpOneChildViewController:syMoreController image:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[2] tag:3];
     self.homeController = homeController;
 }
 
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+    if (item.tag == 2) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeTab"
+                                                            object:nil];
+    }
+    
+}
 
-- (void)setUpOneChildViewController:(UIViewController *)viewController image:(UIImage *)image selectImage:(UIImage *)selectImage  title:(NSString *)title{
+- (void)setUpOneChildViewController:(UIViewController *)viewController image:(UIImage *)image selectImage:(UIImage *)selectImage  title:(NSString *)title tag:(NSInteger) tag{
     UINavigationController *navC = [[UINavigationController alloc]initWithRootViewController:viewController];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     navC.tabBarItem.image = image;
@@ -63,6 +70,7 @@
 #else
     navC.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
 #endif
+    navC.tabBarItem.tag = tag;
     viewController.navigationItem.title = title;
     navC.navigationBar.tintColor = FCStyle.accent;
 ////    navC.navigationBar.barTintColor = RGB(138, 138, 138);

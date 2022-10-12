@@ -197,6 +197,14 @@
                 #endif
             }
         }
+    } else {
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+#ifdef Mac
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#endif
     }
 }
 
@@ -360,6 +368,14 @@
                 #endif
             }
         }
+    } else {
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+#ifdef Mac
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#endif
     }
 }
 
@@ -510,6 +526,7 @@
         headerLabel.width = 260;
         subLabel.width = 260;
     }
+        
     NSDictionary *locate = dic[@"locales"];
     if(locate != NULL  && locate.count > 0) {
         NSDictionary *localLanguage = locate[[UserScript localeCode]];
@@ -586,6 +603,8 @@
     
     [view addGestureRecognizer:tapGesture];
     
+    headerLabel.width = subLabel.width = self.contentView.width - left - btn.width - 50 - 10;
+
     
     return view;
 }
@@ -751,13 +770,15 @@ UIPopoverPresentationControllerDelegate
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:@"changeTab" object:nil];
 //
 //      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 }
 
-
+- (void)changeTab {
+    [self queryData];
+}
 
 //- (void)keyboardWillShow:(NSNotification *)notification{
 //
@@ -772,7 +793,6 @@ UIPopoverPresentationControllerDelegate
 //- (void)keyboardWillHide:(NSNotification *)notification{
 //    self.searchTableView.height = self.searchController.view.height;
 //}
-
 
 - (UIView *)createTableHeaderView {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
@@ -1336,7 +1356,8 @@ UIPopoverPresentationControllerDelegate
 
 
 - (void)dealloc{
-  
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"changeTab" object:nil];
+
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
