@@ -25,8 +25,8 @@
         source += 'let GM_info=' + GM_info(userscript, version) + '\nwindow.GM_info = GM_info\n';
         source += 'GM.info = GM_info;\n';
         source += 'let __stroge = await _fillStroge();\n\n';
-        source += 'let __resourceTextStroge = await _fillAllResourceTextStroge();\n\n';
-        source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge();\n\n';
+        source += 'let __resourceTextStroge = await _fillAllResourceTextStroge() || {};\n\n';
+        source += 'let __resourceUrlStroge = await _fillAllResourceUrlStroge() || {};\n\n';
         source += 'let __RMC_CONTEXT = {};\n\n';
         source += GM_xmlhttpRequest.toString() + '\n\nwindow.GM_xmlhttpRequest = GM_xmlhttpRequest;\n';
         
@@ -286,7 +286,7 @@
     function _fillAllResourceTextStroge() {
         return new Promise((resolve, reject) => {
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getAllResourceText", uuid: _uuid }, (response) => {
-                // console.log("_fillAllResourceTextStroge", response);
+                console.log("_fillAllResourceTextStroge", response);
                 // console.log("_fillAllResourceTextStroge-response.body", response);
                 resolve(response.body);
             });
@@ -874,9 +874,9 @@
         let resourceUrls = userscript.resourceUrls||{};
         let api = `${GM_listValues_Async}\n`;
         api += `${GM_getAllResourceText}\nwindow.GM_getAllResourceText = GM_getAllResourceText;\n`;
-        api += 'let __listValuesStroge = await GM_listValues_Async();\n';
+        api += 'let __listValuesStroge = await GM_listValues_Async() || {};\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
-        api += 'let __resourceTextStroge = await GM_getAllResourceText();\n';
+        api += 'let __resourceTextStroge = await GM_getAllResourceText() || {};\n';
         api += 'let __RMC_CONTEXT = {};\n';
         api += 'let GM_info =' + GM_info(userscript, version) + ';\nwindow.GM_info = GM_info;\n';
         api += `${GM_log}\nwindow.GM_log = GM_log;\n`;
@@ -1224,26 +1224,37 @@
         function GM_getResourceText_Async(name) {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
+                let resourceUrl = typeof __resourceUrlStroge !== undefined ? __resourceUrlStroge[name] : "";
+                if(!resourceUrl){
+                    let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
+                    resolve(resourceText)
+                    return ;
+                }
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_TEXT") return;
                     // console.log("GM_getResourceText_Async------",e)
-                    resolve(e.data.response.body);
+                    resolve(e.data.response && e.data.response.body?e.data.response.body:"");
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
                 // console.log(" __resourceUrlStroge[name]----", __resourceUrlStroge[name])
-                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: __resourceUrlStroge[name] });
+                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: resourceUrl });
             });
         }
 
         function GM_getResourceTextSync(name) {
             const pid = Math.random().toString(36).substring(1, 9);
             let resourceText = typeof __resourceTextStroge !== undefined ? __resourceTextStroge[name] : "";
-            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: __resourceUrlStroge[name] });
+
+            let resourceUrl = typeof __resourceUrlStroge !== undefined ? __resourceUrlStroge[name] : "";
+            if(!resourceUrl){
+                return resourceText;
+            }
+            window.postMessage({ id: _uuid, pid: pid, name: "API_GET_REXOURCE_TEXT", key: name, url: resourceUrl });
             const callback = e => {
                 if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_REXOURCE_TEXT") return;
                 // console.log("GM_getResourceTextSync------",e)
-                __resourceTextStroge[name] = e.data.response.body;
+                __resourceTextStroge[name] = e.data.response && e.data.response.body?e.data.response.body:"";
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
