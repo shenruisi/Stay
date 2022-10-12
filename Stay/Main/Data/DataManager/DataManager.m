@@ -1419,4 +1419,123 @@
 }
 
 
+- (void)updateUserScriptByIcloud:(UserScript *)scrpitDetail {
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open_v2([destPath UTF8String], &sqliteHandle, SQLITE_OPEN_READWRITE, NULL);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        return;
+    }
+    
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ?,iCloud_identifier = ?,switch = ?,inject_info = ?,black_sites = ?,white_sites = ? where uuid = ?";
+    
+    sqlite3_stmt *statement;
+    
+    if (sqlite3_prepare_v2(sqliteHandle, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        sqlite3_bind_text(statement, 1,scrpitDetail.name != NULL? [scrpitDetail.name UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 2,scrpitDetail.namespace !=NULL? [scrpitDetail.namespace UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 3,scrpitDetail.author != NULL? [scrpitDetail.author UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 4,scrpitDetail.version != NULL? [scrpitDetail.version UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 5, [scrpitDetail.desc UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 6, [scrpitDetail.homepage UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 7, [scrpitDetail.icon UTF8String], -1,NULL);
+        if(scrpitDetail.includes.count > 0) {
+        sqlite3_bind_text(statement, 8, [[scrpitDetail.includes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 8, NULL, -1,NULL);
+        }
+        
+        if(scrpitDetail.matches.count > 0) {
+            sqlite3_bind_text(statement, 9, [[scrpitDetail.matches componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 9, NULL, -1,NULL);
+        }
+        if(scrpitDetail.excludes.count > 0) {
+            sqlite3_bind_text(statement, 10, [[scrpitDetail.excludes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 10,  NULL, -1,NULL);
+        }
+  
+        sqlite3_bind_text(statement, 11, [scrpitDetail.runAt UTF8String], -1,NULL);
+        
+        if(scrpitDetail.grants.count > 0) {
+            sqlite3_bind_text(statement, 12, [[scrpitDetail.grants componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 12, NULL, -1,NULL);
+        }
+        sqlite3_bind_int(statement, 13, scrpitDetail.noFrames?1:0);
+        sqlite3_bind_text(statement, 14, [scrpitDetail.content UTF8String], -1,NULL);
+        sqlite3_bind_int(statement, 15, scrpitDetail.active?1:0);
+        if(scrpitDetail.requireUrls.count > 0) {
+            sqlite3_bind_text(statement, 16, [[scrpitDetail.requireUrls componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 16, NULL, -1,NULL);
+        }
+        sqlite3_bind_text(statement, 17, [scrpitDetail.sourcePage UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 21,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 18, [scrpitDetail.updateUrl UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 19, [scrpitDetail.downloadUrl UTF8String], -1,NULL);
+        if(scrpitDetail.notes.count > 0) {
+            sqlite3_bind_text(statement, 20, [[scrpitDetail.notes componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 20, NULL, -1,NULL);
+        }
+        
+        if(scrpitDetail.resourceUrls != nil && scrpitDetail.resourceUrls.count > 0) {
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:scrpitDetail.resourceUrls options:NSJSONWritingPrettyPrinted error:nil];
+            sqlite3_bind_text(statement, 21, [ [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 21, NULL, -1,NULL);
+        }
+        NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+                        NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+                        NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+        sqlite3_bind_double(statement, 22, timeString.doubleValue);
+        
+        sqlite3_bind_text(statement, 23,[scrpitDetail.license UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 24,[scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
+        int updateSwitch = scrpitDetail.updateSwitch ?1:0;
+        sqlite3_bind_int(statement, 25, updateSwitch);
+        
+        sqlite3_bind_text(statement, 26,[scrpitDetail.injectInto UTF8String], -1,NULL);
+
+        
+        if(scrpitDetail.blacklist.count > 0) {
+            sqlite3_bind_text(statement, 27, [[scrpitDetail.blacklist componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 27, NULL, -1,NULL);
+        }
+        
+        if(scrpitDetail.whitelist.count > 0) {
+            sqlite3_bind_text(statement, 28, [[scrpitDetail.whitelist componentsJoinedByString:@","] UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 28, NULL, -1,NULL);
+        }
+        
+        sqlite3_bind_text(statement, 29,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+
+        
+        
+    }
+    
+    NSInteger resultCode = sqlite3_step(statement);
+    if (resultCode != SQLITE_DONE) {
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(sqliteHandle);
+    
+}
+
 @end

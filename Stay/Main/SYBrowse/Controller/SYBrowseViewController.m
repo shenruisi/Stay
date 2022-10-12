@@ -798,6 +798,8 @@ UIPopoverPresentationControllerDelegate
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
     self.tableView.frame = self.view.bounds;
+    self.searchTableView.frame = self.view.bounds;
+    self.allTableView.frame = self.view.bounds;
     [self reloadAllTableview];
 }
 
@@ -994,11 +996,11 @@ UIPopoverPresentationControllerDelegate
     }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
+        NSLocale *locale = [NSLocale currentLocale];
 
-        
-        [[SYNetworkUtils shareInstance] requestPOST:@"https://api.shenyin.name/stay-fork/browse/featured" params:@{@"client":@{@"pro":[[FCStore shared] getPlan:NO] == FCPlan.None?@false:@true}} successBlock:^(NSString * _Nonnull responseObject) {
+        [[SYNetworkUtils shareInstance] requestPOST:@"https://api.shenyin.name/stay-fork/browse/featured" params:@{@"client":@{@"pro":[[FCStore shared] getPlan:NO] == FCPlan.None?@false:@true},@"country":locale != nil?locale.countryCode:@""} successBlock:^(NSString * _Nonnull responseObject) {
             
-                NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
             options:NSJSONReadingMutableContainers
             error:nil];
@@ -1214,7 +1216,6 @@ UIPopoverPresentationControllerDelegate
         if(self.allDatas.count > 0) {
             _pageNo = 1;
             [self queryAllData];
-            [self.allTableView reloadData];
         } else {
             if(_allDatas.count == 0) {
                 _pageNo = 1;

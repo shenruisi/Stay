@@ -41,5 +41,8 @@
 
 - (void)updateUsedTimesByUuid:(NSString *)uuid count:(int)count;
 
+- (void)updateUserScriptByIcloud:(UserScript *)scrpitDetail;
+
+
 
 @end
