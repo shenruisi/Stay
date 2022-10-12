@@ -25,6 +25,8 @@
 #import "LoadingSlideController.h"
 #import <SafariServices/SafariServices.h>
 #import "API.h"
+#import "ImageHelper.h"
+#import "FCStore.h"
 
 #ifdef Mac
 #import "ToolbarTrackView.h"
@@ -200,6 +202,170 @@
 
 
 @end
+
+
+@interface _FeaturedPromotedTableViewCell : UITableViewCell
+@property (nonatomic, strong) NSArray *entity;
+@property (nonatomic, strong) UIScrollView *bannerView;
+@property (nonatomic, strong) UIViewController *controller;
+@property (nonatomic, strong) UINavigationController *navigationController;
+
+@end
+
+@implementation _FeaturedPromotedTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+        self.backgroundColor = FCStyle.secondaryBackground;
+        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+    }
+    
+    return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+}
+
+- (void)setEntity:(NSArray *)entity{
+    for (UIView *subView in self.contentView.subviews) {
+        [subView removeFromSuperview];
+    }
+    _entity = entity;
+    NSArray *blocks = entity;
+//    NSMutableArray *blocks = [NSMutableArray arrayWithObjects:entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0], nil];
+    if(blocks.count == 0 ) {
+        return;
+    }
+    
+    
+    CGFloat width = (self.width - 50) / 2;
+    
+    if(blocks.count == 1) {
+        width = self.width - 40;
+    }
+    
+    _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 20, self.contentView.width - 30 , width / 1.8F)];
+    _bannerView.clipsToBounds = NO;
+    _bannerView.showsVerticalScrollIndicator = false;
+    _bannerView.showsHorizontalScrollIndicator = false;
+    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+    CGFloat left = 20;
+    for (int i = 0; i < blocks.count; i++) {
+        
+        NSDictionary *dic = blocks[i];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width / 1.8F)];
+        [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"imageUrl"]]];
+        imageView.layer.cornerRadius = 10;
+        imageView.clipsToBounds = YES;
+        imageView.userInteractionEnabled = YES;
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClick:)];
+        objc_setAssociatedObject (tapGesture , @"url",  dic[@"jumpUrl"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+        [imageView addGestureRecognizer:tapGesture];
+        
+        bool border = [dic[@"border"] boolValue];
+        if (border) {
+            imageView.layer.borderColor = FCStyle.borderColor.CGColor;
+            imageView.layer.borderWidth = 1;
+        }
+        
+        imageView.left = left;
+        
+        [_bannerView addSubview:imageView];
+        left = imageView.right + 10;
+    }
+    
+//    _bannerView.contentSize = CGSizeMake(left ,56 + (self.contentView.width - 40) / 2.25F);
+    
+    UIImageView *promotedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 15, 15)];
+    
+    [promotedImageView setImage:[ImageHelper sfNamed:@"arrow.up.right.square.fill" font:FCStyle.footnote color:FCStyle.fcSecondaryBlack]];
+
+    promotedImageView.top = _bannerView.bottom + 10;
+    promotedImageView.left = 20;
+    [self.contentView addSubview:promotedImageView];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, 320, 15)];
+    titleLabel.text = NSLocalizedString(@"Promoted", @"");
+    titleLabel.font = FCStyle.footnote;
+    titleLabel.textColor = FCStyle.fcSecondaryBlack;
+    titleLabel.left = promotedImageView.right + 2;
+    titleLabel.bottom = promotedImageView.bottom;
+    [self.contentView addSubview:titleLabel];
+    
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 40, 0.5)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top =  titleLabel.bottom + 10;
+    line.left = 20;
+    [self.contentView addSubview:line];
+    
+    [self.contentView addSubview:_bannerView];
+}
+
+
+
+-(void)bannerClick:(id)tap {
+    NSString *urlStr = objc_getAssociatedObject(tap,@"url");
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+#ifdef Mac
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [_controller presentViewController:safariVc animated:YES completion:nil];
+#endif
+
+    } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+#ifdef Mac
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#endif
+
+    } else if([url.scheme isEqualToString:@"stay"]) {
+        if([url.host isEqualToString:@"album"]) {
+            SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
+            
+            NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
+
+            cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",str];
+            #ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+            #else
+                [self.navigationController pushViewController:cer animated:true];
+            #endif
+        } else if([url.host isEqualToString:@"userscript"]) {
+            NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
+            ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[str];
+
+            if(entity == nil) {
+                SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
+                cer.uuid = str;
+                #ifdef Mac
+                    [[QuickAccess secondaryController] pushViewController:cer];
+                #else
+                    [self.navigationController pushViewController:cer animated:true];
+                #endif
+            } else {
+                SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+                cer.script = [[DataManager shareManager] selectScriptByUuid:str];
+                #ifdef Mac
+                    [[QuickAccess secondaryController] pushViewController:cer];
+                #else
+                    [self.navigationController pushViewController:cer animated:true];
+                #endif
+            }
+        }
+    }
+}
+
+
+@end
+
 
 
 @interface _FeaturedAlubmTableViewCell : UITableViewCell
@@ -732,7 +898,16 @@ UIPopoverPresentationControllerDelegate
             cell.entity = dic[@"userscripts"];
             cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
-        } else {
+        } else if([dic[@"type"] isEqualToString:@"promoted"]){
+            _FeaturedPromotedTableViewCell *cell = [[_FeaturedPromotedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+            cell.contentView.width = self.view.width;
+            cell.width = self.view.width;
+            cell.controller = self;
+            cell.navigationController = self.navigationController;
+            cell.entity = dic[@"blocks"];
+            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            return cell;
+        }else {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
@@ -791,6 +966,15 @@ UIPopoverPresentationControllerDelegate
             } else {
                 return 33 + 78 * array.count;
             }
+        } else if([dic[@"type"] isEqualToString:@"promoted"]) {
+            NSArray *blocks = dic[@"blocks"];
+            if(blocks != nil) {
+                if (blocks.count == 1) {
+                    return 17 + 35 + (self.view.width - 40) / 1.8f;
+                } else {
+                    return 17 + 35 + (self.view.width - 50) / 2 / 1.8f ;
+                }
+            }
         }
         
         return 1.0f;
@@ -810,7 +994,9 @@ UIPopoverPresentationControllerDelegate
     }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
-        [[SYNetworkUtils shareInstance] requestPOST:@"https://api.shenyin.name/stay-fork/browse/featured" params:@{@"client":@{@"pro":@true}} successBlock:^(NSString * _Nonnull responseObject) {
+
+        
+        [[SYNetworkUtils shareInstance] requestPOST:@"https://api.shenyin.name/stay-fork/browse/featured" params:@{@"client":@{@"pro":[[FCStore shared] getPlan:NO] == FCPlan.None?@false:@true}} successBlock:^(NSString * _Nonnull responseObject) {
             
                 NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
