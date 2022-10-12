@@ -1018,23 +1018,40 @@ UIPopoverPresentationControllerDelegate
     
         NSLocale *locale = [NSLocale currentLocale];
 
-        [[SYNetworkUtils shareInstance] requestPOST:@"https://api.shenyin.name/stay-fork/browse/featured" params:@{@"client":@{@"pro":[[FCStore shared] getPlan:NO] == FCPlan.None?@false:@true},@"country":locale != nil?locale.countryCode:@""} successBlock:^(NSString * _Nonnull responseObject) {
+        [[SYNetworkUtils shareInstance] requestPOST:@"https://api.shenyin.name/stay-fork/browse/featured" params:@{@"client":@{@"pro":[[FCStore shared] getPlan:NO] == FCPlan.None?@false:@true,@"country":locale != nil?locale.countryCode:@"",@"device_type":[[API shared] queryDeviceType]}} successBlock:^(NSString * _Nonnull responseObject) {
             
             NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
             options:NSJSONReadingMutableContainers
             error:nil];
-                    self.datas = dic[@"biz"];
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [self.simpleLoadingView stop];
-                        [self.tableView reloadData];
-                    });
-                } failBlock:^(NSError * _Nonnull error) {
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [self.simpleLoadingView stop];
-                        [self.tableView reloadData];
-                    });
-                }];
+            
+            
+            NSMutableArray *array = dic[@"biz"];
+            
+            NSMutableArray *finalArray = [NSMutableArray array];
+            
+            if(array != NULL && array.count > 0) {
+                for(int i = 0;i < array.count; i++){
+                    NSDictionary *dic = array[i];
+                    if ([dic[@"type"] isEqualToString:@"promoted"] && !([[FCStore shared] getPlan:NO] == FCPlan.None)) {
+                        continue;
+                    } else {
+                        [finalArray addObject:dic];
+                    }
+                }
+            }
+    
+            self.datas = finalArray;
+            dispatch_async(dispatch_get_main_queue(),^{
+                [self.simpleLoadingView stop];
+                [self.tableView reloadData];
+            });
+        } failBlock:^(NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(),^{
+                [self.simpleLoadingView stop];
+                [self.tableView reloadData];
+            });
+        }];
 
   
     });
