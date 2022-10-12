@@ -225,7 +225,6 @@
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
 		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
 		58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */; };
-		58CFA5CC28F30668004C5140 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
 		58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
 		58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
 		58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
@@ -2217,7 +2216,6 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
-				58CFA5CC28F30668004C5140 /* SYNavigationController.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,

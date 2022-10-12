@@ -11,7 +11,9 @@
 #import "FCStyle.h"
 #import "SYDetailViewController.h"
 #import "SYNoDownLoadDetailViewController.h"
+#ifdef Mac
 #import "QuickAccess.h"
+#endif
 
 @interface PlaceholderController : UIViewController
 @property (nonatomic, strong) UIView *line;
@@ -412,9 +414,9 @@ typedef enum  {
      else if (splitController.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
          splitController.preferredDisplayMode = UISplitViewControllerDisplayModeOneBesideSecondary;
 //         [UIView animateWithDuration:0.5 animations:^{
-//             
+//
 //         } completion:^(BOOL finished) {
-//             
+//
 //         }];
      }
 }
