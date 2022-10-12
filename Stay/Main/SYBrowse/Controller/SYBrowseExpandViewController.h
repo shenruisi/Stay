@@ -6,14 +6,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SYSecondaryViewController.h"
 
-
-#ifdef Mac
-#import "NavigateViewController.h"
-@interface SYBrowseExpandViewController : NavigateViewController
-#else
-@interface SYBrowseExpandViewController : UIViewController
-#endif
+@interface SYBrowseExpandViewController : SYSecondaryViewController
 
 @property (nonatomic, strong) NSArray *data;
 @property (nonatomic, strong) NSString *url;
