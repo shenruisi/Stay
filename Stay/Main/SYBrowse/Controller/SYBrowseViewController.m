@@ -120,7 +120,7 @@
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width- 40, 15)];
     subLabel.font = FCStyle.subHeadline;
     subLabel.textColor = FCStyle.fcSecondaryBlack;
-    subLabel.text = dic[@"subtitle"];
+    subLabel.text = dic[subtitle];
     subLabel.top = headerLabel.bottom + 5;
     [view addSubview:subLabel];
     
