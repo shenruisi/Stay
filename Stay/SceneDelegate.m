@@ -16,7 +16,7 @@
 #if iOS
 #import "Stay-Swift.h"
 #else
-#import "Stay_2-Swift.h"
+#import "Stay-Swift.h"
 #endif
 
 

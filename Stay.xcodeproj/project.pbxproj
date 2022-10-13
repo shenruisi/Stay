@@ -538,7 +538,7 @@
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
 		5881342F27294C0E0055E1CE /* iframe.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iframe.js; sourceTree = "<group>"; };
-		588202AF2859E73900B2721A /* Stay 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stay 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		588202AF2859E73900B2721A /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		588202B02859E73A00B2721A /* Stay copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Stay copy-Info.plist"; path = "/Users/ris/Documents/GitHub/Stay/Stay copy-Info.plist"; sourceTree = "<absolute>"; };
 		588202B22859F99000B2721A /* FCSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCSplitViewController.h; sourceTree = "<group>"; };
 		588202B32859F99000B2721A /* FCSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCSplitViewController.m; sourceTree = "<group>"; };
@@ -939,7 +939,7 @@
 				587688F62719238000F834A4 /* StayTests.xctest */,
 				587689002719238000F834A4 /* StayUITests.xctest */,
 				5876890C2719238000F834A4 /* Stay Extension.appex */,
-				588202AF2859E73900B2721A /* Stay 2.app */,
+				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
 			);
@@ -1830,7 +1830,7 @@
 			);
 			name = "Stay-Mac";
 			productName = Stay;
-			productReference = 588202AF2859E73900B2721A /* Stay 2.app */;
+			productReference = 588202AF2859E73900B2721A /* Stay.app */;
 			productType = "com.apple.product-type.application";
 		};
 		588202C6285A12B400B2721A /* macOSNative */ = {
@@ -3005,7 +3005,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D Mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
-				PRODUCT_NAME = "Stay 2";
+				PRODUCT_NAME = Stay;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
@@ -3062,7 +3062,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D Mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
-				PRODUCT_NAME = "Stay 2";
+				PRODUCT_NAME = Stay;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;

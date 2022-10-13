@@ -100,7 +100,7 @@ Blacklist = "黑名單";
 WhitelistExplain="手動添加站點（支持正則）到白名單下可以讓腳本 %@ 只在白名單內的站點運行";
 BlacklistExplain="手動添加站點（支持正則）到黑名單下可以讓腳本 %@ 不在黑名單內的站點運行";
 
-Created="創建成功";
+Created="安裝成功";
 Saved="保存成功";
 
 Subscription="訂閱";
@@ -155,3 +155,4 @@ AccentColor="主題色";
 SendFeedback="開發計劃與反饋";
 Featured="推薦";
 All="所有";
+Promoted="推廣";

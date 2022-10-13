@@ -102,7 +102,7 @@ icloud.syncNow = "Sync now";
 icloud.syncNow.alert ="Need to sync now?";
 icloud.insync = "In sync…";
 
-Created="Created";
+Created="Installed";
 Saved="Saved";
 
 Subscription="SUBSCRIPTION";
@@ -158,3 +158,4 @@ AccentColor="ACCENT COLOR";
 SendFeedback="PLAN & SEND FEEDBACK";
 Featured="Featured";
 All="All";
+Promoted="Promoted";
