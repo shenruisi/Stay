@@ -575,7 +575,7 @@
         NSString *btnName = NSLocalizedString(@"Get", @"");
         
         if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
-            btnName = NSLocalizedString(@"Loading", @"");
+            btnName = NSLocalizedString(@"Downloading", @"");
         }
         
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
