@@ -781,7 +781,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                         [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
                                     }
                                     else{
-                                        [[DataManager shareManager] updateUserScript:changedUserscript];
+                                        [[DataManager shareManager] updateUserScriptByIcloud:changedUserscript];  
+                                        //TODO:
                                     }
     //                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     //

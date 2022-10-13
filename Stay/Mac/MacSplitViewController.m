@@ -29,6 +29,16 @@ static CGFloat MAX_PRIMARY_WIDTH = 540;
     if (preferredWidth > 0){
         self.preferredPrimaryColumnWidth = preferredWidth;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sceneWillEnterForeground:)
+                                                 name:UISceneWillEnterForegroundNotification
+                                               object:nil];
+}
+
+- (void)sceneWillEnterForeground:(NSNotification *)note{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"app.stay.notification.SVCDidBecomeActiveNotification"
+                                                        object:nil];
 }
 
 - (id)toolbar{
@@ -55,5 +65,10 @@ static CGFloat MAX_PRIMARY_WIDTH = 540;
     [self.placeHolderTitleView setFrame:CGRectMake(0, 0, self.view.frame.size.width, 25)];
 }
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UISceneWillEnterForegroundNotification
+                                                  object:nil];
+}
 
 @end
