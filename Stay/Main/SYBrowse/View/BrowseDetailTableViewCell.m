@@ -136,7 +136,14 @@
         [btn addTarget:self.controller action:@selector(queryDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"uuid", uuid, OBJC_ASSOCIATION_COPY_NONATOMIC);
     } else {
-        [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Get", @"")
+        
+        NSString *btnName = NSLocalizedString(@"Get", @"");
+        
+        if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
+            btnName = NSLocalizedString(@"Loading", @"");
+        }
+        
+        [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.footnoteBold
@@ -144,6 +151,7 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+        
         [btn sizeToFit];
         btn.width = btn.width + 20;
         if(btn.width < 67) {

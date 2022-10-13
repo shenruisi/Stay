@@ -394,6 +394,7 @@
 @property (nonatomic, strong) UIScrollView *bannerView;
 @property (nonatomic, strong) UINavigationController *navigationController;
 @property (nonatomic, strong) UIViewController *controller;
+@property (nonatomic, strong) NSString *selectedUrl;
 
 @end
 
@@ -570,7 +571,14 @@
         [btn addTarget:self.controller action:@selector(queryDetail:) forControlEvents:UIControlEventTouchUpInside];
         objc_setAssociatedObject (btn , @"uuid", uuid, OBJC_ASSOCIATION_COPY_NONATOMIC);
     } else {
-        [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Get", @"")
+        
+        NSString *btnName = NSLocalizedString(@"Get", @"");
+        
+        if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
+            btnName = NSLocalizedString(@"Loading", @"");
+        }
+        
+        [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.footnoteBold
@@ -742,6 +750,8 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, assign) bool allDataQuerying;
 @property (nonatomic, assign) bool searchDataEnd;
 @property (nonatomic, assign) bool searchDataQuerying;
+@property (nonatomic, strong) NSString  *selectedUrl;
+
 
 @end
 
@@ -921,6 +931,7 @@ UIPopoverPresentationControllerDelegate
                 title = @"title_cn";
             }
             cell.headTitle = dic[title];
+            cell.selectedUrl = _selectedUrl;
             cell.entity = dic[@"userscripts"];
             cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
@@ -950,6 +961,7 @@ UIPopoverPresentationControllerDelegate
         }
         cell.contentView.width = self.view.width;
         cell.controller = self;
+        cell.selectedUrl = _selectedUrl;
         cell.navigationController = self.navigationController;
         cell.entity = self.searchDatas[indexPath.row];
         return cell;
@@ -962,6 +974,7 @@ UIPopoverPresentationControllerDelegate
 
         cell.contentView.width = self.view.width;
         cell.controller = self;
+        cell.selectedUrl = _selectedUrl;
         cell.navigationController = self.navigationController;
         cell.entity = self.allDatas[indexPath.row];
         return cell;
@@ -1150,9 +1163,14 @@ UIPopoverPresentationControllerDelegate
 
 - (void)getDetail:(UIButton *)sender {
 
+//    [sender setTitle:@"下载中" forState:UIControlStateNormal];
+    
     NSString *url = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
     NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
+
+    _selectedUrl = url;
+    [self reloadAllTableview];
 
     self.loadingSlideController.originSubText = name;
     [self.loadingSlideController show];
@@ -1171,7 +1189,7 @@ UIPopoverPresentationControllerDelegate
         userScript.active = true;
         userScript.downloadUrl = url;
         userScript.plafroms = platforms;
-        
+        _selectedUrl = nil;
         BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
         BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
         if(!saveSuccess || !saveResourceSuccess) {
@@ -1183,6 +1201,8 @@ UIPopoverPresentationControllerDelegate
                     self.loadingSlideController = nil;
                 }
             });
+            
+            [self reloadAllTableview];
             return;
         }
         if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){
@@ -1191,6 +1211,17 @@ UIPopoverPresentationControllerDelegate
             [[NSNotificationCenter defaultCenter]postNotification:notification];
             NSNotification *addNotification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil userInfo:@{@"uuid":uuid}];
             [[NSNotificationCenter defaultCenter]postNotification:addNotification];
+            dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                NSString *url = [NSString stringWithFormat:@"%@%@",@"https://api.shenyin.name/stay-fork/install/",uuid];
+                
+                [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                        NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+             
+                        } failBlock:^(NSError * _Nonnull error) {
+                          
+                        }];
+            });
+            
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
@@ -1206,7 +1237,7 @@ UIPopoverPresentationControllerDelegate
                 }];
             [alert addAction:conform];
             [self presentViewController:alert animated:YES completion:nil];
-
+        
             [self reloadAllTableview];
         });
     });
@@ -1455,6 +1486,8 @@ UIPopoverPresentationControllerDelegate
     }
     
 }
+
+
 /*
 #pragma mark - Navigation
 

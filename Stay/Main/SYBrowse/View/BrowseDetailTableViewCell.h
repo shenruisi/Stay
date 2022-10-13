@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSDictionary *entity;
 @property (nonatomic, strong) UINavigationController *navigationController;
 @property (nonatomic, strong) UIViewController *controller;
+@property (nonatomic, strong) NSString *selectedUrl;
 
 @end
 

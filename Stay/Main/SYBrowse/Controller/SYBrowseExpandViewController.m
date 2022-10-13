@@ -28,6 +28,7 @@
 @interface SYBrowseExpandViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@property (nonatomic, strong) NSString  *selectedUrl;
 
 
 @end
@@ -161,6 +162,7 @@
     cell.contentView.width = self.view.width;
     cell.navigationController = self.navigationController;
     cell.controller = self;
+    cell.selectedUrl = _selectedUrl;
     cell.entity = self.data[indexPath.row];
     return cell;
 }
@@ -212,6 +214,8 @@
     NSString *url = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
     NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
+    _selectedUrl = url;
+    [self.tableView reloadData];
 
     self.loadingSlideController.originSubText = name;
     [self.loadingSlideController show];
@@ -231,7 +235,8 @@
         userScript.active = true;
         userScript.downloadUrl = url;
         userScript.plafroms = platforms;
-        
+        _selectedUrl = nil;
+
         BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
         BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
         if(!saveSuccess || !saveResourceSuccess) {
@@ -243,6 +248,7 @@
                     self.loadingSlideController = nil;
                 }
             });
+            [self.tableView reloadData];
             return;
         }
         if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){
@@ -251,6 +257,16 @@
             [[NSNotificationCenter defaultCenter]postNotification:notification];
             NSNotification *addNotification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil userInfo:@{@"uuid":uuid}];
             [[NSNotificationCenter defaultCenter]postNotification:addNotification];
+            dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                NSString *url = [NSString stringWithFormat:@"%@%@",@"https://api.shenyin.name/stay-fork/install/",uuid];
+                
+                [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                        NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+             
+                        } failBlock:^(NSError * _Nonnull error) {
+                          
+                        }];
+            });
         }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
