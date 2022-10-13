@@ -27,6 +27,10 @@
 #import "API.h"
 #import "ImageHelper.h"
 #import "FCStore.h"
+#import "Tampermonkey.h"
+#import "NSString+Urlencode.h"
+#import "SharedStorageManager.h"
+#import <CommonCrypto/CommonDigest.h>
 
 #ifdef Mac
 #import "ToolbarTrackView.h"
@@ -1146,47 +1150,104 @@ UIPopoverPresentationControllerDelegate
 
 - (void)getDetail:(UIButton *)sender {
 
-    NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
+    NSString *url = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
     NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
 
     self.loadingSlideController.originSubText = name;
     [self.loadingSlideController show];
+
+
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
      [set addCharactersInString:@"#"];
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-        dispatch_async(dispatch_get_main_queue(),^{
-            if(data != nil ) {
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:str];
 
+        NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+        NSString *uuid = [self md5HexDigest:uuidName];
+        userScript.uuid = uuid;
+        userScript.active = true;
+        userScript.downloadUrl = url;
+        userScript.plafroms = platforms;
+        
+        BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+        BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+        if(!saveSuccess || !saveResourceSuccess) {
+            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+            dispatch_get_main_queue(), ^{
                 if (self.loadingSlideController.isShown){
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
-                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                SYEditViewController *cer = [[SYEditViewController alloc] init];
-                cer.content = str;
-                cer.downloadUrl = downloadUrl;
-                cer.platforms = platforms;
-#ifdef Mac
-                [[QuickAccess secondaryController] pushViewController:cer];
-#else
-                [self.navigationController pushViewController:cer animated:true];
-#endif
+            });
+            return;
+        }
+        if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){
+            [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+            NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
+            NSNotification *addNotification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil userInfo:@{@"uuid":uuid}];
+            [[NSNotificationCenter defaultCenter]postNotification:addNotification];
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+        dispatch_get_main_queue(), ^{
+            if (self.loadingSlideController.isShown){
+                [self.loadingSlideController dismiss];
+                self.loadingSlideController = nil;
+            }
+            [self initScrpitContent];
+            NSString *content =  NSLocalizedString(@"Created", @"");
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+            [alert addAction:conform];
+            [self presentViewController:alert animated:YES completion:nil];
 
-            }
-            else{
-                [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
-                dispatch_get_main_queue(), ^{
-                    if (self.loadingSlideController.isShown){
-                        [self.loadingSlideController dismiss];
-                        self.loadingSlideController = nil;
-                    }
-                });
-            }
+            [self reloadAllTableview];
         });
     });
+    
+//    self.loadingSlideController.originSubText = name;
+//    [self.loadingSlideController show];
+//    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+//     [set addCharactersInString:@"#"];
+//    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+//        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+//        dispatch_async(dispatch_get_main_queue(),^{
+//            if(data != nil ) {
+//
+//                if (self.loadingSlideController.isShown){
+//                    [self.loadingSlideController dismiss];
+//                    self.loadingSlideController = nil;
+//                }
+//                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//                SYEditViewController *cer = [[SYEditViewController alloc] init];
+//                cer.content = str;
+//                cer.downloadUrl = downloadUrl;
+//                cer.platforms = platforms;
+//#ifdef Mac
+//                [[QuickAccess secondaryController] pushViewController:cer];
+//#else
+//                [self.navigationController pushViewController:cer animated:true];
+//#endif
+//
+//            }
+//            else{
+//                [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+//                dispatch_get_main_queue(), ^{
+//                    if (self.loadingSlideController.isShown){
+//                        [self.loadingSlideController dismiss];
+//                        self.loadingSlideController = nil;
+//                    }
+//                });
+//            }
+//        });
+//    });
 }
 
 - (void)queryDetail:(id)sender {
@@ -1269,22 +1330,6 @@ UIPopoverPresentationControllerDelegate
         [self.tableView reloadData];
     }
 }
-
-//- (UISegmentedControl *)segmentedControl {
-//    if(_segmentedControl == nil) {
-//        NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Featured", @""),NSLocalizedString(@"All", @""),nil];
-//        _segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-//        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
-//        [_segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
-//        _segmentedControl.backgroundColor = FCStyle.secondaryPopup;
-//        _segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
-//        _segmentedControl.selectedSegmentIndex = 0;
-//        CGFloat left = (self.view.width - 200) / 2;
-//        _segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
-//        [_segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
-//    }
-//    return _segmentedControl;
-//}
 
 
 - (UITableView *)tableView {
@@ -1379,6 +1424,37 @@ UIPopoverPresentationControllerDelegate
 //    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    return result;
+}
+
+- (void)initScrpitContent{
+    NSMutableArray *array =  [[NSMutableArray alloc] init];
+    NSArray *datas =  [[DataManager shareManager] findScript:1];
+    if(datas.count > 0) {
+        for(int i = 0; i < datas.count; i++) {
+            UserScript *script = datas[i];
+            UserscriptInfo *info = [[SharedStorageManager shared] getInfoOfUUID:script.uuid];
+            info.content = [script toDictionary];
+            [info flush];
+            script.parsedContent = @"";
+            script.otherContent = @"";
+            [array addObject: [script toDictionary]];
+        }
+        [SharedStorageManager shared].userscriptHeaders.content = array;
+        [[SharedStorageManager shared].userscriptHeaders flush];
+        [[ScriptMananger shareManager] buildData];
+    }
+    
+}
 /*
 #pragma mark - Navigation
 
