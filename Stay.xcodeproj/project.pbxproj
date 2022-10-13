@@ -351,7 +351,6 @@
 		84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B40C288E30CC002A0C1B /* flash@3x.png */; };
 		84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C54CFB2753BDAF00A9F14C /* SYDetailViewController.m */; };
 		84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
-		84CC9B5128C88E71002EB493 /* SYBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B4E28C72C81002EB493 /* SYBrowseViewController.m */; };
 		84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */; };
 		84CC9B5528D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5328D17C2E002EB493 /* SYBrowseExpandViewController.m */; };
 		84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5828D17DF5002EB493 /* BrowseDetailTableViewCell.m */; };
@@ -2312,7 +2311,6 @@
 			files = (
 				587689052719238000F834A4 /* StayUITests.m in Sources */,
 				587689072719238000F834A4 /* StayUITestsLaunchTests.m in Sources */,
-				84CC9B5128C88E71002EB493 /* SYBrowseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2774,7 +2772,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 84;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2827,7 +2825,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 84;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2973,7 +2971,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 84;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3030,7 +3028,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 84;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
