@@ -20,11 +20,9 @@
 #import "ScriptEntity.h"
 #import "UIImageView+WebCache.h"
 #import "ImageHelper.h"
+#import "DeviceHelper.h"
 
-
-#ifdef Mac
 #import "QuickAccess.h"
-#endif
 
 @interface SYDetailViewController ()<UITextViewDelegate,UITableViewDelegate, UITableViewDataSource>
 
@@ -59,14 +57,12 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(whiteSiteNotification:) name:@"whiteSiteNotification" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blackSiteNotification:) name:@"blackSiteNotification" object:nil];
-#ifdef Mac
-     self.rightBarButtonItems = @[[self rightIcon]];
-#else
-     self.navigationItem.rightBarButtonItem = [self rightIcon];
-#endif
-    
-
-    // Do any additional setup after loading the view.
+     if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeIPhone == DeviceHelper.type){
+          self.rightBarButtonItems = @[[self rightIcon]];
+     }
+     else{
+          self.navigationItem.rightBarButtonItem = [self rightIcon];
+     }
 }
 
 - (void)viewWillLayoutSubviews{
@@ -459,23 +455,32 @@
 }
 
 - (void)showScript:(id)sender {
-    SYEditViewController *cer = [[SYEditViewController alloc] init];
-    cer.content = self.script.content;
-    cer.uuid = self.script.uuid;
-    cer.userScript = self.script;
-    cer.isEdit = true;
-    cer.isSearch = self.isSearch;
-#ifdef Mac
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+     SYEditViewController *cer = [[SYEditViewController alloc] init];
+     cer.content = self.script.content;
+     cer.uuid = self.script.uuid;
+     cer.userScript = self.script;
+     cer.isEdit = true;
+     cer.isSearch = self.isSearch;
+     
+     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+         && [QuickAccess splitController].viewControllers.count >= 2){
+          [[QuickAccess secondaryController] pushViewController:cer];
+     }
+     else{
+          [self.navigationController pushViewController:cer animated:true];
+     }
 }
 
 - (void)showNotes:(id)sender {
     SYNotesViewController *cer = [[SYNotesViewController alloc] init];
     cer.notes = self.script.notes;
-    [self.navigationController pushViewController:cer animated:true];
+     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+         && [QuickAccess splitController].viewControllers.count >= 2){
+          [[QuickAccess secondaryController] pushViewController:cer];
+     }
+     else{
+          [self.navigationController pushViewController:cer animated:true];
+     }
 }
 
 

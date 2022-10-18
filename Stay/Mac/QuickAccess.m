@@ -6,16 +6,21 @@
 //
 
 #import "QuickAccess.h"
+#ifdef Mac
 #import "SceneCenter.h"
+#endif
+#import "FCApp.h"
 
 @implementation QuickAccess
 
-+ (nullable MacSplitViewController *)splitController{
++ (nullable UISplitViewController *)splitController{
+#ifdef Mac
     UIWindowScene *windowScene = [[SceneCenter shared] sceneForIdentifier:SCENE_Main];
     if (windowScene){
-        return (MacSplitViewController *)windowScene.windows[0].rootViewController;
+        return (UISplitViewController *)windowScene.windows[0].rootViewController;
     }
-    return nil;
+#endif
+    return (UISplitViewController *)[FCApp keyWindow].rootViewController;
 }
 
 + (nullable MainTabBarController *)primaryController{
@@ -36,6 +41,17 @@
 
 + (nullable SYHomeViewController *)homeViewController{
     return [self primaryController].homeController;
+}
+
+
++ (nullable UIViewController *)rootController{
+#ifdef Mac
+    UIWindowScene *windowScene = [[SceneCenter shared] sceneForIdentifier:SCENE_Main];
+    if (windowScene){
+        return windowScene.windows[0].rootViewController;
+    }
+#endif
+    return [FCApp keyWindow].rootViewController;
 }
 
 

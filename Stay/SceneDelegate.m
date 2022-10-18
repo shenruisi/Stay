@@ -12,6 +12,8 @@
 #import "IACManager.h"
 #ifdef Mac
 #import "SceneCenter.h"
+#else
+#import "PadSplitViewController.h"
 #endif
 #if iOS
 #import "Stay-Swift.h"
@@ -19,6 +21,9 @@
 #import "Stay-Swift.h"
 #endif
 
+#import "DeviceHelper.h"
+#import "SYNavigationController.h"
+#import "EmptyViewController.h"
 
 @implementation SceneDelegate
 
@@ -34,7 +39,20 @@
     UINavigationBar.appearance.prefersLargeTitles = YES;
     self.window = [[UIWindow alloc] initWithWindowScene:windowScene];
     self.window.frame = windowScene.coordinateSpace.bounds;
-    self.window.rootViewController = [[MainTabBarController alloc] init];
+    if (FCDeviceTypeIPad == [DeviceHelper type]){
+        PadSplitViewController *splitViewController = [[PadSplitViewController alloc] init];
+        MainTabBarController *primaryController = [[MainTabBarController alloc] init];
+        SYNavigationController *secondaryController = [[SYNavigationController alloc]
+                                                             initWithRootViewController:[[EmptyViewController alloc] init]];
+        splitViewController.viewControllers = @[
+            primaryController,secondaryController
+        ];
+        
+        self.window.rootViewController = splitViewController;
+    }
+    else{
+        self.window.rootViewController = [[MainTabBarController alloc] init];
+    }
     [self.window makeKeyAndVisible];
 #endif
     

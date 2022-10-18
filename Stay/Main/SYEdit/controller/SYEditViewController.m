@@ -13,10 +13,9 @@
 #import "ScriptMananger.h"
 #import "SharedStorageManager.h"
 #import "LoadingSlideController.h"
-#ifdef Mac
 #import "QuickAccess.h"
-#endif
 #import "FCStyle.h"
+#import "DeviceHelper.h"
 
 @interface SYEditViewController ()
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
@@ -77,11 +76,12 @@
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {
-#ifdef Mac
-        self.rightBarButtonItems = @[[self rightIcon]];
-#else
-        self.navigationItem.rightBarButtonItem = [self rightIcon];
-#endif
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeIPhone == DeviceHelper.type){
+            self.rightBarButtonItems = @[[self rightIcon]];
+        }
+        else{
+            self.navigationItem.rightBarButtonItem = [self rightIcon];
+        }
         
     }
     

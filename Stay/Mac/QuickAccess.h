@@ -6,21 +6,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FCSplitViewController.h"
-#import "NavigateCollectionController.h"
 #import "MainTabBarController.h"
 #import "SYHomeViewController.h"
-#import "MacSplitViewController.h"
 #import "SYNavigationController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QuickAccess : NSObject
 
-+ (nullable MacSplitViewController *)splitController;
++ (nullable UISplitViewController *)splitController;
 + (nullable MainTabBarController *)primaryController;
 + (nullable SYNavigationController *)secondaryController;
 + (nullable SYHomeViewController *)homeViewController;
++ (nullable UIViewController *)rootController;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -7,9 +7,8 @@
 
 #import "SYSelectBarModalViewController.h"
 #import "FCStyle.h"
-#ifdef Mac
 #import "QuickAccess.h"
-#endif
+#import "DeviceHelper.h"
 
 @implementation SYSelectBarModalViewController
 
@@ -77,11 +76,13 @@
 
 - (UIView *)shareUrlBtn {
     if(_shareUrlBtn == nil) {
-#ifdef Mac
-        _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, self.mainViewSize.width - 50, 45)];
-#else
-        _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, kScreenWidth - 80, 45)];
-#endif
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, self.mainViewSize.width - 50, 45)];
+        }
+        else{
+            _shareUrlBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17 + 45 + 16, kScreenWidth - 80, 45)];
+        }
+        
         _shareUrlBtn.backgroundColor = FCStyle.secondaryPopup;
         _shareUrlBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrlClick)];
@@ -100,11 +101,13 @@
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
         imageview.image = image;
         imageview.centerY = 22.5;
-#ifdef Mac
-        imageview.right = self.mainViewSize.width - 65;
-#else
-        imageview.right = kScreenWidth - 95;
-#endif
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            imageview.right = self.mainViewSize.width - 65;
+        }
+        else{
+            imageview.right = kScreenWidth - 95;
+        }
+
         [_shareUrlBtn addSubview:imageview];
 
         [self.view addSubview:_shareUrlBtn];
@@ -114,11 +117,13 @@
 
 - (UIView *)shareContentBtn {
     if(_shareContentBtn == nil) {
-#ifdef Mac
-        _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, self.mainViewSize.width - 50, 45)];
-#else
-        _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
-#endif
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, self.mainViewSize.width - 50, 45)];
+        }
+        else{
+            _shareContentBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
+        }
+
         _shareContentBtn.backgroundColor = FCStyle.secondaryPopup;
         _shareContentBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareContentClick)];
@@ -136,11 +141,13 @@
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
         imageview.image = image;
         imageview.centerY = 22.5;
-#ifdef Mac
-        imageview.right = self.mainViewSize.width - 65;
-#else
-        imageview.right = kScreenWidth - 95;
-#endif
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            imageview.right = self.mainViewSize.width - 65;
+        }
+        else{
+            imageview.right = kScreenWidth - 95;
+        }
+
         [_shareContentBtn addSubview:imageview];
 
         [self.view addSubview:_shareContentBtn];
@@ -151,11 +158,13 @@
 
 - (UIView *)deleteBtn {
     if(_deleteBtn == nil) {
-#ifdef Mac
-        _deleteBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, self.mainViewSize.width - 50, 45)];
-#else
-        _deleteBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
-#endif
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            _deleteBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, self.mainViewSize.width - 50, 45)];
+        }
+        else{
+            _deleteBtn = [[UIView alloc] initWithFrame:CGRectMake(25, 17, kScreenWidth - 80, 45)];
+        }
+
         _deleteBtn.backgroundColor = FCStyle.secondaryPopup;
         _deleteBtn.layer.cornerRadius = 10;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deleteBtnClick)];
@@ -173,11 +182,14 @@
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,15,23,23)] ;
         imageview.image = image;
         imageview.centerY = 22.5;
-#ifdef Mac
-        imageview.right = self.mainViewSize.width - 65;
-#else
-        imageview.right = kScreenWidth - 95;
-#endif
+        
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            imageview.right = self.mainViewSize.width - 65;
+        }
+        else{
+            imageview.right = kScreenWidth - 95;
+        }
+
         [_deleteBtn addSubview:imageview];
 
         [self.view addSubview:_deleteBtn];

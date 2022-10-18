@@ -21,6 +21,7 @@
 #import "SYAboutViewController.h"
 #import "SYAppearanceViewController.h"
 #import "SYFlashViewController.h"
+#import "SharedStorageManager.h"
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
@@ -424,7 +425,57 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     return _fullResyncButton;
 }
 
+@end
 
+@interface _BadgeCell : _MoreTableViewCell
+
+@property (nonatomic, strong) UISwitch *switchButton;
+@end
+
+
+@implementation _BadgeCell
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self switchButton];
+    }
+    
+    return self;
+}
+
+- (void)setEntity:(NSDictionary<NSString *, NSString *>  *)entity{
+    [super setEntity:entity];
+    [self refresh];
+}
+
+- (void)refresh{
+    NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
+    NSString *title = self.entity[@"title"];
+    if (title.length > 0){
+        [builder appendAttributedString:[[NSAttributedString alloc] initWithString:title attributes:@{
+            NSForegroundColorAttributeName:FCStyle.fcBlack,
+            NSFontAttributeName:FCStyle.body
+            
+        }]];
+    }
+    self.switchButton.on =  [SharedStorageManager shared].extensionConfig.showBadge;
+    self.textLabel.attributedText = builder;
+}
+
+- (UISwitch *)switchButton{
+    if (nil == _switchButton){
+        _switchButton = [[UISwitch alloc] init];
+        [_switchButton setOnTintColor:FCStyle.accent];
+        [_switchButton setOn:[SharedStorageManager shared].extensionConfig.showBadge];
+        [_switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+        self.accessoryView = _switchButton;
+    }
+    return _switchButton;
+}
+
+- (void)switchAction:(UISwitch *)sender{
+    [SharedStorageManager shared].extensionConfig.showBadge = sender.on;
+}
 
 @end
 
@@ -519,11 +570,13 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         [((_iCloudOperateTableViewCell *)cell).syncNowButton addTarget:self action:@selector(syncNowAction:) forControlEvents:UIControlEventTouchUpInside];
         [((_iCloudOperateTableViewCell *)cell).fullResyncButton addTarget:self action:@selector(fullResyncAction:) forControlEvents:UIControlEventTouchUpInside];
     }
+    else if ([entity[@"type"] isEqualToString:@"badge"]){
+        cell = [[_BadgeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
     else{
         cell = [[_MoreTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     cell.entity = entity;
-//    NSLog(@"SYMoreViewController %ld,%ld",indexPath.row,((NSArray *)self.dataSource[indexPath.section][@"cells"]).count - 1);
     return cell;
 }
 
@@ -763,6 +816,15 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                       @"url":@"https://github.com/shenruisi/Stay",
                       @"subtitle":@"shenruisi/Stay"
                     },
+                ]
+            },
+            @{
+                @"section":NSLocalizedString(@"Extension",@""),
+                @"cells":@[
+                    @{
+                        @"title":NSLocalizedString(@"ShowBadgeText",@""),
+                        @"type":@"badge"
+                    }
                 ]
             },
             @{

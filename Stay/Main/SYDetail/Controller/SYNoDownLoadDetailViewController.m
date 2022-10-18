@@ -26,10 +26,12 @@
 #import "API.h"
 
 #ifdef Mac
-#import "QuickAccess.h"
 #import "FCShared.h"
 #import "Plugin.h"
 #endif
+
+#import "QuickAccess.h"
+#import "DeviceHelper.h"
 
 @interface SYNoDownLoadDetailViewController ()<UITextViewDelegate,UITableViewDelegate, UITableViewDataSource>
 
@@ -387,11 +389,23 @@
     
     [FCShared.plugin.appKit openUrl:url];
 #else
-    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-     [set addCharactersInString:@"#"];
-    NSURL *url = [NSURL URLWithString:[self.scriptDic[@"hosting_url"] stringByAddingPercentEncodingWithAllowedCharacters:set]];
-    SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:url];
-    [self presentViewController:safariVc animated:YES completion:nil];
+    
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && [QuickAccess splitController].viewControllers.count >= 2){
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        NSURL *url = [NSURL URLWithString:[self.scriptDic[@"hosting_url"] stringByAddingPercentEncodingWithAllowedCharacters:set]];
+        [[UIApplication sharedApplication] openURL:url options:nil completionHandler:nil];
+    }
+    else{
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        NSURL *url = [NSURL URLWithString:[self.scriptDic[@"hosting_url"] stringByAddingPercentEncodingWithAllowedCharacters:set]];
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:url];
+        [self presentViewController:safariVc animated:YES completion:nil];
+    }
+    
+    
 #endif
 
 }
@@ -399,11 +413,14 @@
 - (void)showNotes:(id)sender {
     SYNotesViewController *cer = [[SYNotesViewController alloc] init];
     cer.notes = self.scriptDic[@"notes"];
-#ifdef Mac
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+    
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && [QuickAccess splitController].viewControllers.count >= 2){
+        [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+        [self.navigationController pushViewController:cer animated:true];
+    }
 }
 
 
@@ -821,11 +838,14 @@
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
-#ifdef Mac
-                [[QuickAccess secondaryController] pushViewController:cer];
-#else
-                [self.navigationController pushViewController:cer animated:true];
-#endif
+                
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                        && [QuickAccess splitController].viewControllers.count >= 2){
+                    [[QuickAccess secondaryController] pushViewController:cer];
+                }
+                else{
+                    [self.navigationController pushViewController:cer animated:true];
+                }
 
             }
             else{

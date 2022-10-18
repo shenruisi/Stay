@@ -157,3 +157,6 @@ Featured="推薦";
 All="所有";
 Promoted="推廣";
 Downloading="正在下載";
+GENERAL="GENERAL";
+Extension="擴展";
+ShowBadgeText="在Safari工具欄上顯示腳本數量";

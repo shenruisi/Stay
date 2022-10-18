@@ -13,6 +13,7 @@
 #import "UIImageView+WebCache.h"
 #import <objc/runtime.h>
 #import "ImageHelper.h"
+#import "QuickAccess.h"
 
 @implementation HomeDetailCell
 
@@ -32,6 +33,20 @@
     [super setSelected:selected];
 #ifdef Mac
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#else
+    UIViewController *rootController = [QuickAccess rootController];
+    if ([rootController isKindOfClass:[UISplitViewController class]]){
+        UISplitViewController *splitViewController = (UISplitViewController *)rootController;
+        if (nil == splitViewController || splitViewController.viewControllers.count < 2){
+            self.contentView.backgroundColor = FCStyle.secondaryBackground;
+        }
+        else{
+            self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+        }
+    }
+    else{
+        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+    }
 #endif
 }
 
@@ -39,6 +54,20 @@
     [super setSelected:selected animated:animated];
 #ifdef Mac
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+#else
+    UIViewController *rootController = [QuickAccess rootController];
+    if ([rootController isKindOfClass:[UISplitViewController class]]){
+        UISplitViewController *splitViewController = (UISplitViewController *)rootController;
+        if (nil == splitViewController || splitViewController.viewControllers.count < 2){
+            self.contentView.backgroundColor = FCStyle.secondaryBackground;
+        }
+        else{
+            self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+        }
+    }
+    else{
+        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+    }
 #endif
 }
 

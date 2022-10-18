@@ -160,3 +160,6 @@ Featured="Featured";
 All="All";
 Promoted="Promoted";
 Downloading="Downloading";
+GENERAL="GENERAL";
+Extension="EXTENSION";
+ShowBadgeText="Show badge text on Safari toolbar";

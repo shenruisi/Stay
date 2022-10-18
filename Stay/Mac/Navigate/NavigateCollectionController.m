@@ -8,10 +8,7 @@
 #import "NavigateCollectionController.h"
 #import "NavigateViewController.h"
 
-#ifdef Mac
-#import "FCToolbar.h"
 #import "QuickAccess.h"
-#endif
 #import "FCStyle.h"
 #import "FCConfig.h"
 #import "SYEditViewController.h"
@@ -71,10 +68,10 @@ typedef enum  {
     [self gestureLoad];
     [self shadowBorder];
 //    self.navigationController.navigationBarHidden = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(displayModeDidChange:)
-                                                     name:SVCDisplayModeDidChangeNotification
-                                                   object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(displayModeDidChange:)
+//                                                     name:SVCDisplayModeDidChangeNotification
+//                                                   object:nil];
 }
 
 - (void)gestureLoad{
@@ -268,10 +265,10 @@ typedef enum  {
     return self.viewControllers.lastObject;
 }
 
-- (FCToolbar *)toolbar{
-//    return ((FCHandoffSplitViewController *)self.splitViewController).toolbar;
-    return nil;
-}
+//- (FCToolbar *)toolbar{
+////    return ((FCHandoffSplitViewController *)self.splitViewController).toolbar;
+//    return nil;
+//}
 
 
 - (void)padTrackGesture:(UIPanGestureRecognizer *)recognizer{
@@ -508,9 +505,9 @@ typedef enum  {
 }
 
 - (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:SVCDisplayModeDidChangeNotification
-                                                      object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                        name:SVCDisplayModeDidChangeNotification
+//                                                      object:nil];
 }
 
 @end
