@@ -69,6 +69,7 @@
 
 
 - (UIButton *)button{
+#ifdef Mac
     if (nil == _button){
         _button = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 200)/2,
                                                              self.label.frame.origin.y + self.label.frame.size.height+10,
@@ -87,9 +88,13 @@
     }
     
     return _button;
+#else
+    return nil;
+#endif
 }
 
 - (UILabel *)guide{
+#ifdef Mac
     if (nil == _guide){
         _guide = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                            self.button.frame.origin.y + self.button.frame.size.height+10,
@@ -103,10 +108,15 @@
     }
     
     return _guide;
+#else
+    return nil;
+#endif
 }
 
 - (void)enableExtension:(id)sender{
+#ifdef Mac
    [FCShared.plugin.carbon enableExtension];
+#endif
     
     
 //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"safari://"] options:@{} completionHandler:^(BOOL success) {

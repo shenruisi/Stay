@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FCToolbar.h"
 #import "SYDetailViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -16,10 +15,10 @@ extern NSNotificationName const _Nonnull SVCDidBecomeActiveNotification;
 
 @interface FCSplitViewController : UISplitViewController
 
-@property (nonatomic, strong, nullable) FCToolbar *toolbar;
-- (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript;
-- (void)enableToolbarItem:(NSToolbarItemIdentifier)identifier;
-- (void)disableToolbarItem:(NSToolbarItemIdentifier)identifier;
+//@property (nonatomic, strong, nullable) FCToolbar *toolbar;
+//- (nonnull SYDetailViewController *)produceDetailViewControllerWithUserScript:(UserScript *)userScript;
+//- (void)enableToolbarItem:(NSToolbarItemIdentifier)identifier;
+//- (void)disableToolbarItem:(NSToolbarItemIdentifier)identifier;
 @end
 
 NS_ASSUME_NONNULL_END

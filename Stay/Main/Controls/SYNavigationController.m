@@ -11,9 +11,7 @@
 #import "FCStyle.h"
 #import "SYDetailViewController.h"
 #import "SYNoDownLoadDetailViewController.h"
-#ifdef Mac
 #import "QuickAccess.h"
-#endif
 
 @interface PlaceholderController : UIViewController
 @property (nonatomic, strong) UIView *line;

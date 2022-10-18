@@ -9,7 +9,6 @@
 #import "FCShared.h"
 #import "Plugin.h"
 #import "FCStyle.h"
-#import "FCToolbar.h"
 #import "FCConfig.h"
 #import "FCSplitViewController.h"
 #import "MainTabBarController.h"

@@ -33,8 +33,9 @@
 #ifdef Mac
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
-#import "QuickAccess.h"
 #endif
+
+#import "QuickAccess.h"
 
 #import "ImportSlideController.h"
 #import "SYTextInputViewController.h"
@@ -55,7 +56,7 @@
 
 #import "API.h"
 #import "HomeDetailCell.h"
-
+#import "DeviceHelper.h"
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -1082,32 +1083,32 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-#ifdef Mac
-    if (self.selectedRow != indexPath.row){
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
-        cell.selected = NO;
+    if (FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type]){
+        if (self.selectedRow != indexPath.row){
+            UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
+            cell.selected = NO;
+        }
+        UserScript *userscript = _datas[indexPath.row];
+        self.selectedRow = indexPath.row;
+        self.selectedUUID = userscript.uuid;
+        [[QuickAccess secondaryController] pushViewController:
+         [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
     }
-    UserScript *userscript = _datas[indexPath.row];
-    self.selectedRow = indexPath.row;
-    self.selectedUUID = userscript.uuid;
-    [[QuickAccess secondaryController] pushViewController:
-     [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
-#else
-    if (self.searchController.active) {
-        UserScript *model = _results[indexPath.row];
-        SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-        cer.isSearch = false;
-        cer.script = model;
-        [self.navigationController pushViewController:cer animated:true];
-    } else {
-        UserScript *model = _datas[indexPath.row];
-        SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-        cer.script = model;
-        cer.isSearch = false;
-        [self.navigationController pushViewController:cer animated:true];
+    else{
+        if (self.searchController.active) {
+            UserScript *model = _results[indexPath.row];
+            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+            cer.isSearch = false;
+            cer.script = model;
+            [self.navigationController pushViewController:cer animated:true];
+        } else {
+            UserScript *model = _datas[indexPath.row];
+            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+            cer.script = model;
+            cer.isSearch = false;
+            [self.navigationController pushViewController:cer animated:true];
+        }
     }
-#endif
-    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 100.f;

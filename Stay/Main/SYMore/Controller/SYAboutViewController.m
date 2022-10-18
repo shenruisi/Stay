@@ -109,9 +109,7 @@ UITableViewDataSource
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:true];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *type = [userDefaults objectForKey:@"themeType"];
-    
+    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
     if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
     } else if([@"Dark" isEqual:type]){

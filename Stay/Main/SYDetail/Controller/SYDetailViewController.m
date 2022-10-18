@@ -20,7 +20,7 @@
 #import "ScriptEntity.h"
 #import "UIImageView+WebCache.h"
 #import "ImageHelper.h"
-
+#import "DeviceHelper.h"
 
 #ifdef Mac
 #import "QuickAccess.h"
@@ -59,14 +59,12 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(whiteSiteNotification:) name:@"whiteSiteNotification" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blackSiteNotification:) name:@"blackSiteNotification" object:nil];
-#ifdef Mac
-     self.rightBarButtonItems = @[[self rightIcon]];
-#else
-     self.navigationItem.rightBarButtonItem = [self rightIcon];
-#endif
-    
-
-    // Do any additional setup after loading the view.
+     if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeIPhone == DeviceHelper.type){
+          self.rightBarButtonItems = @[[self rightIcon]];
+     }
+     else{
+          self.navigationItem.rightBarButtonItem = [self rightIcon];
+     }
 }
 
 - (void)viewWillLayoutSubviews{

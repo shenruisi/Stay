@@ -75,6 +75,12 @@
 		5867D16328920E4C00EC822B /* UserDefaultsExRO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D16128920E4B00EC822B /* UserDefaultsExRO.m */; };
 		5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D16128920E4B00EC822B /* UserDefaultsExRO.m */; };
 		5867D16528920E4C00EC822B /* UserDefaultsExRO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5867D16128920E4B00EC822B /* UserDefaultsExRO.m */; };
+		58724A2728FE366700A894D8 /* PadSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A2628FE366700A894D8 /* PadSplitViewController.m */; };
+		58724A2B28FE43E500A894D8 /* DeviceHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A2A28FE43E500A894D8 /* DeviceHelper.m */; };
+		58724A2C28FE43E500A894D8 /* DeviceHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A2A28FE43E500A894D8 /* DeviceHelper.m */; };
+		58724A2D28FE4CCD00A894D8 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
+		58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3C28631FB900AA80D5 /* EmptyViewController.m */; };
+		58724A2F28FE4D0900A894D8 /* QuickAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C38286312B100AA80D5 /* QuickAccess.m */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -219,7 +225,6 @@
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
 		58AC12ED2860781F00875D6D /* FCCarbon.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12EC2860781F00875D6D /* FCCarbon.m */; };
-		58AC12F028607AB800875D6D /* FCToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12EF28607AB800875D6D /* FCToolbar.m */; };
 		58AC12F428607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
@@ -505,6 +510,10 @@
 		5867D157288F91F900EC822B /* TimeHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeHelper.m; sourceTree = "<group>"; };
 		5867D16028920E4B00EC822B /* UserDefaultsExRO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsExRO.h; sourceTree = "<group>"; };
 		5867D16128920E4B00EC822B /* UserDefaultsExRO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsExRO.m; sourceTree = "<group>"; };
+		58724A2528FE366700A894D8 /* PadSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PadSplitViewController.h; sourceTree = "<group>"; };
+		58724A2628FE366700A894D8 /* PadSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PadSplitViewController.m; sourceTree = "<group>"; };
+		58724A2928FE43E500A894D8 /* DeviceHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceHelper.h; sourceTree = "<group>"; };
+		58724A2A28FE43E500A894D8 /* DeviceHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceHelper.m; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -578,8 +587,6 @@
 		58AC12EA286077F100875D6D /* FCCarbonCapability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCCarbonCapability.h; sourceTree = "<group>"; };
 		58AC12EB2860781F00875D6D /* FCCarbon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCCarbon.h; sourceTree = "<group>"; };
 		58AC12EC2860781F00875D6D /* FCCarbon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCCarbon.m; sourceTree = "<group>"; };
-		58AC12EE28607AB700875D6D /* FCToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCToolbar.h; sourceTree = "<group>"; };
-		58AC12EF28607AB800875D6D /* FCToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCToolbar.m; sourceTree = "<group>"; };
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
@@ -856,6 +863,8 @@
 				5867D153288F88FC00EC822B /* AlertHelper.m */,
 				5867D156288F91F900EC822B /* TimeHelper.h */,
 				5867D157288F91F900EC822B /* TimeHelper.m */,
+				58724A2928FE43E500A894D8 /* DeviceHelper.h */,
+				58724A2A28FE43E500A894D8 /* DeviceHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -971,6 +980,8 @@
 				84F48317273A739800217BB3 /* MainTabBarController.m */,
 				5876893E2720064D00F834A4 /* NavigationController.h */,
 				5876893F2720064D00F834A4 /* NavigationController.m */,
+				58724A2528FE366700A894D8 /* PadSplitViewController.h */,
+				58724A2628FE366700A894D8 /* PadSplitViewController.m */,
 				587688EE2719238000F834A4 /* Assets.xcassets */,
 				587688EF2719238000F834A4 /* Info.plist */,
 				587688F02719238000F834A4 /* main.m */,
@@ -1055,8 +1066,6 @@
 			isa = PBXGroup;
 			children = (
 				58639C3A28631F9200AA80D5 /* Navigate */,
-				58AC12EE28607AB700875D6D /* FCToolbar.h */,
-				58AC12EF28607AB800875D6D /* FCToolbar.m */,
 				588202B22859F99000B2721A /* FCSplitViewController.h */,
 				588202B32859F99000B2721A /* FCSplitViewController.m */,
 				58AC12E62860752800875D6D /* Plugin.h */,
@@ -2215,6 +2224,7 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
+				58724A2B28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
@@ -2235,6 +2245,7 @@
 				84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
+				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
@@ -2247,6 +2258,7 @@
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
+				58724A2D28FE4CCD00A894D8 /* SYNavigationController.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
@@ -2279,6 +2291,7 @@
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
 				84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */,
+				58724A2F28FE4D0900A894D8 /* QuickAccess.m in Sources */,
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
@@ -2294,6 +2307,7 @@
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 				84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
+				58724A2728FE366700A894D8 /* PadSplitViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2356,6 +2370,7 @@
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
 				588202552859E73900B2721A /* ScriptDetailModel.m in Sources */,
 				5867D155288F88FC00EC822B /* AlertHelper.m in Sources */,
+				58724A2C28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
@@ -2425,7 +2440,6 @@
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
-				58AC12F028607AB800875D6D /* FCToolbar.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
@@ -2506,7 +2520,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 86;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2546,7 +2560,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 86;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "MacNative=1";
@@ -2699,7 +2713,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 86;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2733,7 +2747,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 86;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2772,7 +2786,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 86;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2825,7 +2839,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 86;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2971,7 +2985,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 86;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3028,7 +3042,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 86;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
