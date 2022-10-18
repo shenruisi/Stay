@@ -1099,6 +1099,7 @@ UIPopoverPresentationControllerDelegate
             options:NSJSONReadingMutableContainers
             error:nil];
             if(_pageNo == 1) {
+                _allDataEnd = false;
                 [self.allDatas removeAllObjects];
             }
             _allDataQuerying = false;
