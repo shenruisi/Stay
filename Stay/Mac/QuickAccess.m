@@ -44,4 +44,15 @@
 }
 
 
++ (nullable UIViewController *)rootController{
+#ifdef Mac
+    UIWindowScene *windowScene = [[SceneCenter shared] sceneForIdentifier:SCENE_Main];
+    if (windowScene){
+        return windowScene.windows[0].rootViewController;
+    }
+#endif
+    return [FCApp keyWindow].rootViewController;
+}
+
+
 @end

@@ -77,4 +77,14 @@ static SharedStorageManager *_instance = nil;
     return _runsRecord;
 }
 
+- (ExtensionConfig *)extensionConfig{
+    if (nil == _extensionConfig){
+        _extensionConfig = [[ExtensionConfig alloc] initWithPath:[FCDataDirectory()
+                                                                  stringByAppendingPathComponent:@"extensionConfig"]
+                                                     isDirectory:NO];
+    }
+    
+    return _extensionConfig;
+}
+
 @end

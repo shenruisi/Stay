@@ -35,10 +35,12 @@
 #ifdef Mac
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
-#import "QuickAccess.h"
 #import "FCShared.h"
 #import "Plugin.h"
 #endif
+
+#import "QuickAccess.h"
+#import "DeviceHelper.h"
 
 @interface _FeaturedBannerTableViewCell : UITableViewCell
 @property (nonatomic, strong) NSArray *entity;
@@ -154,8 +156,14 @@
 #ifdef Mac
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
-        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-        [_controller presentViewController:safariVc animated:YES completion:nil];
+        if (FCDeviceTypeIPhone == DeviceHelper.type){
+            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+            [_controller presentViewController:safariVc animated:YES completion:nil];
+        }
+        else{
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        }
+       
 #endif
 
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
@@ -174,11 +182,14 @@
             NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
 
             cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",str];
-            #ifdef Mac
-                [[QuickAccess secondaryController] pushViewController:cer];
-            #else
-                [self.navigationController pushViewController:cer animated:true];
-            #endif
+            
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                && [QuickAccess splitController].viewControllers.count >= 2){
+                 [[QuickAccess secondaryController] pushViewController:cer];
+            }
+            else{
+                 [self.navigationController pushViewController:cer animated:true];
+            }
         } else if([url.host isEqualToString:@"userscript"]) {
             NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
             ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[str];
@@ -186,19 +197,23 @@
             if(entity == nil) {
                 SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
                 cer.uuid = str;
-                #ifdef Mac
-                    [[QuickAccess secondaryController] pushViewController:cer];
-                #else
-                    [self.navigationController pushViewController:cer animated:true];
-                #endif
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                     [[QuickAccess secondaryController] pushViewController:cer];
+                }
+                else{
+                     [self.navigationController pushViewController:cer animated:true];
+                }
             } else {
                 SYDetailViewController *cer = [[SYDetailViewController alloc] init];
                 cer.script = [[DataManager shareManager] selectScriptByUuid:str];
-                #ifdef Mac
-                    [[QuickAccess secondaryController] pushViewController:cer];
-                #else
-                    [self.navigationController pushViewController:cer animated:true];
-                #endif
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                     [[QuickAccess secondaryController] pushViewController:cer];
+                }
+                else{
+                     [self.navigationController pushViewController:cer animated:true];
+                }
             }
         }
     } else {
@@ -624,23 +639,27 @@
     NSString* uuid = tap.name;
     SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
     cer.uuid = uuid;
-#ifdef Mac
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    [self.navigationController pushViewController:cer animated:true];
-#endif
-    
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+         [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
 }
 
 -(void)clickSeeAll:(id)sender{
     SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
     cer.data = self.entity;
     cer.title = self.headTitle;
-#ifdef Mac
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+    
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+         [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
     
 }
 
@@ -1287,11 +1306,13 @@ UIPopoverPresentationControllerDelegate
     SYDetailViewController *cer = [[SYDetailViewController alloc] init];
     cer.isSearch = false;
     cer.script = model;
-#ifdef Mac
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+         [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
 }
 
 - (void)notSupport:(id)sender {

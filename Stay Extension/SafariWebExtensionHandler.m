@@ -145,7 +145,11 @@
             [[SharedStorageManager shared].runsRecord flush];
         }
         
-        body = datas;        
+        [SharedStorageManager shared].extensionConfig = nil;
+        body = @{
+            @"showBadge": @([SharedStorageManager shared].extensionConfig.showBadge),
+            @"scripts":datas
+        };
         if (!requireCompleteScript){
             [SharedStorageManager shared].userDefaultsExRO = nil;
             [[API shared] active:[SharedStorageManager shared].userDefaultsExRO.deviceID

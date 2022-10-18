@@ -418,10 +418,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
-                // console.log("background--fetchScripts---response==",response);
-                matchAppScriptList = response.body;
+//                 console.log("background--fetchScripts---response==",response);
+                matchAppScriptList = response.body.scripts;
                 if (request.digest == "no"){
-                    if (matchAppScriptList.length > 0){
+                    if (matchAppScriptList.length > 0 && response.body.showBadge){
                         browser.browserAction.setBadgeText({text: matchAppScriptList.length.toString()});
                     }
                     else{

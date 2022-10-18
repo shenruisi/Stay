@@ -1014,10 +1014,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef Mac
-//    [self.line setFrame:CGRectMake(0,kMacToolbar-1,self.view.frame.size.width,1)];
     [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self.tableView reloadData];
 #endif
+    
+    if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+        [self.tableView reloadData];
+    }
 }
 
 
@@ -1036,11 +1038,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     HomeDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
         cell = [[HomeDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
-#ifndef Mac
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-#endif
-        
-//       cell.accessoryType=UITableViewCellAccessoryNone;
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
@@ -1052,9 +1049,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     } else {
         model = _datas[indexPath.row];
     }
-#ifndef Mac
-    cell.backgroundColor = FCStyle.secondaryBackground;
-#endif
+//#ifndef Mac
+////    cell.backgroundColor = FCStyle.secondaryBackground;
+//#endif
     cell.contentView.backgroundColor = FCStyle.secondaryBackground;
     cell.contentView.width = self.view.width;
     cell.controller = self;
@@ -1063,27 +1060,26 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return cell;
 }
 
-#ifdef Mac
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.selectedRow >= 0){
-        NSLog(@"selectedRow willDisplayCell%ld",self.selectedRow);
-        [cell setSelected:indexPath.row == self.selectedRow animated:NO];
-
+    if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+        if (nil == self.splitViewController || self.splitViewController.viewControllers.count < 2){
+            [cell setSelected:NO animated:NO];
+        }
+        else{
+            if (self.selectedRow >= 0){
+                NSLog(@"selectedRow willDisplayCell%ld",self.selectedRow);
+                [cell setSelected:indexPath.row == self.selectedRow animated:NO];
+            }
+        }
     }
+    
 }
 
-//- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath {
-//    if (self.selectedUUID.length > 0){
-////        NSLog(@"self.selectedUUID %@",self.selectedUUID);
-//        cell.selected = indexPath.row == [self indexPathOfUUID:self.selectedUUID].row;
-//
-//    }
-//}
-#endif
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type]){
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && self.splitViewController.viewControllers.count >= 2){
         if (self.selectedRow != indexPath.row){
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
             cell.selected = NO;
@@ -1269,6 +1265,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     self.tableView.hidden = _datas.count == 0;
     self.emptyTipsView.hidden = _datas.count > 0;
+    
+    NSString *scriptCount = @"";
+    if (_datas.count > 0){
+        scriptCount = [NSString stringWithFormat:@"(%ld)",_datas.count];
+    }
+    self.navigationItem.title = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"settings.library","Library"),scriptCount];
+    
 }
 
 - (void)remoteSyncStart{

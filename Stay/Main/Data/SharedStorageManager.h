@@ -12,6 +12,7 @@
 #import "UserDefaults.h"
 #import "UserDefaultsExRO.h"
 #import "RunsRecord.h"
+#import "ExtensionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,6 +34,7 @@ static inline NSString * _Nonnull FCDataDirectory(void){
 @property (nonatomic, strong, nullable) UserDefaults *userDefaults;
 @property (nonatomic, strong, nullable) UserDefaultsExRO *userDefaultsExRO;
 @property (nonatomic, strong, nullable) RunsRecord *runsRecord;
+@property (nonatomic, strong, nullable) ExtensionConfig *extensionConfig;
 - (UserscriptInfo *)getInfoOfUUID:(NSString *)uuid;
 @end
 

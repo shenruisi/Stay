@@ -81,6 +81,10 @@
 		58724A2D28FE4CCD00A894D8 /* SYNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5CB28F30668004C5140 /* SYNavigationController.m */; };
 		58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C3C28631FB900AA80D5 /* EmptyViewController.m */; };
 		58724A2F28FE4D0900A894D8 /* QuickAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 58639C38286312B100AA80D5 /* QuickAccess.m */; };
+		58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A3128FE77FA00A894D8 /* ExtensionConfig.m */; };
+		58724A3328FE77FA00A894D8 /* ExtensionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A3128FE77FA00A894D8 /* ExtensionConfig.m */; };
+		58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A3128FE77FA00A894D8 /* ExtensionConfig.m */; };
+		58724A3528FE77FB00A894D8 /* ExtensionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58724A3128FE77FA00A894D8 /* ExtensionConfig.m */; };
 		587688D92719237E00F834A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587688D82719237E00F834A4 /* AppDelegate.m */; };
 		587688DD2719237E00F834A4 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 587688DB2719237E00F834A4 /* Main.html */; };
 		587688DF2719237E00F834A4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 587688DE2719237E00F834A4 /* Icon.png */; };
@@ -514,6 +518,8 @@
 		58724A2628FE366700A894D8 /* PadSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PadSplitViewController.m; sourceTree = "<group>"; };
 		58724A2928FE43E500A894D8 /* DeviceHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceHelper.h; sourceTree = "<group>"; };
 		58724A2A28FE43E500A894D8 /* DeviceHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceHelper.m; sourceTree = "<group>"; };
+		58724A3028FE77FA00A894D8 /* ExtensionConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionConfig.h; sourceTree = "<group>"; };
+		58724A3128FE77FA00A894D8 /* ExtensionConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExtensionConfig.m; sourceTree = "<group>"; };
 		587688D42719237E00F834A4 /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		587688D72719237E00F834A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		587688D82719237E00F834A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -1468,6 +1474,8 @@
 				5867D16128920E4B00EC822B /* UserDefaultsExRO.m */,
 				58561F5328E6E50400D0913A /* RunsRecord.h */,
 				58561F5428E6E50400D0913A /* RunsRecord.m */,
+				58724A3028FE77FA00A894D8 /* ExtensionConfig.h */,
+				58724A3128FE77FA00A894D8 /* ExtensionConfig.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -2205,6 +2213,7 @@
 				58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */,
 				58561F5828E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
+				58724A3528FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
 				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
 				58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */,
@@ -2296,6 +2305,7 @@
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
@@ -2336,6 +2346,7 @@
 				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
 				58561F5628E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */,
+				58724A3328FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				588B83212845FC0C00AB2D73 /* FCDisk.m in Sources */,
@@ -2382,6 +2393,7 @@
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
+				58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
 				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,

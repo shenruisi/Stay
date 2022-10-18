@@ -22,9 +22,7 @@
 #import "ImageHelper.h"
 #import "DeviceHelper.h"
 
-#ifdef Mac
 #import "QuickAccess.h"
-#endif
 
 @interface SYDetailViewController ()<UITextViewDelegate,UITableViewDelegate, UITableViewDataSource>
 
@@ -457,23 +455,32 @@
 }
 
 - (void)showScript:(id)sender {
-    SYEditViewController *cer = [[SYEditViewController alloc] init];
-    cer.content = self.script.content;
-    cer.uuid = self.script.uuid;
-    cer.userScript = self.script;
-    cer.isEdit = true;
-    cer.isSearch = self.isSearch;
-#ifdef Mac
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+     SYEditViewController *cer = [[SYEditViewController alloc] init];
+     cer.content = self.script.content;
+     cer.uuid = self.script.uuid;
+     cer.userScript = self.script;
+     cer.isEdit = true;
+     cer.isSearch = self.isSearch;
+     
+     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+         && [QuickAccess splitController].viewControllers.count >= 2){
+          [[QuickAccess secondaryController] pushViewController:cer];
+     }
+     else{
+          [self.navigationController pushViewController:cer animated:true];
+     }
 }
 
 - (void)showNotes:(id)sender {
     SYNotesViewController *cer = [[SYNotesViewController alloc] init];
     cer.notes = self.script.notes;
-    [self.navigationController pushViewController:cer animated:true];
+     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+         && [QuickAccess splitController].viewControllers.count >= 2){
+          [[QuickAccess secondaryController] pushViewController:cer];
+     }
+     else{
+          [self.navigationController pushViewController:cer animated:true];
+     }
 }
 
 

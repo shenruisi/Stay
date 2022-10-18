@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable MainTabBarController *)primaryController;
 + (nullable SYNavigationController *)secondaryController;
 + (nullable SYHomeViewController *)homeViewController;
++ (nullable UIViewController *)rootController;
 @end
 
 NS_ASSUME_NONNULL_END
