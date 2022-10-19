@@ -8,6 +8,7 @@
 #import "FCAppKit.h"
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/QuartzCore.h>
+#import "UINSApplicationDelegate.h"
 
 @interface _CursorTextView : NSTextView
 @end
@@ -44,11 +45,31 @@
             mode = @"System";
         }
         [self appearanceChanged:mode];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(willEnterFullScreenHandler:)
+                                                     name:NSWindowWillEnterFullScreenNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(willExitFullScreenHandler:)
+                                                     name:NSWindowWillExitFullScreenNotification
+                                                   object:nil];
+        
+        
     }
     
     return self;
 }
 
+
+- (void)willEnterFullScreenHandler:(NSNotification *)note{
+    [self.appDelegate willEnterFullScreen];
+}
+
+- (void)willExitFullScreenHandler:(NSNotification *)note{
+    [self.appDelegate willExitFullScreen];
+}
 
 
 - (NSWindow *)_findWindow:(NSString *)targetIdentifier{

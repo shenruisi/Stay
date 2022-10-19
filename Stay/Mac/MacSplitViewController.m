@@ -14,7 +14,7 @@ static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 @interface MacSplitViewController ()
 
-@property (nonatomic, strong) UIView *placeHolderTitleView;
+
 @end
 
 @implementation MacSplitViewController
