@@ -406,6 +406,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
     }
 #endif
+    
+    self.tableView.sectionHeaderTopPadding = 0;
+    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+
 }
 
 
@@ -869,6 +873,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                     userScript.blacklist = scrpit.blacklist;
                                     userScript.injectInto = scrpit.injectInto;
                                     userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
+                                    if(scrpit.downloadUrl != NULL ) {
+                                        NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                                        if([url.host isEqualToString:@"res.stayfork.app"]) {
+                                            userScript.downloadUrl = scrpit.downloadUrl;
+                                            userScript.updateUrl = scrpit.downloadUrl;
+                                        }
+                                    }
                                     [[DataManager shareManager] updateUserScript:userScript];
                                     [[DataManager shareManager] updateUserScriptTime:scrpit.uuid];
                                     [self refreshScript];
@@ -886,6 +897,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                         userScript.blacklist = scrpit.blacklist;
                                         userScript.injectInto = scrpit.injectInto;
                                         userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
+                                        if(scrpit.downloadUrl != NULL ) {
+                                            NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                                            if([url.host isEqualToString:@"res.stayfork.app"]) {
+                                                userScript.downloadUrl = scrpit.downloadUrl;
+                                                userScript.updateUrl = scrpit.downloadUrl;
+                                            }
+                                        }
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                             [[DataManager shareManager] updateUserScript:userScript];
                                             [[DataManager shareManager] updateUserScriptTime:scrpit.uuid];
@@ -922,6 +940,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                             if(userScript.downloadUrl == NULL || userScript.downloadUrl.length <= 0) {
                                 userScript.downloadUrl = scrpit.downloadUrl;
                             }
+
+                            NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                            if([url.host isEqualToString:@"res.stayfork.app"]) {
+                                userScript.downloadUrl = scrpit.downloadUrl;
+                                userScript.updateUrl = scrpit.downloadUrl;
+                            }
+                            
+                
+                            
                             if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                 [[DataManager shareManager] updateUserScript:userScript];
                                 [[DataManager shareManager] updateUserScriptTime:scrpit.uuid];

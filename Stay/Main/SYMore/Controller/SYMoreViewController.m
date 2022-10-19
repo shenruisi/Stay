@@ -522,6 +522,10 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                              selector:@selector(subscibeDidChangeHandler:)
                                                  name:@"app.stay.notification.SYSubscibeChangeNotification"
                                                object:nil];
+    
+    self.tableView.sectionHeaderTopPadding = 0;
+    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+
 }
 
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
@@ -857,7 +861,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 - (UITableView *)tableView{
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
-        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
+//        _tableView.contentInset = UIEdgeInsetsMake(20, 0, 0, 0);
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         _tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
         _tableView.separatorColor = FCStyle.fcSeparator;
