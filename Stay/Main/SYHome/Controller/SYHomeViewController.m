@@ -1115,15 +1115,29 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     __weak SYHomeViewController *weakSelf = self;
     if (self.searchController.active) {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            UserScript *model = weakSelf.results[indexPath.row];
-
-            [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
-            [tableView setEditing:NO animated:YES];
-            [self reloadTableView];
-            [tableView reloadData];
-            [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
-            [[NSNotificationCenter defaultCenter]postNotification:notification];
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDelete", @"")
+                                                                           message:@""
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                    UserScript *model = weakSelf.datas[indexPath.row];
+                    [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
+                    [tableView setEditing:NO animated:YES];
+                    [self reloadTableView];
+                    [tableView reloadData];
+                    [self initScrpitContent];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
+                }];
+            [alert addAction:conform];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                 style:UIAlertActionStyleCancel
+                 handler:^(UIAlertAction * _Nonnull action) {
+             }];
+             [alert addAction:cancel];
+            [self presentViewController:alert animated:YES completion:nil];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
@@ -1131,15 +1145,32 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
     } else {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            UserScript *model = weakSelf.datas[indexPath.row];
-            [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
-            [tableView setEditing:NO animated:YES];
-            [self reloadTableView];
-            [tableView reloadData];
-            [self initScrpitContent];
-            NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
-            [[NSNotificationCenter defaultCenter]postNotification:notification];
-
+            
+            
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDelete", @"")
+                                                                           message:@""
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                    UserScript *model = weakSelf.datas[indexPath.row];
+                    [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
+                    [tableView setEditing:NO animated:YES];
+                    [self reloadTableView];
+                    [tableView reloadData];
+                    [self initScrpitContent];
+                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
+                    [[NSNotificationCenter defaultCenter]postNotification:notification];
+                }];
+            [alert addAction:conform];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                 style:UIAlertActionStyleCancel
+                 handler:^(UIAlertAction * _Nonnull action) {
+             }];
+             [alert addAction:cancel];
+            [self presentViewController:alert animated:YES completion:nil];
+            
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);

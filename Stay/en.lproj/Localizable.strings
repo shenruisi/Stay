@@ -163,3 +163,5 @@ Downloading="Downloading";
 GENERAL="GENERAL";
 Extension="EXTENSION";
 ShowBadgeText="Show badge text on Safari toolbar";
+UpdateOn="Update on";
+needDelete="Delete";

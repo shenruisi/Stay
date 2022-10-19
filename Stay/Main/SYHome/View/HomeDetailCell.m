@@ -208,9 +208,22 @@
     version.font = FCStyle.footnoteBold;
     version.text = dic.version;
     version.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor;
+    [version sizeToFit];
     version.centerY = sImageView.centerY;
     version.left = versionImageView.right + 5;
     [self.contentView addSubview:version];
+    
+    
+    if(dic.updateTime != nil && dic.updateTime.length > 0) {
+        UILabel *updateTime = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 15)];
+        updateTime.font = FCStyle.footnoteBold;
+        updateTime.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"UpdateOn", @""),[self timeWithTimeIntervalString: dic.updateTime]];
+        updateTime.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor;
+        updateTime.centerY = sImageView.centerY;
+        updateTime.left = version.right + 5;
+        [self.contentView addSubview:updateTime];
+    }
+
 }
 
 - (UIImage*)makeGrayImage:(UIImage*)image {
@@ -231,4 +244,33 @@
     CGImageRelease(cgimg);
     return newImg;
 }
+
+
+- (NSString *)timeWithTimeIntervalString:(NSString *)timeString
+{
+    
+    if(timeString == NULL || [timeString doubleValue] < 20) {
+        timeString = [self getNowDate];
+    }
+  // 格式化时间
+  NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+  formatter.timeZone = [NSTimeZone timeZoneWithName:@"shanghai"];
+  [formatter setDateStyle:NSDateFormatterMediumStyle];
+  [formatter setTimeStyle:NSDateFormatterShortStyle];
+  [formatter setDateFormat:@"yyyy.MM.dd"];
+  
+  // 毫秒值转化为秒
+  NSDate* date = [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]/ 1000.0];
+  NSString* dateString = [formatter stringFromDate:date];
+  return dateString;
+}
+
+- (NSString *)getNowDate {
+    NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+    NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+    return timeString;
+}
+
+
 @end
