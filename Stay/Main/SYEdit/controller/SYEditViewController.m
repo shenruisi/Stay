@@ -76,7 +76,7 @@
     [self.view addSubview:self.componetView];
     self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {
-        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeIPhone == DeviceHelper.type){
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
             self.rightBarButtonItems = @[[self rightIcon]];
         }
         else{

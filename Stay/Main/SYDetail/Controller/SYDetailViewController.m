@@ -57,7 +57,7 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(whiteSiteNotification:) name:@"whiteSiteNotification" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(blackSiteNotification:) name:@"blackSiteNotification" object:nil];
-     if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeIPhone == DeviceHelper.type){
+     if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
           self.rightBarButtonItems = @[[self rightIcon]];
      }
      else{
