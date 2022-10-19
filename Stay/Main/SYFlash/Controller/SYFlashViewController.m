@@ -39,7 +39,6 @@
     }
 }
 
-
 /*
 #pragma mark - Navigation
 
@@ -58,7 +57,7 @@
     if (_firstView == nil) {
         _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 2,  self.view.height)];
         if (FCDeviceTypeIPad == DeviceHelper.type){
-            _firstView.width = (self.view.width - 64) * 2;
+            _firstView.width = 704;
         }
         _firstView.scrollEnabled = NO;
         _firstView.selectedCount = 0;
