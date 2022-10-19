@@ -216,11 +216,14 @@
     
     if(dic.updateTime != nil && dic.updateTime.length > 0) {
         UILabel *updateTime = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 15)];
-        updateTime.font = FCStyle.footnoteBold;
+        updateTime.font = FCStyle.footnote;
         updateTime.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"UpdateOn", @""),[self timeWithTimeIntervalString: dic.updateTime]];
-        updateTime.textColor = dic.active == 0 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor;
-        updateTime.centerY = sImageView.centerY;
-        updateTime.left = version.right + 5;
+        updateTime.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.5] : FCStyle.fcSecondaryBlack;
+        [updateTime sizeToFit];
+        updateTime.centerY = version.centerY;
+        updateTime.right = self.contentView.width - 20;
+
+//        updateTime.left = version.right + 5;
         [self.contentView addSubview:updateTime];
     }
 
