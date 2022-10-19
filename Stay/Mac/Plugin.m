@@ -6,6 +6,12 @@
 //
 
 #import "Plugin.h"
+#import "QuickAccess.h"
+#import "MacSplitViewController.h"
+
+@interface Plugin()
+
+@end
 
 @implementation Plugin
 
@@ -31,6 +37,16 @@
             self.carbon = [[fcCarbonClass alloc] init];
         }
     }
+}
+
+- (void)willEnterFullScreen{
+    MacSplitViewController *splitController = (MacSplitViewController *)[QuickAccess splitController];
+    splitController.placeHolderTitleView.hidden = YES;
+}
+
+- (void)willExitFullScreen{
+    MacSplitViewController *splitController = (MacSplitViewController *)[QuickAccess splitController];
+    splitController.placeHolderTitleView.hidden = NO;
 }
 
 @end

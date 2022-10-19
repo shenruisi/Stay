@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didReceiveRemoteNotification:(NSDictionary<NSString *,id> *)userInfo;
 - (void)shouldHandleReopenHasVisibleWindows:(BOOL)flag;
 - (void)continueUserActivity:(NSUserActivity *)userActivity;
+- (void)willEnterFullScreen;
+- (void)willExitFullScreen;
 @end
 
 NS_ASSUME_NONNULL_END
