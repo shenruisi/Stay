@@ -451,10 +451,13 @@
     UIButton *seeAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [seeAllBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     [seeAllBtn setTitle:NSLocalizedString(@"SeeAll", @"") forState:UIControlStateNormal];
-    seeAllBtn.frame = CGRectMake(0, 0, 47, 17);
+    seeAllBtn.frame = CGRectMake(0, 0, 100, 17);
+    seeAllBtn.font = FCStyle.subHeadline;
+
+    [seeAllBtn sizeToFit];
     seeAllBtn.centerY = titleLabel.centerY;
     seeAllBtn.right = self.contentView.width -11;
-    seeAllBtn.font = FCStyle.subHeadline;
+    
     [seeAllBtn addTarget:self action:@selector(clickSeeAll:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:seeAllBtn];
     
