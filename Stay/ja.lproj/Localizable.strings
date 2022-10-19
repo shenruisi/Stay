@@ -164,3 +164,4 @@ Downloading="Downloading";
 GENERAL="通用";
 Extension="EXTENSION";
 ShowBadgeText="Show badge text on Safari toolbar";
+needDelete="Are you sure you want to delete this userscript?";
