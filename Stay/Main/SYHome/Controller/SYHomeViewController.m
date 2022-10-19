@@ -307,7 +307,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
-    search.searchBar.placeholder = @"Search added userscripts";
+    search.searchBar.placeholder = NSLocalizedString(@"SearchAddedUserscripts", @"");
     self.navigationItem.searchController = search;
     self.navigationItem.searchController.delegate = self;
     self.navigationItem.searchController.searchBar.delegate = self;
@@ -870,6 +870,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                     userScript.injectInto = scrpit.injectInto;
                                     userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                     [[DataManager shareManager] updateUserScript:userScript];
+                                    [[DataManager shareManager] updateUserScriptTime:scrpit.uuid];
                                     [self refreshScript];
                                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":userScript.uuid}];
                                             [[NSNotificationCenter defaultCenter]postNotification:notification];
@@ -887,6 +888,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                         userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                         if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                             [[DataManager shareManager] updateUserScript:userScript];
+                                            [[DataManager shareManager] updateUserScriptTime:scrpit.uuid];
                                             [self refreshScript];
                                             NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":userScript.uuid}];
                                                     [[NSNotificationCenter defaultCenter]postNotification:notification];
@@ -922,6 +924,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                             }
                             if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                                 [[DataManager shareManager] updateUserScript:userScript];
+                                [[DataManager shareManager] updateUserScriptTime:scrpit.uuid];
                                 [self refreshScript];
                                 NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{@"uuid":userScript.uuid}];
                                         [[NSNotificationCenter defaultCenter]postNotification:notification];

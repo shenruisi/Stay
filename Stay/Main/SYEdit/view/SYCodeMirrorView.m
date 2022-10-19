@@ -162,6 +162,8 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                        userScript.active = tmpScript.active;
                        userScript.iCloudIdentifier = tmpScript.iCloudIdentifier;
                        [[DataManager shareManager] updateUserScript:userScript];
+                       [[DataManager shareManager] updateUserScriptTime:userScript.uuid];
+
                    } else {
                        userScript.plafroms = self.platforms;
                        self.uuid = uuid;
@@ -252,6 +254,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                 
                if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                    [[DataManager shareManager] updateUserScript:userScript];
+                   [[DataManager shareManager] updateUserScriptTime:userScript.uuid];
                    [self initScrpitContent:true];
                    [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
                                                                        object:nil

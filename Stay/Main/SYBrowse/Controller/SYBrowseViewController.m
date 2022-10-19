@@ -783,7 +783,7 @@ UIPopoverPresentationControllerDelegate
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
-    search.searchBar.placeholder = @"Search Userscripts";
+    search.searchBar.placeholder = NSLocalizedString(@"SearchUserscripts", @"");
     self.navigationItem.searchController = search;
     self.navigationItem.searchController.delegate = self;
     self.navigationItem.searchController.searchBar.delegate = self;

@@ -97,7 +97,12 @@
     if(![self isExitedColumn:@"usedTimes"]) {
         [self addColumn:@"user_config_script" column:@"usedTimes" type:@"INTEGER"];
     }
-   
+    
+    if(![self isExitedColumn:@"update_script_time"]) {
+        [self addColumn:@"user_config_script" column:@"update_script_time"];
+
+    }
+    
     return;
 }
 
@@ -422,6 +427,10 @@
         int usedTimes = sqlite3_column_int(stmt, 34);
         scrpitDetail.usedTimes = usedTimes;
         
+        
+        NSString *updateScriptTime = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 35)== NULL?"":(const char *)sqlite3_column_text(stmt, 35)];
+        scrpitDetail.updateScriptTime = updateScriptTime;
+    
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
         
         [scriptList addObject:scrpitDetail];
@@ -1075,6 +1084,9 @@
         int usedTimes = sqlite3_column_int(stmt, 34);
         scrpitDetail.usedTimes = usedTimes;
         
+        NSString *updateScriptTime = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 35)== NULL?"":(const char *)sqlite3_column_text(stmt, 35)];
+        scrpitDetail.updateScriptTime = updateScriptTime;
+        
         [[Tampermonkey shared] conventScriptContent:scrpitDetail];
     }
     sqlite3_finalize(stmt);
@@ -1536,6 +1548,53 @@
     }
     sqlite3_close(sqliteHandle);
     
+}
+
+
+- (void)updateUserScriptTime:(NSString *)uuid{
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE user_config_script SET update_script_time = ? WHERE uuid = ? ";
+    
+    NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+    NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, [timeString UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
 }
 
 @end

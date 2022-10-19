@@ -60,6 +60,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *license;
 @property (nonatomic, assign) NSInteger usedTimes;
 @property (nonatomic, copy) NSArray<NSString *> *plafroms;
+@property (nonatomic, copy) NSString *updateScriptTime;
+
 
 
 //Stay only

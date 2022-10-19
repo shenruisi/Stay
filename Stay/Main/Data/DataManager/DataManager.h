@@ -43,6 +43,7 @@
 
 - (void)updateUserScriptByIcloud:(UserScript *)scrpitDetail;
 
+- (void)updateUserScriptTime:(NSString *)uuid;
 
 
 @end

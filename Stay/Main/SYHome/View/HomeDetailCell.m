@@ -214,10 +214,10 @@
     [self.contentView addSubview:version];
     
     
-    if(dic.updateTime != nil && dic.updateTime.length > 0) {
+    if(dic.updateScriptTime != nil && dic.updateScriptTime.length > 0) {
         UILabel *updateTime = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 15)];
         updateTime.font = FCStyle.footnote;
-        updateTime.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"UpdateOn", @""),[self timeWithTimeIntervalString: dic.updateTime]];
+        updateTime.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"UpdateOn", @""),[self timeWithTimeIntervalString: dic.updateScriptTime]];
         updateTime.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.5] : FCStyle.fcSecondaryBlack;
         [updateTime sizeToFit];
         updateTime.centerY = version.centerY;
