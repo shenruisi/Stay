@@ -96,7 +96,7 @@ UITableViewDataSource
 //    config.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
     WKUserContentController * wkUController = [[WKUserContentController alloc] init];
     config.userContentController = wkUController;
-    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake((self.width/2 - 320) / 2,top,320,450) configuration:config];
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake((self.width / 2 - 320) / 2,top,320,450) configuration:config];
     webView.layer.cornerRadius = 10;
     webView.layer.borderColor = FCStyle.fcSeparator.CGColor;
     webView.layer.borderWidth = 1;

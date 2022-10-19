@@ -9,6 +9,7 @@
 #import "FirstFlashView.h"
 #import "FCStyle.h"
 #import "SharedStorageManager.h"
+#import "DeviceHelper.h"
 
 
 @interface SYFlashViewController ()
@@ -37,6 +38,8 @@
         [self.firstView createFirstView];
     }
 }
+
+
 /*
 #pragma mark - Navigation
 
@@ -54,6 +57,9 @@
 - (FirstFlashView *)firstView {
     if (_firstView == nil) {
         _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 2,  self.view.height)];
+        if (FCDeviceTypeIPad == DeviceHelper.type){
+            _firstView.width = (self.view.width - 64) * 2;
+        }
         _firstView.scrollEnabled = NO;
         _firstView.selectedCount = 0;
         [SharedStorageManager shared].userDefaults = nil;
