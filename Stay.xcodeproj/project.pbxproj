@@ -106,8 +106,6 @@
 		587689242719238000F834A4 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = 587689232719238000F834A4 /* popup.js */; };
 		587689262719238000F834A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 587688EE2719238000F834A4 /* Assets.xcassets */; };
 		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
-		587A55B729012A9F00728DD7 /* NavigationBarIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587A55B629012A9F00728DD7 /* NavigationBarIconView.m */; };
-		587A55B829012A9F00728DD7 /* NavigationBarIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587A55B629012A9F00728DD7 /* NavigationBarIconView.m */; };
 		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
 		5881343127294C0E0055E1CE /* iframe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5881342F27294C0E0055E1CE /* iframe.js */; };
 		5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */; };
@@ -552,8 +550,6 @@
 		587689252719238000F834A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5876893E2720064D00F834A4 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
-		587A55B529012A9F00728DD7 /* NavigationBarIconView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationBarIconView.h; sourceTree = "<group>"; };
-		587A55B629012A9F00728DD7 /* NavigationBarIconView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationBarIconView.m; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
 		5881342F27294C0E0055E1CE /* iframe.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iframe.js; sourceTree = "<group>"; };
 		588202AF2859E73900B2721A /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1317,8 +1313,6 @@
 				58CFA5CB28F30668004C5140 /* SYNavigationController.m */,
 				58CFA5CF28F426F9004C5140 /* SYSecondaryViewController.h */,
 				58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */,
-				587A55B529012A9F00728DD7 /* NavigationBarIconView.h */,
-				587A55B629012A9F00728DD7 /* NavigationBarIconView.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -2264,7 +2258,6 @@
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
-				587A55B729012A9F00728DD7 /* NavigationBarIconView.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
 				5867D154288F88FC00EC822B /* AlertHelper.m in Sources */,
@@ -2452,7 +2445,6 @@
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
 				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
 				58D1B45928893D4C009BD608 /* RMAppReceipt.m in Sources */,
-				587A55B829012A9F00728DD7 /* NavigationBarIconView.m in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
