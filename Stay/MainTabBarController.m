@@ -24,13 +24,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self createTabbar];
     // Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self createTabbar];
-    NSLog(@"MainTabBarController view %@",self.view);
+//    [self createTabbar];
+//    NSLog(@"MainTabBarController view %@",self.view);
 }
 
 -(void)createTabbar

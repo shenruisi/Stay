@@ -10,9 +10,8 @@
 #import "SYEditViewController.h"
 #import "LoadingSlideController.h"
 #import "FCStyle.h"
-#ifdef Mac
 #import "QuickAccess.h"
-#endif
+#import "DeviceHelper.h"
 
 
 @interface SYWebScriptViewController ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
@@ -31,11 +30,14 @@
     self.view.backgroundColor = FCStyle.background;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [self.view addSubview:self.wkwebView];
-#ifdef iOS
-    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82,self.view.frame.size.width, 0.5f)];
-#else
-    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0,self.view.frame.size.width, 0.5f)];
-#endif
+    
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0,self.view.frame.size.width, 0.5f)];
+    }
+    else{
+        self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 82,self.view.frame.size.width, 0.5f)];
+    }
     
     
     self.progressView.backgroundColor =  FCStyle.background;
@@ -142,11 +144,13 @@
                     SYEditViewController *cer = [[SYEditViewController alloc] init];
                     cer.content = str;
                     cer.downloadUrl = url;
-#ifdef Mac
-                    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-                    [self.navigationController pushViewController:cer animated:true];
-#endif
+                    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                        && [QuickAccess splitController].viewControllers.count >= 2){
+                        [[QuickAccess secondaryController] pushViewController:cer];
+                    }
+                    else{
+                        [self.navigationController pushViewController:cer animated:true];
+                    }
                 });
             }
         });

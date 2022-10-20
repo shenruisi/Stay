@@ -68,6 +68,8 @@
 //    [self createDetailView];
 #endif
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
 
     // Do any additional setup after loading the view.
 }
@@ -109,6 +111,9 @@
     [self reload];
 }
 
+- (void)changeThemeColor:(NSNotification *)note{
+     [self reload];
+}
 
 - (void)reload{
     if(_saveSuceess) {

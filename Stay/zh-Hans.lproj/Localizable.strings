@@ -161,5 +161,5 @@ Extension="扩展";
 ShowBadgeText="在Safari工具栏上显示脚本数量";
 UpdateOn="更新于";
 needDelete="你确定要删除这个脚本吗？";
-SearchAddedUserscripts="Search added userscripts";
-SearchUserscripts="Search Userscripts";
+SearchAddedUserscripts="搜索已安装脚本";
+SearchUserscripts="在Stay Fork上搜索脚本";

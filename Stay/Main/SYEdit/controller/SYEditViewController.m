@@ -180,13 +180,14 @@
     NSString *content = _isEdit? NSLocalizedString(@"Saved", @"") :  NSLocalizedString(@"Created", @"");
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-#ifdef Mac
-        [[QuickAccess secondaryController] popViewController];
-#else
-        [self.navigationController popViewControllerAnimated:YES];
-#endif
-        
-        }];
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && [QuickAccess splitController].viewControllers.count >= 2){
+            [[QuickAccess secondaryController] popViewController];
+        }
+        else{
+            [self.navigationController popViewControllerAnimated:YES];
+        }   
+    }];
     [alert addAction:conform];
     [self initScrpitContent];
     NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
