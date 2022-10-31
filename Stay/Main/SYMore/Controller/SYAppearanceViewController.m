@@ -378,7 +378,8 @@ UITableViewDataSource
         
     }
     [self.tableView reloadData];
-    
+
+#ifndef Mac
     for (UINavigationController *navigationController in self.navigationController.tabBarController.viewControllers){
         for (UIBarButtonItem *item in navigationController.topViewController.navigationItem.leftBarButtonItems){
             item.image = [item.image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -387,18 +388,19 @@ UITableViewDataSource
             item.image = [item.image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
         }
     }
-    
-    
-#ifdef Mac
-    [FCShared.plugin.appKit accentColorChanged:color];
-    for(int i = 0; i < 3; i++){
-        UITabBarItem *item = [QuickAccess  primaryController].tabBar.items[i];
-        NSString *imageName = list[i];
-        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
-    }
-    
-    self.navigationItem.leftBarButtonItem.tintColor = FCStyle.accent;
 #endif
+    
+    
+//#ifdef Mac
+//    [FCShared.plugin.appKit accentColorChanged:color];
+//    for(int i = 0; i < 3; i++){
+//        UITabBarItem *item = [QuickAccess  primaryController].tabBar.items[i];
+//        NSString *imageName = list[i];
+//        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
+//    }
+//    
+//    self.navigationItem.leftBarButtonItem.tintColor = FCStyle.accent;
+//#endif
     
     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
         && [QuickAccess splitController].viewControllers.count >= 2){

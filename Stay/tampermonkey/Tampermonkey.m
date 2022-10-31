@@ -149,7 +149,7 @@ static Tampermonkey *kInstance = nil;
 }
 
 - (NSArray *)explictNotInjectJQueryList{
-    return @[@"70178DD295CDA688CD996F65C573FF3C"];
+    return @[@"70178DD295CDA688CD996F65C573FF3C",@"3E1B1AFFA1FB63E8A5AE8ED3422079F2"];
 }
 
 - (BOOL)isES6:(NSString *)script name:(NSString *)name{

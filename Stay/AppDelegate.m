@@ -25,7 +25,6 @@
 #import <SVGKit/SVGKit.h>
 
 #ifdef Mac
-#import "QuickAccess.h"
 #import "Plugin.h"
 #endif
 
@@ -34,6 +33,9 @@
 #else
 #import "Stay-Swift.h"
 #endif
+
+#import "QuickAccess.h"
+#import "DeviceHelper.h"
 
 @interface AppDelegate()
 
@@ -73,13 +75,16 @@
                     SYEditViewController *cer = [[SYEditViewController alloc] init];
                     cer.content = str;
                     cer.downloadUrl = url;
-#ifdef Mac
-                    [[QuickAccess secondaryController] pushViewController:cer];
                     
-#else
-                    UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
-                    [nav pushViewController:cer animated:true];
-#endif
+                    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                        && [QuickAccess splitController].viewControllers.count >= 2){
+                        [[QuickAccess secondaryController] pushViewController:cer];
+                    }
+                    else{
+                        UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                        [nav pushViewController:cer animated:true];
+                    }
+                    
                 } else{
                     [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),

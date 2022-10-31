@@ -102,6 +102,7 @@ typedef enum  {
 }
 
 - (void)setTintColor:(UIColor *)color{
+#ifndef Mac
     self.navigationBar.tintColor = color;
     self.placeholderController.navigationItem.leftBarButtonItem.tintColor = color;
     for (UIBarButtonItem *item in self.placeholderController.navigationItem.leftBarButtonItems){
@@ -111,6 +112,7 @@ typedef enum  {
     for (UIBarButtonItem *item in self.placeholderController.navigationItem.rightBarButtonItems){
         item.image = [item.image imageWithTintColor:color renderingMode:UIImageRenderingModeAlwaysOriginal];
     }
+#endif
 }
 
 - (void)pushViewController:(UIViewController *)viewController{

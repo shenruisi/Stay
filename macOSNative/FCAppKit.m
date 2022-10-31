@@ -63,6 +63,8 @@
 }
 
 
+
+
 - (void)willEnterFullScreenHandler:(NSNotification *)note{
     [self.appDelegate willEnterFullScreen];
 }

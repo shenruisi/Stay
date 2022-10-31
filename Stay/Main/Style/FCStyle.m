@@ -84,6 +84,10 @@
     return [UIColor colorNamed: @"FCSecondaryBlackColor"];
 }
 
++ (UIColor *)fcThirdBlack{
+    return [UIColor colorNamed: @"FCThirdBlackColor"];
+}
+
 + (UIColor *)fcWhite {
     return [UIColor colorNamed: @"FCWhiteColor"];
 }

@@ -57,7 +57,6 @@
 #import "API.h"
 #import "HomeDetailCell.h"
 #import "DeviceHelper.h"
-#import "NavigationBarIconView.h"
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -998,7 +997,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [array addObject: [script toDictionary]];
     }
     [SharedStorageManager shared].userscriptHeaders.content = array;
-    NSLog(@"flush userscriptHeaders123 %p",self.datas);
     [[SharedStorageManager shared].userscriptHeaders flush];
     
     [[ScriptMananger shareManager] buildData];
@@ -1337,8 +1335,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)updateScript:(UIButton *)sender {
     NSString *script = objc_getAssociatedObject(sender,@"script");
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
+    if (@available(macCatalyst 16, *)){
+        script = NSLocalizedString(@"UpdateAlert", @"");
+    }
     
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
+
     NSString *scriptContent = objc_getAssociatedObject(sender,@"scriptContent");
 
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
@@ -1357,9 +1359,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }
     }];
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","Cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                
+
         }];
-    
+
     NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
        paraStyle.alignment = NSTextAlignmentLeft;
 
@@ -1368,7 +1370,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [alert setValue:atrStr forKey:@"attributedMessage"];
     [alert addAction:cancelconform];
     [alert addAction:conform];
+
     [self presentViewController:alert animated:YES completion:nil];
+    
 
 }
 

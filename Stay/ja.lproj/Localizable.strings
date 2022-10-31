@@ -167,3 +167,4 @@ ShowBadgeText="Show badge text on Safari toolbar";
 needDelete="Are you sure you want to delete this userscript?";
 SearchAddedUserscripts="Search installed userscripts";
 SearchUserscripts="Search userscripts on Stay Fork";
+UpdateAlert="Are you sure you want to update this userscript to the latest";
