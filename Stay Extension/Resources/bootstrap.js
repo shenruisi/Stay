@@ -112,15 +112,16 @@ const $_injectInPage = (script) => {
 
 const $_injectInPageWithTiming = (script, runAt) => {
     if (runAt === "document_start") {
-        if (document.readyState === "loading") {
-            document.addEventListener("readystatechange", function() {
-                if (document.readyState === "interactive") {
-                    $_injectInPage(script);
-                }
-            });
-        } else {
-            $_injectInPage(script);
-        }
+        $_injectInPage(script);
+//        if (document.readyState === "loading") {
+//            document.addEventListener("readystatechange", function() {
+//                if (document.readyState === "interactive") {
+//
+//                }
+//            });
+//        } else {
+//            $_injectInPage(script);
+//        }
     } else if (runAt === "document_end" || runAt === "document_body") {
         if (document.readyState !== "loading") {
             $_injectInPage(script);
