@@ -22,6 +22,8 @@ Date.prototype.dateFormat = function (fmt) {
     return fmt;
 }
 
+
+
 let matchAppScriptList = [];
 let matchAppScriptConsole = [];
 let gm_console = {};
