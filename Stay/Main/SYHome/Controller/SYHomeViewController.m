@@ -1293,16 +1293,81 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
 
+    
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        SYEditViewController *cer = [[SYEditViewController alloc] init];
-        cer.content = scriptContent;
-        cer.downloadUrl = downloadUrl;
-        cer.isEdit = YES;
-#ifdef Mac
-        [[QuickAccess secondaryController] pushViewController:cer];
-#else
-        [self.navigationController pushViewController:cer animated:true];
-#endif
+        
+        NSURL *url = [NSURL URLWithString:downloadUrl];
+        if([url.host isEqualToString:@"res.stayfork.app"]) {
+            [self.loadingSlideController show];
+            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:scriptContent];
+            int count = 0;
+
+            if(userScript != nil && userScript.requireUrls != nil) {
+                count += userScript.requireUrls.count;
+            }
+
+            if(userScript != nil && userScript.resourceUrls != nil) {
+                count += userScript.resourceUrls.count;
+            }
+            if(count > 0) {
+                NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+            }
+            BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+            BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+
+            if(!saveSuccess) {
+//                [self saveError:@"requireUrl下载失败,请检查后重试"];
+                return;
+            }
+            if(!saveResourceSuccess) {
+//                [self saveError:@"resourceUrl下载失败,请检查后重试"];
+                return;
+            }
+            
+            UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:userScript.uuid];
+
+            if(tmpScript.downloadUrl != NULL ) {
+                NSURL *url = [NSURL URLWithString:tmpScript.downloadUrl];
+                if([url.host isEqualToString:@"res.stayfork.app"]) {
+                    userScript.downloadUrl = tmpScript.downloadUrl;
+                    userScript.updateUrl = tmpScript.downloadUrl;
+                }
+            }
+            
+            userScript.iCloudIdentifier = tmpScript.iCloudIdentifier;
+            
+           if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+               [[DataManager shareManager] updateUserScript:userScript];
+               [[DataManager shareManager] updateUserScriptTime:userScript.uuid];
+               [self initScrpitContent];
+            
+               [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
+                                                                   object:nil
+                                                                 userInfo:@{
+                   @"operate":@"update"
+               }];
+               
+               [self reloadTableView];
+           }
+            
+            if (self.loadingSlideController.isShown){
+                [self.loadingSlideController dismiss];
+                self.loadingSlideController = nil;
+            }
+            
+            
+        }  else {
+                SYEditViewController *cer = [[SYEditViewController alloc] init];
+                cer.content = scriptContent;
+                cer.downloadUrl = downloadUrl;
+                cer.isEdit = YES;
+            #ifdef Mac
+                [[QuickAccess secondaryController] pushViewController:cer];
+            #else
+                [self.navigationController pushViewController:cer animated:true];
+            #endif
+        }
         }];
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","Cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 
