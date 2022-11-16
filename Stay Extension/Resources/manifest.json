@@ -37,6 +37,12 @@
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"
+        },
+        {
+            "js": ["install.js"],
+            "matches": [ "https://stayfork.app/install/iphone" ],
+            "all_frames": false,
+            "run_at": "document_start"
         }
     ],
 
