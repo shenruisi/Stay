@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1509C3A3288FFD71009BDB85 /* dark.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 1509C3A1288FFD70009BDB85 /* dark.user.js */; };
+		152374412925E33200548C3E /* install.js in Resources */ = {isa = PBXBuildFile; fileRef = 152374402925E33200548C3E /* install.js */; };
 		15C79AB327912BC600559EA5 /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 15C79AB227912BC600559EA5 /* message.js */; };
 		15CBFFE4289786B3000D708F /* dark.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 15CBFFE2289786B2000D708F /* dark.user.js */; };
 		15D9F94D28AF796400C49C5C /* config in Resources */ = {isa = PBXBuildFile; fileRef = 15D9F94C28AF796300C49C5C /* config */; };
@@ -449,6 +450,7 @@
 
 /* Begin PBXFileReference section */
 		1509C3A1288FFD70009BDB85 /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
+		152374402925E33200548C3E /* install.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = install.js; sourceTree = "<group>"; };
 		15C79AB227912BC600559EA5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		15CBFFE2289786B2000D708F /* dark.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = dark.user.js; sourceTree = "<group>"; };
 		15D9F94C28AF796300C49C5C /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
@@ -1044,6 +1046,7 @@
 		587689142719238000F834A4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				152374402925E33200548C3E /* install.js */,
 				15D9F94E28C3511600C49C5C /* config */,
 				15DA5B78289C1E07005CEF9E /* fallback.js */,
 				15CBFFE2289786B2000D708F /* dark.user.js */,
@@ -2048,6 +2051,7 @@
 				15F20BD4281BD24800330A56 /* parse-user-script.js in Resources */,
 				15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */,
 				58F7F4E6274754B900270873 /* gm-apis-gen.js in Resources */,
+				152374412925E33200548C3E /* install.js in Resources */,
 				5876891A2719238000F834A4 /* manifest.json in Resources */,
 				582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */,
 				581F8D6E287D657A00774E2A /* jquery.min.js in Resources */,
