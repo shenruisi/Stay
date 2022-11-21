@@ -194,7 +194,7 @@
          [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
          imageView.clipsToBounds = YES;
          imageView.centerX = 59;
-         imageView.centerY = 50;
+         imageView.centerY = 59;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
          [imageBox addSubview:imageView];
          [cell.contentView addSubview:imageBox];
@@ -212,6 +212,14 @@
      [titleLabel sizeToFit];
      [cell.contentView addSubview:titleLabel];
      
+    
+    UILabel *authourLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , titleLabel.bottom + 10, self.view.width - titleLabelLeftSize - left * 2 , 19)];
+    authourLabel.font = FCStyle.subHeadline;
+    authourLabel.textColor = FCStyle.grayNoteColor;
+    authourLabel.textAlignment = NSTextAlignmentLeft;
+    authourLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+    authourLabel.text = self.scriptDic[@"author"];
+    [cell.contentView addSubview:authourLabel];
    
      [self.actBtn setTitle:NSLocalizedString(@"Get", @"")  forState:UIControlStateNormal];
      self.actBtn.backgroundColor = FCStyle.background;
@@ -227,10 +235,22 @@
         self.actBtn.width =  self.actBtn.width + 20;
     }
     
+    
+    
+    UIImageView *shareImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+    [shareImage setImage:[ImageHelper sfNamed:@"square.and.arrow.up" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
+    shareImage.right = self.view.width - 26;
+    shareImage.bottom = 131;
+    [cell.contentView addSubview:shareImage];
+    shareImage.userInteractionEnabled = true;
+    UITapGestureRecognizer * shareTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrl)];
+    [shareImage addGestureRecognizer:shareTapGesture];
+    
+    
      
      [cell.contentView addSubview:self.actBtn];
      self.actBtn.left = titleLabel.left;
-     self.actBtn.top = titleLabel.bottom + 61;
+     self.actBtn.bottom = 131;
      
      UIScrollView *scrollView =  [self createBaseInfoView];
      scrollView.left = left;
@@ -326,6 +346,7 @@
             imageView.layer.borderWidth = 1;
             imageView.layer.borderColor = FCStyle.borderColor.CGColor;
             imageView.userInteractionEnabled = false;
+            imageView.layer.masksToBounds = YES;
             imageView.left = imageleft;
             [imageScrollView addSubview:imageView];
             imageleft += 27 + 250;
@@ -348,7 +369,7 @@
         previewLabel.textColor = FCStyle.fcBlack;
         previewLabel.textAlignment = NSTextAlignmentLeft;
         previewLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-        previewLabel.text = @"Have a try";
+        previewLabel.text = NSLocalizedString(@"haveTry", @"Have a try");
         [cell.contentView addSubview:previewLabel];
         
 
@@ -357,7 +378,7 @@
         installLabel.textColor = FCStyle.accent;
         installLabel.textAlignment = NSTextAlignmentLeft;
         installLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-        installLabel.text = @"Install & Open the sample link";
+        installLabel.text =  NSLocalizedString(@"installAndOpen", @"Install & Open the sample link");
         installLabel.top = previewLabel.bottom + 7;
         [cell.contentView addSubview:installLabel];
         
@@ -368,9 +389,16 @@
         accessory.right = self.view.width - 26;
         accessory.centerY = installLabel.centerY;
         [accessory setImage:image];
-        accessory.userInteractionEnabled = true;
+       
+        UIView *tryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 17)];
+        tryView.left = left;
+        tryView.centerY = installLabel.centerY;
+        tryView.userInteractionEnabled = true;
+        [cell.contentView  addSubview:tryView];
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tryInstall:)];
-        [accessory addGestureRecognizer:tapGesture];
+        [tryView addGestureRecognizer:tapGesture];
+        
+        
         
         [cell.contentView addSubview:accessory];
         
@@ -429,19 +457,19 @@
     [cell.contentView addSubview:informationLabel];
 
     
-    
-    UILabel *matchesLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
-    matchesLabel.font = FCStyle.footnote;
-    matchesLabel.textColor = FCStyle.fcSecondaryBlack;
-    matchesLabel.textAlignment = NSTextAlignmentLeft;
-    matchesLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-    matchesLabel.text =NSLocalizedString(@"Matches", @"");
-    matchesLabel.top = informationLabel.bottom + 13;
-    [cell.contentView addSubview:matchesLabel];
-    
+    CGFloat infoTop = informationLabel.bottom + 13;
+   
     NSArray *matches = self.scriptDic[@"matches"];
     if (matches.count > 0) {
         
+        UILabel *matchesLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+        matchesLabel.font = FCStyle.footnote;
+        matchesLabel.textColor = FCStyle.fcSecondaryBlack;
+        matchesLabel.textAlignment = NSTextAlignmentLeft;
+        matchesLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        matchesLabel.text =NSLocalizedString(@"Matches", @"");
+        matchesLabel.top = infoTop;
+        [cell.contentView addSubview:matchesLabel];
         
         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
         countLabel.font = FCStyle.footnote;
@@ -461,27 +489,41 @@
         [accessory setImage:image];
         accessory.userInteractionEnabled = true;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMatches)];
-        [accessory addGestureRecognizer:tapGesture];
         [cell.contentView addSubview:accessory];
+        
+        UIView *line1 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+        line1.backgroundColor = FCStyle.fcSeparator;
+        line1.top =  matchesLabel.bottom + 8;
+        line1.left = 15;
+        [cell.contentView addSubview:line1];
+        
+        UIView *matchesListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+        matchesListView.left = left;
+        matchesListView.centerY = matchesLabel.centerY;
+        matchesListView.userInteractionEnabled = true;
+        [cell.contentView  addSubview:matchesListView];
+        
+        [matchesListView addGestureRecognizer:tapGesture];
+
+        infoTop = line1.bottom + 13;
     }
-    UIView *line1 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
-    line1.backgroundColor = FCStyle.fcSeparator;
-    line1.top =  matchesLabel.bottom + 8;
-    line1.left = 15;
-    [cell.contentView addSubview:line1];
+
     
     
-    UILabel *grantsLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
-    grantsLabel.font = FCStyle.footnote;
-    grantsLabel.textColor = FCStyle.fcSecondaryBlack;
-    grantsLabel.textAlignment = NSTextAlignmentLeft;
-    grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-    grantsLabel.text =NSLocalizedString(@"Grants", @"");
-    grantsLabel.top = line1.bottom + 13;
-    [cell.contentView addSubview:grantsLabel];
+
     
     NSArray *grants = self.scriptDic[@"grants"];
     if (grants.count > 0) {
+        
+        UILabel *grantsLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+        grantsLabel.font = FCStyle.footnote;
+        grantsLabel.textColor = FCStyle.fcSecondaryBlack;
+        grantsLabel.textAlignment = NSTextAlignmentLeft;
+        grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        grantsLabel.text =NSLocalizedString(@"Grants", @"");
+        grantsLabel.top = infoTop;
+        [cell.contentView addSubview:grantsLabel];
+        
         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
         countLabel.font = FCStyle.footnote;
         countLabel.textColor = FCStyle.fcBlack;
@@ -500,16 +542,25 @@
         [accessory setImage:image];
         accessory.userInteractionEnabled = true;
         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showGrants)];
-        [accessory addGestureRecognizer:tapGesture];
         [cell.contentView addSubview:accessory];
         
+        UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+        line2.backgroundColor = FCStyle.fcSeparator;
+        line2.top =  grantsLabel.bottom + 8;
+        line2.left = 15;
+        [cell.contentView addSubview:line2];
+        
+        UIView *grantsListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+        grantsListView.left = left;
+        grantsListView.centerY = grantsLabel.centerY;
+        grantsListView.userInteractionEnabled = true;
+        [cell.contentView  addSubview:grantsListView];
+        
+        [grantsListView addGestureRecognizer:tapGesture];
+
     }
     
-    UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
-    line2.backgroundColor = FCStyle.fcSeparator;
-    line2.top =  grantsLabel.bottom + 8;
-    line2.left = 15;
-    [cell.contentView addSubview:line2];
+
     
  
     return cell;
@@ -659,6 +710,15 @@
     else{
         [self.navigationController pushViewController:cer animated:true];
     }
+}
+
+- (void)shareUrl {
+    //分享的url
+    NSArray *activityItems = @[self.scriptDic[@"hosting_url"]];
+        
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+
+    [self.navigationController presentViewController:activityVC animated:YES completion:nil];
 }
 
 - (UIView *)createNoteView:(NSArray *)notes{

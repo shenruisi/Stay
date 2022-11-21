@@ -64,13 +64,13 @@ UITableViewDataSource
     [self addSubview:extensionLabel];
     
     top = extensionLabel.bottom + 10;
-    UIView *activiteView = [[UIView alloc] initWithFrame:CGRectMake(left, top, width, 45)];
+    UIView *activiteView = [[UIView alloc] initWithFrame:CGRectMake(left, top, width, 35)];
     activiteView.backgroundColor = FCStyle.background;
     activiteView.layer.cornerRadius = 8;
     UIImage *image = [UIImage imageNamed:self.activite?@"NavIcon":@"noActIcon"];
     UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15,17,26,26)] ;
     imageview.image = image;
-    imageview.centerY = 24;
+    imageview.centerY = 17.5;
     imageview.layer.cornerRadius = 8;
     imageview.layer.masksToBounds = YES;
     [activiteView addSubview:imageview];
@@ -80,7 +80,7 @@ UITableViewDataSource
     activiteLabel.font = FCStyle.body;
     activiteLabel.textColor = FCStyle.fcBlack;
     activiteLabel.right = width - 15;
-    activiteLabel.centerY = 24;
+    activiteLabel.centerY = 17.5;
     activiteLabel.textAlignment = UITextAlignmentRight;
     [activiteView addSubview:activiteLabel];
     [self addSubview:activiteView];
@@ -95,8 +95,21 @@ UITableViewDataSource
     tipsLabel.text = NSLocalizedString(@"GuidePage1Text4", @"") ;
     tipsLabel.font = FCStyle.bodyBold;
     tipsLabel.textColor = FCStyle.accent;
-    tipsLabel.backgroundColor = FCStyle.background;
+    tipsLabel.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
+    [tipsLabel sizeToFit];
+    tipsLabel.textAlignment = NSTextAlignmentLeft;
+    tipsLabel.width = tipsLabel.width + 30;
+    UIImageView *arrowImage = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 17, 17)];
+    [arrowImage setImage:[ImageHelper sfNamed:@"arrow.up.right" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]];
+    arrowImage.left = tipsLabel.right - 20;
+    arrowImage.centerY = tipsLabel.centerY;
     [self addSubview:tipsLabel];
+    [self addSubview:arrowImage];
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openTutorial)];
+    tipsLabel.userInteractionEnabled = true;
+    [tipsLabel addGestureRecognizer:tapGesture];
+    
     top =  number1.bottom + 17;
     
     UIImageView *number2 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
@@ -115,6 +128,7 @@ UITableViewDataSource
     [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range];
     tipsLabel2.attributedText = noteStr;
     tipsLabel2.font = FCStyle.body;
+    [tipsLabel2 sizeToFit];
     [self addSubview:tipsLabel2];
     top = number2.bottom + 17;
     
@@ -128,7 +142,7 @@ UITableViewDataSource
     [number3 setImage:[ImageHelper sfNamed:@"3.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number3];
     
-    UILabel *tipsLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(number3.right + 5, top, 98, 22)];
+    UILabel *tipsLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(number3.right + 5, top, width, 22)];
     tipsLabel3.textColor = FCStyle.fcBlack;
     tipsLabel3.font = FCStyle.body;
     NSString *str3 = [NSString stringWithFormat: NSLocalizedString(@"GuidePage1Text6", @""),NSLocalizedString(@"GuidePage1Text12", @"")];
@@ -138,6 +152,7 @@ UITableViewDataSource
     [noteStr2 addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range3];
 
     tipsLabel3.attributedText = noteStr2;
+    [tipsLabel3 sizeToFit];
     [self addSubview:tipsLabel3];
     
     
@@ -173,6 +188,7 @@ UITableViewDataSource
     [noteStr3 addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range5];
 
     tipsLabel4.attributedText = noteStr3;
+    [tipsLabel4 sizeToFit];
     [self addSubview:tipsLabel4];
     top = tipsLabel4.bottom + 10;
     
@@ -196,6 +212,8 @@ UITableViewDataSource
     [noteStr4 addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range6];
 
     tipsLabel5.attributedText= noteStr4;
+    [tipsLabel5 sizeToFit];
+
     [self addSubview:tipsLabel5];
     
     UIImage *iconImage = [UIImage imageNamed:@"NavIcon"];
@@ -220,7 +238,7 @@ UITableViewDataSource
     [number6 setImage:[ImageHelper sfNamed:@"6.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number6];
     
-    UILabel *tipsLabel6 = [[UILabel alloc] initWithFrame:CGRectMake(number4.right + 5, top, 179, 44)];
+    UILabel *tipsLabel6 = [[UILabel alloc] initWithFrame:CGRectMake(number4.right + 5, top, width - 24, 44)];
     tipsLabel6.textColor = FCStyle.fcBlack;
     tipsLabel6.font = FCStyle.body;
     NSString *str6 = [NSString stringWithFormat: NSLocalizedString(@"GuidePage1Text9", @""),NSLocalizedString(@"GuidePage1Text15", @""),NSLocalizedString(@"GuidePage1Text16", @"")];
@@ -233,7 +251,9 @@ UITableViewDataSource
     [noteStr5 addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range8];
 
     tipsLabel6.attributedText = noteStr5;
-    tipsLabel6.numberOfLines = 2;
+    tipsLabel6.numberOfLines = 0;
+    [tipsLabel6 sizeToFit];
+
     [self addSubview:tipsLabel6];
     
     top = tipsLabel6.bottom + 10;
@@ -243,7 +263,7 @@ UITableViewDataSource
     [self addSubview:number7];
     
     
-    UILabel *tipsLabel7 = [[UILabel alloc] initWithFrame:CGRectMake(number4.right + 5, top, width, 22)];
+    UILabel *tipsLabel7 = [[UILabel alloc] initWithFrame:CGRectMake(number4.right + 5, top, width - 24, 22)];
     tipsLabel7.textColor = FCStyle.fcBlack;
     tipsLabel7.font = FCStyle.body;
     NSString *str7 = [NSString stringWithFormat: NSLocalizedString(@"GuidePage1Text10", @""),NSLocalizedString(@"GuidePage1Text17", @""),NSLocalizedString(@"GuidePage1Text18", @"")];
@@ -256,6 +276,7 @@ UITableViewDataSource
     [noteStr6 addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range10];
     [noteStr6 addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range10];
     tipsLabel7.attributedText = noteStr6;
+    [tipsLabel7 sizeToFit];
     [self addSubview:tipsLabel7];
 
     top = tipsLabel7.bottom + 15;
@@ -416,6 +437,7 @@ UITableViewDataSource
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.backgroundColor =  FCStyle.fcWhite;
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];
     }
@@ -474,7 +496,7 @@ UITableViewDataSource
     } else {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"GuidePage2ButtonAdded", @"")
                                                                 attributes:@{
-            NSForegroundColorAttributeName : FCStyle.fcWhite,
+            NSForegroundColorAttributeName : [UIColor whiteColor],
             NSFontAttributeName : FCStyle.footnoteBold
         }] forState:UIControlStateNormal];
         btn.backgroundColor = FCStyle.accent;
@@ -505,7 +527,7 @@ UITableViewDataSource
             imageView.layer.cornerRadius = 15;
             imageView.layer.borderWidth = 1;
             imageView.layer.borderColor = FCStyle.borderColor.CGColor;
-            imageView.userInteractionEnabled = false;
+            imageView.layer.masksToBounds = YES;
             imageView.left = imageleft;
             [scrollView addSubview:imageView];
             imageleft += 27 + 250;
@@ -558,6 +580,12 @@ UITableViewDataSource
     [[NSNotificationCenter defaultCenter]postNotification:notification];
 }
 
+- (void)openTutorial {
+    if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"https://stayfork.app/install/iphone" ]]){
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://stayfork.app/install/iphone"]];
+    }
+}
+
 - (void)initScrpitContent{
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     NSArray *datas =  [[DataManager shareManager] findScript:1];
@@ -584,10 +612,11 @@ UITableViewDataSource
         _tableview = [[UITableView alloc]initWithFrame:CGRectMake(self.width/3+15 , 0, self.width / 3  - 30, self.height) style:UITableViewStylePlain];
         _tableview.delegate = self;
         _tableview.dataSource = self;
-        _tableview.backgroundColor = [UIColor clearColor];
         _tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableview.layer.cornerRadius = 8;
         _tableview.scrollEnabled = false;
+//        _tableview.backgroundColor = FCStyle.background;
+        _tableview.backgroundColor = FCStyle.fcWhite;
         [self addSubview:_tableview];
     }
     return _tableview;
