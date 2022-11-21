@@ -90,13 +90,17 @@ UITableViewDataSource
     [number1 setImage:[ImageHelper sfNamed:@"1.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number1];
 
-    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(number1.right + 5, top, width, 22)];
+    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(number1.right + 5, top, width, 30)];
 //    tipsLabel.text = NSLocalizedString(@"GuidePage1Text4", @"");
     tipsLabel.text = NSLocalizedString(@"GuidePage1Text4", @"") ;
     tipsLabel.font = FCStyle.bodyBold;
+
     tipsLabel.textColor = FCStyle.accent;
     tipsLabel.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
     [tipsLabel sizeToFit];
+    tipsLabel.layer.cornerRadius = 10;
+    tipsLabel.clipsToBounds = true;
+    tipsLabel.height = 30;
     tipsLabel.textAlignment = NSTextAlignmentLeft;
     tipsLabel.width = tipsLabel.width + 30;
     UIImageView *arrowImage = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 17, 17)];
