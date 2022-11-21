@@ -333,6 +333,8 @@
 		84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
 		84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
 		84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AC68D027E434E500F356DF /* SYNotesViewController.m */; };
+		84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */; };
+		84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
 		84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC848274BC5AD005367C6 /* ScriptDetailModel.m */; };
@@ -728,6 +730,8 @@
 		84AA932428A63440003E3967 /* SYAppearanceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAppearanceViewController.m; sourceTree = "<group>"; };
 		84AC68CF27E434E500F356DF /* SYNotesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNotesViewController.h; sourceTree = "<group>"; };
 		84AC68D027E434E500F356DF /* SYNotesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNotesViewController.m; sourceTree = "<group>"; };
+		84BA9D11292B11CE00BB28A7 /* SYWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYWebsiteViewController.h; sourceTree = "<group>"; };
+		84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYWebsiteViewController.m; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
 		84BDC83B2745575E005367C6 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
 		84BDC83D27455CA2005367C6 /* SYDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDefines.h; sourceTree = "<group>"; };
@@ -1553,6 +1557,8 @@
 				84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */,
 				84AC68CF27E434E500F356DF /* SYNotesViewController.h */,
 				84AC68D027E434E500F356DF /* SYNotesViewController.m */,
+				84BA9D11292B11CE00BB28A7 /* SYWebsiteViewController.h */,
+				84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2253,6 +2259,7 @@
 				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
 				84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
+				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
@@ -2371,6 +2378,7 @@
 				5867D151288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
 				58D1B45528893D4B009BD608 /* FCStore.m in Sources */,
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
+				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
@@ -2532,7 +2540,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2552,7 +2560,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.3.3;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -2572,7 +2580,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "MacNative=1";
@@ -2588,7 +2596,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 2.3.3;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -2725,7 +2733,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2740,7 +2748,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.3;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -2759,7 +2767,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -2774,7 +2782,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.3;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -2798,7 +2806,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2826,7 +2834,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.3;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -2851,7 +2859,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 91;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -2879,7 +2887,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.3;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -2997,7 +3005,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 91;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3025,7 +3033,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D Mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -3054,7 +3062,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 86;
+				CURRENT_PROJECT_VERSION = 91;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3082,7 +3090,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.2;
+				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D Mac";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;

@@ -13,8 +13,10 @@
 #ifdef Mac
 #import "FCShared.h"
 #import "Plugin.h"
-#import "QuickAccess.h"
 #endif
+
+#import "QuickAccess.h"
+#import "DeviceHelper.h"
 
 NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @"app.stay.notification.AppearanceDidChangeAccentColorNotification";
 
@@ -368,24 +370,43 @@ UITableViewDataSource
     [userDefaults setObject:color forKey:@"themeColor"];
     [userDefaults synchronize];
     [[UINavigationBar appearance] setTintColor:[FCStyle colorWithHexString:color alpha:1]];
-    self.navigationController.navigationBar.tintColor = FCStyle.accent;
     NSArray *list = @[@"rectangle.stack.fill",@"square.grid.2x2.fill",@"gearshape.fill"];
     for(int i = 0; i < 3; i++){
         UITabBarItem *item =  self.navigationController.tabBarController.tabBar.items[i];
         NSString *imageName = list[i];
         item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
+        
     }
     [self.tableView reloadData];
-#ifdef Mac
-    [FCShared.plugin.appKit accentColorChanged:color];
-    for(int i = 0; i < 3; i++){
-        UITabBarItem *item = [QuickAccess  primaryController].tabBar.items[i];
-        NSString *imageName = list[i];
-        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
+
+#ifndef Mac
+    for (UINavigationController *navigationController in self.navigationController.tabBarController.viewControllers){
+        for (UIBarButtonItem *item in navigationController.topViewController.navigationItem.leftBarButtonItems){
+            item.image = [item.image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+        }
+        for (UIBarButtonItem *item in navigationController.topViewController.navigationItem.rightBarButtonItems){
+            item.image = [item.image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+        }
+    }
+#endif
+    
+    
+//#ifdef Mac
+//    [FCShared.plugin.appKit accentColorChanged:color];
+//    for(int i = 0; i < 3; i++){
+//        UITabBarItem *item = [QuickAccess  primaryController].tabBar.items[i];
+//        NSString *imageName = list[i];
+//        item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
+//    }
+//    
+//    self.navigationItem.leftBarButtonItem.tintColor = FCStyle.accent;
+//#endif
+    
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [[QuickAccess secondaryController] setTintColor:[FCStyle colorWithHexString:color alpha:1]];
     }
     
-    self.navigationItem.leftBarButtonItem.tintColor = FCStyle.accent;
-#endif
     [[NSNotificationCenter defaultCenter] postNotificationName:AppearanceDidChangeAccentColorNotification object:nil];
     
 }

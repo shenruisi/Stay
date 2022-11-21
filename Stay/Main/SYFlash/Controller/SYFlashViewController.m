@@ -51,11 +51,21 @@
 
 - (void)closeFlash {
     [self dismissViewControllerAnimated:YES completion:nil];
+#ifdef Mac
+        if ([QuickAccess primaryController] != nil){
+            [QuickAccess primaryController].selectedIndex = 2;         
+        }
+#else
+        if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
+            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 1;
+        }
+#endif
+//    nav.tabBarController.selectedIndex = 1;
 }
 
 - (FirstFlashView *)firstView {
     if (_firstView == nil) {
-        _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 2,  self.view.height)];
+        _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 0, self.view.width * 3,  self.view.height)];
         if (FCDeviceTypeIPad == DeviceHelper.type){
             _firstView.width = 704 * 2;
         }

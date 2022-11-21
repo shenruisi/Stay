@@ -63,6 +63,12 @@
      else{
           self.navigationItem.rightBarButtonItem = [self rightIcon];
      }
+     
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
+}
+
+- (void)changeThemeColor:(NSNotification *)note{
+     [self reload];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -80,8 +86,9 @@
     self.scrollView = nil;
     self.slideView = nil;
     self.slideLineView = nil;
-
-   [self.tableView reloadData];
+     [self.tableView reloadData];
+     
+   
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -96,7 +103,9 @@
 
 - (void)scriptSaveSuccess:(id)sender{
     self.script =  [[DataManager shareManager] selectScriptByUuid:self.script.uuid];
-     [self.tableView reloadData];
+     dispatch_async(dispatch_get_main_queue(), ^{
+          [self.tableView reloadData];
+     });
 //    [self createDetailView];
 }
 
@@ -227,6 +236,7 @@
           imageView.clipsToBounds = YES;
           imageView.centerX = 28.5;
           imageView.centerY = 28.5;
+          imageView.contentMode = UIViewContentModeScaleAspectFit;
           [imageBox addSubview:imageView];
           [cell.contentView addSubview:imageBox];
          titleLabelLeftSize = 15 + 57;

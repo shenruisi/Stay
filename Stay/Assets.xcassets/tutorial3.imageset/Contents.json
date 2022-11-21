@@ -59,6 +59,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "编组 4@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -69,6 +70,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "编组 4@3x 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -839,7 +839,7 @@
         return;
     }
     
-    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ?,iCloud_identifier = ?,switch = ?   where uuid = ?";
+    NSString *sql = @"UPDATE user_config_script set name = ?, namespace = ?, author = ?, version = ?, desc = ?, homepage = ?, icon = ?, includes= ?,maches= ?,excludes= ?,runAt= ?,grants= ?,noFrames= ?,content= ?,active= ?,requireUrls= ?,sourcePage= ?,updateUrl = ?,downloadUrl = ?,notes = ?,resourceUrl = ?, update_time = ?, license = ?,iCloud_identifier = ?,switch = ?,inject_info = ?   where uuid = ?";
     
     sqlite3_stmt *statement;
     
@@ -909,7 +909,15 @@
         sqlite3_bind_text(statement, 24,[scrpitDetail.iCloudIdentifier UTF8String], -1,NULL);
         int updateSwitch = scrpitDetail.updateSwitch ?1:0;
         sqlite3_bind_int(statement, 25, updateSwitch);
-        sqlite3_bind_text(statement, 26,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        
+        NSString *injectInto = [NSString stringWithFormat:@"%@%@",
+                                [scrpitDetail.injectInto substringToIndex:1].uppercaseString,
+                                [scrpitDetail.injectInto substringFromIndex:1]
+        ];
+        sqlite3_bind_text(statement, 26,[injectInto UTF8String], -1,NULL);
+        
+        sqlite3_bind_text(statement, 27,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);
+        
 
     }
     

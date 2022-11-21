@@ -161,3 +161,6 @@ GENERAL="GENERAL";
 Extension="擴展";
 ShowBadgeText="在Safari工具欄上顯示腳本數量";
 needDelete="你確定要刪除這個腳本嗎？";
+SearchAddedUserscripts="搜索已安装脚本";
+SearchUserscripts="在Stay Fork上搜索脚本";
+UpdateAlert="你確定想要把該腳本更新到最新嗎？";

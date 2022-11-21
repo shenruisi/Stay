@@ -72,7 +72,7 @@ FCSceneIdentifier const _Nonnull SCENE_Main = @"app.stay.scene.main";
         
         window = [[UIWindow alloc] initWithWindowScene:windowScene];
         
-        windowScene.title = @"Stay for Mac";
+        windowScene.title = @" ";
         windowScene.sizeRestrictions.minimumSize = CGSizeMake(425, 480);
         NSDictionary *frame = [[FCConfig shared] getValueOfKey:GroupUserDefaultsKeyMacMainWindowFrame];
         

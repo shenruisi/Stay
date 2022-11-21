@@ -101,6 +101,20 @@ typedef enum  {
     [self.stTopViewController viewWillLayoutSubviews];
 }
 
+- (void)setTintColor:(UIColor *)color{
+#ifndef Mac
+    self.navigationBar.tintColor = color;
+    self.placeholderController.navigationItem.leftBarButtonItem.tintColor = color;
+    for (UIBarButtonItem *item in self.placeholderController.navigationItem.leftBarButtonItems){
+        item.image = [item.image imageWithTintColor:color renderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
+    self.placeholderController.navigationItem.rightBarButtonItem.tintColor = color;
+    for (UIBarButtonItem *item in self.placeholderController.navigationItem.rightBarButtonItems){
+        item.image = [item.image imageWithTintColor:color renderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
+#endif
+}
+
 - (void)pushViewController:(UIViewController *)viewController{
     [self pushViewController:viewController removeUUID:nil inViewDidLoad:NO isForward:NO];
 }

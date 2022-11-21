@@ -21,6 +21,7 @@
 #import "NSString+Urlencode.h"
 #import "UserscriptUpdateManager.h"
 #import "SharedStorageManager.h"
+#import "SYNetworkUtils.h"
 #ifdef Mac
 #import "QuickAccess.h"
 #endif

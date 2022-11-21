@@ -29,6 +29,7 @@
 
 #import "SharedStorageManager.h"
 #import "FCStyle.h"
+#import <CommonCrypto/CommonDigest.h>
 
 #ifdef Mac
 #import "ToolbarTrackView.h"
@@ -299,8 +300,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
     self.selectedRow = -1;
-//    [ScriptMananger shareManager];
-//    [SYCodeMirrorView shareCodeView];
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
@@ -318,10 +317,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self.searchController.searchBar setTintColor:FCStyle.accent];
     
     self.navigationItem.hidesSearchBarWhenScrolling = false;
-
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     [self initScrpitContent];
+    
 #ifdef Mac
     [self line];
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -440,11 +439,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }];
     }
-#ifdef Mac
-    [self reloadTableView];
-    [self.tableView reloadData];
-#endif
     
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)userscriptDidActiveHandler:(NSNotification *)note{
@@ -464,10 +464,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }];
     }
-#ifdef Mac
-    [self reloadTableView];
-    [self.tableView reloadData];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)userscriptDidStopHandler:(NSNotification *)note{
@@ -487,10 +488,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }];
     }
-#ifdef Mac
-    [self reloadTableView];
-    [self.tableView reloadData];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)userscriptDidAddHandler:(NSNotification *)note{
@@ -547,10 +549,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }];
     }
     
-#ifdef Mac
-    [self reloadTableView];
-    [self.tableView reloadData];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)userscriptDidUpdateHandler:(NSNotification *)note{
@@ -571,10 +574,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }];
     }
     
-#ifdef Mac
-    [self reloadTableView];
-    [self.tableView reloadData];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
 
     
 }
@@ -600,11 +604,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                    SYEditViewController *cer = [[SYEditViewController alloc] init];
                    cer.content = str;
                    cer.downloadUrl = url;
-#ifdef Mac
-                   [[QuickAccess secondaryController] pushViewController:cer];
-#else
-                   [self.navigationController pushViewController:cer animated:true];
-#endif
+                   
+                   if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                       && [QuickAccess splitController].viewControllers.count >= 2){
+                       [[QuickAccess secondaryController] pushViewController:cer];
+                   }
+                   else{
+                       [self.navigationController pushViewController:cer animated:true];
+                   }
                }else {
                    [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
@@ -624,23 +631,25 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSInteger index = [(NSNumber *)notification.object integerValue];
     if(index == 0) {
         SYEditViewController *cer = [[SYEditViewController alloc] init];
-#ifdef Mac
-        [[QuickAccess secondaryController] pushViewController:cer];
-#else
-        [self.navigationController pushViewController:cer animated:true];
-#endif
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && [QuickAccess splitController].viewControllers.count >= 2){
+             [[QuickAccess secondaryController] pushViewController:cer];
+        }
+        else{
+             [self.navigationController pushViewController:cer animated:true];
+        }
         
     } else if(index == 1) {
         [self.sYTextInputViewController show];
     } else if (index == 2) {
         SYWebScriptViewController *cer = [[SYWebScriptViewController alloc] init];
-#ifdef Mac
-        [[QuickAccess secondaryController] pushViewController:cer];
-#else
-        [self.navigationController pushViewController:cer animated:true];
-#endif
-        
-        
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && [QuickAccess splitController].viewControllers.count >= 2){
+             [[QuickAccess secondaryController] pushViewController:cer];
+        }
+        else{
+             [self.navigationController pushViewController:cer animated:true];
+        }
     }
     else if (index == 3) {
         UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeItem] asCopy:YES];
@@ -657,11 +666,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         NSError *error = nil;
         cer.content = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
         if (!error){
-#ifdef Mac
-        [[QuickAccess secondaryController] pushViewController:cer];
-#else
-        [self.navigationController pushViewController:cer animated:true];
-#endif
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                && [QuickAccess splitController].viewControllers.count >= 2){
+                 [[QuickAccess secondaryController] pushViewController:cer];
+            }
+            else{
+                 [self.navigationController pushViewController:cer animated:true];
+            }
             
         }
         else{
@@ -708,7 +719,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
     [self checkShowTips];
-
+    NSLog(@"onBecomeActive-------");
     [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
     if (activateChanged.count > 0){
@@ -975,6 +986,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)initScrpitContent{
+    
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     for(int i = 0; i < self.datas.count; i++) {
         UserScript *script = self.datas[i];
@@ -989,7 +1001,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[SharedStorageManager shared].userscriptHeaders flush];
     
     [[ScriptMananger shareManager] buildData];
-
+    
 }
 #pragma mark -popover
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller{
@@ -1152,15 +1164,35 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
-                    UserScript *model = weakSelf.datas[indexPath.row];
-                    [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
-                    [tableView setEditing:NO animated:YES];
-                    [self reloadTableView];
-                    [tableView reloadData];
-                    [self initScrpitContent];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
-                    [[NSNotificationCenter defaultCenter]postNotification:notification];
-                }];
+                
+                
+                UserScript *model = weakSelf.datas[indexPath.row];
+                [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
+                [tableView setEditing:NO animated:YES];
+                [self reloadTableView];
+                [tableView reloadData];
+                [self initScrpitContent];
+                
+                if (self.selectedRow == indexPath.row){
+                    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                        && [QuickAccess splitController].viewControllers.count >= 2){
+                        [[QuickAccess secondaryController] popViewController];
+                        if (weakSelf.datas.count > 0){
+                            self.selectedRow = 0;
+                            [[QuickAccess secondaryController] pushViewController:
+                             [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:weakSelf.datas[0]]];
+                        }
+                        else{
+                            self.selectedRow = -1;
+                        }
+                    }
+                }
+                
+                NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+                
+                
+            }];
             [alert addAction:conform];
             UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
                  style:UIAlertActionStyleCancel
@@ -1184,15 +1216,32 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
-                    UserScript *model = weakSelf.datas[indexPath.row];
-                    [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
-                    [tableView setEditing:NO animated:YES];
-                    [self reloadTableView];
-                    [tableView reloadData];
-                    [self initScrpitContent];
-                    NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
-                    [[NSNotificationCenter defaultCenter]postNotification:notification];
-                }];
+                
+                UserScript *model = weakSelf.datas[indexPath.row];
+                [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
+                [tableView setEditing:NO animated:YES];
+                [self reloadTableView];
+                [tableView reloadData];
+                [self initScrpitContent];
+                
+                if (self.selectedRow == indexPath.row){
+                    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                        && [QuickAccess splitController].viewControllers.count >= 2){
+                        [[QuickAccess secondaryController] popViewController];
+                        if (weakSelf.datas.count > 0){
+                            self.selectedRow = 0;
+                            [[QuickAccess secondaryController] pushViewController:
+                             [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:weakSelf.datas[0]]];
+                        }
+                        else{
+                            self.selectedRow = -1;
+                        }
+                    }
+                }
+                
+                NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidDeleteNotification" object:nil userInfo:@{@"uuid":model.uuid}];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+            }];
             [alert addAction:conform];
             UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
                  style:UIAlertActionStyleCancel
@@ -1287,21 +1336,28 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)updateScript:(UIButton *)sender {
     NSString *script = objc_getAssociatedObject(sender,@"script");
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
+    if (@available(macCatalyst 16, *)){
+        script = NSLocalizedString(@"UpdateAlert", @"");
+    }
     
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:script preferredStyle:UIAlertControllerStyleAlert];
+
     NSString *scriptContent = objc_getAssociatedObject(sender,@"scriptContent");
 
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
 
     
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
         NSURL *url = [NSURL URLWithString:downloadUrl];
         if([url.host isEqualToString:@"res.stayfork.app"]) {
             [self.loadingSlideController show];
             UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:scriptContent];
             int count = 0;
 
+            NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+            NSString *uuid = [self md5HexDigest:uuidName];
+            userScript.uuid = uuid;
+            userScript.active = true;
             if(userScript != nil && userScript.requireUrls != nil) {
                 count += userScript.requireUrls.count;
             }
@@ -1340,6 +1396,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
            if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
                [[DataManager shareManager] updateUserScript:userScript];
                [[DataManager shareManager] updateUserScriptTime:userScript.uuid];
+               [self reloadTableView];
+
                [self initScrpitContent];
             
                [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
@@ -1348,7 +1406,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                    @"operate":@"update"
                }];
                
-               [self reloadTableView];
+               [self.tableView reloadData];
+
            }
             
             if (self.loadingSlideController.isShown){
@@ -1358,21 +1417,24 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             
             
         }  else {
-                SYEditViewController *cer = [[SYEditViewController alloc] init];
-                cer.content = scriptContent;
-                cer.downloadUrl = downloadUrl;
-                cer.isEdit = YES;
-            #ifdef Mac
+            SYEditViewController *cer = [[SYEditViewController alloc] init];
+            cer.content = scriptContent;
+            cer.downloadUrl = downloadUrl;
+            cer.isEdit = YES;
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                && [QuickAccess splitController].viewControllers.count >= 2){
                 [[QuickAccess secondaryController] pushViewController:cer];
-            #else
+            }
+            else{
                 [self.navigationController pushViewController:cer animated:true];
-            #endif
+            }
         }
         }];
+
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","Cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                
+
         }];
-    
+
     NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
        paraStyle.alignment = NSTextAlignmentLeft;
 
@@ -1381,11 +1443,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [alert setValue:atrStr forKey:@"attributedMessage"];
     [alert addAction:cancelconform];
     [alert addAction:conform];
+
     [self presentViewController:alert animated:YES completion:nil];
+    
 
 }
 
 - (void) reloadTableView {
+    
     [_datas removeAllObjects];
     [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
     
@@ -1736,6 +1801,17 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                  name:iCloudServiceSyncEndNotification
                                                object:nil];
 #endif
+}
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    return result;
 }
 
 @end

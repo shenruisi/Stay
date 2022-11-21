@@ -4,7 +4,7 @@
 
     "name": "__MSG_extension_name__",
     "description": "__MSG_extension_description__",
-    "version": "2.2.0",
+    "version": "2.3.3",
 
     "icons": {
         "48": "images/icon-48.png",
@@ -49,7 +49,8 @@
             "16": "images/toolbar-icon-16.png",
             "19": "images/toolbar-icon-19.png",
             "32": "images/toolbar-icon-32.png",
-            "38": "images/toolbar-icon-38.png"
+            "38": "images/toolbar-icon-38.png",
+            "100": "images/toolbar-icon-100.png"
         }
     },
     "host_permissions":[

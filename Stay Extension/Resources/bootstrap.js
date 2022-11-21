@@ -349,7 +349,7 @@ let injectedContentVendor = new Set();
     
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         matchedScripts = response.body;
-        // console.log("matchedScripts-", matchedScripts)
+        console.log("matchedScripts-", matchedScripts)
         let activeCount = 0;
         matchedScripts.forEach((script) => {
             var pageInject = script.installType === "page";

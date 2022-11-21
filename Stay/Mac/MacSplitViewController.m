@@ -50,11 +50,15 @@ static CGFloat MAX_PRIMARY_WIDTH = 540;
     [self layout];
 }
 
-- (UIView *)placeHolderTitleView{
+- (UILabel *)placeHolderTitleView{
     if (nil == _placeHolderTitleView){
-        _placeHolderTitleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 25)];
+        _placeHolderTitleView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 25)];
         _placeHolderTitleView.backgroundColor = UIColor.secondarySystemBackgroundColor;
         _placeHolderTitleView.layer.zPosition = MAXFLOAT;
+        _placeHolderTitleView.text = @"FastClip for Mac";
+        _placeHolderTitleView.textAlignment = NSTextAlignmentCenter;
+        _placeHolderTitleView.font = FCStyle.subHeadlineBold;
+        _placeHolderTitleView.textColor = FCStyle.fcThirdBlack;
         [self.view addSubview:_placeHolderTitleView];
     }
     
