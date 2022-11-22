@@ -894,7 +894,7 @@
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
     
-        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:@"安装"  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
+        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Get", @"")  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
     }
     return _rightIcon;
 }
