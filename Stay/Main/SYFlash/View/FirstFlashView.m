@@ -19,6 +19,8 @@
 #import "ScriptMananger.h"
 #import "ImageHelper.h"
 #import <WebKit/WebKit.h>
+#import "SYScanImage.h"
+
 
 @interface FirstFlashView()<
 UITableViewDelegate,
@@ -521,7 +523,7 @@ UITableViewDataSource
     
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, previewLabel.bottom + 10, self.width / 3, 540)];
     
-    
+    scrollView.showsHorizontalScrollIndicator = false;
     NSArray *picArray = self.scriptDic[@"screenshots"];
     if(picArray != nil) {
         CGFloat imageleft = 27;
@@ -536,6 +538,11 @@ UITableViewDataSource
             [scrollView addSubview:imageView];
             imageleft += 27 + 250;
             scrollView.contentSize = CGSizeMake(imageleft + 27, 540);
+            
+            UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
+            [imageView addGestureRecognizer:tapGestureRecognizer1];
+            //让UIImageView和它的父类开启用户交互属性
+            [imageView setUserInteractionEnabled:YES];
         }
     }
     
@@ -608,6 +615,12 @@ UITableViewDataSource
         [[ScriptMananger shareManager] buildData];
     }
     
+}
+
+-(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
+    NSLog(@"点击图片");
+    UIImageView *clickedImageView = (UIImageView *)tap.view;
+    [SYScanImage scanBigImageWithImageView:clickedImageView];
 }
 
 

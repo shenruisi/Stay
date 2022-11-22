@@ -27,6 +27,8 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "API.h"
 #import "SYWebsiteViewController.h"
+#import "SYScanImage.h"
+
 
 #ifdef Mac
 #import "FCShared.h"
@@ -347,6 +349,7 @@
         [cell.contentView addSubview:previewLabel];
         
         UIScrollView *imageScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, previewLabel.bottom + 10, self.view.width, 540)];
+        imageScrollView.showsHorizontalScrollIndicator = false;
         
         CGFloat imageleft = 15;
         for(int i = 0; i < picArray.count; i++) {
@@ -361,6 +364,10 @@
             [imageScrollView addSubview:imageView];
             imageleft += 27 + 250;
             imageScrollView.contentSize = CGSizeMake(imageleft + 15, 540);
+            UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
+            [imageView addGestureRecognizer:tapGestureRecognizer1];
+            //让UIImageView和它的父类开启用户交互属性
+            [imageView setUserInteractionEnabled:YES];
         }
         
         [cell.contentView addSubview:imageScrollView];
@@ -1197,6 +1204,12 @@
     }
     
     return _slideLineView;
+}
+
+-(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
+    NSLog(@"点击图片");
+    UIImageView *clickedImageView = (UIImageView *)tap.view;
+    [SYScanImage scanBigImageWithImageView:clickedImageView];
 }
 
 
