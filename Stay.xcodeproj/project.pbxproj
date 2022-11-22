@@ -336,6 +336,8 @@
 		84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AC68D027E434E500F356DF /* SYNotesViewController.m */; };
 		84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */; };
 		84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */; };
+		84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D16292C6CEE00BB28A7 /* SYScanImage.m */; };
+		84BA9D18292C6CEE00BB28A7 /* SYScanImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D16292C6CEE00BB28A7 /* SYScanImage.m */; };
 		84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC83B2745575E005367C6 /* UIViewExt.m */; };
 		84BDC843274BB820005367C6 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC842274BB820005367C6 /* DataManager.m */; };
 		84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BDC848274BC5AD005367C6 /* ScriptDetailModel.m */; };
@@ -734,6 +736,8 @@
 		84AC68D027E434E500F356DF /* SYNotesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNotesViewController.m; sourceTree = "<group>"; };
 		84BA9D11292B11CE00BB28A7 /* SYWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYWebsiteViewController.h; sourceTree = "<group>"; };
 		84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYWebsiteViewController.m; sourceTree = "<group>"; };
+		84BA9D15292C6CEE00BB28A7 /* SYScanImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYScanImage.h; sourceTree = "<group>"; };
+		84BA9D16292C6CEE00BB28A7 /* SYScanImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYScanImage.m; sourceTree = "<group>"; };
 		84BDC83A2745575E005367C6 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
 		84BDC83B2745575E005367C6 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
 		84BDC83D27455CA2005367C6 /* SYDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDefines.h; sourceTree = "<group>"; };
@@ -1705,6 +1709,8 @@
 				84A15E07282DEB2C002E121D /* ScriptMananger.m */,
 				84A15E09282DF0D2002E121D /* ScriptEntity.h */,
 				84A15E0A282DF0D2002E121D /* ScriptEntity.m */,
+				84BA9D15292C6CEE00BB28A7 /* SYScanImage.h */,
+				84BA9D16292C6CEE00BB28A7 /* SYScanImage.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2282,6 +2288,7 @@
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
+				84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
@@ -2465,6 +2472,7 @@
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
+				84BA9D18292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
