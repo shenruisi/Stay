@@ -64,6 +64,11 @@
           self.navigationItem.rightBarButtonItem = [self rightIcon];
      }
      
+     UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
+     appperance.backgroundColor = FCStyle.fcWhite;
+     self.navigationController.navigationBar.standardAppearance = appperance;
+     self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
+
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
 }
 

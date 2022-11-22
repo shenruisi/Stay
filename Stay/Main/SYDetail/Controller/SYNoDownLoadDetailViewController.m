@@ -69,6 +69,10 @@
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
  
     [self queryData];
+    UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
+    appperance.backgroundColor = FCStyle.fcWhite;
+    self.navigationController.navigationBar.standardAppearance = appperance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
 
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
@@ -102,13 +106,18 @@
                         [self.tableView reloadData];
                 if(self.scriptDic[@"icon_url"] != nil) {
                   
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+                    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+                    imageBox.layer.cornerRadius = 8;
+                    imageBox.layer.borderWidth = 1;
+                    imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 18, 18)];
                     [imageView sd_setImageWithURL:[NSURL URLWithString:self.scriptDic[@"icon_url"]]];
                     imageView.clipsToBounds = YES;
-                    imageView.centerX = 12;
-                    imageView.centerY = 12;
+                    imageView.centerX = 13;
+                    imageView.centerY = 13;
                    imageView.contentMode = UIViewContentModeScaleAspectFit;
-                    self.navigationItem.titleView = imageView;
+                    [imageBox addSubview:imageView];
+                    self.navigationItem.titleView = imageBox;
                     self.navigationItem.titleView.hidden = true;
                 }
             });
