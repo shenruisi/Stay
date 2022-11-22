@@ -65,11 +65,10 @@
     self.view.backgroundColor = FCStyle.popup;
 
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    
+ 
     [self queryData];
-#ifndef Mac
-//    [self createDetailView];
-#endif
+
+    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
@@ -99,6 +98,17 @@
             dispatch_async(dispatch_get_main_queue(),^{
 //                        [self.simpleLoadingView stop];
                         [self.tableView reloadData];
+                if(self.scriptDic[@"icon_url"] != nil) {
+                  
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+                    [imageView sd_setImageWithURL:[NSURL URLWithString:self.scriptDic[@"icon_url"]]];
+                    imageView.clipsToBounds = YES;
+                    imageView.centerX = 12;
+                    imageView.centerY = 12;
+                   imageView.contentMode = UIViewContentModeScaleAspectFit;
+                    self.navigationItem.titleView = imageView;
+                    self.navigationItem.titleView.hidden = true;
+                }
             });
 
                 } failBlock:^(NSError * _Nonnull error) {
@@ -876,9 +886,8 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        UIImage *image = [UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:17]]];
-
-        _rightIcon = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(shareBtnClick)];
+    
+        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:@"安装"  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
     }
     return _rightIcon;
 }
@@ -1190,22 +1199,6 @@
     return _slideLineView;
 }
 
-- (UIScrollView *)whiteTableView {
-    if(_whiteTableView == nil) {
-        _whiteTableView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width * 2, 0, self.view.width, kScreenHeight)];
-        
-    }
-    
-    return _whiteTableView;
-}
-
-- (UIScrollView *)blackTableView {
-    if(_blackTableView == nil) {
-        _blackTableView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width * 3, 0, self.view.width, kScreenHeight)];
-    }
-    
-    return _blackTableView;
-}
 
 //基础信息view
 - (UIScrollView *)createBaseInfoView {
@@ -1346,6 +1339,35 @@
     return result;
 }
 
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = scrollView.contentOffset;
+    
+    float y = offset.y;
+
+     float reload_distance = 10;
+    
+    
+    if(y >  reload_distance) {
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+             self.rightBarButtonItems = @[[self rightIcon]];
+        }
+        else{
+             self.navigationItem.rightBarButtonItem = [self rightIcon];
+        }
+        
+        self.navigationItem.titleView.hidden = false;
+    } else {
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            self.rightBarButtonItems = nil;
+        }
+        else{
+            self.navigationItem.rightBarButtonItem = nil;
+        }
+        self.navigationItem.titleView.hidden = true;
+
+    }
+}
 
 
 - (SYTextInputViewController *)sYTextInputViewController {
