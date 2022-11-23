@@ -173,7 +173,7 @@ GuidePage2ButtonFinished="完成";
 
 
 GuidePage3Text1="恭喜您成功运行脚本！";
-GuidePage3Text2="接下来！";
+GuidePage3Text2="接下来";
 GuidePage3Button="安装更多脚本";
 
 AccentColor="主题色";
@@ -190,3 +190,7 @@ needDelete="你确定要删除这个脚本吗？";
 SearchAddedUserscripts="搜索已安装脚本";
 SearchUserscripts="在Stay Fork上搜索脚本";
 UpdateAlert="你确定想要把该脚本更新到最新吗？";
+
+haveTry="试一试";
+installAndOpen="安装并打开示例网址";
+Information="信息";
