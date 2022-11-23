@@ -767,7 +767,7 @@
 		84C2B3F728757B9E002A0C1B /* SYTextInputViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTextInputViewController.h; sourceTree = "<group>"; };
 		84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTextInputViewController.m; sourceTree = "<group>"; };
 		84C2B400288D86AF002A0C1B /* SYFlashViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYFlashViewController.h; sourceTree = "<group>"; };
-		84C2B401288D86AF002A0C1B /* SYFlashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYFlashViewController.m; sourceTree = "<group>"; };
+		84C2B401288D86AF002A0C1B /* SYFlashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SYFlashViewController.m; path = ../../SYFlashViewController.m; sourceTree = "<group>"; };
 		84C2B405288D955F002A0C1B /* FirstFlashView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstFlashView.h; sourceTree = "<group>"; };
 		84C2B406288D955F002A0C1B /* FirstFlashView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstFlashView.m; sourceTree = "<group>"; };
 		84C2B40C288E30CC002A0C1B /* flash@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flash@3x.png"; sourceTree = "<group>"; };

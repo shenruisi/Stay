@@ -223,7 +223,7 @@
      }
      
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 20, self.view.width - titleLabelLeftSize - left * 2, 21)];
-     titleLabel.font = FCStyle.headlineBold;
+     titleLabel.font = FCStyle.title3Bold;
      titleLabel.textColor = FCStyle.fcBlack;
      titleLabel.textAlignment = NSTextAlignmentLeft;
      titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -1124,7 +1124,7 @@
         _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
 #endif
         
-        _actBtn.font = FCStyle.headlineBold;
+        _actBtn.font = FCStyle.subHeadlineBold;
         _actBtn.layer.cornerRadius = 15;
         _actBtn.right = self.view.width - 12;
         [_actBtn addTarget:self action:@selector(tryInstall:) forControlEvents:UIControlEventTouchUpInside];
@@ -1232,23 +1232,23 @@
      
      NSMutableArray *array = [NSMutableArray arrayWithArray: @[
         @{
-            @"name":@"INSTALLS",
+            @"name":NSLocalizedString(@"INSTALLS", @""),
             @"desc": used,
             @"color":FCStyle.grayNoteColor
         },
         @{
-            @"name":@"SCRIPT",
+            @"name":NSLocalizedString(@"SCRIPT", @""),
             @"desc":@"edit",
             @"color":FCStyle.accent,
             @"type":@"edit"
         },
         @{
-            @"name":@"AUTHOR",
+            @"name":NSLocalizedString(@"AUTHOR", @""),
             @"desc":self.scriptDic[@"author"],
             @"color":FCStyle.grayNoteColor,
         },
         @{
-            @"name":@"VERSION",
+            @"name":NSLocalizedString(@"VERSION", @""),
             @"desc":self.scriptDic[@"version"],
             @"color":FCStyle.grayNoteColor,
         }
