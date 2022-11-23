@@ -105,15 +105,15 @@
                         [self.tableView reloadData];
                 if(self.scriptDic[@"icon_url"] != nil) {
                   
-                    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+                    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
                     imageBox.layer.cornerRadius = 8;
                     imageBox.layer.borderWidth = 1;
                     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 18, 18)];
                     [imageView sd_setImageWithURL:[NSURL URLWithString:self.scriptDic[@"icon_url"]]];
                     imageView.clipsToBounds = YES;
-                    imageView.centerX = 13;
-                    imageView.centerY = 13;
+                    imageView.centerX = 15;
+                    imageView.centerY = 15;
                    imageView.contentMode = UIViewContentModeScaleAspectFit;
                     [imageBox addSubview:imageView];
                     self.navigationItem.titleView = imageBox;
@@ -257,10 +257,11 @@
     
     
     
-    UIImageView *shareImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+    UIImageView *shareImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 22, 24)];
     [shareImage setImage:[ImageHelper sfNamed:@"square.and.arrow.up" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     shareImage.right = self.view.width - 26;
     shareImage.bottom = 131;
+    shareImage.contentMode = UIViewContentModeBottom;
     [cell.contentView addSubview:shareImage];
     shareImage.userInteractionEnabled = true;
     UITapGestureRecognizer * shareTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrl)];
@@ -349,7 +350,7 @@
     NSArray *picArray = self.scriptDic[@"screenshots"];
     if(picArray != nil) {
         UILabel *previewLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 28)];
-        previewLabel.font = FCStyle.headlineBold;
+        previewLabel.font = FCStyle.title3Bold;
         previewLabel.textColor = FCStyle.fcBlack;
         previewLabel.textAlignment = NSTextAlignmentLeft;
         previewLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -901,8 +902,8 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-    
         _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Get", @"")  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
+        
     }
     return _rightIcon;
 }
@@ -1126,7 +1127,7 @@
         _actBtn.font = FCStyle.footnoteBold;
         _actBtn.layer.cornerRadius = 12.5;
         _actBtn.right = self.view.width - 12;
-        [_actBtn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
+        [_actBtn addTarget:self action:@selector(tryInstall:) forControlEvents:UIControlEventTouchUpInside];
 
     }
     return _actBtn;
