@@ -988,7 +988,7 @@
      
      if(self.script.license != NULL && self.script.license.length > 0) {
           [array addObject:@{
-               @"name":@"LICENSE",
+               @"name":NSLocalizedString(@"LICENSE", @""),
                @"desc":self.script.license,
                @"color":FCStyle.grayNoteColor,
           }];
@@ -996,7 +996,7 @@
      
      if(self.script.homepage != NULL && self.script.homepage.length > 0) {
           [array addObject:@{
-               @"name":@"HOMEPAGE",
+               @"name":NSLocalizedString(@"HOMEPAGE", @""),
                @"desc":self.script.homepage,
                @"color":FCStyle.grayNoteColor,
           }];
