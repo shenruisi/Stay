@@ -10,7 +10,7 @@
 #import "FCStyle.h"
 #import "SharedStorageManager.h"
 #import "DeviceHelper.h"
-
+#import "QuickAccess.h"
 
 @interface SYFlashViewController ()
 
