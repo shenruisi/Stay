@@ -258,7 +258,7 @@
      [cell.contentView addSubview:titleLabel];
      
      
-     UILabel *authourLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , titleLabel.bottom + 10, self.view.width - titleLabelLeftSize - left * 2 , 19)];
+     UILabel *authourLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , titleLabel.bottom , self.view.width - titleLabelLeftSize - left * 2 , 19)];
      authourLabel.font = FCStyle.subHeadline;
      authourLabel.textColor = FCStyle.grayNoteColor;
      authourLabel.textAlignment = NSTextAlignmentLeft;
@@ -882,13 +882,13 @@
 - (UIButton *)actBtn {
     if (_actBtn == nil) {
 #ifdef Mac
-        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 25)];
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 30)];
 #else
-        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 25)];
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
 #endif
         
-        _actBtn.font = FCStyle.footnoteBold;
-        _actBtn.layer.cornerRadius = 12.5;
+        _actBtn.font = FCStyle.headlineBold;
+        _actBtn.layer.cornerRadius = 15;
         _actBtn.right = self.view.width - 12;
         [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
 

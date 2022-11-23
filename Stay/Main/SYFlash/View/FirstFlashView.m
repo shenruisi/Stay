@@ -129,21 +129,38 @@ UITableViewDataSource
     UILabel *tipsLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(number2.right + 5, top, width, 22)];
 //    tipsLabel2.attributedText =
     
-    NSString *str2 = [NSString stringWithFormat: NSLocalizedString(@"GuidePage1Text5", @""),NSLocalizedString(@"GuidePage1Text11", @"")];
+    NSString *str2 = [NSString stringWithFormat: NSLocalizedString(@"GuidePage1Text5", @""),NSLocalizedString(@"GuidePage1Text11", @""),NSLocalizedString(@"GuidePage1Text19", @"")];
     
     NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:str2];
 
     NSRange range = [str2 rangeOfString:NSLocalizedString(@"GuidePage1Text11", @"")];
+    
+    NSRange range20 = [str2 rangeOfString:NSLocalizedString(@"GuidePage1Text19", @"")];
     tipsLabel2.textColor = FCStyle.fcBlack;
-    [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range];
-    tipsLabel2.attributedText = noteStr;
     tipsLabel2.font = FCStyle.body;
+    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range];
+        [noteStr addAttribute:NSFontAttributeName value:FCStyle.footnoteBold range:range];
+        
+        [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range20];
+        [noteStr addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range20];
+    } else {
+        [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range];
+        [noteStr addAttribute:NSFontAttributeName value:FCStyle.bodyBold range:range];
+        [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.accent range:range20];
+        [noteStr addAttribute:NSFontAttributeName value:FCStyle.footnoteBold range:range20];
+    }
+    tipsLabel2.attributedText = noteStr;
     [tipsLabel2 sizeToFit];
     [self addSubview:tipsLabel2];
     top = number2.bottom + 11;
     
     UIImageView *prewImage = [[UIImageView alloc] initWithFrame:CGRectMake(tipsLabel2.left, top, 332,40)];
-    [prewImage setImage: [UIImage imageNamed:@"tutorial2"]];
+    NSString *name1 = @"tutorial2";
+    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        name1 = @"tutorial1-en";
+    }
+    [prewImage setImage: [UIImage imageNamed:name1]];
     [self addSubview:prewImage];
     
     top = prewImage.bottom + 15;
@@ -175,7 +192,12 @@ UITableViewDataSource
     top = tipsLabel3.bottom + 10;
     
     UIImageView *prewImage1 = [[UIImageView alloc] initWithFrame:CGRectMake(tipsLabel2.left, top, 225,40)];
-    [prewImage1 setImage: [UIImage imageNamed:@"tutorial3"]];
+    NSString *name2 = @"tutorial3";
+    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        name2 = @"tutorial2-en";
+        prewImage1.width = 258;
+    }
+    [prewImage1 setImage: [UIImage imageNamed:name2]];
     [self addSubview:prewImage1];
     
     top = prewImage1.bottom + 10;
@@ -203,7 +225,11 @@ UITableViewDataSource
     top = tipsLabel4.bottom + 10;
     
     UIImageView *prewImage2 = [[UIImageView alloc] initWithFrame:CGRectMake(tipsLabel2.left, top, 332,129)];
-    [prewImage2 setImage: [UIImage imageNamed:@"tutorial4"]];
+    NSString *name3 = @"tutorial4";
+    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        name3 = @"tutorial3-en";
+    }
+    [prewImage2 setImage: [UIImage imageNamed:name3]];
     [self addSubview:prewImage2];
     
     top = prewImage2.bottom + 10;
@@ -239,7 +265,11 @@ UITableViewDataSource
     top = tipsLabel5.bottom + 10;
 
     UIImageView *prewImage3 = [[UIImageView alloc] initWithFrame:CGRectMake(tipsLabel2.left, top, 226,40)];
-    [prewImage3 setImage: [UIImage imageNamed:@"tutorial5"]];
+    NSString *name4 = @"tutorial5";
+    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        name4 = @"tutorial4-en";
+    }
+    [prewImage3 setImage: [UIImage imageNamed:name4]];
     [self addSubview:prewImage3];
     
     top = prewImage3.bottom + 15;
@@ -474,15 +504,17 @@ UITableViewDataSource
     [imageBox addSubview:imageView];
     [cell.contentView addSubview:imageBox];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + imageBox.right , 20, self.width / 3 - 30 - 118 , 28)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + imageBox.right , 20, self.width / 3  - 60 - 118, 21)];
     titleLabel.font = FCStyle.title3Bold;
     titleLabel.textColor = FCStyle.fcBlack;
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+    titleLabel.numberOfLines = 2;
     titleLabel.text = self.scriptDic[@"name"];
+    [titleLabel sizeToFit];
     [cell.contentView addSubview:titleLabel];
     
-    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + imageBox.right , titleLabel.bottom + 10, self.width / 3  - 30 - 118 , 19)];
+    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + imageBox.right , titleLabel.bottom, self.width / 3  - 30 - 118 , 19)];
     descLabel.font = FCStyle.subHeadline;
     descLabel.textColor = FCStyle.grayNoteColor;
     descLabel.textAlignment = NSTextAlignmentLeft;
@@ -501,14 +533,14 @@ UITableViewDataSource
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"GuidePage2Button", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.accent,
-            NSFontAttributeName : FCStyle.bodyBold
+            NSFontAttributeName : FCStyle.subHeadlineBold
         }] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"GuidePage2ButtonAdded", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : [UIColor whiteColor],
-            NSFontAttributeName : FCStyle.bodyBold
+            NSFontAttributeName : FCStyle.subHeadlineBold
         }] forState:UIControlStateNormal];
         btn.backgroundColor = FCStyle.accent;
     }
