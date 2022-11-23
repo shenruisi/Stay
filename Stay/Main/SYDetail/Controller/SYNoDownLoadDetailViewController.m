@@ -257,10 +257,11 @@
     
     
     
-    UIImageView *shareImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+    UIImageView *shareImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 22, 24)];
     [shareImage setImage:[ImageHelper sfNamed:@"square.and.arrow.up" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     shareImage.right = self.view.width - 26;
     shareImage.bottom = 131;
+    shareImage.contentMode = UIViewContentModeBottom;
     [cell.contentView addSubview:shareImage];
     shareImage.userInteractionEnabled = true;
     UITapGestureRecognizer * shareTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrl)];
@@ -349,7 +350,7 @@
     NSArray *picArray = self.scriptDic[@"screenshots"];
     if(picArray != nil) {
         UILabel *previewLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 28)];
-        previewLabel.font = FCStyle.headlineBold;
+        previewLabel.font = FCStyle.title3Bold;
         previewLabel.textColor = FCStyle.fcBlack;
         previewLabel.textAlignment = NSTextAlignmentLeft;
         previewLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -901,8 +902,8 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-    
         _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Get", @"")  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
+        
     }
     return _rightIcon;
 }

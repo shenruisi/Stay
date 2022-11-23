@@ -92,29 +92,33 @@ UITableViewDataSource
     [number1 setImage:[ImageHelper sfNamed:@"1.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number1];
 
-    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(number1.right + 5, top, width, 30)];
+    UIView *tapWebView = [[UIView alloc] initWithFrame:CGRectMake(number1.right + 5, top, width, 30)];
+    tapWebView.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
+    tapWebView.layer.cornerRadius = 10;
+    tapWebView.clipsToBounds = true;
+    
+    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 4, width, 22)];
+
 //    tipsLabel.text = NSLocalizedString(@"GuidePage1Text4", @"");
     tipsLabel.text = NSLocalizedString(@"GuidePage1Text4", @"") ;
     tipsLabel.font = FCStyle.bodyBold;
 
     tipsLabel.textColor = FCStyle.accent;
-    tipsLabel.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
     [tipsLabel sizeToFit];
-    tipsLabel.layer.cornerRadius = 10;
-    tipsLabel.clipsToBounds = true;
-    tipsLabel.height = 30;
     tipsLabel.textAlignment = NSTextAlignmentLeft;
-    tipsLabel.width = tipsLabel.width + 30;
-    UIImageView *arrowImage = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 17, 17)];
+    tapWebView.width = tipsLabel.width + 40;
+    UIImageView *arrowImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
     [arrowImage setImage:[ImageHelper sfNamed:@"arrow.up.right" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]];
-    arrowImage.left = tipsLabel.right - 20;
+    arrowImage.left = tipsLabel.right + 5;
     arrowImage.centerY = tipsLabel.centerY;
-    [self addSubview:tipsLabel];
-    [self addSubview:arrowImage];
+    [tapWebView addSubview:tipsLabel];
+    [tapWebView addSubview:arrowImage];
+    [self addSubview:tapWebView];
+
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openTutorial)];
-    tipsLabel.userInteractionEnabled = true;
-    [tipsLabel addGestureRecognizer:tapGesture];
+    tapWebView.userInteractionEnabled = true;
+    [tapWebView addGestureRecognizer:tapGesture];
     
     top =  number1.bottom + 17;
     
@@ -136,7 +140,7 @@ UITableViewDataSource
     tipsLabel2.font = FCStyle.body;
     [tipsLabel2 sizeToFit];
     [self addSubview:tipsLabel2];
-    top = number2.bottom + 17;
+    top = number2.bottom + 11;
     
     UIImageView *prewImage = [[UIImageView alloc] initWithFrame:CGRectMake(tipsLabel2.left, top, 332,40)];
     [prewImage setImage: [UIImage imageNamed:@"tutorial2"]];
@@ -331,7 +335,7 @@ UITableViewDataSource
     top += 20;
     self.tableview.top = top;
     
-    NSString *url = @"https://api.shenyin.name/stay-fork/tutorial/userscript";
+    NSString *url = @"https://stayfork.app/install/iphone";
     
 //    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
 //        url = @"https://fastclip.app/stay/welcome.json";
@@ -384,7 +388,7 @@ UITableViewDataSource
     [_runBtn  setTitle:NSLocalizedString(@"Skip", @"") forState:UIControlStateNormal];
     _runBtn.titleLabel.font = FCStyle.body;
     [_runBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
-    _runBtn.top = 10;
+    _runBtn.top = 13;
     _runBtn.right = self.width / 3 * 2 -17;
     _runBtn.hidden = true;
 
@@ -418,7 +422,7 @@ UITableViewDataSource
     
     UIButton *addMoreBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.width/2+(self.width/2-240)/2, 682, 240, 45)];
     addMoreBtn.backgroundColor = FCStyle.background;
-    addMoreBtn.layer.cornerRadius = 8;
+    addMoreBtn.layer.cornerRadius = 10;
     UILabel *btnLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, (45 - 16) / 2, 200, 16)];
     btnLabel.text = NSLocalizedString(@"GuidePage3Button", @"");
     btnLabel.font = FCStyle.bodyBold;
@@ -427,6 +431,7 @@ UITableViewDataSource
     UIImageView *accessory2 = [[UIImageView alloc] initWithFrame:CGRectMake(0, (45 - 16) / 2, 19, 19)];
     [accessory2 setImage:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:16] color:FCStyle.accent]];
     accessory2.right = 240 - 15;
+    accessory2.contentMode = UIViewContentModeBottom;
     [addMoreBtn addSubview:accessory2];
     addMoreBtn.centerX = imageView.centerX;
     addMoreBtn.top = title4.bottom + 38;
@@ -496,14 +501,14 @@ UITableViewDataSource
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"GuidePage2Button", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.accent,
-            NSFontAttributeName : FCStyle.footnoteBold
+            NSFontAttributeName : FCStyle.bodyBold
         }] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"GuidePage2ButtonAdded", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : [UIColor whiteColor],
-            NSFontAttributeName : FCStyle.footnoteBold
+            NSFontAttributeName : FCStyle.bodyBold
         }] forState:UIControlStateNormal];
         btn.backgroundColor = FCStyle.accent;
     }
