@@ -105,15 +105,15 @@
                         [self.tableView reloadData];
                 if(self.scriptDic[@"icon_url"] != nil) {
                   
-                    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+                    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
                     imageBox.layer.cornerRadius = 8;
                     imageBox.layer.borderWidth = 1;
                     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 18, 18)];
                     [imageView sd_setImageWithURL:[NSURL URLWithString:self.scriptDic[@"icon_url"]]];
                     imageView.clipsToBounds = YES;
-                    imageView.centerX = 13;
-                    imageView.centerY = 13;
+                    imageView.centerX = 15;
+                    imageView.centerY = 15;
                    imageView.contentMode = UIViewContentModeScaleAspectFit;
                     [imageBox addSubview:imageView];
                     self.navigationItem.titleView = imageBox;
@@ -1126,7 +1126,7 @@
         _actBtn.font = FCStyle.footnoteBold;
         _actBtn.layer.cornerRadius = 12.5;
         _actBtn.right = self.view.width - 12;
-        [_actBtn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
+        [_actBtn addTarget:self action:@selector(tryInstall:) forControlEvents:UIControlEventTouchUpInside];
 
     }
     return _actBtn;
