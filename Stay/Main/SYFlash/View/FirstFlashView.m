@@ -414,7 +414,7 @@ UITableViewDataSource
            
     top = self.tableview.bottom + 15;
     
-    _runBtn = [[UIButton alloc] initWithFrame:CGRectMake(left, top, 40, 22)];
+    _runBtn = [[UIButton alloc] initWithFrame:CGRectMake(left, top, 40, 30)];
     [_runBtn  setTitle:NSLocalizedString(@"Skip", @"") forState:UIControlStateNormal];
     _runBtn.titleLabel.font = FCStyle.body;
     [_runBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
