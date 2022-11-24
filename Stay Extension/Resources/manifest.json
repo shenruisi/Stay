@@ -21,19 +21,19 @@
 
     "content_scripts": [
         {
-            "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
+            "js": [ "convert2RegExp.js", "MatchPattern.js", "bootstrap.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"
         },
         {
-            "js": [ "parse-meta-line.js","parse-user-script.js","message.js", "checkUserscript.js"],
+            "js": [ "parse-meta-line.js", "parse-user-script.js", "message.js", "checkUserscript.js"],
             "matches": [ "*://*/*.js" ],
             "all_frames": false,
             "run_at": "document_end"
         },
         {
-            "js": ["fallback.js","dark.user.js"],
+            "js": ["popup/js/fallback.js", "popup/js/darkmode.js", "popup/js/chunk-vendors.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"
@@ -41,7 +41,7 @@
     ],
 
     "browser_action": {
-        "default_popup": "popup.html",
+        "default_popup": "popup/popup.html",
         "default_icon": {
             "16": "images/toolbar-icon-16.png",
             "19": "images/toolbar-icon-19.png",
