@@ -5,15 +5,14 @@
 </template>
 
 <script>
-import { reactive } from "vue"
+import { reactive, toRefs } from 'vue'
 
 export default {
   name: 'SnifferComp',
-  setup(props, {emit, expose}){
-
+  setup (props, {emit, expose}) {
     const state = reactive({
 
-    })
+    });
     return {
       ...toRefs(state)
       

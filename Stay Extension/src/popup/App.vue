@@ -1,23 +1,29 @@
 <template>
   <div class="stay-popup-warpper">
-    
+    <Header>{{title}}</Header>
+    <TabMenu></TabMenu>
   </div>
 </template>
 <script>
 import { inject, ref, reactive, watch, toRefs } from 'vue';
 import { useStore } from 'vuex';
+import Header from './components/Header.vue';
+import TabMenu from './components/TabMenu.vue';
 
 export default {
   name: 'popup',
+  components: {
+    Header,
+    TabMenu
+  },
   setup(props, { emit, attrs, slots }) {
     // 获取全局对象`
     const global = inject('global');
     const store = useStore();
-    console.log("localLanstore.state.localeLan====", store.state.localeLan);
-    console.log("global====", global, global.store);
     const localLan = global.store.state.localeLan;
     console.log("localLan====", localLan);
     const state = reactive({
+      title: 'Matched',
       locale: global.store.state.localeLan,
       browserRunUrl: ''
     })
@@ -54,7 +60,7 @@ export default {
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import "../assets/css/common.less";
 #app {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",

@@ -22,6 +22,7 @@ const path = require("path");
 //   	})
 // ];
 
+
 // 页面文件
 const pages = {};
 // 配置 popup.html 页面
@@ -40,6 +41,13 @@ module.exports = {
 	publicPath: './',
 	outputDir:"Resources/popup",
 	productionSourceMap: false,
+	chainWebpack:(config) => {
+		config.module.rule("images").set("parser", {
+			dataUrlCondition: {
+			  maxSize: 4 * 1024, // 4KiB
+			},
+		});
+	},
 	// 配置 content.js background.js
 	configureWebpack: {
 		entry: {
