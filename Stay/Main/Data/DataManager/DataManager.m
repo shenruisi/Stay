@@ -910,10 +910,14 @@
         int updateSwitch = scrpitDetail.updateSwitch ?1:0;
         sqlite3_bind_int(statement, 25, updateSwitch);
         
-        NSString *injectInto = [NSString stringWithFormat:@"%@%@",
-                                [scrpitDetail.injectInto substringToIndex:1].uppercaseString,
-                                [scrpitDetail.injectInto substringFromIndex:1]
-        ];
+        NSString *injectInto = @"Auto";
+        if (scrpitDetail.injectInto.length > 0){
+            injectInto = [NSString stringWithFormat:@"%@%@",
+                                    [scrpitDetail.injectInto substringToIndex:1].uppercaseString,
+                                    [scrpitDetail.injectInto substringFromIndex:1]
+            ];
+        }
+       
         sqlite3_bind_text(statement, 26,[injectInto UTF8String], -1,NULL);
         
         sqlite3_bind_text(statement, 27,scrpitDetail.uuid != NULL? [scrpitDetail.uuid UTF8String]:[[[NSUUID UUID] UUIDString] UTF8String], -1,NULL);

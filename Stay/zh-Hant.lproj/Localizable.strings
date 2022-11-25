@@ -194,3 +194,5 @@ UpdateAlert="你確定想要把該腳本更新到最新嗎？";
 haveTry="試一試";
 installAndOpen="安裝並打開示例網址";
 Information="信息";
+Debug="調試";
+Continue="繼續";

@@ -195,3 +195,5 @@ UpdateAlert="你确定想要把该脚本更新到最新吗？";
 haveTry="试一试";
 installAndOpen="安装并打开示例网址";
 Information="信息";
+Debug="调试";
+Continue="继续";

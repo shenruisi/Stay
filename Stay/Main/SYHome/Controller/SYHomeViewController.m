@@ -58,6 +58,8 @@
 #import "API.h"
 #import "HomeDetailCell.h"
 #import "DeviceHelper.h"
+#import "ToastDebugger.h"
+#import <Bugsnag/Bugsnag.h>
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -718,7 +720,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
+//    [Bugsnag notifyError:[NSError errorWithDomain:@"com.example" code:408 userInfo:nil]];
     [self checkShowTips];
+    [ToastDebugger log:@"checkShowTips"];
     NSLog(@"onBecomeActive-------");
     [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
@@ -730,6 +734,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].activateChanged.content = @{};
     [[SharedStorageManager shared].activateChanged flush];
+    [ToastDebugger log:@"activateChanged"];
     
     [SharedStorageManager shared].runsRecord = nil;
     for (NSString *uuid in [SharedStorageManager shared].runsRecord.contentDic.allKeys){
@@ -737,16 +742,20 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].runsRecord.contentDic = [NSMutableDictionary dictionary];
     [[SharedStorageManager shared].runsRecord flush];
+    [ToastDebugger log:@"runsRecord"];
     
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
-
+    [ToastDebugger log:@"initScrpitContent"];
+    
+    [ToastDebugger log:@"iCloudSyncIfNeeded Start"];
     [self iCloudSyncIfNeeded];
     
     [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
                    isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
              isExtension:NO];
+    [ToastDebugger log:@"API"];
 }
 
 - (void)iCloudSyncIfNeeded{
@@ -795,9 +804,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                     UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
                                     if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
                                         [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
+                                        [ToastDebugger log:@"insertUserConfigByUserScript"];
                                     }
                                     else{
-                                        [[DataManager shareManager] updateUserScriptByIcloud:changedUserscript];  
+                                        [[DataManager shareManager] updateUserScriptByIcloud:changedUserscript];
+                                        [ToastDebugger log:@"updateUserScriptByIcloud"];
                                         //TODO:
                                     }
     //                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
@@ -862,6 +873,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
+    [ToastDebugger log:[NSString stringWithFormat:@"updateScriptWhen Start %d",isSearch]];
     for(int i = 0; i < array.count; i++) {
         UserScript *scrpit = array[i];
         if(!isSearch && !scrpit.updateSwitch) {
@@ -975,6 +987,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }];
         }
     }
+    
+    [ToastDebugger log:@"updateScriptWhen End"];
 }
 
 - (void)refreshScript{
