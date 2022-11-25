@@ -1277,7 +1277,7 @@
     NSString *runAt = self.scriptDic[@"run_at"];
     if(runAt != NULL && runAt.length > 0) {
          [array addObject:@{
-              @"name":@"RUNAT",
+              @"name":NSLocalizedString(@"RUNAT", @""),
               @"desc":runAt,
               @"color":FCStyle.grayNoteColor,
          }];
@@ -1288,7 +1288,7 @@
     
     if(license != NULL && license.length > 0) {
          [array addObject:@{
-              @"name":@"LICENSE",
+              @"name":NSLocalizedString(@"LICENSE",@""),
               @"desc":license,
               @"color":FCStyle.grayNoteColor,
          }];
@@ -1297,7 +1297,7 @@
     NSString *homepage = self.scriptDic[@"homepage"];
     if(homepage != NULL && homepage.length > 0) {
          [array addObject:@{
-              @"name":@"HOMEPAGE",
+              @"name":NSLocalizedString(@"HOMEPAGE",@""),
               @"desc":homepage,
               @"color":FCStyle.grayNoteColor,
          }];
