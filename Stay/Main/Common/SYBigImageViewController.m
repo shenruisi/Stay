@@ -26,7 +26,7 @@
     for(int i = 0; i < self.imageList.count; i++) {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 60), (self.view.width - 60) * 2.16)];
         [imageView sd_setImageWithURL:self.imageList[i]];
-        imageView.layer.cornerRadius = 15;
+        imageView.layer.cornerRadius = 20;
         imageView.layer.borderWidth = 1;
         imageView.layer.borderColor = FCStyle.borderColor.CGColor;
         imageView.layer.masksToBounds = YES;
