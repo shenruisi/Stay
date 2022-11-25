@@ -626,7 +626,10 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                animated:YES completion:^{}];
             
 #else
-            [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
+            
+            SYFlashViewController *cer = [[SYFlashViewController alloc] init];
+            cer.modalPresentationStyle = 0;
+            [self presentViewController:cer animated:YES completion:nil];
 #endif
 
         }

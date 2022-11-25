@@ -20,6 +20,7 @@
 #import "ImageHelper.h"
 #import <WebKit/WebKit.h>
 #import "SYScanImage.h"
+#import "SYBigImageViewController.h"
 
 
 @interface FirstFlashView()<
@@ -656,6 +657,11 @@ UITableViewDataSource
 
 -(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
     NSLog(@"点击图片");
+    
+    SYBigImageViewController *cer = [[SYBigImageViewController alloc] init];
+    
+    
+    
     UIImageView *clickedImageView = (UIImageView *)tap.view;
     [SYScanImage scanBigImageWithImageView:clickedImageView];
 }

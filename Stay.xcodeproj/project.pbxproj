@@ -319,6 +319,8 @@
 		8457A84B280276020010A387 /* webback@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8457A84A280276010010A387 /* webback@3x.png */; };
 		848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */; };
 		848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B8279A5BA000D55FFD /* SYVersionUtils.m */; };
+		84932DDD292F50A9004A1EEC /* SYBigImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84932DDC292F50A9004A1EEC /* SYBigImageViewController.m */; };
+		84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84932DDC292F50A9004A1EEC /* SYBigImageViewController.m */; };
 		8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB527592B850075ABD5 /* more-selected@3x.png */; };
 		8496DFB827592C260075ABD5 /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB727592C260075ABD5 /* more@3x.png */; };
 		8496DFBA275935B30075ABD5 /* add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8496DFB9275935B30075ABD5 /* add@3x.png */; };
@@ -712,6 +714,8 @@
 		848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNetworkUtils.m; sourceTree = "<group>"; };
 		848A48B7279A5BA000D55FFD /* SYVersionUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVersionUtils.h; sourceTree = "<group>"; };
 		848A48B8279A5BA000D55FFD /* SYVersionUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYVersionUtils.m; sourceTree = "<group>"; };
+		84932DDB292F50A9004A1EEC /* SYBigImageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYBigImageViewController.h; sourceTree = "<group>"; };
+		84932DDC292F50A9004A1EEC /* SYBigImageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYBigImageViewController.m; sourceTree = "<group>"; };
 		8496DFB527592B850075ABD5 /* more-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more-selected@3x.png"; sourceTree = "<group>"; };
 		8496DFB727592C260075ABD5 /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
 		8496DFB9275935B30075ABD5 /* add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@3x.png"; sourceTree = "<group>"; };
@@ -1711,6 +1715,8 @@
 				84A15E0A282DF0D2002E121D /* ScriptEntity.m */,
 				84BA9D15292C6CEE00BB28A7 /* SYScanImage.h */,
 				84BA9D16292C6CEE00BB28A7 /* SYScanImage.m */,
+				84932DDB292F50A9004A1EEC /* SYBigImageViewController.h */,
+				84932DDC292F50A9004A1EEC /* SYBigImageViewController.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2318,6 +2324,7 @@
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
 				84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */,
+				84932DDD292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
 				58724A2F28FE4D0900A894D8 /* QuickAccess.m in Sources */,
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
@@ -2383,6 +2390,7 @@
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
+				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
 				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
