@@ -65,7 +65,12 @@
 
 - (FirstFlashView *)firstView {
     if (_firstView == nil) {
-        _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, 40, self.view.width * 3,  self.view.height)];
+        CGFloat top = 40;
+        if(self.isMore) {
+            top = 0;
+        }
+        
+        _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, top, self.view.width * 3,  self.view.height)];
         if (FCDeviceTypeIPad == DeviceHelper.type){
             _firstView.width =704 * 3;
         }

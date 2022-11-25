@@ -165,11 +165,6 @@
     [appperance setShadowColor:FCStyle.fcWhite];
     self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
     
-    UINavigationBarAppearance *stanardappperance = [[UINavigationBarAppearance alloc]init];
-    stanardappperance.backgroundColor = FCStyle.fcWhite;
-    self.navigationController.navigationBar.standardAppearance = stanardappperance;
-
-    
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
@@ -1413,24 +1408,6 @@
         self.navigationItem.titleView.hidden = true;
 
     }
-    
-    
-
-    
-    UIColor *backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-
-    if(y > -80) {
-
-
-        [self.navigationController.navigationBar.standardAppearance setBackgroundColor: [backgroundColor colorWithAlphaComponent:1 * y / 100.0f]];
-        [self.navigationController.navigationBar.scrollEdgeAppearance setBackgroundColor:[backgroundColor colorWithAlphaComponent:1 * y / 100.0f]];
-    } else {
-        [self.navigationController.navigationBar.standardAppearance setBackgroundColor: FCStyle.fcWhite];
-        [self.navigationController.navigationBar.scrollEdgeAppearance setBackgroundColor:FCStyle.fcWhite];
-    }
-
-    
-    
 }
 
 
