@@ -135,7 +135,7 @@ UITableViewDataSource
     
     top =  number1.bottom + 17;
     
-    UIImageView *number2 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
+    UIImageView *number2 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top - 2, 24, 24)];
     [number2 setImage:[ImageHelper sfNamed:@"2.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number2];
     
@@ -178,7 +178,7 @@ UITableViewDataSource
     
     top = prewImage.bottom + 15;
     
-    UIImageView *number3 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
+    UIImageView *number3 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top - 2, 24, 24)];
     [number3 setImage:[ImageHelper sfNamed:@"3.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number3];
     
@@ -215,7 +215,7 @@ UITableViewDataSource
     
     top = prewImage1.bottom + 10;
 
-    UIImageView *number4 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
+    UIImageView *number4 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top - 2, 24, 24)];
     [number4 setImage:[ImageHelper sfNamed:@"4.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number4];
     
@@ -247,7 +247,7 @@ UITableViewDataSource
     
     top = prewImage2.bottom + 10;
 
-    UIImageView *number5 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
+    UIImageView *number5 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top - 2, 24, 24)];
     [number5 setImage:[ImageHelper sfNamed:@"5.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number5];
     
@@ -287,7 +287,7 @@ UITableViewDataSource
     
     top = prewImage3.bottom + 15;
     
-    UIImageView *number6 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
+    UIImageView *number6 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top - 2, 24, 24)];
     [number6 setImage:[ImageHelper sfNamed:@"6.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number6];
     
@@ -311,7 +311,7 @@ UITableViewDataSource
     
     top = tipsLabel6.bottom + 10;
 
-    UIImageView *number7 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24, 24)];
+    UIImageView *number7 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24 - 2, 24)];
     [number7 setImage:[ImageHelper sfNamed:@"7.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number7];
     
