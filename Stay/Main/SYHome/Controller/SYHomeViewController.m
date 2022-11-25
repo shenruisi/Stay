@@ -884,6 +884,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             
         if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
+                NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                 [set addCharactersInString:@"#"];
                 if(responseObject != nil) {
                     UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                     if(userScript.version != NULL) {
@@ -899,7 +901,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                     userScript.injectInto = scrpit.injectInto;
                                     userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                     if(scrpit.downloadUrl != NULL ) {
-                                        NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                                        NSURL *url = [NSURL URLWithString:[scrpit.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                                         if([url.host isEqualToString:@"res.stayfork.app"]) {
                                             userScript.downloadUrl = scrpit.downloadUrl;
                                             userScript.updateUrl = scrpit.downloadUrl;
@@ -913,6 +915,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 }
                             } else {
                                 [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                                    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                                     [set addCharactersInString:@"#"];
                                     if(responseObject != nil) {
                                         UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                                         userScript.uuid = scrpit.uuid;
@@ -923,7 +927,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                         userScript.injectInto = scrpit.injectInto;
                                         userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                         if(scrpit.downloadUrl != NULL ) {
-                                            NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                                            NSURL *url = [NSURL URLWithString:[scrpit.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                                             if([url.host isEqualToString:@"res.stayfork.app"]) {
                                                 userScript.downloadUrl = scrpit.downloadUrl;
                                                 userScript.updateUrl = scrpit.downloadUrl;
@@ -950,6 +954,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }];
         } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                 [set addCharactersInString:@"#"];
                 if(responseObject != nil) {
                     UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                     if(userScript.version != NULL) {
@@ -966,7 +972,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 userScript.downloadUrl = scrpit.downloadUrl;
                             }
 
-                            NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                            NSURL *url = [NSURL URLWithString:[scrpit.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                             if([url.host isEqualToString:@"res.stayfork.app"]) {
                                 userScript.downloadUrl = scrpit.downloadUrl;
                                 userScript.updateUrl = scrpit.downloadUrl;
@@ -1371,7 +1377,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
     
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSURL *url = [NSURL URLWithString:downloadUrl];
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        NSURL *url = [NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
         if([url.host isEqualToString:@"res.stayfork.app"]) {
             [self.loadingSlideController show];
             UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:scriptContent];
@@ -1407,7 +1415,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:userScript.uuid];
 
             if(tmpScript.downloadUrl != NULL ) {
-                NSURL *url = [NSURL URLWithString:tmpScript.downloadUrl];
+                NSURL *url = [NSURL URLWithString:[tmpScript.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                 if([url.host isEqualToString:@"res.stayfork.app"]) {
                     userScript.downloadUrl = tmpScript.downloadUrl;
                     userScript.updateUrl = tmpScript.downloadUrl;

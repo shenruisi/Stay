@@ -142,7 +142,9 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
         
                     
                     if(self.downloadUrl != NULL ) {
-                        NSURL *url = [NSURL URLWithString:self.downloadUrl];
+                        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                         [set addCharactersInString:@"#"];
+                        NSURL *url = [NSURL URLWithString:[self.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                         if([url.host isEqualToString:@"res.stayfork.app"]) {
                             userScript.downloadUrl = self.downloadUrl;
                             userScript.updateUrl = self.downloadUrl;
@@ -243,7 +245,9 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
                 }
             
                 if(tmpScript.downloadUrl != NULL ) {
-                    NSURL *url = [NSURL URLWithString:tmpScript.downloadUrl];
+                    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                     [set addCharactersInString:@"#"];
+                    NSURL *url = [NSURL URLWithString:[tmpScript.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                     if([url.host isEqualToString:@"res.stayfork.app"]) {
                         userScript.downloadUrl = tmpScript.downloadUrl;
                         userScript.updateUrl = tmpScript.downloadUrl;
