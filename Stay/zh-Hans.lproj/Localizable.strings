@@ -161,6 +161,8 @@ GuidePage1Text18="下一步";
 
 
 GuidePage1Button="去激活";
+GuidePage1ButtonFeedBack="无法激活?联系我们";
+
 Next="下一步";
 Skip="跳过";
 GuidePage2Text2="步骤 2/2";

@@ -59,7 +59,7 @@
 #import "HomeDetailCell.h"
 #import "DeviceHelper.h"
 #import "ToastDebugger.h"
-#import <Bugsnag/Bugsnag.h>
+//#import <Bugsnag/Bugsnag.h>
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -403,7 +403,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #ifndef Mac
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
-        [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
+        SYFlashViewController *cer = [[SYFlashViewController alloc] init];
+        cer.modalPresentationStyle = 0;
+        [self presentViewController:cer animated:YES completion:nil];
         [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
     }
 #endif

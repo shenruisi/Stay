@@ -20,7 +20,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     CGFloat imageleft = 30;
+    self.view.backgroundColor = FCStyle.fcWhite;
 
+        
     for(int i = 0; i < self.imageList.count; i++) {
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 60), (self.view.width - 60) * 2)];
         [imageView sd_setImageWithURL:self.imageList[i]];
@@ -28,19 +30,56 @@
         imageView.layer.borderWidth = 1;
         imageView.layer.borderColor = FCStyle.borderColor.CGColor;
         imageView.layer.masksToBounds = YES;
+        imageView.clipsToBounds = YES;
+
         imageView.left = imageleft;
+        
+        imageView.centerY = self.view.height / 2 + 20;
+    
         [self.scrollView addSubview:imageView];
+        
         imageleft += 15 + self.view.width - 60;
     }
+    
+    self.scrollView.contentSize = CGSizeMake(imageleft, (self.view.width - 60) * 2);
+
+    
+    [self.view addSubview:self.scrollView];
+    
+    
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
+    [btn  setTitle:NSLocalizedString(@"GuidePage2ButtonFinished", @"") forState:UIControlStateNormal];
+    btn.titleLabel.font = FCStyle.body;
+    [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(closeFlash) forControlEvents:UIControlEventTouchUpInside];
+    btn.top = 60;
+    btn.right = self.view.width - 26;
+
+    [self.view addSubview:btn];
 }
 
+- (void)closeFlash {
+    [self dismissViewControllerAnimated:YES completion:nil];
+#ifdef Mac
+        if ([QuickAccess primaryController] != nil){
+            [QuickAccess primaryController].selectedIndex = 2;
+        }
+#else
+        if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
+            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 1;
+        }
+#endif
+//    nav.tabBarController.selectedIndex = 1;
+}
+
+
 - (UIScrollView *)scrollView {
-    if(_scrollView != nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,60 +(self.view.width - 60)* self.imageList.count, (self.view.width - 60)* 2)];
+    if(_scrollView == nil) {
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,self.view.width - 60, (self.view.width - 60)* 2)];
         _scrollView.showsHorizontalScrollIndicator = false;
         _scrollView.pagingEnabled = true;
-        
-        
+        _scrollView.clipsToBounds = NO;
+                
     }
     return _scrollView;
 }

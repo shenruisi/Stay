@@ -28,6 +28,7 @@
 #import "API.h"
 #import "SYWebsiteViewController.h"
 #import "SYScanImage.h"
+#import "SYBigImageViewController.h"
 
 
 #ifdef Mac
@@ -1217,8 +1218,17 @@
 
 -(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
     NSLog(@"点击图片");
-    UIImageView *clickedImageView = (UIImageView *)tap.view;
-    [SYScanImage scanBigImageWithImageView:clickedImageView];
+    
+    SYBigImageViewController *cer = [[SYBigImageViewController alloc] init];
+    cer.modalPresentationStyle = 0;
+    cer.imageList = self.scriptDic[@"screenshots"];
+    
+    [self.navigationController presentViewController:cer animated:true completion:^{
+        
+    }];
+    
+//    UIImageView *clickedImageView = (UIImageView *)tap.view;
+//    [SYScanImage scanBigImageWithImageView:clickedImageView];
 }
 
 

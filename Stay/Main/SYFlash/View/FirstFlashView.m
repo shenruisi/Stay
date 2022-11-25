@@ -22,7 +22,6 @@
 #import "SYScanImage.h"
 #import "SYBigImageViewController.h"
 
-
 @interface FirstFlashView()<
 UITableViewDelegate,
 UITableViewDataSource
@@ -50,7 +49,20 @@ UITableViewDataSource
     title.text = NSLocalizedString(@"GuidePage1Text1", @"");
     title.font = FCStyle.headlineBold;
     title.textColor = FCStyle.fcBlack;
+    
     [self addSubview:title];
+    
+    
+    UIButton *feedbackBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 44)];
+    [feedbackBtn  setTitle:NSLocalizedString(@"GuidePage1ButtonFeedBack", @"") forState:UIControlStateNormal];
+    feedbackBtn.titleLabel.font = FCStyle.body;
+    feedbackBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    [feedbackBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+    [feedbackBtn addTarget:self action:@selector(feedback) forControlEvents:UIControlEventTouchUpInside];
+    feedbackBtn.top = top;
+    feedbackBtn.right = self.width / 3 - 26;
+
+    [self addSubview:feedbackBtn];
     
     top = title.bottom + 5;
     UILabel *stepLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top, width, 20)];
@@ -658,14 +670,18 @@ UITableViewDataSource
 -(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
     NSLog(@"点击图片");
     
-    SYBigImageViewController *cer = [[SYBigImageViewController alloc] init];
-    
-    
-    
     UIImageView *clickedImageView = (UIImageView *)tap.view;
     [SYScanImage scanBigImageWithImageView:clickedImageView];
 }
 
+
+- (void)feedback {
+    NSString *url = @"mailto:feedback@fastclip.app?subject=Feedback - TUTORIAL_SUBJECT";
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]
+                                       options:@{} completionHandler:^(BOOL succeed){}];
+    
+    
+}
 
 - (UITableView *)tableview {
     if (_tableview == nil) {
