@@ -311,7 +311,7 @@ UITableViewDataSource
     
     top = tipsLabel6.bottom + 10;
 
-    UIImageView *number7 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, 24 - 2, 24)];
+    UIImageView *number7 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top - 2, 24, 24)];
     [number7 setImage:[ImageHelper sfNamed:@"7.circle" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
     [self addSubview:number7];
     
