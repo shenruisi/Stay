@@ -1,7 +1,7 @@
 <template>
   <div class="stay-popup-warpper">
-    <!-- hello -->
-    <Header>{{"Matched"}}</Header>
+    hello Stay
+    <!-- <Header>{{"Matched"}}</Header> -->
     <!-- <TabMenu :tabId="tabId" @setTabName="setTabName"></TabMenu> -->
   </div>
 </template>
@@ -15,7 +15,7 @@ import Header from './components/Header.vue';
 export default {
   name: 'popup',
   components: {
-    Header
+    // Header
     // TabMenu
   },
   setup(props, { emit, attrs, slots }) {
