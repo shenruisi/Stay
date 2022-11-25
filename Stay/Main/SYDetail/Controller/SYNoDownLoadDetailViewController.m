@@ -382,6 +382,7 @@
             [imageScrollView addSubview:imageView];
             imageleft += 27 + 250;
             imageScrollView.contentSize = CGSizeMake(imageleft + 15, 540);
+            
             UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
             [imageView addGestureRecognizer:tapGestureRecognizer1];
             //让UIImageView和它的父类开启用户交互属性
@@ -390,7 +391,7 @@
         
         imageScrollView.clipsToBounds = NO;
         imageScrollView.pagingEnabled = true;        
-        
+        imageScrollView.width = imageleft / picArray.count - 30;
         [cell.contentView addSubview:imageScrollView];
         
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
