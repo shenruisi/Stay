@@ -56,11 +56,16 @@ UITableViewDataSource
     UIButton *feedbackBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 44)];
     [feedbackBtn  setTitle:NSLocalizedString(@"GuidePage1ButtonFeedBack", @"") forState:UIControlStateNormal];
     feedbackBtn.titleLabel.font = FCStyle.body;
+    feedbackBtn.titleLabel.textAlignment = NSTextAlignmentRight;
     feedbackBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [feedbackBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     [feedbackBtn addTarget:self action:@selector(feedback) forControlEvents:UIControlEventTouchUpInside];
     feedbackBtn.top = top;
-    feedbackBtn.right = self.width / 3 - 26;
+    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        feedbackBtn.width = 150;
+    }
+    feedbackBtn.right = self.width / 3 - 11;
+
 
     [self addSubview:feedbackBtn];
     
