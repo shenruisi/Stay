@@ -196,3 +196,14 @@ installAndOpen="Install & Open the sample url";
 Information="Information";
 Debug="Debug";
 Continue="Continue";
+
+GuidePage1ButtonFeedBack="Trouble enabling? Contact Us";
+
+INSTALLS="INSTALLS";
+RUNS="RUNS";
+SCRIPT="SCRIPT";
+AUTHOR="AUTHOR";
+VERSION="VERSION";
+RUNAT="RUN AT";
+LICENSE="LICENSE";
+HOMEPAGE="HOMEPAGE";

@@ -196,3 +196,13 @@ installAndOpen="安裝並打開示例網址";
 Information="信息";
 Debug="調試";
 Continue="繼續";
+GuidePage1ButtonFeedBack="無法激活?聯繫我們";
+
+INSTALLS="安裝次數";
+RUNS="運行次數";
+SCRIPT="腳本";
+AUTHOR="作者";
+VERSION="版本";
+RUNAT="運行時機";
+LICENSE="許可證";
+HOMEPAGE="主頁";

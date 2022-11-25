@@ -199,3 +199,12 @@ installAndOpen="安装并打开示例网址";
 Information="信息";
 Debug="调试";
 Continue="继续";
+
+INSTALLS="安装次数";
+RUNS="运行次数";
+SCRIPT="脚本";
+AUTHOR="作者";
+VERSION="版本";
+RUNAT="运行时机";
+LICENSE="许可证";
+HOMEPAGE="主页";
