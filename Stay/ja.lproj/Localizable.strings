@@ -194,3 +194,5 @@ UpdateAlert="Are you sure you want to update this userscript to the latest";
 haveTry="Have a try";
 installAndOpen="Install & Open the sample url";
 Information="Information";
+Debug="Debug";
+Continue="Continue";
