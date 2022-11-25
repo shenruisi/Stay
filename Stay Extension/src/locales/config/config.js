@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  "en_US": {
+  "en": {
     "matched_scripts_tab": "Matched",
     "console_tab": "Console",
     "darkmode_tab": "Dark Mode",
@@ -18,9 +18,10 @@ export default {
     "darkmode_on": "On",
     "darkmode_enabled":"Enabled for current website",
     "darkmode_disabled": "Disabled for current website",
-    "download_text":"User script manager"
+    "download_text":"User script manager",
+    "downloader_tab": "Downloader",
   },
-  "zh_CN": {
+  "zh": {
     "matched_scripts_tab": "已匹配脚本",
     "console_tab": "控制台",
     "darkmode_tab": "暗黑模式",
@@ -38,7 +39,8 @@ export default {
     "darkmode_on": "开",
     "darkmode_enabled": "启用当前网站",
     "darkmode_disabled": "禁用当前网站",
-    "download_text":"用户脚本管理"
+    "download_text":"用户脚本管理",
+    "downloader_tab": "下载器",
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -58,7 +60,8 @@ export default {
     "darkmode_on":"開",
     "darkmode_enabled": "啟用當前網站",
     "darkmode_disabled": "禁用當前網站",
-    "download_text":"用戶腳本管理"
+    "download_text":"用戶腳本管理",
+    "downloader_tab": "下載器",
   }
 }
 /* eslint-disable */

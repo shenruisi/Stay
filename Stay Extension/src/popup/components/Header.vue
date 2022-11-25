@@ -13,16 +13,11 @@ import { reactive, toRefs } from 'vue'
 export default {
   name: 'headerComp',
   setup (props, {emit, expose}) {
-    const state = reactive({
-
-    });
-
     const clickStayAction = () => {
       window.open('stay://');
     }
     
     return {
-      ...toRefs(state),
       clickStayAction
     };
   }

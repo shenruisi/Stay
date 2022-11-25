@@ -1,32 +1,42 @@
 <template>
   <div class="stay-popup-warpper">
-    <Header>{{title}}</Header>
-    <TabMenu></TabMenu>
+    <!-- hello -->
+    <Header>{{"Matched"}}</Header>
+    <!-- <TabMenu :tabId="tabId" @setTabName="setTabName"></TabMenu> -->
   </div>
 </template>
 <script>
 import { inject, ref, reactive, watch, toRefs } from 'vue';
 import { useStore } from 'vuex';
 import Header from './components/Header.vue';
-import TabMenu from './components/TabMenu.vue';
+// import TabMenu from './components/TabMenu.vue';
+// import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'popup',
   components: {
-    Header,
-    TabMenu
+    Header
+    // TabMenu
   },
   setup(props, { emit, attrs, slots }) {
+    // const { t, tm } = useI18n();
     // 获取全局对象`
     const global = inject('global');
     const store = useStore();
     const localLan = global.store.state.localeLan;
     console.log("localLan====", localLan);
+    // console.log("localLan====", t('matched_scripts_tab'));
     const state = reactive({
-      title: 'Matched',
+      tabName: 'matched_scripts_tab',
+      tabId: 1,
       locale: global.store.state.localeLan,
       browserRunUrl: ''
     })
+
+    const setTabName = (tabId, tabName) => {
+      state.tabName = tabName;
+      state.tabId = tabId;
+    }
 
     /**
      * 获取当前网页可匹配的脚本
@@ -54,8 +64,10 @@ export default {
     fetchMatchedScriptList();
 
     return {
-      ...toRefs(state)
-      
+      ...toRefs(state),
+      // t,
+      // tm,
+      setTabName
     };
   }
 };
