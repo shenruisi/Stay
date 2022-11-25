@@ -52,7 +52,7 @@
     btn.titleLabel.font = FCStyle.body;
     [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(closeFlash) forControlEvents:UIControlEventTouchUpInside];
-    btn.top = 60;
+    btn.top = 50;
     btn.right = self.view.width - 26;
 
     [self.view addSubview:btn];
