@@ -773,8 +773,6 @@
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showNotes:)];
     [notesView addGestureRecognizer:tapGesture];
-    
-    
     UILabel *note = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30,19)];
     note.text = notes[0];
     note.textColor = FCStyle.fcBlack;
