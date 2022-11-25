@@ -70,15 +70,7 @@
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
  
     [self queryData];
-    UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
-    appperance.backgroundColor = FCStyle.fcWhite;
-    [appperance setShadowColor:FCStyle.fcWhite];
-    self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
-    
-    UINavigationBarAppearance *stanardappperance = [[UINavigationBarAppearance alloc]init];
-    stanardappperance.backgroundColor = FCStyle.fcWhite;
-    self.navigationController.navigationBar.standardAppearance = stanardappperance;
-
+  
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
@@ -167,11 +159,28 @@
     if(_saveSuceess) {
         [self.navigationController popViewControllerAnimated:TRUE];
     }
+    
+    UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
+    appperance.backgroundColor = FCStyle.fcWhite;
+    [appperance setShadowColor:FCStyle.fcWhite];
+    self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
+    
+    UINavigationBarAppearance *stanardappperance = [[UINavigationBarAppearance alloc]init];
+    stanardappperance.backgroundColor = FCStyle.fcWhite;
+    self.navigationController.navigationBar.standardAppearance = stanardappperance;
+
+    
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
+    
+    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+    [appearance configureWithOpaqueBackground];
+    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    self.navigationController.navigationBar.standardAppearance = appearance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 
@@ -369,7 +378,7 @@
         for(int i = 0; i < picArray.count; i++) {
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
             [imageView sd_setImageWithURL:picArray[i]];
-            imageView.layer.cornerRadius = 30;
+            imageView.layer.cornerRadius = 25;
             imageView.layer.borderWidth = 1;
             imageView.layer.borderColor = FCStyle.borderColor.CGColor;
             imageView.userInteractionEnabled = false;
@@ -383,6 +392,9 @@
             //让UIImageView和它的父类开启用户交互属性
             [imageView setUserInteractionEnabled:YES];
         }
+        
+        imageScrollView.clipsToBounds = NO;
+        imageScrollView.pagingEnabled = true;        
         
         [cell.contentView addSubview:imageScrollView];
         

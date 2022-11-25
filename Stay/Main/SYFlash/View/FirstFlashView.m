@@ -580,7 +580,7 @@ UITableViewDataSource
         for(int i = 0; i < picArray.count; i++) {
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
             [imageView sd_setImageWithURL:picArray[i]];
-            imageView.layer.cornerRadius = 30;
+            imageView.layer.cornerRadius = 25;
             imageView.layer.borderWidth = 1;
             imageView.layer.borderColor = FCStyle.borderColor.CGColor;
             imageView.layer.masksToBounds = YES;
@@ -594,6 +594,9 @@ UITableViewDataSource
             //让UIImageView和它的父类开启用户交互属性
             [imageView setUserInteractionEnabled:YES];
         }
+        
+        scrollView.clipsToBounds = NO;
+        scrollView.pagingEnabled = true;
     }
     
     [cell.contentView addSubview:scrollView];
