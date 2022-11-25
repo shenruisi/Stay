@@ -676,8 +676,10 @@ UITableViewDataSource
 
 
 - (void)feedback {
-    NSString *url = @"mailto:feedback@fastclip.app?subject=Feedback - TUTORIAL_SUBJECT";
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]
+    NSString *url = @"mailto:feedback@fastclip.app?subject=Feedback-TUTORIAL_SUBJECT";
+    
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[url  stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
                                        options:@{} completionHandler:^(BOOL succeed){}];
     
     

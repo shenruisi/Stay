@@ -24,7 +24,7 @@
 
         
     for(int i = 0; i < self.imageList.count; i++) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 60), (self.view.width - 60) * 2)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, (self.view.width - 60), (self.view.width - 60) * 2.16)];
         [imageView sd_setImageWithURL:self.imageList[i]];
         imageView.layer.cornerRadius = 15;
         imageView.layer.borderWidth = 1;
@@ -41,7 +41,7 @@
         imageleft += 15 + self.view.width - 60;
     }
     
-    self.scrollView.contentSize = CGSizeMake(imageleft + 15, (self.view.width - 60) * 2);
+    self.scrollView.contentSize = CGSizeMake(imageleft + 15, (self.view.width - 60) * 2.16);
     self.scrollView.width = (imageleft + 15) / self.imageList.count - 45 / self.imageList.count;
     
     [self.view addSubview:self.scrollView];
@@ -60,22 +60,12 @@
 
 - (void)closeFlash {
     [self dismissViewControllerAnimated:YES completion:nil];
-#ifdef Mac
-        if ([QuickAccess primaryController] != nil){
-            [QuickAccess primaryController].selectedIndex = 2;
-        }
-#else
-        if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 1;
-        }
-#endif
-//    nav.tabBarController.selectedIndex = 1;
 }
 
 
 - (UIScrollView *)scrollView {
     if(_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,self.view.width - 30, (self.view.width - 60)* 2)];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,self.view.width - 30, (self.view.width - 60)* 2.16)];
         _scrollView.showsHorizontalScrollIndicator = false;
         _scrollView.pagingEnabled = true;
         _scrollView.clipsToBounds = NO;
