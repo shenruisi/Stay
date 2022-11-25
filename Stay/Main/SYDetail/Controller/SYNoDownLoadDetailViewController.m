@@ -72,6 +72,7 @@
     [self queryData];
     UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
     appperance.backgroundColor = FCStyle.fcWhite;
+    [appperance setShadowColor:FCStyle.fcWhite];
     self.navigationController.navigationBar.standardAppearance = appperance;
     self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
 
