@@ -41,8 +41,8 @@
         imageleft += 15 + self.view.width - 60;
     }
     
-    self.scrollView.contentSize = CGSizeMake(imageleft, (self.view.width - 60) * 2);
-
+    self.scrollView.contentSize = CGSizeMake(imageleft + 15, (self.view.width - 60) * 2);
+    self.scrollView.width = (imageleft + 15) / self.imageList.count - 45 / self.imageList.count;
     
     [self.view addSubview:self.scrollView];
     
@@ -75,7 +75,7 @@
 
 - (UIScrollView *)scrollView {
     if(_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,self.view.width - 60, (self.view.width - 60)* 2)];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0,self.view.width - 30, (self.view.width - 60)* 2)];
         _scrollView.showsHorizontalScrollIndicator = false;
         _scrollView.pagingEnabled = true;
         _scrollView.clipsToBounds = NO;
