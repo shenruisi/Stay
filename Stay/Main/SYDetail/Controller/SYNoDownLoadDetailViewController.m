@@ -73,9 +73,7 @@
     UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
     appperance.backgroundColor = FCStyle.fcWhite;
     [appperance setShadowColor:FCStyle.fcWhite];
-    self.navigationController.navigationBar.standardAppearance = appperance;
     self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
-
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
@@ -1404,17 +1402,17 @@
     
 
     
-    UIColor *backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-
-    if(y > -80) {
-    
-    
-        [self.navigationController.navigationBar.standardAppearance setBackgroundColor: [backgroundColor colorWithAlphaComponent:1 * y / 100.0f]];
-        [self.navigationController.navigationBar.scrollEdgeAppearance setBackgroundColor:[backgroundColor colorWithAlphaComponent:1 * y / 100.0f]];
-    } else {
-        [self.navigationController.navigationBar.standardAppearance setBackgroundColor: FCStyle.fcWhite];
-        [self.navigationController.navigationBar.scrollEdgeAppearance setBackgroundColor:FCStyle.fcWhite];
-    }
+//    UIColor *backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+//
+//    if(y > -80) {
+//
+//
+//        [self.navigationController.navigationBar.standardAppearance setBackgroundColor: [backgroundColor colorWithAlphaComponent:1 * y / 100.0f]];
+//        [self.navigationController.navigationBar.scrollEdgeAppearance setBackgroundColor:[backgroundColor colorWithAlphaComponent:1 * y / 100.0f]];
+//    } else {
+//        [self.navigationController.navigationBar.standardAppearance setBackgroundColor: FCStyle.fcWhite];
+//        [self.navigationController.navigationBar.scrollEdgeAppearance setBackgroundColor:FCStyle.fcWhite];
+//    }
 
     
     
