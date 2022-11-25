@@ -206,3 +206,5 @@ VERSION="版本";
 RUNAT="運行時機";
 LICENSE="許可證";
 HOMEPAGE="主頁";
+
+FeedbackEnabling="問題(無法激活Stay)";

@@ -208,3 +208,5 @@ VERSION="版本";
 RUNAT="运行时机";
 LICENSE="许可证";
 HOMEPAGE="主页";
+
+FeedbackEnabling="问题(无法激活Stay)";
