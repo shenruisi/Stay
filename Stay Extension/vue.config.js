@@ -1,10 +1,8 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
-
+const { VueLoaderPlugin } = require('vue-loader')
 // 复制文件到指定目录
 // const copyFiles = [
-
-	
 //   	{
 //     	from: path.resolve("src/assets"),
 //     	to: path.resolve("dist/assets")
@@ -16,11 +14,12 @@ const path = require("path");
 // ];
 
 // 复制插件
-// const plugins = [
-//   	new CopyWebpackPlugin({
-//     	patterns: copyFiles
-//   	})
-// ];
+const plugins = [
+  	// new CopyWebpackPlugin({
+    // 	patterns: copyFiles
+  	// }),
+	new VueLoaderPlugin()
+];
 
 
 // 页面文件
@@ -41,13 +40,7 @@ module.exports = {
 	publicPath: './',
 	outputDir:"Resources/popup",
 	productionSourceMap: false,
-	chainWebpack:(config) => {
-		config.module.rule("images").set("parser", {
-			dataUrlCondition: {
-			  maxSize: 4 * 1024, // 4KiB
-			},
-		});
-	},
+	runtimeCompiler: false,
 	// 配置 content.js background.js
 	configureWebpack: {
 		entry: {
@@ -55,7 +48,8 @@ module.exports = {
 			fallback: "./src/darkmode/fallback.js"
 		},
 		output: {
-			filename: "js/[name].js"
+			filename: "js/[name].js",
+			libraryExport: 'default'
 		},
 		// plugins
 	},
@@ -70,5 +64,10 @@ module.exports = {
 			config.output.filename('js/[name].js').end()
 			config.output.chunkFilename('js/[name].js').end()
 		}
+		config.module.rule("images").set("parser", {
+			dataUrlCondition: {
+			  maxSize: 4 * 1024, // 4KiB
+			},
+		});
 	}
-}
+};

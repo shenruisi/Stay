@@ -1,4 +1,7 @@
 // 加载文件
+let __b; 
+if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof browser !== 'undefined') { __b = browser; }
+const browser = __b;
 
 const filesInDirectory = dir =>
   new Promise(resolve =>
@@ -23,17 +26,17 @@ const timestampForFilesInDirectory = dir =>
 
 // 刷新当前活动页
 const reload = () => {
-  window.chrome.tabs.query({
+  browser.tabs.query({
       active: true,
       currentWindow: true
     },
     tabs => {
       // NB: see https://github.com/xpl/crx-hotreload/issues/5
       if (tabs[0]) {
-        window.chrome.tabs.reload(tabs[0].id);
+        browser.tabs.reload(tabs[0].id);
       }
       // 强制刷新页面
-      window.chrome.runtime.reload();
+      browser.runtime.reload();
     }
   );
 };
@@ -52,10 +55,10 @@ const watchChanges = (dir, lastTimestamp) => {
 };
 
 const hotReload = () => {
-  window.chrome.management.getSelf(self => {
+  browser.management.getSelf(self => {
     if (self.installType === 'development') {
       // 获取插件目录，监听文件变化
-      window.chrome.runtime.getPackageDirectoryEntry(dir => watchChanges(dir));
+      browser.runtime.getPackageDirectoryEntry(dir => watchChanges(dir));
     }
   });
 };
