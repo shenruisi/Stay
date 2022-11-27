@@ -142,17 +142,39 @@ iCloudTrunOffTips="After turning off iCloud sync, all your actions on the script
 HomeEmptyTips1="Click";
 HomeEmptyTips2="in the upper right corner to add a userscript";
 
-GuidePage1Text1="Run a userscript";
+GuidePage1Text1="Run a userscript with Stay";
 GuidePage1Text2="Step 1/2";
-GuidePage1Text3="Activate the Stay Safari extension";
-GuidePage1Text4="Operate accroding to the video, back to Stay.";
+GuidePage1Text3="Enabling the Stay extension";
+GuidePage1Text4="Tap here to open Safari";
+GuidePage1Text5="Tap the %@ button in the address bar";
+GuidePage1Text11="AA";
+GuidePage1Text6="Tap %@";
+GuidePage1Text12="Manage Extensions";
+GuidePage1Text7="Enable %@ and tap %@";
+GuidePage1Text13="Stay";
+GuidePage1Text14="Done";
+GuidePage1Text8="Tap %@";
+GuidePage1Text9="Tap %@ and then %@";
+GuidePage1Text15="Always allow...";
+GuidePage1Text16="Always Allow on Every Website";
+GuidePage1Text10="Stay is %@, tap %@ to continue";
+GuidePage1Text17="activated";
+GuidePage1Text18="Next";
+
 GuidePage1Button="Go & Activated";
 Next="Next";
 Skip="Skip";
 GuidePage2Text2="Step 2/2";
-GuidePage2Text3="Select a userscript to run";
+GuidePage2Text3="Install the sample userscript & run";
 GuidePage2Text4="View more installation methods";
-GuidePage2Button="Run";
+GuidePage2Button="Install & Run";
+GuidePage2ButtonAdded="Activated";
+GuidePage2Text5="Preview";
+GuidePage2ButtonFinished="Done";
+
+GuidePage3Text1="Congratulations!";
+GuidePage3Text2="The next";
+GuidePage3Button="Install more userscripts";
 
 AccentColor="ACCENT COLOR";
 SendFeedback="PLAN & SEND FEEDBACK";
@@ -168,3 +190,22 @@ needDelete="Are you sure you want to delete this userscript?";
 SearchAddedUserscripts="Search installed userscripts";
 SearchUserscripts="Search userscripts on Stay Fork";
 UpdateAlert="Are you sure you want to update this userscript to the latest?";
+
+haveTry="Have a try";
+installAndOpen="Install & Open the sample url";
+Information="Information";
+Debug="Debug";
+Continue="Continue";
+
+GuidePage1ButtonFeedBack="Trouble enabling? Contact Us";
+
+INSTALLS="INSTALLS";
+RUNS="RUNS";
+SCRIPT="SCRIPT";
+AUTHOR="AUTHOR";
+VERSION="VERSION";
+RUNAT="RUN AT";
+LICENSE="LICENSE";
+HOMEPAGE="HOMEPAGE";
+
+FeedbackEnabling="Problem(Trouble enabling Stay)";

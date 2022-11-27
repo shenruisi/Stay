@@ -64,6 +64,8 @@
           self.navigationItem.rightBarButtonItem = [self rightIcon];
      }
      
+   
+
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
 }
 
@@ -94,11 +96,23 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
+     
+     UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
+     appperance.backgroundColor = FCStyle.fcWhite;
+     [appperance setShadowColor:FCStyle.fcWhite];
+     self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
+
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
+     
+     UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+     [appearance configureWithOpaqueBackground];
+     appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+     self.navigationController.navigationBar.standardAppearance = appearance;
+     self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 - (void)scriptSaveSuccess:(id)sender{
@@ -224,25 +238,26 @@
      CGFloat left = 15;
      CGFloat titleLabelLeftSize = 0;
      if(self.script.icon != NULL && self.script.icon.length > 0) {
-          UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 57, 57)];
-          imageBox.layer.cornerRadius = 10;
+          UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
+          imageBox.layer.cornerRadius = 30;
           imageBox.layer.borderWidth = 1;
           imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
           
-          UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+          UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
       //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
           [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
 
           imageView.clipsToBounds = YES;
-          imageView.centerX = 28.5;
-          imageView.centerY = 28.5;
+          imageView.centerX = 59;
+          imageView.centerY = 59;
+          imageView.contentMode = UIViewContentModeScaleAspectFit;
           [imageBox addSubview:imageView];
           [cell.contentView addSubview:imageBox];
-         titleLabelLeftSize = 15 + 57;
+         titleLabelLeftSize = 15 + 118;
      }
      
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 15, self.view.width - titleLabelLeftSize - left * 2, 21)];
-     titleLabel.font = FCStyle.headlineBold;
+     titleLabel.font = FCStyle.title3Bold;
      titleLabel.textColor = FCStyle.fcBlack;
      titleLabel.textAlignment = NSTextAlignmentLeft;
      titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -250,6 +265,15 @@
      titleLabel.text = self.script.name;
      [titleLabel sizeToFit];
      [cell.contentView addSubview:titleLabel];
+     
+     
+     UILabel *authourLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , titleLabel.bottom , self.view.width - titleLabelLeftSize - left * 2 , 19)];
+     authourLabel.font = FCStyle.subHeadline;
+     authourLabel.textColor = FCStyle.grayNoteColor;
+     authourLabel.textAlignment = NSTextAlignmentLeft;
+     authourLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+     authourLabel.text = self.script.author;
+     [cell.contentView addSubview:authourLabel];
      
      if(self.script.active) {
          [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
@@ -263,8 +287,7 @@
      
      [cell.contentView addSubview:self.actBtn];
      self.actBtn.left = titleLabel.left;
-     self.actBtn.top = titleLabel.bottom + 5;
-     
+     self.actBtn.bottom = 131;
 
      UIScrollView *scrollView =  [self createBaseInfoView];
      scrollView.left = left;
@@ -868,13 +891,13 @@
 - (UIButton *)actBtn {
     if (_actBtn == nil) {
 #ifdef Mac
-        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 25)];
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 30)];
 #else
-        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 25)];
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
 #endif
         
-        _actBtn.font = FCStyle.footnoteBold;
-        _actBtn.layer.cornerRadius = 12.5;
+        _actBtn.font = FCStyle.subHeadlineBold;
+        _actBtn.layer.cornerRadius = 15;
         _actBtn.right = self.view.width - 12;
         [_actBtn addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -943,28 +966,28 @@
      NSString *used =[NSString stringWithFormat:@"%ld", self.script.usedTimes];
      NSMutableArray *array = [NSMutableArray arrayWithArray:  @[
           @{
-              @"name":@"RUNS",
+              @"name":NSLocalizedString(@"RUNS", @""),
               @"desc": used,
               @"color":FCStyle.grayNoteColor
           },
           @{
-              @"name":@"SCRIPT",
+              @"name":NSLocalizedString(@"SCRIPT", @""),
               @"desc":@"edit",
               @"color":FCStyle.accent,
               @"type":@"edit"
           },
           @{
-              @"name":@"AUTHOR",
+              @"name":NSLocalizedString(@"AUTHOR", @""),
               @"desc":self.script.author,
               @"color":FCStyle.grayNoteColor,
           },
           @{
-              @"name":@"VERSION",
+              @"name":NSLocalizedString(@"VERSION", @""),
               @"desc":self.script.version,
               @"color":FCStyle.grayNoteColor,
           },
           @{
-               @"name":@"RUN AT",
+               @"name":NSLocalizedString(@"RUNAT", @""),
                @"desc":self.script.runAt,
                @"color":FCStyle.grayNoteColor,
           }
@@ -974,7 +997,7 @@
      
      if(self.script.license != NULL && self.script.license.length > 0) {
           [array addObject:@{
-               @"name":@"LICENSE",
+               @"name":NSLocalizedString(@"LICENSE", @""),
                @"desc":self.script.license,
                @"color":FCStyle.grayNoteColor,
           }];
@@ -982,7 +1005,7 @@
      
      if(self.script.homepage != NULL && self.script.homepage.length > 0) {
           [array addObject:@{
-               @"name":@"HOMEPAGE",
+               @"name":NSLocalizedString(@"HOMEPAGE", @""),
                @"desc":self.script.homepage,
                @"color":FCStyle.grayNoteColor,
           }];

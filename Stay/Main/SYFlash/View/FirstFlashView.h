@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *forPlayView;
 @property (nonatomic, assign) NSInteger selectedCount;
 @property (nonatomic, strong) NSString *guideUrl;
+@property (nonatomic, strong) NSDictionary *scriptDic;
+
 
 -(void)createFirstView;
 

@@ -138,17 +138,46 @@ iCloudTrunOffTips="关闭iCloud同步后，你对脚本的所有操作将不再�
 HomeEmptyTips1="点击右上角";
 HomeEmptyTips2="添加用户脚本";
 
-GuidePage1Text1="尝试首次运行一个脚本";
+GuidePage1Text1="尝试首次通过Stay来运行脚本";
 GuidePage1Text2="步骤 1/2";
-GuidePage1Text3="激活 Stay Safari扩展";
-GuidePage1Text4="根据视频在Safari中操作，完成后返回Stay。";
+GuidePage1Text3="激活Stay浏览器扩展";
+GuidePage1Text4="点击打开Safari浏览器";
+GuidePage1Text5="点击地址栏左侧的%@%@按钮";
+GuidePage1Text11="大";
+GuidePage1Text19="小";
+GuidePage1Text6="点击%@";
+GuidePage1Text12="管理扩展";
+GuidePage1Text7="启用%@并且点击%@";
+GuidePage1Text13="Stay";
+GuidePage1Text14="完成";
+
+GuidePage1Text8="点击%@";
+GuidePage1Text9="点击%@并且点击%@";
+GuidePage1Text15="始终允许...";
+GuidePage1Text16="在每个网站上始终允许";
+GuidePage1Text10="恭喜你已成功%@,点击%@继续";
+GuidePage1Text17="激活";
+GuidePage1Text18="下一步";
+
+
 GuidePage1Button="去激活";
+GuidePage1ButtonFeedBack="无法激活?联系我们";
+
 Next="下一步";
 Skip="跳过";
 GuidePage2Text2="步骤 2/2";
-GuidePage2Text3="选择要运行的用户脚本";
+GuidePage2Text3="安装示例并运行脚本";
 GuidePage2Text4="查看更多安装方式";
-GuidePage2Button="运行";
+
+GuidePage2Button="安装并运行";
+GuidePage2ButtonAdded="已安装";
+GuidePage2Text5="预览";
+GuidePage2ButtonFinished="完成";
+
+
+GuidePage3Text1="恭喜您成功运行脚本！";
+GuidePage3Text2="接下来";
+GuidePage3Button="安装更多脚本";
 
 AccentColor="主题色";
 SendFeedback="开发计划与反馈";
@@ -164,3 +193,20 @@ needDelete="你确定要删除这个脚本吗？";
 SearchAddedUserscripts="搜索已安装脚本";
 SearchUserscripts="在Stay Fork上搜索脚本";
 UpdateAlert="你确定想要把该脚本更新到最新吗？";
+
+haveTry="试一试";
+installAndOpen="安装并打开示例网址";
+Information="信息";
+Debug="调试";
+Continue="继续";
+
+INSTALLS="安装次数";
+RUNS="运行次数";
+SCRIPT="脚本";
+AUTHOR="作者";
+VERSION="版本";
+RUNAT="运行时机";
+LICENSE="许可证";
+HOMEPAGE="主页";
+
+FeedbackEnabling="问题(无法激活Stay)";

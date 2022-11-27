@@ -29,6 +29,7 @@
 
 #import "SharedStorageManager.h"
 #import "FCStyle.h"
+#import <CommonCrypto/CommonDigest.h>
 
 #ifdef Mac
 #import "ToolbarTrackView.h"
@@ -57,6 +58,8 @@
 #import "API.h"
 #import "HomeDetailCell.h"
 #import "DeviceHelper.h"
+#import "ToastDebugger.h"
+//#import <Bugsnag/Bugsnag.h>
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -400,7 +403,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #ifndef Mac
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
-        [self presentViewController:[[SYFlashViewController alloc] init] animated:YES completion:nil];
+        SYFlashViewController *cer = [[SYFlashViewController alloc] init];
+        cer.modalPresentationStyle = 0;
+        [self presentViewController:cer animated:YES completion:nil];
         [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
     }
 #endif
@@ -717,7 +722,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
+//    [Bugsnag notifyError:[NSError errorWithDomain:@"com.example" code:408 userInfo:nil]];
     [self checkShowTips];
+    [ToastDebugger log:@"checkShowTips"];
     NSLog(@"onBecomeActive-------");
     [SharedStorageManager shared].activateChanged = nil;
     NSDictionary *activateChanged = [SharedStorageManager shared].activateChanged.content;
@@ -729,6 +736,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].activateChanged.content = @{};
     [[SharedStorageManager shared].activateChanged flush];
+    [ToastDebugger log:@"activateChanged"];
     
     [SharedStorageManager shared].runsRecord = nil;
     for (NSString *uuid in [SharedStorageManager shared].runsRecord.contentDic.allKeys){
@@ -736,16 +744,20 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].runsRecord.contentDic = [NSMutableDictionary dictionary];
     [[SharedStorageManager shared].runsRecord flush];
+    [ToastDebugger log:@"runsRecord"];
     
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
-
+    [ToastDebugger log:@"initScrpitContent"];
+    
+    [ToastDebugger log:@"iCloudSyncIfNeeded Start"];
     [self iCloudSyncIfNeeded];
     
     [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
                    isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
              isExtension:NO];
+    [ToastDebugger log:@"API"];
 }
 
 - (void)iCloudSyncIfNeeded{
@@ -794,9 +806,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                     UserScript *userscriptInDB = [[DataManager shareManager] selectScriptByUuid:uuid];
                                     if (nil == userscriptInDB || userscriptInDB.uuid.length == 0){
                                         [[DataManager shareManager] insertUserConfigByUserScript:changedUserscript];
+                                        [ToastDebugger log:@"insertUserConfigByUserScript"];
                                     }
                                     else{
-                                        [[DataManager shareManager] updateUserScriptByIcloud:changedUserscript];  
+                                        [[DataManager shareManager] updateUserScriptByIcloud:changedUserscript];
+                                        [ToastDebugger log:@"updateUserScriptByIcloud"];
                                         //TODO:
                                     }
     //                                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
@@ -861,6 +875,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (void)updateScriptWhen:(NSArray *)array type:(bool)isSearch {
+    [ToastDebugger log:[NSString stringWithFormat:@"updateScriptWhen Start %d",isSearch]];
     for(int i = 0; i < array.count; i++) {
         UserScript *scrpit = array[i];
         if(!isSearch && !scrpit.updateSwitch) {
@@ -869,6 +884,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             
         if(scrpit.updateUrl != NULL && scrpit.updateUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.updateUrl params:NULL successBlock:^(NSString * _Nonnull responseObject) {
+                NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                 [set addCharactersInString:@"#"];
                 if(responseObject != nil) {
                     UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                     if(userScript.version != NULL) {
@@ -884,7 +901,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                     userScript.injectInto = scrpit.injectInto;
                                     userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                     if(scrpit.downloadUrl != NULL ) {
-                                        NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                                        NSURL *url = [NSURL URLWithString:[scrpit.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                                         if([url.host isEqualToString:@"res.stayfork.app"]) {
                                             userScript.downloadUrl = scrpit.downloadUrl;
                                             userScript.updateUrl = scrpit.downloadUrl;
@@ -898,6 +915,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 }
                             } else {
                                 [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                                    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                                     [set addCharactersInString:@"#"];
                                     if(responseObject != nil) {
                                         UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                                         userScript.uuid = scrpit.uuid;
@@ -908,7 +927,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                         userScript.injectInto = scrpit.injectInto;
                                         userScript.iCloudIdentifier = scrpit.iCloudIdentifier;
                                         if(scrpit.downloadUrl != NULL ) {
-                                            NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                                            NSURL *url = [NSURL URLWithString:[scrpit.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                                             if([url.host isEqualToString:@"res.stayfork.app"]) {
                                                 userScript.downloadUrl = scrpit.downloadUrl;
                                                 userScript.updateUrl = scrpit.downloadUrl;
@@ -935,6 +954,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }];
         } else if(scrpit.downloadUrl != NULL && scrpit.downloadUrl.length > 0) {
             [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                 [set addCharactersInString:@"#"];
                 if(responseObject != nil) {
                     UserScript *userScript = [[Tampermonkey shared] parseWithScriptContent:responseObject];
                     if(userScript.version != NULL) {
@@ -951,7 +972,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                 userScript.downloadUrl = scrpit.downloadUrl;
                             }
 
-                            NSURL *url = [NSURL URLWithString:scrpit.downloadUrl];
+                            NSURL *url = [NSURL URLWithString:[scrpit.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
                             if([url.host isEqualToString:@"res.stayfork.app"]) {
                                 userScript.downloadUrl = scrpit.downloadUrl;
                                 userScript.updateUrl = scrpit.downloadUrl;
@@ -974,6 +995,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }];
         }
     }
+    
+    [ToastDebugger log:@"updateScriptWhen End"];
 }
 
 - (void)refreshScript{
@@ -1316,6 +1339,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+    [appearance configureWithOpaqueBackground];
+    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    self.navigationController.navigationBar.standardAppearance = appearance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+    
     [self reloadTableView];
     [self initScrpitContent];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1345,19 +1375,93 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
     NSString *downloadUrl = objc_getAssociatedObject(sender,@"downloadUrl");
 
+    
     UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"settings.update","update") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        SYEditViewController *cer = [[SYEditViewController alloc] init];
-        cer.content = scriptContent;
-        cer.downloadUrl = downloadUrl;
-        cer.isEdit = YES;
-        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-            && [QuickAccess splitController].viewControllers.count >= 2){
-            [[QuickAccess secondaryController] pushViewController:cer];
+        NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+         [set addCharactersInString:@"#"];
+        NSURL *url = [NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
+        if([url.host isEqualToString:@"res.stayfork.app"]) {
+            [self.loadingSlideController show];
+            UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:scriptContent];
+            int count = 0;
+
+            NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+            NSString *uuid = [self md5HexDigest:uuidName];
+            userScript.uuid = uuid;
+            userScript.active = true;
+            if(userScript != nil && userScript.requireUrls != nil) {
+                count += userScript.requireUrls.count;
+            }
+
+            if(userScript != nil && userScript.resourceUrls != nil) {
+                count += userScript.resourceUrls.count;
+            }
+            if(count > 0) {
+                NSNotification *notification = [NSNotification notificationWithName:@"startSave" object:[NSString stringWithFormat:@"%d",count]];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+            }
+            BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+            BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+
+            if(!saveSuccess) {
+//                [self saveError:@"requireUrl下载失败,请检查后重试"];
+                return;
+            }
+            if(!saveResourceSuccess) {
+//                [self saveError:@"resourceUrl下载失败,请检查后重试"];
+                return;
+            }
+            
+            UserScript *tmpScript = [[DataManager shareManager] selectScriptByUuid:userScript.uuid];
+
+            if(tmpScript.downloadUrl != NULL ) {
+                NSURL *url = [NSURL URLWithString:[tmpScript.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
+                if([url.host isEqualToString:@"res.stayfork.app"]) {
+                    userScript.downloadUrl = tmpScript.downloadUrl;
+                    userScript.updateUrl = tmpScript.downloadUrl;
+                }
+            }
+            
+            userScript.iCloudIdentifier = tmpScript.iCloudIdentifier;
+            
+           if(userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length <= 0) {
+               [[DataManager shareManager] updateUserScript:userScript];
+               [[DataManager shareManager] updateUserScriptTime:userScript.uuid];
+               [self reloadTableView];
+
+               [self initScrpitContent];
+            
+               [[NSNotificationCenter defaultCenter] postNotificationName:CMVDidFinishContentNotification
+                                                                   object:nil
+                                                                 userInfo:@{
+                   @"operate":@"update"
+               }];
+               
+               [self.tableView reloadData];
+
+           }
+            
+            if (self.loadingSlideController.isShown){
+                [self.loadingSlideController dismiss];
+                self.loadingSlideController = nil;
+            }
+            
+            
+        }  else {
+            SYEditViewController *cer = [[SYEditViewController alloc] init];
+            cer.content = scriptContent;
+            cer.downloadUrl = downloadUrl;
+            cer.isEdit = YES;
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                && [QuickAccess splitController].viewControllers.count >= 2){
+                [[QuickAccess secondaryController] pushViewController:cer];
+            }
+            else{
+                [self.navigationController pushViewController:cer animated:true];
+            }
         }
-        else{
-            [self.navigationController pushViewController:cer animated:true];
-        }
-    }];
+        }];
+
     UIAlertAction *cancelconform = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel","Cancel") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
         }];
@@ -1728,6 +1832,17 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                  name:iCloudServiceSyncEndNotification
                                                object:nil];
 #endif
+}
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    return result;
 }
 
 @end
