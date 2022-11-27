@@ -7,6 +7,7 @@ target 'Stay' do
  pod 'UMCommon'
  pod 'UMDevice'
  pod 'SDWebImageSVGKitPlugin'
+ pod 'Bugsnag'
 
 end
 

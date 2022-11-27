@@ -12,4 +12,12 @@
 
 #import "IAP/FCStore.h"
 
+#import "FCApp.h"
+#import "FCShared.h"
+
+#import "Main/Controls/FCTab.h"
+
+#import "Main/Controls/SlideController/FCSlideController.h"
+#import "Main/Controls/Modal/ModalViewController.h"
+
 #endif /* Stay_Bridging_Header_h */

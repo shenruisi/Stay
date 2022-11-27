@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "iCloudService.h"
+#import "FCTabManager.h"
 NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
 @class Plugin;
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, readonly, strong) Plugin *plugin;
 #endif
 @property (class, readonly, strong) iCloudService *iCloudService;
+@property (class, readonly, strong) FCTabManager *tabManager;
 @end
 
 NS_ASSUME_NONNULL_END

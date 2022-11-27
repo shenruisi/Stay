@@ -23,7 +23,13 @@
 #import "SYNetworkUtils.h"
 #import "LoadingSlideController.h"
 #import <SafariServices/SafariServices.h>
+#import "Tampermonkey.h"
+#import <CommonCrypto/CommonDigest.h>
 #import "API.h"
+#import "SYWebsiteViewController.h"
+#import "SYScanImage.h"
+#import "SYBigImageViewController.h"
+
 
 #ifdef Mac
 #import "FCShared.h"
@@ -62,11 +68,9 @@
     self.view.backgroundColor = FCStyle.popup;
 
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    
+ 
     [self queryData];
-#ifndef Mac
-//    [self createDetailView];
-#endif
+  
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
@@ -96,6 +100,22 @@
             dispatch_async(dispatch_get_main_queue(),^{
 //                        [self.simpleLoadingView stop];
                         [self.tableView reloadData];
+                if(self.scriptDic[@"icon_url"] != nil) {
+                  
+                    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+                    imageBox.layer.cornerRadius = 8;
+                    imageBox.layer.borderWidth = 1;
+                    imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 18, 18)];
+                    [imageView sd_setImageWithURL:[NSURL URLWithString:self.scriptDic[@"icon_url"]]];
+                    imageView.clipsToBounds = YES;
+                    imageView.centerX = 15;
+                    imageView.centerY = 15;
+                   imageView.contentMode = UIViewContentModeScaleAspectFit;
+                    [imageBox addSubview:imageView];
+                    self.navigationItem.titleView = imageBox;
+                    self.navigationItem.titleView.hidden = true;
+                }
             });
 
                 } failBlock:^(NSError * _Nonnull error) {
@@ -139,18 +159,34 @@
     if(_saveSuceess) {
         [self.navigationController popViewControllerAnimated:TRUE];
     }
+    
+    UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
+    appperance.backgroundColor = FCStyle.fcWhite;
+    [appperance setShadowColor:FCStyle.fcWhite];
+    self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
+    
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
+    
+    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+    [appearance configureWithOpaqueBackground];
+    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    self.navigationController.navigationBar.standardAppearance = appearance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(self.scriptDic != nil && self.scriptDic[@"screenshots"] != nil) {
+        return self.view.height + 540 + 30;
+    } else {
      return self.view.height;
+    }
 }
 
 
@@ -179,24 +215,24 @@
     NSString *icon = self.scriptDic[@"icon_url"];
     
     if(icon != NULL && icon.length > 0) {
-         UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 57, 57)];
-         imageBox.layer.cornerRadius = 10;
+         UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
+         imageBox.layer.cornerRadius = 30;
          imageBox.layer.borderWidth = 1;
          imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 37, 37)];
+         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
          [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
          imageView.clipsToBounds = YES;
-         imageView.centerX = 28.5;
-         imageView.centerY = 28.5;
+         imageView.centerX = 59;
+         imageView.centerY = 59;
         imageView.contentMode = UIViewContentModeScaleAspectFit;
          [imageBox addSubview:imageView];
          [cell.contentView addSubview:imageBox];
 
-         titleLabelLeftSize = 15 + 57;
+         titleLabelLeftSize = 15 + 118;
      }
      
-     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 15, self.view.width - titleLabelLeftSize - left * 2, 21)];
-     titleLabel.font = FCStyle.headlineBold;
+     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 20, self.view.width - titleLabelLeftSize - left * 2, 21)];
+     titleLabel.font = FCStyle.title3Bold;
      titleLabel.textColor = FCStyle.fcBlack;
      titleLabel.textAlignment = NSTextAlignmentLeft;
      titleLabel.lineBreakMode= NSLineBreakByTruncatingTail;
@@ -205,6 +241,14 @@
      [titleLabel sizeToFit];
      [cell.contentView addSubview:titleLabel];
      
+    
+    UILabel *authourLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , titleLabel.bottom, self.view.width - titleLabelLeftSize - left * 2 , 19)];
+    authourLabel.font = FCStyle.subHeadline;
+    authourLabel.textColor = FCStyle.grayNoteColor;
+    authourLabel.textAlignment = NSTextAlignmentLeft;
+    authourLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+    authourLabel.text = self.scriptDic[@"author"];
+    [cell.contentView addSubview:authourLabel];
    
      [self.actBtn setTitle:NSLocalizedString(@"Get", @"")  forState:UIControlStateNormal];
      self.actBtn.backgroundColor = FCStyle.background;
@@ -220,10 +264,23 @@
         self.actBtn.width =  self.actBtn.width + 20;
     }
     
+    
+    
+    UIImageView *shareImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 22, 24)];
+    [shareImage setImage:[ImageHelper sfNamed:@"square.and.arrow.up" font:[UIFont systemFontOfSize:20] color:FCStyle.accent]];
+    shareImage.right = self.view.width - 26;
+    shareImage.bottom = 131;
+    shareImage.contentMode = UIViewContentModeBottom;
+    [cell.contentView addSubview:shareImage];
+    shareImage.userInteractionEnabled = true;
+    UITapGestureRecognizer * shareTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareUrl)];
+    [shareImage addGestureRecognizer:shareTapGesture];
+    
+    
      
      [cell.contentView addSubview:self.actBtn];
      self.actBtn.left = titleLabel.left;
-     self.actBtn.top = titleLabel.bottom + 5;
+     self.actBtn.bottom = 131;
      
      UIScrollView *scrollView =  [self createBaseInfoView];
      scrollView.left = left;
@@ -297,6 +354,103 @@
          top = line.bottom + 10;
      }
     
+
+    
+    NSArray *picArray = self.scriptDic[@"screenshots"];
+    if(picArray != nil) {
+        UILabel *previewLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 28)];
+        previewLabel.font = FCStyle.title3Bold;
+        previewLabel.textColor = FCStyle.fcBlack;
+        previewLabel.textAlignment = NSTextAlignmentLeft;
+        previewLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        previewLabel.text = NSLocalizedString(@"GuidePage2Text5", @"");
+        [cell.contentView addSubview:previewLabel];
+        
+        UIScrollView *imageScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, previewLabel.bottom + 10, self.view.width, 540)];
+        imageScrollView.showsHorizontalScrollIndicator = false;
+        
+        CGFloat imageleft = 15;
+        for(int i = 0; i < picArray.count; i++) {
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
+            [imageView sd_setImageWithURL:picArray[i]];
+            imageView.layer.cornerRadius = 25;
+            imageView.layer.borderWidth = 1;
+            imageView.layer.borderColor = FCStyle.borderColor.CGColor;
+            imageView.userInteractionEnabled = false;
+            imageView.layer.masksToBounds = YES;
+            imageView.left = imageleft;
+            [imageScrollView addSubview:imageView];
+            imageleft += 27 + 250;
+            imageScrollView.contentSize = CGSizeMake(imageleft + 15, 540);
+            
+            UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
+            [imageView addGestureRecognizer:tapGestureRecognizer1];
+            //让UIImageView和它的父类开启用户交互属性
+            [imageView setUserInteractionEnabled:YES];
+        }
+        
+        imageScrollView.clipsToBounds = NO;
+        imageScrollView.pagingEnabled = true;        
+        imageScrollView.width = imageleft / picArray.count - 30;
+        [cell.contentView addSubview:imageScrollView];
+        
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+        line.backgroundColor = FCStyle.fcSeparator;
+        line.top =  imageScrollView.bottom + 25;
+        line.left = 15;
+        [cell.contentView addSubview:line];
+        top = line.bottom + 15;
+    }
+    
+    if(self.scriptDic[@"have_a_try"] != nil) {
+        UILabel *previewLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+        previewLabel.font = FCStyle.title3Bold;
+        previewLabel.textColor = FCStyle.fcBlack;
+        previewLabel.textAlignment = NSTextAlignmentLeft;
+        previewLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        previewLabel.text = NSLocalizedString(@"haveTry", @"Have a try");
+        [cell.contentView addSubview:previewLabel];
+        
+
+        UILabel *installLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 17)];
+        installLabel.font = FCStyle.footnote;
+        installLabel.textColor = FCStyle.accent;
+        installLabel.textAlignment = NSTextAlignmentLeft;
+        installLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        installLabel.text =  NSLocalizedString(@"installAndOpen", @"Install & Open the sample link");
+        installLabel.top = previewLabel.bottom + 7;
+        [cell.contentView addSubview:installLabel];
+        
+        UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+        UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+        image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+        accessory.right = self.view.width - 26;
+        accessory.centerY = installLabel.centerY;
+        [accessory setImage:image];
+       
+        UIView *tryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 17)];
+        tryView.left = left;
+        tryView.centerY = installLabel.centerY;
+        tryView.userInteractionEnabled = true;
+        [cell.contentView  addSubview:tryView];
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tryInstall:)];
+        [tryView addGestureRecognizer:tapGesture];
+        
+        
+        
+        [cell.contentView addSubview:accessory];
+        
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+        line.backgroundColor = FCStyle.fcSeparator;
+        line.top =  installLabel.bottom + 10;
+        line.left = 15;
+        [cell.contentView addSubview:line];
+        top = line.bottom + 15;
+    }
+    
+    
+    
     UILabel *descDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top,self.view.width - left * 2 - 25 ,200)];
     descDetailLabel.text = self.scriptDic[@"desc"];
     descDetailLabel.textColor =  FCStyle.fcBlack;
@@ -331,59 +485,228 @@
     [cell.contentView addSubview:line];
     top = line.bottom + 15;
             
-     UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
-     [cell.contentView addSubview:buttonView];
-     
-     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 34, self.view.width, 1)];
-     lineView.backgroundColor = FCStyle.fcShadowLine;
-     
-     [buttonView addSubview:lineView];
-     
-     NSArray *selectedArray = @[@"Matches",@"Grants"];
-     CGFloat btnLeft = 5;
-     
-     for(int i = 0; i < 2; i++) {
-         CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 2.0;
-         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnLeft, 0, btnWidth, 31)];
-         [btn setTitle:selectedArray[i] forState:UIControlStateNormal];
-         [btn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
-         [btn addTarget:self action:@selector(switchTab:) forControlEvents:UIControlEventTouchUpInside];
-         btn.font = FCStyle.bodyBold;
-         btn.tag = 100 + i;
-         btnLeft += btnWidth + 14;
-         [buttonView addSubview:btn];
-         
-         if (i == 0) {
-             [buttonView addSubview:self.slideView];
-             self.slideView.left = 5;
-             [buttonView addSubview:self.slideLineView];
-             self.slideLineView.left = 5;
-         }
-     }
-     
-     
-      top = buttonView.bottom;
-     _scrollerTop = top;
-     self.scrollView.top = top;
-     self.scrollView.height = self.view.height - top;
-     [cell.contentView addSubview:self.scrollView];
-     
-     [self.scrollView addSubview:self.matchScrollView];
-     self.matchScrollView.height = self.view.height- top;
     
-     [self.scrollView addSubview:self.grantScrollView];
-     self.grantScrollView.height = self.view.height - top;
+    
+    UILabel *informationLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+    informationLabel.font = FCStyle.title3Bold;
+    informationLabel.textColor = FCStyle.fcBlack;
+    informationLabel.textAlignment = NSTextAlignmentLeft;
+    informationLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+    informationLabel.text =NSLocalizedString(@"Information", @"");
+    [cell.contentView addSubview:informationLabel];
+
+    
+    CGFloat infoTop = informationLabel.bottom + 13;
+   
+    NSArray *matches = self.scriptDic[@"matches"];
+    if (matches.count > 0) {
+        
+        UILabel *matchesLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+        matchesLabel.font = FCStyle.footnote;
+        matchesLabel.textColor = FCStyle.fcSecondaryBlack;
+        matchesLabel.textAlignment = NSTextAlignmentLeft;
+        matchesLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        matchesLabel.text =NSLocalizedString(@"Matches", @"");
+        matchesLabel.top = infoTop;
+        [cell.contentView addSubview:matchesLabel];
+        
+        UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+        countLabel.font = FCStyle.footnote;
+        countLabel.textColor = FCStyle.fcBlack;
+        countLabel.textAlignment = NSTextAlignmentLeft;
+        countLabel.text = [NSString stringWithFormat:@"%ld",matches.count];
+        countLabel.right =  self.view.width - 42;
+        countLabel.centerY = matchesLabel.centerY;
+        [cell.contentView addSubview:countLabel];
+
+        UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+        UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+        image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+        accessory.right = self.view.width - 26;
+        accessory.centerY = matchesLabel.centerY;
+        [accessory setImage:image];
+        accessory.userInteractionEnabled = true;
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMatches)];
+        [cell.contentView addSubview:accessory];
+        
+        UIView *line1 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+        line1.backgroundColor = FCStyle.fcSeparator;
+        line1.top =  matchesLabel.bottom + 8;
+        line1.left = 15;
+        [cell.contentView addSubview:line1];
+        
+        UIView *matchesListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+        matchesListView.left = left;
+        matchesListView.centerY = matchesLabel.centerY;
+        matchesListView.userInteractionEnabled = true;
+        [cell.contentView  addSubview:matchesListView];
+        
+        [matchesListView addGestureRecognizer:tapGesture];
+
+        infoTop = line1.bottom + 13;
+    }
+
+    
+    
+
+    
+    NSArray *grants = self.scriptDic[@"grants"];
+    if (grants.count > 0) {
+        
+        UILabel *grantsLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+        grantsLabel.font = FCStyle.footnote;
+        grantsLabel.textColor = FCStyle.fcSecondaryBlack;
+        grantsLabel.textAlignment = NSTextAlignmentLeft;
+        grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+        grantsLabel.text =NSLocalizedString(@"Grants", @"");
+        grantsLabel.top = infoTop;
+        [cell.contentView addSubview:grantsLabel];
+        
+        UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+        countLabel.font = FCStyle.footnote;
+        countLabel.textColor = FCStyle.fcBlack;
+        countLabel.textAlignment = NSTextAlignmentLeft;
+        countLabel.text = [NSString stringWithFormat:@"%ld",grants.count];
+        countLabel.centerY = grantsLabel.centerY;
+        countLabel.right =  self.view.width - 42;
+        [cell.contentView addSubview:countLabel];
+        
+        UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+        UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+        image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+        accessory.right = self.view.width - 26;
+        accessory.centerY = grantsLabel.centerY;
+        [accessory setImage:image];
+        accessory.userInteractionEnabled = true;
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showGrants)];
+        [cell.contentView addSubview:accessory];
+        
+        UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+        line2.backgroundColor = FCStyle.fcSeparator;
+        line2.top =  grantsLabel.bottom + 8;
+        line2.left = 15;
+        [cell.contentView addSubview:line2];
+        
+        UIView *grantsListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+        grantsListView.left = left;
+        grantsListView.centerY = grantsLabel.centerY;
+        grantsListView.userInteractionEnabled = true;
+        [cell.contentView  addSubview:grantsListView];
+        
+        [grantsListView addGestureRecognizer:tapGesture];
+
+    }
+    
+
+    
+ 
     return cell;
 }
 
-- (void)deleteScript:(id)sender {
-  
+- (void)showGrants{
+#ifdef Mac
+    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+    cer.type = @"grants";
+    cer.scriptDic = self.scriptDic;
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
+    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+    cer.type = @"grants";
+    cer.scriptDic = self.scriptDic;
+    [self.navigationController pushViewController:cer animated:true];
+#endif
+}
 
+- (void)showMatches{
+#ifdef Mac
+    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+    cer.type = @"matches";
+    cer.scriptDic = self.scriptDic;
+    [[QuickAccess secondaryController] pushViewController:cer];
+#else
+    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+    cer.type = @"matches";
+    cer.scriptDic = self.scriptDic;
+    [self.navigationController pushViewController:cer animated:true];
+#endif
 }
 
 - (void)expand {
      _needExpand = true;
      [self.tableView reloadData];
+}
+
+- (void)tryInstall:(id)sender {
+    NSString *url = self.scriptDic[@"hosting_url"];
+    NSString *name = self.scriptDic[@"name"];
+    
+    self.loadingSlideController.originSubText = name;
+    [self.loadingSlideController show];
+
+
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+     [set addCharactersInString:@"#"];
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:str];
+
+        NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
+        NSString *uuid = [self md5HexDigest:uuidName];
+        userScript.uuid = uuid;
+        userScript.active = true;
+        userScript.downloadUrl = url;
+
+        BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
+        BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
+        if(!saveSuccess || !saveResourceSuccess) {
+            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+            dispatch_get_main_queue(), ^{
+                if (self.loadingSlideController.isShown){
+                    [self.loadingSlideController dismiss];
+                    self.loadingSlideController = nil;
+                }
+            });
+            return;
+        }
+        if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){
+            [[DataManager shareManager] insertUserConfigByUserScript:userScript];
+            NSNotification *notification = [NSNotification notificationWithName:@"scriptSaveSuccess" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotification:notification];
+            NSNotification *addNotification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidAddNotification" object:nil userInfo:@{@"uuid":uuid}];
+            [[NSNotificationCenter defaultCenter]postNotification:addNotification];
+            dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                NSString *url = [NSString stringWithFormat:@"%@%@",@"https://api.shenyin.name/stay-fork/install/",uuid];
+                
+                [[SYNetworkUtils shareInstance] requestGET:url params:nil successBlock:^(NSString * _Nonnull responseObject) {
+                        NSData *jsonData = [responseObject dataUsingEncoding:NSUTF8StringEncoding];
+             
+                        } failBlock:^(NSError * _Nonnull error) {
+                          
+                        }];
+            });
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+        dispatch_get_main_queue(), ^{
+            if (self.loadingSlideController.isShown){
+                [self.loadingSlideController dismiss];
+                self.loadingSlideController = nil;
+            }
+            [self initScrpitContent];
+            NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+             [set addCharactersInString:@"#"];
+            if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.scriptDic[@"have_a_try"] stringByAddingPercentEncodingWithAllowedCharacters:set]]]){
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.scriptDic[@"have_a_try"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+            }
+            
+            [self.navigationController popViewControllerAnimated:true];
+        });
+    });
+    
 }
 
 - (void)showScript:(id)sender {
@@ -428,9 +751,13 @@
     }
 }
 
+- (void)shareUrl {
+    //分享的url
+    NSArray *activityItems = @[self.scriptDic[@"hosting_url"]];
+        
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
 
-- (void) switchAction:(id)sender {
-   
+    [self.navigationController presentViewController:activityVC animated:YES completion:nil];
 }
 
 - (UIView *)createNoteView:(NSArray *)notes{
@@ -443,7 +770,6 @@
     title.left = 15;
     [view addSubview:title];
     
-    
     UILabel *notesView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100,19)];
     notesView.text = @"Version Notes";
     notesView.textColor = FCStyle.accent;
@@ -455,8 +781,6 @@
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showNotes:)];
     [notesView addGestureRecognizer:tapGesture];
-    
-    
     UILabel *note = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30,19)];
     note.text = notes[0];
     note.textColor = FCStyle.fcBlack;
@@ -589,9 +913,8 @@
 
 - (UIBarButtonItem *)rightIcon {
     if (nil == _rightIcon){
-        UIImage *image = [UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:17]]];
-
-        _rightIcon = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(shareBtnClick)];
+        _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Get", @"")  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
+        
     }
     return _rightIcon;
 }
@@ -807,15 +1130,15 @@
 - (UIButton *)actBtn {
     if (_actBtn == nil) {
 #ifdef Mac
-        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 25)];
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 30)];
 #else
-        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 25)];
+        _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];
 #endif
         
-        _actBtn.font = FCStyle.footnoteBold;
-        _actBtn.layer.cornerRadius = 12.5;
+        _actBtn.font = FCStyle.subHeadlineBold;
+        _actBtn.layer.cornerRadius = 15;
         _actBtn.right = self.view.width - 12;
-        [_actBtn addTarget:self action:@selector(getDetail:) forControlEvents:UIControlEventTouchUpInside];
+        [_actBtn addTarget:self action:@selector(tryInstall:) forControlEvents:UIControlEventTouchUpInside];
 
     }
     return _actBtn;
@@ -903,22 +1226,21 @@
     return _slideLineView;
 }
 
-- (UIScrollView *)whiteTableView {
-    if(_whiteTableView == nil) {
-        _whiteTableView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width * 2, 0, self.view.width, kScreenHeight)];
-        
-    }
+-(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
+    NSLog(@"点击图片");
     
-    return _whiteTableView;
+    SYBigImageViewController *cer = [[SYBigImageViewController alloc] init];
+    cer.modalPresentationStyle = 0;
+    cer.imageList = self.scriptDic[@"screenshots"];
+    
+    [self.navigationController presentViewController:cer animated:true completion:^{
+        
+    }];
+    
+//    UIImageView *clickedImageView = (UIImageView *)tap.view;
+//    [SYScanImage scanBigImageWithImageView:clickedImageView];
 }
 
-- (UIScrollView *)blackTableView {
-    if(_blackTableView == nil) {
-        _blackTableView = [[UIScrollView alloc] initWithFrame:CGRectMake(self.view.width * 3, 0, self.view.width, kScreenHeight)];
-    }
-    
-    return _blackTableView;
-}
 
 //基础信息view
 - (UIScrollView *)createBaseInfoView {
@@ -930,23 +1252,23 @@
      
      NSMutableArray *array = [NSMutableArray arrayWithArray: @[
         @{
-            @"name":@"INSTALLS",
+            @"name":NSLocalizedString(@"INSTALLS", @""),
             @"desc": used,
             @"color":FCStyle.grayNoteColor
         },
         @{
-            @"name":@"SCRIPT",
+            @"name":NSLocalizedString(@"SCRIPT", @""),
             @"desc":@"edit",
             @"color":FCStyle.accent,
             @"type":@"edit"
         },
         @{
-            @"name":@"AUTHOR",
+            @"name":NSLocalizedString(@"AUTHOR", @""),
             @"desc":self.scriptDic[@"author"],
             @"color":FCStyle.grayNoteColor,
         },
         @{
-            @"name":@"VERSION",
+            @"name":NSLocalizedString(@"VERSION", @""),
             @"desc":self.scriptDic[@"version"],
             @"color":FCStyle.grayNoteColor,
         }
@@ -956,7 +1278,7 @@
     NSString *runAt = self.scriptDic[@"run_at"];
     if(runAt != NULL && runAt.length > 0) {
          [array addObject:@{
-              @"name":@"RUNAT",
+              @"name":NSLocalizedString(@"RUNAT", @""),
               @"desc":runAt,
               @"color":FCStyle.grayNoteColor,
          }];
@@ -967,7 +1289,7 @@
     
     if(license != NULL && license.length > 0) {
          [array addObject:@{
-              @"name":@"LICENSE",
+              @"name":NSLocalizedString(@"LICENSE",@""),
               @"desc":license,
               @"color":FCStyle.grayNoteColor,
          }];
@@ -976,7 +1298,7 @@
     NSString *homepage = self.scriptDic[@"homepage"];
     if(homepage != NULL && homepage.length > 0) {
          [array addObject:@{
-              @"name":@"HOMEPAGE",
+              @"name":NSLocalizedString(@"HOMEPAGE",@""),
               @"desc":homepage,
               @"color":FCStyle.grayNoteColor,
          }];
@@ -1048,6 +1370,46 @@
      return view;
 }
 
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    return result;
+}
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGPoint offset = scrollView.contentOffset;
+    
+    float y = offset.y;
+
+     float reload_distance = 10;
+    
+    
+    if(y >  reload_distance) {
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+             self.rightBarButtonItems = @[[self rightIcon]];
+        }
+        else{
+             self.navigationItem.rightBarButtonItem = [self rightIcon];
+        }
+        
+        self.navigationItem.titleView.hidden = false;
+    } else {
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            self.rightBarButtonItems = nil;
+        }
+        else{
+            self.navigationItem.rightBarButtonItem = nil;
+        }
+        self.navigationItem.titleView.hidden = true;
+
+    }
+}
 
 
 - (SYTextInputViewController *)sYTextInputViewController {
@@ -1079,6 +1441,7 @@
     
     return _loadingSlideController;
 }
+
 
 
 @end

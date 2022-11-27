@@ -37,6 +37,10 @@
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
 
+#ifdef iOS
+//#import <Bugsnag/Bugsnag.h>
+#endif
+
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
@@ -51,7 +55,9 @@
     // Override point for customization after application launch.
 #ifndef Mac
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
+//    [Bugsnag start];
 #endif
+    
     
     SDImageSVGKCoder *SVGCoder = [SDImageSVGKCoder sharedCoder];
     [[SDImageCodersManager sharedManager] addCoder:SVGCoder];
@@ -206,6 +212,8 @@
     
     return _loadingSlideController;
 }
+
+- (void)applicationWillTerminate:(UIApplication *)application{}
 
 
 @end

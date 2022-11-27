@@ -1045,6 +1045,11 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+    [appearance configureWithOpaqueBackground];
+    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+    self.navigationController.navigationBar.standardAppearance = appearance;
+    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     [[ScriptMananger shareManager] refreshData];
     [self reloadAllTableview];
 }

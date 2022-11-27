@@ -37,4 +37,15 @@ static iCloudService *_iCloudService = nil;
     return _iCloudService;
 }
 
+static FCTabManager *_tabManager = nil;
++ (FCTabManager *)tabManager{
+    static dispatch_once_t onceTokenTabManager;
+    dispatch_once(&onceTokenTabManager, ^{
+        if (nil == _tabManager){
+            _tabManager = [[FCTabManager alloc] init];
+        }
+    });
+    return _tabManager;
+}
+
 @end
