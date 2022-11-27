@@ -3,20 +3,20 @@
     <div class="fotter-box">
       <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="tabClickAction(item.id)">
         <template v-if="item.name == 'matched_scripts_tab'">
-          <img src="../../assets/images/script-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../../assets/images/script.png" v-else/>
+          <img src="../assets/images/script-sel.png" v-if="item.id == selectedTabId" />
+          <img src="../assets/images/script.png" v-else/>
         </template>
         <template v-if="item.name == 'darkmode_tab'">
-          <img src="../../assets/images/dark-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../../assets/images/dark.png" v-else/>
+          <img src="../assets/images/dark-sel.png" v-if="item.id == selectedTabId" />
+          <img src="../assets/images/dark.png" v-else/>
         </template>
         <template v-if="item.name == 'downloader_tab'">
-          <img src="../../assets/images/download-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../../assets/images/download.png" v-else/>
+          <img src="../assets/images/download-sel.png" v-if="item.id == selectedTabId" />
+          <img src="../assets/images/download.png" v-else/>
         </template>
-        <template v-if="item.name == 'console_tb'">
-          <img src="../../assets/images/console-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../../assets/images/console.png" v-else/>
+        <template v-if="item.name == 'console_tab'">
+          <img src="../assets/images/console-sel.png" v-if="item.id == selectedTabId" />
+          <img src="../assets/images/console.png" v-else/>
         </template>
       </div>
     </div>
@@ -87,7 +87,7 @@ export default {
         align-items: center;
         flex-shrink: 1;
         img{
-            max-height: 24px;
+            max-height: 20px;
             // object-fit: cover;
         }
       }

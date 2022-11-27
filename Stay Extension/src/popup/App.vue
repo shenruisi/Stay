@@ -1,35 +1,39 @@
 <template>
   <div class="stay-popup-warpper">
-    <!-- hello Stay -->
+    hello Stay
     <Header>{{"Matched"}}</Header>
-    <!-- <TabMenu :tabId="tabId" @setTabName="setTabName"></TabMenu> -->
+    <TabMenu :tabId="tabId" @setTabName="setTabName"></TabMenu>
   </div>
 </template>
 <script>
 import { inject, ref, reactive, watch, toRefs } from 'vue';
 import { useStore } from 'vuex';
-import Header from './components/Header.vue';
-// import TabMenu from './components/TabMenu.vue';
-// import { useI18n } from 'vue-i18n';
+import Header from '../components/Header.vue';
+import TabMenu from '../components/TabMenu.vue';
+import { useI18n } from 'vue-i18n';
+
+let __b; 
+if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
+const browser = __b;
 
 export default {
   name: 'popupView',
   components: {
-    Header
-    // TabMenu
+    Header,
+    TabMenu
   },
   setup(props, { emit, attrs, slots }) {
-    // const { t, tm } = useI18n();
+    const { t, tm } = useI18n();
     // 获取全局对象`
-    const global = inject('global');
+    // const global = inject('global');
     const store = useStore();
-    const localLan = global.store.state.localeLan;
+    const localLan = store.state.localeLan;
     console.log("localLan====", localLan);
     // console.log("localLan====", t('matched_scripts_tab'));
     const state = reactive({
       tabName: 'matched_scripts_tab',
       tabId: 1,
-      locale: global.store.state.localeLan,
+      locale: "store.state.localeLan",
       browserRunUrl: ''
     })
 
@@ -43,10 +47,10 @@ export default {
      * 初始化tab
      */
     const fetchMatchedScriptList = () => {
-      global.browser.tabs.getSelected(null, (tab) => {
+      browser.tabs.getSelected(null, (tab) => {
         console.log("tab=======", tab);
         state.browserRunUrl = tab.url;
-        global.browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: state.browserRunUrl, digest: "yes" }, (response) => {
+        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: state.browserRunUrl, digest: "yes" }, (response) => {
           console.log("response-----", response);
           try {
             // scriptStateList = response.body;

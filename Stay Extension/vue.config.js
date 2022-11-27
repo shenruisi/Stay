@@ -1,6 +1,7 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
-const { VueLoaderPlugin } = require('vue-loader')
+const { defineConfig } = require('@vue/cli-service');
+
 // 复制文件到指定目录
 // const copyFiles = [
 //   	{
@@ -18,9 +19,8 @@ const plugins = [
   	// new CopyWebpackPlugin({
     // 	patterns: copyFiles
   	// }),
-	new VueLoaderPlugin()
+	
 ];
-
 
 // 页面文件
 const pages = {};
@@ -35,12 +35,13 @@ chromeName.forEach(name => {
   	};
 });
 
-module.exports = {
+module.exports = defineConfig({
 	pages,
 	publicPath: './',
 	outputDir:"Resources/popup",
 	productionSourceMap: false,
 	runtimeCompiler: false,
+	transpileDependencies: true,
 	// 配置 content.js background.js
 	configureWebpack: {
 		entry: {
@@ -51,7 +52,7 @@ module.exports = {
 			filename: "js/[name].js",
 			libraryExport: 'default'
 		},
-		// plugins
+		plugins
 	},
 	// 配置 content.css
 	css: {
@@ -70,4 +71,4 @@ module.exports = {
 			},
 		});
 	}
-};
+});

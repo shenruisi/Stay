@@ -35,25 +35,26 @@ export default {
     background-color: var(--s-f6);
     border-bottom: 1px solid var(--s-e0);
     .stay-icon{
-        position: absolute;
-        left: 0;
-        width: 48px;
-        height: 38px;
-        top: 50%;
-        transform: translate(0, -50%);
-        background: url("../../assets/images/stay-large-icon.png") no-repeat 50% 50%;
-        background-size: 50%;
+      position: absolute;
+      left: 0;
+      width: 48px;
+      height: 38px;
+      top: 50%;
+      padding: 2px;
+      transform: translate(0, -50%);
+      background: url("../assets/images/stay-large-icon.png") no-repeat 50% 50%;
+      background-size: 50%;
     }
     .header-content{
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        justify-items: center;
-        align-items: center;
-        font-weight: 700;
-        font-size: 15px;
-        color: var(--s-black);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      justify-items: center;
+      align-items: center;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--s-black);
     }
   }
 </style>
