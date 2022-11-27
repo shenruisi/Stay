@@ -38,7 +38,7 @@
 #import "DeviceHelper.h"
 
 #ifdef iOS
-#import <Bugsnag/Bugsnag.h>
+//#import <Bugsnag/Bugsnag.h>
 #endif
 
 @interface AppDelegate()
@@ -55,7 +55,7 @@
     // Override point for customization after application launch.
 #ifndef Mac
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
-    [Bugsnag start];
+//    [Bugsnag start];
 #endif
     
     

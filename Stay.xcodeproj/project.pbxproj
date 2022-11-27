@@ -22,6 +22,30 @@
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
 		3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
 		3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
+		3C8388BE292E55B9007563E6 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388BD292E55B9007563E6 /* DownloadManager.m */; };
+		3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388BD292E55B9007563E6 /* DownloadManager.m */; };
+		3C8388C62931ADC5007563E6 /* FCTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C12931ADC3007563E6 /* FCTab.m */; };
+		3C8388C72931ADC5007563E6 /* FCTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C12931ADC3007563E6 /* FCTab.m */; };
+		3C8388C82931ADC5007563E6 /* FCTabConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C22931ADC4007563E6 /* FCTabConfig.m */; };
+		3C8388C92931ADC5007563E6 /* FCTabConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C22931ADC4007563E6 /* FCTabConfig.m */; };
+		3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C42931ADC4007563E6 /* FCTabManager.m */; };
+		3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C42931ADC4007563E6 /* FCTabManager.m */; };
+		3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388CC2931B785007563E6 /* ColorHelper.m */; };
+		3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388CC2931B785007563E6 /* ColorHelper.m */; };
+		3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388D2293355F9007563E6 /* FolderSlideController.swift */; };
+		3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388D2293355F9007563E6 /* FolderSlideController.swift */; };
+		3C8388D529335624007563E6 /* FCTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C12931ADC3007563E6 /* FCTab.m */; };
+		3C8388D629335628007563E6 /* FCTabConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C22931ADC4007563E6 /* FCTabConfig.m */; };
+		3C8388D72933562D007563E6 /* FCTabManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C42931ADC4007563E6 /* FCTabManager.m */; };
+		3C8388D829335636007563E6 /* FCTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C12931ADC3007563E6 /* FCTab.m */; };
+		3C8388D92933563B007563E6 /* FCTabConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C22931ADC4007563E6 /* FCTabConfig.m */; };
+		3C8388DA2933563E007563E6 /* FCTabManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C42931ADC4007563E6 /* FCTabManager.m */; };
+		3C8388DB29335701007563E6 /* ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388CC2931B785007563E6 /* ColorHelper.m */; };
+		3C8388DC29335705007563E6 /* ColorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388CC2931B785007563E6 /* ColorHelper.m */; };
+		3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388DD2933594A007563E6 /* FolderModalController.swift */; };
+		3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388DD2933594A007563E6 /* FolderModalController.swift */; };
+		3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E129335C68007563E6 /* RoundedBorderView.swift */; };
+		3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E129335C68007563E6 /* RoundedBorderView.swift */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
@@ -478,6 +502,19 @@
 		3755771ACCADED7F63DD2803 /* Pods-Stay-Mac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay-Mac.release.xcconfig"; path = "Target Support Files/Pods-Stay-Mac/Pods-Stay-Mac.release.xcconfig"; sourceTree = "<group>"; };
 		3C72260C288C243900FF0F68 /* SYSubscribeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYSubscribeController.swift; sourceTree = "<group>"; };
 		3C72260F288C315600FF0F68 /* Stay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stay-Bridging-Header.h"; sourceTree = "<group>"; };
+		3C8388BC292E55B9007563E6 /* DownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadManager.h; sourceTree = "<group>"; };
+		3C8388BD292E55B9007563E6 /* DownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadManager.m; sourceTree = "<group>"; };
+		3C8388C02931ADC3007563E6 /* FCTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCTab.h; sourceTree = "<group>"; };
+		3C8388C12931ADC3007563E6 /* FCTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCTab.m; sourceTree = "<group>"; };
+		3C8388C22931ADC4007563E6 /* FCTabConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCTabConfig.m; sourceTree = "<group>"; };
+		3C8388C32931ADC4007563E6 /* FCTabManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCTabManager.h; sourceTree = "<group>"; };
+		3C8388C42931ADC4007563E6 /* FCTabManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCTabManager.m; sourceTree = "<group>"; };
+		3C8388C52931ADC5007563E6 /* FCTabConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCTabConfig.h; sourceTree = "<group>"; };
+		3C8388CC2931B785007563E6 /* ColorHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorHelper.m; sourceTree = "<group>"; };
+		3C8388CD2931B786007563E6 /* ColorHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorHelper.h; sourceTree = "<group>"; };
+		3C8388D2293355F9007563E6 /* FolderSlideController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSlideController.swift; sourceTree = "<group>"; };
+		3C8388DD2933594A007563E6 /* FolderModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModalController.swift; sourceTree = "<group>"; };
+		3C8388E129335C68007563E6 /* RoundedBorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBorderView.swift; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -735,7 +772,6 @@
 		8496DFB9275935B30075ABD5 /* add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@3x.png"; sourceTree = "<group>"; };
 		8496DFC12759CADC0075ABD5 /* SYEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYEditViewController.h; sourceTree = "<group>"; };
 		8496DFC22759CADC0075ABD5 /* SYEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYEditViewController.m; sourceTree = "<group>"; };
-		8496DFC4275A6D7E0075ABD5 /* Stay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stay-Bridging-Header.h"; sourceTree = "<group>"; };
 		849E203327B0AF7C000E5C02 /* UserscriptUpdateManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserscriptUpdateManager.h; sourceTree = "<group>"; };
 		849E203427B0AF7C000E5C02 /* UserscriptUpdateManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserscriptUpdateManager.m; sourceTree = "<group>"; };
 		84A15DFF282A4FFF002E121D /* BrowseView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrowseView.h; sourceTree = "<group>"; };
@@ -886,6 +922,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C8388B8292E469A007563E6 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				3C8388BC292E55B9007563E6 /* DownloadManager.h */,
+				3C8388BD292E55B9007563E6 /* DownloadManager.m */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
+		3C8388D029333F7E007563E6 /* SYDownload */ = {
+			isa = PBXGroup;
+			children = (
+				3C8388E029335C47007563E6 /* View */,
+				3C8388D129333FB8007563E6 /* Controller */,
+			);
+			path = SYDownload;
+			sourceTree = "<group>";
+		};
+		3C8388D129333FB8007563E6 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3C8388D2293355F9007563E6 /* FolderSlideController.swift */,
+				3C8388DD2933594A007563E6 /* FolderModalController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3C8388E029335C47007563E6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3C8388E129335C68007563E6 /* RoundedBorderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		5839C315293051CC00CCBAE5 /* Debugger */ = {
 			isa = PBXGroup;
 			children = (
@@ -912,6 +983,8 @@
 				5867D157288F91F900EC822B /* TimeHelper.m */,
 				58724A2928FE43E500A894D8 /* DeviceHelper.h */,
 				58724A2A28FE43E500A894D8 /* DeviceHelper.m */,
+				3C8388CD2931B786007563E6 /* ColorHelper.h */,
+				3C8388CC2931B785007563E6 /* ColorHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1005,6 +1078,7 @@
 			isa = PBXGroup;
 			children = (
 				5839C315293051CC00CCBAE5 /* Debugger */,
+				3C8388B8292E469A007563E6 /* Download */,
 				58DF3FF22898D4050029E1AA /* API */,
 				58D1B44D28893D27009BD608 /* IAP */,
 				58EA444B286AFB5400BD6C4D /* iCloud */,
@@ -1346,6 +1420,12 @@
 				84FD427D2851FB1A00B25A17 /* SelectBar */,
 				588B831A2845F7BE00AB2D73 /* FCDisk.h */,
 				588B831B2845F7BF00AB2D73 /* FCDisk.m */,
+				3C8388C02931ADC3007563E6 /* FCTab.h */,
+				3C8388C12931ADC3007563E6 /* FCTab.m */,
+				3C8388C52931ADC5007563E6 /* FCTabConfig.h */,
+				3C8388C22931ADC4007563E6 /* FCTabConfig.m */,
+				3C8388C32931ADC4007563E6 /* FCTabManager.h */,
+				3C8388C42931ADC4007563E6 /* FCTabManager.m */,
 				58FEB1FF283B5C1D00BC2A92 /* Loading */,
 				58FEB1EF283B5B2700BC2A92 /* Modal */,
 				58FEB1EC283B5AE100BC2A92 /* FCApp.h */,
@@ -1484,7 +1564,6 @@
 			children = (
 				8496DFC12759CADC0075ABD5 /* SYEditViewController.h */,
 				8496DFC22759CADC0075ABD5 /* SYEditViewController.m */,
-				8496DFC4275A6D7E0075ABD5 /* Stay-Bridging-Header.h */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -1635,6 +1714,7 @@
 		84F4830D273A69AA00217BB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				3C8388D029333F7E007563E6 /* SYDownload */,
 				84CC9B4B28C72C35002EB493 /* SYBrowse */,
 				84C2B3FE288D82D2002A0C1B /* SYFlash */,
 				58FEB1E8283B57A400BC2A92 /* Style */,
@@ -2265,12 +2345,16 @@
 				58639D1C28644D0300AA80D5 /* ActivateChanged.m in Sources */,
 				58561F5828E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
+				3C8388DA2933563E007563E6 /* FCTabManager.m in Sources */,
 				58724A3528FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
+				3C8388D829335636007563E6 /* FCTab.m in Sources */,
 				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
 				58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */,
 				58639D1828644BEB00AA80D5 /* Stroge.m in Sources */,
+				3C8388DC29335705007563E6 /* ColorHelper.m in Sources */,
 				5867D16528920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
+				3C8388D92933563B007563E6 /* FCTabConfig.m in Sources */,
 				58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */,
 				58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */,
 				58639D1D28644D8800AA80D5 /* FCDisk.m in Sources */,
@@ -2285,6 +2369,7 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
+				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				58724A2B28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
@@ -2312,7 +2397,9 @@
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
+				3C8388C82931ADC5007563E6 /* FCTabConfig.m in Sources */,
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
+				3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */,
 				5867D154288F88FC00EC822B /* AlertHelper.m in Sources */,
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
@@ -2322,6 +2409,7 @@
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				58724A2D28FE4CCD00A894D8 /* SYNavigationController.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
+				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
@@ -2338,12 +2426,15 @@
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
 				84F48318273A739800217BB3 /* MainTabBarController.m in Sources */,
+				3C8388BE292E55B9007563E6 /* DownloadManager.m in Sources */,
 				84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */,
+				3C8388C62931ADC5007563E6 /* FCTab.m in Sources */,
 				587689402720064D00F834A4 /* NavigationController.m in Sources */,
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
 				5867D158288F91F900EC822B /* TimeHelper.m in Sources */,
+				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
@@ -2368,6 +2459,7 @@
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
+				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
@@ -2404,12 +2496,16 @@
 				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
 				58561F5628E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */,
+				3C8388D72933562D007563E6 /* FCTabManager.m in Sources */,
 				58724A3328FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
+				3C8388D529335624007563E6 /* FCTab.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				588B83212845FC0C00AB2D73 /* FCDisk.m in Sources */,
 				588B83292846147000AB2D73 /* UserscriptInfo.m in Sources */,
+				3C8388DB29335701007563E6 /* ColorHelper.m in Sources */,
 				5867D16328920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
+				3C8388D629335628007563E6 /* FCTabConfig.m in Sources */,
 				588B83202845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				58F7F4E9274776AB00270873 /* Stroge.m in Sources */,
 				588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */,
@@ -2433,9 +2529,11 @@
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
+				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
+				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
@@ -2452,6 +2550,7 @@
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
+				3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
 				58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
@@ -2477,6 +2576,8 @@
 				84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
+				3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */,
+				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
 				588202672859E73900B2721A /* SYVersionUtils.m in Sources */,
@@ -2484,6 +2585,7 @@
 				58DF3FF62898D4820029E1AA /* API.m in Sources */,
 				588202692859E73900B2721A /* SharedStorageManager.m in Sources */,
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
+				3C8388C72931ADC5007563E6 /* FCTab.m in Sources */,
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
@@ -2498,6 +2600,7 @@
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
 				5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
+				3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
@@ -2519,6 +2622,7 @@
 				84BA9D18292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
+				3C8388C92931ADC5007563E6 /* FCTabConfig.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
