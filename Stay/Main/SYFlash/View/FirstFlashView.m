@@ -285,7 +285,7 @@ UITableViewDataSource
     UIImageView *prewImage3 = [[UIImageView alloc] initWithFrame:CGRectMake(tipsLabel2.left, top, 226,40)];
     NSString *name4 = @"tutorial5";
     if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-        name4 = @"tutorial4-en";
+        name4 = @"tutorial5-en";
     }
     [prewImage3 setImage: [UIImage imageNamed:name4]];
     [self addSubview:prewImage3];

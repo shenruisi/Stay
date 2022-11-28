@@ -73,8 +73,11 @@
         _firstView = [[FirstFlashView alloc] initWithFrame:CGRectMake(0, top, self.view.width * 3,  self.view.height)];
         if (FCDeviceTypeIPad == DeviceHelper.type){
             _firstView.width =704 * 3;
+            _firstView.contentSize = CGSizeMake(_firstView.width, 850);
+            _firstView.scrollEnabled = YES;
+        } else {
+            _firstView.scrollEnabled = NO;
         }
-        _firstView.scrollEnabled = NO;
         _firstView.selectedCount = 0;
         [SharedStorageManager shared].userDefaults = nil;
         if([SharedStorageManager shared].userDefaults.safariExtensionEnabled) {
