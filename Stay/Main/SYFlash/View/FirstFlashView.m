@@ -633,8 +633,8 @@ UITableViewDataSource
             self.contentOffset =  CGPointMake(self.width / 3 , 0);
         }];
     }
-    else{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://fastclip.app"]];
+    else{        
+        [self openTutorial];
     }
 }
 
