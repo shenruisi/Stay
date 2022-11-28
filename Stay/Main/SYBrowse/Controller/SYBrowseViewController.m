@@ -372,19 +372,23 @@
             if(entity == nil) {
                 SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
                 cer.uuid = str;
-                #ifdef Mac
-                    [[QuickAccess secondaryController] pushViewController:cer];
-                #else
-                    [self.navigationController pushViewController:cer animated:true];
-                #endif
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                     [[QuickAccess secondaryController] pushViewController:cer];
+                }
+                else{
+                     [self.navigationController pushViewController:cer animated:true];
+                }
             } else {
                 SYDetailViewController *cer = [[SYDetailViewController alloc] init];
                 cer.script = [[DataManager shareManager] selectScriptByUuid:str];
-                #ifdef Mac
-                    [[QuickAccess secondaryController] pushViewController:cer];
-                #else
-                    [self.navigationController pushViewController:cer animated:true];
-                #endif
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                     [[QuickAccess secondaryController] pushViewController:cer];
+                }
+                else{
+                     [self.navigationController pushViewController:cer animated:true];
+                }
             }
         }
     } else {

@@ -606,31 +606,29 @@
 }
 
 - (void)showGrants{
-#ifdef Mac
     SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
     cer.type = @"grants";
     cer.scriptDic = self.scriptDic;
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
-    cer.type = @"grants";
-    cer.scriptDic = self.scriptDic;
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
 }
 
 - (void)showMatches{
-#ifdef Mac
     SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
     cer.type = @"matches";
     cer.scriptDic = self.scriptDic;
-    [[QuickAccess secondaryController] pushViewController:cer];
-#else
-    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
-    cer.type = @"matches";
-    cer.scriptDic = self.scriptDic;
-    [self.navigationController pushViewController:cer animated:true];
-#endif
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
 }
 
 - (void)expand {
