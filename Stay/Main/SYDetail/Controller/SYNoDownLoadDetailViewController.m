@@ -703,7 +703,14 @@
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.scriptDic[@"have_a_try"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
             }
             
-            [self.navigationController popViewControllerAnimated:true];
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                        && [QuickAccess splitController].viewControllers.count >= 2){
+                        [[QuickAccess secondaryController] popViewController];
+                    }
+                    else{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
+            
         });
     });
     
