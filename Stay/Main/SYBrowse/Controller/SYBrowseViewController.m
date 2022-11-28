@@ -811,14 +811,40 @@ UIPopoverPresentationControllerDelegate
 
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:@"changeTab" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidAddHandler)
+                                                 name:@"app.stay.notification.userscriptDidAddNotification"
+                                               object:nil];
+    
 //
 //      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 }
 
+- (void)dealloc {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidAddNotification"
+                                                  object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"changeTab"
+                                                  object:nil];
+}
+
 - (void)changeTab {
     [self queryData];
 }
+
+- (void)userscriptDidAddHandler{
+    dispatch_async(dispatch_get_main_queue(),^{
+        [[ScriptMananger shareManager] refreshData];
+            [self reloadAllTableview];
+    });
+}
+                   
 
 //- (void)keyboardWillShow:(NSNotification *)notification{
 //
@@ -1479,14 +1505,6 @@ UIPopoverPresentationControllerDelegate
     }
     
     return _loadingSlideController;
-}
-
-
-- (void)dealloc{
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"changeTab" object:nil];
-
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 
