@@ -404,7 +404,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
         SYFlashViewController *cer = [[SYFlashViewController alloc] init];
-        cer.modalPresentationStyle = 0;
+        if (!(FCDeviceTypeIPad == DeviceHelper.type)){
+            cer.modalPresentationStyle = 0;
+        } else {
+            cer.isMore = true;
+        }
         [self presentViewController:cer animated:YES completion:nil];
         [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
     }
