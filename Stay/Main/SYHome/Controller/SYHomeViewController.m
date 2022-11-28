@@ -450,8 +450,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
         && [QuickAccess splitController].viewControllers.count >= 2){
-        [self reloadTableView];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reloadTableView];
+            [self.tableView reloadData];
+        });
     }
 }
 
@@ -474,8 +476,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
         && [QuickAccess splitController].viewControllers.count >= 2){
-        [self reloadTableView];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reloadTableView];
+            [self.tableView reloadData];
+        });
     }
 }
 
@@ -498,8 +502,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
         && [QuickAccess splitController].viewControllers.count >= 2){
-        [self reloadTableView];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reloadTableView];
+            [self.tableView reloadData];
+        });
     }
 }
 
@@ -559,8 +565,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
         && [QuickAccess splitController].viewControllers.count >= 2){
-        [self reloadTableView];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reloadTableView];
+            [self.tableView reloadData];
+        });
+        
     }
 }
 
@@ -584,8 +593,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
         && [QuickAccess splitController].viewControllers.count >= 2){
-        [self reloadTableView];
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reloadTableView];
+            [self.tableView reloadData];
+        });
     }
 
     

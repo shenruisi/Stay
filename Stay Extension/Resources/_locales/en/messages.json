@@ -1,7 +1,7 @@
 {
     "extension_name": {
         "message": "Stay",
-        "description": "Stay - Userscript manager"
+        "description": "Stay - Userscript Extension"
     },
     "extension_description": {
         "message": "Stay is a new generation browser script manager on Safari.",
