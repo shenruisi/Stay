@@ -121,6 +121,12 @@
     [self.tableView reloadData];
 //    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userscriptDidAddHandler)
+                                                 name:@"app.stay.notification.userscriptDidAddNotification"
+                                               object:nil];
     // Do any additional setup after loading the view.
 
 }
@@ -195,6 +201,7 @@
     self.navigationController.navigationBar.standardAppearance = appearance;
     self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     self.tabBarController.tabBar.hidden = YES;
+    [[ScriptMananger shareManager] refreshData];
     [self.tableView reloadData];
 }
  
@@ -354,6 +361,21 @@
         [[ScriptMananger shareManager] buildData];
     }
     
+}
+
+- (void)userscriptDidAddHandler{
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self initScrpitContent];
+        [self.tableView reloadData];
+    });
+}
+
+- (void)dealloc {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"app.stay.notification.userscriptDidAddNotification"
+                                                  object:nil];
+
 }
 
 /*
