@@ -195,6 +195,7 @@
     self.navigationController.navigationBar.standardAppearance = appearance;
     self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     self.tabBarController.tabBar.hidden = YES;
+    [[ScriptMananger shareManager] refreshData];
     [self.tableView reloadData];
 }
  
