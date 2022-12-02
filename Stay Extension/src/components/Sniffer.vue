@@ -1,28 +1,237 @@
 <template>
-  <div class="popup-header-wrapper">
-
+  <div class="popup-sniffer-wrapper">
+    <div class="sniffer-video-box" v-if="videoList && videoList.length">
+      <div class="sniffer-video" v-for="(item, index) in videoList" :key="index">
+        <div class="video-info">
+          <div class="img-info">
+            <div class="video">
+              <img :src="item.cover_img" v-if="item.cover_img"/>
+              <div class="no-img" v-else>
+                {{ getDomain(browserUrl) }}
+              </div>
+            </div>
+            <div class="info">
+              <div class="title">{{getLevel2domain(browserUrl)}}</div>
+              <div class="name">{{item.title+"."+(item.srcUrl?getFiletypeByUrl(item.srcUrl):"")}}</div>
+            </div>
+          </div>
+          <div class="download"><div class="btn" @click="downloadClickAction">{{ t("download") }}</div></div>
+        </div>
+        <div class="video-download-info">
+          <div class="label-txt">{{ t("save_to_folder") }}&nbsp;:</div>
+          <div class="folder select-options">
+            <select class="select-container" v-model="selectedFolder" >
+              <option v-for="(o, i) in folderOptions" :style="{display: o.id?'block':'none'}" :key="i" :value="o.id">{{o.name}}</option>
+            </select>
+          </div>
+          <template v-if="(qualityList && qualityList.length)">
+            <div class="label-txt">{{ t("quality") }}&nbsp;:</div>
+            <div class="quality select-options">
+              <select class="select-container" v-model="selectedQuality" >
+                <option v-for="(o, i) in qualityList" :key="i" :value="o.value">{{o.quotations}}</option>
+              </select>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <div class="sniffer-null" v-else>
+      {{ t('sniffer_none') }}
+    </div>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
-
+import { reactive, inject, toRefs } from 'vue'
+import { getDomain, getHostname, getFilenameByUrl, getLevel2domain, getFiletypeByUrl } from '../utils/util'
+import { useI18n } from 'vue-i18n';
 export default {
   name: 'SnifferComp',
+  props: ['browserUrl'],
   setup (props, {emit, expose}) {
+    const { t, tm } = useI18n();
+    const global = inject('global');
     const state = reactive({
-
+      browserUrl: props.browserUrl,
+      hostName: getHostname(props.browserUrl),
+      selectedFolder: '',
+      folderOptions: [{name: t('select_folder'), id: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
+      videoList: [
+        {
+          cover_img: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
+          srcUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
+          title: '美国军机飞抵台海已人困马乏，赖岳谦：若开战会被解放军碾压',
+          qualityList:[]
+        }
+      ]
     });
+    const downloadClickAction = () => {
+
+    }
     return {
-      ...toRefs(state)
-      
+      ...toRefs(state),
+      t,
+      tm,
+      getDomain,
+      getFilenameByUrl,
+      getLevel2domain,
+      getFiletypeByUrl,
+      downloadClickAction
     };
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .popup-header-wrapper{
+  .popup-sniffer-wrapper{
     width: 100%;
+    .sniffer-null{
+      width: 100%;
+      padding: 40px 10px;
+      font-size: 16px;
+      color: var(--s-000-08);
+    }
+    .sniffer-video-box{
+      padding: 10px 0 0px 10px;
+      width: 100%;
+      .sniffer-video{
+        width: 100;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        justify-items: center;
+        border-bottom: 0.5px solid var(--s-e0);
+        .video-info{
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          height: 65px;
+          justify-items: center;
+          align-items: center;
+          padding-bottom: 4px;
+          .img-info{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .video{
+              width: 60px;
+              height: 60px;
+              border: 0.5px solid var(--s-e0);
+              background-color: var(--s-f7);
+              border-radius: 10px;
+              display: flex;
+              flex-shrink: 0;
+              img{
+                max-width: 100%;
+                max-height: 100%;
+              }
+            }
+            .info{
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: left;
+              padding-left: 10px;
+              .title{
+                width: 100%;
+                color: var(--s-7a);
+                font-size: 13px;
+                font-family: 'Helvetica Neue';
+                text-align: left;
+                line-height: 16px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+              }
+              .name{
+                width: 100%;
+                text-align: left;
+                color: var(--s-black);
+                font-size: 16px;
+                font-weight: 400;
+                font-family: 'Ping Fang SC';
+                padding-top: 8px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                line-height: 17px;
+              }
+
+            }
+
+          }
+          .download{
+            width: 100px;
+            height: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 10px;
+            .btn{
+              width: 94px;
+              background-color: var(--s-f7);
+              color: var(--s-main);
+              font-size: 13px;
+              font-weight: 700;
+              padding: 2px 0;
+              border-radius: 8px;
+            }
+          }
+        }
+        .video-download-info{
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          height: 24px;
+          justify-items: center;
+          align-items: center;
+          margin-bottom: 8px;
+          padding-right: 10px;
+          .label-txt{
+            font-size: 13px;
+            color: var(--s-black);
+            font-weight: 400;
+            padding-right: 4px;
+          }
+          .select-options{
+            height: 24px;
+            select.select-container{
+              width: 100%;
+              height: 100%;
+              font-size: 13px;
+              font-weight: 700;
+              color: var(--s-black);
+              position: relative;
+              appearance:none;  
+              -moz-appearance:none;  
+              -webkit-appearance:none;  
+              background: url("../assets/images/dropdown.png") no-repeat 100% 50%;  
+              background-size: 12px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              padding-right: 6px;
+            }
+          }
+          .folder{
+            width: 155px;
+            padding-right: 10px;
+          }
+          .quality{
+            width: 68px;
+          }
+        }
+      }
+    }
   }
 </style>

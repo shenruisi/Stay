@@ -109,6 +109,7 @@ body.dialog-open {
   --s-background: #f2f2f6;
   --s-f6: #f6f6f6;
   --s-f7: #f7f7f7;
+  --s-7a: #7a7a7a;
   --s-d8: #d8d8d8;
   --s-e0: #e0e0e0;
   --s-main: #b620e0;
@@ -124,4 +125,22 @@ body.dialog-open {
   --s-e02020: #e02020;
   --s-bg: var(--s-white);
   --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+#app {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica, Arial, "Lucida Grande", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: var(--s-black);
+  width: 100%;
+  position: relative;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%; /*IE6不识别min-height*/
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--s-white);
 }

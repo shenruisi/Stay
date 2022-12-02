@@ -1,8 +1,16 @@
 <template>
   <div class="stay-popup-warpper">
-    hello Stay
-    <Header>{{"Matched"}}</Header>
-    <TabMenu :tabId="tabId" @setTabName="setTabName"></TabMenu>
+    <div class="hide-temp">hello Stay</div>
+    <Header>{{t(selectedTab.name)}}</Header>
+    <div class="tab-content">
+      <div class="matched-script" v-if="selectedTab.id==1">
+        匹配脚本
+      </div>
+      <DarkMode v-if="selectedTab.id==2"></DarkMode>
+      <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
+      <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
+    </div>
+    <TabMenu :tabId="selectedTab.id" @setTabName="setTabName"></TabMenu>
   </div>
 </template>
 <script>
@@ -10,36 +18,37 @@ import { inject, ref, reactive, watch, toRefs } from 'vue';
 import { useStore } from 'vuex';
 import Header from '../components/Header.vue';
 import TabMenu from '../components/TabMenu.vue';
+import DarkMode from '../components/DarkMode.vue';
+import Sniffer from '../components/Sniffer.vue';
+import ConsolePusher from '../components/ConsolePusher.vue';
 import { useI18n } from 'vue-i18n';
 
-let __b; 
-if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
-const browser = __b;
 
 export default {
   name: 'popupView',
   components: {
     Header,
-    TabMenu
+    TabMenu,
+    ConsolePusher,
+    Sniffer,
+    DarkMode
   },
   setup(props, { emit, attrs, slots }) {
     const { t, tm } = useI18n();
     // 获取全局对象`
-    // const global = inject('global');
-    const store = useStore();
+    const global = inject('global');
+    const store = global.store;
     const localLan = store.state.localeLan;
-    console.log("localLan====", localLan);
-    // console.log("localLan====", t('matched_scripts_tab'));
+    console.log('localLan====', localLan);
+    // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
-      tabName: 'matched_scripts_tab',
-      tabId: 1,
-      locale: "store.state.localeLan",
+      selectedTab: {id: 1, name: 'matched_scripts_tab'},
+      localLan,
       browserRunUrl: ''
     })
 
-    const setTabName = (tabId, tabName) => {
-      state.tabName = tabName;
-      state.tabId = tabId;
+    const setTabName = (selectedTab) => {
+      state.selectedTab = selectedTab;
     }
 
     /**
@@ -47,11 +56,11 @@ export default {
      * 初始化tab
      */
     const fetchMatchedScriptList = () => {
-      browser.tabs.getSelected(null, (tab) => {
-        console.log("tab=======", tab);
+      global.browser.tabs.getSelected(null, (tab) => {
+        console.log('tab-----', tab);
         state.browserRunUrl = tab.url;
-        browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: state.browserRunUrl, digest: "yes" }, (response) => {
-          console.log("response-----", response);
+        global.browser.runtime.sendMessage({ from: 'bootstrap', operate: 'fetchScripts', url: state.browserRunUrl, digest: 'yes' }, (response) => {
+          console.log('response-----', response);
           try {
             // scriptStateList = response.body;
             // renderScriptContent(scriptStateList);
@@ -69,8 +78,8 @@ export default {
 
     return {
       ...toRefs(state),
-      // t,
-      // tm,
+      t,
+      tm,
       setTabName
     };
   }
@@ -78,21 +87,14 @@ export default {
 </script>
 <style lang="less">
 @import "../assets/css/common.less";
-#app {
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-    Helvetica, Arial, "Lucida Grande", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: var(--s-black);
-  width: 100%;
-  position: relative;
-  min-height: 100%;
-  height: auto !important;
-  height: 100%; /*IE6不识别min-height*/
-  position: relative;
-  display: flex;
-  flex-direction: column;
+.stay-popup-warpper{
+  .hide-temp{
+    height: 38px;
+    width: 100%;
+  }
+  .tab-content{
+    width: 100%;
+    background-color: var(--s-white);
+  }
 }
-
 </style>

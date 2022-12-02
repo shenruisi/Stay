@@ -47,8 +47,7 @@ export default {
       state.selectedTabId = tabId
       state.tabList.forEach(item => {
         if (item.id === tabId) {
-          state.tabName = item.name;
-          emit('setTabName', tabId, item.name);
+          emit('setTabName', item);
         }
       })
     }

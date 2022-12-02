@@ -20,6 +20,11 @@ export default {
     "darkmode_disabled": "Disabled for current website",
     "download_text":"User script manager",
     "downloader_tab": "Downloader",
+    "sniffer_none": "No video found",
+    "download": "DOWNLOAD",
+    "save_to_folder": "Save to folder",
+    "quality": "Quality",
+    "select_folder": "Select Folder"
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -41,6 +46,11 @@ export default {
     "darkmode_disabled": "禁用当前网站",
     "download_text":"用户脚本管理",
     "downloader_tab": "下载器",
+    "sniffer_none": "没有发现视频",
+    "download": "下载",
+    "save_to_folder": "保存到文件夹",
+    "quality": "画质",
+    "select_folder": "选择文件夹"
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -62,6 +72,11 @@ export default {
     "darkmode_disabled": "禁用當前網站",
     "download_text":"用戶腳本管理",
     "downloader_tab": "下載器",
+    "sniffer_none": "沒有發現視頻",
+    "download": "下載",
+    "save_to_folder": "保存到文件夾",
+    "quality": "畫質",
+    "select_folder": "選擇文件夾"
   }
 }
 /* eslint-disable */

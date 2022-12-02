@@ -4,21 +4,38 @@
     <div class="header-content">
       <slot></slot>
     </div>
+    <div class="stay-switch" :class="staySwitch" @click="clickStaySwitchAction(staySwitch)"></div>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, inject } from 'vue'
 
 export default {
   name: 'headerComp',
   setup (props, {emit, expose}) {
+    const global = inject('global');
+    const store = global.store;
+    const state = reactive({
+      staySwitch: store.state.staySwitch
+    })
+
     const clickStayAction = () => {
       window.open('stay://');
     }
+    const clickStaySwitchAction = (staySwitch) => {
+      if(staySwitch == 'start'){
+        state.staySwitch = 'cease';
+      }else{
+        state.staySwitch = 'start';
+      }
+      store.commit('setStaySwitch', state.staySwitch);
+    }
     
     return {
-      clickStayAction
+      ...toRefs(state),
+      clickStayAction,
+      clickStaySwitchAction
     };
   }
 }
@@ -42,8 +59,26 @@ export default {
       top: 50%;
       padding: 2px;
       transform: translate(0, -50%);
-      background: url("../assets/images/stay-large-icon.png") no-repeat 50% 50%;
-      background-size: 50%;
+      background: url("../assets/images/stay-header.png") no-repeat 50% 50%;
+      background-size: 40%;
+    }
+    .stay-switch{
+      position: absolute;
+      right: 0;
+      width: 48px;
+      height: 38px;
+      top: 50%;
+      padding: 2px;
+      transform: translate(0, -50%);
+      &.start{
+        background: url("../assets/images/pause.png") no-repeat 50% 50%;
+        background-size: 40%;
+      }
+      &.cease{
+        background: url("../assets/images/play.png") no-repeat 50% 50%;
+        background-size: 40%;
+      }
+      
     }
     .header-content{
       width: 100%;

@@ -24,23 +24,33 @@ const moudleA = {
 
 export default createStore({
   state: {
-    localeLan: languageCode().indexOf('zh_') > -1 ? 'zh' : 'en'
+    localeLan: languageCode().indexOf('zh_') > -1 ? 'zh' : 'en',
+    staySwitch: 'start', // start,cease
   },
   getters: {
     localLanGetter: (state) => {
       return state.localeLan;
+    },
+    staySwitchGetter: (state) => {
+      return state.staySwitch;
     }
   },
   // vuex的store状态更新的唯一方式：提交 mutation
   mutations: {
     setLocalLan: (state, data) => {
       state.localeLan = data;
+    },
+    setStaySwitch: (state, data) => {
+      state.staySwitch = data;
     }
   },
   // 异步操作在action中进行，再传递到mutation
   actions: {
     setLocalLanAsync: ({ commit }, data) => {
       commit('setLocalLan', data);
+    },
+    setStaySwitchAsync: ({ commit }, data) => {
+      commit('setStaySwitch', data);
     }
   },
   // 当应用变得复杂时，state中管理的变量变多，store对象就有可能变得相当臃肿。为了解决这个问题，
@@ -53,10 +63,10 @@ export default createStore({
       // 默认存储在localStorage 可改为sessionStorage
       storage: window.localStorage,
       // 本地存储数据的键名
-      key: 'stay-client-vuex-store-persistence',
+      key: 'stay-popup-vuex-store-persistence',
       // paths是存储state中的那些数据，如果是模块下具体的数据需要加上模块名称，如moudleA.name
       // 修改state后触发才可以看到本地存储数据的的变化。
-      paths: ['moudleA', 'localeLan']
+      paths: ['moudleA', 'localeLan', 'staySwitch']
     })
   ]
 });

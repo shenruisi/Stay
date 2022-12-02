@@ -1,6 +1,7 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const { defineConfig } = require('@vue/cli-service');
+// const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
 // 复制文件到指定目录
 // const copyFiles = [
@@ -42,6 +43,8 @@ module.exports = defineConfig({
 	productionSourceMap: false,
 	runtimeCompiler: false,
 	transpileDependencies: true,
+	// 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建，在适当的时候开启几个子进程去并发的执行压缩
+	parallel: require('os').cpus().length > 1,
 	// 配置 content.js background.js
 	configureWebpack: {
 		entry: {
@@ -70,5 +73,14 @@ module.exports = defineConfig({
 			  maxSize: 4 * 1024, // 4KiB
 			},
 		});
+		// 开启gzip压缩
+		// config.plugins.push(
+		// 	new CompressionWebpackPlugin({
+		// 	  algorithm: 'gzip',
+		// 	  test: /\.js$|\.html$|\.json$|\.css/,
+		// 	  threshold: 10240,
+		// 	  minRatio: 0.8,
+		// 	})
+		// );
 	}
 });

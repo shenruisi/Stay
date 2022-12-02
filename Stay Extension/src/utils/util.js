@@ -112,3 +112,62 @@ export function checkJavascriptFileType(fileType) {
   }
   return false;
 }
+
+export function matchRule(str, rule) {
+  let reg = new RegExp('([.*+?^=!:${}()|[]/\\])','g');
+  let escapeRegex = (str) => str.replace(reg, '\\$1');
+  return new RegExp('^' + rule.split('*').map(escapeRegex).join('.*') + '$').test(str);
+}
+
+export function getHostname(url) {
+  if(!url){
+    return ''
+  }
+  try {
+    return new URL(url).hostname.toLowerCase();
+  } catch (error) {
+    return url.split('/')[0].toLowerCase();
+  }
+}
+
+export function getFilenameByUrl(url){
+  if(!url){
+    return '';
+  }
+  return url.split('/').pop();
+}
+
+export function getFiletypeByUrl(url){
+  if(!url){
+    return '';
+  }
+  return url.split('.').pop();
+}
+
+export function getDomain(url){
+  let l2domain = getLevel2domain(url);
+  if(!l2domain){
+    return '';
+  }
+  let reg = new RegExp('.(com.cn|com|net.cn|net|org.cn|org|gov.cn|gov|cn|mobi|me|info|name|biz|cc|tv|asia|hk|网络|公司|中国)','g');
+  return l2domain.replace(reg, '');
+}
+
+export function getLevel2domain(url) {
+  try {
+    let subdomain = ''
+    const domain = url ? url.split('/') : ''
+    const domainList = domain[2].split('.')
+    const urlItems = []
+    urlItems.unshift(domainList.pop())
+    while (urlItems.length < 2) {
+      urlItems.unshift(domainList.pop())
+      subdomain = urlItems.join('.')
+    }
+    return subdomain
+  } catch (e) {
+    return ''
+  }
+}
+
+
