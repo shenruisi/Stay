@@ -7,7 +7,7 @@
             <div class="video">
               <img :src="item.cover_img" v-if="item.cover_img"/>
               <div class="no-img" v-else>
-                {{ getDomain(browserUrl) }}
+                <span>{{ getDomain(browserUrl) }}</span>
               </div>
             </div>
             <div class="info">
@@ -58,7 +58,7 @@ export default {
       folderOptions: [{name: t('select_folder'), id: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
         {
-          cover_img: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
+          // cover_img: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
           srcUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
           title: '美国军机飞抵台海已人困马乏，赖岳谦：若开战会被解放军碾压',
           qualityList:[]
@@ -127,6 +127,18 @@ export default {
               img{
                 max-width: 100%;
                 max-height: 100%;
+              }
+              .no-img{
+                background: url("../assets/images/video-default.png") no-repeat 50% 32%;
+                width: 100%;
+                height: 100%;
+                background-size: 50%;
+                span{
+                  position: relative;
+                  top: 51%;
+                  font-family: 'Helvetica Neue';
+                  font-size: 10px;
+                }
               }
             }
             .info{
