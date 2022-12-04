@@ -46,6 +46,10 @@
 		3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388DD2933594A007563E6 /* FolderModalController.swift */; };
 		3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E129335C68007563E6 /* RoundedBorderView.swift */; };
 		3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E129335C68007563E6 /* RoundedBorderView.swift */; };
+		3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
+		3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
+		3C8388EC2934F56C007563E6 /* DMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388EB2934F56C007563E6 /* DMStore.m */; };
+		3C8388ED2934F56C007563E6 /* DMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388EB2934F56C007563E6 /* DMStore.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
@@ -515,6 +519,10 @@
 		3C8388D2293355F9007563E6 /* FolderSlideController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSlideController.swift; sourceTree = "<group>"; };
 		3C8388DD2933594A007563E6 /* FolderModalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModalController.swift; sourceTree = "<group>"; };
 		3C8388E129335C68007563E6 /* RoundedBorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBorderView.swift; sourceTree = "<group>"; };
+		3C8388E62934E7D5007563E6 /* MyAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAdditions.m; sourceTree = "<group>"; };
+		3C8388E72934E7D5007563E6 /* MyAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAdditions.h; sourceTree = "<group>"; };
+		3C8388EA2934F56C007563E6 /* DMStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMStore.h; sourceTree = "<group>"; };
+		3C8388EB2934F56C007563E6 /* DMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMStore.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -927,6 +935,10 @@
 			children = (
 				3C8388BC292E55B9007563E6 /* DownloadManager.h */,
 				3C8388BD292E55B9007563E6 /* DownloadManager.m */,
+				3C8388E72934E7D5007563E6 /* MyAdditions.h */,
+				3C8388E62934E7D5007563E6 /* MyAdditions.m */,
+				3C8388EA2934F56C007563E6 /* DMStore.h */,
+				3C8388EB2934F56C007563E6 /* DMStore.m */,
 			);
 			path = Download;
 			sourceTree = "<group>";
@@ -2378,6 +2390,7 @@
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
 				5867D14C288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				58AC12F428607B3400875D6D /* FCConfig.m in Sources */,
+				3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
 				58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */,
@@ -2436,6 +2449,7 @@
 				5867D158288F91F900EC822B /* TimeHelper.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
+				3C8388EC2934F56C007563E6 /* DMStore.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
@@ -2518,6 +2532,7 @@
 			files = (
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
+				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
@@ -2532,6 +2547,7 @@
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
+				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,

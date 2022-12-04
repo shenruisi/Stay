@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
+    DMStatusNone = -1,
     DMStatusPending,
     DMStatusDownloading,
     DMStatusPaused,
