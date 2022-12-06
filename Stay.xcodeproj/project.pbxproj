@@ -22,6 +22,7 @@
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
 		3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
 		3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
+		3C81E717293EF56400AB4B3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		3C8388BE292E55B9007563E6 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388BD292E55B9007563E6 /* DownloadManager.m */; };
 		3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388BD292E55B9007563E6 /* DownloadManager.m */; };
 		3C8388C62931ADC5007563E6 /* FCTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388C12931ADC3007563E6 /* FCTab.m */; };
@@ -2515,6 +2516,7 @@
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				3C8388D529335624007563E6 /* FCTab.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
+				3C81E717293EF56400AB4B3F /* FCShared.m in Sources */,
 				588B83212845FC0C00AB2D73 /* FCDisk.m in Sources */,
 				588B83292846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				3C8388DB29335701007563E6 /* ColorHelper.m in Sources */,

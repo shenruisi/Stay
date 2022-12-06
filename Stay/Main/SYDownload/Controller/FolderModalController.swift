@@ -35,11 +35,11 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
     let previewView = UIView()
     
     let globalColors = [
-        "D91D06","FA6400","F7B500","6DD400","44D7B6","32C5FF",
-        "0091FF","6236FF","B620E0","6D7278","E5E5E5","000000"
+        "B620E0","FA6400","F7B500","6DD400","44D7B6","32C5FF",
+        "0091FF","6236FF","D91D06","6D7278","E5E5E5","000000"
     ]
     var selectedColorIndex = 0
-    var selectedColor = "D91D06"
+    var selectedColor = "B620E0"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,7 +79,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
             selectedColor = folderTab!.config.hexColor
             if selectedColor.isEmpty {
                 selectedColorIndex = 0
-                selectedColor = "D91D06"
+                selectedColor = "B620E0"
             }
             nameInput.text = folderTab?.config.name
             for (index, color) in globalColors.enumerated() {
@@ -301,6 +301,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
                 folderTab?.config.name = nameInput.text!
                 folderTab?.config.hexColor = selectedColor
             }
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "app.stay.notification.SYFolderChangeNotification"), object: nil)
             self.navigationController?.slideController?.dismiss()
         }
     }

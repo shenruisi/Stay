@@ -88,9 +88,16 @@
             }
         }
         
-        [_tabs sortUsingComparator:^NSComparisonResult(FCTab *  _Nonnull tab1, FCTab *  _Nonnull tab2) {
-            return tab1.config.position - tab2.config.position;
-        }];
+        if (_tabs.count == 0) {
+            FCTab *tab = [self newTab];
+            tab.config.name = NSLocalizedString(@"Default", @"");
+            tab.config.hexColor = @"B620E0";
+            [_tabs addObject:tab];
+        } else {
+            [_tabs sortUsingComparator:^NSComparisonResult(FCTab *  _Nonnull tab1, FCTab *  _Nonnull tab2) {
+                return tab1.config.position - tab2.config.position;
+            }];
+        }
     }
     
     return _tabs;
