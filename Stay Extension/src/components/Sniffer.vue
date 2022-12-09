@@ -65,7 +65,18 @@ export default {
         }
       ]
     });
+    /**
+     * title:xxx,
+     * hostUrl:xxx,
+     * downloadUrl:xxx,
+     * poster:xxx 
+     * folderUuid:xxx
+     */
     const downloadClickAction = () => {
+
+
+
+
 
     }
     return {

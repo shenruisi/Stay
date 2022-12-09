@@ -1,3 +1,4 @@
+/* eslint-disable */
 Date.prototype.dateFormat = function (fmt) {
     fmt = fmt ? fmt : "YYYY-mm-dd HH:MM:SS"
     if (!this || typeof this == "undefined") {

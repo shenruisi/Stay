@@ -26,6 +26,8 @@ export default createStore({
   state: {
     localeLan: languageCode().indexOf('zh_') > -1 ? 'zh' : 'en',
     staySwitch: 'start', // start,cease
+    isStayPro: 'b',
+    browserUrl: '',
   },
   getters: {
     localLanGetter: (state) => {
@@ -33,6 +35,12 @@ export default createStore({
     },
     staySwitchGetter: (state) => {
       return state.staySwitch;
+    },
+    isStayProGetter: (state) => {
+      return state.isStayPro;
+    },
+    browserUrlGetter: (state) => {
+      return state.browserUrl;
     }
   },
   // vuex的store状态更新的唯一方式：提交 mutation
@@ -42,6 +50,12 @@ export default createStore({
     },
     setStaySwitch: (state, data) => {
       state.staySwitch = data;
+    },
+    setIsStayPro: (state, data) => {
+      state.isStayPro = data;
+    },
+    setBrowserUrl: (state, data) => {
+      state.browserUrl = data;
     }
   },
   // 异步操作在action中进行，再传递到mutation
@@ -51,6 +65,12 @@ export default createStore({
     },
     setStaySwitchAsync: ({ commit }, data) => {
       commit('setStaySwitch', data);
+    },
+    setIsStayProAsync: ({ commit }, data) => {
+      commit('setIsStayPro', data);
+    },
+    setrowserUrlAsync: ({ commit }, data) => {
+      commit('setBrowserUrl', data);
     }
   },
   // 当应用变得复杂时，state中管理的变量变多，store对象就有可能变得相当臃肿。为了解决这个问题，
