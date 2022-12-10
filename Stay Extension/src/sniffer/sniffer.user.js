@@ -2,13 +2,17 @@
  * 自动嗅探video资源
  * 解析页面video标签
  */
+let __b; 
+if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
+const browser = __b;
 (function () {
   let videoInfoList = [];
-  const host = window.location.host;
+  let videoLinkSet = new Set();
+  let contentHost = window.location.host;
 
   let scriptTag = document.createElement('script');
   scriptTag.type = 'text/javascript';
-  scriptTag.id = 'Stay_parse_video_Inject_JS_'+host;
+  scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
   let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo();`;
   //   scriptTag.textContent = injectJSContent;
   scriptTag.appendChild(document.createTextNode(injectJSContent));
@@ -27,7 +31,7 @@
 
   function injectParseVideoJS(){
     const hostUrl = window.location.href;
-    const host = window.location.host;
+    let host = window.location.host;
     console.log('------------injectParseVideoJS-----start------------------')
     let videoList = [];
     // 获取到的video Url数组
@@ -48,59 +52,30 @@
         observerVideo()
       }
     }
-    
+
     function observerVideo(){
       // 创建观察者对象  
       const observer = new MutationObserver(function(mutations) {  
-        console.log('----------------MutationObserver---------------',mutations)
+        // console.log('----------------MutationObserver---------------',mutations)
         try{
           mutations.forEach(function(mutation) {  
             // todo
             videoDoms = document.querySelectorAll('video');
             if('VIDEO' === mutation.target.nodeName && videoDoms && videoDoms.length){
               console.log('mutation.videoDoms-----',videoDoms)
+              host = window.location.host;
               parseVideoNodeList(videoDoms);
               throw new Error('endloop');
             }
-            //   ifreamDoms = document.getElementsByTagName('iframe');
-            //   console.log('ifreamDoms-------',ifreamDoms)
-            //   if(ifreamDoms && ifreamDoms.length){
-            //     // document.domain = domain;
-            //     for (let i = 0; i<ifreamDoms.length; i++) {
-            //       // Catch and ignore errors caused by iframes from other domains
-            //       console.log('ifreamDoms-------',i);
-            //       try {
-            //         let doc = ifreamDoms[i].contentDocument || ifreamDoms[i].contentWindow.document;
-            //         doc.addEventListener('load', function() {
-            //           console.log('ifreamDoms------load--------',doc);
-            //           videoDoms = doc.getElementsByTagName('video');
-            //           if(videoDoms && videoDoms.length){
-            //             parseVideoNodeList(videoDoms);
-            //             observer.disconnect(); 
-            //           }else{
-            //             doc.addEventListener('DOMSubtreeModified', ()=>{
-            //               videoDoms = doc.getElementsByTagName('video');
-            //               parseVideoNodeList(videoDoms);
-            //             }, true);
-            //           }
-            //         })
-            //       } catch (ex) { 
-            //         console.log(ex); 
-            //       }
-            //     }
-            //   }
-    
           });  
         } catch (e) {
           if(e.message === 'endloop') {
             // 随后,你还可以停止观察  
-            observer.disconnect(); 
+            // observer.disconnect(); 
           }else{
             throw e
           }
         }
-        // 随后,你还可以停止观察  
-        //   observer.disconnect(); 
       });
         /**
        * 配置观察选项: 
@@ -110,25 +85,24 @@
        * subtree: 目标节点所有后代节点的attributes、childList、characterData变化
        */
       const config = { attributes: true, childList: true, characterData: true, subtree: true }  
-        
       // 传入目标节点和观察选项  
       observer.observe(document, config);  
     }
     
     function parseVideoNodeList(videoDoms){
-      console.log('parseVideoNodeList-----------------start------------------')
       if(videoDoms && videoDoms.length){
         let videoNodeList = Array.from(videoDoms)
         videoNodeList.forEach(item => {
-          console.log('parseVideoNodeList.item=======', item)
           if(!item || !(item instanceof HTMLElement)){
             return;
           }
           let downloadUrl = item.getAttribute('src');
+
           // 已存在
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
             return;
           }
+          console.log('parseVideoNodeList-----------------start------------------')
           // todo fetch other scenarios
           let videoInfo = handleVideoInfoParse(item);
          
@@ -139,6 +113,7 @@
           videoUrlSet.add(downloadUrl);
           videoList.push(videoInfo);
         })
+        window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
         console.log('parseVideoNodeList-----------result---------',videoList);
           
       }
@@ -430,10 +405,19 @@
       return '';
     }
     
-      
-    //   observerVideo()
-    
     startFindVideoInfo();
+    //   observerVideo()
+    document.onreadystatechange = () => {
+      console.log('document.readyState==',document.readyState)
+      if (document.readyState === 'complete') {
+        console.log('readyState-------------------', document.readyState)
+        
+        
+        // eslint-disable-next-line no-undef
+        console.log('readyStateytInitialPlayerResponseytInitialPlayerResponse-----')
+      }
+    };
+    
     
     
     function handlePageInterceptor(){
@@ -482,16 +466,50 @@
     }
   }
 
-  document.onreadystatechange = () => {
-    console.log('document.readyState==',document.readyState)
-    if (document.readyState === 'complete') {
-      console.log('readyState-----', window.ytInitialPlayerResponse)
-      // eslint-disable-next-line no-undef
-      console.log('readyStateytInitialPlayerResponseytInitialPlayerResponse-----')
+  
+  
+  window.addEventListener('message', (e) => {
+    if (!e || !e.data || !e.data.name) return;
+    
+    const name = e.data.name;
+    console.log('snifffer.user----->e.data.name=',name);
+    if(name === 'VIDEO_LINK_CAPTURE'){
+      videoLinkSet = e.data.urls ? e.data.urls : new Set();
+      console.log('snifffer.user----->videoLinkSet=',videoLinkSet);
     }
-  };
-  
-  
+    else if(name === 'VIDEO_INFO_CAPTURE'){
+      videoInfoList = e.data.videoList ? e.data.videoList : [];
+      console.log('snifffer.user----->videoInfoList=',videoInfoList);
+    }
+
+    // let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH' };
+    // browser.runtime.sendMessage(message, (response) => {
+    // });
+
+  })
+
+
+  // document.onreadystatechange = () => {
+  //   console.log('content--------document.readyState==',document.readyState)
+  //   if (document.readyState === 'complete') {
+  //     console.log('content--------readyState-------------------', document.readyState)
+  //     // startFindVideoInfo();
+      
+  //     // eslint-disable-next-line no-undef
+  //     console.log('content-------------')
+  //   }
+  // };
+
+  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
+    const operate = request.operate;
+    if('background' === requestFrom){
+      if('FETCH_VIDEO_INFO' === operate){
+        sendResponse({body : {videoInfoList, videoLinkSet}})
+      }
+    }
+    return true;
+  })
 
   
     

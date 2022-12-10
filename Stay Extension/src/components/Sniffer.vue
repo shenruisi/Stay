@@ -5,17 +5,17 @@
         <div class="video-info">
           <div class="img-info">
             <div class="video">
-              <img :src="item.cover_img" v-if="item.cover_img"/>
+              <img :src="item.poster" v-if="item.poster"/>
               <div class="no-img" v-else>
                 <span>{{ getDomain(browserUrl) }}</span>
               </div>
             </div>
             <div class="info">
               <div class="title">{{getLevel2domain(browserUrl)}}</div>
-              <div class="name">{{item.title+"."+(item.srcUrl?getFiletypeByUrl(item.srcUrl):"")}}</div>
+              <div class="name">{{item.title+"."+(item.downloadUrl?getFiletypeByUrl(item.downloadUrl):"")}}</div>
             </div>
           </div>
-          <div class="download"><div class="btn" @click="downloadClickAction">{{ t("download") }}</div></div>
+          <div class="download"><div class="btn" @click="downloadClickAction(item)">{{ t("download") }}</div></div>
         </div>
         <div class="video-download-info">
           <div class="label-txt">{{ t("save_to_folder") }}&nbsp;:</div>
@@ -28,7 +28,8 @@
             <div class="label-txt">{{ t("quality") }}&nbsp;:</div>
             <div class="quality select-options">
               <select class="select-container" v-model="selectedQuality" >
-                <option v-for="(o, i) in qualityList" :key="i" :value="o.value">{{o.quotations}}</option>
+                <!-- {downloadUrl, qualityLabel, quality } -->
+                <option v-for="(o, i) in qualityList" :key="i" :value="o.downloadUrl">{{o.qualityLabel}}</option>
               </select>
             </div>
           </template>
@@ -55,29 +56,51 @@ export default {
       browserUrl: props.browserUrl,
       hostName: getHostname(props.browserUrl),
       selectedFolder: '',
+      selectedQuality: '',
       folderOptions: [{name: t('select_folder'), id: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
         {
-          // cover_img: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
-          srcUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
+          poster: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
+          downloadUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
           title: '美国军机飞抵台海已人困马乏，赖岳谦：若开战会被解放军碾压',
           qualityList:[]
         }
       ]
     });
+
+    const snifferFetchVideoInfo = () => {
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'snifferFetchVideoInfo'}, (response) => {
+        console.log('snifferFetchVideoInfo---response-----', response);
+        try {
+          
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+
+    snifferFetchVideoInfo();
+
     /**
      * title:xxx,
      * hostUrl:xxx,
      * downloadUrl:xxx,
      * poster:xxx 
-     * folderUuid:xxx
+     * uuid:xxx
+     * title:xxx,
+     * 
+     * stay://x-callback-url/snifferVideo?list=encodeURIComponent([{hostUrl,title,icon,downloadUrl}])
      */
-    const downloadClickAction = () => {
-
-
-
-
-
+    const downloadClickAction = (item) => {
+      if(!state.selectedFolder){
+        global.toast(t('select_folder'));
+        return;
+      }
+      item.uuid = state.selectedFolder;
+      if(state.selectedQuality){
+        item.downloadUrl = state.selectedQuality;
+      }
+      window.open('stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(item)));
     }
     return {
       ...toRefs(state),

@@ -365,6 +365,7 @@ function isFullyQualifiedDomain(candidate) {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
@@ -1039,12 +1040,17 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
         }
-        // else if ("DARKMODE_SETTING" == request.operate){
-        //     const darkmodeStatus = request.status;
-        //     browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        //         browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus,  domain: request.domain, enabled: request.enabled });
-        //     });
-        // }
+        else if ("sniffer" == request.operate){
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_VIDEO_INFO"});
+            });
+        }
+        else if("fetchFolders" == request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
+                console.log("fetchFolders-----response--",response)
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }
 });

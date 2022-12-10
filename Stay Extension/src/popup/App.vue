@@ -6,8 +6,15 @@
       <div class="matched-script" v-if="selectedTab.id==1">
         匹配脚本
       </div>
-      <DarkMode v-if="selectedTab.id==2"></DarkMode>
-      <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
+      <template v-if="selectedTab.id==2 || selectedTab.id==3">
+        <template v-if="isStayPro">
+          <DarkMode v-if="selectedTab.id==2"></DarkMode>
+          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
+        </template>
+        <UpgradePro v-else></UpgradePro>
+      </template>
+      
+      
       <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName"></TabMenu>
@@ -21,6 +28,7 @@ import TabMenu from '../components/TabMenu.vue';
 import DarkMode from '../components/DarkMode.vue';
 import Sniffer from '../components/Sniffer.vue';
 import ConsolePusher from '../components/ConsolePusher.vue';
+import UpgradePro from '../components/UpgradePro.vue';
 import { useI18n } from 'vue-i18n';
 
 
@@ -31,7 +39,8 @@ export default {
     TabMenu,
     ConsolePusher,
     Sniffer,
-    DarkMode
+    DarkMode,
+    UpgradePro
   },
   setup(props, { emit, attrs, slots }) {
     const { t, tm } = useI18n();
@@ -62,7 +71,7 @@ export default {
       if('background' === from){
         if (operate == 'giveDarkmodeConfig'){
           console.log('giveDarkmodeConfig==res==', request);
-          state.isStayPro = request.isStayAround;
+          state.isStayPro = request.isStayAround=='a'?true:false;
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
           state.siteEnabled = request.enabled;
@@ -138,13 +147,27 @@ export default {
 <style lang="less">
 @import "../assets/css/common.less";
 .stay-popup-warpper{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  flex: 1;
   .hide-temp{
     height: 38px;
     width: 100%;
   }
   .tab-content{
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
     background-color: var(--s-white);
+    flex: 1;
+    padding-bottom: 52px;
   }
 }
 </style>

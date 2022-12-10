@@ -26,7 +26,7 @@ export default createStore({
   state: {
     localeLan: languageCode().indexOf('zh_') > -1 ? 'zh' : 'en',
     staySwitch: 'start', // start,cease
-    isStayPro: 'b',
+    isStayPro: false,
     browserUrl: '',
   },
   getters: {
