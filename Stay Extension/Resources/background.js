@@ -1040,9 +1040,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
         }
-        else if ("sniffer" == request.operate){
+        else if ("snifferFetchVideoInfo" == request.operate){
+            console.log("--------snifferFetchVideoInfo------------")
             browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_VIDEO_INFO"});
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_VIDEO_INFO"}).then(
+                    (res)=>{
+                        console.log("-----bg-snifferFetchVideoInfo------res",res)
+                        sendResponse({ body: res.body })  
+                    }
+                );
             });
         }
         else if("fetchFolders" == request.operate){
