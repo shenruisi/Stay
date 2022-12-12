@@ -71,11 +71,6 @@
     
     CGFloat top = imageView.bottom + 7;
     
-    
-    UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
-    runBtn.titleLabel.textColor = FCStyle.accent;
-    runBtn.titleLabel.font = FCStyle.footnoteBold;
-    
     if(_downloadResource.status == 2) {
         UIButton *savePhotoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
         [savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
@@ -103,8 +98,19 @@
         [saveFileBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
 
         [self.contentView addSubview:saveFileBtn];
-        runBtn.titleLabel.text = NSLocalizedString(@"PLAY", @"");
         
+        UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
+        runBtn.titleLabel.font = FCStyle.footnoteBold;
+        [runBtn setTitle:NSLocalizedString(@"PLAY", @"PLAY") forState:UIControlStateNormal] ;
+        [runBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
+        [runBtn sizeToFit];
+        runBtn.width += 20;
+        runBtn.layer.cornerRadius = 8;
+        runBtn.centerY = imageView.centerY;
+        runBtn.right = self.contentView.right - 11;
+        runBtn.backgroundColor =  FCStyle.secondaryPopup;
+        [runBtn addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:runBtn];
         
     } else {
         UILabel *downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 128, 16)];
@@ -117,9 +123,65 @@
     
         if(_downloadResource.status == 0) {
             downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
+            
+            
+            UILabel *stopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
+            stopLabel.tintColor = FCStyle.accent;
+            stopLabel.text = NSLocalizedString(@"STOP","");
+            stopLabel.font = FCStyle.footnoteBold;
+            stopLabel.bottom = imageView.bottom;
+            stopLabel.textColor = FCStyle.accent;
+            [stopLabel sizeToFit];
+            stopLabel.right = self.contentView.width - 9;
+            [self.contentView addSubview:stopLabel];
+        
+            
+            UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+            [stop setImage:[ImageHelper sfNamed:@"pause.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+            stop.bottom = stopLabel.top - 2;
+            stop.centerX =  stopLabel.centerX;
+            [stop addTarget:self action:@selector(stopDownload:) forControlEvents:UIControlEventTouchUpInside];
+            [self.contentView addSubview:stop];
+        
         } else if (_downloadResource.status == 1) {
+            
+            UILabel *continueLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
+            continueLabel.tintColor = FCStyle.accent;
+            continueLabel.text = NSLocalizedString(@"CONTINUE","");
+            continueLabel.font = FCStyle.footnoteBold;
+            continueLabel.bottom = imageView.bottom;
+            continueLabel.textColor = FCStyle.accent;
+            [continueLabel sizeToFit];
+            continueLabel.right = self.contentView.width - 9;
+            [self.contentView addSubview:continueLabel];
+        
+            
+            UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+            [stop setImage:[ImageHelper sfNamed:@"play.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+            stop.bottom = continueLabel.top - 2;
+            stop.centerX =  continueLabel.centerX;
+            [stop addTarget:self action:@selector(continueDownload:) forControlEvents:UIControlEventTouchUpInside];
+            [self.contentView addSubview:stop];
             downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 3) {
+            UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
+            retryLabel.tintColor = FCStyle.accent;
+            retryLabel.text = NSLocalizedString(@"RETRY","");
+            retryLabel.font = FCStyle.footnoteBold;
+            retryLabel.bottom = imageView.bottom;
+            retryLabel.textColor = FCStyle.accent;
+            [retryLabel sizeToFit];
+            retryLabel.right = self.contentView.width - 9;
+            [self.contentView addSubview:retryLabel];
+        
+            UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+            [stop setImage:[ImageHelper sfNamed:@"play.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+            
+            [stop addTarget:self action:@selector(retryDownload:) forControlEvents:UIControlEventTouchUpInside];
+
+            stop.bottom = retryLabel.top - 2;
+            stop.centerX =  retryLabel.centerX;
+            [self.contentView addSubview:stop];
             downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         }
         
@@ -131,9 +193,22 @@
         [self.contentView addSubview:progress];
     }
     
+}
+
+//播放视频
+- (void)playVideo:(UIButton *)sender{
     
+}
+
+- (void)stopDownload:(UIButton *)sender {
     
+}
+
+- (void)retryDownload:(UIButton *)sender {
     
+}
+
+- (void)continueDownload:(UIButton *)sender {
     
 }
 
