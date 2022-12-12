@@ -52,6 +52,8 @@ UITableViewDataSource
     DownloadResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadResourcecellID"];
     if (cell == nil) {
         cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
     }
     for (UIView *subView in cell.contentView.subviews) {
         [subView removeFromSuperview];

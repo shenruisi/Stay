@@ -80,22 +80,32 @@
         UIButton *savePhotoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
         [savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [savePhotoBtn setTitle:NSLocalizedString(@"SAVETOPHOTOS", @"") forState:UIControlStateNormal];
+        [savePhotoBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         savePhotoBtn.titleLabel.font = FCStyle.footnoteBold;
         savePhotoBtn.top = top;
         savePhotoBtn.left = 12;
         savePhotoBtn.backgroundColor = FCStyle.secondaryPopup;
+        savePhotoBtn.layer.cornerRadius = 8;
+        [savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+
         [self.contentView addSubview:savePhotoBtn];
 
         
         UIButton *saveFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
         [saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [saveFileBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
+        [saveFileBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         saveFileBtn.titleLabel.font = FCStyle.footnoteBold;
         saveFileBtn.centerY = savePhotoBtn.centerY;
         saveFileBtn.left = savePhotoBtn.right + 9;
         saveFileBtn.backgroundColor = FCStyle.secondaryPopup;
+        saveFileBtn.layer.cornerRadius = 8;
+        [saveFileBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+
         [self.contentView addSubview:saveFileBtn];
         runBtn.titleLabel.text = NSLocalizedString(@"PLAY", @"");
+        
+        
     } else {
         UILabel *downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 128, 16)];
     
@@ -106,11 +116,11 @@
         [self.contentView addSubview:downloadRateLabel];
     
         if(_downloadResource.status == 0) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%2f",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 1) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%2f",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 3) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%2f",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         }
         
         
