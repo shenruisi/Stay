@@ -116,11 +116,11 @@
         [self.contentView addSubview:downloadRateLabel];
     
         if(_downloadResource.status == 0) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 1) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 3) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         }
         
         
