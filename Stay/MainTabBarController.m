@@ -11,8 +11,14 @@
 #import "NavigationController.h"
 #import "SYMoreViewController.h"
 #import "SYDetailViewController.h"
+#import "SYFIleManagerViewController.h"
 #import "FCStyle.h"
 #import "ImageHelper.h"
+#if iOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
 
 @interface MainTabBarController ()
 
@@ -36,19 +42,23 @@
 
 -(void)createTabbar
 {
-    NSArray *titleArray = @[NSLocalizedString(@"settings.library","Library"),NSLocalizedString(@"settings.search","search"),NSLocalizedString(@"settings.more","more")];
+    NSArray *titleArray = @[NSLocalizedString(@"settings.library","Library"),NSLocalizedString(@"settings.search","search"),NSLocalizedString(@"Downloader","Downloader"),NSLocalizedString(@"settings.more","more")];
     
     SYHomeViewController *homeController = [[SYHomeViewController alloc] init];
     SYBrowseViewController *searchController = [[SYBrowseViewController alloc] init];
-    SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];    
-    
+    SYMoreViewController *syMoreController = [[SYMoreViewController alloc] init];
+    SYFIleManagerViewController *syFIleManagerController = [[SYFIleManagerViewController alloc] init];
     UIColor *normalColor = FCStyle.grayNoteColor;
     
 
     [self setUpOneChildViewController:homeController image:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"rectangle.stack.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[0] tag:1];
     
     [self setUpOneChildViewController:searchController image:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[1] tag:2];
-    [self setUpOneChildViewController:syMoreController image:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[2] tag:3];
+    
+    [self setUpOneChildViewController:syFIleManagerController image:[ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[2] tag:3];
+    
+    
+    [self setUpOneChildViewController:syMoreController image:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[3] tag:4];
     self.homeController = homeController;
 }
 

@@ -53,7 +53,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 #ifdef Mac
         if ([QuickAccess primaryController] != nil){
-            [QuickAccess primaryController].selectedIndex = 2;         
+            [QuickAccess primaryController].selectedIndex = 1;
         }
 #else
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
