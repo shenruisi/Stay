@@ -6,7 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#if iOS || Mac
 #import "iCloudService.h"
+#endif
 #import "FCTabManager.h"
 NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
@@ -17,7 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
 @property (class, readonly, strong) Plugin *plugin;
 #endif
+#if iOS || Mac
 @property (class, readonly, strong) iCloudService *iCloudService;
+#endif
 @property (class, readonly, strong) FCTabManager *tabManager;
 @end
 

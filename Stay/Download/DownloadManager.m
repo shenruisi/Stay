@@ -65,9 +65,16 @@ static DownloadManager *instance = nil;
             task.taskId = taskId;
             task.progress = 0;
             task.status = DMStatusPending;
-            NSURLSessionDownloadTask *sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
+            NSURLSessionDownloadTask *sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url] completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                if (error != nil) {
+                    task.block(0, DMStatusFailed);
+                } else {
+                    task.block(100, DMStatusComplete);
+                }
+            }];
             sessionTask.delegate = task;
             task.sessionTask = sessionTask;
+            [sessionTask resume];
             
             @synchronized (self.taskDict) {
                 self.taskDict[taskId] = task;
