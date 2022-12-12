@@ -24,16 +24,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame BgViewBgColor:(UIColor *)bgViewBgColor BgViewBorderColor:(UIColor *)bgViewBorderColor ProgressViewColor:(UIColor *)progressViewColor {
       if (self = [super initWithFrame:frame]) {
-          self.layer.cornerRadius = self.bounds.size.height * 0.5;
+//          self.layer.cornerRadius = self.bounds.size.height * 0.5;
           self.layer.masksToBounds = YES;
           self.backgroundColor = bgViewBgColor;
-          self.layer.borderColor = bgViewBorderColor.CGColor;
-          self.layer.borderWidth = 1;
+//          self.layer.borderColor = bgViewBorderColor.CGColor;
+//          self.layer.borderWidth = 1;
   
           //进度
           self.progressView = [[UIView alloc] init];
           self.progressView.backgroundColor = progressViewColor;
-          self.progressView.layer.cornerRadius = (self.bounds.size.height - 2) * 0.5;
+//          self.progressView.layer.cornerRadius = (self.bounds.size.height - 2) * 0.5;
           self.progressView.layer.masksToBounds = YES;
           [self addSubview:self.progressView];
       }
@@ -43,8 +43,8 @@
   - (void)setProgress:(CGFloat)progress {
       _progress = progress;
       CGFloat width = self.bounds.size.width - 2;
-      CGFloat heigth = self.bounds.size.height - 2;
-      _progressView.frame = CGRectMake(1, 1, width * progress, heigth);
+      CGFloat heigth = self.bounds.size.height;
+      _progressView.frame = CGRectMake(1, 0, width * progress, heigth);
   }
 
 @end

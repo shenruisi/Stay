@@ -77,8 +77,7 @@ UIDocumentPickerDelegate
     [self.navigationController pushViewController:controller animated:TRUE];
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {    UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
     label.font = FCStyle.headlineBold;
     label.text = NSLocalizedString(@"Folders", @"");

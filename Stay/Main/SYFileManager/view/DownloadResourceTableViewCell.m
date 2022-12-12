@@ -11,6 +11,9 @@
 #import "DownloadManager.h"
 #import "ImageHelper.h"
 #import "SYProgress.h"
+#import "DataManager.h"
+#import <objc/runtime.h>
+
 @implementation DownloadResourceTableViewCell
 
 - (void)awakeFromNib {
@@ -107,14 +110,17 @@
         runBtn.width += 20;
         runBtn.layer.cornerRadius = 8;
         runBtn.centerY = imageView.centerY;
-        runBtn.right = self.contentView.right - 11;
+        runBtn.right = self.contentView.width - 10;
         runBtn.backgroundColor =  FCStyle.secondaryPopup;
-        [runBtn addTarget:self action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+        [runBtn addTarget:self.controller action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:runBtn];
-        
+        objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
     } else {
-        UILabel *downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 128, 16)];
-    
+        UILabel *downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
+        UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        objc_setAssociatedObject(stop , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
         downloadRateLabel.font = FCStyle.footnoteBold;
         downloadRateLabel.top = top;
         downloadRateLabel.left = 12;
@@ -122,7 +128,7 @@
         [self.contentView addSubview:downloadRateLabel];
     
         if(_downloadResource.status == 0) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.2f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
             
             
             UILabel *stopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
@@ -132,16 +138,17 @@
             stopLabel.bottom = imageView.bottom;
             stopLabel.textColor = FCStyle.accent;
             [stopLabel sizeToFit];
-            stopLabel.right = self.contentView.width - 9;
+            stopLabel.right = self.contentView.width - 10;
             [self.contentView addSubview:stopLabel];
         
             
-            UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
             [stop setImage:[ImageHelper sfNamed:@"pause.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
             stop.bottom = stopLabel.top - 2;
-            stop.centerX =  stopLabel.centerX;
-            [stop addTarget:self action:@selector(stopDownload:) forControlEvents:UIControlEventTouchUpInside];
+            stop.right =  self.contentView.width - 26;
+            [stop addTarget:self.controller action:@selector(stopDownload:) forControlEvents:UIControlEventTouchUpInside];
             [self.contentView addSubview:stop];
+            
+            stopLabel.centerX = stop.centerX;
         
         } else if (_downloadResource.status == 1) {
             
@@ -152,17 +159,18 @@
             continueLabel.bottom = imageView.bottom;
             continueLabel.textColor = FCStyle.accent;
             [continueLabel sizeToFit];
-            continueLabel.right = self.contentView.width - 9;
+            continueLabel.right = self.contentView.width - 10;
             [self.contentView addSubview:continueLabel];
         
             
-            UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
             [stop setImage:[ImageHelper sfNamed:@"play.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
             stop.bottom = continueLabel.top - 2;
-            stop.centerX =  continueLabel.centerX;
-            [stop addTarget:self action:@selector(continueDownload:) forControlEvents:UIControlEventTouchUpInside];
+            stop.right =  self.contentView.width - 26;
+            [stop addTarget:self.controller action:@selector(continueDownload:) forControlEvents:UIControlEventTouchUpInside];
             [self.contentView addSubview:stop];
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.2f%%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
+            continueLabel.centerX = stop.centerX;
+
         } else if (_downloadResource.status == 3) {
             UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             retryLabel.tintColor = FCStyle.accent;
@@ -171,45 +179,31 @@
             retryLabel.bottom = imageView.bottom;
             retryLabel.textColor = FCStyle.accent;
             [retryLabel sizeToFit];
-            retryLabel.right = self.contentView.width - 9;
+            retryLabel.right = self.contentView.width - 10;
             [self.contentView addSubview:retryLabel];
         
-            UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
             [stop setImage:[ImageHelper sfNamed:@"play.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
             
-            [stop addTarget:self action:@selector(retryDownload:) forControlEvents:UIControlEventTouchUpInside];
+            [stop addTarget:self.controller action:@selector(retryDownload:) forControlEvents:UIControlEventTouchUpInside];
 
             stop.bottom = retryLabel.top - 2;
-            stop.centerX =  retryLabel.centerX;
+            stop.right =  self.contentView.width - 26;
             [self.contentView addSubview:stop];
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@%.2f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
+            
+            retryLabel.centerX = stop.centerX;
+
+            downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.2f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         }
         
         
-        SYProgress *progress = [[SYProgress alloc] initWithFrame:CGRectMake(12, 0, self.contentView.width - 24, 2) BgViewBgColor:FCStyle.progressBgColor BgViewBorderColor:FCStyle.progressBgColor ProgressViewColor:FCStyle.accent];
+        SYProgress *progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
 
         progress.top = downloadRateLabel.bottom + 5;
-        progress.progress = _downloadResource.downloadProcess;
+        progress.progress = _downloadResource.downloadProcess / 100;
         [self.contentView addSubview:progress];
     }
     
 }
 
-//播放视频
-- (void)playVideo:(UIButton *)sender{
-    
-}
-
-- (void)stopDownload:(UIButton *)sender {
-    
-}
-
-- (void)retryDownload:(UIButton *)sender {
-    
-}
-
-- (void)continueDownload:(UIButton *)sender {
-    
-}
 
 @end

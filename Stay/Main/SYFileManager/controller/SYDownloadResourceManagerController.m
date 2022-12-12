@@ -12,6 +12,8 @@
 #import "ImageHelper.h"
 #import "DataManager.h"
 #import "DownloadManager.h"
+#import <objc/runtime.h>
+
 #if iOS
 #import "Stay-Swift.h"
 #else
@@ -61,46 +63,76 @@ UITableViewDataSource
     
     cell.contentView.width = self.view.width;
     cell.downloadResource = self.array[indexPath.row];
+    cell.controller = self;
     
-    
-    if( cell.downloadResource.status == 0) {
-        FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
-        Request *request = [[Request alloc] init];
-        request.url =  cell.downloadResource.downloadUrl;
-        request.fileDir = tab.config.name;
-        request.fileType = @"video";
-        request.key =  cell.downloadResource.firstPath;
-        Task *task =  [[DownloadManager shared]  enqueue:request];
-        task.block = ^(float progress, DMStatus status) {
-            if(status == DMStatusFailed) {
-                [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:cell.downloadResource.downloadUuid];
-                cell.downloadResource.status = 3;
-            } else if(status == DMStatusDownloading) {
-                [[DataManager shareManager] updateDownloadResourcProcess:progress uuid:cell.downloadResource.downloadUuid];
-                cell.downloadResource.status = 0;
-
-            } else if(status == DMStatusComplete) {
-                [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
-                [[DataManager shareManager] updateDownloadResourcProcess:1 uuid:cell.downloadResource.downloadUuid];
-                cell.downloadResource.status = 2;
-
-            } else if(status == DMStatusPending) {
-                [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
-                cell.downloadResource.status = 1;
-           }
-
-            cell.downloadResource.downloadProcess = progress;
-
-            dispatch_async(dispatch_get_main_queue(),^{
-                [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
-            });
-        };
-    }
+//    if( cell.downloadResource.status == 0) {
+//        FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
+//        Request *request = [[Request alloc] init];
+//        request.url =  cell.downloadResource.downloadUrl;
+//        request.fileDir = tab.config.name;
+//        request.fileType = @"video";
+//        request.key =  cell.downloadResource.firstPath;
+//        Task *task =  [[DownloadManager shared]  enqueue:request];
+//        task.block = ^(float progress, DMStatus status) {
+//            if(status == DMStatusFailed) {
+//                [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:cell.downloadResource.downloadUuid];
+//                cell.downloadResource.status = 3;
+//            } else if(status == DMStatusDownloading) {
+//                [[DataManager shareManager] updateDownloadResourcProcess:progress uuid:cell.downloadResource.downloadUuid];
+//                cell.downloadResource.status = 0;
+//
+//            } else if(status == DMStatusComplete) {
+//                [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
+//                [[DataManager shareManager] updateDownloadResourcProcess:1 uuid:cell.downloadResource.downloadUuid];
+//                cell.downloadResource.status = 2;
+//
+//            } else if(status == DMStatusPending) {
+//                [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
+//                cell.downloadResource.status = 1;
+//           }
+//
+//            cell.downloadResource.downloadProcess = progress;
+//
+//            dispatch_async(dispatch_get_main_queue(),^{
+//                [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+//            });
+//        };
+//    }
     
     return cell;
     
 }
 
+
+
+- (void)playVideo:(UIButton *)sender{
+    
+}
+
+- (void)stopDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
+//    [[DownloadManager shared] pause:resource.downloadUuid];
+    self.array = [[DataManager shareManager] selectDownloadResourceByPath:self.pathUuid];
+    [self.tableView reloadData];
+}
+
+- (void)retryDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+    self.array = [[DataManager shareManager] selectDownloadResourceByPath:self.pathUuid];
+    [self.tableView reloadData];
+
+}
+
+- (void)continueDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+    self.array = [[DataManager shareManager] selectDownloadResourceByPath:self.pathUuid];
+    [self.tableView reloadData];
+
+
+}
 
 
 

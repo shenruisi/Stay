@@ -1714,7 +1714,7 @@
         sqlite3_bind_text(statement, 4,resource.downloadUrl != NULL? [resource.downloadUrl UTF8String]:NULL, -1,NULL);
         sqlite3_bind_text(statement, 5,resource.downloadUuid != NULL? [resource.downloadUuid UTF8String]:NULL, -1,NULL);
         sqlite3_bind_int(statement, 6, 0);
-        sqlite3_bind_double(statement, 7, 0);
+        sqlite3_bind_double(statement, 7, resource.downloadProcess);
         sqlite3_bind_double(statement, 8, 0);
         sqlite3_bind_text(statement, 9, resource.firstPath !=NULL? [resource.firstPath UTF8String]:NULL,-1,NULL);
         sqlite3_bind_text(statement, 10, resource.allPath !=NULL? [resource.allPath UTF8String]:NULL,-1,NULL);
