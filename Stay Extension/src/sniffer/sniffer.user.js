@@ -32,7 +32,7 @@ const browser = __b;
   function injectParseVideoJS(){
     let hostUrl = window.location.href;
     let host = window.location.host;
-    console.log('------------injectParseVideoJS-----start------------------')
+    // console.log('------------injectParseVideoJS-----start------------------')
     let videoList = [];
     // 获取到的video Url数组
     let videoUrlSet = new Set();
@@ -77,7 +77,7 @@ const browser = __b;
       // let flag = false;
       let flag = videoDoms && videoDoms.length;
       if(flag){
-        console.log('videoDoms---false-----',videoDoms)
+        // console.log('videoDoms---false-----',videoDoms)
         parseVideoNodeList(videoDoms);
       }else{
         observerVideo()
@@ -93,7 +93,7 @@ const browser = __b;
             // todo
             videoDoms = document.querySelectorAll('video');
             if('VIDEO' === mutation.target.nodeName && videoDoms && videoDoms.length){
-              console.log('mutation.videoDoms-----',videoDoms)
+              // console.log('mutation.videoDoms-----',videoDoms)
               host = window.location.host;
               parseVideoNodeList(videoDoms);
               throw new Error('endloop');
@@ -121,6 +121,7 @@ const browser = __b;
     }
     
     function parseVideoNodeList(videoDoms){
+      console.log('parseVideoNodeList-----------------start------------------')
       if(videoDoms && videoDoms.length){
         let videoNodeList = Array.from(videoDoms)
         videoNodeList.forEach(item => {
@@ -133,10 +134,9 @@ const browser = __b;
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
             return;
           }
-          console.log('parseVideoNodeList-----------------start------------------')
+          
           // todo fetch other scenarios
           let videoInfo = handleVideoInfoParse(item);
-         
           console.log('parseVideoNodeList------videoInfo---------',videoInfo)
           if(!videoInfo.downloadUrl){
             return;
@@ -164,11 +164,12 @@ const browser = __b;
       hostUrl = window.location.href;
       console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')){
-        if(Utils.isMobile()){
-          videoInfo = handleMobileYoutubeVideoInfo(title);
-        }else{
-          videoInfo = handlePCYoutubeVideoInfo();
-        }
+        // if(Utils.isMobile()){
+        //   videoInfo = handleMobileYoutubeVideoInfo(title);
+        // }else{
+        //   videoInfo = handleYoutubeVideoInfo(title);
+        // }
+        videoInfo = handleYoutubeVideoInfo(title);
       }
       else if(host.indexOf('baidu.com')){
         videoInfo = handleBaiduVideoInfo(videoDom);
@@ -340,8 +341,22 @@ const browser = __b;
       return '';
     }
 
-    function handlePCYoutubeVideoInfo(){
-
+    /**
+     * 解析Youtube视频信息
+     * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
+     */
+    function handleYoutubeVideoInfo(title){
+      let videoInfo = handleYoutubeGlobalVariable(title);
+      if(Object.keys(videoInfo).length){
+        return videoInfo;
+      }else{
+        videoInfo = {};
+        videoInfo['title'] = getYoutubeVideoTitleByDom();
+        // poster img
+        videoInfo['poster'] = getYoutubeVideoPosterByDom();
+        videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+      }
+      return videoInfo;
     }
     
     /**
@@ -410,7 +425,7 @@ const browser = __b;
     }
     
     /**
-     * youtube 移动端video标签
+     * youtube 移动端(PC)video标签
      * @returns url
      */
     function getYoutubeVideoSourceByDom(){
@@ -440,6 +455,13 @@ const browser = __b;
         console.log('overlayImg-------',overlayImg);
         let imgText = overlayImg.getAttribute('style');
         console.log('overlayImg----imgText---',imgText);
+        if(imgText){
+          return Utils.matchUrlInString(imgText);
+        }
+      }
+      const overlayImgPc = document.querySelector('.html5-video-player .ytp-cued-thumbnail-overlay .ytp-cued-thumbnail-overlay-image');
+      if(overlayImgPc){
+        let imgText = overlayImgPc.getAttribute('style');
         if(imgText){
           return Utils.matchUrlInString(imgText);
         }
@@ -517,11 +539,11 @@ const browser = __b;
     console.log('snifffer.user----->e.data.name=',name);
     if(name === 'VIDEO_LINK_CAPTURE'){
       videoLinkSet = e.data.urls ? e.data.urls : new Set();
-      console.log('snifffer.user----->videoLinkSet=',videoLinkSet);
+      // console.log('snifffer.user----->videoLinkSet=',videoLinkSet);
     }
     else if(name === 'VIDEO_INFO_CAPTURE'){
       videoInfoList = e.data.videoList ? e.data.videoList : [];
-      console.log('snifffer.user----->videoInfoList=',videoInfoList);
+      // console.log('snifffer.user----->videoInfoList=',videoInfoList);
     }
 
     // let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH' };
