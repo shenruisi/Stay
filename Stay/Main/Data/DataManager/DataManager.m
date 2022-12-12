@@ -1923,4 +1923,46 @@
     sqlite3_close(sqliteHandle);
 }
 
+
+- (void)updateDownloadResourceStatus:(NSInteger)status uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE download_resource SET status = ? WHERE download_uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_int(stmt, 1, status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
 @end
