@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UserScript.h"
+#import "DownloadResource.h"
 
 
 @interface DataManager : NSObject
@@ -45,5 +46,14 @@
 
 - (void)updateUserScriptTime:(NSString *)uuid;
 
+- (void)addDownloadResource:(DownloadResource *)resource;
+
+- (NSArray *)selectDownloadResourceByPath:(NSString *)path;
+
+- (DownloadResource *)selectDownloadResourceByDownLoadUUid:(NSString *)uuid;
+
+- (void)updateDownloadResourcProcess:(float)process uuid:(NSString *)uuid;
+
+- (void)updateDownloadResourceStatus:(NSInteger)status uuid:(NSString *)uuid;
 
 @end

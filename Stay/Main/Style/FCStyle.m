@@ -132,6 +132,13 @@
     return [UIColor colorNamed:@"FCNavigationLineColor"];
 }
 
++ (UIColor *)titleGrayColor {
+    return  [UIColor colorNamed:@"TitleGrayColor"];
+}
+
++ (UIColor *)progressBgColor {
+    return  [UIColor colorNamed:@"progressBgColor"];
+}
 
 + (UIFont *)title1{
 #ifdef iOS

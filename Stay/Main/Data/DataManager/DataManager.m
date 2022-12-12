@@ -103,6 +103,10 @@
 
     }
     
+    if(![self isExitedDownloadTable]) {
+        [self createTable];
+    }
+    
     return;
 }
 
@@ -210,6 +214,73 @@
     
 }
 
+- (void)createTable {
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return ;
+    }
+    NSString *sql = @"CREATE TABLE 'download_resource' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'icon' TEXT, 'host' TEXT, 'download_url' TEXT, 'download_uuid' TEXT,'status' INTEGER,'download_process' DOUBLE, 'watch_process' INTEGER, 'videoDuration' INTEGER,'firstPath' TEXT,'allPath' TEXT,'type' TEXT,'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'use_info' TEXT)";
+
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return ;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return ;
+}
+
+- (BOOL)isExitedDownloadTable{
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return true;
+    }
+    
+    NSString *sql = @"select count(*) from sqlite_master where type='table' and name = 'download_resource'";
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return true;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    int activite = 0;
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        activite = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return activite == 0? false:true;
+}
 
 - (BOOL)isExitedColumn:(NSString *)column {
     //打开数据库
@@ -1601,6 +1672,291 @@
         return;
     }
     sqlite3_bind_text(stmt, 1, [timeString UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
+
+- (void)addDownloadResource:(DownloadResource *)resource {
+    
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    NSString *sql = @"INSERT INTO download_resource (title,icon,host,download_url,download_uuid,status,download_process,watch_process,firstPath,allPath,type,update_time,create_time,use_info) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    sqlite3_stmt *statement;
+    
+    if (sqlite3_prepare_v2(sqliteHandle, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        sqlite3_bind_text(statement, 1,resource.title != NULL? [resource.title UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 2,resource.icon != NULL? [resource.icon  UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 3,resource.host !=NULL? [resource.host UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 4,resource.downloadUrl != NULL? [resource.downloadUrl UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 5,resource.downloadUuid != NULL? [resource.downloadUuid UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_int(statement, 6, 0);
+        sqlite3_bind_double(statement, 7, 0);
+        sqlite3_bind_double(statement, 8, 0);
+        sqlite3_bind_text(statement, 9, resource.firstPath !=NULL? [resource.firstPath UTF8String]:NULL,-1,NULL);
+        sqlite3_bind_text(statement, 10, resource.allPath !=NULL? [resource.allPath UTF8String]:NULL,-1,NULL);
+        sqlite3_bind_text(statement, 11, resource.type !=NULL? [resource.type UTF8String]:NULL,-1,NULL);
+        NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];
+        NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
+        NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
+        sqlite3_bind_double(statement, 12, timeString.doubleValue);
+        sqlite3_bind_double(statement, 13, timeString.doubleValue);
+        if(resource.useInfo != NULL) {
+            NSError * err;
+            NSData * jsonData = [NSJSONSerialization dataWithJSONObject:resource.useInfo options:0 error:&err];
+            NSString * useInfo = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            sqlite3_bind_text(statement, 14,[useInfo UTF8String], -1,NULL);
+        } else {
+            sqlite3_bind_text(statement, 14,NULL, -1,NULL);
+
+        }
+
+    }
+    
+    NSInteger resultCode = sqlite3_step(statement);
+    if (resultCode != SQLITE_DONE) {
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
+
+- (NSArray *)selectDownloadResourceByPath:(NSString *)path{
+    NSMutableArray *scriptList = [NSMutableArray array];
+    
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return scriptList;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"SELECT * FROM download_resource where firstPath = ? order by create_time desc";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return scriptList;
+        
+    }
+    
+//    绑定占位符
+//    NSString *queryCondition = [NSString stringWithFormat:@"%d", condition];
+    sqlite3_bind_text(stmt, 1, [path UTF8String], -1, NULL);
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    while(sqlite3_step(stmt) == SQLITE_ROW) {
+        
+        DownloadResource *resource = [[DownloadResource alloc] init];
+        
+        
+        //第几列字段是从0开始
+        resource.title = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 1)== NULL?"":(const char *)sqlite3_column_text(stmt, 1)];
+        resource.icon = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 2)== NULL?"":(const char *)sqlite3_column_text(stmt, 2)];
+        resource.host = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3) == NULL?"":(const char *)sqlite3_column_text(stmt, 3)];
+        resource.downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 4)== NULL?"":(const char *)sqlite3_column_text(stmt, 4)];
+        resource.downloadUuid =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 5)== NULL?"":(const char *)sqlite3_column_text(stmt, 5)];
+        resource.status = sqlite3_column_int(stmt, 6);;
+        resource.downloadProcess = sqlite3_column_double(stmt, 7);;
+        resource.watchProcess = sqlite3_column_int(stmt, 8);
+        resource.videoDuration = sqlite3_column_int(stmt, 9);
+        resource.firstPath =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
+        resource.allPath =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
+        resource.type =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 12)== NULL?"":(const char *)sqlite3_column_text(stmt, 12)];
+        resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
+        resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
+        resource.sort = sqlite3_column_int(stmt, 15);
+        [scriptList addObject:resource];
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+    
+    return scriptList;
+}
+
+- (DownloadResource *)selectDownloadResourceByDownLoadUUid:(NSString *)uuid {
+    
+    
+    
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return nil;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"SELECT * FROM download_resource where download_uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return nil;
+        
+    }
+    
+//    绑定占位符
+//    NSString *queryCondition = [NSString stringWithFormat:@"%d", condition];
+    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    DownloadResource *resource = [[DownloadResource alloc] init];
+
+    while(sqlite3_step(stmt) == SQLITE_ROW) {
+        //第几列字段是从0开始
+        resource.title = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 1)== NULL?"":(const char *)sqlite3_column_text(stmt, 1)];
+        resource.icon = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 2)== NULL?"":(const char *)sqlite3_column_text(stmt, 2)];
+        resource.host = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3) == NULL?"":(const char *)sqlite3_column_text(stmt, 3)];
+        resource.downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 4)== NULL?"":(const char *)sqlite3_column_text(stmt, 4)];
+        resource.downloadUuid =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 5)== NULL?"":(const char *)sqlite3_column_text(stmt, 5)];
+        resource.status = sqlite3_column_int(stmt, 6);;
+        resource.downloadProcess = sqlite3_column_double(stmt, 7);;
+        resource.watchProcess = sqlite3_column_int(stmt, 8);
+        resource.videoDuration = sqlite3_column_int(stmt, 9);
+        resource.firstPath =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
+        resource.allPath =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
+        resource.type =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 12)== NULL?"":(const char *)sqlite3_column_text(stmt, 12)];
+        resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
+        resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
+        resource.sort = sqlite3_column_int(stmt, 15);
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+    
+    return resource;
+}
+
+- (void)updateDownloadResourcProcess:(float)process uuid:(NSString *)uuid {
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE download_resource SET download_process = ? WHERE download_uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_double(stmt, 1, process);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+}
+
+
+- (void)updateDownloadResourceStatus:(NSInteger)status uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"UPDATE download_resource SET status = ? WHERE download_uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    sqlite3_bind_int(stmt, 1, status);
     sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
