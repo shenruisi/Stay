@@ -7,11 +7,11 @@
             <div class="video">
               <img :src="item.poster" v-if="item.poster"/>
               <div class="no-img" v-else>
-                <span>{{ getDomain(browserUrl) }}</span>
+                <span>{{ getDomain(item.hostUrl) }}</span>
               </div>
             </div>
             <div class="info">
-              <div class="title">{{getLevel2domain(browserUrl)}}</div>
+              <div class="title">{{getLevel2domain(item.hostUrl)}}</div>
               <div class="name">{{item.title+"."+(item.downloadUrl?getFiletypeByUrl(item.downloadUrl):"")}}</div>
             </div>
           </div>
@@ -21,7 +21,7 @@
           <div class="label-txt">{{ t("save_to_folder") }}&nbsp;:</div>
           <div class="folder select-options">
             <select class="select-container" v-model="selectedFolder" >
-              <option v-for="(o, i) in folderOptions" :style="{display: o.id?'block':'none'}" :key="i" :value="o.id">{{o.name}}</option>
+              <option v-for="(o, i) in folderOptions" :style="{display: o.id?'block':'none'}" :key="i" :value="o.uuid">{{o.name}}</option>
             </select>
           </div>
           <template v-if="(qualityList && qualityList.length)">
@@ -57,7 +57,7 @@ export default {
       hostName: getHostname(props.browserUrl),
       selectedFolder: '',
       selectedQuality: '',
-      folderOptions: [{name: t('select_folder'), id: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
+      folderOptions: [{name: t('select_folder'), uuid: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
         {
           poster: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
@@ -68,11 +68,37 @@ export default {
       ]
     });
 
+    const fetchSnifferFolder = () => {
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchFolders'}, (response) => {
+        console.log('fetchSnifferFolder---response-----', response);
+        try {
+          if(response.body){
+            state.folderOptions = [{name: t('select_folder'), uuid: ''}, ...response.body];
+            response.body.forEach(item => {
+              if(item.selected){
+                state.selectedFolder = item.uuid;
+              }
+            });
+          }else{
+            // state.folderOptions = [];
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+
+    fetchSnifferFolder();
+
     const snifferFetchVideoInfo = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'snifferFetchVideoInfo'}, (response) => {
         console.log('snifferFetchVideoInfo---response-----', response);
         try {
-          
+          if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
+            state.videoList = response.body.videoInfoList;
+          }else{
+            state.videoList = [];
+          }
         } catch (e) {
           console.log(e);
         }
@@ -129,13 +155,14 @@ export default {
       padding: 10px 0 0px 10px;
       width: 100%;
       .sniffer-video{
-        width: 100;
+        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         justify-items: center;
         border-bottom: 0.5px solid var(--s-e0);
+        flex: 1;
         .video-info{
           display: flex;
           flex-direction: row;
@@ -144,12 +171,15 @@ export default {
           justify-items: center;
           align-items: center;
           padding-bottom: 4px;
+          padding-right: 100px;
           .img-info{
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-left: 60px;
+            position: relative;
             .video{
               width: 60px;
               height: 60px;
@@ -158,6 +188,8 @@ export default {
               border-radius: 10px;
               display: flex;
               flex-shrink: 0;
+              position: absolute;
+              left: 0;
               img{
                 max-width: 100%;
                 max-height: 100%;
