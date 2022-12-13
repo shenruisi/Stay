@@ -13,9 +13,11 @@
 
 @end
 
-@interface Task()<NSURLSessionTaskDelegate>
+@interface Task()<NSURLSessionDownloadDelegate>
 
 @property (nonatomic, strong) NSURLSessionTask *sessionTask;
+@property (nonatomic, strong) DMStore *store;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, Task *> *taskDict;
 @end
 
 @implementation Task
@@ -32,6 +34,39 @@
     if (self.block != nil) {
         self.progress = totalBytesSent * 1.0 / totalBytesExpectedToSend;
         self.block(self.progress, DMStatusDownloading);
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+                                           didWriteData:(int64_t)bytesWritten
+                                      totalBytesWritten:(int64_t)totalBytesWritten
+totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    if (self.block != nil) {
+        self.progress = totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
+        self.block(self.progress, DMStatusDownloading);
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
+    [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:self.filePath] error:nil];
+    if (self.block != nil) {
+        self.block(1, DMStatusComplete);
+    }
+    [self.store update:self.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
+    @synchronized (self.taskDict) {
+        [self.taskDict removeObjectForKey:self.taskId];
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (error != nil) {
+        if (self.block != nil) {
+            self.block(0, DMStatusFailed);
+        }
+        [self.store update:self.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+        @synchronized (self.taskDict) {
+            [self.taskDict removeObjectForKey:self.taskId];
+        }
     }
 }
 
@@ -68,24 +103,12 @@ static DownloadManager *instance = nil;
             task.taskId = taskId;
             task.progress = 0;
             task.status = DMStatusPending;
-            NSURLSessionDownloadTask *sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url] completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                if (error != nil) {
-                    if (task.block != nil) {
-                        task.block(0, DMStatusFailed);
-                    }
-                    [self.store update:taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-                } else {
-                    if (task.block != nil) {
-                        task.block(100, DMStatusComplete);
-                    }
-                    [self.store update:taskId withDict:@{@"progress": @(100), @"status": @(DMStatusComplete)}];
-                }
-                @synchronized (self.taskDict) {
-                    [self.taskDict removeObjectForKey:taskId];
-                }
-            }];
+            task.filePath = [request.fileDir stringByAppendingPathComponent:request.fileName];
+            NSURLSessionDownloadTask *sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
             sessionTask.delegate = task;
             task.sessionTask = sessionTask;
+            task.store = self.store;
+            task.taskDict = self.taskDict;
             [sessionTask resume];
             
             @synchronized (self.taskDict) {

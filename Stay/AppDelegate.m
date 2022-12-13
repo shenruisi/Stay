@@ -204,9 +204,9 @@
                     FCTab *tab = [[FCShared tabManager] tabOfUUID:dic[@"uuid"]];
                     Request *request = [[Request alloc] init];
                     request.url = downLoadUrl;
-                    request.fileDir = tab.config.name;
+                    request.fileDir = tab.path;
                     request.fileType = @"video";
-                    request.fileName =  [self md5HexDigest:downLoadUrl];
+                    request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
                     request.key = tab.uuid;
                     Task *task = [[DownloadManager shared] enqueue:request];
            
