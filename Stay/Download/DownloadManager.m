@@ -29,7 +29,10 @@
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-    self.block(totalBytesSent * 1.0 / totalBytesExpectedToSend, DMStatusDownloading);
+    if (self.block != nil) {
+        self.progress = totalBytesSent * 1.0 / totalBytesExpectedToSend;
+        self.block(self.progress, DMStatusDownloading);
+    }
 }
 
 @end
@@ -67,9 +70,18 @@ static DownloadManager *instance = nil;
             task.status = DMStatusPending;
             NSURLSessionDownloadTask *sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url] completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 if (error != nil) {
-                    task.block(0, DMStatusFailed);
+                    if (task.block != nil) {
+                        task.block(0, DMStatusFailed);
+                    }
+                    [self.store update:taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
                 } else {
-                    task.block(100, DMStatusComplete);
+                    if (task.block != nil) {
+                        task.block(100, DMStatusComplete);
+                    }
+                    [self.store update:taskId withDict:@{@"progress": @(100), @"status": @(DMStatusComplete)}];
+                }
+                @synchronized (self.taskDict) {
+                    [self.taskDict removeObjectForKey:taskId];
                 }
             }];
             sessionTask.delegate = task;
@@ -79,6 +91,10 @@ static DownloadManager *instance = nil;
             @synchronized (self.taskDict) {
                 self.taskDict[taskId] = task;
             }
+        }
+    } else {
+        if (task.status == DMStatusPaused) {
+            [task.sessionTask resume];
         }
     }
     
@@ -110,7 +126,14 @@ static DownloadManager *instance = nil;
 
 - (void)pause:(NSString *)taskId {
     @synchronized (self.taskDict) {
-        self.taskDict[taskId].status = DMStatusPaused;
+        Task *task = self.taskDict[taskId];
+        if (task != nil) {
+            [task.sessionTask suspend];
+            task.status = DMStatusPaused;
+            if (task.block != nil) {
+                task.block(task.progress, DMStatusPaused);
+            }
+        }
     }
     [self.store update:taskId withDict:@{@"progress": self.taskDict[taskId], @"status": @(self.taskDict[taskId].status)}];
 }
