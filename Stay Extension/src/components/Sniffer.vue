@@ -126,7 +126,10 @@ export default {
       if(state.selectedQuality){
         item.downloadUrl = state.selectedQuality;
       }
-      window.open('stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(item)));
+      let list = [];
+      list.push(item);
+      let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
+      window.open(downloadUrl);
     }
     return {
       ...toRefs(state),
