@@ -5,6 +5,7 @@
 //  Created by Jin on 2022/11/23.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import "DownloadManager.h"
 #import "MyAdditions.h"
 #import "DMStore.h"
@@ -76,10 +77,11 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 
 @end
 
-@interface DownloadManager()
+@interface DownloadManager()<AVAssetDownloadDelegate>
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, Task *> *taskDict;
 @property (nonatomic, strong) DMStore *store;
+@property (nonatomic, strong) AVAssetDownloadURLSession *assetDownloadURLSession;
 @end
 
 @implementation DownloadManager
@@ -104,12 +106,22 @@ static DownloadManager *instance = nil;
             task.progress = 0;
             task.status = DMStatusPending;
             task.filePath = [request.fileDir stringByAppendingPathComponent:request.fileName];
-            NSURLSessionDownloadTask *sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
-            sessionTask.delegate = task;
-            task.sessionTask = sessionTask;
             task.store = self.store;
             task.taskDict = self.taskDict;
-            [sessionTask resume];
+            
+            NSURLSessionTask *sessionTask;
+            if ([request.url containsString:@"m3u8"]) {
+                sessionTask = [self.assetDownloadURLSession assetDownloadTaskWithURLAsset:[AVURLAsset assetWithURL:[NSURL URLWithString:request.url]] assetTitle:request.fileName assetArtworkData:nil options:nil];
+            } else {
+                sessionTask = [NSURLSession.sharedSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
+                sessionTask.delegate = task;
+            }
+            if (sessionTask != nil) {
+                task.sessionTask = sessionTask;
+                [sessionTask resume];
+            } else {
+                
+            }
             
             @synchronized (self.taskDict) {
                 self.taskDict[taskId] = task;
@@ -175,6 +187,38 @@ static DownloadManager *instance = nil;
     }
     
     return _store;
+}
+
+- (AVAssetDownloadURLSession *)assetDownloadURLSession {
+    if (nil == _assetDownloadURLSession) {
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"m3u8.downloader"];
+        _assetDownloadURLSession = [AVAssetDownloadURLSession sessionWithConfiguration:config assetDownloadDelegate:self delegateQueue:nil];
+    }
+    
+    return _assetDownloadURLSession;
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
+    Task *task = [self getTaskWithSessionTask:sessionTask];
+    if (error != nil && task != nil) {
+        if (task.block != nil) {
+            task.block(0, DMStatusFailed);
+        }
+        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+        @synchronized (self.taskDict) {
+            [self.taskDict removeObjectForKey:task.taskId];
+        }
+    }
+}
+
+- (nullable Task *)getTaskWithSessionTask:(NSURLSessionTask *)sessionTask {
+    for (Task *task in self.taskDict.allValues) {
+        if (task.sessionTask == sessionTask) {
+            return task;
+        }
+    }
+    
+    return nil;
 }
 
 @end
