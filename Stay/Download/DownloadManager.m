@@ -198,6 +198,35 @@ static DownloadManager *instance = nil;
     return _assetDownloadURLSession;
 }
 
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
+    Task *task = [self getTaskWithSessionTask:assetDownloadTask];
+    if (task != nil) {
+        float progress = 0.0;
+        for (NSValue *value in loadedTimeRanges) {
+            progress += CMTimeGetSeconds(value.CMTimeRangeValue.duration) / CMTimeGetSeconds(timeRangeExpectedToLoad.duration);
+        }
+        task.progress = progress;
+        if (task.block != nil) {
+            task.block(progress, DMStatusDownloading);
+        }
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
+    Task *task = [self getTaskWithSessionTask:assetDownloadTask];
+    if (task != nil) {
+        NSError *err;
+        [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:&err];
+        if (task.block != nil) {
+            task.block(1, DMStatusComplete);
+        }
+        [self.store update:task.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
+        @synchronized (self.taskDict) {
+            [self.taskDict removeObjectForKey:task.taskId];
+        }
+    }
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
     Task *task = [self getTaskWithSessionTask:sessionTask];
     if (error != nil && task != nil) {
