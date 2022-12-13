@@ -73,7 +73,9 @@ const browser = __b;
     
     // let ifreamDoms = document.getElementsByTagName('iframe');
     function startFindVideoInfo(){
+      // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
+      // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
       let flag = videoDoms && videoDoms.length;
       if(flag){
@@ -121,7 +123,7 @@ const browser = __b;
     }
     
     function parseVideoNodeList(videoDoms){
-      console.log('parseVideoNodeList-----------------start------------------')
+      // console.log('parseVideoNodeList-----------------start------------------')
       if(videoDoms && videoDoms.length){
         let videoNodeList = Array.from(videoDoms)
         videoNodeList.forEach(item => {
@@ -137,7 +139,7 @@ const browser = __b;
           
           // todo fetch other scenarios
           let videoInfo = handleVideoInfoParse(item);
-          console.log('parseVideoNodeList------videoInfo---------',videoInfo)
+          // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
           if(!videoInfo.downloadUrl){
             return;
           }
@@ -163,7 +165,7 @@ const browser = __b;
       let qualityList = [];
       hostUrl = window.location.href;
       console.log('handleVideoInfoParse---host---', host);
-      if(host.indexOf('youtube.com')){
+      if(host.indexOf('youtube.com')>-1){
         // if(Utils.isMobile()){
         //   videoInfo = handleMobileYoutubeVideoInfo(title);
         // }else{
@@ -171,7 +173,7 @@ const browser = __b;
         // }
         videoInfo = handleYoutubeVideoInfo(title);
       }
-      else if(host.indexOf('baidu.com')){
+      else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoDom);
       }
 
@@ -255,12 +257,13 @@ const browser = __b;
       /*--https://haokan.baidu.com/--*/
       // window.__PRELOADED_STATE__.curVideoMeta
       if('haokan.baidu.com' === host){
+        // console.log('haokan----start-----');
         const preloadedState = window.__PRELOADED_STATE__;
         const videoId = Utils.queryURLParams(hostUrl, 'vid');
         const srcUrl = videoDom.getAttribute('src');
-        // 主视频
-        if(srcUrl && videoId && srcUrl.indexOf(videoId)){
-          console.log('haokan----videoId-----',videoId);
+        // 主视频 
+        if(srcUrl && videoId && srcUrl.indexOf(videoId)>-1){
+          // console.log('haokan----videoId-----',videoId);
           if(preloadedState && preloadedState.curVideoMeta){
             const curVideoMeta = preloadedState.curVideoMeta;
             videoInfo = haokanBaiduVideoInfo(curVideoMeta);
@@ -330,7 +333,7 @@ const browser = __b;
       if(activityTitleDom){
         return activityTitleDom.textContent;
       }
-      const haokanTitleDom = document.querySelector('.videoinfo .videoinfo-title');
+      const haokanTitleDom = document.querySelector('.video-info .video-info-title');
       if(haokanTitleDom){
         return haokanTitleDom.textContent;
       }
@@ -470,13 +473,12 @@ const browser = __b;
     }
     
     startFindVideoInfo();
-    //   observerVideo()
     document.onreadystatechange = () => {
       console.log('document.readyState==',document.readyState)
       if (document.readyState === 'complete') {
         console.log('readyState-------------------', document.readyState)
         
-        
+        startFindVideoInfo();
         // eslint-disable-next-line no-undef
         console.log('readyStateytInitialPlayerResponseytInitialPlayerResponse-----')
       }
@@ -528,6 +530,9 @@ const browser = __b;
         return originalFetch(resource,options);
       };
     }
+
+    handlePageInterceptor();
+
   }
 
   

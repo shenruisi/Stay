@@ -24,12 +24,12 @@
               <option v-for="(o, i) in folderOptions" :style="{display: o.id?'block':'none'}" :key="i" :value="o.uuid">{{o.name}}</option>
             </select>
           </div>
-          <template v-if="(qualityList && qualityList.length)">
+          <template v-if="(item.qualityList && item.qualityList.length)">
             <div class="label-txt">{{ t("quality") }}&nbsp;:</div>
             <div class="quality select-options">
-              <select class="select-container" v-model="selectedQuality" >
+              <select class="select-container" v-model="item.selectedQuality" >
                 <!-- {downloadUrl, qualityLabel, quality } -->
-                <option v-for="(o, i) in qualityList" :key="i" :value="o.downloadUrl">{{o.qualityLabel}}</option>
+                <option v-for="(o, i) in item.qualityList" :key="i" :value="o.downloadUrl">{{o.qualityLabel}}</option>
               </select>
             </div>
           </template>
@@ -56,14 +56,14 @@ export default {
       browserUrl: props.browserUrl,
       hostName: getHostname(props.browserUrl),
       selectedFolder: '',
-      selectedQuality: '',
       folderOptions: [{name: t('select_folder'), uuid: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
         {
           poster: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
           downloadUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
           title: '美国军机飞抵台海已人困马乏，赖岳谦：若开战会被解放军碾压',
-          qualityList:[]
+          qualityList:[],
+          selectedQuality: ''
         }
       ]
     });
@@ -95,7 +95,13 @@ export default {
         console.log('snifferFetchVideoInfo---response-----', response);
         try {
           if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
-            state.videoList = response.body.videoInfoList;
+            let videoList = response.body.videoInfoList;
+            videoList.forEach(item=>{
+              if(item.qualityList && item.qualityList.length ){
+                item.selectedQuality = item.qualityList[0].downloadUrl;
+              }
+            });
+            state.videoList = videoList;
           }else{
             state.videoList = [];
           }
@@ -123,11 +129,10 @@ export default {
         return;
       }
       item.uuid = state.selectedFolder;
-      if(state.selectedQuality){
-        item.downloadUrl = state.selectedQuality;
+      if(item.selectedQuality){
+        item.downloadUrl = item.selectedQuality;
       }
-      let list = [];
-      list.push(item);
+      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: item.hostUrl, uuid: state.selectedFolder}];
       let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
       window.open(downloadUrl);
     }
@@ -175,6 +180,7 @@ export default {
           align-items: center;
           padding-bottom: 4px;
           padding-right: 100px;
+          position: relative;
           .img-info{
             width: 100%;
             height: 100%;
@@ -257,6 +263,8 @@ export default {
             align-items: center;
             justify-content: center;
             padding-right: 10px;
+            position:absolute;
+            right: 0;
             .btn{
               width: 94px;
               background-color: var(--s-f7);
