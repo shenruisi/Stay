@@ -51,6 +51,10 @@
 		3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
 		3C8388EC2934F56C007563E6 /* DMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388EB2934F56C007563E6 /* DMStore.m */; };
 		3C8388ED2934F56C007563E6 /* DMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388EB2934F56C007563E6 /* DMStore.m */; };
+		3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
+		3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
+		3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
+		3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
@@ -536,6 +540,8 @@
 		3C8388E72934E7D5007563E6 /* MyAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAdditions.h; sourceTree = "<group>"; };
 		3C8388EA2934F56C007563E6 /* DMStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMStore.h; sourceTree = "<group>"; };
 		3C8388EB2934F56C007563E6 /* DMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMStore.m; sourceTree = "<group>"; };
+		3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -982,6 +988,7 @@
 			children = (
 				3C8388D2293355F9007563E6 /* FolderSlideController.swift */,
 				3C8388DD2933594A007563E6 /* FolderModalController.swift */,
+				3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -990,6 +997,7 @@
 			isa = PBXGroup;
 			children = (
 				3C8388E129335C68007563E6 /* RoundedBorderView.swift */,
+				3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2463,6 +2471,7 @@
 				58AC12F428607B3400875D6D /* FCConfig.m in Sources */,
 				3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
+				3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
 				58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */,
 				58AC12E42860750800875D6D /* FCShared.m in Sources */,
@@ -2506,6 +2515,7 @@
 				5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
+				3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 				84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */,
@@ -2707,6 +2717,7 @@
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
 				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
 				58D1B45928893D4C009BD608 /* RMAppReceipt.m in Sources */,
+				3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
@@ -2724,6 +2735,7 @@
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
+				3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,5 +19,8 @@
 
 #import "Main/Controls/SlideController/FCSlideController.h"
 #import "Main/Controls/Modal/ModalViewController.h"
+#import "Main/SYFileManager/model/DownloadResource.h"
+
+#import "Main/Data/DataManager/DataManager.h"
 
 #endif /* Stay_Bridging_Header_h */

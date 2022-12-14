@@ -103,10 +103,11 @@ UITableViewDataSource
     
 }
 
-
-
 - (void)playVideo:(UIButton *)sender{
-    
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:resource];
+    playerController.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:playerController animated:YES completion:nil];
 }
 
 - (void)stopDownload:(UIButton *)sender {
