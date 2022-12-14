@@ -33,6 +33,8 @@ class VideoPlayerView: UIView {
         super.init(frame: .zero)
         backgroundColor = .black
         setupControls()
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapAction)))
+        resetControlHide()
         
         addAllVideosToPlayer()
         
@@ -50,6 +52,10 @@ class VideoPlayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(toggleControls), object: nil)
+    }
+    
     func addPeriodicTimeObserver() {
         // Notify every half second
         let timeScale = CMTimeScale(NSEC_PER_SEC)
@@ -59,7 +65,8 @@ class VideoPlayerView: UIView {
             guard let currentItem = self?.player?.currentItem else { return }
             self?.seekBar.setValue(Float(time.seconds / currentItem.duration.seconds) , animated: true)
             self?.currLabel.text = time.positionalTime
-            self?.remainLabel.text = (currentItem.duration - time).positionalTime
+            self?.remainLabel.text = currentItem.duration.positionalTime
+//            self?.remainLabel.text = (currentItem.duration - time).positionalTime
         }
     }
 
@@ -78,23 +85,25 @@ class VideoPlayerView: UIView {
         }
     }
     
+    var isControlsShow = true
+    let backBtn = UIButton()
+    let airBtn = UIButton()
+    let pipBtn = UIButton()
     let playBtn = UIButton()
     let currLabel = UILabel()
     let seekBar = UISlider()
     let remainLabel = UILabel()
+    let modeBtn = UIButton()
     func setupControls() {
-        let backBtn = UIButton()
         backBtn.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         backBtn.addTarget(self, action: #selector(backAction), for: .touchUpInside)
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backBtn)
         
-        let airBtn = UIButton()
         airBtn.setImage(UIImage(systemName: "airplayvideo", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         airBtn.addTarget(self, action: #selector(airAction), for: .touchUpInside)
         airBtn.translatesAutoresizingMaskIntoConstraints = false
         addSubview(airBtn)
-        let pipBtn = UIButton()
         pipBtn.setImage(UIImage(systemName: "pip.enter", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         pipBtn.addTarget(self, action: #selector(pipAction), for: .touchUpInside)
         pipBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -118,7 +127,6 @@ class VideoPlayerView: UIView {
         remainLabel.text = "00:00"
         remainLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(remainLabel)
-        let modeBtn = UIButton()
         modeBtn.setImage(UIImage(systemName: "iphone", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         modeBtn.addTarget(self, action: #selector(modeAction), for: .touchUpInside)
         modeBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -164,16 +172,19 @@ class VideoPlayerView: UIView {
     
     @objc
     func airAction() {
+        resetControlHide()
         print("airAction")
     }
     
     @objc
     func pipAction() {
+        resetControlHide()
         print("pipAction")
     }
     
     @objc
     func playAction() {
+        resetControlHide()
         if player?.rate == 0 {
             player?.play()
             playBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
@@ -185,6 +196,7 @@ class VideoPlayerView: UIView {
     
     @objc
     func onSliderValChanged(slider: UISlider, event: UIEvent) {
+        resetControlHide()
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
             case .began:
@@ -200,13 +212,50 @@ class VideoPlayerView: UIView {
                 break
             }
         }
-        
-        
     }
     
     @objc
     func modeAction() {
+        resetControlHide()
         print("modeAction")
+    }
+    
+    @objc
+    func tapAction() {
+        toggleControls()
+    }
+    
+    @objc
+    func toggleControls() {
+        if (isControlsShow) {
+            backBtn.isHidden = true
+            airBtn.isHidden = true
+            pipBtn.isHidden = true
+            playBtn.isHidden = true
+            currLabel.isHidden = true
+            seekBar.isHidden = true
+            remainLabel.isHidden = true
+            modeBtn.isHidden = true
+            isControlsShow = false
+        } else {
+            backBtn.isHidden = false
+            airBtn.isHidden = false
+            pipBtn.isHidden = false
+            playBtn.isHidden = false
+            currLabel.isHidden = false
+            seekBar.isHidden = false
+            remainLabel.isHidden = false
+            modeBtn.isHidden = false
+            isControlsShow = true
+        }
+        resetControlHide()
+    }
+    
+    func resetControlHide() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(toggleControls), object: nil)
+        if (isControlsShow) {
+            perform(#selector(toggleControls), with: nil, afterDelay: 5)
+        }
     }
     
     func play() {
@@ -231,7 +280,7 @@ class VideoPlayerView: UIView {
 
 extension CMTime {
     var roundedSeconds: TimeInterval {
-        guard !(seconds.isFinite || seconds.isNaN) else { return 0 }
+        guard !(seconds.isInfinite || seconds.isNaN) else { return 0 }
         return seconds.rounded()
     }
     var hours:  Int { return Int(roundedSeconds / 3600) }
