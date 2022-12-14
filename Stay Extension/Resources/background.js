@@ -1,3 +1,4 @@
+/* eslint-disable */
 Date.prototype.dateFormat = function (fmt) {
     fmt = fmt ? fmt : "YYYY-mm-dd HH:MM:SS"
     if (!this || typeof this == "undefined") {
@@ -364,6 +365,7 @@ function isFullyQualifiedDomain(candidate) {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
@@ -1038,12 +1040,23 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
         }
-        // else if ("DARKMODE_SETTING" == request.operate){
-        //     const darkmodeStatus = request.status;
-        //     browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        //         browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus,  domain: request.domain, enabled: request.enabled });
-        //     });
-        // }
+        else if ("snifferFetchVideoInfo" == request.operate){
+            console.log("--------snifferFetchVideoInfo------------")
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "FETCH_VIDEO_INFO"}).then(
+                    (res)=>{
+                        console.log("-----bg-snifferFetchVideoInfo------res",res)
+                        sendResponse({ body: res.body })  
+                    }
+                );
+            });
+        }
+        else if("fetchFolders" == request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
+                console.log("fetchFolders-----response--",response)
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }
 });

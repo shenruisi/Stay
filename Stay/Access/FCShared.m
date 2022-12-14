@@ -26,6 +26,7 @@ static Plugin *_plugin = nil;
 }
 #endif
 
+#if iOS || Mac
 static iCloudService *_iCloudService = nil;
 + (iCloudService *)iCloudService{
     static dispatch_once_t onceToken_iCloudService;
@@ -35,6 +36,18 @@ static iCloudService *_iCloudService = nil;
         }
     });
     return _iCloudService;
+}
+#endif
+
+static FCTabManager *_tabManager = nil;
++ (FCTabManager *)tabManager{
+    static dispatch_once_t onceTokenTabManager;
+    dispatch_once(&onceTokenTabManager, ^{
+        if (nil == _tabManager){
+            _tabManager = [[FCTabManager alloc] init];
+        }
+    });
+    return _tabManager;
 }
 
 @end

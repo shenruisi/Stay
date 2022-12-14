@@ -11,6 +11,7 @@
 #import "MatchPattern.h"
 #import "SharedStorageManager.h"
 #import "API.h"
+#import "FCShared.h"
 
 @implementation SafariWebExtensionHandler
 
@@ -293,6 +294,19 @@
     else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
         NSDictionary *details = message[@"details"];
         body = [self xmlHttpRequestProxy:details];
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchFolders"]){
+        NSMutableArray<NSDictionary *> *datas = [[NSMutableArray alloc] init];
+        NSArray *tabs = FCShared.tabManager.tabs;
+        NSString *selectedUUID = ((FCTab *)[tabs objectAtIndex:0]).uuid;
+        for (FCTab *tab in tabs) {
+            [datas addObject:@{
+                @"uuid": tab.uuid,
+                @"name": tab.config.name,
+                @"selected": @([selectedUUID isEqualToString:tab.uuid]),
+            }];
+        }
+        body = datas;
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

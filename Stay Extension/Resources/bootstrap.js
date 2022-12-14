@@ -1,3 +1,4 @@
+
 /**
  Main entrance of Stay
  1. Fetch inject scripts from SafariWebExtensionHandler
@@ -8,6 +9,7 @@
  background.js passing message to content.js using browser.tabs.sendMessage.
  popup.js passing message to content.js should sendMessage to background.js first.
  */
+/* eslint-disable */
 // console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
