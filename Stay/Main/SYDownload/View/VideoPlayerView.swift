@@ -185,8 +185,6 @@ class VideoPlayerView: UIView {
     
     @objc
     func onSliderValChanged(slider: UISlider, event: UIEvent) {
-        print("onSliderValChanged : \(slider.value)")
-        
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
             case .began:
@@ -233,6 +231,7 @@ class VideoPlayerView: UIView {
 
 extension CMTime {
     var roundedSeconds: TimeInterval {
+        guard !(seconds.isFinite || seconds.isNaN) else { return 0 }
         return seconds.rounded()
     }
     var hours:  Int { return Int(roundedSeconds / 3600) }
