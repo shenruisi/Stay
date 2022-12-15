@@ -89,7 +89,7 @@ UITableViewDataSource
                 cell.downloadResource.status = 1;
            }
 
-            cell.downloadResource.downloadProcess = progress;
+            cell.downloadResource.downloadProcess = progress * 100;
 
             dispatch_async(dispatch_get_main_queue(),^{
                 [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];

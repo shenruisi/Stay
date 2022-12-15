@@ -44,7 +44,7 @@
       _progress = progress;
       CGFloat width = self.bounds.size.width - 2;
       CGFloat heigth = self.bounds.size.height;
-      _progressView.frame = CGRectMake(1, 0, width * progress / 100, heigth);
+      _progressView.frame = CGRectMake(1, 0, width * progress, heigth);
   }
 
 @end
