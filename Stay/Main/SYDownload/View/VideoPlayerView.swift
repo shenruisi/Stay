@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import AVKit
 
 class VideoPlayerView: UIView {
     
@@ -20,6 +21,7 @@ class VideoPlayerView: UIView {
     
     private var player: AVQueuePlayer?
     private var itemOb: NSKeyValueObservation?
+    private var itemStatusOb: NSKeyValueObservation?
     private var timeOb: Any?
     
     private let allURLs: [URL]
@@ -39,10 +41,20 @@ class VideoPlayerView: UIView {
         addAllVideosToPlayer()
         
         playerLayer.player = player
+        avPipController = AVPictureInPictureController(playerLayer: playerLayer)
         
         itemOb = player?.observe(\.currentItem) { [weak self] player, _ in
             if player.items().count == 1 {
                 self?.addAllVideosToPlayer()
+            }
+        }
+        itemStatusOb = player?.observe(\AVQueuePlayer.currentItem?.status) { [weak self] _, _ in
+            if let currentItem = self?.player?.currentItem {
+                if currentItem.status == .readyToPlay {
+                    self?.remainLabel.text = currentItem.duration.positionalTime
+                } else {
+                    self?.remainLabel.text = "00:00"
+                }
             }
         }
         addPeriodicTimeObserver()
@@ -65,7 +77,7 @@ class VideoPlayerView: UIView {
             guard let currentItem = self?.player?.currentItem else { return }
             self?.seekBar.setValue(Float(time.seconds / currentItem.duration.seconds) , animated: true)
             self?.currLabel.text = time.positionalTime
-            self?.remainLabel.text = currentItem.duration.positionalTime
+//            self?.remainLabel.text = currentItem.duration.positionalTime
 //            self?.remainLabel.text = (currentItem.duration - time).positionalTime
         }
     }
@@ -87,7 +99,7 @@ class VideoPlayerView: UIView {
     
     var isControlsShow = true
     let backBtn = UIButton()
-    let airBtn = UIButton()
+    let airBtn = AVRoutePickerView()
     let pipBtn = UIButton()
     let playBtn = UIButton()
     let currLabel = UILabel()
@@ -100,8 +112,8 @@ class VideoPlayerView: UIView {
         backBtn.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backBtn)
         
-        airBtn.setImage(UIImage(systemName: "airplayvideo", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
-        airBtn.addTarget(self, action: #selector(airAction), for: .touchUpInside)
+        airBtn.tintColor = .white
+        airBtn.prioritizesVideoDevices = true
         airBtn.translatesAutoresizingMaskIntoConstraints = false
         addSubview(airBtn)
         pipBtn.setImage(UIImage(systemName: "pip.enter", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 23)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
@@ -170,16 +182,17 @@ class VideoPlayerView: UIView {
         controller?.dismiss(animated: true, completion: nil)
     }
     
-    @objc
-    func airAction() {
-        resetControlHide()
-        print("airAction")
-    }
-    
+    var avPipController: AVPictureInPictureController?
     @objc
     func pipAction() {
         resetControlHide()
-        print("pipAction")
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            if avPipController?.isPictureInPictureActive != true {
+                avPipController?.startPictureInPicture()
+            }
+        } else {
+            
+        }
     }
     
     @objc

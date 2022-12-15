@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>bugsnag</key>
-    <dict>
-      <key>apiKey</key>
-      <string>c9596e54fc2c91c8aa4971f1fc3f047d</string>
-    </dict>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -55,6 +50,15 @@
 				</dict>
 			</array>
 		</dict>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+	<key>bugsnag</key>
+	<dict>
+		<key>apiKey</key>
+		<string>c9596e54fc2c91c8aa4971f1fc3f047d</string>
 	</dict>
 </dict>
 </plist>

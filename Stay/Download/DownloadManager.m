@@ -215,8 +215,7 @@ static DownloadManager *instance = nil;
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
     Task *task = [self getTaskWithSessionTask:assetDownloadTask];
     if (task != nil) {
-        NSError *err;
-        [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:&err];
+        [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:nil];
         if (task.block != nil) {
             task.block(1, DMStatusComplete);
         }
