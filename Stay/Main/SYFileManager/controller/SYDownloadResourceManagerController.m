@@ -80,12 +80,10 @@ UITableViewDataSource
             } else if(status == DMStatusDownloading) {
                 [[DataManager shareManager] updateDownloadResourcProcess:progress * 100 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 0;
-
             } else if(status == DMStatusComplete) {
                 [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
                 [[DataManager shareManager] updateDownloadResourcProcess:100 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 2;
-
             } else if(status == DMStatusPending) {
                 [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 1;

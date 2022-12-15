@@ -199,7 +199,7 @@
         SYProgress *progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
 
         progress.top = downloadRateLabel.bottom + 5;
-        progress.progress = _downloadResource.downloadProcess / 100;
+        progress.progress = _downloadResource.downloadProcess;
         [self.contentView addSubview:progress];
     }
     

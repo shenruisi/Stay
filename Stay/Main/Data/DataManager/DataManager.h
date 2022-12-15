@@ -56,4 +56,9 @@
 
 - (void)updateDownloadResourceStatus:(NSInteger)status uuid:(NSString *)uuid;
 
+- (void)updateVideoDuration:(NSInteger)videoDuration uuid:(NSString *)uuid;
+
+- (void)updateWatchProgress:(NSInteger)watchProgress uuid:(NSString *)uuid;
+
+
 @end
