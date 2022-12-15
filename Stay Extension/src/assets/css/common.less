@@ -1,0 +1,148 @@
+body,
+div,
+span,
+header,
+footer,
+nav,
+section,
+aside,
+article,
+ul,
+dl,
+dt,
+cite,
+dd,
+li,
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+i,
+b,
+textarea,
+button,
+input,
+select,
+figure,
+figcaption {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-style: normal;
+  text-decoration: none;
+  border: none;
+  font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none; 
+  -webkit-font-smoothing: antialiased;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  &:focus {
+      outline: none;
+  }
+}
+html { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;}
+/* 移动端点击高亮 */
+html,
+body {
+  background-color: var(--s-background);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+}
+
+del {
+  color: #949497;
+}
+input {
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+em, i { font-style: normal;}
+input{ vertical-align:middle;}
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0;}
+input,textarea{ box-shadow: none !important;}
+input[type=file]{ cursor: pointer;}
+img,button{ border:0; outline: 0;}
+header,section,footer{  display: block; }
+input::-webkit-input-placeholder{font-family:"微软雅黑"; color: #909090;}
+input:-moz-placeholder{font-family:"微软雅黑"; color: #909090;}
+input::-moz-placeholder{font-family:"微软雅黑"; color: #909090;}
+textarea {
+  border: none;
+  outline: none;
+}
+button {
+  border: none;
+  outline: none;
+}
+a {
+  text-decoration: none;
+  color: #333;
+}
+li {
+  list-style-type: none;
+}
+img{
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+  image-rendering: crisp-edges;    
+  -ms-interpolation-mode: nearest-neighbor; 
+  object-fit: contain;
+}
+/* 解决端遮罩层穿透 */
+body.dialog-open {
+  position: fixed;
+  width: 100%;
+}
+
+:root {
+  --s-background: #f2f2f6;
+  --s-f6: #f6f6f6;
+  --s-f7: #f7f7f7;
+  --s-7a: #7a7a7a;
+  --s-d8: #d8d8d8;
+  --s-e0: #e0e0e0;
+  --s-main: #b620e0;
+  --s-151-f6: rgba(151, 151, 151, 0.06);
+  --s-main-f10: rgba(182, 32, 224, 0.1);
+  --s-main-f60: rgba(182, 32, 224, 0.6);
+  --s-btn-bg: rgb(245,224,153);
+  --s-btn: #84561D;
+  --s-8a: #8a8a8a;
+  --s-000-08: rgba(0, 0, 0, 0.08);
+  --s-000-26: rgba(0, 0, 0, 0.26);
+  --s-black: #000000;
+  --s-red: #d91d06;
+  --s-white: #ffffff;
+  --s-e02020: #e02020;
+  --s-bg: var(--s-white);
+  --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+#app {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica, Arial, "Lucida Grande", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: var(--s-black);
+  width: 100%;
+  position: relative;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%; /*IE6不识别min-height*/
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--s-white);
+}

@@ -34,7 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *borderColor;
 @property(class, nonatomic, readonly) UIColor *grayNoteColor;
 @property(class, nonatomic, readonly) UIColor *fcMacIcon;
-@property(class, nonatomic, readonly) UIColor *fcNavigationLineColor; 
+@property(class, nonatomic, readonly) UIColor *fcNavigationLineColor;
+@property(class, nonatomic, readonly) UIColor *titleGrayColor;
+@property(class, nonatomic, readonly) UIColor *progressBgColor;
+
 
 @property(class, nonatomic, readonly) UIFont *headline;
 @property(class, nonatomic, readonly) UIFont *headlineBold;

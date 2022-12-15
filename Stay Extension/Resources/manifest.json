@@ -21,33 +21,33 @@
 
     "content_scripts": [
         {
-            "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
+            "js": [ "convert2RegExp.js", "MatchPattern.js", "bootstrap.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"
         },
         {
-            "js": [ "parse-meta-line.js","parse-user-script.js","message.js", "checkUserscript.js"],
+            "js": [ "parse-meta-line.js", "parse-user-script.js", "message.js", "checkUserscript.js"],
             "matches": [ "*://*/*.js" ],
             "all_frames": false,
             "run_at": "document_end"
         },
         {
-            "js": ["fallback.js","dark.user.js"],
+            "js": ["popup/js/fallback.js", "popup/js/darkmode.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"
         },
         {
-            "js": ["install.js"],
-            "matches": [ "https://stayfork.app/install/iphone" ],
-            "all_frames": false,
+            "js": ["popup/js/chunk-vendors.js", "popup/js/sniffer.js"],
+            "matches": [ "*://*/*" ],
+            "all_frames": true,
             "run_at": "document_start"
         }
     ],
 
     "browser_action": {
-        "default_popup": "popup.html",
+        "default_popup": "/popup/popup.html",
         "default_icon": {
             "16": "images/toolbar-icon-16.png",
             "19": "images/toolbar-icon-19.png",
@@ -58,8 +58,10 @@
     },
     "host_permissions":[
         "https://*/*",
-        "http://*/*"
+        "http://*/*",
+        "file://*"
     ],
     "web_accessible_resources": ["*"],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage","cookies"]
 }

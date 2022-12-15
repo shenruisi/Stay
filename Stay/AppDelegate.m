@@ -23,6 +23,10 @@
 #import "ScriptEntity.h"
 #import <SDWebImageSVGKitPlugin/SDWebImageSVGKitPlugin.h>
 #import <SVGKit/SVGKit.h>
+#import "NSString+Urlencode.h"
+#import "DownloadResource.h"
+#import <CommonCrypto/CommonDigest.h>
+#import "DownloadManager.h"
 
 #ifdef Mac
 #import "Plugin.h"
@@ -38,7 +42,7 @@
 #import "DeviceHelper.h"
 
 #ifdef iOS
-#import <Bugsnag/Bugsnag.h>
+//#import <Bugsnag/Bugsnag.h>
 #endif
 
 @interface AppDelegate()
@@ -55,7 +59,7 @@
     // Override point for customization after application launch.
 #ifndef Mac
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
-    [Bugsnag start];
+//    [Bugsnag start];
 #endif
     
     
@@ -113,14 +117,14 @@
     [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
 #ifdef Mac
         if ([QuickAccess primaryController] != nil){
-            [QuickAccess primaryController].selectedIndex = 2;
+            [QuickAccess primaryController].selectedIndex = 3;
             [[QuickAccess primaryController].selectedViewController presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
                                animated:YES completion:^{}];
         }
 #else
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
+            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 3;
             [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
         }
 #endif
@@ -169,6 +173,57 @@
     }];
     
     
+    [[IACManager sharedManager] handleAction:@"snifferVideo" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        
+        //如果不是pro会员直接返回
+//        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//        if(!isPro) {
+//            return;
+//        }
+//
+       NSString *listStr = inputParameters[@"list"];
+       NSString *listDecodeStr = [listStr decodeString];
+       NSArray *arrays = [NSJSONSerialization JSONObjectWithData:[listDecodeStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        
+        if(arrays != nil && arrays.count > 0) {
+            for(int i = 0;i < arrays.count; i++) {
+                NSDictionary *dic = arrays[i];
+                DownloadResource *resource = [[DownloadResource alloc] init];
+                NSString *downLoadUrl = dic[@"downloadUrl"];
+                resource.title = dic[@"title"];
+                resource.icon = dic[@"poster"];
+                resource.host = dic[@"hostUrl"];
+                resource.downloadUrl = downLoadUrl;
+                resource.firstPath = dic[@"uuid"];
+                resource.downloadUuid = [self md5HexDigest:downLoadUrl];
+             
+                DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
+                if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
+                    
+
+                    FCTab *tab = [[FCShared tabManager] tabOfUUID:dic[@"uuid"]];
+                    Request *request = [[Request alloc] init];
+                    request.url = downLoadUrl;
+                    request.fileDir = tab.path;
+                    request.fileType = @"video";
+                    request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
+                    request.key = tab.uuid;
+                    Task *task = [[DownloadManager shared] enqueue:request];
+           
+                    resource.status = 0;
+                    resource.watchProcess = 0;
+                    resource.downloadProcess = 0;
+                    resource.videoDuration = 0;
+                    resource.allPath = task.filePath;
+                    resource.sort = 0;
+                    [[DataManager shareManager] addDownloadResource:resource];
+                }
+            }
+        }
+            
+    }];
+    
+    
     return YES;
 }
 
@@ -211,6 +266,18 @@
     }
     
     return _loadingSlideController;
+}
+
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    return result;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application{}
