@@ -7,12 +7,12 @@
         匹配脚本
       </div>
       <template v-if="selectedTab.id==2 || selectedTab.id==3">
-        <!-- <template v-if="isStayPro">
+        <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
-        </template> -->
-          <DarkMode v-if="selectedTab.id==2"></DarkMode>
-          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
+        </template>
+          <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
+          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
         <UpgradePro v-else></UpgradePro>
       </template>
       
