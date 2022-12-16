@@ -27,6 +27,7 @@
 #import "DownloadResource.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "DownloadManager.h"
+#import "SYDownloadSlideController.h"
 
 #ifdef Mac
 #import "Plugin.h"
@@ -188,39 +189,9 @@
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
-                DownloadResource *resource = [[DownloadResource alloc] init];
-                NSString *downLoadUrl = dic[@"downloadUrl"];
-                resource.title = dic[@"title"];
-                resource.icon = dic[@"poster"];
-                resource.host = dic[@"hostUrl"];
-                resource.downloadUrl = downLoadUrl;
-                resource.firstPath = dic[@"uuid"];
-                resource.downloadUuid = [self md5HexDigest:downLoadUrl];
-             
-                DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
-                if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
-                    
-
-                    FCTab *tab = [[FCShared tabManager] tabOfUUID:dic[@"uuid"]];
-                    Request *request = [[Request alloc] init];
-                    request.url = downLoadUrl;
-                    request.fileDir = tab.path;
-                    request.fileType = @"video";
-                    request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
-                    if (![request.fileName hasSuffix:@".mp4"]) {
-                        request.fileName = [request.fileName stringByAppendingString:@".mp4"];
-                    }
-                    request.key = tab.uuid;
-                    Task *task = [[DownloadManager shared] enqueue:request];
-           
-                    resource.status = 0;
-                    resource.watchProcess = 0;
-                    resource.downloadProcess = 0;
-                    resource.videoDuration = 0;
-                    resource.allPath = task.filePath;
-                    resource.sort = 0;
-                    [[DataManager shareManager] addDownloadResource:resource];
-                }
+                SYDownloadSlideController *cer = [[SYDownloadSlideController alloc] init];
+                cer.dic = dic;
+                [cer show];
             }
         }
             

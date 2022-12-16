@@ -113,6 +113,10 @@
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         inputEntity = [[ModalItemDataEntityInput alloc] init];
         inputEntity.keyboardType = UIKeyboardTypeDefault;
+        if(self.dic != NULL && self.dic[@"downloadUrl"] != nil) {
+            inputEntity.text = self.dic[@"downloadUrl"];
+            linkElement.enable = false;
+        }
         linkElement.generalEntity = generalEntity;
         linkElement.inputEntity = inputEntity;
         linkElement.tapEnabled = NO;
@@ -136,6 +140,9 @@
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         inputEntity = [[ModalItemDataEntityInput alloc] init];
         inputEntity.keyboardType = UIKeyboardTypeDefault;
+        if(self.dic != NULL && self.dic[@"title"] != nil) {
+            inputEntity.text = self.dic[@"title"];
+        }
         nameElement.generalEntity = generalEntity;
         nameElement.inputEntity = inputEntity;
         nameElement.tapEnabled = NO;
@@ -162,6 +169,7 @@
         saveToElement.type = ModalItemElementTypeAccessory;
         saveToElement.renderMode = ModalItemElementRenderModeSingle;
         saveToElement.action = ^(ModalItemElement * _Nonnull element) {
+            
         };
         [ret addObject:saveToElement];
         
