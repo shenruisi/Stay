@@ -99,6 +99,7 @@
                 @"itemElements" : self.saveToElements
             }
         ];
+        
     }
     
     return _dataSource;
@@ -113,9 +114,13 @@
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         inputEntity = [[ModalItemDataEntityInput alloc] init];
         inputEntity.keyboardType = UIKeyboardTypeDefault;
+        inputEntity.textChanged = ^(NSString * _Nonnull text) {
+            
+        };
         linkElement.generalEntity = generalEntity;
         linkElement.inputEntity = inputEntity;
         linkElement.tapEnabled = NO;
+        linkElement.enable = !self.downloadFromExtension;
         linkElement.type = ModalItemElementTypeInput;
         linkElement.renderMode = ModalItemElementRenderModeSingle;
         linkElement.action = ^(ModalItemElement * _Nonnull element) {
@@ -136,6 +141,9 @@
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         inputEntity = [[ModalItemDataEntityInput alloc] init];
         inputEntity.keyboardType = UIKeyboardTypeDefault;
+        inputEntity.textChanged = ^(NSString * _Nonnull text) {
+            
+        };
         nameElement.generalEntity = generalEntity;
         nameElement.inputEntity = inputEntity;
         nameElement.tapEnabled = NO;

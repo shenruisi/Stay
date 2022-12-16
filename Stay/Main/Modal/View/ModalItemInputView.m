@@ -45,10 +45,19 @@
         _textField.textColor = self.element.enable ? FCStyle.fcBlack : FCStyle.fcSeparator;
         _textField.backgroundColor = UIColor.clearColor;
         _textField.delegate = self;
+        [_textField addTarget:self
+                      action:@selector(textFieldDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
         [self.contentView addSubview:_textField];
     }
     
     return _textField;
+}
+
+- (void)textFieldDidChange:(UITextField *)textField{
+    if (self.element.inputEntity.textChanged){
+        self.element.inputEntity.textChanged(textField.text);
+    }
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
