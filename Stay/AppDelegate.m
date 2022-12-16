@@ -207,6 +207,9 @@
                     request.fileDir = tab.path;
                     request.fileType = @"video";
                     request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
+                    if (![request.fileName hasSuffix:@".mp4"]) {
+                        request.fileName = [request.fileName stringByAppendingString:@".mp4"];
+                    }
                     request.key = tab.uuid;
                     Task *task = [[DownloadManager shared] enqueue:request];
            

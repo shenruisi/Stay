@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVKit
 
 @objc
 class PlayerViewController: UIViewController {
@@ -29,6 +30,7 @@ class PlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         view.backgroundColor = .black
         
         let videoView = VideoPlayerView(urls: [URL(fileURLWithPath: resource.allPath)], controller: self)
