@@ -86,7 +86,7 @@ UIDocumentPickerDelegate
     [headrView addSubview:label];
     
     
-    UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 17)];
+    UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     [addImage setImage:[ImageHelper sfNamed:@"plus.circle" font:[UIFont systemFontOfSize:17] color:FCStyle.accent]];
     
     addImage.centerY = label.centerY;
