@@ -3,9 +3,7 @@
     <div class="hide-temp"></div>
     <Header>{{t(selectedTab.name)}}</Header>
     <div class="tab-content">
-      <div class="matched-script" v-if="selectedTab.id==1">
-        匹配脚本
-      </div>
+      <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
       <template v-if="selectedTab.id==2 || selectedTab.id==3">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2"></DarkMode>
@@ -29,6 +27,7 @@ import DarkMode from '../components/DarkMode.vue';
 import Sniffer from '../components/Sniffer.vue';
 import ConsolePusher from '../components/ConsolePusher.vue';
 import UpgradePro from '../components/UpgradePro.vue';
+import MatchedScript from '../components/MatchedScript.vue';
 import { useI18n } from 'vue-i18n';
 
 
@@ -40,7 +39,8 @@ export default {
     ConsolePusher,
     Sniffer,
     DarkMode,
-    UpgradePro
+    UpgradePro,
+    MatchedScript
   },
   setup(props, { emit, attrs, slots }) {
     const { t, tm } = useI18n();

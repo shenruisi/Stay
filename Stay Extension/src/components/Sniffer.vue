@@ -7,7 +7,7 @@
             <div class="video">
               <img :src="item.poster" v-if="item.poster"/>
               <div class="no-img" v-else>
-                <span>{{ getDomain(item.hostUrl) }}</span>
+                <span>{{ getHostname(item.hostUrl) }}</span>
               </div>
             </div>
             <div class="info">
@@ -53,8 +53,6 @@ export default {
     const { t, tm } = useI18n();
     const global = inject('global');
     const state = reactive({
-      browserUrl: props.browserUrl,
-      hostName: getHostname(props.browserUrl),
       selectedFolder: '',
       folderOptions: [{name: t('select_folder'), uuid: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
@@ -145,7 +143,7 @@ export default {
       if(item.selectedQuality){
         item.downloadUrl = item.selectedQuality;
       }
-      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: item.hostUrl, uuid: state.selectedFolder}];
+      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: state.selectedFolder}];
       let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
       window.open(downloadUrl);
     }
