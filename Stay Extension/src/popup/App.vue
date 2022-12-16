@@ -1,6 +1,6 @@
 <template>
   <div class="stay-popup-warpper">
-    <div class="hide-temp">hello Stay</div>
+    <div class="hide-temp"></div>
     <Header>{{t(selectedTab.name)}}</Header>
     <div class="tab-content">
       <div class="matched-script" v-if="selectedTab.id==1">
@@ -15,8 +15,6 @@
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
         <UpgradePro v-else></UpgradePro>
       </template>
-      
-      
       <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName"></TabMenu>

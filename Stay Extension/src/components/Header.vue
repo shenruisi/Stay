@@ -51,6 +51,7 @@ export default {
     right: 0;
     background-color: var(--s-f6);
     border-bottom: 1px solid var(--s-e0);
+    z-index: 999;
     .stay-icon{
       position: absolute;
       left: 0;

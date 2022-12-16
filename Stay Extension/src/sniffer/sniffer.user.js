@@ -6,15 +6,11 @@ let __b;
 if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
 const browser = __b;
 (function () {
-  let videoInfoList = [];
-  let videoLinkSet = new Set();
   let contentHost = window.location.host;
-
   let scriptTag = document.createElement('script');
   scriptTag.type = 'text/javascript';
   scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
   let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo();`;
-  //   scriptTag.textContent = injectJSContent;
   scriptTag.appendChild(document.createTextNode(injectJSContent));
   if (document.body) {
     document.body.appendChild(scriptTag);
@@ -71,7 +67,6 @@ const browser = __b;
       }
     }
     
-    // let ifreamDoms = document.getElementsByTagName('iframe');
     function startFindVideoInfo(){
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
@@ -82,8 +77,10 @@ const browser = __b;
         // console.log('videoDoms---false-----',videoDoms)
         parseVideoNodeList(videoDoms);
       }else{
+        // handleIframeObserver()
         observerVideo()
       }
+
     }
 
     function observerVideo(){
@@ -148,7 +145,6 @@ const browser = __b;
         })
         window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
         console.log('parseVideoNodeList-----------result---------',videoList);
-          
       }
     }
     
@@ -164,7 +160,7 @@ const browser = __b;
       let downloadUrl = videoDom.getAttribute('src');
       let qualityList = [];
       hostUrl = window.location.href;
-      console.log('handleVideoInfoParse---host---', host);
+      // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
         // if(Utils.isMobile()){
         //   videoInfo = handleMobileYoutubeVideoInfo(title);
@@ -191,7 +187,16 @@ const browser = __b;
       if(videoInfo.qualityList && videoInfo.qualityList.length){
         qualityList = videoInfo.qualityList;
       }
-      videoInfo['title'] = title;
+      if(!title){
+        let pathName = '';
+        if(Utils.isURL(downloadUrl)){
+          pathName = new URL(downloadUrl).pathname;
+        }else{
+          pathName = new URL(hostUrl).pathname;
+        }
+        title = pathName.split('/').pop();
+      }
+      videoInfo['title'] = title
       videoInfo['poster'] = poster;
       videoInfo['downloadUrl'] = downloadUrl;
       videoInfo['hostUrl'] = hostUrl;
@@ -213,13 +218,14 @@ const browser = __b;
       // window.PAGE_DATA.remote.rcmdVideoList
       if(host === 'activity.baidu.com'){
         const pageData = window.PAGE_DATA;
-        if(pageData && pageData.pageData && pageData.pageData.remote && pageData.remote.mainVideoList && pageData.remote.mainVideoList.length){
-          const mainVideo = pageData.remote.mainVideoList[0];
+        if(pageData && pageData.pageData && pageData.pageData.remote && pageData.pageData.remote.mainVideoList && pageData.pageData.remote.mainVideoList.length){
+          const mainVideo = pageData.pageData.remote.mainVideoList[0];
+          const moreVideoList = pageData.pageData.remote.moreVideoList;
           videoInfo['title'] = mainVideo.title;
           videoInfo['poster'] = mainVideo.poster;
           videoInfo['downloadUrl'] = mainVideo.videoUrl;
-          if(pageData.remote.moreVideoList && pageData.remote.moreVideoList.length){
-            pageData.remote.moreVideoList.forEach(item=>{
+          if(moreVideoList && moreVideoList.length){
+            moreVideoList.forEach(item=>{
               if(videoUrlSet.size && videoUrlSet.has(item.videoUrl)){
                 return;
               }
@@ -372,7 +378,7 @@ const browser = __b;
         return videoInfo;
       }else{
         videoInfo = {};
-        console.log('playerResp---is---null-------');
+        // console.log('playerResp---is---null-------');
         videoInfo['title'] = getYoutubeVideoTitleByDom();
         // poster img
         videoInfo['poster'] = getYoutubeVideoPosterByDom();
@@ -535,135 +541,30 @@ const browser = __b;
 
   }
 
-  
-  
+
+  let videoInfoList = [];
+  let videoLinkSet = new Set();
   window.addEventListener('message', (e) => {
     if (!e || !e.data || !e.data.name) return;
-    
     const name = e.data.name;
     console.log('snifffer.user----->e.data.name=',name);
     if(name === 'VIDEO_LINK_CAPTURE'){
-      videoLinkSet = e.data.urls ? e.data.urls : new Set();
-      // console.log('snifffer.user----->videoLinkSet=',videoLinkSet);
+      let tempSet = e.data.urls ? e.data.urls : new Set();
+      console.log('snifffer.VIDEO_LINK_CAPTURE----->tempSet=',tempSet);
+      // videoLinkSet = new Set( [ ...tempSet, ...videoLinkSet ] )
+      videoLinkSet = tempSet
+      // console.log('snifffer.VIDEO_LINK_CAPTURE----->videoLinkSet=',videoLinkSet);
+      let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet};
+      browser.runtime.sendMessage(message, (response) => {});
     }
     else if(name === 'VIDEO_INFO_CAPTURE'){
-      videoInfoList = e.data.videoList ? e.data.videoList : [];
-      // console.log('snifffer.user----->videoInfoList=',videoInfoList);
+      let videoInfoListTemp = e.data.videoList ? e.data.videoList : [];
+      videoInfoList = videoInfoListTemp
+      // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoListTemp=',videoInfoListTemp);
+      // videoInfoList.push(...videoInfoListTemp)
+      console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoList=',videoInfoList);
+      let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList};
+      browser.runtime.sendMessage(message, (response) => {});
     }
-
-    // let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH' };
-    // browser.runtime.sendMessage(message, (response) => {
-    // });
-
   })
-
-
-  // document.onreadystatechange = () => {
-  //   console.log('content--------document.readyState==',document.readyState)
-  //   if (document.readyState === 'complete') {
-  //     console.log('content--------readyState-------------------', document.readyState)
-  //     // startFindVideoInfo();
-      
-  //     // eslint-disable-next-line no-undef
-  //     console.log('content-------------')
-  //   }
-  // };
-
-  
-
-  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    const requestFrom = request.from;
-    const operate = request.operate;
-    if('background' === requestFrom){
-      if('FETCH_VIDEO_INFO' === operate){
-        console.log('----videoInfoList-----',videoInfoList,videoLinkSet);
-        sendResponse({body: {videoInfoList: mergeVideoInfoList()}})
-      }
-    }
-    return true;
-  })
-
-  /**
-   * 合并 videoInfoList 和 videoLinkSet
-   * @returns videoInfoListRes
-   */
-  function mergeVideoInfoList(){
-    let videoInfoListRes = [];
-    let hostUrl = window.location.href;
-    console.log('mergeVideoInfoList-------',hostUrl)
-    if(videoInfoList.length){
-      let videnLen = videoInfoList.length
-      let isValidAmount = 0;
-      if(videnLen == 1){
-        videoInfoList.forEach(item=>{
-          if(!isURL(item.downloadUrl)){
-            isValidAmount = isValidAmount + 1;
-            return
-          }
-        });
-        if(videoLinkSet.size == 1){
-          if(isValidAmount == 1){
-            let array = [...videoLinkSet];
-            videoInfoList[0].downloadUrl = array[0];
-            videoInfoListRes = videoInfoList;
-          }else{
-            videoInfoListRes = videoInfoList;
-          }
-        }else{
-          if(videoLinkSet.size>1){
-            // 存在无效视频链接，以videoLinkSet为准
-            if(isValidAmount == 1){
-              let array = [...videoLinkSet];
-              array.forEach(item=>{
-                videoInfoListRes.push({downloadUrl:item,poster:'',title: new URL(item).pathname, hostUrl:hostUrl,qualityList:[]})
-              })
-              return videoInfoListRes;
-            }
-          }
-        }
-        videoInfoListRes = videoInfoList;
-        return videoInfoListRes;
-      }
-      // videoInfoList.length>1
-      else {
-        // 收集有效视频信息
-        videoInfoList.forEach(item=>{
-          if(isURL(item.downloadUrl)){
-            videoInfoListRes.push(item);
-          }
-        });
-        // 有效视频信息videoInfoListRes与videoLinkSet进行合并
-        if(videoInfoListRes.length){
-          let array = [...videoLinkSet];
-          let videoUrlArr = [];
-          videoInfoListRes.forEach(videoItem=>{
-            videoUrlArr.push(videoItem.downloadUrl);
-          })
-          array.forEach(item=>{
-            if(!videoUrlArr.includes(item)){
-              videoInfoListRes.push({downloadUrl:item,poster:'',title:new URL(item).pathname,hostUrl: hostUrl,qualityList:[]})
-            }
-          })
-        }else{
-          // videoInfoList中没有有效链接，以videoLinkSet返回
-          let array = [...videoLinkSet];
-          array.forEach(item=>{
-            videoInfoListRes.push({downloadUrl:item,poster:'',title:new URL(item).pathname,hostUrl: hostUrl,qualityList:[]})
-          })
-        }
-      }
-    }
-    return videoInfoListRes;
-  }
-
-  function isURL(s) {
-    if(!s){
-      return false;
-    }
-    return /^http[s]?:\/\/.*/.test(s);
-  }
-  
-    
-  
-
 })()

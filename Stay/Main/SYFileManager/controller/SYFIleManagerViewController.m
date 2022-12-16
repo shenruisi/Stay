@@ -98,7 +98,8 @@ UIDocumentPickerDelegate
     SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
     controller.pathUuid = [FCShared tabManager].tabs[indexPath.row].uuid;
     controller.title = [FCShared tabManager].tabs[indexPath.row].config.name;
-    controller.array = [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid];
+    controller.array = [NSMutableArray array];
+    [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
     [self.navigationController pushViewController:controller animated:TRUE];
 }
 
