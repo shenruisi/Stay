@@ -60,5 +60,5 @@
 
 - (void)updateWatchProgress:(NSInteger)watchProgress uuid:(NSString *)uuid;
 
-
+- (void)deleteVideoByuuid:(NSString *)uuid;
 @end

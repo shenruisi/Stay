@@ -182,8 +182,8 @@
 //        }
 //
        NSString *listStr = inputParameters[@"list"];
-       NSString *listDecodeStr = [listStr decodeString];
-       NSArray *arrays = [NSJSONSerialization JSONObjectWithData:[listDecodeStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+//       NSString *listDecodeStr = [listStr decodeString];
+       NSArray *arrays = [NSJSONSerialization JSONObjectWithData:[listStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
         
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {

@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 #import "DownloadResource.h"
+#import "SYProgress.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DownloadResourceTableViewCell : UITableViewCell
@@ -15,8 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,strong)UIViewController *controller;
 
+@property(nonatomic,strong)UILabel *downloadRateLabel;
 
+@property(nonatomic,strong)SYProgress *progress;
 
+- (void)reloadCell;
 @end
 
 NS_ASSUME_NONNULL_END
