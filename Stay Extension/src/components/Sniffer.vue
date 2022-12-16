@@ -58,13 +58,13 @@ export default {
       selectedFolder: '',
       folderOptions: [{name: t('select_folder'), uuid: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
-        {
-          poster: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
-          downloadUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
-          title: '美国军机飞抵台海已人困马乏，赖岳谦：若开战会被解放军碾压',
-          qualityList:[],
-          selectedQuality: ''
-        }
+        // {
+        //   poster: 'https://f7.baidu.com/it/u=3855037150,2522612002&fm=222&app=108&f=JPEG',
+        //   downloadUrl: 'https://vd2.bdstatic.com/mda-nkea4tasr6ur1ykf/cae_h264/1668497008894896459/mda-nkea4tasr6ur1ykf.mp4',
+        //   title: '美国军机飞抵台海已人困马乏，赖岳谦：若开战会被解放军碾压',
+        //   qualityList:[],
+        //   selectedQuality: ''
+        // }
       ]
     });
 
@@ -109,6 +109,19 @@ export default {
           console.log(e);
         }
       });
+
+      // global.browser.tabs.query({
+      //   active: true,
+      //   currentWindow: true
+      // }, (tabs) => {
+      //   console.log('--------global.browser.tabs.--snifferFetchVideoInfo-');
+      //   let message = { from: 'popup', operate: 'snifferFetchVideoInfo'};
+      //   global.browser.tabs.sendMessage(tabs[0].id, message, res => {
+      //     console.log('snifferFetchVideoInfo---response-----', res);
+      //     console.log('popup=>content')
+          
+      //   })
+      // })
     }
 
     snifferFetchVideoInfo();
@@ -153,6 +166,8 @@ export default {
 <style lang="less" scoped>
   .popup-sniffer-wrapper{
     width: 100%;
+    height: 100%;
+    // user-select: none;
     .sniffer-null{
       width: 100%;
       padding: 40px 10px;
@@ -160,10 +175,11 @@ export default {
       color: var(--s-000-08);
     }
     .sniffer-video-box{
-      padding: 10px 0 0px 10px;
+      padding: 0px 0 0px 10px;
       width: 100%;
       .sniffer-video{
         width: 100%;
+        padding-top: 10px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -181,6 +197,7 @@ export default {
           padding-bottom: 4px;
           padding-right: 100px;
           position: relative;
+          user-select: none;
           .img-info{
             width: 100%;
             height: 100%;
@@ -213,6 +230,7 @@ export default {
                   top: 51%;
                   font-family: 'Helvetica Neue';
                   font-size: 10px;
+                  user-select: none;
                 }
               }
             }
@@ -224,6 +242,7 @@ export default {
               align-items: center;
               text-align: left;
               padding-left: 10px;
+              user-select: none;
               .title{
                 width: 100%;
                 color: var(--s-7a);
@@ -235,8 +254,10 @@ export default {
                 text-overflow: ellipsis;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
+                user-select: none;
               }
               .name{
+                user-select: none;
                 width: 100%;
                 text-align: left;
                 color: var(--s-black);
@@ -265,6 +286,7 @@ export default {
             padding-right: 10px;
             position:absolute;
             right: 0;
+            user-select: none;
             .btn{
               width: 94px;
               background-color: var(--s-f7);

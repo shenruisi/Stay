@@ -50,7 +50,7 @@ module.exports = defineConfig({
     entry: {
       darkmode: './src/darkmode/dark.user.js',
       fallback: './src/darkmode/fallback.js',
-	  sniffer: './src/sniffer/sniffer.user.js'
+	    sniffer: './src/sniffer/sniffer.user.js',
     },
     output: {
       filename: 'js/[name].js',
