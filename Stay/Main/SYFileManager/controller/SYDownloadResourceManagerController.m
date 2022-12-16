@@ -33,6 +33,7 @@ UITableViewDataSource
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self reloadData];
     // Do any additional setup after loading the view.
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.
@@ -90,6 +91,7 @@ UITableViewDataSource
                 [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
 //                [[DataManager shareManager] updateDownloadResourcProcess:100 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 2;
+                [self reloadData];
             } else if(status == DMStatusPending) {
                 [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 1;
@@ -147,6 +149,15 @@ UITableViewDataSource
     
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    DownloadResource *downloadResource = self.array[indexPath.row];
+    if(downloadResource.status == 2){
+        PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:downloadResource];
+        playerController.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:playerController animated:YES completion:nil];
+    }
+}
+
 #pragma cellClickEvent
 
 - (void)playVideo:(UIButton *)sender{
@@ -197,7 +208,8 @@ UITableViewDataSource
 
 - (void)reloadData {
     [self.array removeAllObjects];
-    [self.array addObjectsFromArray:[[DataManager shareManager] selectDownloadResourceByPath:self.pathUuid]];
+    [self.array addObjectsFromArray:[[DataManager shareManager] selectUnDownloadComplete:self.pathUuid]];
+    [self.array addObjectsFromArray:[[DataManager shareManager] selectDownloadComplete:self.pathUuid]];
     [self.tableView reloadData];
 }
 

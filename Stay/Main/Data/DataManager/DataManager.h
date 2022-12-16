@@ -61,4 +61,11 @@
 - (void)updateWatchProgress:(NSInteger)watchProgress uuid:(NSString *)uuid;
 
 - (void)deleteVideoByuuid:(NSString *)uuid;
+
+- (NSArray *)selectUnDownloadComplete:(NSString *)path;
+
+- (NSArray *)selectDownloadComplete:(NSString *)path;
+
+
+
 @end

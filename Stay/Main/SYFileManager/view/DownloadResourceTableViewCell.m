@@ -55,6 +55,9 @@
     
     [self.contentView addSubview:imageView];
     UILabel *hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 60 - 12 - 15 -12 - 50, 15)];
+    if(_downloadResource.status == 2) {
+        hostLabel.width =  self.contentView.width - 60 - 15 - 12 - 12;
+    }
     hostLabel.font = FCStyle.footnote;
     hostLabel.text = _downloadResource.host;
     hostLabel.textColor = FCStyle.titleGrayColor;
@@ -63,12 +66,15 @@
     [self.contentView addSubview:hostLabel];
 
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 60 - 12 - 15 -12 - 50, 44)];
+    if(_downloadResource.status == 2) {
+        titleLabel.width =  self.contentView.width - 60 - 15 - 12 - 12;
+    }
     titleLabel.numberOfLines = 2;
     titleLabel.font = FCStyle.body;
     titleLabel.text = _downloadResource.title;
     [titleLabel sizeToFit];
     titleLabel.top = hostLabel.bottom + 2;
-    titleLabel.left = imageView.right + 5;
+    titleLabel.left = imageView.right + 15;
     [self.contentView addSubview:titleLabel];
     
     CGFloat top = imageView.bottom + 7;
@@ -103,15 +109,7 @@
         
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
         runBtn.titleLabel.font = FCStyle.footnoteBold;
-        [runBtn setTitle:NSLocalizedString(@"PLAY", @"PLAY") forState:UIControlStateNormal] ;
-        [runBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
-        [runBtn sizeToFit];
-        runBtn.width += 20;
-        runBtn.layer.cornerRadius = 8;
-        runBtn.centerY = imageView.centerY;
-        runBtn.right = self.contentView.width - 10;
-        runBtn.backgroundColor =  FCStyle.secondaryPopup;
-        [runBtn addTarget:self.controller action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+       
         [self.contentView addSubview:runBtn];
         objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
