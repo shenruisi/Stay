@@ -17,6 +17,8 @@
 #else
 #import "Stay-Swift.h"
 #endif
+#import "SYDownloadSlideController.h"
+
 @interface SYFIleManagerViewController ()<
 UITableViewDelegate,
 UITableViewDataSource,
@@ -29,6 +31,8 @@ UIDocumentPickerDelegate
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) FolderSlideController *folderSlideController;
+@property (nonatomic, strong) UIBarButtonItem *addItem;
+@property (nonatomic, strong) SYDownloadSlideController *downloadSlideController;
 
 @end
 
@@ -50,6 +54,27 @@ UIDocumentPickerDelegate
     self.navigationItem.hidesSearchBarWhenScrolling = false;
 
     self.tableView.sectionHeaderTopPadding = 0;
+    
+    self.navigationItem.rightBarButtonItems = @[[self addItem]];
+}
+
+- (UIBarButtonItem *)addItem{
+    if (nil == _addItem){
+        _addItem = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"plus"
+                                                                            font:FCStyle.sfNavigationBar
+                                                                           color:FCStyle.fcMacIcon]
+                                                      style:UIBarButtonItemStylePlain
+                                                     target:self
+                                                     action:@selector(addBtnClick:)];
+    }
+    return _addItem;
+}
+
+- (void)addBtnClick:(id)sender{
+    if (!self.downloadSlideController.isShown){
+        self.downloadSlideController = [[SYDownloadSlideController alloc] init];
+        [self.downloadSlideController show];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -73,7 +98,8 @@ UIDocumentPickerDelegate
     SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
     controller.pathUuid = [FCShared tabManager].tabs[indexPath.row].uuid;
     controller.title = [FCShared tabManager].tabs[indexPath.row].config.name;
-    controller.array = [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid];
+    controller.array = [NSMutableArray array];
+    [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
     [self.navigationController pushViewController:controller animated:TRUE];
 }
 
@@ -85,7 +111,7 @@ UIDocumentPickerDelegate
     [headrView addSubview:label];
     
     
-    UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 17)];
+    UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     [addImage setImage:[ImageHelper sfNamed:@"plus.circle" font:[UIFont systemFontOfSize:17] color:FCStyle.accent]];
     
     addImage.centerY = label.centerY;

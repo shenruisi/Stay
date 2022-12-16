@@ -49,6 +49,20 @@
     return self;
 }
 
+- (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController
+                                slideController:(FCSlideController *)slideController{
+    if (self = [super init]){
+        [self view];
+        self.rootModalViewController = modalViewController;
+        modalViewController.navigationController = self;
+        modalViewController.isRoot = YES;
+        self.slideController = slideController;
+        [self pushModalViewController:modalViewController];
+    }
+    
+    return self;
+}
+
 - (instancetype)initWithRootModalViewControllerAndNoRoundShadow:(ModalViewController *)modalViewController{
     if (self = [super init]){
         self.noRoundShadow = YES;

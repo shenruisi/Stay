@@ -208,3 +208,9 @@ LICENSE="許可證";
 HOMEPAGE="主頁";
 
 FeedbackEnabling="問題(無法激活Stay)";
+
+ToBeDownload="待下載";
+Link="鏈接";
+Name="名稱";
+SaveTo="保存到";
+StartDownload="開始下載";

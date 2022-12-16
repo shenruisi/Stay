@@ -27,6 +27,7 @@
 #import "DownloadResource.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "DownloadManager.h"
+#import "SYDownloadSlideController.h"
 
 #ifdef Mac
 #import "Plugin.h"
@@ -48,6 +49,8 @@
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@property (nonatomic, strong) SYDownloadSlideController *syDownloadSlideController;
+
 
 @end
 
@@ -182,45 +185,25 @@
 //        }
 //
        NSString *listStr = inputParameters[@"list"];
-       NSString *listDecodeStr = [listStr decodeString];
-       NSArray *arrays = [NSJSONSerialization JSONObjectWithData:[listDecodeStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+//       NSString *listDecodeStr = [listStr decodeString];
+       NSArray *arrays = [NSJSONSerialization JSONObjectWithData:[listStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
         
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
-                DownloadResource *resource = [[DownloadResource alloc] init];
-                NSString *downLoadUrl = dic[@"downloadUrl"];
-                resource.title = dic[@"title"];
-                resource.icon = dic[@"poster"];
-                resource.host = dic[@"hostUrl"];
-                resource.downloadUrl = downLoadUrl;
-                resource.firstPath = dic[@"uuid"];
-                resource.downloadUuid = [self md5HexDigest:downLoadUrl];
-             
-                DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
-                if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
-                    
-
-                    FCTab *tab = [[FCShared tabManager] tabOfUUID:dic[@"uuid"]];
-                    Request *request = [[Request alloc] init];
-                    request.url = downLoadUrl;
-                    request.fileDir = tab.path;
-                    request.fileType = @"video";
-                    request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
-                    if (![request.fileName hasSuffix:@".mp4"]) {
-                        request.fileName = [request.fileName stringByAppendingString:@".mp4"];
-                    }
-                    request.key = tab.uuid;
-                    Task *task = [[DownloadManager shared] enqueue:request];
-           
-                    resource.status = 0;
-                    resource.watchProcess = 0;
-                    resource.downloadProcess = 0;
-                    resource.videoDuration = 0;
-                    resource.allPath = task.filePath;
-                    resource.sort = 0;
-                    [[DataManager shareManager] addDownloadResource:resource];
+                self.syDownloadSlideController.dic = dic;
+                
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                    self.syDownloadSlideController.controller = [QuickAccess secondaryController];
                 }
+                else{
+                    UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                
+                    self.syDownloadSlideController.controller = nav;
+                }
+                
+                [self.syDownloadSlideController show];
             }
         }
             
@@ -269,6 +252,13 @@
     }
     
     return _loadingSlideController;
+}
+
+- (SYDownloadSlideController *)syDownloadSlideController {
+    if(nil == _syDownloadSlideController) {
+        _syDownloadSlideController = [[SYDownloadSlideController alloc] init];
+    }
+    return _syDownloadSlideController;
 }
 
 

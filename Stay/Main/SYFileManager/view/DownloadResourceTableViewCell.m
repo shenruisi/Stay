@@ -10,7 +10,6 @@
 #import "FCStyle.h"
 #import "DownloadManager.h"
 #import "ImageHelper.h"
-#import "SYProgress.h"
 #import "DataManager.h"
 #import <objc/runtime.h>
 
@@ -56,6 +55,9 @@
     
     [self.contentView addSubview:imageView];
     UILabel *hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 60 - 12 - 15 -12 - 50, 15)];
+    if(_downloadResource.status == 2) {
+        hostLabel.width =  self.contentView.width - 60 - 15 - 12 - 12;
+    }
     hostLabel.font = FCStyle.footnote;
     hostLabel.text = _downloadResource.host;
     hostLabel.textColor = FCStyle.titleGrayColor;
@@ -64,12 +66,15 @@
     [self.contentView addSubview:hostLabel];
 
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 60 - 12 - 15 -12 - 50, 44)];
+    if(_downloadResource.status == 2) {
+        titleLabel.width =  self.contentView.width - 60 - 15 - 12 - 12;
+    }
     titleLabel.numberOfLines = 2;
     titleLabel.font = FCStyle.body;
     titleLabel.text = _downloadResource.title;
     [titleLabel sizeToFit];
     titleLabel.top = hostLabel.bottom + 2;
-    titleLabel.left = imageView.right + 5;
+    titleLabel.left = imageView.right + 15;
     [self.contentView addSubview:titleLabel];
     
     CGFloat top = imageView.bottom + 7;
@@ -104,31 +109,28 @@
         
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
         runBtn.titleLabel.font = FCStyle.footnoteBold;
-        [runBtn setTitle:NSLocalizedString(@"PLAY", @"PLAY") forState:UIControlStateNormal] ;
-        [runBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
-        [runBtn sizeToFit];
-        runBtn.width += 20;
-        runBtn.layer.cornerRadius = 8;
-        runBtn.centerY = imageView.centerY;
-        runBtn.right = self.contentView.width - 10;
-        runBtn.backgroundColor =  FCStyle.secondaryPopup;
-        [runBtn addTarget:self.controller action:@selector(playVideo:) forControlEvents:UIControlEventTouchUpInside];
+       
         [self.contentView addSubview:runBtn];
         objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 11, 0.5)];
+        line.backgroundColor = FCStyle.fcSeparator;
+        line.top =  saveFileBtn.bottom + 6;
+        line.left = 12;
+        [self.contentView addSubview:line];
     } else {
-        UILabel *downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
+        _downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
         UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
         objc_setAssociatedObject(stop , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
-        downloadRateLabel.font = FCStyle.footnoteBold;
-        downloadRateLabel.top = top;
-        downloadRateLabel.left = 12;
-        downloadRateLabel.textColor = FCStyle.accent;
-        [self.contentView addSubview:downloadRateLabel];
+        _downloadRateLabel.font = FCStyle.footnoteBold;
+        _downloadRateLabel.top = top;
+        _downloadRateLabel.left = 12;
+        _downloadRateLabel.textColor = FCStyle.accent;
+        [self.contentView addSubview:_downloadRateLabel];
     
         if(_downloadResource.status == 0) {
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.2f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
+            _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
             
             
             UILabel *stopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
@@ -168,7 +170,7 @@
             stop.right =  self.contentView.width - 26;
             [stop addTarget:self.controller action:@selector(continueDownload:) forControlEvents:UIControlEventTouchUpInside];
             [self.contentView addSubview:stop];
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.2f%%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
+            _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"StopDownload",""),_downloadResource.downloadProcess];
             continueLabel.centerX = stop.centerX;
 
         } else if (_downloadResource.status == 3) {
@@ -182,7 +184,7 @@
             retryLabel.right = self.contentView.width - 10;
             [self.contentView addSubview:retryLabel];
         
-            [stop setImage:[ImageHelper sfNamed:@"play.circle.fill" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+            [stop setImage:[ImageHelper sfNamed:@"goforward" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
             
             [stop addTarget:self.controller action:@selector(retryDownload:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -192,17 +194,25 @@
             
             retryLabel.centerX = stop.centerX;
 
-            downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.2f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
+            _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         }
         
         
-        SYProgress *progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
+        _progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
 
-        progress.top = downloadRateLabel.bottom + 5;
-        progress.progress = _downloadResource.downloadProcess / 100;
-        [self.contentView addSubview:progress];
+        _progress.top = _downloadRateLabel.bottom + 5;
+        _progress.progress = _downloadResource.downloadProcess / 100;
+        [self.contentView addSubview:_progress];
     }
     
+}
+
+
+- (void)reloadCell {
+    for (UIView *subView in self.contentView.subviews) {
+        [subView removeFromSuperview];
+    }
+    [self createCell];
 }
 
 

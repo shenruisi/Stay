@@ -260,6 +260,23 @@
 #endif
 }
 
++ (UIFont *)sfSecondaryIcon{
+#ifdef iOS
+    return [UIFont systemFontOfSize:15];
+#else
+    return [UIFont systemFontOfSize:13];
+#endif
+}
+
++ (UIFont *)cellIcon{
+#ifdef iOS
+    return [UIFont systemFontOfSize:20];
+#else
+    return [UIFont systemFontOfSize:18];
+#endif
+    
+}
+
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha
 {
     if ([string hasPrefix:@"#"])
