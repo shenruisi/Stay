@@ -64,6 +64,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, assign) UIKeyboardType keyboardType;
 @property (nonatomic, weak) UITextField *textField;
+@property (nonatomic, copy) void(^textChanged)(NSString *text);
 @end
 
 @interface ModalItemElement : NSObject

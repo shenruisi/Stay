@@ -105,6 +105,7 @@
                 @"itemElements" : self.saveToElements
             }
         ];
+        
     }
     
     return _dataSource;
@@ -119,9 +120,12 @@
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         inputEntity = [[ModalItemDataEntityInput alloc] init];
         inputEntity.keyboardType = UIKeyboardTypeDefault;
+        inputEntity.textChanged = ^(NSString * _Nonnull text) {
+            
+        };
         if(self.dic != NULL && self.dic[@"downloadUrl"] != nil) {
             inputEntity.text = self.dic[@"downloadUrl"];
-            linkElement.enable = false;
+            linkElement.enable = NO;
         }
         linkElement.generalEntity = generalEntity;
         linkElement.inputEntity = inputEntity;
@@ -146,6 +150,9 @@
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         inputEntity = [[ModalItemDataEntityInput alloc] init];
         inputEntity.keyboardType = UIKeyboardTypeDefault;
+        inputEntity.textChanged = ^(NSString * _Nonnull text) {
+            
+        };
         if(self.dic != NULL && self.dic[@"title"] != nil) {
             inputEntity.text = self.dic[@"title"];
         }
