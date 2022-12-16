@@ -26,6 +26,7 @@
 - (ModalNavigationController *)navController{
     if (nil == _navController){
         SYDownloadModalViewController *cer = [[SYDownloadModalViewController alloc] init];
+        cer.dic = self.dic;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer slideController:self];
     }
     
@@ -35,5 +36,7 @@
 - (BOOL)blockAction{
     return YES;
 }
+
+
 
 @end

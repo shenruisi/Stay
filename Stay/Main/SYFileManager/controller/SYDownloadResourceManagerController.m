@@ -34,7 +34,6 @@ UITableViewDataSource
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.array = [[DataManager shareManager] selectDownloadResourceByPath:self.pathUuid];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.
     self.tableView.sectionHeaderTopPadding = 0;
@@ -95,9 +94,6 @@ UITableViewDataSource
                 [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 1;
            }
-
-
-        
             
             dispatch_async(dispatch_get_main_queue(),^{
                 [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
