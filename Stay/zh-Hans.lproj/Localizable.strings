@@ -210,3 +210,9 @@ LICENSE="许可证";
 HOMEPAGE="主页";
 
 FeedbackEnabling="问题(无法激活Stay)";
+
+ToBeDownload="待下载";
+Link="链接";
+Name="名称";
+SaveTo="保存到";
+StartDownload="开始下载";

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) CGFloat height;
 @property (nonatomic, assign) BOOL showCancel;
 @property (nonatomic, weak) id<ModalNavigationBarDelegate> delegate;
+@property (nonatomic, strong) NSArray<UIView *> *rightItems;
 - (instancetype)init;
 
 @end

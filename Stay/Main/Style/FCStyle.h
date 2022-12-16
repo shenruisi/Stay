@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
 
 
+
 @property(class, nonatomic, readonly) UIFont *headline;
 @property(class, nonatomic, readonly) UIFont *headlineBold;
 @property(class, nonatomic, readonly) UIFont *subHeadline;
@@ -56,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfFootnote;
 @property(class, nonatomic, readonly) UIFont *sfActbar;
 @property(class, nonatomic, readonly) UIFont *sfNavigationBar;
+@property(class, nonatomic, readonly) UIFont *sfSecondaryIcon;
+@property(class, nonatomic, readonly) UIFont *cellIcon;
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
 + (NSString *)appearance;

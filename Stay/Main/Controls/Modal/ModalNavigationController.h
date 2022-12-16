@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) FCSlideController *slideController;
 
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController;
+- (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController
+                                slideController:(FCSlideController *)slideController;
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController radius:(CGFloat)radius;
 - (instancetype)initWithRootModalViewControllerAndNoRoundShadow:(ModalViewController *)modalViewController;
 

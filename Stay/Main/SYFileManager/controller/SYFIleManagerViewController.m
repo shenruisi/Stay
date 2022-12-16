@@ -17,6 +17,8 @@
 #else
 #import "Stay-Swift.h"
 #endif
+#import "SYDownloadSlideController.h"
+
 @interface SYFIleManagerViewController ()<
 UITableViewDelegate,
 UITableViewDataSource,
@@ -29,6 +31,8 @@ UIDocumentPickerDelegate
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) FolderSlideController *folderSlideController;
+@property (nonatomic, strong) UIBarButtonItem *addItem;
+@property (nonatomic, strong) SYDownloadSlideController *downloadSlideController;
 
 @end
 
@@ -50,6 +54,27 @@ UIDocumentPickerDelegate
     self.navigationItem.hidesSearchBarWhenScrolling = false;
 
     self.tableView.sectionHeaderTopPadding = 0;
+    
+    self.navigationItem.rightBarButtonItems = @[[self addItem]];
+}
+
+- (UIBarButtonItem *)addItem{
+    if (nil == _addItem){
+        _addItem = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"plus"
+                                                                            font:FCStyle.sfNavigationBar
+                                                                           color:FCStyle.fcMacIcon]
+                                                      style:UIBarButtonItemStylePlain
+                                                     target:self
+                                                     action:@selector(addBtnClick:)];
+    }
+    return _addItem;
+}
+
+- (void)addBtnClick:(id)sender{
+    if (!self.downloadSlideController.isShown){
+        self.downloadSlideController = [[SYDownloadSlideController alloc] init];
+        [self.downloadSlideController show];
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

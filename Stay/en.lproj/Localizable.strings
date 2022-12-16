@@ -209,3 +209,9 @@ LICENSE="LICENSE";
 HOMEPAGE="HOMEPAGE";
 
 FeedbackEnabling="Problem(Trouble enabling Stay)";
+
+ToBeDownload="To be download";
+Link="Link";
+Name="Name";
+SaveTo="Save to";
+StartDownload="Start download";
