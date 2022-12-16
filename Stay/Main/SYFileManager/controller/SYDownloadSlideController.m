@@ -27,6 +27,7 @@
     if (nil == _navController){
         SYDownloadModalViewController *cer = [[SYDownloadModalViewController alloc] init];
         cer.dic = self.dic;
+        cer.nav = self.controller;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer slideController:self];
     }
     

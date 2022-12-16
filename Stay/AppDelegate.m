@@ -49,6 +49,8 @@
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@property (nonatomic, strong) SYDownloadSlideController *syDownloadSlideController;
+
 
 @end
 
@@ -189,9 +191,19 @@
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
-                SYDownloadSlideController *cer = [[SYDownloadSlideController alloc] init];
-                cer.dic = dic;
-                [cer show];
+                self.syDownloadSlideController.dic = dic;
+                
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                    self.syDownloadSlideController.controller = [QuickAccess secondaryController];
+                }
+                else{
+                    UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                
+                    self.syDownloadSlideController.controller = nav;
+                }
+                
+                [self.syDownloadSlideController show];
             }
         }
             
@@ -240,6 +252,13 @@
     }
     
     return _loadingSlideController;
+}
+
+- (SYDownloadSlideController *)syDownloadSlideController {
+    if(nil == _syDownloadSlideController) {
+        _syDownloadSlideController = [[SYDownloadSlideController alloc] init];
+    }
+    return _syDownloadSlideController;
 }
 
 

@@ -13,6 +13,12 @@
 #import "ModalItemViewFactory.h"
 #import "ModalSectionView.h"
 #import "FCStyle.h"
+#import "DownloadResource.h"
+#import "FCShared.h"
+#import <CommonCrypto/CommonDigest.h>
+#import "DataManager.h"
+#import "DownloadManager.h"
+#import "SYDownloadResourceManagerController.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,
@@ -165,6 +171,12 @@
         ModalItemElement *saveToElement = [[ModalItemElement alloc] init];
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
         generalEntity.title = @"Default";
+        if(self.dic != NULL && self.dic[@"uuid"] != nil) {
+            generalEntity.uuid = self.dic[@"uuid"];
+        } else {
+            FCTab *tab = [FCShared tabManager].tabs[0];
+            generalEntity.uuid = tab.uuid;
+        }
         saveToElement.generalEntity = generalEntity;
         saveToElement.type = ModalItemElementTypeAccessory;
         saveToElement.renderMode = ModalItemElementRenderModeSingle;
@@ -200,6 +212,56 @@
 }
 
 - (void)startDownloadAction:(id)sender{
+
+    DownloadResource *resource = [[DownloadResource alloc] init];
+    NSString *downLoadUrl = self.linkElements[0].inputEntity.text;
+    resource.title = self.nameElements[0].inputEntity.text;
+
+    resource.downloadUrl = downLoadUrl;
+    if(self.dic != NULL) {
+        resource.icon = self.dic[@"poster"];
+        resource.host = self.dic[@"hostUrl"];
+    }
+    
+    resource.firstPath = self.saveToElements[0].generalEntity.uuid;
+    
+    resource.downloadUuid = [self md5HexDigest:downLoadUrl];
+    DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
+    if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
+        
+
+        FCTab *tab = [[FCShared tabManager] tabOfUUID:self.saveToElements[0].generalEntity.uuid];
+        Request *request = [[Request alloc] init];
+        request.url = downLoadUrl;
+        request.fileDir = tab.path;
+        request.fileType = @"video";
+        request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
+        if (![request.fileName hasSuffix:@".mp4"]) {
+            request.fileName = [request.fileName stringByAppendingString:@".mp4"];
+        }
+        request.key = tab.uuid;
+        Task *task = [[DownloadManager shared] enqueue:request];
+
+        resource.status = 0;
+        resource.watchProcess = 0;
+        resource.downloadProcess = 0;
+        resource.videoDuration = 0;
+        resource.allPath = task.filePath;
+        resource.sort = 0;
+        [[DataManager shareManager] addDownloadResource:resource];
+        SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
+        controller.pathUuid = tab.uuid;
+        controller.title = tab.config.name;
+        controller.array = [NSMutableArray array];
+        [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
+
+        [self.nav pushViewController:controller animated:true];
+        
+        [self.navigationController.slideController dismiss];
+    } else {
+        
+    }
+    
     
 }
 
@@ -233,6 +295,17 @@
 
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 420);
+}
+
+- (NSString* )md5HexDigest:(NSString* )input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    return result;
 }
 
 @end

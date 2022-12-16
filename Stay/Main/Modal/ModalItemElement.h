@@ -33,6 +33,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *subtitle;
 @property (nonatomic, strong) NSString *tips;
+@property (nonatomic, strong) NSString *uuid;
 @end
 
 @interface ModalItemDataEntityIcon : NSObject

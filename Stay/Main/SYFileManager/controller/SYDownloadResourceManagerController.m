@@ -184,6 +184,17 @@ UITableViewDataSource
 }
 
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+ 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.tabBarController.tabBar.hidden = NO;
+}
+
+
 - (void)reloadData {
     [self.array removeAllObjects];
     [self.array addObjectsFromArray:[[DataManager shareManager] selectDownloadResourceByPath:self.pathUuid]];
