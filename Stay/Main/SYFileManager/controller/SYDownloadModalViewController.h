@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SYDownloadModalViewController : ModalViewController
-@property(nonatomic,strong)NSDictionary *dic;
+@property(nonatomic,strong) NSMutableDictionary *dic;
 @property(nonatomic,strong) UINavigationController *nav;
 @end
 

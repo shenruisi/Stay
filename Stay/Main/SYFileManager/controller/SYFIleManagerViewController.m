@@ -73,6 +73,8 @@ UIDocumentPickerDelegate
 - (void)addBtnClick:(id)sender{
     if (!self.downloadSlideController.isShown){
         self.downloadSlideController = [[SYDownloadSlideController alloc] init];
+        self.downloadSlideController.dic = [[NSMutableDictionary alloc] init];
+        self.downloadSlideController.controller = self.navigationController;
         [self.downloadSlideController show];
     }
 }

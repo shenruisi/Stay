@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYDownloadSlideController : FCSlideController
 
-@property(nonatomic,strong) NSDictionary *dic;
+@property(nonatomic,strong) NSMutableDictionary *dic;
 @property(nonatomic,strong) UINavigationController *controller;
 
 @end
