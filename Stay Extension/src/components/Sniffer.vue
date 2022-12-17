@@ -7,11 +7,11 @@
             <div class="video">
               <img :src="item.poster" v-if="item.poster"/>
               <div class="no-img" v-else>
-                <span>{{ getHostname(item.hostUrl) }}</span>
+                <span>{{ getDomain(item.hostUrl) }}</span>
               </div>
             </div>
             <div class="info">
-              <div class="title">{{getLevel2domain(item.hostUrl)}}</div>
+              <div class="title">{{getHostname(item.hostUrl)}}</div>
               <div class="name">{{item.title+"."+(item.downloadUrl?getFiletypeByUrl(item.downloadUrl):"")}}</div>
             </div>
           </div>
@@ -152,6 +152,7 @@ export default {
       t,
       tm,
       getDomain,
+      getHostname,
       getFilenameByUrl,
       getLevel2domain,
       getFiletypeByUrl,

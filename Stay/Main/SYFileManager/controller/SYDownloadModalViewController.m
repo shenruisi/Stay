@@ -244,7 +244,7 @@
         request.fileDir = tab.path;
         request.fileType = @"video";
         request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
-        if (![request.fileName hasSuffix:@".mp4"]) {
+        if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
             request.fileName = [request.fileName stringByAppendingString:@".mp4"];
         }
         request.key = tab.uuid;
