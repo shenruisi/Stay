@@ -19,6 +19,7 @@
 #import "DataManager.h"
 #import "DownloadManager.h"
 #import "SYDownloadResourceManagerController.h"
+#import "SYDownloadFolderChooseModalViewController.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,

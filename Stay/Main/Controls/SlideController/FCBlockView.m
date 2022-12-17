@@ -11,7 +11,7 @@
 
 - (instancetype)init{
     if (self = [super init]){
-        self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
+        self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.05];
     }
     
     return self;

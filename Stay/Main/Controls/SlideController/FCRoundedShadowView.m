@@ -53,7 +53,7 @@
         _containerView.backgroundColor = FCStyle.popup;
         _containerView.layer.cornerRadius = MAX(10,self.radius);
         _containerView.layer.borderColor = FCStyle.fcSeparator.CGColor;
-        _containerView.layer.borderWidth = 1;
+        _containerView.layer.borderWidth = 0.5;
         _containerView.clipsToBounds = YES;
         [self addSubview:_containerView];
     }
