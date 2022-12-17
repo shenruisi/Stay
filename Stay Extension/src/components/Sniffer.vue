@@ -89,9 +89,33 @@ export default {
     fetchSnifferFolder();
 
     const snifferFetchVideoInfo = () => {
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'snifferFetchVideoInfo'}, (response) => {
-        console.log('snifferFetchVideoInfo---response-----', response);
-        try {
+      // global.browser.runtime.sendMessage({ from: 'popup', operate: 'snifferFetchVideoInfo'}, (response) => {
+      //   console.log('snifferFetchVideoInfo---response-----', response);
+      //   try {
+      //     if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
+      //       let videoList = response.body.videoInfoList;
+      //       videoList.forEach(item=>{
+      //         if(item.qualityList && item.qualityList.length ){
+      //           item.selectedQuality = item.qualityList[0].downloadUrl;
+      //         }
+      //       });
+      //       state.videoList = videoList;
+      //     }else{
+      //       state.videoList = [];
+      //     }
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // });
+
+      global.browser.tabs.query({
+        active: true,
+        currentWindow: true
+      }, (tabs) => {
+        console.log('--------global.browser.tabs.--snifferFetchVideoInfo-');
+        let message = { from: 'popup', operate: 'snifferFetchVideoInfo'};
+        global.browser.tabs.sendMessage(tabs[0].id, message, response => {
+          console.log('snifferFetchVideoInfo---response-----', response);
           if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
             let videoList = response.body.videoInfoList;
             videoList.forEach(item=>{
@@ -103,23 +127,9 @@ export default {
           }else{
             state.videoList = [];
           }
-        } catch (e) {
-          console.log(e);
-        }
-      });
-
-      // global.browser.tabs.query({
-      //   active: true,
-      //   currentWindow: true
-      // }, (tabs) => {
-      //   console.log('--------global.browser.tabs.--snifferFetchVideoInfo-');
-      //   let message = { from: 'popup', operate: 'snifferFetchVideoInfo'};
-      //   global.browser.tabs.sendMessage(tabs[0].id, message, res => {
-      //     console.log('snifferFetchVideoInfo---response-----', res);
-      //     console.log('popup=>content')
           
-      //   })
-      // })
+        })
+      })
     }
 
     snifferFetchVideoInfo();
