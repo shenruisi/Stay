@@ -69,12 +69,13 @@ UITableViewDataSource
         FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
         Request *request = [[Request alloc] init];
         request.url =  cell.downloadResource.downloadUrl;
-        request.fileDir = tab.config.name;
+        request.fileDir = tab.path;
+        request.fileName = [cell.downloadResource.allPath lastPathComponent];
         request.fileType = @"video";
         request.key =  cell.downloadResource.firstPath;
         Task *task =  [[DownloadManager shared]  enqueue:request];
         
-        task.block = ^(float progress, DMStatus status) {
+        task.block = ^(float progress, NSString *speed, DMStatus status) {
             if(status == DMStatusFailed) {
                 [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 3;
