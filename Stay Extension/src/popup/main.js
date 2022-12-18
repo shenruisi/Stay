@@ -8,12 +8,17 @@ let __b;
 if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
 const browser = __b;
 const app = createApp(App);
- 
+const globalClick = (callback) => {
+  document.body.addEventListener('click', (event) => {
+    callback(event);
+  });
+};
 // 配置全局变量 页面中使用 inject 接收
 app.provide('global', {
   store,
   browser,
-  toast
+  toast,
+  globalClick
 });
 
 app.use(i18n).use(store).mount('#app');
