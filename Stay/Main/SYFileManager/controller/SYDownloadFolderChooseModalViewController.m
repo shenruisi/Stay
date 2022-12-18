@@ -102,9 +102,13 @@
         
         for (NSInteger i = 0; i < FCShared.tabManager.tabs.count; i++){
             FCTab *tab = FCShared.tabManager.tabs[i];
+            if ([tab.uuid isEqualToString:self.excludeUUID]){
+                continue;
+            }
             ModalItemElement *element = [[ModalItemElement alloc] init];
             generalEntity = [[ModalItemDataEntityGeneral alloc] init];
             generalEntity.title = tab.config.name;
+            generalEntity.uuid = tab.uuid;
             element.generalEntity = generalEntity;
             element.type = ModalItemElementTypeClick;
             if (i == 0){
@@ -116,6 +120,10 @@
             else{
                 element.renderMode = ModalItemElementRenderModeMiddle;
             }
+            element.action = ^(ModalItemElement * _Nonnull element) {
+                self.dic[@"uuid"] = element.generalEntity.uuid;
+                [self.navigationController popModalViewController];
+            };
             [ret addObject:element];
         }
        

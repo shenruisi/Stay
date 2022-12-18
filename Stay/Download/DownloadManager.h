@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) float progress;
 @property (nonatomic, assign) DMStatus status;
 @property (nonatomic, strong) NSString *filePath;
-@property (nonatomic ,strong) void (^block)(float progress, DMStatus status);
+@property (nonatomic ,strong) void (^block)(float progress, NSString *speed, DMStatus status);
 @end
 
 @interface Query : NSObject

@@ -47,6 +47,16 @@
 
 - (void)viewWillAppear{
     [super viewWillAppear];
+    
+    NSString *uuid = FCShared.tabManager.tabs[0].uuid;
+    if(self.dic != NULL && self.dic[@"uuid"] != nil) {
+        uuid = self.dic[@"uuid"];
+    }
+    ModalItemElement *element = self.saveToElements.firstObject;
+    element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+    element.generalEntity.uuid = uuid;
+    [element clear];
+    
     [self.tableView reloadData];
 }
 
@@ -178,18 +188,19 @@
         NSMutableArray *ret = [[NSMutableArray alloc] init];
         ModalItemElement *saveToElement = [[ModalItemElement alloc] init];
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
-        generalEntity.title = @"Default";
+        NSString *uuid = FCShared.tabManager.tabs[0].uuid;
         if(self.dic != NULL && self.dic[@"uuid"] != nil) {
-            generalEntity.uuid = self.dic[@"uuid"];
-        } else {
-            FCTab *tab = [FCShared tabManager].tabs[0];
-            generalEntity.uuid = tab.uuid;
+            uuid = self.dic[@"uuid"];
         }
+        generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+        generalEntity.uuid = uuid;
         saveToElement.generalEntity = generalEntity;
         saveToElement.type = ModalItemElementTypeAccessory;
         saveToElement.renderMode = ModalItemElementRenderModeSingle;
         saveToElement.action = ^(ModalItemElement * _Nonnull element) {
-            
+            SYDownloadFolderChooseModalViewController *cer = [[SYDownloadFolderChooseModalViewController alloc] init];
+            cer.dic = self.dic;
+            [self.navigationController pushModalViewController:cer];
         };
         [ret addObject:saveToElement];
         
@@ -311,7 +322,7 @@
     CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
     NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
     for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [result appendFormat:@"%02X", digest[i]];
+        [result appendFormat:@"%02x", digest[i]];
     }
     return result;
 }

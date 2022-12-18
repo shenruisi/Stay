@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYDownloadFolderChooseModalViewController : ModalViewController
 
+@property (nonatomic, strong) NSString *excludeUUID;
+@property (nonatomic, strong) NSMutableDictionary *dic;
 @end
 
 NS_ASSUME_NONNULL_END

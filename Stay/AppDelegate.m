@@ -191,7 +191,7 @@
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
-                self.syDownloadSlideController.dic = dic;
+                self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];
                 
                 if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
                     && [QuickAccess splitController].viewControllers.count >= 2){
