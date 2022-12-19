@@ -26,10 +26,9 @@
             sqlite3_stmt *stmt = NULL;
             int result = sqlite3_prepare(_sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
             if (result == SQLITE_OK) {
-                if (sqlite3_step(stmt) != SQLITE_DONE) {
-                    sqlite3_finalize(stmt);
-                }
+                sqlite3_step(stmt);
             }
+            sqlite3_finalize(stmt);
         }
     }
     
@@ -44,9 +43,9 @@
 }
 
 - (const char*)sqlitePath {
-    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@".dm/sqlite/dm.db"];
+    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/.dm/dm.sqlite"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
+        [NSFileManager.defaultManager createDirectoryAtPath:[path stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
     }
     
     return [path fileSystemRepresentation];
@@ -57,7 +56,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO Task VALUES (?, ?, ?, ?, ?, ?, 0, 0, now())";
+    NSString *sql = @"INSERT INTO Task VALUES (?, ?, ?, ?, ?, ?, 0, 0, datetime())";
     sqlite3_stmt *stmt = NULL;
     if (sqlite3_prepare_v2(_sqliteHandle, [sql UTF8String], -1, &stmt, NULL) == SQLITE_OK) {
         sqlite3_bind_text(stmt, 1, [task[@"taskId"] UTF8String], -1, NULL);
@@ -67,9 +66,8 @@
         sqlite3_bind_text(stmt, 5, [task[@"fileName"] UTF8String], -1, NULL);
         sqlite3_bind_text(stmt, 6, [task[@"fileType"] UTF8String], -1, NULL);
     }
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-    }
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }
 
 - (void)remove:(NSString *)taskId {
@@ -78,9 +76,8 @@
     if (sqlite3_prepare_v2(_sqliteHandle, [sql UTF8String], -1, &stmt, NULL) == SQLITE_OK) {
         sqlite3_bind_text(stmt, 1, [taskId UTF8String], -1, NULL);
     }
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-    }
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }
 
 - (void)removeAll:(NSString *)key {
@@ -89,9 +86,8 @@
     if (sqlite3_prepare_v2(_sqliteHandle, [sql UTF8String], -1, &stmt, NULL) == SQLITE_OK) {
         sqlite3_bind_text(stmt, 1, [key UTF8String], -1, NULL);
     }
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-    }
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }
 
 - (void)update:(NSString *)taskId withDict:(NSDictionary *)info {
@@ -102,9 +98,8 @@
         sqlite3_bind_int(stmt, 2, [info[@"status"] intValue]);
         sqlite3_bind_text(stmt, 3, [taskId UTF8String], -1, NULL);
     }
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-    }
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }
 
 - (NSArray *)query:(nullable NSString *)taskId withKey:(nullable NSString *)key andStatus:(NSInteger)status {
@@ -151,10 +146,10 @@
     }
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         Task *task = [[Task alloc] init];
-        task.taskId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 1)];
-        task.progress = sqlite3_column_double(stmt, 7);
-        task.status = sqlite3_column_int(stmt, 8);
-        task.filePath = [[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 4)] stringByAppendingPathComponent: [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 5)]];
+        task.taskId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 0)];
+        task.progress = sqlite3_column_double(stmt, 6);
+        task.status = sqlite3_column_int(stmt, 7);
+        task.filePath = [[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3)] stringByAppendingPathComponent: [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 4)]];
         [ret addObject:task];
     }
     sqlite3_finalize(stmt);

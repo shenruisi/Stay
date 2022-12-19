@@ -18,14 +18,19 @@
         </div>
       </div>
       <div class="matched-script-content">
-        <!-- <template  v-if="showTab == 'activated'">
-          <ScriptItem v-for="(item, i) in activatedScriptList" :key="i" :scriptItem="item" :state="showTab"></ScriptItem>
+        <template  v-if="showTab == 'activated'">
+          <ScriptItem v-for="(item, i) in activatedScriptList" :key="i" :scriptItem="item" 
+            @handleState="handleState"
+            @handleWebsiteDisabled="handleWebsiteDisabled"
+            @handleWebsite="handleWebsite" 
+          />
         </template>
         <template  v-if="showTab == 'stopped'">
-          <ScriptItem v-for="(item, i) in stoppedScriptList" :key="i" :scriptItem="item" :state="showTab"></ScriptItem>
-        </template> -->
-        <ScriptItem v-for="(item, i) in scriptStateList" :key="i" :scriptItem="item" :state="showTab"></ScriptItem>
-        
+          <ScriptItem v-for="(item, i) in stoppedScriptList" :key="i" :scriptItem="item" 
+            @handleState="handleState"
+            @handleWebsiteDisabled="handleWebsiteDisabled"
+            @handleWebsite="handleWebsite"  />
+        </template>
       </div>
     </div>
     <div class="null-data" v-else>
@@ -60,6 +65,23 @@ export default {
       spliteActivatedScript();
     }
 
+    const spliteActivatedScript = () => {
+      state.stoppedScriptList = state.stoppedScriptList.filter(item=>{
+        if(item.active){
+          state.activatedScriptList.push(item);
+        }else{
+          return item;
+        }
+      })
+      state.activatedScriptList = state.activatedScriptList.filter(item=>{
+        if(item.active){
+          return item;
+        }else{
+          state.stoppedScriptList.push(item);
+        }
+      })
+    }
+
     /**
      * 获取当前网页可匹配的脚本
      * 初始化tab
@@ -84,10 +106,6 @@ export default {
           console.log(e);
         }
       });
-    }
-
-    const spliteActivatedScript = () => {
-      state.stoppedScriptList
     }
 
     const startFetchBrowserMatched = () => {
@@ -115,17 +133,42 @@ export default {
       }
       return true;
     });
-
-    
-
     startFetchBrowserMatched();
+
+    /**
+     * 处理script中active状态
+     * @param {Object} item    当前script
+     * @param {boolean} state  点击动作之后的状态值
+     */
+    const handleState = (item, state) => {
+
+    }
+    /**
+     * 处理script中active状态
+     * @param {String} uuid    当前script uuid
+     * @param {boolean} state  点击动作之后的状态值
+     */
+    const handleWebsite = (uuid, state) => {
+
+    }
+    /**
+     * 处理disabledWebsite状态
+     * @param {String} uuid       当前script uuid
+     * @param {String} website    当前选中的websiate
+     * @param {boolean} disabled  是否disabled
+     */
+    const handleWebsiteDisabled = (uuid, website, disabled) => {
+
+    }
 
     return {
       ...toRefs(state),
       t,
       tm,
       tabACtion,
-      
+      handleState,
+      handleWebsite,
+      handleWebsiteDisabled
     };
   }
 }
