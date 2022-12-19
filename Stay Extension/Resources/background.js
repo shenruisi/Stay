@@ -996,7 +996,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, active: request.active }, function (response) {
                 sendResponse(response);
             });
-
+        }
+        else if ("setDisabledWebsites" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, disabledUrl: request.website }, function (response) {
+                sendResponse(response);
+            });
         }
         else if ("exeScriptManually" == request.operate) {
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTheScript", uuid: request.uuid }, function (response) {

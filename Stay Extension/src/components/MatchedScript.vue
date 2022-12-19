@@ -135,29 +135,65 @@ export default {
     });
     startFetchBrowserMatched();
 
+    const handleScriptItemValue = (scriptList, uuid, {type, value}) =>{
+      scriptList.forEach(item=> {
+        if(item.uuid === uuid){
+          if(type === 'website'){
+            item.website = value;
+          }
+          else if(type === 'active'){
+            item.active = value;
+          }
+          else if(type === 'disableWebsite'){
+            item.disableWebsite = value;
+            item.disableChecked = value?true:false;
+          }
+        }
+      })
+    }
+
     /**
      * 处理script中active状态
      * @param {Object} item    当前script
      * @param {boolean} state  点击动作之后的状态值
      */
-    const handleState = (item, state) => {
+    const handleState = (uuid, active) => {
+      console.log('handleState------',uuid,active);
+      if(state.showTab == 'activated'){
+        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'active', value: active})
+      }else{
+        console.log('handleState--stopped----',uuid,active);
+        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'active', value: active})
+      }
+      handleScriptItemValue(state.scriptStateList, uuid, {type: 'active', value: active})
 
     }
     /**
      * 处理script中active状态
-     * @param {String} uuid    当前script uuid
-     * @param {boolean} state  点击动作之后的状态值
+     * @param {String} uuid       当前script uuid
+     * @param {String} website    当前选中的websiate
      */
-    const handleWebsite = (uuid, state) => {
+    const handleWebsite = (uuid, website) => {
+      if(state.showTab == 'activated'){
+        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'website', value: website})
+      }else{
+        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'website', value: website})
+      }
+      handleScriptItemValue(state.scriptStateList, uuid, {type: 'website', value: website})
 
     }
     /**
      * 处理disabledWebsite状态
-     * @param {String} uuid       当前script uuid
-     * @param {String} website    当前选中的websiate
-     * @param {boolean} disabled  是否disabled
+     * @param {String} uuid          当前script uuid
+     * @param {String} websiteReq    当前选中的disableWebsite
      */
-    const handleWebsiteDisabled = (uuid, website, disabled) => {
+    const handleWebsiteDisabled = (uuid, websiteReq) => {
+      if(state.showTab == 'activated'){
+        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'disableWebsite', value: websiteReq})
+      }else{
+        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'disableWebsite', value: websiteReq})
+      }
+      handleScriptItemValue(state.scriptStateList, uuid, {type: 'disableWebsite', value: websiteReq})
 
     }
 
