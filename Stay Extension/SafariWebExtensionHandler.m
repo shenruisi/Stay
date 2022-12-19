@@ -25,37 +25,7 @@
 }
 
 - (BOOL)matchesCheck:(NSDictionary *)userscript url:(NSString *)url{
-    NSArray *whitelist = userscript[@"whitelist"];
     BOOL matched = NO;
-    if (whitelist.count > 0){
-        for (NSString *white in whitelist){
-            @autoreleasepool {
-                NSRegularExpression *whiteExpr = [self convert2GlobsRegExp:white];
-                NSArray<NSTextCheckingResult *> *result = [whiteExpr matchesInString:url options:0 range:NSMakeRange(0, url.length)];
-                if (result.count > 0){
-                    matched = YES;
-                    break;
-                }
-            }
-        }
-    }
-    
-    if (!matched && whitelist.count > 0) return NO;
-    
-    NSArray *blacklist = userscript[@"blacklist"];
-    if (blacklist.count > 0){
-        for (NSString *black in blacklist){
-            @autoreleasepool {
-                NSRegularExpression *blackExpr = [self convert2GlobsRegExp:black];
-                NSArray<NSTextCheckingResult *> *result = [blackExpr matchesInString:url options:0 range:NSMakeRange(0, url.length)];
-                if (result.count > 0){
-                    return NO;
-                }
-            }
-        }
-    }
-    
-    if (matched) return YES;
     
     NSArray *matches = userscript[@"matches"];
     for (NSString *match in matches){
@@ -105,6 +75,26 @@
     }
     
     return matched;
+}
+
+- (NSString *)disabledWebsitesCheck:(NSDictionary *)userscript url:(NSString *)url{
+    BOOL matched = NO;
+    
+//    NSArray *blacklist = userscript[@"blacklist"];
+//    if (blacklist.count > 0){
+//        for (NSString *black in blacklist){
+//            @autoreleasepool {
+//                NSRegularExpression *blackExpr = [self convert2GlobsRegExp:black];
+//                NSArray<NSTextCheckingResult *> *result = [blackExpr matchesInString:url options:0 range:NSMakeRange(0, url.length)];
+//                if (result.count > 0){
+//                    return NO;
+//                }
+//            }
+//        }
+//    }
+//
+//    if (matched) return YES;
+    return @"";
 }
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context

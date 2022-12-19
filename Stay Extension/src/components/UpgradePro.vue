@@ -1,5 +1,5 @@
 <template>
-    <div class="upgrade-pro-warpper">
+    <div class="upgrade-pro-warpper" @click="upgradeAction">
       <div class="upgrade-img"></div>
       <div class="upgrade-btn">{{t('upgrade_pro')}}</div>
     </div>
@@ -16,11 +16,14 @@ export default {
     const state = reactive({
   
     });
-      
+    const upgradeAction = () => {
+      window.open('stay://x-callback-url/pay?');
+    }
     return {
       ...toRefs(state),
       t,
       tm,
+      upgradeAction
     };
   }
 }

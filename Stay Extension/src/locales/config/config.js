@@ -24,7 +24,8 @@ export default {
     "download": "DOWNLOAD",
     "save_to_folder": "Save to folder",
     "quality": "Quality",
-    "select_folder": "Select Folder"
+    "select_folder": "Select Folder",
+    "disable_website":"Disable on this website",
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -50,7 +51,8 @@ export default {
     "download": "下载",
     "save_to_folder": "保存到文件夹",
     "quality": "画质",
-    "select_folder": "选择文件夹"
+    "select_folder": "选择文件夹",
+    "disable_website": "在此网站上禁用",
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -76,7 +78,8 @@ export default {
     "download": "下載",
     "save_to_folder": "保存到文件夾",
     "quality": "畫質",
-    "select_folder": "選擇文件夾"
+    "select_folder": "選擇文件夾",
+    "disable_website": "在此網站上禁用",
   }
 }
 /* eslint-disable */
