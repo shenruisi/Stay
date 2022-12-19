@@ -61,18 +61,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger usedTimes;
 @property (nonatomic, copy) NSArray<NSString *> *plafroms;
 @property (nonatomic, copy) NSString *updateScriptTime;
-
-
-
 //Stay only
 @property (nonatomic, copy) NSString *stayEngine;
-
 //add by iCloud feature
 @property (nonatomic, copy) NSString *iCloudIdentifier;
-
 @property (nonatomic, assign) NSInteger status;
-
 @property (nonatomic, assign) BOOL stayOnly;
+
+@property (nonatomic, copy) NSArray<NSString *> *disabledWebsites;
 
 + (instancetype)ofDictionary:(NSDictionary *)dic;
 - (NSDictionary *)toDictionary;
