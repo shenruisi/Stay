@@ -43,6 +43,7 @@
     userScript.whitelist = dic[@"whitelist"] == nil ? @[] : dic[@"whitelist"];
     userScript.blacklist = dic[@"blacklist"] == nil ? @[] : dic[@"blacklist"];
     userScript.updateSwitch = [dic[@"updateSwitch"] boolValue];
+    userScript.disabledWebsites = dic[@"disabledWebsites"] == nil ? @[] : dic[@"disabledWebsites"];
     return userScript;
 }
 
@@ -81,42 +82,44 @@
         @"license":self.license ? self.license : @"",
         @"iCloudIdentifier":self.iCloudIdentifier ? self.iCloudIdentifier : @"",
         @"status":@(self.status),
-        @"updateSwitch":@(self.updateSwitch)
+        @"updateSwitch":@(self.updateSwitch),
+        @"disabledWebsites":self.disabledWebsites ? self.disabledWebsites : @[]
     };
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone{
-    UserScript *copyed = [[[self class] allocWithZone:zone] init];
-    copyed.name = [self.name copy];
-    copyed.namespace = [self.namespace copy];
-    copyed.author = [self.author copy];
-    copyed.version = [self.version copy];
-    copyed.desc = [self.desc copy];
-    copyed.homepage = [self.homepage copy];
-    copyed.icon = [self.icon copy];
-    copyed.includes = [self.includes copy];
-    copyed.matches = [self.matches copy];
-    copyed.excludes = [self.excludes copy];
-    copyed.runAt = [self.runAt copy];
-    copyed.grants = [self.grants copy];
-    copyed.noFrames = self.noFrames;
-    copyed.pass = self.pass;
-    copyed.errorMessage = [self.errorMessage copy];
-    copyed.requireUrls = [self.requireUrls copy];
-    copyed.updateUrl = [self.updateUrl copy];
-    copyed.downloadUrl = [self.downloadUrl copy];
-    copyed.requireCodes = [self.requireCodes copy];
-    copyed.resourceUrls = [self.resourceUrls copy];
-    copyed.notes = [self.notes copy];
-    copyed.locales = [self.locales copy];
-    copyed.unsupportedGrants = [self.unsupportedGrants copy];
-    copyed.stayEngine = [self.stayEngine copy];
-    copyed.injectInto = [self.injectInto copy];
-    copyed.license = [self.license copy];
-    copyed.iCloudIdentifier = [self.iCloudIdentifier copy];
-    copyed.status = self.status;
-    copyed.updateSwitch = self.updateSwitch;
-    return copyed;
+    UserScript *copied = [[[self class] allocWithZone:zone] init];
+    copied.name = [self.name copy];
+    copied.namespace = [self.namespace copy];
+    copied.author = [self.author copy];
+    copied.version = [self.version copy];
+    copied.desc = [self.desc copy];
+    copied.homepage = [self.homepage copy];
+    copied.icon = [self.icon copy];
+    copied.includes = [self.includes copy];
+    copied.matches = [self.matches copy];
+    copied.excludes = [self.excludes copy];
+    copied.runAt = [self.runAt copy];
+    copied.grants = [self.grants copy];
+    copied.noFrames = self.noFrames;
+    copied.pass = self.pass;
+    copied.errorMessage = [self.errorMessage copy];
+    copied.requireUrls = [self.requireUrls copy];
+    copied.updateUrl = [self.updateUrl copy];
+    copied.downloadUrl = [self.downloadUrl copy];
+    copied.requireCodes = [self.requireCodes copy];
+    copied.resourceUrls = [self.resourceUrls copy];
+    copied.notes = [self.notes copy];
+    copied.locales = [self.locales copy];
+    copied.unsupportedGrants = [self.unsupportedGrants copy];
+    copied.stayEngine = [self.stayEngine copy];
+    copied.injectInto = [self.injectInto copy];
+    copied.license = [self.license copy];
+    copied.iCloudIdentifier = [self.iCloudIdentifier copy];
+    copied.status = self.status;
+    copied.updateSwitch = self.updateSwitch;
+    copied.disabledWebsites = [self.disabledWebsites copy];
+    return copied;
 }
 
 
@@ -153,7 +156,8 @@
         @"license":self.license ? self.license : @"",
         @"iCloudIdentifier":self.iCloudIdentifier ? self.iCloudIdentifier : @"",
         @"status":@(self.status),
-        @"updateSwitch":@(self.updateSwitch)
+        @"updateSwitch":@(self.updateSwitch),
+        @"disabledWebsites":self.disabledWebsites ? self.disabledWebsites : @[]
     };
 }
 
