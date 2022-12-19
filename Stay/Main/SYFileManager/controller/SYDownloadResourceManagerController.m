@@ -61,6 +61,8 @@ UITableViewDataSource
         [subView removeFromSuperview];
     }
     
+    
+    
     cell.contentView.width = self.view.width;
     cell.downloadResource = self.array[indexPath.row];
     cell.controller = self;
@@ -188,10 +190,20 @@ UITableViewDataSource
 
 
 - (void)saveToFile:(UIButton *)sender {
-
+//    NSString *fileURL = [FCResource getResourceFilePathWithUUID:tabUUID userInfo:searchResult.getUserInfo];
+//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",[fileURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+//        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
+//
+//        documentPicker.delegate = self;
+//        [self presentViewController:documentPicker animated:YES completion:nil]
 }
 - (void)saveToPhoto:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
 
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
+                    UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                }
 }
 
 
@@ -207,10 +219,12 @@ UITableViewDataSource
 
 
 - (void)reloadData {
-    [self.array removeAllObjects];
-    [self.array addObjectsFromArray:[[DataManager shareManager] selectUnDownloadComplete:self.pathUuid]];
-    [self.array addObjectsFromArray:[[DataManager shareManager] selectDownloadComplete:self.pathUuid]];
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self.array removeAllObjects];
+        [self.array addObjectsFromArray:[[DataManager shareManager] selectUnDownloadComplete:self.pathUuid]];
+        [self.array addObjectsFromArray:[[DataManager shareManager] selectDownloadComplete:self.pathUuid]];
+        [self.tableView reloadData];
+    });
 }
 
 - (UITableView *)tableView {
