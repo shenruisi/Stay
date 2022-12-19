@@ -80,20 +80,20 @@
 - (NSString *)disabledWebsitesCheck:(NSDictionary *)userscript url:(NSString *)url{
     BOOL matched = NO;
     
-    NSArray *blacklist = userscript[@"blacklist"];
-    if (blacklist.count > 0){
-        for (NSString *black in blacklist){
-            @autoreleasepool {
-                NSRegularExpression *blackExpr = [self convert2GlobsRegExp:black];
-                NSArray<NSTextCheckingResult *> *result = [blackExpr matchesInString:url options:0 range:NSMakeRange(0, url.length)];
-                if (result.count > 0){
-                    return NO;
-                }
-            }
-        }
-    }
-    
-    if (matched) return YES;
+//    NSArray *blacklist = userscript[@"blacklist"];
+//    if (blacklist.count > 0){
+//        for (NSString *black in blacklist){
+//            @autoreleasepool {
+//                NSRegularExpression *blackExpr = [self convert2GlobsRegExp:black];
+//                NSArray<NSTextCheckingResult *> *result = [blackExpr matchesInString:url options:0 range:NSMakeRange(0, url.length)];
+//                if (result.count > 0){
+//                    return NO;
+//                }
+//            }
+//        }
+//    }
+//    
+//    if (matched) return YES;
 }
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context
