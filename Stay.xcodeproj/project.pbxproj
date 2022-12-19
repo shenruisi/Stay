@@ -102,6 +102,10 @@
 		582061FB294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061F9294C57E400A32D0C /* ModalItemAccessoryView.m */; };
 		582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061FD294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m */; };
 		582061FF294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061FD294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m */; };
+		582062022950675900A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
+		582062032950675900A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
+		582062042950696E00A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
+		582062052950696F00A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
 		582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */; };
 		582441CE28781E0D003DF4F7 /* SYTextInputModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */; };
 		582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */; };
@@ -632,6 +636,8 @@
 		582061F9294C57E400A32D0C /* ModalItemAccessoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModalItemAccessoryView.m; sourceTree = "<group>"; };
 		582061FC294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadFolderChooseModalViewController.h; sourceTree = "<group>"; };
 		582061FD294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadFolderChooseModalViewController.m; sourceTree = "<group>"; };
+		582062002950675900A32D0C /* DisabledWebsites.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisabledWebsites.h; sourceTree = "<group>"; };
+		582062012950675900A32D0C /* DisabledWebsites.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisabledWebsites.m; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
 		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		5839C3162930525D00CCBAE5 /* ToastDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastDebugger.h; sourceTree = "<group>"; };
@@ -1834,6 +1840,8 @@
 				58561F5428E6E50400D0913A /* RunsRecord.m */,
 				58724A3028FE77FA00A894D8 /* ExtensionConfig.h */,
 				58724A3128FE77FA00A894D8 /* ExtensionConfig.m */,
+				582062002950675900A32D0C /* DisabledWebsites.h */,
+				582062012950675900A32D0C /* DisabledWebsites.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -2591,6 +2599,7 @@
 				58639D1828644BEB00AA80D5 /* Stroge.m in Sources */,
 				3C8388DC29335705007563E6 /* ColorHelper.m in Sources */,
 				5867D16528920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
+				582062052950696F00A32D0C /* DisabledWebsites.m in Sources */,
 				3C8388D92933563B007563E6 /* FCTabConfig.m in Sources */,
 				58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */,
 				58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */,
@@ -2717,6 +2726,7 @@
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
+				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
@@ -2777,6 +2787,7 @@
 				5867D16328920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				3C8388D629335628007563E6 /* FCTabConfig.m in Sources */,
 				588B83202845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
+				582062042950696E00A32D0C /* DisabledWebsites.m in Sources */,
 				58F7F4E9274776AB00270873 /* Stroge.m in Sources */,
 				588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */,
 			);
@@ -2837,6 +2848,7 @@
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
+				582062032950675900A32D0C /* DisabledWebsites.m in Sources */,
 				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
 				58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,

@@ -13,6 +13,7 @@
 #import "UserDefaultsExRO.h"
 #import "RunsRecord.h"
 #import "ExtensionConfig.h"
+#import "DisabledWebsites.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,7 @@ static inline NSString * _Nonnull FCDataDirectory(void){
 + (instancetype)shared;
 @property (nonatomic, strong, nullable) UserscriptHeaders *userscriptHeaders;
 @property (nonatomic, strong, nullable) ActivateChanged *activateChanged;
+@property (nonatomic, strong, nullable) DisabledWebsites *disabledWebsites;
 @property (nonatomic, strong, nullable) UserDefaults *userDefaults;
 @property (nonatomic, strong, nullable) UserDefaultsExRO *userDefaultsExRO;
 @property (nonatomic, strong, nullable) RunsRecord *runsRecord;

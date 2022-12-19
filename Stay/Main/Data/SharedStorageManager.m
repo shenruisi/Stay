@@ -77,6 +77,16 @@ static SharedStorageManager *_instance = nil;
     return _runsRecord;
 }
 
+- (DisabledWebsites *)disabledWebsites{
+    if (nil == _disabledWebsites){
+        _disabledWebsites = [[DisabledWebsites alloc] initWithPath:[FCDataDirectory()
+                                                        stringByAppendingPathComponent:@"disabledWebsites"]
+                                                       isDirectory:NO];
+    }
+    
+    return _disabledWebsites;
+}
+
 - (ExtensionConfig *)extensionConfig{
     if (nil == _extensionConfig){
         _extensionConfig = [[ExtensionConfig alloc] initWithPath:[FCDataDirectory()
