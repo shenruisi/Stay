@@ -92,8 +92,9 @@
 //            }
 //        }
 //    }
-//    
+//
 //    if (matched) return YES;
+    return @"";
 }
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context
