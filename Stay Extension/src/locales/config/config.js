@@ -11,7 +11,7 @@ export default {
     "null_register_menu": "No register menu item",
     "menu_close": "Close",
     "toast_keep_active": "Please keep the script activated",
-    "run_manually": "Run manually",
+    "run_manually": "RUN MANUALLY",
     "upgrade_pro":"Upgrade to Stay Pro",
     "darkmode_off": "Off",
     "darkmode_auto": "Auto",
@@ -26,6 +26,8 @@ export default {
     "quality": "Quality",
     "select_folder": "Select Folder",
     "disable_website":"Disable on this website",
+    "menu":"MENU",
+    "open_app":"OPEN IN APP"
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -53,6 +55,8 @@ export default {
     "quality": "画质",
     "select_folder": "选择文件夹",
     "disable_website": "在此网站上禁用",
+    "menu":"菜单",
+    "open_app":"在应用里打开"
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -80,6 +84,8 @@ export default {
     "quality": "畫質",
     "select_folder": "選擇文件夾",
     "disable_website": "在此網站上禁用",
+    "menu":"菜單",
+    "open_app":"在應用裡打開"
   }
 }
 /* eslint-disable */
