@@ -168,8 +168,11 @@ const browser = __b;
       let qualityList = [];
       hostUrl = window.location.href;
       if(!poster){
-        let posterDom = document.querySelector('source[type=\'image/webp\']');
-        poster = posterDom?posterDom.getAttribute('srcset'):'';
+        let posterDom = document.querySelector('source[type=\'image/webp\'] img');
+        poster = posterDom?posterDom.getAttribute('src'):'';
+        if(!title){
+          title = posterDom?posterDom.getAttribute('alt'):'';
+        }
       }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){

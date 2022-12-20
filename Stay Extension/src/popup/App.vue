@@ -48,10 +48,10 @@ export default {
     const global = inject('global');
     const store = global.store;
     const localLan = store.state.localeLan;
-    console.log('localLan====', localLan);
+    console.log('localLan====', localLan, store.state.selectedTab);
     // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
-      selectedTab: {id: 1, name: 'matched_scripts_tab'},
+      selectedTab: store.state.selectedTab,
       localLan,
       browserUrl: '',
       isStayPro: store.state.isStayPro,
@@ -61,9 +61,8 @@ export default {
 
     const setTabName = (selectedTab) => {
       state.selectedTab = selectedTab;
+      store.commit('setSelectedTab', state.selectedTab);
     }
-
-    
 
     global.browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const from = request.from;

@@ -22,9 +22,9 @@
         </div>
       </div>
       <div class="action-cell">
-        <div class="menu">{{t("menu")}}</div>
-        <div class="manually">{{t("run_manually")}}</div>
-        <div class="open-app">{{t("open_app")}}</div>
+        <div class="cell-icon menu">{{t("menu")}}</div>
+        <div class="cell-icon manually">{{t("run_manually")}}</div>
+        <div class="cell-icon open-app">{{t("open_app")}}</div>
       </div>
     </div>
   </div>
@@ -134,6 +134,7 @@ export default {
     border-bottom: 1px solid var(--s-e0);
     background-color: var(--s-white);
     user-select: none;
+    padding-bottom: 6px;
     &.disabled{
       .script-info{
         .state{
@@ -227,7 +228,7 @@ export default {
       justify-content: start;
       align-items: center;
       position: relative;
-      padding: 2px 0;
+      padding: 4px 0 2px 0;
       .check-box{
         width: 16px;
         height: 16px;
@@ -316,21 +317,55 @@ export default {
       justify-content: start;
       align-items: center;
       position: relative;
-      .menu{
+      .cell-icon{
         position: relative;
-        padding-left: 40px;
-        padding-right: 6px;
+        height: 24px;
+        line-height: 24px;
+        margin-right: 4px;
+        padding-left: 30px;
+        padding-right: 8px;
+        font-family: Helvetica Neue;
+        font-size: 13px;
+        color: var(--s-main);
+        font-weight: 700;
+        border-radius: 8px;
+        background-color: var(--s-f7);
+      }
+      .menu{
+        
         &::before{
           position:absolute;
-          left: 0;
+          left: 6px;
           top: 50%;
           transform: translate(0, -50%);
           content: "";
-          width: 20px;
-          height: 20px;
+          width: 19px;
+          height: 19px;
           background: url("../assets/images/menu.png") no-repeat 50% 50%;
           background-size: contain;
         }
+      }
+      .manually::after{
+        position:absolute;
+        left: 6px;
+        top: 50%;
+        transform: translate(0, -50%);
+        content: "";
+        width: 19px;
+        height: 19px;
+        background: url("../assets/images/manaully.png") no-repeat 50% 50%;
+        background-size: contain;
+      }
+      .open-app::after{
+        position:absolute;
+        left: 6px;
+        top: 50%;
+        transform: translate(0, -50%);
+        content: "";
+        width: 19px;
+        height: 19px;
+        background: url("../assets/images/openinapp.png") no-repeat 50% 50%;
+        background-size: contain;
 
       }
 
