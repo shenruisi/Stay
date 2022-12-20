@@ -66,6 +66,7 @@
 
 - (NSArray *)selectDownloadComplete:(NSString *)path;
 
+- (void)updateIconByuuid:(UIImage *)image uuid:(NSString *)uuid;
 
 
 @end
