@@ -410,16 +410,17 @@ const browser = __b;
         }
         // console.log('playerResp-------videoDetails-------------', videoDetails);
         const streamingData = playerResp.streamingData;
-        const adaptiveFormats = streamingData.adaptiveFormats;
+        // const adaptiveFormats = streamingData.adaptiveFormats;
+        const formats = streamingData.formats;
         title = title ? title : '';
         let detailTitle = videoDetails.title?videoDetails.title:'';
         // 取画质的时候防止原视频有广告
-        if(adaptiveFormats && adaptiveFormats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
-          console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, adaptiveFormats);
+        if(formats && formats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
+          console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
           // * qualityList[{downloadUrl, qualityLabel, quality}]
           let qualityList = []
           let qualitySet = new Set();
-          adaptiveFormats.forEach(item=>{
+          formats.forEach(item=>{
             let mimeType = item.mimeType;
             if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
               qualitySet.add(item.quality)

@@ -761,6 +761,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[SharedStorageManager shared].runsRecord flush];
     [ToastDebugger log:@"runsRecord"];
     
+    [SharedStorageManager shared].disabledWebsites = nil;
+    for (NSString *uuid in [SharedStorageManager shared].disabledWebsites.contentDic.allKeys){
+        //TODO: update disableWebsites by uuid
+        NSArray *disableWebsites = (NSArray *)[SharedStorageManager shared].disabledWebsites.contentDic[uuid];
+        
+    }
+    
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
