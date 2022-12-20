@@ -33,7 +33,7 @@ class PlayerViewController: UIViewController {
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         view.backgroundColor = .black
         
-        let videoView = VideoPlayerView(urls: [URL(fileURLWithPath: resource.allPath)], controller: self)
+        let videoView = VideoPlayerView(reseources: [resource], controller: self)
         videoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(videoView)
         
@@ -55,6 +55,18 @@ class PlayerViewController: UIViewController {
         ])
         
         videoView.play()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
 }

@@ -13,6 +13,7 @@
 #import "DataManager.h"
 #import "DownloadManager.h"
 #import <objc/runtime.h>
+#import <AVFoundation/AVFoundation.h>
 
 #if iOS
 #import "Stay-Swift.h"
@@ -93,6 +94,16 @@ UITableViewDataSource
             } else if(status == DMStatusComplete) {
                 [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
 //                [[DataManager shareManager] updateDownloadResourcProcess:100 uuid:cell.downloadResource.downloadUuid];
+                AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:cell.downloadResource.allPath]];
+                if (cell.downloadResource.icon.length == 0) {
+                    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+                    CMTime time = CMTimeMake(1, 1);
+                    CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:nil error:nil];
+                    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+                    [[DataManager shareManager] updateIconByuuid:thumbnail uuid:cell.downloadResource.downloadUuid];
+                    CGImageRelease(imageRef);
+                }
+                [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 2;
                 [self reloadData];
             } else if(status == DMStatusPending) {
@@ -157,7 +168,7 @@ UITableViewDataSource
     if(downloadResource.status == 2){
         PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:downloadResource];
         playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-        [self presentViewController:playerController animated:YES completion:nil];
+        [self.navigationController pushViewController:playerController animated:YES];
     }
 }
 
@@ -167,7 +178,7 @@ UITableViewDataSource
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
     PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:resource];
     playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self presentViewController:playerController animated:YES completion:nil];
+    [self.navigationController pushViewController:playerController animated:YES];
 }
 
 - (void)stopDownload:(UIButton *)sender {
