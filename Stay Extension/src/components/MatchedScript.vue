@@ -144,8 +144,8 @@ export default {
           else if(type === 'active'){
             item.active = value;
           }
-          else if(type === 'disableWebsite'){
-            item.disableWebsite = value;
+          else if(type === 'disabledUrl'){
+            item.disabledUrl = value;
             item.disableChecked = value?true:false;
           }
         }
@@ -185,15 +185,15 @@ export default {
     /**
      * 处理disabledWebsite状态
      * @param {String} uuid          当前script uuid
-     * @param {String} websiteReq    当前选中的disableWebsite
+     * @param {String} websiteReq    当前选中的disabledUrl
      */
     const handleWebsiteDisabled = (uuid, websiteReq) => {
       if(state.showTab == 'activated'){
-        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'disableWebsite', value: websiteReq})
+        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'disabledUrl', value: websiteReq})
       }else{
-        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'disableWebsite', value: websiteReq})
+        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'disabledUrl', value: websiteReq})
       }
-      handleScriptItemValue(state.scriptStateList, uuid, {type: 'disableWebsite', value: websiteReq})
+      handleScriptItemValue(state.scriptStateList, uuid, {type: 'disabledUrl', value: websiteReq})
 
     }
 

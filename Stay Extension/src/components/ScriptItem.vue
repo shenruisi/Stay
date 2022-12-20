@@ -1,6 +1,6 @@
 <template>
   <div class="script-item-box">
-    <div class="script-item" :class="{disabled: script.disableWebsite && script.disableWebsite!='' }">
+    <div class="script-item" :class="{disabled: script.disabledUrl && script.disabledUrl!='' }">
       <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'50px':'0px'}">
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
@@ -10,11 +10,11 @@
         <div class="desc overflow">{{script.description}}</div>
       </div>
       <div class="website-cell">
-        <div class="check-box" :class="{ active: script.disableWebsite}" >
+        <div class="check-box" :class="{ active: script.disabledUrl}" >
           <input :ref="script.uuid" v-model="script.disableChecked" 
           @change='changeWebsiteDisabled(script.uuid, script.website, $event)' type="checkbox" class="allow" />
         </div>
-        <div class="website"  @click="disableWebsiteClick(script.uuid)">{{t("disable_website")}}</div>
+        <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
         <div class="select-options">
           <select class="select-container" v-model="script.website" @change='changeSelectWebsite(script.uuid, $event)' >
             <option v-for="(website, i) in websiteList" :key="i" :value="website">{{website}}</option>
@@ -43,7 +43,7 @@ export default {
     const hostName = getHostname(store.state.browserUrl);
     const state = reactive({
       browserUrl: store.state.browserUrl,
-      script: {...props.scriptItem, disableChecked:props.scriptItem.disableWebsite?true:false, website: props.scriptItem.disableWebsite?props.scriptItem.disableWebsite:hostName},
+      script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, website: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:hostName},
       hostName,
       websiteList: [hostName,store.state.browserUrl]
     });
@@ -53,7 +53,7 @@ export default {
     }
     
     const activeStateClick = (scriptItem) => {
-      if(scriptItem.disableWebsite){
+      if(scriptItem.disabledUrl){
         return;
       }
       let uuid = scriptItem.uuid;
@@ -79,8 +79,8 @@ export default {
     const refreshTargetTabs = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
     }
-    const disableWebsiteClick = (refId) => {
-      // console.log('disableWebsiteClick----', refId, proxy.$refs);
+    const disabledUrlClick = (refId) => {
+      // console.log('disabledUrlClick----', refId, proxy.$refs);
       proxy.$refs[refId].dispatchEvent(new MouseEvent('click'));
     }
     const changeSelectWebsite = (uuid, event) => {
@@ -94,7 +94,7 @@ export default {
       if(disabled){
         websiteReq = website;
       }
-      state.script.disableWebsite = websiteReq;
+      state.script.disabledUrl = websiteReq;
       state.script.disableChecked = disabled;
       global.browser.runtime.sendMessage({
         from: 'popup',
@@ -113,7 +113,7 @@ export default {
       tm,
       intoAppScriptDetail,
       activeStateClick,
-      disableWebsiteClick,
+      disabledUrlClick,
       changeSelectWebsite,
       changeWebsiteDisabled
     };
