@@ -128,6 +128,13 @@ const browser = __b;
             return;
           }
           let downloadUrl = item.getAttribute('src');
+          if(!downloadUrl){
+            let sourceDom = item.querySelector('source[type=\'video/mp4\']');
+            if(sourceDom){
+              item = sourceDom;
+              downloadUrl = sourceDom.getAttribute('src');
+            }
+          }
 
           // 已存在
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
@@ -160,6 +167,10 @@ const browser = __b;
       let downloadUrl = videoDom.getAttribute('src');
       let qualityList = [];
       hostUrl = window.location.href;
+      if(!poster){
+        let posterDom = document.querySelector('source[type=\'image/webp\']');
+        poster = posterDom?posterDom.getAttribute('srcset'):'';
+      }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
         // if(Utils.isMobile()){
@@ -506,7 +517,7 @@ const browser = __b;
       XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
         
       XMLHttpRequest.prototype.open = function(method, url, async, user, password){
-        console.log('OPEN_URL',url);
+        // console.log('OPEN_URL',url);
         this.reallyOpen(method,url,async,user,password);
         if (isVideoLink(url)){
           if (!uniqueUrls.has(url)){

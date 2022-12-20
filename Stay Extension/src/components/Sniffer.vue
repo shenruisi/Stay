@@ -12,7 +12,7 @@
             </div>
             <div class="info">
               <div class="title">{{getHostname(item.hostUrl)}}</div>
-              <div class="name">{{item.title+"."+(item.downloadUrl?getFiletypeByUrl(item.downloadUrl):"")}}</div>
+              <div class="name">{{item.title}}</div>
             </div>
           </div>
           <div class="download"><div class="btn" @click="downloadClickAction(item)">{{ t("download") }}</div></div>

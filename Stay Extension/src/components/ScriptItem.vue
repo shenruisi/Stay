@@ -21,7 +21,11 @@
           </select>
         </div>
       </div>
-      <div class="action-cell"></div>
+      <div class="action-cell">
+        <div class="menu">{{t("menu")}}</div>
+        <div class="manually">{{t("run_manually")}}</div>
+        <div class="open-app">{{t("open_app")}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -223,10 +227,11 @@ export default {
       justify-content: start;
       align-items: center;
       position: relative;
+      padding: 2px 0;
       .check-box{
         width: 16px;
         height: 16px;
-        z-index: 999;
+        z-index: 889;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -305,6 +310,29 @@ export default {
 
     }
     .action-cell{
+      width: 100%;
+      padding: 2px 0;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      position: relative;
+      .menu{
+        position: relative;
+        padding-left: 40px;
+        padding-right: 6px;
+        &::before{
+          position:absolute;
+          left: 0;
+          top: 50%;
+          transform: translate(0, -50%);
+          content: "";
+          width: 20px;
+          height: 20px;
+          background: url("../assets/images/menu.png") no-repeat 50% 50%;
+          background-size: contain;
+        }
+
+      }
 
     }
   }
