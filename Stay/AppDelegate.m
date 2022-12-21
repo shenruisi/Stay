@@ -191,6 +191,7 @@
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
+                self.syDownloadSlideController = [[SYDownloadSlideController alloc] init];
                 self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];
                 
                 if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
@@ -253,14 +254,6 @@
     
     return _loadingSlideController;
 }
-
-- (SYDownloadSlideController *)syDownloadSlideController {
-    if(nil == _syDownloadSlideController) {
-        _syDownloadSlideController = [[SYDownloadSlideController alloc] init];
-    }
-    return _syDownloadSlideController;
-}
-
 
 - (NSString* )md5HexDigest:(NSString* )input {
     const char *cStr = [input UTF8String];
