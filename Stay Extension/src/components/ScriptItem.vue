@@ -1,7 +1,7 @@
 <template>
-  <div class="script-item-box">
+  <div class="script-item-box" >
     <div class="script-item" :class="{disabled: script.disabledUrl && script.disabledUrl!='' }">
-      <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'50px':'0px'}">
+      <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'60px':'0px'}">
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
         </div>
@@ -16,17 +16,19 @@
         </div>
         <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
         <div class="select-options">
+          <div class="selected-text">{{script.website}}</div>
           <select class="select-container" v-model="script.website" @change='changeSelectWebsite(script.uuid, $event)' >
             <option v-for="(website, i) in websiteList" :key="i" :value="website">{{website}}</option>
           </select>
         </div>
       </div>
       <div class="action-cell">
-        <div class="cell-icon menu">{{t("menu")}}</div>
-        <div class="cell-icon manually">{{t("run_manually")}}</div>
-        <div class="cell-icon open-app">{{t("open_app")}}</div>
+        <div class="cell-icon menu" v-if="script.grants.length && (script.grants.includes('GM.registerMenuCommand') || script.grants.includes('GM_registerMenuCommand'))" @click="showRegisterMenu(script.uuid, script.active)">{{t("menu")}}</div>
+        <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
+        <div class="cell-icon open-app" @click="openInAPP(script.uuid)">{{t("open_app")}}</div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -36,9 +38,12 @@ import { useI18n } from 'vue-i18n';
 import { getHostname } from '../utils/util'
 
 
+
 export default {
   name: 'ScriptItemComp',
-  props: ['scriptItem'],
+  props: ['scriptItem', 'tabState'],
+  components: {
+  },
   setup (props, {emit, expose}) {
     const { proxy } = getCurrentInstance();
     const { t, tm } = useI18n();
@@ -49,12 +54,10 @@ export default {
       browserUrl: store.state.browserUrl,
       script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, website: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:hostName},
       hostName,
-      websiteList: [hostName,store.state.browserUrl]
+      websiteList: [hostName,store.state.browserUrl],
+      showMenu: false,
+      tabState: proxy.tabState
     });
-
-    const intoAppScriptDetail = (uuid) => {
-      window.open('stay://x-callback-url/userscript?id='+uuid);
-    }
     
     const activeStateClick = (scriptItem) => {
       if(scriptItem.disabledUrl){
@@ -111,15 +114,52 @@ export default {
       console.log('------website---enabled------',event, websiteReq, disabled);
       emit('handleWebsiteDisabled', uuid, websiteReq);
     }
+    
+    const openInAPP = (uuid) => {
+      window.open('stay://x-callback-url/userscript?id='+uuid);
+    }
+
+    const showRegisterMenu = (uuid, active) => {
+      if(active){
+        // state.showMenu = true;
+        browser.runtime.sendMessage({ from: 'popup', uuid: uuid, operate: 'fetchRegisterMenuCommand' });
+        emit('handleRegisterMenu', uuid);
+      }else{
+        global.toast(t('toast_keep_active'))
+      }
+    }
+
+    const runManually = (uuid, name) => {
+      if (uuid && uuid != '' && typeof uuid == 'string') {
+        global.browser.runtime.sendMessage({
+          from: 'popup',
+          operate: 'exeScriptManually',
+          uuid: uuid,
+        }, (response) => {
+          console.log('exeScriptManually response,', response)
+        });
+        // // 改变数据manually状态
+        // scriptStateList.forEach(function (item, index) {
+        //   if (uuid == item.uuid) {
+        //     item.manually = "1";
+        //   }
+        // })
+        // renderScriptContent(scriptStateList)
+        global.toast({title: name, subTitle: t('run_manually')})
+        
+      }
+    }
     return {
       ...toRefs(state),
       t,
       tm,
-      intoAppScriptDetail,
       activeStateClick,
       disabledUrlClick,
       changeSelectWebsite,
-      changeWebsiteDisabled
+      changeWebsiteDisabled,
+      showRegisterMenu,
+      runManually,
+      openInAPP
     };
   }
 }
@@ -144,9 +184,9 @@ export default {
     }
     .script-info{
       width: 100%;
-      height: 40px;
-      padding-left: 50px;
-      padding-right: 50px;
+      height: 48px;
+      padding-left: 60px;
+      padding-right: 60px;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -157,8 +197,8 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         border: 0.5px solid var(--s-e0);
         border-radius: 8px;
         padding: 8px;
@@ -184,6 +224,12 @@ export default {
           background: url("../assets/images/start-icon.png") no-repeat 50% 50%;
           background-size: 40%;
         }
+        .author{
+          opacity: 0.7;
+        }
+        .desc{
+          opacity: 0.7;
+        }
       }
       &.activated{
         .state{
@@ -193,10 +239,9 @@ export default {
       }
       .author{
         font-size: 16px;
-        font-weight: 400;
+        font-weight: 700;
         color: var(--s-black);
         text-align: left;
-        font-family: 'Ping Fang SC';
         // padding-top: 8px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -218,6 +263,7 @@ export default {
         font-weight: 400;
         text-align: left;
         line-height: 17px;
+        padding-top: 4px;
       }
 
 
@@ -281,10 +327,14 @@ export default {
       }
       .select-options{
         height: 24px;
-        width: 125px;
-        select.select-container{
-          width: 100%;
-          height: 100%;
+        width: 200px;
+        position: relative;
+        .selected-text{
+          max-width: 100%;
+          min-width: 60px;
+          height: 24px;
+          line-height: 24px;
+          z-index: 555;
           font-size: 13px;
           font-weight: 700;
           color: var(--s-black);
@@ -292,20 +342,33 @@ export default {
           appearance:none;  
           -moz-appearance:none;  
           -webkit-appearance:none;  
-          background: url("../assets/images/dropdown.png") no-repeat 100% 50%;  
-          background-size: 12px;
           overflow: hidden;
           text-overflow: ellipsis;
-          display: -webkit-box;
+          display: inline-block;
           -webkit-box-orient: vertical;
-          padding-right: 6px;
-          option{
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 100%;
-            display: -webkit-box;
+          padding-right: 16px;
+          text-align: center;
+          &::after{
+            background: url("../assets/images/dropdown.png") no-repeat 50% 50%;  
+            background-size: 12px;
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+            width: 12px;
+            height: 12px;
           }
+        }
+        select.select-container{
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          position: absolute;
+          background: transparent !important;
+          color: transparent !important;
+          z-index: 777;
         }
       }
 
@@ -332,7 +395,6 @@ export default {
         background-color: var(--s-f7);
       }
       .menu{
-        
         &::before{
           position:absolute;
           left: 6px;
@@ -373,17 +435,17 @@ export default {
   }
   
 }
-  @media (prefers-color-scheme: dark) {
-    .script-item-box{
-      .script-item{
-        .script-info{
-          .activated{
-            .state{
-              background: url("../assets/images/stop-dark.png");
-            }
+@media (prefers-color-scheme: dark) {
+  .script-item-box{
+    .script-item{
+      .script-info{
+        .activated{
+          .state{
+            background: url("../assets/images/stop-dark.png");
           }
         }
       }
     }
   }
+}
 </style>

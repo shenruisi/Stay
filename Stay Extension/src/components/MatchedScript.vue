@@ -23,19 +23,23 @@
             @handleState="handleState"
             @handleWebsiteDisabled="handleWebsiteDisabled"
             @handleWebsite="handleWebsite" 
+            @handleRegisterMenu="handleRegisterMenu"
           />
         </template>
         <template  v-if="showTab == 'stopped'">
           <ScriptItem v-for="(item, i) in stoppedScriptList" :key="i" :scriptItem="item" 
             @handleState="handleState"
             @handleWebsiteDisabled="handleWebsiteDisabled"
-            @handleWebsite="handleWebsite"  />
+            @handleWebsite="handleWebsite"
+            @handleRegisterMenu="handleRegisterMenu"
+          />
         </template>
       </div>
     </div>
     <div class="null-data" v-else>
       {{t('null_scripts')}}
     </div>
+    <RegisterMenuItem v-show="showMenu"></RegisterMenuItem>
   </div>
 </template>
 
@@ -43,10 +47,12 @@
 import { reactive, inject, toRefs } from 'vue'
 import ScriptItem from './ScriptItem.vue';
 import { useI18n } from 'vue-i18n';
+import RegisterMenuItem from './RegisterMenuItem.vue'
 export default {
   name: 'MatchedScriptComp',
   components: {
-    ScriptItem
+    ScriptItem,
+    RegisterMenuItem
   },
   setup (props, {emit, expose}) {
     const { t, tm } = useI18n();
@@ -58,6 +64,7 @@ export default {
       scriptStateList: [],
       activatedScriptList: [],
       stoppedScriptList: [],
+      showMenu: false
     });
 
     const tabACtion = (tabName) => {
@@ -121,18 +128,6 @@ export default {
       }
     }
 
-    global.browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      const from = request.from;
-      const operate = request.operate;
-      if (from == 'content' && operate == 'giveRegisterMenuCommand') {
-        let uuid = request.uuid;
-        console.log('giveRegisterMenuCommand--request.data---', uuid, request.data)
-        // registerMenuMap[uuid] = request.data;
-        // let registerMenu = registerMenuMap[uuid]
-        // renderRegisterMenuContent(uuid, registerMenu)
-      }
-      return true;
-    });
     startFetchBrowserMatched();
 
     const handleScriptItemValue = (scriptList, uuid, {type, value}) =>{
@@ -194,8 +189,22 @@ export default {
         handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'disabledUrl', value: websiteReq})
       }
       handleScriptItemValue(state.scriptStateList, uuid, {type: 'disabledUrl', value: websiteReq})
-
     }
+
+    const handleRegisterMenu = (uuid) => {
+      state.showMenu = true;
+    }
+
+    global.browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      const from = request.from;
+      const operate = request.operate;
+      if (from == 'content' && operate == 'giveRegisterMenuCommand') {
+        state.uuid = request.uuid;
+        console.log('giveRegisterMenuCommand--request.data---', state.uuid, request.data)
+        state.registerMenuMap[state.uuid] = request.data;
+      }
+      return true;
+    });
 
     return {
       ...toRefs(state),
@@ -204,7 +213,8 @@ export default {
       tabACtion,
       handleState,
       handleWebsite,
-      handleWebsiteDisabled
+      handleWebsiteDisabled,
+      handleRegisterMenu
     };
   }
 }
