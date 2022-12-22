@@ -39,7 +39,10 @@
       </div>
     </div>
     <div class="sniffer-null" v-else>
-      {{ t('sniffer_none') }}
+      <div class="null-title">{{ t('sniffer_none') }}</div>
+      <div class="desc-prompt">{{t('sniffer_none_prompt')}}
+        <span class="mail-to" @click="contactClick">{{t('contact_us')}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -159,7 +162,6 @@ export default {
     }
     const changeSelectQuality = (index, event) => {
       const selectOpt = event.target;
-      
       console.log(selectOpt, selectOpt.value, selectOpt.selectedIndex, selectOpt.options);
       state.videoList.forEach((item, i)=>{
         if(index == i){
@@ -168,7 +170,11 @@ export default {
         }
       })
     }
-    
+
+    const contactClick = () => {
+      window.open(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}`);
+    }
+
     return {
       ...toRefs(state),
       t,
@@ -181,6 +187,7 @@ export default {
       downloadClickAction,
       changeSelectQuality,
       changeSelectFolder,
+      contactClick
     };
   }
 }
@@ -195,7 +202,22 @@ export default {
       width: 100%;
       padding: 40px 10px;
       font-size: 16px;
-      color: var(--s-000-08);
+      font-weight: 400;
+      .null-title{
+        color: var(--s-black);
+      }
+      .desc-prompt{
+        color: var(--s-7a);
+        font-size: 15px;
+        line-height: 25px;
+        .mail-to{
+          display: inline;
+          text-decoration: underline;
+          color: var(--s-black);
+          font-weight: 700;
+          padding-left: 2px;
+        }
+      }
     }
     .sniffer-video-box{
       padding: 0px 0 0px 10px;
