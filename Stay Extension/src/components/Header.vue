@@ -4,7 +4,7 @@
     <div class="header-content">
       <slot></slot>
     </div>
-    <div class="stay-switch" :class="staySwitch" @click="clickStaySwitchAction(staySwitch)"></div>
+    <!-- <div class="stay-switch" :class="staySwitch" @click="clickStaySwitchAction(staySwitch)"></div> -->
   </div>
 </template>
 

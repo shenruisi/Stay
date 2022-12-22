@@ -20,16 +20,18 @@
         <div class="video-download-info">
           <div class="label-txt">{{ t("save_to_folder") }}&nbsp;:</div>
           <div class="folder select-options">
-            <select class="select-container" v-model="selectedFolder" >
-              <option v-for="(o, i) in folderOptions" :style="{display: o.id?'block':'none'}" :key="i" :value="o.uuid">{{o.name}}</option>
+            <div class="selected-text" >{{item.selectedFolderText}}</div>
+            <select class="select-container" :ref="`folder_${index}`"  v-model="item.selectedFolder" @change="changeSelectFolder(index, $event)">
+              <option v-for="(o, i) in folderOptions" :style="{display: o.id?'block':'none'}" :name="o.name" :key="i" :value="o.uuid">{{o.name}}</option>
             </select>
           </div>
           <template v-if="(item.qualityList && item.qualityList.length)">
             <div class="label-txt">{{ t("quality") }}&nbsp;:</div>
             <div class="quality select-options">
-              <select class="select-container" v-model="item.selectedQuality" >
+              <div class="selected-text" >{{item.selectedQualityText}}</div>
+              <select class="select-container" :ref="`quality_${index}`" v-model="item.selectedQuality" @change="changeSelectQuality(index, $event)">
                 <!-- {downloadUrl, qualityLabel, quality } -->
-                <option v-for="(o, i) in item.qualityList" :key="i" :value="o.downloadUrl">{{o.qualityLabel}}</option>
+                <option v-for="(o, i) in item.qualityList" :key="i" :name="o.qualityLabel" :value="o.downloadUrl">{{o.qualityLabel}}</option>
               </select>
             </div>
           </template>
@@ -43,17 +45,19 @@
 </template>
 
 <script>
-import { reactive, inject, toRefs } from 'vue'
+import { reactive, getCurrentInstance, inject, toRefs } from 'vue'
 import { getDomain, getHostname, getFilenameByUrl, getLevel2domain, getFiletypeByUrl } from '../utils/util'
 import { useI18n } from 'vue-i18n';
 export default {
   name: 'SnifferComp',
   props: ['browserUrl'],
   setup (props, {emit, expose}) {
+    const { proxy } = getCurrentInstance();
     const { t, tm } = useI18n();
     const global = inject('global');
     const state = reactive({
       selectedFolder: '',
+      selectedFolderText: '',
       folderOptions: [{name: t('select_folder'), uuid: ''}, {name:'download_video', id: '1'},{name:'stay-download-video', id: '2'}],
       videoList: [
         // {
@@ -75,8 +79,10 @@ export default {
             response.body.forEach(item => {
               if(item.selected){
                 state.selectedFolder = item.uuid;
+                state.selectedFolderText = item.name;
               }
             });
+            snifferFetchVideoInfo();
           }else{
             // state.folderOptions = [];
           }
@@ -89,25 +95,6 @@ export default {
     fetchSnifferFolder();
 
     const snifferFetchVideoInfo = () => {
-      // global.browser.runtime.sendMessage({ from: 'popup', operate: 'snifferFetchVideoInfo'}, (response) => {
-      //   console.log('snifferFetchVideoInfo---response-----', response);
-      //   try {
-      //     if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
-      //       let videoList = response.body.videoInfoList;
-      //       videoList.forEach(item=>{
-      //         if(item.qualityList && item.qualityList.length ){
-      //           item.selectedQuality = item.qualityList[0].downloadUrl;
-      //         }
-      //       });
-      //       state.videoList = videoList;
-      //     }else{
-      //       state.videoList = [];
-      //     }
-      //   } catch (e) {
-      //     console.log(e);
-      //   }
-      // });
-
       global.browser.tabs.query({
         active: true,
         currentWindow: true
@@ -119,8 +106,11 @@ export default {
           if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
             let videoList = response.body.videoInfoList;
             videoList.forEach(item=>{
+              item.selectedFolder = state.selectedFolder;
+              item.selectedFolderText = state.selectedFolderText;
               if(item.qualityList && item.qualityList.length ){
                 item.selectedQuality = item.qualityList[0].downloadUrl;
+                item.selectedQualityText = item.qualityList[0].qualityLabel;
               }
             });
             state.videoList = videoList;
@@ -132,7 +122,7 @@ export default {
       })
     }
 
-    snifferFetchVideoInfo();
+    
 
     /**
      * title:xxx,
@@ -145,18 +135,40 @@ export default {
      * stay://x-callback-url/snifferVideo?list=encodeURIComponent([{hostUrl,title,icon,downloadUrl}])
      */
     const downloadClickAction = (item) => {
-      if(!state.selectedFolder){
+      if(!item.selectedFolder){
         global.toast(t('select_folder'));
         return;
       }
-      item.uuid = state.selectedFolder;
       if(item.selectedQuality){
         item.downloadUrl = item.selectedQuality;
       }
-      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: state.selectedFolder}];
+      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: item.selectedFolder}];
       let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
       window.open(downloadUrl);
     }
+    const changeSelectFolder = (index, event) => {
+      const selectOpt = event.target;
+      console.log(selectOpt);
+      state.videoList.forEach((item, i)=>{
+        if(index == i){
+          item.selectedFolder = selectOpt.value;
+          item.selectedFolderText = selectOpt.options[selectOpt.selectedIndex].text;
+        }
+      })
+
+    }
+    const changeSelectQuality = (index, event) => {
+      const selectOpt = event.target;
+      
+      console.log(selectOpt, selectOpt.value, selectOpt.selectedIndex, selectOpt.options);
+      state.videoList.forEach((item, i)=>{
+        if(index == i){
+          item.selectedQuality = selectOpt.value;
+          item.selectedQualityText = selectOpt.options[selectOpt.selectedIndex].text;
+        }
+      })
+    }
+    
     return {
       ...toRefs(state),
       t,
@@ -166,7 +178,9 @@ export default {
       getFilenameByUrl,
       getLevel2domain,
       getFiletypeByUrl,
-      downloadClickAction
+      downloadClickAction,
+      changeSelectQuality,
+      changeSelectFolder,
     };
   }
 }
@@ -240,6 +254,7 @@ export default {
                   font-family: 'Helvetica Neue';
                   font-size: 10px;
                   user-select: none;
+                  color: var(--s-7a);
                 }
               }
             }
@@ -302,7 +317,9 @@ export default {
               color: var(--s-main);
               font-size: 13px;
               font-weight: 700;
-              padding: 2px 0;
+              height: 25px;
+              line-height: 25px;
+              // padding: 2px 0;
               border-radius: 8px;
             }
           }
@@ -314,19 +331,26 @@ export default {
           height: 24px;
           justify-items: center;
           align-items: center;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
           padding-right: 10px;
           .label-txt{
             font-size: 13px;
             color: var(--s-black);
             font-weight: 400;
             padding-right: 4px;
+            height: 24px;
+            line-height: 24px;
           }
           .select-options{
             height: 24px;
-            select.select-container{
-              width: 100%;
-              height: 100%;
+            position: relative;
+            text-align: left;
+            .selected-text{
+              max-width: 100%;
+              min-width: 60px;
+              height: 24px;
+              line-height: 24px;
+              z-index: 555;
               font-size: 13px;
               font-weight: 700;
               color: var(--s-black);
@@ -334,21 +358,46 @@ export default {
               appearance:none;  
               -moz-appearance:none;  
               -webkit-appearance:none;  
-              background: url("../assets/images/dropdown.png") no-repeat 100% 50%;  
-              background-size: 12px;
               overflow: hidden;
               text-overflow: ellipsis;
-              display: -webkit-box;
+              display: inline-block;
               -webkit-box-orient: vertical;
               padding-right: 6px;
+              text-align: center;
+              &::after{
+                background: url("../assets/images/dropdown.png") no-repeat 50% 50%;  
+                background-size: 12px;
+                content: "";
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translate(0, -50%);
+                width: 12px;
+                height: 12px;
+              }
+            }
+            select.select-container{
+              width: 100%;
+              height: 100%;
+              left: 0;
+              top: 0;
+              position: absolute;
+              background: transparent !important;
+              color: transparent !important;
+              z-index: 777;
             }
           }
-          .folder{
-            width: 155px;
+          .select-options.folder{
+            width: 150px;
             padding-right: 10px;
+            position: relative;
+            .selected-text{
+              min-width: 80px;
+            }
+            
           }
           .quality{
-            width: 68px;
+            width: 60px;
           }
         }
       }

@@ -44,7 +44,7 @@
     imageView.layer.borderColor = FCStyle.borderColor.CGColor;
     imageView.layer.borderWidth = 0.5;
     if(_downloadResource.icon != nil) {
-        [imageView sd_setImageWithURL:[NSURL URLWithString:_downloadResource.icon] placeholderImage:[UIImage imageNamed:@"videoDefault"]];
+        [imageView sd_setImageWithURL:([_downloadResource.icon hasPrefix:@"http"] ? [NSURL URLWithString:_downloadResource.icon] : [NSURL fileURLWithPath:_downloadResource.icon]) placeholderImage:[UIImage imageNamed:@"videoDefault"]];
     } else {
         [imageView setImage:[UIImage imageNamed:@"videoDefault"]];
     }

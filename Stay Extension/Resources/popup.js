@@ -143,7 +143,7 @@ function fetchMatchedScriptList(){
     browser.tabs.getSelected(null, (tab) => {
         browserRunUrl = tab.url;
         browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: browserRunUrl, digest: "yes" }, (response) => {
-            // console.log("response-----",response);
+            console.log("response-----",response);
             try{
                 scriptStateList = response.body;
                 renderScriptContent(scriptStateList);
@@ -663,7 +663,7 @@ function checkProAndRenderPannel(params) {
         document.getElementById("darkmodePro").hide();
         document.getElementById("darkmodeUpgrade").show();
         document.querySelector("#darkmodeUpgrade .upgrade-btn").addEventListener("click", function (e) {
-            console.log("darkmodeUpgrade");
+            // console.log("darkmodeUpgrade");
             window.open("stay://x-callback-url/pay?");
         })
     }
