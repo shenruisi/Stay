@@ -184,6 +184,8 @@
 //            return;
 //        }
 //
+        
+       self.syDownloadSlideController = nil;
        NSString *listStr = inputParameters[@"list"];
 //       NSString *listDecodeStr = [listStr decodeString];
        NSArray *arrays = [NSJSONSerialization JSONObjectWithData:[listStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];

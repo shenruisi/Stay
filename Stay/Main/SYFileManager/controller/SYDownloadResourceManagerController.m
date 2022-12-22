@@ -48,7 +48,12 @@ UITableViewDataSource
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 107;
+   DownloadResource *downloadResource = self.array[indexPath.row];
+    if(downloadResource.status == 2) {
+        return 137;
+    } else {
+        return 103;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -83,6 +88,9 @@ UITableViewDataSource
                 [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 3;
             } else if(status == DMStatusDownloading) {
+                if(cell.downloadResource.status != 0) {
+                    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:cell.downloadResource.downloadUuid];
+                }
 //                [[DataManager shareManager] updateDownloadResourcProcess:progress * 100 uuid:cell.downloadResource.downloadUuid];
                 cell.downloadResource.status = 0;
                 cell.downloadResource.downloadProcess = progress * 100;
@@ -90,10 +98,10 @@ UITableViewDataSource
                     cell.progress.progress = progress;
                     cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
                 });
+                
                 return;
             } else if(status == DMStatusComplete) {
                 [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
-//                [[DataManager shareManager] updateDownloadResourcProcess:100 uuid:cell.downloadResource.downloadUuid];
                 AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:cell.downloadResource.allPath]];
                 if (cell.downloadResource.icon.length == 0) {
                     AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
