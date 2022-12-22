@@ -41,7 +41,7 @@ import { getHostname } from '../utils/util'
 
 export default {
   name: 'ScriptItemComp',
-  props: ['scriptItem', 'tabState'],
+  props: ['scriptItem'],
   components: {
   },
   setup (props, {emit, expose}) {
@@ -55,8 +55,7 @@ export default {
       script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, website: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:hostName},
       hostName,
       websiteList: [hostName,store.state.browserUrl],
-      showMenu: false,
-      tabState: proxy.tabState
+      showMenu: false
     });
     
     const activeStateClick = (scriptItem) => {
@@ -121,8 +120,9 @@ export default {
 
     const showRegisterMenu = (uuid, active) => {
       if(active){
+        console.log('showRegisterMenu------',uuid, active);
         // state.showMenu = true;
-        browser.runtime.sendMessage({ from: 'popup', uuid: uuid, operate: 'fetchRegisterMenuCommand' });
+        global.browser.runtime.sendMessage({ from: 'popup', uuid: uuid, operate: 'fetchRegisterMenuCommand' });
         emit('handleRegisterMenu', uuid);
       }else{
         global.toast(t('toast_keep_active'))
@@ -329,6 +329,7 @@ export default {
         height: 24px;
         width: 200px;
         position: relative;
+        text-align: left;
         .selected-text{
           max-width: 100%;
           min-width: 60px;

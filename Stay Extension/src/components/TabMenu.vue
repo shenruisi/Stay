@@ -70,8 +70,10 @@ export default {
     left: 0;
     right: 0;
     background-color: var(--s-f6);
-    border-bottom: 1px solid var(--s-e0);
+    border-top: 1px solid var(--s-e0);
     z-index: 999;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
     .fotter-box{
       position: relative;
       width: 100%;

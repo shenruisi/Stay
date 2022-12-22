@@ -1,6 +1,6 @@
 <template>
   <div class="stay-popup-warpper">
-    <div class="hide-temp"></div>
+    <!-- <div class="hide-temp"></div> -->
     <Header>{{t(selectedTab.name)}}</Header>
     <div class="tab-content">
       <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
@@ -147,7 +147,7 @@ export default {
 @import "../assets/css/common.less";
 .stay-popup-warpper{
   width: 100%;
-  height: 100%;
+  // height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -166,7 +166,7 @@ export default {
     justify-content: start;
     background-color: var(--s-white);
     flex: 1;
-    padding-bottom: 52px;
+    // padding-bottom: 52px;
   }
 }
 </style>

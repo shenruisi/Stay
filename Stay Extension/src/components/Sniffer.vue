@@ -287,7 +287,6 @@ export default {
                 color: var(--s-black);
                 font-size: 16px;
                 font-weight: 400;
-                font-family: 'Ping Fang SC';
                 padding-top: 8px;
                 overflow: hidden;
                 text-overflow: ellipsis;

@@ -19,7 +19,7 @@
       </div>
       <div class="matched-script-content">
         <template  v-if="showTab == 'activated'">
-          <ScriptItem v-for="(item, i) in activatedScriptList" :key="i" :scriptItem="item" 
+          <ScriptItem v-for="(item, i) in activatedScriptList" :key="i" :tabState="showTab" :scriptItem="item" 
             @handleState="handleState"
             @handleWebsiteDisabled="handleWebsiteDisabled"
             @handleWebsite="handleWebsite" 
@@ -39,7 +39,7 @@
     <div class="null-data" v-else>
       {{t('null_scripts')}}
     </div>
-    <RegisterMenuItem v-show="showMenu"></RegisterMenuItem>
+    <RegisterMenuItem v-if="showMenu" :registerMenu="registerMenuMap[uuid]" @closeMenuPopup="closeMenuPopup"></RegisterMenuItem>
   </div>
 </template>
 
@@ -64,7 +64,9 @@ export default {
       scriptStateList: [],
       activatedScriptList: [],
       stoppedScriptList: [],
-      showMenu: false
+      showMenu: false,
+      uuid: '',
+      registerMenuMap:{}
     });
 
     const tabACtion = (tabName) => {
@@ -192,7 +194,14 @@ export default {
     }
 
     const handleRegisterMenu = (uuid) => {
+      console.log('matched-----handleRegisterMenu-------',uuid)
+      state.uuid = uuid;
       state.showMenu = true;
+    }
+
+    const closeMenuPopup = () => {
+      state.showMenu = false;
+      state.uuid = '';
     }
 
     global.browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -214,7 +223,8 @@ export default {
       handleState,
       handleWebsite,
       handleWebsiteDisabled,
-      handleRegisterMenu
+      handleRegisterMenu,
+      closeMenuPopup
     };
   }
 }

@@ -47,17 +47,17 @@ figcaption {
       outline: none;
   }
 }
-html { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;}
+html { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;height: 100%;}
 /* 移动端点击高亮 */
-html,
 body {
-  background-color: var(--s-background);
+  background-color: var(--s-f6);
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   margin: 0 auto;
   height: 100%;
   width: 100%;
-  overflow-y: auto;
-  min-height: 390px;
+  overflow: hidden;
+  // min-height: 390px;
+  min-height: 101%;
   min-width: 375px;
 }
 
@@ -118,6 +118,7 @@ body.dialog-open {
   --s-e0: #e0e0e0;
   --s-main: #b620e0;
   --s-151-f6: rgba(151, 151, 151, 0.06);
+  --s-151-f02: rgba(151, 151, 151, 0.2);
   --s-main-f10: rgba(182, 32, 224, 0.1);
   --s-main-f60: rgba(182, 32, 224, 0.6);
   --s-btn-bg: rgb(245,224,153);
@@ -141,14 +142,16 @@ body.dialog-open {
   text-align: center;
   color: var(--s-black);
   width: 100%;
-  position: relative;
-  min-height: 100%;
-  height: auto !important;
+  // min-height: 100%;
+  // height: auto !important;
+  padding-bottom: 52px;
+  padding-top: 38px;
   height: 100%; /*IE6不识别min-height*/
   position: relative;
   display: flex;
   flex-direction: column;
   background-color: var(--s-white);
+  overflow-y: scroll;
 }
 
 @media (prefers-color-scheme: dark) {
