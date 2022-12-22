@@ -37,7 +37,7 @@
 
 - (void)createCell {
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 8, 60, 60)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 8, 160, 90)];
     imageView.layer.cornerRadius = 10;
     imageView.clipsToBounds = YES;
     imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -54,9 +54,9 @@
     }
     
     [self.contentView addSubview:imageView];
-    UILabel *hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 60 - 12 - 15 -12 - 50, 15)];
+    UILabel *hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 160 - 12 - 15 -12 - 50, 15)];
     if(_downloadResource.status == 2) {
-        hostLabel.width =  self.contentView.width - 60 - 15 - 12 - 12;
+        hostLabel.width =  self.contentView.width - 160 - 15 - 12 - 12;
     }
     hostLabel.font = FCStyle.footnote;
     hostLabel.text = _downloadResource.host;
@@ -65,11 +65,11 @@
     hostLabel.top = imageView.top;
     [self.contentView addSubview:hostLabel];
 
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 60 - 12 - 15 -12 - 50, 44)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 160 - 12 - 15 -12 - 50, 44)];
     if(_downloadResource.status == 2) {
-        titleLabel.width =  self.contentView.width - 60 - 15 - 12 - 12;
+        titleLabel.width =  self.contentView.width - 160 - 15 - 12 - 12;
     }
-    titleLabel.numberOfLines = 2;
+    titleLabel.numberOfLines = 3;
     titleLabel.font = FCStyle.body;
     titleLabel.text = _downloadResource.title;
     [titleLabel sizeToFit];
