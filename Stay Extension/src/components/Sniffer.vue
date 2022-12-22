@@ -287,7 +287,7 @@ export default {
                 color: var(--s-black);
                 font-size: 16px;
                 font-weight: 400;
-                padding-top: 8px;
+                padding-top: 5px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
