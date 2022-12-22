@@ -39,7 +39,7 @@
     <div class="null-data" v-else>
       {{t('null_scripts')}}
     </div>
-    <RegisterMenuItem v-if="showMenu" :registerMenu="registerMenuMap[uuid]" @closeMenuPopup="closeMenuPopup"></RegisterMenuItem>
+    <RegisterMenuItem v-if="showMenu" :registerMenu="registerMenuMap[uuid]"  @closeMenuPopup="closeMenuPopup"></RegisterMenuItem>
   </div>
 </template>
 
@@ -96,9 +96,9 @@ export default {
      * 初始化tab
      */
     const fetchMatchedScriptList = () => {
-      console.log('--------fetchMatchedScriptList---start-----');
+      // console.log('--------fetchMatchedScriptList---start-----');
       global.browser.runtime.sendMessage({ from: 'bootstrap', operate: 'fetchScripts', url: state.browserUrl, digest: 'yes' }, (response) => {
-        console.log('fetchMatchedScriptList---response-----', response);
+        // console.log('fetchMatchedScriptList---response-----', response);
         try {
           state.scriptStateList = response.body;
           state.activatedScriptList = [];
@@ -110,7 +110,6 @@ export default {
               state.stoppedScriptList.push(item);
             }
           })
-          // fetchMatchedScriptConsole();
         } catch (e) {
           console.log(e);
         }
@@ -122,7 +121,7 @@ export default {
         fetchMatchedScriptList();
       }else{
         global.browser.tabs.getSelected(null, (tab) => {
-          console.log('fetchMatchedScriptList-----tab-----', tab);
+          // console.log('fetchMatchedScriptList-----tab-----', tab);
           state.browserUrl = tab.url;
           store.commit('setBrowserUrl', state.browserUrl);
           fetchMatchedScriptList();
@@ -155,11 +154,11 @@ export default {
      * @param {boolean} state  点击动作之后的状态值
      */
     const handleState = (uuid, active) => {
-      console.log('handleState------',uuid,active);
+      // console.log('handleState------',uuid,active);
       if(state.showTab == 'activated'){
         handleScriptItemValue(state.activatedScriptList, uuid, {type: 'active', value: active})
       }else{
-        console.log('handleState--stopped----',uuid,active);
+        // console.log('handleState--stopped----',uuid,active);
         handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'active', value: active})
       }
       handleScriptItemValue(state.scriptStateList, uuid, {type: 'active', value: active})
@@ -194,7 +193,7 @@ export default {
     }
 
     const handleRegisterMenu = (uuid) => {
-      console.log('matched-----handleRegisterMenu-------',uuid)
+      // console.log('matched-----handleRegisterMenu-------',uuid)
       state.uuid = uuid;
       state.showMenu = true;
     }
@@ -209,7 +208,7 @@ export default {
       const operate = request.operate;
       if (from == 'content' && operate == 'giveRegisterMenuCommand') {
         state.uuid = request.uuid;
-        console.log('giveRegisterMenuCommand--request.data---', state.uuid, request.data)
+        // console.log('giveRegisterMenuCommand--request.data---', state.uuid, request.data)
         state.registerMenuMap[state.uuid] = request.data;
       }
       return true;

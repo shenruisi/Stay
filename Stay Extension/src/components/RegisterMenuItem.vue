@@ -35,7 +35,6 @@ export default {
   setup (props, {emit, expose}) {
     const { t, tm } = useI18n();
     const global = inject('global');
-    console.log('props.uuid======',props.uuid,',props.registerMenu====',props.registerMenu);
     const state = reactive({
       loading: true,
       registerMenuList: props.registerMenu || [],
@@ -49,7 +48,7 @@ export default {
           state.registerMenuList = newProps.registerMenu;
           state.loading = false;
         }
-        console.log('newProps.registerMenu==========',newProps.registerMenu)
+        // console.log('newProps.registerMenu==========',newProps.registerMenu)
       },
       { immediate: true, deep: true }
     );

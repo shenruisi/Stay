@@ -71,7 +71,7 @@ export default {
           uuid: uuid,
           active: !active
         }, (response) => {
-          console.log('setScriptActive response,',response)
+          // console.log('setScriptActive response,',response)
         })
         state.script.active = !active;
         refreshTargetTabs();
@@ -91,7 +91,7 @@ export default {
     }
     const changeSelectWebsite = (uuid, event) => {
       const website = event.target.value;
-      console.log('website------',website);
+      // console.log('website------',website);
       emit('handleWebsite', uuid, website);
     }
     const changeWebsiteDisabled = (uuid, website, event) => {
@@ -110,7 +110,7 @@ export default {
       }, (response) => {
         console.log('setDisabledWebsites response,',response)
       })
-      console.log('------website---enabled------',event, websiteReq, disabled);
+      // console.log('------website---enabled------',event, websiteReq, disabled);
       emit('handleWebsiteDisabled', uuid, websiteReq);
     }
     
@@ -120,7 +120,7 @@ export default {
 
     const showRegisterMenu = (uuid, active) => {
       if(active){
-        console.log('showRegisterMenu------',uuid, active);
+        // console.log('showRegisterMenu------',uuid, active);
         // state.showMenu = true;
         global.browser.runtime.sendMessage({ from: 'popup', uuid: uuid, operate: 'fetchRegisterMenuCommand' });
         emit('handleRegisterMenu', uuid);
