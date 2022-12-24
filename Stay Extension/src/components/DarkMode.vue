@@ -69,6 +69,7 @@ export default {
     const changeWebsiteAllowEnabled = (event) => {
       const disabled = event.target.checked;
       state.siteEnabled = disabled;
+      handleDarkmodeProSetting();
     }
     
     return {
@@ -77,7 +78,6 @@ export default {
       tm,
       dakmodeSetingClick,
       changeWebsiteAllowEnabled
-      
     };
   }
 }
