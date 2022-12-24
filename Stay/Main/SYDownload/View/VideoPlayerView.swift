@@ -311,8 +311,14 @@ class VideoPlayerView: UIView {
     
     @objc
     func backAction() {
-        if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
-            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            if #available(iOS 16.0, *) {
+                controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+            } else {
+                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+            }
             return
         }
         if let currentTime = player?.currentTime() {
@@ -376,7 +382,13 @@ class VideoPlayerView: UIView {
     @objc
     func modeAction() {
         resetControlHide()
-        UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        if #available(iOS 16.0, *) {
+            controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+        } else {
+            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        }
     }
     
     @objc
