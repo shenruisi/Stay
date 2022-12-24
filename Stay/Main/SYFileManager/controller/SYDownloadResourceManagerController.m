@@ -107,8 +107,10 @@ UITableViewDataSource
                     AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
                     CMTime time = CMTimeMake(1, 1);
                     CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:nil error:nil];
-                    UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-                    [[DataManager shareManager] updateIconByuuid:thumbnail uuid:cell.downloadResource.downloadUuid];
+                    if (imageRef != nil) {
+                        UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+                        [[DataManager shareManager] updateIconByuuid:thumbnail uuid:cell.downloadResource.downloadUuid];
+                    }
                     CGImageRelease(imageRef);
                 }
                 [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
