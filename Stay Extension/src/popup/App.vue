@@ -6,7 +6,7 @@
       <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
       <template v-if="selectedTab.id==2 || selectedTab.id==3">
         <template v-if="isStayPro">
-          <DarkMode v-if="selectedTab.id==2"></DarkMode>
+          <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
@@ -74,54 +74,10 @@ export default {
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
           state.siteEnabled = request.enabled;
-          // if(shouldToFetchScript){
-          //   fetchMatchedScriptList();
-          // }
         }
       }
       return true;
     });
-
-    function fetchMatchedScriptConsole(){
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchMatchedScriptLog' }, (response) => {
-        // logIsFetched = true;
-        console.log('fetchMatchedScriptLog response----', response)
-        // if (response && response.body && response.body.length > 0) {
-        //   response.body.forEach(item => {
-        //     if (item.logList && item.logList.length > 0) {
-        //       item.logList.forEach(logMsg => {
-        //         let logType = logMsg.msgType ? logMsg.msgType : 'log'
-        //         let dateTime = logMsg && logMsg.time ? logMsg.time : ''
-        //         let data = {
-        //           uuid: item.uuid,
-        //           name: item.name,
-        //           time: dateTime,
-        //           //Fixed wrong variable logMsg.
-        //           msgType: logType,
-        //           message: logMsg.msg
-        //         };
-        //         scriptConsole.push(data)
-        //       })
-        //     }
-        //   })
-        //   if (!showLogNotify && scriptConsole.length>0) {
-        //     let count = scriptConsole.length
-        //     let readCount = window.localStorage.getItem('console_count');
-        //     readCount = readCount ? Number(readCount) : 0
-        //     if (count - readCount > 0){
-        //       window.localStorage.setItem('console_count', count);
-        //       showLogNotify = true
-        //       logNotifyDom.show()
-        //       let showCount = count - readCount;
-        //       showCount = showCount > 99 ? '99+' : showCount
-        //       logNotifyDom.setInnerHtml(showCount)
-        //     }
-        //   }
-        // } else {
-        //   scriptConsole = [];
-        // }
-      })
-    }
 
     const fetchStayProConfig = () => {
       global.browser.tabs.getSelected(null, (tab) => {
