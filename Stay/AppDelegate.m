@@ -195,7 +195,6 @@
                 NSDictionary *dic = arrays[i];
                 self.syDownloadSlideController = [[SYDownloadSlideController alloc] init];
                 self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];
-                self.syDownloadSlideController.dic[@"downloadUrl"] = @"https://muiplayer.js.org/media/media.m3u8";
                 
                 if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
                     && [QuickAccess splitController].viewControllers.count >= 2){
