@@ -50,11 +50,12 @@ export default {
     const global = inject('global');
     const store = global.store;
     const hostName = getHostname(store.state.browserUrl);
+    const origin = new URL(store.state.browserUrl).origin;
     const state = reactive({
       browserUrl: store.state.browserUrl,
       script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, website: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:hostName},
       hostName,
-      websiteList: [hostName,store.state.browserUrl],
+      websiteList: [origin,store.state.browserUrl],
       showMenu: false
     });
     
@@ -91,27 +92,30 @@ export default {
     }
     const changeSelectWebsite = (uuid, event) => {
       const website = event.target.value;
+      disabledUrlToReq(uuid, state.script.disableChecked, state.script.disabledUrl);
       // console.log('website------',website);
       emit('handleWebsite', uuid, website);
     }
     const changeWebsiteDisabled = (uuid, website, event) => {
       const disabled = event.target.checked;
-      let websiteReq = '';
-      if(disabled){
-        websiteReq = website;
-      }
+      let websiteReq = website;
       state.script.disabledUrl = websiteReq;
       state.script.disableChecked = disabled;
+      disabledUrlToReq(uuid, disabled, websiteReq);
+      // console.log('------website---enabled------',event, websiteReq, disabled);
+      emit('handleWebsiteDisabled', uuid, websiteReq);
+    }
+
+    const disabledUrlToReq = (uuid, disabled, websiteReq) => {
       global.browser.runtime.sendMessage({
         from: 'popup',
         operate: 'setDisabledWebsites',
+        on: disabled,
         uuid: uuid,
         website: websiteReq
       }, (response) => {
         console.log('setDisabledWebsites response,',response)
       })
-      // console.log('------website---enabled------',event, websiteReq, disabled);
-      emit('handleWebsiteDisabled', uuid, websiteReq);
     }
     
     const openInAPP = (uuid) => {
