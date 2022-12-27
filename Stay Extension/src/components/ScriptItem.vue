@@ -1,6 +1,6 @@
 <template>
   <div class="script-item-box" >
-    <div class="script-item" :class="{disabled: script.disabledUrl && script.disabledUrl!='' }">
+    <div class="script-item" :class="{disabled: script.disableChecked}">
       <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'60px':'0px'}">
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
@@ -10,14 +10,14 @@
         <div class="desc overflow">{{script.description}}</div>
       </div>
       <div class="website-cell">
-        <div class="check-box" :class="{ active: script.disabledUrl}" >
+        <div class="check-box" :class="{ active: script.disableChecked}" >
           <input :ref="script.uuid" v-model="script.disableChecked" 
-          @change='changeWebsiteDisabled(script.uuid, script.website, $event)' type="checkbox" class="allow" />
+          @change='changeWebsiteDisabled(script.uuid, script.disabledUrl, $event)' type="checkbox" class="allow" />
         </div>
         <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
         <div class="select-options">
-          <div class="selected-text">{{script.website}}</div>
-          <select class="select-container" v-model="script.website" @change='changeSelectWebsite(script.uuid, $event)' >
+          <div class="selected-text">{{script.disabledUrl}}</div>
+          <select class="select-container" v-model="script.disabledUrl" @change='changeSelectWebsite(script.uuid, $event)' >
             <option v-for="(website, i) in websiteList" :key="i" :value="website">{{website}}</option>
           </select>
         </div>
@@ -53,7 +53,7 @@ export default {
     const origin = new URL(store.state.browserUrl).origin;
     const state = reactive({
       browserUrl: store.state.browserUrl,
-      script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, website: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:hostName},
+      script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, disabledUrl: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:origin},
       hostName,
       websiteList: [origin,store.state.browserUrl],
       showMenu: false
@@ -92,30 +92,37 @@ export default {
     }
     const changeSelectWebsite = (uuid, event) => {
       const website = event.target.value;
-      disabledUrlToReq(uuid, state.script.disableChecked, state.script.disabledUrl);
+      state.script.disabledUrl = website;
+      disabledUrlToReq(uuid);
       // console.log('website------',website);
       emit('handleWebsite', uuid, website);
     }
     const changeWebsiteDisabled = (uuid, website, event) => {
       const disabled = event.target.checked;
-      let websiteReq = website;
-      state.script.disabledUrl = websiteReq;
+      state.script.disabledUrl = website;
       state.script.disableChecked = disabled;
-      disabledUrlToReq(uuid, disabled, websiteReq);
+      disabledUrlToReq(uuid);
       // console.log('------website---enabled------',event, websiteReq, disabled);
-      emit('handleWebsiteDisabled', uuid, websiteReq);
+      emit('handleWebsiteDisabled', uuid, disabled);
     }
 
-    const disabledUrlToReq = (uuid, disabled, websiteReq) => {
-      global.browser.runtime.sendMessage({
-        from: 'popup',
-        operate: 'setDisabledWebsites',
-        on: disabled,
-        uuid: uuid,
-        website: websiteReq
-      }, (response) => {
-        console.log('setDisabledWebsites response,',response)
-      })
+    const disabledUrlToReq = (uuid) => {
+      state.websiteList.forEach(item => {
+        let disabled = false;
+        if(state.script.disableChecked && state.script.disabledUrl==item){
+          disabled = true;
+        }
+        global.browser.runtime.sendMessage({
+          from: 'popup',
+          operate: 'setDisabledWebsites',
+          on: disabled,
+          uuid: uuid,
+          website: item
+        }, (response) => {
+          console.log('setDisabledWebsites response,',response)
+        })
+      });
+      
     }
     
     const openInAPP = (uuid) => {

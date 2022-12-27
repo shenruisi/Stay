@@ -135,14 +135,15 @@ export default {
       scriptList.forEach(item=> {
         if(item.uuid === uuid){
           if(type === 'website'){
-            item.website = value;
+            // item.website = value;
+            item.disabledUrl = value;
           }
           else if(type === 'active'){
             item.active = value;
           }
           else if(type === 'disabledUrl'){
-            item.disabledUrl = value;
-            item.disableChecked = value?true:false;
+            // item.disabledUrl = value;
+            item.disableChecked = value;
           }
         }
       })
@@ -181,15 +182,15 @@ export default {
     /**
      * 处理disabledWebsite状态
      * @param {String} uuid          当前script uuid
-     * @param {String} websiteReq    当前选中的disabledUrl
+     * @param {String} disabled      当前选中的checkBox
      */
-    const handleWebsiteDisabled = (uuid, websiteReq) => {
+    const handleWebsiteDisabled = (uuid, disabled) => {
       if(state.showTab == 'activated'){
-        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'disabledUrl', value: websiteReq})
+        handleScriptItemValue(state.activatedScriptList, uuid, {type: 'disabledUrl', value: disabled})
       }else{
-        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'disabledUrl', value: websiteReq})
+        handleScriptItemValue(state.stoppedScriptList, uuid, {type: 'disabledUrl', value: disabled})
       }
-      handleScriptItemValue(state.scriptStateList, uuid, {type: 'disabledUrl', value: websiteReq})
+      handleScriptItemValue(state.scriptStateList, uuid, {type: 'disabledUrl', value: disabled})
     }
 
     const handleRegisterMenu = (uuid) => {
