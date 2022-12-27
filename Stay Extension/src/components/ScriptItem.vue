@@ -16,9 +16,9 @@
         </div>
         <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
         <div class="select-options">
-          <div class="selected-text">{{script.disabledUrl}}</div>
+          <div class="selected-text">{{website}}</div>
           <select class="select-container" v-model="script.disabledUrl" @change='changeSelectWebsite(script.uuid, $event)' >
-            <option v-for="(website, i) in websiteList" :key="i" :value="website">{{website}}</option>
+            <option v-for="(item, i) in websiteList" :key="i" :value="item.disabledUrl">{{item.website}}</option>
           </select>
         </div>
       </div>
@@ -51,11 +51,13 @@ export default {
     const store = global.store;
     const hostName = getHostname(store.state.browserUrl);
     const origin = new URL(store.state.browserUrl).origin;
+    const reg = /^\*[://]*.+[/]\*$/g
     const state = reactive({
       browserUrl: store.state.browserUrl,
-      script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, disabledUrl: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:origin},
+      script: {...props.scriptItem, disableChecked:props.scriptItem.disabledUrl?true:false, disabledUrl: props.scriptItem.disabledUrl?props.scriptItem.disabledUrl:`*://${hostName}/*`},
       hostName,
-      websiteList: [origin,store.state.browserUrl],
+      website: props.scriptItem.disabledUrl?(reg.test(props.scriptItem.disabledUrl)?hostName:props.scriptItem.disabledUrl):hostName,
+      websiteList: [{website:hostName, disabledUrl: `*://${hostName}/*`},{disabledUrl:store.state.browserUrl,website:store.state.browserUrl}],
       showMenu: false
     });
     
@@ -91,8 +93,12 @@ export default {
       proxy.$refs[refId].dispatchEvent(new MouseEvent('click'));
     }
     const changeSelectWebsite = (uuid, event) => {
-      const website = event.target.value;
+      const selectOpt = event.target;
+      const website = selectOpt.value;
       state.script.disabledUrl = website;
+
+      state.website = selectOpt.options[selectOpt.selectedIndex].text;
+
       disabledUrlToReq(uuid);
       // console.log('website------',website);
       emit('handleWebsite', uuid, website);

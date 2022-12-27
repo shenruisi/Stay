@@ -105,6 +105,7 @@ export default {
           state.stoppedScriptList = [];
           state.scriptStateList.forEach(item=>{
             if(item.active){
+              // item.disabledUrl = '*://www.baidu.com/*'
               state.activatedScriptList.push(item);
             }else{
               state.stoppedScriptList.push(item);
