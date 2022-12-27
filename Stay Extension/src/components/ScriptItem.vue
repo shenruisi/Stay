@@ -228,7 +228,7 @@ export default {
         right: 0;
         top: 0;
         width: 40px;
-        height: 40px;
+        height: 50px;
       }
       &.stopped{
         .state{
@@ -299,8 +299,8 @@ export default {
         position: relative;
         width: 14px;
         height: 14px;
-        background: #fff;
-        color: #000000;
+        background: var(--s-white);;
+        color: var(--s-black);
       }
       input[type='checkbox']:disabled::after {
         opacity: 0.4;
@@ -309,8 +309,8 @@ export default {
         position: absolute;
         top: 0px;
         right: 0px;
-        background: #fff;
-        color: #fff;
+        background: var(--s-white);
+        color: var(--s-white);;
         height: 14px;
         width: 14px;
         display: inline-block;
@@ -319,7 +319,7 @@ export default {
         content: '';
         border-radius: 2px;
         box-sizing: border-box;
-        border: 1px solid #B620E0;
+        border: 1px solid var(--s-main);
       }
       input[type='checkbox']:checked::after {
         content: '✓';
@@ -327,8 +327,8 @@ export default {
         line-height: 12px;
         font-weight: bold;
         font-family: -apple-system;
-        color: #ffffff;
-        background-color: #B620E0;
+        color: var(--s-white);;
+        background-color: var(--s-main);
       }
       .website{
         font-size: 13px;
