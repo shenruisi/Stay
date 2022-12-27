@@ -12,7 +12,7 @@
       <div class="website-cell">
         <div class="check-box" :class="{ active: script.disableChecked}" >
           <input :ref="script.uuid" v-model="script.disableChecked" 
-          @change='changeWebsiteDisabled(script.uuid, script.disabledUrl, $event)' type="checkbox" class="allow" />
+          @change='changeWebsiteDisabled(script.uuid, $event)' type="checkbox" class="allow" />
         </div>
         <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
         <div class="select-options">
@@ -103,9 +103,8 @@ export default {
       // console.log('website------',website);
       emit('handleWebsite', uuid, website);
     }
-    const changeWebsiteDisabled = (uuid, website, event) => {
+    const changeWebsiteDisabled = (uuid, event) => {
       const disabled = event.target.checked;
-      state.script.disabledUrl = website;
       state.script.disableChecked = disabled;
       disabledUrlToReq(uuid);
       // console.log('------website---enabled------',event, websiteReq, disabled);
@@ -115,7 +114,7 @@ export default {
     const disabledUrlToReq = (uuid) => {
       state.websiteList.forEach(item => {
         let disabled = false;
-        if(state.script.disableChecked && state.script.disabledUrl==item){
+        if(state.script.disableChecked && state.script.disabledUrl==item.disabledUrl){
           disabled = true;
         }
         global.browser.runtime.sendMessage({
@@ -123,7 +122,7 @@ export default {
           operate: 'setDisabledWebsites',
           on: disabled,
           uuid: uuid,
-          website: item
+          website: item.disabledUrl
         }, (response) => {
           console.log('setDisabledWebsites response,',response)
         })
