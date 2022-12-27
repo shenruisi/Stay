@@ -998,7 +998,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         }
         else if ("setDisabledWebsites" == request.operate) {
-            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, disabledUrl: request.website }, function (response) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, disabledUrl: request.website, on: request.on }, function (response) {
                 sendResponse(response);
             });
         }
