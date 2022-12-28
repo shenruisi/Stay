@@ -114,39 +114,7 @@
     
     CGFloat top = imageView.bottom + 7;
     
-    UIButton *savePhotoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
-    [savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
-    [savePhotoBtn setTitle:NSLocalizedString(@"SAVETOPHOTOS", @"") forState:UIControlStateNormal];
-    [savePhotoBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
-    savePhotoBtn.titleLabel.font = FCStyle.footnoteBold;
-    savePhotoBtn.top = top;
-    savePhotoBtn.left = 12;
-    savePhotoBtn.backgroundColor = FCStyle.background;
-    savePhotoBtn.layer.cornerRadius = 8;
-    [savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
-
-    [self.contentView addSubview:savePhotoBtn];
-
-    
-    UIButton *saveFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
-    [saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
-    [saveFileBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
-    [saveFileBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
-    saveFileBtn.titleLabel.font = FCStyle.footnoteBold;
-    saveFileBtn.centerY = savePhotoBtn.centerY;
-    saveFileBtn.left = savePhotoBtn.right + 9;
-    saveFileBtn.backgroundColor = FCStyle.background;
-    saveFileBtn.layer.cornerRadius = 8;
-    [saveFileBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
-
-    [self.contentView addSubview:saveFileBtn];
-    
-    UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
-    runBtn.titleLabel.font = FCStyle.footnoteBold;
-   
-    [self.contentView addSubview:runBtn];
     objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
-
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 11, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  saveFileBtn.bottom + 6;
