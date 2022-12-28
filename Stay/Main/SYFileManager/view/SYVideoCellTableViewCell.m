@@ -27,6 +27,15 @@
     // Configure the view for the selected state
 }
 
+- (void)setDownloadResource:(DownloadResource *)downloadResource {
+    for (UIView *subView in self.contentView.subviews) {
+        [subView removeFromSuperview];
+    }
+    _downloadResource = downloadResource;
+    [self createCell];
+}
+
+
 
 - (void)createCell {
     
