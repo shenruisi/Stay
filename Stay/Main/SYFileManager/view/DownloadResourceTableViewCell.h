@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,strong)SYProgress *progress;
 
+@property(nonatomic,strong)UILabel *downloadSpeedLabel;
+
+
 - (void)reloadCell;
 @end
 

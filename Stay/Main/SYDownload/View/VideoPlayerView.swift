@@ -313,9 +313,9 @@ class VideoPlayerView: UIView {
     func backAction() {
         if UIApplication.shared.statusBarOrientation.isLandscape {
             if #available(iOS 16.0, *) {
-                controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
-                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+//                controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
+//                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+//                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
             } else {
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
             }
@@ -383,9 +383,9 @@ class VideoPlayerView: UIView {
     func modeAction() {
         resetControlHide()
         if #available(iOS 16.0, *) {
-            controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
-            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+//            controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
+//            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+//            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
         } else {
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
         }
