@@ -114,10 +114,15 @@
     
     CGFloat top = imageView.bottom + 7;
     
+    UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
+    runBtn.titleLabel.font = FCStyle.footnoteBold;
+   
+    [self.contentView addSubview:runBtn];
     objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
+
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 11, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  saveFileBtn.bottom + 6;
+    line.top =  imageView.bottom + 6;
     line.left = 12;
     [self.contentView addSubview:line];
 
