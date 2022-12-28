@@ -62,37 +62,38 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .popup-fotter-wrapper{
+.popup-fotter-wrapper{
+  width: 100%;
+  position: fixed;
+  height: 52px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--dm-bg-f6);
+  border-top: 1px solid var(--dm-bd);
+  z-index: 999;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  .fotter-box{
+    position: relative;
     width: 100%;
-    position: fixed;
-    height: 52px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: var(--s-f6);
-    border-top: 1px solid var(--s-e0);
-    z-index: 999;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    .fotter-box{
-      position: relative;
-      width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .tab-item{
+      width: 25%;
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      .tab-item{
-        width: 25%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-shrink: 1;
-        img{
-            max-height: 20px;
-            // object-fit: cover;
-        }
+      flex-shrink: 1;
+      img{
+          max-height: 20px;
+          // object-fit: cover;
       }
     }
   }
+}
+
 </style>

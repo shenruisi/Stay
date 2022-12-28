@@ -109,6 +109,7 @@ export default {
   align-items: center;
   justify-content: start;
   flex: 1;
+  padding-bottom: 52px;
   .hide-temp{
     height: 38px;
     width: 100%;
@@ -120,9 +121,17 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    background-color: var(--s-white);
+    background-color: var(--dm-bg);
     flex: 1;
     // padding-bottom: 52px;
   }
+}
+@supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
+  .stay-popup-warpper{
+    padding-bottom: 60px;
+    // padding-bottom: calc(52px + env(safe-area-inset-bottom));
+    // margin-bottom: constant(safe-area-inset-bottom);
+    // margin-bottom: env(safe-area-inset-bottom);  
+	}
 }
 </style>

@@ -5,7 +5,9 @@
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
         </div>
-        <div class="active-state state" @click="activeStateClick(script)"></div>
+        <div class="active-state state" @click="activeStateClick(script)">
+          <!-- <div class="state"></div> -->
+        </div>
         <div class="author overflow">{{script.author+"@"+script.name}}</div>
         <div class="desc overflow">{{script.description}}</div>
       </div>
@@ -62,7 +64,7 @@ export default {
     });
     
     const activeStateClick = (scriptItem) => {
-      if(scriptItem.disabledUrl){
+      if(scriptItem.disableChecked){
         return;
       }
       let uuid = scriptItem.uuid;
@@ -187,8 +189,8 @@ export default {
   padding: 10px 0 0 10px;
   .script-item{
     width: 100%;
-    border-bottom: 1px solid var(--s-e0);
-    background-color: var(--s-white);
+    border-bottom: 1px solid var(--dm-bd);
+    background-color: var(--dm-bg);
     user-select: none;
     padding-bottom: 6px;
     &.disabled{
@@ -215,7 +217,7 @@ export default {
         top: 0;
         width: 48px;
         height: 48px;
-        border: 0.5px solid var(--s-e0);
+        border: 0.5px solid var(--dm-bd);
         border-radius: 8px;
         padding: 8px;
         display: flex;
@@ -234,11 +236,16 @@ export default {
         top: 0;
         width: 40px;
         height: 50px;
+        // .state{
+        //   width: 100%;
+        //   height: 100%;
+        //   position: relative;
+        // }
       }
       &.stopped{
         .state{
           background: url("../assets/images/start-icon.png") no-repeat 50% 50%;
-          background-size: 40%;
+          background-size: 16px;
         }
         .author{
           opacity: 0.7;
@@ -248,15 +255,21 @@ export default {
         }
       }
       &.activated{
-        .state{
+        .state::after{
           background: url("../assets/images/stop-icon.png") no-repeat 50% 50%;
-          background-size: 50%;
+          background-size: 20px;
+          content: "";
+          position: relative;
+          display: block;
+          right: 0px;
+          width: 100%;
+          height: 100%;
         }
       }
       .author{
         font-size: 16px;
         font-weight: 700;
-        color: var(--s-black);
+        color: var(--dm-font);
         text-align: left;
         // padding-top: 8px;
         overflow: hidden;
@@ -275,7 +288,7 @@ export default {
       }
       .desc{
         font-size: 13px;
-        color: var(--s-8a);
+        color: var(--dm-font-2);
         font-weight: 400;
         text-align: left;
         line-height: 17px;
@@ -304,8 +317,8 @@ export default {
         position: relative;
         width: 14px;
         height: 14px;
-        background: var(--s-white);;
-        color: var(--s-black);
+        background: var(--dm-bg);
+        color: var(--dm-font);
       }
       input[type='checkbox']:disabled::after {
         opacity: 0.4;
@@ -314,8 +327,8 @@ export default {
         position: absolute;
         top: 0px;
         right: 0px;
-        background: var(--s-white);
-        color: var(--s-white);;
+        background: var(--dm-bg);
+        color: var(--dm-font);
         height: 14px;
         width: 14px;
         display: inline-block;
@@ -332,12 +345,12 @@ export default {
         line-height: 12px;
         font-weight: bold;
         font-family: -apple-system;
-        color: var(--s-white);;
+        color: var(--s-white);
         background-color: var(--s-main);
       }
       .website{
         font-size: 13px;
-        color: var(--s-black);
+        color: var(--dm-font);
         font-weight: 400;
         padding: 0 5px;
       }
@@ -354,7 +367,7 @@ export default {
           z-index: 555;
           font-size: 13px;
           font-weight: 700;
-          color: var(--s-black);
+          color: var(--dm-font);
           position: relative;
           appearance:none;  
           -moz-appearance:none;  
@@ -409,7 +422,7 @@ export default {
         color: var(--s-main);
         font-weight: 700;
         border-radius: 8px;
-        background-color: var(--s-f7);
+        background-color: var(--dm-bg-f7);
       }
       .menu{
         &::before{
@@ -456,9 +469,25 @@ export default {
   .script-item-box{
     .script-item{
       .script-info{
-        .activated{
-          .state{
-            background: url("../assets/images/stop-dark.png");
+        &.activated{
+          overflow: hidden;
+          .state::after{
+            filter: drop-shadow(var(--dm-font) -40px 0);
+            border-left: 40px solid transparent;
+            right: -80px;
+            transform: translate(-100%, 0);
+          }
+        }
+      }
+      .website-cell{
+        .select-options{
+          .selected-text{
+            &::after{
+              filter: drop-shadow(var(--dm-font) -12px 0);
+              border-left: 12px solid transparent;
+              overflow: hidden;
+              right: -12px;
+            }
           }
         }
       }
