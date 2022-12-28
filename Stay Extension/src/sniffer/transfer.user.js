@@ -96,7 +96,9 @@ const browser = __b;
     }else{
       pathName = new URL(hostUrl).pathname;
     }
-    return pathName.split('/').pop();
+    let pathArr = pathName.split('/');
+    pathArr = pathArr.filter(item=>{if(item&&item!=''){return item}});
+    return pathArr.pop();
   }
 
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {

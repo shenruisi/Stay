@@ -129,7 +129,7 @@ const browser = __b;
           }
           let downloadUrl = item.getAttribute('src');
           if(!downloadUrl){
-            let sourceDom = item.querySelector('source[type=\'video/mp4\']');
+            let sourceDom = item.querySelector('source');
             if(sourceDom){
               item = sourceDom;
               downloadUrl = sourceDom.getAttribute('src');
@@ -208,7 +208,9 @@ const browser = __b;
         }else{
           pathName = new URL(hostUrl).pathname;
         }
-        title = pathName.split('/').pop();
+        let pathArr = pathName.split('/');
+        pathArr = pathArr.filter(item=>{if(item&&item!=''){return item}});
+        title = pathArr.pop();
       }
       videoInfo['title'] = title
       videoInfo['poster'] = poster;
