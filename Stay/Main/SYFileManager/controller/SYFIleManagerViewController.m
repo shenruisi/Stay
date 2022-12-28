@@ -55,6 +55,12 @@ UIDocumentPickerDelegate
 
     self.tableView.sectionHeaderTopPadding = 0;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(buildFolder:)
+                                                 name:@"app.stay.notification.SYFolderChangeNotification"
+                                               object:nil];
+    
+    
     self.navigationItem.rightBarButtonItems = @[[self addItem]];
 }
 
@@ -68,6 +74,10 @@ UIDocumentPickerDelegate
                                                      action:@selector(addBtnClick:)];
     }
     return _addItem;
+}
+
+- (void)buildFolder:(id)sender{
+    [self.tableView reloadData];
 }
 
 - (void)addBtnClick:(id)sender{
@@ -172,6 +182,13 @@ UIDocumentPickerDelegate
     }
     return _folderSlideController;
 }
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:@"app.stay.notification.SYFolderChangeNotification"
+                                                      object:nil];
+}
+
 /*
 #pragma mark - Navigation
 

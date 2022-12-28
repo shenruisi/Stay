@@ -49,11 +49,9 @@ UITableViewDataSource
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    DownloadResource *downloadResource = self.array[indexPath.row];
-    if(downloadResource.status == 2) {
+//    if(downloadResource.status == 2) {
         return 137;
-    } else {
-        return 103;
-    }
+//    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

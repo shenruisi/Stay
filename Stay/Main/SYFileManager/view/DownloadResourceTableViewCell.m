@@ -43,14 +43,49 @@
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.layer.borderColor = FCStyle.borderColor.CGColor;
     imageView.layer.borderWidth = 0.5;
+    imageView.backgroundColor = RGB(247, 247, 247);
     if(_downloadResource.icon != nil) {
-        [imageView sd_setImageWithURL:([_downloadResource.icon hasPrefix:@"http"] ? [NSURL URLWithString:_downloadResource.icon] : [NSURL fileURLWithPath:_downloadResource.icon]) placeholderImage:[UIImage imageNamed:@"videoDefault"]];
+        UIImageView *plImg = [[UIImageView alloc] initWithFrame:CGRectMake(18, 0, 44, 36)];
+        [plImg setImage:[UIImage imageNamed:@"videoDefault"]];
+        plImg.centerX = 80;
+        plImg.top = 18;
+        plImg.contentMode = UIViewContentModeScaleAspectFit;
+        [imageView addSubview:plImg];
+        [imageView sd_setImageWithURL:([_downloadResource.icon hasPrefix:@"http"] ? [NSURL URLWithString:_downloadResource.icon] : [NSURL fileURLWithPath:_downloadResource.icon])  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            if(error == nil) {
+                plImg.hidden = true;
+            }
+        }];
     } else {
-        [imageView setImage:[UIImage imageNamed:@"videoDefault"]];
+
+        UIImageView *plImg = [[UIImageView alloc] initWithFrame:CGRectMake(18, 0, 44, 36)];
+        [plImg setImage:[UIImage imageNamed:@"videoDefault"]];
+        plImg.contentMode = UIViewContentModeScaleAspectFit;
+        plImg.centerX = 80;
+        [imageView addSubview:plImg];
     }
     
-    if(_downloadResource.videoDuration >= 0) {
+    if(_downloadResource.videoDuration > 0) {
+        SYProgress *watchProcess = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, 160, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
         
+        watchProcess.progress = _downloadResource.watchProcess / _downloadResource.videoDuration;
+        watchProcess.bottom = 90;
+        [imageView addSubview:watchProcess];
+        
+        UILabel *time = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 15)];
+        time.font = FCStyle.footnote;
+        time.textColor = [UIColor whiteColor];
+        time.backgroundColor = RGBA(0, 0, 0, 0.8);
+        time.text = [self timeFormatted:_downloadResource.videoDuration];
+        time.textAlignment = NSTextAlignmentCenter;
+        time.bottom = 82;
+        [time sizeToFit];
+        time.width = time.width + 20;
+
+        time.right = 160;
+        time.layer.cornerRadius = 7;
+        time.layer.masksToBounds = TRUE;
+        [imageView addSubview:time];
     }
     
     [self.contentView addSubview:imageView];
@@ -213,6 +248,16 @@
         [subView removeFromSuperview];
     }
     [self createCell];
+}
+
+- (NSString *)timeFormatted:(NSInteger)totalSeconds
+{
+
+    int seconds = totalSeconds % 60;
+    int minutes = (totalSeconds / 60) % 60;
+    int hours = totalSeconds / 3600;
+
+    return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
 }
 
 
