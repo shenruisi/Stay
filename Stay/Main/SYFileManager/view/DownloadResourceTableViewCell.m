@@ -133,6 +133,8 @@
         savePhotoBtn.backgroundColor = FCStyle.background;
         savePhotoBtn.layer.cornerRadius = 8;
         [savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+        [savePhotoBtn addTarget:self.controller action:@selector(saveToPhoto:) forControlEvents:UIControlEventTouchUpInside];
+        objc_setAssociatedObject(savePhotoBtn , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
         [self.contentView addSubview:savePhotoBtn];
 
@@ -147,7 +149,10 @@
         saveFileBtn.backgroundColor = FCStyle.background;
         saveFileBtn.layer.cornerRadius = 8;
         [saveFileBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+        objc_setAssociatedObject(saveFileBtn , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
+        [saveFileBtn addTarget:self.controller action:@selector(saveToFile:) forControlEvents:UIControlEventTouchUpInside];
+        
         [self.contentView addSubview:saveFileBtn];
         
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
