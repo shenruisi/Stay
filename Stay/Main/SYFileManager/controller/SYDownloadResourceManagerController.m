@@ -21,8 +21,9 @@
 #import "Stay-Swift.h"
 #endif
 @interface SYDownloadResourceManagerController ()<
-UITableViewDelegate,
-UITableViewDataSource
+ UITableViewDelegate,
+ UITableViewDataSource,
+ UIDocumentPickerDelegate
 >
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ToastCenter *toastCenter;
@@ -208,12 +209,12 @@ UITableViewDataSource
 
 
 - (void)saveToFile:(UIButton *)sender {
-//    NSString *fileURL = [FCResource getResourceFilePathWithUUID:tabUUID userInfo:searchResult.getUserInfo];
-//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",[fileURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-//        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
-//
-//        documentPicker.delegate = self;
-//        [self presentViewController:documentPicker animated:YES completion:nil]
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+    UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
+
+    documentPicker.delegate = self;
+    [self presentViewController:documentPicker animated:YES completion:nil];
 }
 - (void)saveToPhoto:(UIButton *)sender {
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
@@ -223,6 +224,17 @@ UITableViewDataSource
         UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
     }
 }
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls{
+    UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+    image = [image imageWithTintColor:FCStyle.fcBlack
+                        renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.toastCenter show:image
+                     mainTitle:NSLocalizedString(@"Video", @"")
+                secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+}
+
 
 - (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo: (void *)contextInfo {
     UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
