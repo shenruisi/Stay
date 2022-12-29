@@ -247,7 +247,7 @@ export default {
         width: 240px;
         margin: 10px auto 0px auto;
         border-radius: 8px;
-        background-color: var(--s-f7);
+        background-color: var(--dm-bg-f7);
         display: flex;
         justify-content: center;
         justify-items: center;
@@ -258,7 +258,7 @@ export default {
           line-height: 24px;
           font-size: 13px;
           font-weight: 700;
-          color: var(--s-black);
+          color: var(--dm-font);
           padding: 0 8px;
           display: flex;
           justify-content: center;
@@ -270,7 +270,7 @@ export default {
           }
           &.active .tab-text {
             width: 100%;
-            background-color: var(--s-white);
+            background-color: var(--dm-bg);
             color: var(--s-main);
             border-radius: 8px;
           }

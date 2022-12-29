@@ -112,11 +112,15 @@ body.dialog-open {
 :root {
   --s-background: #f2f2f6;
   --s-f6: #f6f6f6;
+  --s-6f: #6f6f6f;
+  --s-dc:#DCDCDC;
   --s-f7: #f7f7f7;
   --s-7a: #7a7a7a;
   --s-d8: #d8d8d8;
   --s-e0: #e0e0e0;
   --s-main: #b620e0;
+  --s-37372F:#37372F;
+  --s-13: #131313;
   --s-151-f6: rgba(151, 151, 151, 0.06);
   --s-151-f02: rgba(151, 151, 151, 0.2);
   --s-main-f10: rgba(182, 32, 224, 0.1);
@@ -131,8 +135,13 @@ body.dialog-open {
   --s-red: #d91d06;
   --s-white: #ffffff;
   --s-e02020: #e02020;
-  --s-bg: var(--s-white);
   --shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+  --dm-font: var(--s-black);
+  --dm-bg: var(--s-white);
+  --dm-bg-f6: var(--s-f6);
+  --dm-bd: var(--s-e0);
+  --dm-bg-f7: var(--s-f7);
+  --dm-font-2: var(--s-8a);
 }
 
 #app {
@@ -145,17 +154,25 @@ body.dialog-open {
   width: 100%;
   // min-height: 100%;
   // height: auto !important;
-  padding-bottom: 52px;
   padding-top: 38px;
-  height: 100%; /*IE6不识别min-height*/
+  height: 100%; 
+  box-sizing: content-box;
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--s-white);
+  background-color: var(--dm-bg);
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
+  :root {
+    --dm-bg: #1C1C1C;
+    --dm-bd: var(--s-37372F);
+    --dm-font: var(--s-dc);
+    --dm-bg-f6: var(--s-13);
+    --dm-font-2: var(--s-6f);
+    --dm-bg-f7: var(--s-13);
+  }
   
 }

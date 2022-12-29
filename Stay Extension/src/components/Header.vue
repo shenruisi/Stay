@@ -49,8 +49,8 @@ export default {
     top: 0;
     left: 0;
     right: 0;
-    background-color: var(--s-f6);
-    border-bottom: 1px solid var(--s-e0);
+    background-color: var(--dm-bg-f6);
+    border-bottom: 1px solid var(--dm-bd);
     z-index: 999;
     .stay-icon{
       position: absolute;
@@ -90,7 +90,7 @@ export default {
       align-items: center;
       font-weight: 700;
       font-size: 15px;
-      color: var(--s-black);
+      color: var(--dm-font);
     }
   }
 </style>
