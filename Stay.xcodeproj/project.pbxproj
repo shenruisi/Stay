@@ -477,6 +477,8 @@
 		84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */; };
 		84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
 		84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
+		84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */; };
+		84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */; };
 		84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EC790D28E4345A001FFB92 /* bz@3x.png */; };
 		84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EC790D28E4345A001FFB92 /* bz@3x.png */; };
 		84F48318273A739800217BB3 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F48317273A739800217BB3 /* MainTabBarController.m */; };
@@ -974,6 +976,8 @@
 		84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeDetailCell.m; sourceTree = "<group>"; };
 		84CC9B5F28D1C290002EB493 /* SYNoDownLoadDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNoDownLoadDetailViewController.h; sourceTree = "<group>"; };
 		84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNoDownLoadDetailViewController.m; sourceTree = "<group>"; };
+		84E8EA07295C7C95003846AD /* SYVideoCellTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVideoCellTableViewCell.h; sourceTree = "<group>"; };
+		84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYVideoCellTableViewCell.m; sourceTree = "<group>"; };
 		84EC790D28E4345A001FFB92 /* bz@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bz@3x.png"; sourceTree = "<group>"; };
 		84F48316273A739800217BB3 /* MainTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		84F48317273A739800217BB3 /* MainTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
@@ -1800,6 +1804,8 @@
 				849E77D2293D8F3300AD83D7 /* DownloadFileTableViewCell.m */,
 				849E77D9293E0E0C00AD83D7 /* DownloadResourceTableViewCell.h */,
 				849E77DA293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m */,
+				84E8EA07295C7C95003846AD /* SYVideoCellTableViewCell.h */,
+				84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */,
 				84BA56F42944BC5D00FD4446 /* SYProgress.h */,
 				84BA56F52944BC5D00FD4446 /* SYProgress.m */,
 			);
@@ -2703,6 +2709,7 @@
 				3C8388C62931ADC5007563E6 /* FCTab.m in Sources */,
 				587689402720064D00F834A4 /* NavigationController.m in Sources */,
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
+				84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				582061F2294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
@@ -2848,6 +2855,7 @@
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
+				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				849E77CF293C7F5A00AD83D7 /* SYFIleManagerViewController.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
