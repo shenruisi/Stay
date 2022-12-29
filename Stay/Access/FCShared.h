@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 #ifdef Mac
 @class Plugin;
 #endif
+
+
 @interface FCShared : NSObject
 
 #ifdef Mac
@@ -23,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, readonly, strong) iCloudService *iCloudService;
 #endif
 @property (class, readonly, strong) FCTabManager *tabManager;
+
 @end
 
 NS_ASSUME_NONNULL_END

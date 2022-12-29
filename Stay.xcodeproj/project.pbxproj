@@ -292,6 +292,8 @@
 		588202B42859F99000B2721A /* FCSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202B32859F99000B2721A /* FCSplitViewController.m */; };
 		588202B82859F9FD00B2721A /* SceneCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202B72859F9FD00B2721A /* SceneCenter.m */; };
 		588202CB285A12C400B2721A /* FCAppKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202C1285A100300B2721A /* FCAppKit.m */; };
+		588402C9295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
+		588402CA295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		5889731A27213C8300BE123E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5889731C27213C8300BE123E /* Localizable.strings */; };
 		58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5889731F272156C900BE123E /* LaunchScreen.storyboard */; };
 		5889733E2723033600BE123E /* icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5889733D2723033600BE123E /* icon@3x.png */; };
@@ -742,6 +744,8 @@
 		588202C0285A100300B2721A /* FCAppKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCAppKit.h; sourceTree = "<group>"; };
 		588202C1285A100300B2721A /* FCAppKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCAppKit.m; sourceTree = "<group>"; };
 		588202C7285A12B400B2721A /* macOSNative.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOSNative.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		588402C7295D3272002CA227 /* ToastCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastCenter.h; sourceTree = "<group>"; };
+		588402C8295D3272002CA227 /* ToastCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastCenter.m; sourceTree = "<group>"; };
 		5889731427213BC200BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = ../en.lproj/Main.html; sourceTree = "<group>"; };
 		5889731B27213C8300BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5889731E27213CB100BE123E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1144,6 +1148,8 @@
 				5839C31B29305CA100CCBAE5 /* FCTopToast.m */,
 				5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */,
 				5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */,
+				588402C7295D3272002CA227 /* ToastCenter.h */,
+				588402C8295D3272002CA227 /* ToastCenter.m */,
 			);
 			path = Debugger;
 			sourceTree = "<group>";
@@ -2681,6 +2687,7 @@
 				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
+				588402C9295D3272002CA227 /* ToastCenter.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 				84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
@@ -2801,6 +2808,7 @@
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
+				588402CA295D3272002CA227 /* ToastCenter.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
 				582061E7294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,

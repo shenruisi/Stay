@@ -59,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfNavigationBar;
 @property(class, nonatomic, readonly) UIFont *sfSecondaryIcon;
 @property(class, nonatomic, readonly) UIFont *cellIcon;
+@property(class, nonatomic, readonly) UIFont *sfIcon;
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
 + (NSString *)appearance;

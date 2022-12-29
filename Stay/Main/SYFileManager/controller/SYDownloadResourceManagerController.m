@@ -14,7 +14,7 @@
 #import "DownloadManager.h"
 #import <objc/runtime.h>
 #import <AVFoundation/AVFoundation.h>
-
+#import "ToastCenter.h"
 #if iOS
 #import "Stay-Swift.h"
 #else
@@ -25,9 +25,7 @@ UITableViewDelegate,
 UITableViewDataSource
 >
 @property (nonatomic, strong) UITableView *tableView;
-
-
-
+@property (nonatomic, strong) ToastCenter *toastCenter;
 @end
 
 @implementation SYDownloadResourceManagerController
@@ -221,11 +219,20 @@ UITableViewDataSource
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
 
     NSURL *url = [NSURL fileURLWithPath:resource.allPath];
-                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
-                    UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                }
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
+        UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+    }
 }
 
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo: (void *)contextInfo {
+    UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+    image = [image imageWithTintColor:FCStyle.fcBlack
+                        renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.toastCenter show:image
+                     mainTitle:NSLocalizedString(@"Video", @"")
+                secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+}
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -260,14 +267,12 @@ UITableViewDataSource
 }
 
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (ToastCenter *)toastCenter{
+    if (nil == _toastCenter){
+        _toastCenter = [[ToastCenter alloc] init];
+    }
+    
+    return _toastCenter;
 }
-*/
 
 @end

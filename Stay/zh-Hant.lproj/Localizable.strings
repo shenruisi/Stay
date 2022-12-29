@@ -214,3 +214,11 @@ Link="鏈接";
 Name="名稱";
 SaveTo="保存到";
 StartDownload="開始下載";
+
+Downloader="下載器";
+SearchVideo="搜索已下載的視頻";
+Folders="文件夾";
+SAVETOPHOTOS="保存到相冊";
+SAVETOFILES="保存到文件";
+Video="視頻";
+SaveDone="已保存";

@@ -277,6 +277,15 @@
     
 }
 
++ (UIFont *)sfIcon{
+#ifdef iOS
+    return [UIFont systemFontOfSize:22];
+#else
+    return [UIFont systemFontOfSize:20];
+#endif
+}
+
+
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha
 {
     if ([string hasPrefix:@"#"])
