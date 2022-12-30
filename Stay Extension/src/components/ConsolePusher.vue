@@ -79,12 +79,12 @@ export default {
       padding: 10px 0;
       /* justify-content: space-between; */
       padding: 10px 10px 10px 0;
-      border-bottom: 1px solid #E0E0E0;
+      border-bottom: 1px solid var(--dm-bd);
     }
     .console-con{
       /* display: flex; */
       text-align: left;
-      color: #000000;
+      color: var(--dm-font);
       font-size: 13px;
       line-height: 17px;
     }
@@ -96,7 +96,7 @@ export default {
     .console-time{
       text-align: left;
       white-space: nowrap;
-      color: rgba(0,0,0,0.5);
+      color: var(--dm-font-3);
       font-size: 13px;
       padding-bottom: 4px;
     }
@@ -105,7 +105,7 @@ export default {
       /* flex: auto 1; */
       text-align: right;
       white-space: pre-wrap;
-      color: rgba(0,0,0,0.5);
+      color: var(--dm-font-3);
       font-size: 13px;
       padding-bottom: 4px;
     }

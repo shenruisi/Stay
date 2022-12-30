@@ -202,16 +202,17 @@ export default {
       font-size: 16px;
       font-weight: 400;
       .null-title{
-        color: var(--s-black);
+        color: var(--dm-font);
       }
       .desc-prompt{
-        color: var(--s-7a);
+        // color: var(--s-7a);
+        color: var(--dm-font-2);
         font-size: 15px;
         line-height: 25px;
         .mail-to{
           display: inline;
           text-decoration: underline;
-          color: var(--s-black);
+          color: var(--dm-font);
           font-weight: 700;
           padding-left: 2px;
         }
@@ -228,7 +229,7 @@ export default {
         justify-content: center;
         align-items: center;
         justify-items: center;
-        border-bottom: 0.5px solid var(--s-e0);
+        border-bottom: 0.5px solid var(--dm-bd);
         flex: 1;
         .video-info{
           display: flex;
@@ -252,8 +253,8 @@ export default {
             .video{
               width: 60px;
               height: 60px;
-              border: 0.5px solid var(--s-e0);
-              background-color: var(--s-f7);
+              border: 0.5px solid var(--dm-bd);
+              background-color: var(--dm-bg-f7);
               border-radius: 10px;
               display: flex;
               flex-shrink: 0;
@@ -274,7 +275,8 @@ export default {
                   font-family: 'Helvetica Neue';
                   font-size: 10px;
                   user-select: none;
-                  color: var(--s-7a);
+                  // color: var(--s-7a);
+                  color: var(--dm-font-2);
                 }
               }
             }
@@ -289,7 +291,8 @@ export default {
               user-select: none;
               .title{
                 width: 100%;
-                color: var(--s-7a);
+                // color: var(--s-7a);
+                color: var(--dm-font-2);
                 font-size: 13px;
                 font-family: 'Helvetica Neue';
                 text-align: left;
@@ -304,7 +307,7 @@ export default {
                 user-select: none;
                 width: 100%;
                 text-align: left;
-                color: var(--s-black);
+                color: var(--dm-font);
                 font-size: 16px;
                 font-weight: 400;
                 padding-top: 5px;
@@ -332,7 +335,7 @@ export default {
             user-select: none;
             .btn{
               width: 94px;
-              background-color: var(--s-f7);
+              background-color: var(--dm-bg-f7);
               color: var(--s-main);
               font-size: 13px;
               font-weight: 700;
@@ -354,7 +357,7 @@ export default {
           padding-right: 10px;
           .label-txt{
             font-size: 13px;
-            color: var(--s-black);
+            color: var(--dm-font);
             font-weight: 400;
             padding-right: 4px;
             height: 24px;
@@ -372,7 +375,7 @@ export default {
               z-index: 555;
               font-size: 13px;
               font-weight: 700;
-              color: var(--s-black);
+              color: var(--dm-font);
               position: relative;
               appearance:none;  
               -moz-appearance:none;  
@@ -413,7 +416,6 @@ export default {
             .selected-text{
               min-width: 80px;
             }
-            
           }
           .quality{
             width: 60px;
@@ -422,4 +424,25 @@ export default {
       }
     }
   }
+@media (prefers-color-scheme: dark) {
+  .popup-sniffer-wrapper{
+    .sniffer-video-box{
+      .sniffer-video{
+        .video-download-info{
+          .select-options{
+            .selected-text{
+              &::after{
+                filter: drop-shadow(var(--dm-font) -12px 0);
+                border-left: 12px solid transparent;
+                overflow: hidden;
+                right: -12px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }  
+  
+}
 </style>

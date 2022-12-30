@@ -92,7 +92,7 @@ export default {
     margin: 0 auto 15px auto;
     display: flex;
     /* flex: 1; */
-    background: var(--s-white);
+    background: var(--dm-bg);
     height: 26px;
     width: 100%;
     border: 1px solid var(--s-main);
@@ -112,7 +112,7 @@ export default {
   }
   .darkmode-setting .setting{
     width: 33.33%;
-    color: var(--s-black);
+    color: var(--dm-font);
     font-size: 13px;
     cursor: pointer;
     font-weight: 400;
@@ -125,7 +125,7 @@ export default {
     flex-flow: column;
   }
   .darkmode-pro .darkmode-setting .active {
-    color: var(--s-white);
+    color: var(--dm-bg);
     background: var(--s-main);
   }
   .darkmode-web{
@@ -134,7 +134,7 @@ export default {
     position: relative;
     margin-bottom: 10px;
     width: 100%; 
-    background: var(--s-white);
+    background: var(--dm-bg);
   }
   .darkmode-web input.website-input{
     width: 100%;
@@ -144,6 +144,8 @@ export default {
     font-size: 12px;
     opacity:1;
     border-radius:7px;
+    background: var(--dm-bg);
+    color: var(--dm-font);
   }
   .check-box{
     position: absolute;
@@ -158,18 +160,18 @@ export default {
     position: relative;
     width: 11px;
     height: 11px;
-    background: var(--s-white);
-    color: var(--s-black);
+    background: var(--dm-bg);
+    color: var(--dm-font);
   }
   input[type='checkbox']:disabled::after {
     opacity: 0.4;
   }
   input[type=checkbox]::after {
     position: absolute;
-    top: -1px;
+    top: -2px;
     right: 0px;
-    background: var(--s-white);
-    color: var(--s-white);
+    background: var(--dm-bg);
+    color: var(--dm-bg);
     height: 12px;
     width: 12px;
     display: inline-block;
@@ -186,13 +188,13 @@ export default {
     line-height: 10px;
     font-family: system-ui, -apple-system;
     font-weight: bold;
-    color: var(--s-white);
+    color: var(--dm-bg);
     background-color: var(--s-main);
   }
   .darkmode-note{
     font-size: 13px;
     font-weight: 400;
-    color: var(--s-000-50);
+    color: var(--dm-font-3);
   }
 }
 </style>

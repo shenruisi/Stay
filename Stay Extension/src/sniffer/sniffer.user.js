@@ -7,23 +7,41 @@ if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof 
 const browser = __b;
 (function () {
   let contentHost = window.location.host;
-  let scriptTag = document.createElement('script');
-  scriptTag.type = 'text/javascript';
-  scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
-  let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo();`;
-  scriptTag.appendChild(document.createTextNode(injectJSContent));
-  if (document.body) {
-    document.body.appendChild(scriptTag);
-  } else {
-    const root = document.documentElement;
-    const observer = new MutationObserver(() => {
-      if (document.body) {
-        observer.disconnect();
-        document.body.appendChild(scriptTag);
-      }
-    });
-    observer.observe(root, {childList: true});
+  let isContent = false;
+  try {
+    handleInjectScript();
+    document.addEventListener('securitypolicyviolation', (e) => {
+      console.log('securitypolicyviolation--------------', e);
+      console.log(e.blockedURI);
+      console.log(e.violatedDirective);
+      console.log(e.originalPolicy);
+      isContent = true;
+      injectParseVideoJS();
+    })
+  } catch (error) {
+    console.log('Exception----------------------------',error);
   }
+
+  function handleInjectScript(){
+    let scriptTag = document.createElement('script');
+    scriptTag.type = 'text/javascript';
+    scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
+    let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo();`;
+    scriptTag.appendChild(document.createTextNode(injectJSContent));
+    if (document.body) {
+      document.body.appendChild(scriptTag);
+    } else {
+      const root = document.documentElement;
+      const observer = new MutationObserver(() => {
+        if (document.body) {
+          observer.disconnect();
+          document.body.appendChild(scriptTag);
+        }
+      });
+      observer.observe(root, {childList: true});
+    }
+  }
+
 
   function injectParseVideoJS(){
     let hostUrl = window.location.href;
@@ -152,6 +170,10 @@ const browser = __b;
         })
         window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
         console.log('parseVideoNodeList-----------result---------',videoList);
+        if(isContent){
+          let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
+          browser.runtime.sendMessage(message, (response) => {});
+        }
       }
     }
     
@@ -529,6 +551,10 @@ const browser = __b;
             uniqueUrls.add(url);
             console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
+            if(isContent){
+              let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
+              browser.runtime.sendMessage(message, (response) => {});
+            }
           }       
         }
       };
@@ -550,6 +576,10 @@ const browser = __b;
             uniqueUrls.add(url);
             console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
+            if(isContent){
+              let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
+              browser.runtime.sendMessage(message, (response) => {});
+            }
           }       
         }
         return originalFetch(resource,options);

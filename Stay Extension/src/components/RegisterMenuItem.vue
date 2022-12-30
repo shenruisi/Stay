@@ -119,7 +119,7 @@ export default {
         border-radius: 10px;
         border: 1px solid var(--s-151-f02);
         border-bottom: 0;
-        background-color: var(--s-f6);
+        background-color: var(--dm-bg-f6);
     }
     .register-menu{
         position: relative;
@@ -129,7 +129,7 @@ export default {
         padding-bottom: 20px;
     }
     .menu-close{
-        background-color: var(--s-f6);
+        background-color: var(--dm-bg-f6);
         color: var(--s-black);
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
@@ -147,6 +147,7 @@ export default {
         height: 100%;
         align-items: center;
         display: flex;
+        color: var(--dm-font);
     }
     .menu-item-box{
         width: 100%;
@@ -155,7 +156,7 @@ export default {
         overflow-y: auto;
     }
     .menu-content{
-        background: var(--s-white);
+        background: var(--dm-bg);
         border: 1px solid var(--s-151-f02);
         border-radius: 10px;
         padding-left: 10px;
@@ -165,10 +166,10 @@ export default {
         width: 100%;
         display: flex;
         padding: 10px 50px 10px 0;
-        border-bottom: 1px solid var(--s-e0);
+        border-bottom: 1px solid var(--dm-bd);
         position: relative;
         font-size: 14px;
-        color: var(--s-black);
+        color: var(--dm-font);
     }
     .menu-content .menu-item:last-child{
         border-bottom: none;

@@ -2,22 +2,22 @@
   <div class="popup-fotter-wrapper">
     <div class="fotter-box">
       <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="tabClickAction(item.id)">
-        <template v-if="item.name == 'matched_scripts_tab'">
+        <div class="tab-img" v-if="item.name == 'matched_scripts_tab'">
           <img src="../assets/images/script-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../assets/images/script.png" v-else/>
-        </template>
-        <template v-if="item.name == 'darkmode_tab'">
+          <img class="unselected" src="../assets/images/script.png" v-else/>
+        </div>
+        <div class="tab-img" v-if="item.name == 'darkmode_tab'">
           <img src="../assets/images/dark-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../assets/images/dark.png" v-else/>
-        </template>
-        <template v-if="item.name == 'downloader_tab'">
+          <img class="unselected"  src="../assets/images/dark.png" v-else/>
+        </div>
+        <div class="tab-img" v-if="item.name == 'downloader_tab'">
           <img src="../assets/images/download-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../assets/images/download.png" v-else/>
-        </template>
-        <template v-if="item.name == 'console_tab'">
+          <img class="unselected"  src="../assets/images/download.png" v-else/>
+        </div>
+        <div class="tab-img"  v-if="item.name == 'console_tab'">
           <img src="../assets/images/console-sel.png" v-if="item.id == selectedTabId" />
-          <img src="../assets/images/console.png" v-else/>
-        </template>
+          <img class="unselected" src="../assets/images/console.png" v-else/>
+        </div>
       </div>
     </div>
   </div>
@@ -88,12 +88,41 @@ export default {
       justify-content: center;
       align-items: center;
       flex-shrink: 1;
-      img{
-          max-height: 20px;
-          // object-fit: cover;
+      .tab-img{
+        width: 23px;
+        height: 23px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 1;
+        overflow: hidden;
+        img{
+          // height: 20px;
+          width: 22px;
+        }
       }
     }
   }
 }
-
+@media (prefers-color-scheme: dark) {
+  .popup-fotter-wrapper{
+    .fotter-box{
+      .tab-item{
+        .tab-img{
+          img.unselected{
+            // max-height: 23px;
+            // max-width: 23px;
+            filter: drop-shadow(#dcdcdc 22px 0);
+            border-right: 22px solid transparent;
+            position: relative;
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+          }
+        }
+      }
+    }
+  }
+  
+}
 </style>

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "watch": "vue-cli-service build --watch --mode production",
+    "watch": "vue-cli-service build --watch --mode production && cp -r Resources/popup/ ../Stay-Mac Extension/Resources/popup",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
