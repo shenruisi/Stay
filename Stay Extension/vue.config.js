@@ -42,6 +42,7 @@ module.exports = defineConfig({
   outputDir:'Resources/popup',
   productionSourceMap: false,
   runtimeCompiler: false,
+  filenameHashing: false,
   transpileDependencies: true,
   // 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建，在适当的时候开启几个子进程去并发的执行压缩
   parallel: require('os').cpus().length > 1,

@@ -65,7 +65,7 @@ export default {
 .popup-fotter-wrapper{
   width: 100%;
   position: fixed;
-  height: 52px;
+  height: 72px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -89,16 +89,16 @@ export default {
       align-items: center;
       flex-shrink: 1;
       .tab-img{
-        width: 23px;
-        height: 23px;
+        width: 40px;
+        height: 40px;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-shrink: 1;
         overflow: hidden;
         img{
-          // height: 20px;
-          width: 22px;
+          height: 40px;
+          // width: 22px;
         }
       }
     }
@@ -112,9 +112,8 @@ export default {
           img.unselected{
             // max-height: 23px;
             // max-width: 23px;
-            filter: drop-shadow(#dcdcdc 22px 0);
-            border-right: 22px solid transparent;
-            position: relative;
+            filter: drop-shadow(#dcdcdc 40px 0);
+            border-right: 40px solid transparent;
             position: relative;
             left: 50%;
             transform: translate(-50%);

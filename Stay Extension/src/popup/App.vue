@@ -128,7 +128,7 @@ export default {
 }
 @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
   .stay-popup-warpper{
-    padding-bottom: 60px;
+    padding-bottom: 80px;
     // padding-bottom: calc(52px + env(safe-area-inset-bottom));
     // margin-bottom: constant(safe-area-inset-bottom);
     // margin-bottom: env(safe-area-inset-bottom);  
