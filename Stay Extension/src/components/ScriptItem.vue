@@ -5,8 +5,11 @@
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
         </div>
-        <div class="active-state state" @click="activeStateClick(script)">
-          <!-- <div class="state"></div> -->
+        <div class="active-state" :key="script.uuid" @click="activeStateClick(script)">
+          <div class="state">
+            <img src="../assets/images/stop-icon.png" alt="" v-if="script.active" />
+            <img src="../assets/images/start-icon.png" alt="" v-else />
+          </div>
         </div>
         <div class="author overflow">{{script.author+"@"+script.name}}</div>
         <div class="desc overflow">{{script.description}}</div>
@@ -236,34 +239,29 @@ export default {
         top: 0;
         width: 40px;
         height: 50px;
-        // .state{
-        //   width: 100%;
-        //   height: 100%;
-        //   position: relative;
-        // }
+        overflow: hidden;
+        .state{
+          width: 100%;
+          height: 100%;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          justify-items: center;
+          text-align: center;
+          img{
+            width: 20px;
+            height: 20px;
+          }
+        }
       }
       &.stopped{
-        .state{
-          background: url("../assets/images/start-icon.png") no-repeat 50% 50%;
-          background-size: 16px;
-        }
         .author{
           opacity: 0.7;
         }
         .desc{
           opacity: 0.7;
-        }
-      }
-      &.activated{
-        .state::after{
-          background: url("../assets/images/stop-icon.png") no-repeat 50% 50%;
-          background-size: 20px;
-          content: "";
-          position: relative;
-          display: block;
-          right: 0px;
-          width: 100%;
-          height: 100%;
         }
       }
       .author{
@@ -470,13 +468,19 @@ export default {
     .script-item{
       .script-info{
         &.activated{
-          overflow: hidden;
-          .state::after{
-            filter: drop-shadow(var(--dm-font) -40px 0);
-            border-left: 40px solid transparent;
-            right: -80px;
-            transform: translate(-100%, 0);
+          .active-state{
+            .state{
+              img{
+                filter: drop-shadow(var(--dm-font) -40px 0);
+                border-left: 40px solid transparent;
+                right: -19px;
+                transform: translate(0%);
+                z-index: 888;
+                position: relative;
+              }
+            }
           }
+         
         }
       }
       .website-cell{

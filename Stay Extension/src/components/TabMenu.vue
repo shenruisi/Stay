@@ -2,19 +2,19 @@
   <div class="popup-fotter-wrapper">
     <div class="fotter-box">
       <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="tabClickAction(item.id)">
-        <div class="tab-img" v-if="item.name == 'matched_scripts_tab'">
+        <div class="tab-img" :key="item.name" v-if="item.name == 'matched_scripts_tab'">
           <img src="../assets/images/script-sel.png" v-if="item.id == selectedTabId" />
           <img class="unselected" src="../assets/images/script.png" v-else/>
         </div>
-        <div class="tab-img" v-if="item.name == 'darkmode_tab'">
+        <div class="tab-img" :key="item.name" v-if="item.name == 'darkmode_tab'">
           <img src="../assets/images/dark-sel.png" v-if="item.id == selectedTabId" />
           <img class="unselected"  src="../assets/images/dark.png" v-else/>
         </div>
-        <div class="tab-img" v-if="item.name == 'downloader_tab'">
+        <div class="tab-img" :key="item.name" v-if="item.name == 'downloader_tab'">
           <img src="../assets/images/download-sel.png" v-if="item.id == selectedTabId" />
           <img class="unselected"  src="../assets/images/download.png" v-else/>
         </div>
-        <div class="tab-img"  v-if="item.name == 'console_tab'">
+        <div class="tab-img" :key="item.name" v-if="item.name == 'console_tab'">
           <img src="../assets/images/console-sel.png" v-if="item.id == selectedTabId" />
           <img class="unselected" src="../assets/images/console.png" v-else/>
         </div>
@@ -112,8 +112,8 @@ export default {
       .tab-item{
         .tab-img{
           img.unselected{
-            -webkit-filter: drop-shadow(#dcdcdc 40px 0);
-            filter: drop-shadow(#dcdcdc 40px 0);
+            -webkit-filter: drop-shadow(var(--s-dc) 40px 0);
+            filter: drop-shadow(var(--s-dc) 40px 0);
             border-right: 40px solid transparent;
             position: relative;
             left: 50%;
