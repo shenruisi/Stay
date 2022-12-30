@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "watch": "vue-cli-service build --watch --mode production && cp -r Resources/popup/ ../Stay-Mac Extension/Resources/popup",
+    "watch": "vue-cli-service build --watch --mode production && cp -r Resources/popup/ ../Stay-Mac' 'Extension/Resources/popup",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "vue-cli-service build && cp -r Resources/popup/ ../Stay-Mac' 'Extension/Resources/popup",
+    "lint": "vue-cli-service lint",
+    "cp" : "cp -r Resources/popup/ ../Stay-Mac' 'Extension/Resources/popup"
   },
   "dependencies": {
     "core-js": "^3.8.3",

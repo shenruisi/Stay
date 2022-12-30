@@ -11,15 +11,10 @@ const browser = __b;
   try {
     handleInjectScript();
     document.addEventListener('securitypolicyviolation', (e) => {
-      console.log('securitypolicyviolation--------------', e);
-      console.log(e.blockedURI);
-      console.log(e.violatedDirective);
-      console.log(e.originalPolicy);
       isContent = true;
       injectParseVideoJS();
     })
   } catch (error) {
-    console.log('Exception----------------------------',error);
   }
 
   function handleInjectScript(){
