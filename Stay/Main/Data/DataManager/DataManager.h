@@ -38,6 +38,9 @@
 
 - (void)updateScriptConfigInjectInfo:(NSString *)str numberId:(NSString *)uuid;
 
+- (void)updateScriptConfigDisableWebsite:(NSString *)str numberId:(NSString *)uuid;
+
+
 - (void)updateScriptConfigStatus:(int)status numberId:(NSString *)uuid;
 
 - (void)updateUsedTimesByUuid:(NSString *)uuid count:(int)count;
@@ -67,6 +70,8 @@
 - (NSArray *)selectDownloadComplete:(NSString *)path;
 
 - (void)updateIconByuuid:(UIImage *)image uuid:(NSString *)uuid;
+
+- (NSArray *)selectDownloadResourceByTitle:(NSString *)title;
 
 
 @end

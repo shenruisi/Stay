@@ -12,6 +12,11 @@
 #import "SYDownloadResourceManagerController.h"
 #import "ImageHelper.h"
 #import "DataManager.h"
+#import "DownloadManager.h"
+#import <objc/runtime.h>
+#import <AVFoundation/AVFoundation.h>
+#import "DownloadResourceTableViewCell.h"
+
 #if iOS
 #import "Stay-Swift.h"
 #else
@@ -33,6 +38,12 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) FolderSlideController *folderSlideController;
 @property (nonatomic, strong) UIBarButtonItem *addItem;
 @property (nonatomic, strong) SYDownloadSlideController *downloadSlideController;
+@property (nonatomic, strong) UITableView *searchTableView;
+@property (nonatomic, strong) UISearchController *searchController;
+
+@property (nonatomic, strong) NSMutableArray *searchData;
+
+
 
 @end
 
@@ -52,7 +63,13 @@ UIDocumentPickerDelegate
     self.navigationItem.searchController.searchBar.delegate = self;
     self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
     self.navigationItem.hidesSearchBarWhenScrolling = false;
-
+    
+    self.searchController = search;
+    self.searchController.delegate = self;
+    self.searchController.searchBar.delegate = self;
+    [self.searchController.searchBar setTintColor:FCStyle.accent];
+    [self.searchController.view addSubview:self.searchTableView];
+    
     self.tableView.sectionHeaderTopPadding = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -76,6 +93,77 @@ UIDocumentPickerDelegate
     return _addItem;
 }
 
+
+#pragma cellClickEvent
+
+- (void)playVideo:(UIButton *)sender{
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:resource];
+    playerController.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self.navigationController pushViewController:playerController animated:YES];
+}
+
+- (void)stopDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
+    [[DownloadManager shared] pause:resource.downloadUuid];
+    [self.searchTableView reloadData];
+}
+
+- (void)retryDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+    [self.searchTableView reloadData];
+}
+
+- (void)continueDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+    [self.searchTableView reloadData];
+}
+
+
+- (void)saveToFile:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+    UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
+
+    documentPicker.delegate = self;
+    [self presentViewController:documentPicker animated:YES completion:nil];
+}
+- (void)saveToPhoto:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
+        UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+#pragma mark -searchBarDelegate
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+//    [searchBar resignFirstResponder];
+    [self.searchController setActive:NO];
+    [self.searchData removeAllObjects];
+}
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+    [self.searchController setActive:YES];
+    [self.searchData removeAllObjects];
+    [self.searchTableView reloadData];
+    return YES;
+}
+
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self.searchData removeAllObjects];
+    if(searchText.length > 0) {
+        [self.searchData addObjectsFromArray:[[DataManager shareManager] selectDownloadResourceByTitle:searchText]];
+    }
+    [self.searchTableView reloadData];
+}
+
+
 - (void)buildFolder:(id)sender{
     [self.tableView reloadData];
 }
@@ -90,11 +178,19 @@ UIDocumentPickerDelegate
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [FCShared tabManager].tabs.count;
+    if([tableView isEqual:self.searchTableView]) {
+        return self.searchData.count;
+    } else {
+        return [FCShared tabManager].tabs.count;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 42;
+    if([tableView isEqual:self.searchTableView]) {
+        return 137;
+    } else {
+        return 42;
+    }
 }
 
 
@@ -103,59 +199,149 @@ UIDocumentPickerDelegate
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 38;
+    if([tableView isEqual:self.searchTableView]) {
+        return 0.1f;
+    } else {
+        return 38;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-    controller.pathUuid = [FCShared tabManager].tabs[indexPath.row].uuid;
-    controller.title = [FCShared tabManager].tabs[indexPath.row].config.name;
-    controller.array = [NSMutableArray array];
-    [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
-    [self.navigationController pushViewController:controller animated:TRUE];
+    if([tableView isEqual:self.searchTableView]) {
+        DownloadResource *downloadResource = self.searchData[indexPath.row];
+        if(downloadResource.status == 2){
+            PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:downloadResource];
+            playerController.modalPresentationStyle = UIModalPresentationFullScreen;
+            [self.navigationController pushViewController:playerController animated:YES];
+        }
+    } else {
+        SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
+        controller.pathUuid = [FCShared tabManager].tabs[indexPath.row].uuid;
+        controller.title = [FCShared tabManager].tabs[indexPath.row].config.name;
+        controller.array = [NSMutableArray array];
+        [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
+        [self.navigationController pushViewController:controller animated:TRUE];
+    }
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {    UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
-    label.font = FCStyle.headlineBold;
-    label.text = NSLocalizedString(@"Folders", @"");
-    
-    [headrView addSubview:label];
-    
-    
-    UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [addImage setImage:[ImageHelper sfNamed:@"plus.circle" font:[UIFont systemFontOfSize:17] color:FCStyle.accent]];
-    
-    addImage.centerY = label.centerY;
-    addImage.right = self.view.width - 17;
-    [headrView addSubview:addImage];
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if([tableView isEqual:self.searchTableView]) {
+        return nil;
+    } else {
+        UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
+        label.font = FCStyle.headlineBold;
+        label.text = NSLocalizedString(@"Folders", @"");
+        
+        [headrView addSubview:label];
+        
+        
+        UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [addImage setImage:[ImageHelper sfNamed:@"plus.circle" font:[UIFont systemFontOfSize:17] color:FCStyle.accent]];
+        
+        addImage.centerY = label.centerY;
+        addImage.right = self.view.width - 17;
+        [headrView addSubview:addImage];
 
-    UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addFolder:)];
-    [addImage addGestureRecognizer:tapGestureRecognizer1];
-    //让UIImageView和它的父类开启用户交互属性
-    [addImage setUserInteractionEnabled:YES];
-    
-    return headrView;
+        UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addFolder:)];
+        [addImage addGestureRecognizer:tapGestureRecognizer1];
+        //让UIImageView和它的父类开启用户交互属性
+        [addImage setUserInteractionEnabled:YES];
+        
+        return headrView;
+    }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
-    if (cell == nil) {
-        cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    for (UIView *subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
-    
-    cell.contentView.width = self.view.width;
-    cell.cer = self;
-    cell.fctab = [FCShared tabManager].tabs[indexPath.row];
-    
-    return cell;
-}
+    if ([tableView isEqual:self.searchTableView]) {
+        DownloadResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadResourcecellID"];
+        if (cell == nil) {
+            cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
+        }
+        for (UIView *subView in cell.contentView.subviews) {
+            [subView removeFromSuperview];
+        }
+        
+        
+        
+        cell.contentView.width = self.view.width;
+        cell.downloadResource = self.searchData[indexPath.row];
+        cell.controller = self;
+        
+        if( cell.downloadResource.status == 0) {
+            FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
+            Request *request = [[Request alloc] init];
+            request.url =  cell.downloadResource.downloadUrl;
+            request.fileDir = tab.path;
+            request.fileName = [cell.downloadResource.allPath lastPathComponent];
+            request.fileType = @"video";
+            request.key =  cell.downloadResource.firstPath;
+            Task *task =  [[DownloadManager shared]  enqueue:request];
+            
+            task.block = ^(float progress, NSString *speed, DMStatus status) {
+                if(status == DMStatusFailed) {
+                    [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:cell.downloadResource.downloadUuid];
+                    cell.downloadResource.status = 3;
+                } else if(status == DMStatusDownloading) {
+                    if(cell.downloadResource.status != 0) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:cell.downloadResource.downloadUuid];
+                    }
+    //                [[DataManager shareManager] updateDownloadResourcProcess:progress * 100 uuid:cell.downloadResource.downloadUuid];
+                    cell.downloadResource.status = 0;
+                    cell.downloadResource.downloadProcess = progress * 100;
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        cell.progress.progress = progress;
+                        cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
+                    });
+                    
+                    return;
+                } else if(status == DMStatusComplete) {
+                    [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
+                    AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:cell.downloadResource.allPath]];
+                    if (cell.downloadResource.icon.length == 0) {
+                        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+                        CMTime time = CMTimeMake(1, 1);
+                        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:nil error:nil];
+                        if (imageRef != nil) {
+                            UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+                            [[DataManager shareManager] updateIconByuuid:thumbnail uuid:cell.downloadResource.downloadUuid];
+                        }
+                        CGImageRelease(imageRef);
+                    }
+                    [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
+                    cell.downloadResource.status = 2;
+                } else if(status == DMStatusPending) {
+                    [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
+                    cell.downloadResource.status = 1;
+               }
+                
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+                });
+            };
+        }
+        
+        return cell;
+    } else {
+        DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
+        if (cell == nil) {
+            cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        for (UIView *subView in cell.contentView.subviews) {
+            [subView removeFromSuperview];
+        }
+        
+        cell.contentView.width = self.view.width;
+        cell.cer = self;
+        cell.fctab = [FCShared tabManager].tabs[indexPath.row];
+        
+        return cell;
+    }
+}
 
 -(void)addFolder:(UITapGestureRecognizer *)tap{
     NSLog(@"点击图片");
@@ -169,7 +355,7 @@ UIDocumentPickerDelegate
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableView.backgroundColor = FCStyle.background;
         [self.view addSubview:_tableView];
     }
     return _tableView;
@@ -187,6 +373,26 @@ UIDocumentPickerDelegate
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:@"app.stay.notification.SYFolderChangeNotification"
                                                       object:nil];
+}
+
+
+- (UITableView *)searchTableView {
+    if (_searchTableView == nil) {
+        _searchTableView = [[UITableView alloc]initWithFrame:self.searchController.view.bounds style:UITableViewStylePlain];
+        _searchTableView.delegate = self;
+        _searchTableView.dataSource = self;
+        _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _searchTableView.sectionHeaderTopPadding = 0;
+        _searchTableView.backgroundColor = FCStyle.background;
+    }
+    return _searchTableView;
+}
+
+- (NSMutableArray *)searchData {
+    if(_searchData == nil) {
+        _searchData = [NSMutableArray array];
+    }
+    return _searchData;
 }
 
 /*

@@ -765,7 +765,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     for (NSString *uuid in [SharedStorageManager shared].disabledWebsites.contentDic.allKeys){
         //TODO: update disableWebsites by uuid
         NSArray *disableWebsites = (NSArray *)[SharedStorageManager shared].disabledWebsites.contentDic[uuid];
-        
+        [[DataManager shareManager] updateScriptConfigDisableWebsite:[disableWebsites componentsJoinedByString:@","] numberId:uuid];
     }
     
     [self reloadTableView];
