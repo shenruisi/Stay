@@ -96,6 +96,8 @@ export default {
         align-items: center;
         flex-shrink: 1;
         overflow: hidden;
+        position: relative;
+        top: -6px;
         img{
           height: 40px;
           // width: 22px;
