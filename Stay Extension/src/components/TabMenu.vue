@@ -100,7 +100,7 @@ export default {
         top: -6px;
         img{
           height: 40px;
-          // width: 22px;
+          width: 40px;
         }
       }
     }
@@ -112,13 +112,13 @@ export default {
       .tab-item{
         .tab-img{
           img.unselected{
-            // max-height: 23px;
-            // max-width: 23px;
+            -webkit-filter: drop-shadow(#dcdcdc 40px 0);
             filter: drop-shadow(#dcdcdc 40px 0);
             border-right: 40px solid transparent;
             position: relative;
             left: 50%;
             transform: translate(-50%);
+            z-index: 888;
           }
         }
       }
