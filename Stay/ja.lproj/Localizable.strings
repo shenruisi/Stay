@@ -215,3 +215,11 @@ Link="Link";
 Name="Name";
 SaveTo="Save to";
 StartDownload="Start download";
+
+Downloader="Downloader";
+SearchVideo="Search download videos";
+Folders="Folders";
+SAVETOPHOTOS="Save to Photos";
+SAVETOFILES="Save to Files";
+Video="Video";
+SaveDone="Saved";

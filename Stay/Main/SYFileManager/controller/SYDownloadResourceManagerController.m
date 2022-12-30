@@ -14,20 +14,19 @@
 #import "DownloadManager.h"
 #import <objc/runtime.h>
 #import <AVFoundation/AVFoundation.h>
-
+#import "ToastCenter.h"
 #if iOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
 #endif
 @interface SYDownloadResourceManagerController ()<
-UITableViewDelegate,
-UITableViewDataSource
+ UITableViewDelegate,
+ UITableViewDataSource,
+ UIDocumentPickerDelegate
 >
 @property (nonatomic, strong) UITableView *tableView;
-
-
-
+@property (nonatomic, strong) ToastCenter *toastCenter;
 @end
 
 @implementation SYDownloadResourceManagerController
@@ -210,22 +209,42 @@ UITableViewDataSource
 
 
 - (void)saveToFile:(UIButton *)sender {
-//    NSString *fileURL = [FCResource getResourceFilePathWithUUID:tabUUID userInfo:searchResult.getUserInfo];
-//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",[fileURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-//        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
-//
-//        documentPicker.delegate = self;
-//        [self presentViewController:documentPicker animated:YES completion:nil]
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+    UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
+
+    documentPicker.delegate = self;
+    [self presentViewController:documentPicker animated:YES completion:nil];
 }
 - (void)saveToPhoto:(UIButton *)sender {
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
 
     NSURL *url = [NSURL fileURLWithPath:resource.allPath];
-                if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
-                    UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                }
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
+        UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+    }
 }
 
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls{
+    UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+    image = [image imageWithTintColor:FCStyle.fcBlack
+                        renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.toastCenter show:image
+                     mainTitle:NSLocalizedString(@"Video", @"")
+                secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+}
+
+
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo: (void *)contextInfo {
+    UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+    image = [image imageWithTintColor:FCStyle.fcBlack
+                        renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.toastCenter show:image
+                     mainTitle:NSLocalizedString(@"Video", @"")
+                secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+}
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -260,14 +279,12 @@ UITableViewDataSource
 }
 
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (ToastCenter *)toastCenter{
+    if (nil == _toastCenter){
+        _toastCenter = [[ToastCenter alloc] init];
+    }
+    
+    return _toastCenter;
 }
-*/
 
 @end

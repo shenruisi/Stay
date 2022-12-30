@@ -212,18 +212,26 @@
         NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
         NSString *uuid = message[@"uuid"];
         NSString *disabledUrl = message[@"disabledUrl"];
+        BOOL on = [message[@"on"] boolValue];
         if (datas != NULL && datas.count > 0) {
             for(int i = 0; i < datas.count;i++) {
                 NSDictionary *dic = datas[i];
                 if([dic[@"uuid"] isEqualToString:uuid]) {
                     NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
-                    [datas removeObject:dic];
                     NSMutableArray *array = [NSMutableArray arrayWithArray:[mdic objectForKey:@"disabledWebsites"]];
-                    if (![array containsObject:disabledUrl]){
-                        [array addObject:disabledUrl];
+                    if (on){
+                        if (![array containsObject:disabledUrl]){
+                            [array addObject:disabledUrl];
+                        }
                     }
+                    else{
+                        if ([array containsObject:disabledUrl]){
+                            [array removeObject:disabledUrl];
+                        }
+                    }
+                    
                     [mdic setValue:array forKey:@"disabledWebsites"];
-                    [datas addObject:mdic];
+                    [datas replaceObjectAtIndex:i withObject:mdic];
                     [SharedStorageManager shared].userscriptHeaders.content = datas;
                     [[SharedStorageManager shared].userscriptHeaders flush];
                     break;
@@ -248,9 +256,8 @@
                 NSDictionary *dic = datas[i];
                 if([dic[@"uuid"] isEqualToString:uuid]) {
                     NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
-                    [datas removeObject:dic];
                     [mdic setValue:@(activeVal) forKey:@"active"];
-                    [datas addObject:mdic];
+                    [datas replaceObjectAtIndex:i withObject:mdic];
                     [SharedStorageManager shared].userscriptHeaders.content = datas;
                     [[SharedStorageManager shared].userscriptHeaders flush];
                     break;

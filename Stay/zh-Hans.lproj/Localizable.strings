@@ -216,3 +216,11 @@ Link="链接";
 Name="名称";
 SaveTo="保存到";
 StartDownload="开始下载";
+
+Downloader="下载器";
+SearchVideo="搜索已下载的视频";
+Folders="文件夹";
+SAVETOPHOTOS="保存到相册";
+SAVETOFILES="保存到文件";
+Video="视频";
+SaveDone="已保存";

@@ -133,6 +133,8 @@
         savePhotoBtn.backgroundColor = FCStyle.background;
         savePhotoBtn.layer.cornerRadius = 8;
         [savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+        [savePhotoBtn addTarget:self.controller action:@selector(saveToPhoto:) forControlEvents:UIControlEventTouchUpInside];
+        objc_setAssociatedObject(savePhotoBtn , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
         [self.contentView addSubview:savePhotoBtn];
 
@@ -147,7 +149,10 @@
         saveFileBtn.backgroundColor = FCStyle.background;
         saveFileBtn.layer.cornerRadius = 8;
         [saveFileBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+        objc_setAssociatedObject(saveFileBtn , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
+        [saveFileBtn addTarget:self.controller action:@selector(saveToFile:) forControlEvents:UIControlEventTouchUpInside];
+        
         [self.contentView addSubview:saveFileBtn];
         
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
@@ -161,7 +166,10 @@
         line.top =  saveFileBtn.bottom + 6;
         line.left = 12;
         [self.contentView addSubview:line];
+        self.contentView.backgroundColor = [UIColor clearColor];
     } else {
+        self.contentView.backgroundColor =  [FCStyle.accent colorWithAlphaComponent:0.1];
+
         _downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
         UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
         objc_setAssociatedObject(stop , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -265,7 +273,13 @@
     int minutes = (totalSeconds / 60) % 60;
     int hours = totalSeconds / 3600;
 
-    return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
+    if(hours == 0) {
+        return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+
+    } else {
+        return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
+    }
+    
 }
 
 
