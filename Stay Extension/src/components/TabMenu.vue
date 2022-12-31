@@ -116,8 +116,6 @@ export default {
             filter: drop-shadow(var(--s-dc) 40px 0);
             border-right: 40px solid transparent;
             position: relative;
-            // left: 50%;
-            // transform: translate(-50%);
             left: -20px;
             transform: translateZ(0);
             z-index: 888;

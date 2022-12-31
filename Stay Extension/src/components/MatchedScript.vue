@@ -285,7 +285,7 @@ export default {
       flex-direction: column;
       flex: 1;
       justify-content: center;
+      color: var(--dm-font);
     }
-    
   }
 </style>
