@@ -155,8 +155,14 @@ const browser = __b;
               downloadUrl = sourceDom.getAttribute('src');
             }
           }
-          if(downloadUrl && !/^(f|ht)tps?:\/\//i.test(downloadUrl)){
-            downloadUrl = window.location.origin+downloadUrl;
+          if(downloadUrl){
+            if(!/^(f|ht)tps?:\/\//i.test(downloadUrl)){
+              if(/^\/\//i.test(downloadUrl)){
+                downloadUrl = window.location.protocol+downloadUrl;
+              }else{
+                downloadUrl = window.location.origin+downloadUrl;
+              }
+            }
           }
           // 已存在
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
@@ -194,8 +200,14 @@ const browser = __b;
       let qualityList = [];
       hostUrl = window.location.href;
 
-      if(downloadUrl && !/^(f|ht)tps?:\/\//i.test(downloadUrl)){
-        downloadUrl = window.location.origin+downloadUrl;
+      if(downloadUrl){
+        if(!/^(f|ht)tps?:\/\//i.test(downloadUrl)){
+          if(/^\/\//i.test(downloadUrl)){
+            downloadUrl = window.location.protocol+downloadUrl;
+          }else{
+            downloadUrl = window.location.origin+downloadUrl;
+          }
+        }
       }
       if(!poster){
         let posterDom = document.querySelector('source[type=\'image/webp\'] img');
