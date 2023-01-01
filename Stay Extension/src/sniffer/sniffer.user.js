@@ -84,6 +84,19 @@ const browser = __b;
           return false;
         }
         return /^http[s]?:\/\/.*/.test(s);
+      },
+      completionSourceUrl: function(downloadUrl){
+        if(!downloadUrl){
+          return '';
+        }
+        if(!/^(f|ht)tps?:\/\//i.test(downloadUrl)){
+          if(/^\/\//i.test(downloadUrl)){
+            downloadUrl = window.location.protocol+downloadUrl;
+          }else{
+            downloadUrl = window.location.origin+downloadUrl;
+          }
+        }
+        return downloadUrl;
       }
     }
     
@@ -155,15 +168,7 @@ const browser = __b;
               downloadUrl = sourceDom.getAttribute('src');
             }
           }
-          if(downloadUrl){
-            if(!/^(f|ht)tps?:\/\//i.test(downloadUrl)){
-              if(/^\/\//i.test(downloadUrl)){
-                downloadUrl = window.location.protocol+downloadUrl;
-              }else{
-                downloadUrl = window.location.origin+downloadUrl;
-              }
-            }
-          }
+          downloadUrl = Utils.completionSourceUrl(downloadUrl);
           // 已存在
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
             return;
@@ -200,15 +205,8 @@ const browser = __b;
       let qualityList = [];
       hostUrl = window.location.href;
 
-      if(downloadUrl){
-        if(!/^(f|ht)tps?:\/\//i.test(downloadUrl)){
-          if(/^\/\//i.test(downloadUrl)){
-            downloadUrl = window.location.protocol+downloadUrl;
-          }else{
-            downloadUrl = window.location.origin+downloadUrl;
-          }
-        }
-      }
+      downloadUrl = Utils.completionSourceUrl(downloadUrl);
+
       if(!poster){
         let posterDom = document.querySelector('source[type=\'image/webp\'] img');
         poster = posterDom?posterDom.getAttribute('src'):'';
@@ -254,6 +252,7 @@ const browser = __b;
         pathArr = pathArr.filter(item=>{if(item&&item!=''){return item}});
         title = pathArr.pop();
       }
+      poster = Utils.completionSourceUrl(poster);
       videoInfo['title'] = title
       videoInfo['poster'] = poster;
       videoInfo['downloadUrl'] = downloadUrl;
