@@ -6,39 +6,46 @@ let __b;
 if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
 const browser = __b;
 (function () {
-  let contentHost = window.location.host;
   let isContent = false;
   try {
     handleInjectScript();
     document.addEventListener('securitypolicyviolation', (e) => {
+      // console.log('securitypolicyviolation--------', isContent)
       isContent = true;
-      injectParseVideoJS();
+      injectParseVideoJS(isContent);
     })
   } catch (error) {
   }
 
   function handleInjectScript(){
+    const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+    let contentHost = window.location.host;
     let scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
-    let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo();`;
+    let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo(false);`;
     scriptTag.appendChild(document.createTextNode(injectJSContent));
+    // console.log('document.body--------------------------',document.body)
     if (document.body) {
+      // console.log('document.body--------------------------')
       document.body.appendChild(scriptTag);
     } else {
-      const root = document.documentElement;
-      const observer = new MutationObserver(() => {
+      // console.log('else-----------------document.body--------------------------');
+      let observerBody = new MutationObserver((mutations, observer) => {
+        // console.log('---------mutations-------',mutations);
+        // console.log('---------observer---------',observer);
         if (document.body) {
-          observer.disconnect();
+          // console.log('document.body---------gogogogogogogogogogo-----------------');
           document.body.appendChild(scriptTag);
+          observerBody.disconnect();
         }
       });
-      observer.observe(root, {childList: true});
+      observerBody.observe(document.documentElement, { attributes: true, childList: true, characterData: true, subtree: true });
     }
   }
 
 
-  function injectParseVideoJS(){
+  function injectParseVideoJS(isContent){
     let hostUrl = window.location.href;
     let host = window.location.host;
     // console.log('------------injectParseVideoJS-----start------------------')
@@ -90,7 +97,7 @@ const browser = __b;
         // console.log('videoDoms---false-----',videoDoms)
         parseVideoNodeList(videoDoms);
       }else{
-        // handleIframeObserver()
+        // console.log('else-------else------',isContent)
         observerVideo()
       }
 
@@ -148,12 +155,14 @@ const browser = __b;
               downloadUrl = sourceDom.getAttribute('src');
             }
           }
-
+          if(!downloadUrl.indexOf('http')>-1){
+            downloadUrl = window.location.origin+downloadUrl;
+          }
           // 已存在
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
             return;
           }
-          
+         
           // todo fetch other scenarios
           let videoInfo = handleVideoInfoParse(item);
           // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
@@ -184,6 +193,10 @@ const browser = __b;
       let downloadUrl = videoDom.getAttribute('src');
       let qualityList = [];
       hostUrl = window.location.href;
+
+      if(!downloadUrl.indexOf('http')>-1){
+        downloadUrl = window.location.origin+downloadUrl;
+      }
       if(!poster){
         let posterDom = document.querySelector('source[type=\'image/webp\'] img');
         poster = posterDom?posterDom.getAttribute('src'):'';
@@ -519,9 +532,7 @@ const browser = __b;
       console.log('document.readyState==',document.readyState)
       if (document.readyState === 'complete') {
         console.log('readyState-------------------', document.readyState)
-        
         startFindVideoInfo();
-        // eslint-disable-next-line no-undef
         console.log('readyStateytInitialPlayerResponseytInitialPlayerResponse-----')
       }
     };
