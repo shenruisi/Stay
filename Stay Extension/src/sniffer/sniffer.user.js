@@ -155,7 +155,7 @@ const browser = __b;
               downloadUrl = sourceDom.getAttribute('src');
             }
           }
-          if(!downloadUrl.indexOf('http')>-1){
+          if(downloadUrl && !/^(f|ht)tps?:\/\//i.test(downloadUrl)){
             downloadUrl = window.location.origin+downloadUrl;
           }
           // 已存在
@@ -194,7 +194,7 @@ const browser = __b;
       let qualityList = [];
       hostUrl = window.location.href;
 
-      if(!downloadUrl.indexOf('http')>-1){
+      if(downloadUrl && !/^(f|ht)tps?:\/\//i.test(downloadUrl)){
         downloadUrl = window.location.origin+downloadUrl;
       }
       if(!poster){
