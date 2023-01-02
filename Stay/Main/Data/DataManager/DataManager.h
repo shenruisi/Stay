@@ -74,4 +74,10 @@
 - (NSArray *)selectDownloadResourceByTitle:(NSString *)title;
 
 
+- (void)updateVideoTitle:(NSString *)title uuid:(NSString *)uuid;
+
+- (void)updateVideoPath:(NSString *)path uuid:(NSString *)uuid;
+
+
+
 @end

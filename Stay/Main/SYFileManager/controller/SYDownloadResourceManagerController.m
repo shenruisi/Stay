@@ -15,6 +15,8 @@
 #import <objc/runtime.h>
 #import <AVFoundation/AVFoundation.h>
 #import "ToastCenter.h"
+#import "SYTextInputViewController.h"
+#import "SYChangeDocSlideController.h"
 #if iOS
 #import "Stay-Swift.h"
 #else
@@ -27,6 +29,8 @@
 >
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ToastCenter *toastCenter;
+@property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
+@property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
 @end
 
 @implementation SYDownloadResourceManagerController
@@ -39,8 +43,23 @@
     // Do any additional setup after loading the view.
     self.tableView.sectionHeaderTopPadding = 0;
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoTitle:) name:@"changeVideoTitle" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
+
 }
 
+- (void)changeVideoTitle:(NSNotification *)notification {
+    [self.sYTextInputViewController dismiss];
+    NSString *uuid = self.sYTextInputViewController.uuid;
+    self.sYTextInputViewController = nil;
+    NSString *title = notification.object;
+    [[DataManager shareManager] updateVideoTitle:title uuid:uuid];
+    [self reloadData];
+}
+- (void)changeVideoDoc:(NSNotification *)notification {
+    [self reloadData];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _array.count;
@@ -166,7 +185,37 @@
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
         
-        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+    
+    UIContextualAction *changeFloderAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        DownloadResource *downloadResource = weakSelf.array[indexPath.row];
+        if (!weakSelf.syChangeDocSlideController.isShown){
+            weakSelf.syChangeDocSlideController = [[SYChangeDocSlideController alloc] init];
+            weakSelf.syChangeDocSlideController.dic = [[NSMutableDictionary alloc] init];
+            weakSelf.syChangeDocSlideController.dic[@"title"] = downloadResource.title;
+            weakSelf.syChangeDocSlideController.dic[@"downloadUuid"] = downloadResource.downloadUuid;
+            weakSelf.syChangeDocSlideController.dic[@"uuid"] = downloadResource.firstPath;
+            weakSelf.syChangeDocSlideController.controller = self.navigationController;
+            [weakSelf.syChangeDocSlideController show];
+        }
+        [tableView setEditing:NO animated:YES];
+    }];
+    
+    changeFloderAction.image = [ImageHelper sfNamed:@"arrowshape.turn.up.right" font:[UIFont systemFontOfSize:15]];
+
+    changeFloderAction.backgroundColor = FCStyle.fcBlue;
+    
+    UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        DownloadResource *downloadResource = self.array[indexPath.row];
+        self.sYTextInputViewController.uuid = downloadResource.downloadUuid;
+        [self.sYTextInputViewController show];
+        [tableView setEditing:NO animated:YES];
+    }];
+    
+    changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+
+    changeTitleAction.backgroundColor = FCStyle.accent;
+    
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeFloderAction,changeTitleAction]];
     
 }
 
@@ -276,6 +325,16 @@
         [self.view addSubview:_tableView];
     }
     return _tableView;
+}
+
+
+- (SYTextInputViewController *)sYTextInputViewController {
+    if(nil == _sYTextInputViewController) {
+        _sYTextInputViewController = [[SYTextInputViewController alloc] init];
+       _sYTextInputViewController.notificationName = @"changeVideoTitle";
+
+    }
+    return _sYTextInputViewController;
 }
 
 
