@@ -37,7 +37,7 @@
     [super viewDidLoad];
     self.navigationBar.hidden = NO;
     self.navigationBar.showCancel = YES;
-    self.title = NSLocalizedString(@"ChangeDoc", @"");
+    self.title = NSLocalizedString(@"EDIT", @"");
     [self tableView];
     [self startDownloadButton];
 }
@@ -105,7 +105,7 @@
                 @"itemElements" : self.nameElements
             },
             @{
-                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"SaveTo", @"")],
+                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"location", @"")],
                 @"itemElements" : self.saveToElements
             }
         ];
@@ -196,8 +196,9 @@
 - (void)startDownloadAction:(id)sender{
     NSString *path = self.saveToElements[0].generalEntity.uuid;
     [[DataManager  shareManager] updateVideoPath:path uuid:self.dic[@"downloadUuid"]];
+    NSString *title = self.nameElements[0].inputEntity.text;
+    [[DataManager shareManager] updateVideoTitle:title uuid:self.dic[@"downloadUuid"]];
     [self.navigationController.slideController dismiss];
-
     [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
                                                         object:nil];
 }

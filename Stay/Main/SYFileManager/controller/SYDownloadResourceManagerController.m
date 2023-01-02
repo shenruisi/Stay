@@ -43,20 +43,10 @@
     // Do any additional setup after loading the view.
     self.tableView.sectionHeaderTopPadding = 0;
     
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoTitle:) name:@"changeVideoTitle" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
 
 }
 
-- (void)changeVideoTitle:(NSNotification *)notification {
-    [self.sYTextInputViewController dismiss];
-    NSString *uuid = self.sYTextInputViewController.uuid;
-    self.sYTextInputViewController = nil;
-    NSString *title = notification.object;
-    [[DataManager shareManager] updateVideoTitle:title uuid:uuid];
-    [self reloadData];
-}
 - (void)changeVideoDoc:(NSNotification *)notification {
     [self reloadData];
 }
@@ -67,9 +57,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    DownloadResource *downloadResource = self.array[indexPath.row];
-//    if(downloadResource.status == 2) {
+    if(downloadResource.status == 2) {
         return 137;
-//    }
+    } else {
+        return 128;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -180,7 +172,7 @@
              }];
              [alert addAction:cancel];
             [self presentViewController:alert animated:YES completion:nil];
-            
+            [tableView setEditing:NO animated:YES];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
@@ -200,22 +192,10 @@
         [tableView setEditing:NO animated:YES];
     }];
     
-    changeFloderAction.image = [ImageHelper sfNamed:@"arrowshape.turn.up.right" font:[UIFont systemFontOfSize:15]];
-
-    changeFloderAction.backgroundColor = FCStyle.fcBlue;
+    changeFloderAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+    changeFloderAction.backgroundColor = FCStyle.accent;
     
-    UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        DownloadResource *downloadResource = self.array[indexPath.row];
-        self.sYTextInputViewController.uuid = downloadResource.downloadUuid;
-        [self.sYTextInputViewController show];
-        [tableView setEditing:NO animated:YES];
-    }];
-    
-    changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
-
-    changeTitleAction.backgroundColor = FCStyle.accent;
-    
-    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeFloderAction,changeTitleAction]];
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeFloderAction]];
     
 }
 

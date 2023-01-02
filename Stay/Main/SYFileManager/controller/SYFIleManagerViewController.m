@@ -189,7 +189,7 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return 137;
     } else {
-        return 42;
+        return 47;
     }
 }
 
@@ -374,16 +374,28 @@ UIDocumentPickerDelegate
              }];
              [alert addAction:cancel];
             [self presentViewController:alert animated:YES completion:nil];
-            
+            [tableView setEditing:NO animated:YES];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
         
-    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+    UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+        weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
+        [self.folderSlideController show];
+        [tableView setEditing:NO animated:YES];
+    }];
+    
+    changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+
+    changeTitleAction.backgroundColor = FCStyle.accent;
+    
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
 }
 
 -(void)addFolder:(UITapGestureRecognizer *)tap{
     NSLog(@"点击图片");
+    self.folderSlideController = nil;
     [self.folderSlideController show];
 }
 
