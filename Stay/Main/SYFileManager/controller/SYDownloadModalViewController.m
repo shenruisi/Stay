@@ -277,7 +277,9 @@
     if(self.dic != NULL) {
         resource.icon = self.dic[@"poster"];
         resource.host = self.dic[@"hostUrl"];
-    } else {
+    }
+    
+    if(resource.host == nil) {
         resource.host = [NSURL URLWithString:downLoadUrl].host;
     }
     
