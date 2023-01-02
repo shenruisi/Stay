@@ -43,11 +43,12 @@ export default {
     MatchedScript
   },
   setup(props, { emit, attrs, slots }) {
-    const { t, tm } = useI18n();
+    const { t, tm, locale } = useI18n();
     // 获取全局对象`
     const global = inject('global');
     const store = global.store;
     const localLan = store.state.localeLan;
+    locale.value = store.state.localeLan;
     console.log('localLan====', localLan, store.state.selectedTab);
     // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
@@ -58,7 +59,7 @@ export default {
       darkmodeToggleStatus: 'on',
       siteEnabled: true,
     })
-
+    
     const setTabName = (selectedTab) => {
       state.selectedTab = selectedTab;
       store.commit('setSelectedTab', state.selectedTab);

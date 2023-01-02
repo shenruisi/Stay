@@ -66,7 +66,7 @@ static DownloadManager *instance = nil;
             task.taskId = taskId;
             task.progress = 0;
             task.status = DMStatusPending;
-            task.filePath = [request.fileDir stringByAppendingPathComponent:request.fileName];
+            task.filePath = [NSString stringWithFormat:@"%@/%@.%@", request.fileDir, taskId, [request.url containsString:@"m3u8"] ? @"m3u8" : @"mp4"];
             
             [self.store insert:@{
                 @"taskId": taskId,
