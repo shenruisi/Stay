@@ -355,7 +355,6 @@ UIDocumentPickerDelegate
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = FCStyle.background;
         [self.view addSubview:_tableView];
     }
     return _tableView;
