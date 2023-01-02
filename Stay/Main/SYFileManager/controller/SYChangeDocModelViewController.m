@@ -1,11 +1,9 @@
 //
-//  SYDownloadModalViewController.m
+//  SYChangeDocModelViewController.m
 //  Stay
 //
-//  Created by ris on 2022/12/16.
+//  Created by zly on 2023/1/2.
 //
-
-#import "SYDownloadModalViewController.h"
 #import "FCApp.h"
 #import "ModalItemElement.h"
 #import "UIView+Layout.h"
@@ -20,27 +18,26 @@
 #import "DownloadManager.h"
 #import "SYDownloadResourceManagerController.h"
 #import "SYDownloadFolderChooseModalViewController.h"
-
-@interface SYDownloadModalViewController()<
+#import "SYChangeDocModelViewController.h"
+@interface SYChangeDocModelViewController()<
  UITableViewDelegate,
  UITableViewDataSource
 >
 
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray<ModalItemElement *> *linkElements;
 @property (nonatomic, strong) NSArray<ModalItemElement *> *nameElements;
 @property (nonatomic, strong) NSArray<ModalItemElement *> *saveToElements;
 @property (nonatomic, strong) UIButton *startDownloadButton;
 @end
 
-@implementation SYDownloadModalViewController
+@implementation SYChangeDocModelViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.navigationBar.hidden = NO;
     self.navigationBar.showCancel = YES;
-    self.title = NSLocalizedString(@"ToBeDownload", @"");
+    self.title = NSLocalizedString(@"EDIT", @"");
     [self tableView];
     [self startDownloadButton];
 }
@@ -104,15 +101,11 @@
     if (nil == _dataSource){
         _dataSource = @[
             @{
-                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"Link", @"")],
-                @"itemElements" : self.linkElements
-            },
-            @{
                 @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"Name", @"")],
                 @"itemElements" : self.nameElements
             },
             @{
-                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"SaveTo", @"")],
+                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"location", @"")],
                 @"itemElements" : self.saveToElements
             }
         ];
@@ -120,36 +113,6 @@
     }
     
     return _dataSource;
-}
-
-- (NSArray<ModalItemElement *> *)linkElements{
-    if (nil == _linkElements){
-        ModalItemDataEntityGeneral *generalEntity;
-        ModalItemDataEntityInput *inputEntity;
-        NSMutableArray *ret = [[NSMutableArray alloc] init];
-        ModalItemElement *linkElement = [[ModalItemElement alloc] init];
-        generalEntity = [[ModalItemDataEntityGeneral alloc] init];
-        inputEntity = [[ModalItemDataEntityInput alloc] init];
-        inputEntity.keyboardType = UIKeyboardTypeDefault;
-        inputEntity.textChanged = ^(NSString * _Nonnull text) {
-            
-        };
-        if(self.dic != NULL && self.dic[@"downloadUrl"] != nil) {
-            inputEntity.text = self.dic[@"downloadUrl"];
-            linkElement.enable = NO;
-        }
-        linkElement.generalEntity = generalEntity;
-        linkElement.inputEntity = inputEntity;
-        linkElement.tapEnabled = NO;
-        linkElement.type = ModalItemElementTypeInput;
-        linkElement.renderMode = ModalItemElementRenderModeSingle;
-        linkElement.action = ^(ModalItemElement * _Nonnull element) {
-        };
-        [ret addObject:linkElement];
-        _linkElements = ret;
-    }
-    
-    return _linkElements;
 }
 
 - (NSArray<ModalItemElement *> *)nameElements{
@@ -213,7 +176,7 @@
 - (UIButton *)startDownloadButton{
     if (nil == _startDownloadButton){
         _startDownloadButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
-        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
+        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Save", @"")
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : UIColor.whiteColor,
                              NSFontAttributeName : FCStyle.bodyBold}]
@@ -231,106 +194,13 @@
 }
 
 - (void)startDownloadAction:(id)sender{
-
-    
-    if(self.nameElements[0].inputEntity.text == nil) {
-        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"titleNotEmpty", @"")
-                                                                       message:@""
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * _Nonnull action) {
-        
-            
-        }];
-        [onlyOneAlert addAction:onlyOneConform];
-        
-        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
-
-        return;
-    }
-    
-    if(self.linkElements[0].inputEntity.text == nil) {
-        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
-                                                                       message:@""
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * _Nonnull action) {
-        
-            
-        }];
-        [onlyOneAlert addAction:onlyOneConform];
-        
-        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
-
-        return;
-    }
-    
-    DownloadResource *resource = [[DownloadResource alloc] init];
-    NSString *downLoadUrl = self.linkElements[0].inputEntity.text;
-    resource.title = self.nameElements[0].inputEntity.text;
-
-    resource.downloadUrl = downLoadUrl;
-    if(self.dic != NULL) {
-        resource.icon = self.dic[@"poster"];
-        resource.host = self.dic[@"hostUrl"];
-    } else {
-        resource.host = [NSURL URLWithString:downLoadUrl].host;
-    }
-    
-    resource.firstPath = self.saveToElements[0].generalEntity.uuid;
-    
-    resource.downloadUuid = [self md5HexDigest:downLoadUrl];
-    DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
-    if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
-        FCTab *tab = [[FCShared tabManager] tabOfUUID:self.saveToElements[0].generalEntity.uuid];
-        Request *request = [[Request alloc] init];
-        request.url = downLoadUrl;
-        request.fileDir = tab.path;
-        request.fileType = @"video";
-        request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
-        if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
-            request.fileName = [request.fileName stringByAppendingString:@".mp4"];
-        }
-        request.key = tab.uuid;
-        Task *task = [[DownloadManager shared] enqueue:request];
-
-        resource.status = 0;
-        resource.watchProcess = 0;
-        resource.downloadProcess = 0;
-        resource.videoDuration = 0;
-        resource.allPath = task.filePath;
-        resource.sort = 0;
-        [[DataManager shareManager] addDownloadResource:resource];
-        SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-        controller.pathUuid = tab.uuid;
-        controller.title = tab.config.name;
-        controller.array = [NSMutableArray array];
-        [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
-
-        [self.nav pushViewController:controller animated:true];
-        
-        [self.navigationController.slideController dismiss];
-    } else {
-        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlIsDownloaded", @"")
-                                                                       message:@""
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * _Nonnull action) {
-        
-            
-        }];
-        [onlyOneAlert addAction:onlyOneConform];
-        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
-
-    }
-    
-    
+    NSString *path = self.saveToElements[0].generalEntity.uuid;
+    [[DataManager  shareManager] updateVideoPath:path uuid:self.dic[@"downloadUuid"]];
+    NSString *title = self.nameElements[0].inputEntity.text;
+    [[DataManager shareManager] updateVideoTitle:title uuid:self.dic[@"downloadUuid"]];
+    [self.navigationController.slideController dismiss];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
+                                                        object:nil];
 }
 
 - (UITableView *)tableView{
@@ -375,5 +245,6 @@
     }
     return result;
 }
+
 
 @end

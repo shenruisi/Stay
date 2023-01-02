@@ -15,6 +15,8 @@
 #import <objc/runtime.h>
 #import <AVFoundation/AVFoundation.h>
 #import "ToastCenter.h"
+#import "SYTextInputViewController.h"
+#import "SYChangeDocSlideController.h"
 #if iOS
 #import "Stay-Swift.h"
 #else
@@ -27,6 +29,8 @@
 >
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) ToastCenter *toastCenter;
+@property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
+@property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
 @end
 
 @implementation SYDownloadResourceManagerController
@@ -39,8 +43,13 @@
     // Do any additional setup after loading the view.
     self.tableView.sectionHeaderTopPadding = 0;
     
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
+
 }
 
+- (void)changeVideoDoc:(NSNotification *)notification {
+    [self reloadData];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return _array.count;
@@ -48,9 +57,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    DownloadResource *downloadResource = self.array[indexPath.row];
-//    if(downloadResource.status == 2) {
+    if(downloadResource.status == 2) {
         return 137;
-//    }
+    } else {
+        return 128;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -144,14 +155,13 @@
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
-              
-                
                 DownloadResource *downloadResource = weakSelf.array[indexPath.row];
                 [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
                 [weakSelf.array removeObject:downloadResource];
                 dispatch_async(dispatch_get_main_queue(),^{
                     [weakSelf.tableView reloadData];
                 });
+                
                 
             }];
             [alert addAction:conform];
@@ -161,12 +171,30 @@
              }];
              [alert addAction:cancel];
             [self presentViewController:alert animated:YES completion:nil];
-            
+            [tableView setEditing:NO animated:YES];
         }];
         deleteAction.image = [UIImage imageNamed:@"delete"];
         deleteAction.backgroundColor = RGB(224, 32, 32);
         
-        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+    
+    UIContextualAction *changeFloderAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        DownloadResource *downloadResource = weakSelf.array[indexPath.row];
+        if (!weakSelf.syChangeDocSlideController.isShown){
+            weakSelf.syChangeDocSlideController = [[SYChangeDocSlideController alloc] init];
+            weakSelf.syChangeDocSlideController.dic = [[NSMutableDictionary alloc] init];
+            weakSelf.syChangeDocSlideController.dic[@"title"] = downloadResource.title;
+            weakSelf.syChangeDocSlideController.dic[@"downloadUuid"] = downloadResource.downloadUuid;
+            weakSelf.syChangeDocSlideController.dic[@"uuid"] = downloadResource.firstPath;
+            weakSelf.syChangeDocSlideController.controller = self.navigationController;
+            [weakSelf.syChangeDocSlideController show];
+        }
+        [tableView setEditing:NO animated:YES];
+    }];
+    
+    changeFloderAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+    changeFloderAction.backgroundColor = FCStyle.accent;
+    
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeFloderAction]];
     
 }
 
@@ -190,6 +218,11 @@
 
 - (void)stopDownload:(UIButton *)sender {
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    Request *request = [[Request alloc] init];
+    request.url =  resource.downloadUrl;
+    
+    Task *task =  [[DownloadManager shared] enqueue:request];
+    [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];
     [self reloadData];
@@ -276,6 +309,16 @@
         [self.view addSubview:_tableView];
     }
     return _tableView;
+}
+
+
+- (SYTextInputViewController *)sYTextInputViewController {
+    if(nil == _sYTextInputViewController) {
+        _sYTextInputViewController = [[SYTextInputViewController alloc] init];
+       _sYTextInputViewController.notificationName = @"changeVideoTitle";
+
+    }
+    return _sYTextInputViewController;
 }
 
 

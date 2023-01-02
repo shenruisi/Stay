@@ -189,7 +189,7 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return 137;
     } else {
-        return 42;
+        return 47;
     }
 }
 
@@ -343,8 +343,77 @@ UIDocumentPickerDelegate
     }
 }
 
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    //Fixed retains self
+    __weak SYFIleManagerViewController *weakSelf = self;
+    
+        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                    
+            
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDeleteTab", @"")
+                                                                           message:@""
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                
+                if([FCShared tabManager].tabs.count == 1){
+                    UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needNotDelete", @"")
+                                                                                   message:@""
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                    
+                        
+                        
+                    }];
+                    
+                    [onlyOneAlert addAction:onlyOneConform];
+
+                    
+                    [self presentViewController:onlyOneAlert animated:YES completion:nil];
+                } else {
+                    FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+                    [[DataManager shareManager] deleteVideoByuuidPath:tab.uuid];
+                    [[FCShared tabManager] deleteTab:tab];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [weakSelf.tableView  reloadData];
+                    });
+                }
+            
+            }];
+            [alert addAction:conform];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                 style:UIAlertActionStyleCancel
+                 handler:^(UIAlertAction * _Nonnull action) {
+             }];
+             [alert addAction:cancel];
+            [self presentViewController:alert animated:YES completion:nil];
+            [tableView setEditing:NO animated:YES];
+        }];
+        deleteAction.image = [UIImage imageNamed:@"delete"];
+        deleteAction.backgroundColor = RGB(224, 32, 32);
+        
+    UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+        weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
+        [self.folderSlideController show];
+        [tableView setEditing:NO animated:YES];
+    }];
+    
+    changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+
+    changeTitleAction.backgroundColor = FCStyle.accent;
+    
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
+}
+
 -(void)addFolder:(UITapGestureRecognizer *)tap{
     NSLog(@"点击图片");
+    self.folderSlideController = nil;
     [self.folderSlideController show];
 }
 
@@ -355,7 +424,6 @@ UIDocumentPickerDelegate
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = FCStyle.background;
         [self.view addSubview:_tableView];
     }
     return _tableView;

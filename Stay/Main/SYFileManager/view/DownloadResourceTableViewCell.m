@@ -88,7 +88,7 @@
         time.textAlignment = NSTextAlignmentCenter;
         time.bottom = 82;
         [time sizeToFit];
-        time.width = time.width + 20;
+        time.width = time.width + 10;
 
         time.right = 155;
         time.layer.cornerRadius = 7;
@@ -123,6 +123,8 @@
     CGFloat top = imageView.bottom + 7;
     
     if(_downloadResource.status == 2) {
+        NSLocale *locale = [NSLocale currentLocale];
+
         UIButton *savePhotoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
         [savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [savePhotoBtn setTitle:NSLocalizedString(@"SAVETOPHOTOS", @"") forState:UIControlStateNormal];
@@ -158,6 +160,11 @@
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
         runBtn.titleLabel.font = FCStyle.footnoteBold;
        
+        if([@"CN" isEqualToString:locale.countryCode]) {
+            saveFileBtn.width = savePhotoBtn.width = 110;
+            saveFileBtn.left = savePhotoBtn.right + 9;
+        }
+        
         [self.contentView addSubview:runBtn];
         objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
