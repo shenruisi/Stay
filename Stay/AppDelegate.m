@@ -179,11 +179,11 @@
     [[IACManager sharedManager] handleAction:@"snifferVideo" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
         
         //如果不是pro会员直接返回
-//        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-//        if(!isPro) {
-//            return;
-//        }
-//
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+        if(!isPro) {
+            return;
+        }
+
         
        self.syDownloadSlideController = nil;
        NSString *listStr = inputParameters[@"list"];

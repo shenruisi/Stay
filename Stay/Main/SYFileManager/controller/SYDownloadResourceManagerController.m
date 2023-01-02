@@ -155,14 +155,13 @@
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
-              
-                
                 DownloadResource *downloadResource = weakSelf.array[indexPath.row];
                 [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
                 [weakSelf.array removeObject:downloadResource];
                 dispatch_async(dispatch_get_main_queue(),^{
                     [weakSelf.tableView reloadData];
                 });
+                
                 
             }];
             [alert addAction:conform];

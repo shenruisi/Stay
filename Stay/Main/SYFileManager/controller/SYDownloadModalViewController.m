@@ -232,6 +232,43 @@
 
 - (void)startDownloadAction:(id)sender{
 
+    
+    if(self.nameElements[0].inputEntity.text == nil) {
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"titleNotEmpty", @"")
+                                                                       message:@""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        
+            
+        }];
+        [onlyOneAlert addAction:onlyOneConform];
+        
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+
+        return;
+    }
+    
+    if(self.linkElements[0].inputEntity.text == nil) {
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
+                                                                       message:@""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        
+            
+        }];
+        [onlyOneAlert addAction:onlyOneConform];
+        
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+
+        return;
+    }
+    
     DownloadResource *resource = [[DownloadResource alloc] init];
     NSString *downLoadUrl = self.linkElements[0].inputEntity.text;
     resource.title = self.nameElements[0].inputEntity.text;
@@ -240,6 +277,8 @@
     if(self.dic != NULL) {
         resource.icon = self.dic[@"poster"];
         resource.host = self.dic[@"hostUrl"];
+    } else {
+        resource.host = [NSURL URLWithString:downLoadUrl].host;
     }
     
     resource.firstPath = self.saveToElements[0].generalEntity.uuid;
@@ -247,8 +286,6 @@
     resource.downloadUuid = [self md5HexDigest:downLoadUrl];
     DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
     if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
-        
-
         FCTab *tab = [[FCShared tabManager] tabOfUUID:self.saveToElements[0].generalEntity.uuid];
         Request *request = [[Request alloc] init];
         request.url = downLoadUrl;
@@ -278,7 +315,19 @@
         
         [self.navigationController.slideController dismiss];
     } else {
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlIsDownloaded", @"")
+                                                                       message:@""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
         
+        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        
+            
+        }];
+        [onlyOneAlert addAction:onlyOneConform];
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+
     }
     
     

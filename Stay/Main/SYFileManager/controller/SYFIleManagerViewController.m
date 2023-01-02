@@ -358,13 +358,31 @@ UIDocumentPickerDelegate
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
-              
-                FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
-                [[DataManager shareManager] deleteVideoByuuidPath:tab.uuid];
-                [[FCShared tabManager] deleteTab:tab];
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [weakSelf.tableView  reloadData];
-                });
+                if([FCShared tabManager].tabs.count == 1){
+                    UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needNotDelete", @"")
+                                                                                   message:@""
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                    
+                        
+                        
+                    }];
+                    
+                    [onlyOneAlert addAction:onlyOneConform];
+
+                    
+                    [self presentViewController:onlyOneAlert animated:YES completion:nil];
+                } else {
+                    FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+                    [[DataManager shareManager] deleteVideoByuuidPath:tab.uuid];
+                    [[FCShared tabManager] deleteTab:tab];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [weakSelf.tableView  reloadData];
+                    });
+                }
             
             }];
             [alert addAction:conform];
