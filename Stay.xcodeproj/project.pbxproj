@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		15193710295F013900D1A97A /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 1519370F295F013900D1A97A /* popup */; };
-		1519371F295F20E700D1A97A /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 1519371E295F20E700D1A97A /* popup */; };
 		152374412925E33200548C3E /* install.js in Resources */ = {isa = PBXBuildFile; fileRef = 152374402925E33200548C3E /* install.js */; };
 		15C79AB327912BC600559EA5 /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 15C79AB227912BC600559EA5 /* message.js */; };
 		15D9F94D28AF796400C49C5C /* config in Resources */ = {isa = PBXBuildFile; fileRef = 15D9F94C28AF796300C49C5C /* config */; };
@@ -555,7 +554,6 @@
 
 /* Begin PBXFileReference section */
 		1519370F295F013900D1A97A /* popup */ = {isa = PBXFileReference; lastKnownFileType = folder; path = popup; sourceTree = "<group>"; };
-		1519371E295F20E700D1A97A /* popup */ = {isa = PBXFileReference; lastKnownFileType = folder; path = popup; sourceTree = "<group>"; };
 		152374402925E33200548C3E /* install.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = install.js; sourceTree = "<group>"; };
 		15C79AB227912BC600559EA5 /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		15D9F94C28AF796300C49C5C /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
@@ -1336,7 +1334,6 @@
 			isa = PBXGroup;
 			children = (
 				15EA67D7292F61FD0024D1EB /* popup */,
-				1519371E295F20E700D1A97A /* popup */,
 				152374402925E33200548C3E /* install.js */,
 				15D9F94E28C3511600C49C5C /* config */,
 				58639CF8286447F900AA80D5 /* convert2RegExp.js */,
@@ -2416,7 +2413,6 @@
 				152374412925E33200548C3E /* install.js in Resources */,
 				5876891A2719238000F834A4 /* manifest.json in Resources */,
 				582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */,
-				1519371F295F20E700D1A97A /* popup in Resources */,
 				581F8D6E287D657A00774E2A /* jquery.min.js in Resources */,
 				587689162719238000F834A4 /* _locales in Resources */,
 				582F9DE4276F32B900C88135 /* base64.min.js in Resources */,
@@ -3205,7 +3201,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 103;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -3220,7 +3216,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 2.3.6;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -3239,7 +3235,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 103;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -3254,7 +3250,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 2.3.6;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -3278,7 +3274,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 103;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3306,7 +3302,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 2.3.6;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -3331,7 +3327,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 103;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3359,7 +3355,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 2.3.6;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;

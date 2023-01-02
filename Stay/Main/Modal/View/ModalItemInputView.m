@@ -55,6 +55,7 @@
 }
 
 - (void)textFieldDidChange:(UITextField *)textField{
+    self.element.inputEntity.text = textField.text;
     if (self.element.inputEntity.textChanged){
         self.element.inputEntity.textChanged(textField.text);
     }
