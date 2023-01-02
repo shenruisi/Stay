@@ -105,7 +105,7 @@
                 @"itemElements" : self.nameElements
             },
             @{
-                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"location", @"")],
+                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"Location", @"")],
                 @"itemElements" : self.saveToElements
             }
         ];
