@@ -219,6 +219,11 @@
 
 - (void)stopDownload:(UIButton *)sender {
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    Request *request = [[Request alloc] init];
+    request.url =  resource.downloadUrl;
+    
+    Task *task =  [[DownloadManager shared] enqueue:request];
+    [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];
     [self reloadData];
