@@ -89,7 +89,7 @@
         time.textAlignment = NSTextAlignmentCenter;
         time.bottom = 82;
         [time sizeToFit];
-        time.width = time.width + 20;
+        time.width = time.width + 10;
 
         time.right = 155;
         time.layer.cornerRadius = 7;
@@ -152,7 +152,13 @@
     int minutes = (totalSeconds / 60) % 60;
     int hours = totalSeconds / 3600;
 
-    return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
+    if(hours == 0) {
+        return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+
+    } else {
+        return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
+    }
+    
 }
 
 @end

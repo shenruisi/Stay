@@ -88,7 +88,7 @@
         time.textAlignment = NSTextAlignmentCenter;
         time.bottom = 82;
         [time sizeToFit];
-        time.width = time.width + 20;
+        time.width = time.width + 10;
 
         time.right = 155;
         time.layer.cornerRadius = 7;
