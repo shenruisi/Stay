@@ -214,6 +214,7 @@ FeedbackEnabling="问题(无法激活Stay)";
 ToBeDownload="待下载";
 Link="链接";
 Name="名称";
+Title="标题";
 SaveTo="保存到";
 StartDownload="开始下载";
 
@@ -228,3 +229,8 @@ needDeleteTab="你确定要删除这个文件夹吗？";
 EDIT="编辑";
 Location="位置";
 needDeleteVideo="你确定要删除这个视频吗？";
+titleNotEmpty="标题不能为空。";
+urlNotEmpty="链接不能为空。";
+STOP="点击暂停";
+CONTINUE="点击继续";
+StopDownload="已暂停";
