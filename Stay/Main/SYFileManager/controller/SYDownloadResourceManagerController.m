@@ -105,6 +105,8 @@
                 dispatch_async(dispatch_get_main_queue(),^{
                     cell.progress.progress = progress;
                     cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
+                    [cell.downloadRateLabel sizeToFit];
+                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
                     cell.downloadSpeedLabel.text = speed;
                 });
                 
