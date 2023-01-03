@@ -223,3 +223,7 @@ SAVETOPHOTOS="Save to Photos";
 SAVETOFILES="Save to Files";
 Video="Video";
 SaveDone="Saved";
+needDeleteTab="Are you sure you want to delete this folder?";
+EDIT="Edit";
+Location="Location";
+needDeleteVideo="Are you sure you want to delete this video?";

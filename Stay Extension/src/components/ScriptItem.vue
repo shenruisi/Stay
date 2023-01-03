@@ -29,8 +29,8 @@
       </div>
       <div class="action-cell">
         <div class="cell-icon menu" v-if="script.grants.length && (script.grants.includes('GM.registerMenuCommand') || script.grants.includes('GM_registerMenuCommand'))" @click="showRegisterMenu(script.uuid, script.active)">{{t("menu")}}</div>
-        <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
         <div class="cell-icon open-app" @click="openInAPP(script.uuid)">{{t("open_app")}}</div>
+        <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
       </div>
     </div>
     
