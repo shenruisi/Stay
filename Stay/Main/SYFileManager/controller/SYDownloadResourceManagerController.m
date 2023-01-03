@@ -105,6 +105,7 @@
                 dispatch_async(dispatch_get_main_queue(),^{
                     cell.progress.progress = progress;
                     cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
+                    cell.downloadSpeedLabel.text = speed;
                 });
                 
                 return;
@@ -156,6 +157,13 @@
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
                 DownloadResource *downloadResource = weakSelf.array[indexPath.row];
+                if(downloadResource.status == 2) {
+                    NSFileManager *defaultManager;
+                    defaultManager = [NSFileManager defaultManager];
+                    [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
+                } else {
+                    [[DownloadManager shared] remove:downloadResource.downloadUuid];
+                }
                 [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
                 [weakSelf.array removeObject:downloadResource];
                 dispatch_async(dispatch_get_main_queue(),^{
@@ -222,6 +230,7 @@
     request.url =  resource.downloadUrl;
     
     Task *task =  [[DownloadManager shared] enqueue:request];
+    task.block = NULL;
     [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];

@@ -377,6 +377,22 @@ UIDocumentPickerDelegate
                     [self presentViewController:onlyOneAlert animated:YES completion:nil];
                 } else {
                     FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+                      
+                    NSArray *resources = [[DataManager shareManager] selectDownloadResourceByPath:tab.uuid];
+                    
+                    if(resources != nil) {
+                        for (int i = 0; i < resources.count; i++) {
+                            DownloadResource * resource =  resources[i];
+                            if (resource.status == 2) {
+                                NSFileManager *defaultManager;
+                                defaultManager = [NSFileManager defaultManager];
+                                [defaultManager removeItemAtPath:resource.allPath error:nil];
+                            } else {
+                                [[DownloadManager shared] remove:resource.downloadUuid];
+                            }
+                        }
+                    }
+                    
                     [[DataManager shareManager] deleteVideoByuuidPath:tab.uuid];
                     [[FCShared tabManager] deleteTab:tab];
                     dispatch_async(dispatch_get_main_queue(),^{

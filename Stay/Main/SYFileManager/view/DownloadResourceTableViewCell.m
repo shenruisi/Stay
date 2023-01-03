@@ -78,7 +78,10 @@
         
         watchProcess.progress = _downloadResource.watchProcess / _downloadResource.videoDuration;
         watchProcess.bottom = 90;
-        [imageView addSubview:watchProcess];
+        
+        if(_downloadResource.watchProcess > 0) {
+            [imageView addSubview:watchProcess];
+        }
         
         UILabel *time = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 15)];
         time.font = FCStyle.footnote;
