@@ -233,7 +233,7 @@
 - (void)startDownloadAction:(id)sender{
 
     
-    if(self.nameElements[0].inputEntity.text == nil) {
+    if(self.nameElements[0].inputEntity.text == nil || self.nameElements[0].inputEntity.text.length == 0) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"titleNotEmpty", @"")
                                                                        message:@""
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -251,7 +251,7 @@
         return;
     }
     
-    if(self.linkElements[0].inputEntity.text == nil) {
+    if(self.linkElements[0].inputEntity.text == nil || self.linkElements[0].inputEntity.text.length == 0 ) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
                                                                        message:@""
                                                                 preferredStyle:UIAlertControllerStyleAlert];
