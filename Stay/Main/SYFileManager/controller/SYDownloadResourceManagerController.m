@@ -231,9 +231,12 @@
     Request *request = [[Request alloc] init];
     request.url =  resource.downloadUrl;
     
-    Task *task =  [[DownloadManager shared] enqueue:request];
-    task.block = NULL;
-    [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
+    
+    Task *task = [[DownloadManager shared]  queryByTaskId:resource.downloadUuid];;
+    if(task != nil) {
+        task.block = NULL;
+        [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
+    }
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];
     [self reloadData];

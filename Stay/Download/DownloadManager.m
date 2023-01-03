@@ -110,6 +110,10 @@ static DownloadManager *instance = nil;
     return [self.store query:condition.taskId withKey:condition.key andStatus:condition.status];
 }
 
+- (Task *)queryByTaskId:(NSString *)taskId {
+    return self.taskDict[taskId];
+}
+
 - (void)remove:(NSString *)taskId {
     @synchronized (self.taskDict) {
         [self.taskDict removeObjectForKey:taskId];
