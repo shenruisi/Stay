@@ -224,3 +224,7 @@ SAVETOPHOTOS="保存到相册";
 SAVETOFILES="保存到文件";
 Video="视频";
 SaveDone="已保存";
+needDeleteTab="你确定要删除这个文件夹吗？";
+EDIT="编辑";
+Location="位置";
+needDeleteVideo="你确定要删除这个视频吗？";

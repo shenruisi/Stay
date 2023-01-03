@@ -105,6 +105,9 @@
                 dispatch_async(dispatch_get_main_queue(),^{
                     cell.progress.progress = progress;
                     cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
+                    [cell.downloadRateLabel sizeToFit];
+                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                    cell.downloadSpeedLabel.text = speed;
                 });
                 
                 return;
@@ -156,6 +159,13 @@
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
                 DownloadResource *downloadResource = weakSelf.array[indexPath.row];
+                if(downloadResource.status == 2) {
+                    NSFileManager *defaultManager;
+                    defaultManager = [NSFileManager defaultManager];
+                    [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
+                } else {
+                    [[DownloadManager shared] remove:downloadResource.downloadUuid];
+                }
                 [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
                 [weakSelf.array removeObject:downloadResource];
                 dispatch_async(dispatch_get_main_queue(),^{
@@ -221,8 +231,12 @@
     Request *request = [[Request alloc] init];
     request.url =  resource.downloadUrl;
     
-    Task *task =  [[DownloadManager shared] enqueue:request];
-    [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
+    
+    Task *task = [[DownloadManager shared]  queryByTaskId:resource.downloadUuid];;
+    if(task != nil) {
+        task.block = NULL;
+        [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
+    }
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];
     [self reloadData];
@@ -282,6 +296,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
+    [self reloadData];
 }
  
 - (void)viewWillDisappear:(BOOL)animated{

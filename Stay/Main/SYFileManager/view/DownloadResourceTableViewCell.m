@@ -76,9 +76,12 @@
     if(_downloadResource.videoDuration > 0) {
         SYProgress *watchProcess = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, 160, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
         
-        watchProcess.progress = _downloadResource.watchProcess / _downloadResource.videoDuration;
+        watchProcess.progress = _downloadResource.watchProcess * 1.0 / _downloadResource.videoDuration;
         watchProcess.bottom = 90;
-        [imageView addSubview:watchProcess];
+        
+        if(_downloadResource.watchProcess > 0) {
+            [imageView addSubview:watchProcess];
+        }
         
         UILabel *time = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 15)];
         time.font = FCStyle.footnote;
@@ -177,7 +180,7 @@
     } else {
         self.contentView.backgroundColor =  [FCStyle.accent colorWithAlphaComponent:0.1];
 
-        _downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
+        _downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 16)];
         UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
         objc_setAssociatedObject(stop , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
@@ -189,6 +192,14 @@
     
         if(_downloadResource.status == 0) {
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
+            
+            
+            _downloadSpeedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
+            _downloadSpeedLabel.font = FCStyle.footnote;
+            _downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
+            _downloadSpeedLabel.left = _downloadRateLabel.right + 10;
+            _downloadSpeedLabel.textColor = FCStyle.titleGrayColor;
+            [self.contentView addSubview:_downloadSpeedLabel];
             
             
             UILabel *stopLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];

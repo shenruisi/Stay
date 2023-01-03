@@ -20,6 +20,7 @@
 #import "DownloadManager.h"
 #import "SYDownloadResourceManagerController.h"
 #import "SYDownloadFolderChooseModalViewController.h"
+#import "QuickAccess.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,
@@ -233,7 +234,7 @@
 - (void)startDownloadAction:(id)sender{
 
     
-    if(self.nameElements[0].inputEntity.text == nil) {
+    if(self.nameElements[0].inputEntity.text == nil || self.nameElements[0].inputEntity.text.length == 0) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"titleNotEmpty", @"")
                                                                        message:@""
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -251,7 +252,7 @@
         return;
     }
     
-    if(self.linkElements[0].inputEntity.text == nil) {
+    if(self.linkElements[0].inputEntity.text == nil || self.linkElements[0].inputEntity.text.length == 0 ) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
                                                                        message:@""
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -306,7 +307,22 @@
         resource.videoDuration = 0;
         resource.allPath = task.filePath;
         resource.sort = 0;
+        
         [[DataManager shareManager] addDownloadResource:resource];
+        
+        
+        UIViewController *mainController = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+        
+        if ([mainController isKindOfClass: [SYDownloadResourceManagerController class]]){
+            SYDownloadResourceManagerController *downloadCer = mainController;
+            if(downloadCer.pathUuid == tab.uuid) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
+                                                                    object:nil];
+                [self.navigationController.slideController dismiss];
+                return;
+            }
+        }
+        
         SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
         controller.pathUuid = tab.uuid;
         controller.title = tab.config.name;
@@ -377,5 +393,34 @@
     }
     return result;
 }
+
+
+- (UIViewController *)findCurrentShowingViewControllerFrom:(UIViewController *)vc
+{
+    // 递归方法 Recursive method
+    UIViewController *currentShowingVC;
+    if ([vc presentedViewController]) {
+        // 当前视图是被presented出来的
+        UIViewController *nextRootVC = [vc presentedViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        // 根视图为UITabBarController
+        UIViewController *nextRootVC = [(UITabBarController *)vc selectedViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else if ([vc isKindOfClass:[UINavigationController class]]){
+        // 根视图为UINavigationController
+        UIViewController *nextRootVC = [(UINavigationController *)vc visibleViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else {
+        // 根视图为非导航类
+        currentShowingVC = vc;
+    }
+
+    return currentShowingVC;
+}
+　　
 
 @end
