@@ -296,6 +296,7 @@ UIDocumentPickerDelegate
         return nil;
     } else {
         UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
+        headrView.backgroundColor = FCStyle.fcWhite;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
         label.font = FCStyle.headlineBold;
         label.text = NSLocalizedString(@"Folders", @"");
