@@ -114,6 +114,8 @@ LifetimeSubscription="永久";
 OneTimePayment="一次性購買";
 
 Upgrade="升級";
+DownloaderFeature="下載器";
+DownloaderFeatureDesc="下載Safari瀏覽器中的視頻";
 iCloudFeature="iCloud同步";
 iCloudFeatureDesc="在不同的設備間同步用戶腳本";
 DarkModeFeature="網頁暗黑模式";
@@ -232,3 +234,4 @@ urlNotEmpty="鏈接不能為空。";
 STOP="點擊暫停";
 CONTINUE="點擊繼續";
 StopDownload="已暫停";
+NowPlaying="正在播放";

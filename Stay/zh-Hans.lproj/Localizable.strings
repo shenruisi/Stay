@@ -113,6 +113,8 @@ LifetimeSubscription="永久";
 OneTimePayment="一次性购买";
 
 Upgrade="升级";
+DownloaderFeature="下载器";
+DownloaderFeatureDesc="下载Safari浏览器中的视频";
 iCloudFeature="iCloud同步";
 iCloudFeatureDesc="在不同的设备间同步用户脚本";
 DarkModeFeature="网页暗黑模式";
@@ -234,3 +236,4 @@ urlNotEmpty="链接不能为空。";
 STOP="点击暂停";
 CONTINUE="点击继续";
 StopDownload="已暂停";
+NowPlaying="正在播放";

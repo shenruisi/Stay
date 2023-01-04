@@ -9,12 +9,16 @@ import UIKit
 import AVKit
 
 @objc
-class PlayerViewController: UIViewController {
+class PlayerViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    let resource: DownloadResource
+    let resources: [DownloadResource]
+    let folderName: String
+    let initIndex: Int
     @objc
-    init(resource: DownloadResource) {
-        self.resource = resource
+    init(resources: [DownloadResource], folderName: String, initIndex: Int) {
+        self.resources = resources
+        self.folderName = folderName
+        self.initIndex = initIndex
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,21 +42,49 @@ class PlayerViewController: UIViewController {
     override var shouldAutorotate: Bool {
         return true
     }
-
+    
+    let videoTitleLabel = UILabel()
+    let container = UIView()
+    let tableView = UITableView()
+    var videoView: VideoPlayerView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         view.backgroundColor = .black
         
-        let videoView = VideoPlayerView(reseources: [resource], controller: self)
+        videoView = VideoPlayerView(reseources: resources, controller: self)
         videoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(videoView)
         
-        let container = UIView()
-        container.backgroundColor = FCStyle.background
+        container.backgroundColor = FCStyle.secondaryBackground
         container.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(container)
+        
+        videoTitleLabel.font = FCStyle.bodyBold
+        videoTitleLabel.textColor = .black
+        videoTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(videoTitleLabel)
+        
+        let line = UIView()
+        line.backgroundColor = FCStyle.fcSeparator
+        line.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(line)
+        
+        let folderNameLabel = UILabel()
+        folderNameLabel.font = FCStyle.subHeadlineBold
+        folderNameLabel.textColor = FCStyle.fcSecondaryBlack
+        folderNameLabel.text = folderName
+        folderNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(folderNameLabel)
+
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 104.5
+        tableView.register(SYVideoCellTableViewCell.self, forCellReuseIdentifier: "SYVideoCellTableViewCell")
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(tableView)
         
         NSLayoutConstraint.activate([
             videoView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -64,23 +96,76 @@ class PlayerViewController: UIViewController {
             container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             container.topAnchor.constraint(equalTo: videoView.bottomAnchor),
             container.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            videoTitleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12.5),
+            videoTitleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12.5),
+            videoTitleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 13),
+            line.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12.5),
+            line.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: 0),
+            line.topAnchor.constraint(equalTo: container.topAnchor, constant: 46),
+            line.heightAnchor.constraint(equalToConstant: 0.5),
+            folderNameLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12.5),
+            folderNameLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12.5),
+            folderNameLabel.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 14),
+            tableView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 46),
+            tableView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
         ])
         
-        videoView.play()
+        videoView.play(index: initIndex)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.tabBarController?.tabBar.isHidden = true
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        DispatchQueue.main.async {
+            self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         self.tabBarController?.tabBar.isHidden = false
         navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    func updateViewState(isLandscape: Bool) {
+        container.isHidden = isLandscape
+        for constraint in videoView.constraints {
+            if constraint.firstAnchor == videoView.heightAnchor {
+                videoView.removeConstraint(constraint)
+                break
+            }
+        }
+        if isLandscape {
+            videoView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height).isActive = true
+        } else {
+            videoView.heightAnchor.constraint(equalTo: videoView.widthAnchor, multiplier: 9.0 / 16).isActive = true
+        }
+    }
+    
+    func refreshCurrVideo() {
+        videoTitleLabel.text = resources[videoView.currIndex].title
+        tableView.reloadData()
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return resources.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SYVideoCellTableViewCell", for: indexPath) as! SYVideoCellTableViewCell
+        cell.selectionStyle = .none
+        cell.downloadResource = resources[indexPath.row];
+        cell.reload(videoView.currIndex == indexPath.row)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        videoView.play(index: indexPath.row)
     }
 
 }

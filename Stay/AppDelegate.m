@@ -270,5 +270,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application{}
 
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window {
+    return _orientationLock;
+}
 
 @end
