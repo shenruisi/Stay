@@ -212,6 +212,7 @@ FeedbackEnabling="問題(無法激活Stay)";
 ToBeDownload="待下載";
 Link="鏈接";
 Name="名稱";
+Title="標題";
 SaveTo="保存到";
 StartDownload="開始下載";
 
@@ -226,3 +227,8 @@ needDeleteTab="你確定要刪除這個文件夾嗎？";
 EDIT="編輯";
 Location="位置";
 needDeleteVideo="你確定要刪除這個視頻嗎？";
+titleNotEmpty="標題不能為空。";
+urlNotEmpty="鏈接不能為空。";
+STOP="點擊暫停";
+CONTINUE="點擊繼續";
+StopDownload="已暫停";

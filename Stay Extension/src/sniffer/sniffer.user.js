@@ -52,6 +52,7 @@ const browser = __b;
     let videoList = [];
     // 获取到的video Url数组
     let videoUrlSet = new Set();
+    let videoIdSet = new Set();
     // Firefox和Chrome早期版本中带有前缀  
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     let videoDoms;  
@@ -153,7 +154,7 @@ const browser = __b;
     }
     
     function parseVideoNodeList(videoDoms){
-      // console.log('parseVideoNodeList-----------------start------------------')
+      // console.log('parseVideoNodeList-----------------start------------------', videoDoms)
       if(videoDoms && videoDoms.length){
         let videoNodeList = Array.from(videoDoms)
         videoNodeList.forEach(item => {
@@ -176,6 +177,11 @@ const browser = __b;
          
           // todo fetch other scenarios
           let videoInfo = handleVideoInfoParse(item);
+
+
+
+
+
           // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
           if(!videoInfo.downloadUrl){
             return;
@@ -216,12 +222,18 @@ const browser = __b;
       }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
-        // if(Utils.isMobile()){
-        //   videoInfo = handleMobileYoutubeVideoInfo(title);
-        // }else{
-        //   videoInfo = handleYoutubeVideoInfo(title);
-        // }
-        videoInfo = handleYoutubeVideoInfo(title);
+        const videoId = Utils.queryURLParams(hostUrl, 'v');
+        if(videoIdSet.size && videoIdSet.has(videoId)){
+          console.log('videoId------isAlready', videoId);
+          return {};
+        }
+        videoInfo = handleYoutubeVideoInfo(title, videoId);
+        // videoIdSet.add(videoId);
+        // console.log('----------------------videoInfo---------------------',videoInfo);
+        if(videoInfo && Object.keys(videoInfo).length && videoInfo.downloadUrl){
+          // console.log('-------adddddddddddd-----------------videoId------', videoId);
+          videoIdSet.add(videoId);
+        }
       }
       else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoDom);
@@ -411,69 +423,37 @@ const browser = __b;
      * 解析Youtube视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
      */
-    function handleYoutubeVideoInfo(title){
-      let videoInfo = handleYoutubeGlobalVariable(title);
-      if(Object.keys(videoInfo).length){
-        return videoInfo;
-      }else{
-        videoInfo = {};
-        videoInfo['title'] = getYoutubeVideoTitleByDom();
-        // poster img
-        videoInfo['poster'] = getYoutubeVideoPosterByDom();
-        videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
-      }
-      return videoInfo;
-    }
-    
-    /**
-     * 解析Youtube视频信息
-     * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
-     */
-    function handleMobileYoutubeVideoInfo(title){
-      let videoInfo = handleYoutubeGlobalVariable(title);
-      if(Object.keys(videoInfo).length){
-        return videoInfo;
-      }else{
-        videoInfo = {};
-        // console.log('playerResp---is---null-------');
-        videoInfo['title'] = getYoutubeVideoTitleByDom();
-        // poster img
-        videoInfo['poster'] = getYoutubeVideoPosterByDom();
-        videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
-      }
-      return videoInfo;
-    }
-    
-    function handleYoutubeGlobalVariable(title){
-      const videoId = Utils.queryURLParams(hostUrl, 'v');
-      // console.log('videoId-------------',videoId)
+    function handleYoutubeVideoInfo(title, videoId){
+      // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
       let videoInfo = {};
       const playerResp = window.ytInitialPlayerResponse;
       // console.log('playerResp-------', playerResp);
       if(playerResp && playerResp.videoDetails && playerResp.streamingData && videoId === playerResp.videoDetails.videoId){
         const videoDetails = playerResp.videoDetails;
-        videoInfo['title'] = videoDetails.title;
+        let detailTitle = videoDetails.title?videoDetails.title:'';
+        videoInfo['title'] = detailTitle;
         let thumbnail = videoDetails.thumbnail;
         if(thumbnail){
           let thumbnails = thumbnail.thumbnails;
           if(thumbnails && thumbnails.length){
             // console.log('thumbnails-----',thumbnails);
             videoInfo['poster'] =  thumbnails.pop().url;
-          }else{
-            videoInfo['poster'] = getYoutubeVideoPosterByDom();
           }
-        }else{
-          videoInfo['poster'] = getYoutubeVideoPosterByDom();
+          // else{
+          //   videoInfo['poster'] = getYoutubeVideoPosterByDom();
+          // }
         }
+        // else{
+        //   videoInfo['poster'] = getYoutubeVideoPosterByDom();
+        // }
         // console.log('playerResp-------videoDetails-------------', videoDetails);
         const streamingData = playerResp.streamingData;
         // const adaptiveFormats = streamingData.adaptiveFormats;
         const formats = streamingData.formats;
         title = title ? title : '';
-        let detailTitle = videoDetails.title?videoDetails.title:'';
         // 取画质的时候防止原视频有广告
         if(formats && formats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
-          console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
+          // console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
           // * qualityList[{downloadUrl, qualityLabel, quality}]
           let qualityList = []
           let qualitySet = new Set();
@@ -488,7 +468,17 @@ const browser = __b;
             videoInfo['qualityList'] = qualityList;
           }
           videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+        }else{
+          videoInfo['title'] = getYoutubeVideoTitleByDom();
+          videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+          videoInfo['poster'] = getYoutubeVideoPosterByDom();
         }
+      }else{
+        videoInfo = {};
+        videoInfo['title'] = getYoutubeVideoTitleByDom();
+        // poster img
+        videoInfo['poster'] = getYoutubeVideoPosterByDom();
+        videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
       }
       return videoInfo;
     }
@@ -500,6 +490,7 @@ const browser = __b;
     function getYoutubeVideoSourceByDom(){
       let videoDom = document.querySelector('.html5-video-player .html5-video-container video');
       if(videoDom){
+        // console.log('----------------',videoDom);
         return videoDom.getAttribute('src');
       }
       return '';
@@ -523,7 +514,6 @@ const browser = __b;
       if(overlayImg){
         console.log('overlayImg-------',overlayImg);
         let imgText = overlayImg.getAttribute('style');
-        console.log('overlayImg----imgText---',imgText);
         if(imgText){
           return Utils.matchUrlInString(imgText);
         }
@@ -613,7 +603,7 @@ const browser = __b;
   window.addEventListener('message', (e) => {
     if (!e || !e.data || !e.data.name) return;
     const name = e.data.name;
-    console.log('snifffer.user----->e.data.name=',name);
+    // console.log('snifffer.user----->e.data.name=',name);
     if(name === 'VIDEO_LINK_CAPTURE'){
       let tempSet = e.data.urls ? e.data.urls : new Set();
       console.log('snifffer.VIDEO_LINK_CAPTURE----->tempSet=',tempSet);

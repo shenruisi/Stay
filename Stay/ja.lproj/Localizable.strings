@@ -213,6 +213,7 @@ FeedbackEnabling="Problem(Trouble enabling Stay)";
 ToBeDownload="To be download";
 Link="Link";
 Name="Name";
+Title="Title";
 SaveTo="Save to";
 StartDownload="Start download";
 
@@ -227,3 +228,8 @@ needDeleteTab="Are you sure you want to delete this folder?";
 EDIT="Edit";
 Location="Location";
 needDeleteVideo="Are you sure you want to delete this video?";
+titleNotEmpty="Title can not be empty.";
+urlNotEmpty="Link can not be empty.";
+STOP="Pause";
+CONTINUE="Continue";
+StopDownload="Download paused";

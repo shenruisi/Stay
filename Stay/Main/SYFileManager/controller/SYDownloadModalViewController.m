@@ -109,7 +109,7 @@
                 @"itemElements" : self.linkElements
             },
             @{
-                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"Name", @"")],
+                @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"Title", @"")],
                 @"itemElements" : self.nameElements
             },
             @{
