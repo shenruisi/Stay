@@ -189,7 +189,7 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return 137;
     } else {
-        return 47;
+        return 46;
     }
 }
 

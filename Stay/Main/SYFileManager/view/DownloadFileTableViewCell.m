@@ -34,7 +34,6 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 13, 27, 20)];
     [imageView setImage:[ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:20] color: [ColorHelper colorFromHex:fCTab.config.hexColor]]];
     imageView.contentMode = UIViewContentModeBottom;
-    imageView.centerY = 25;
     [self.contentView addSubview:imageView];
 
     
@@ -57,7 +56,7 @@
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 10, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.top =  imageView.bottom + 13;
+    line.bottom =  imageView.bottom + 13;
     line.left = 10;
     [self.contentView addSubview:line];
     
