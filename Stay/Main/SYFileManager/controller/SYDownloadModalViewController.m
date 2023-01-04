@@ -234,24 +234,6 @@
 - (void)startDownloadAction:(id)sender{
 
     
-    if(self.nameElements[0].inputEntity.text == nil || self.nameElements[0].inputEntity.text.length == 0) {
-        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"titleNotEmpty", @"")
-                                                                       message:@""
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * _Nonnull action) {
-        
-            
-        }];
-        [onlyOneAlert addAction:onlyOneConform];
-        
-        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
-
-        return;
-    }
-    
     if(self.linkElements[0].inputEntity.text == nil || self.linkElements[0].inputEntity.text.length == 0 ) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
                                                                        message:@""
@@ -269,6 +251,25 @@
 
         return;
     }
+    
+    if(self.nameElements[0].inputEntity.text == nil || self.nameElements[0].inputEntity.text.length == 0) {
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"titleNotEmpty", @"")
+                                                                       message:@""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        
+            
+        }];
+        [onlyOneAlert addAction:onlyOneConform];
+        
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+
+        return;
+    }
+
     
     DownloadResource *resource = [[DownloadResource alloc] init];
     NSString *downLoadUrl = self.linkElements[0].inputEntity.text;
