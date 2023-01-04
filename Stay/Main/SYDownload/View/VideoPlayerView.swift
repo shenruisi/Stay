@@ -60,6 +60,7 @@ class VideoPlayerView: UIView {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onVolumeChanged), name: NSNotification.Name(rawValue: "SystemVolumeDidChange"), object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -68,6 +69,7 @@ class VideoPlayerView: UIView {
     
     deinit {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(toggleControls), object: nil)
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hideVolumeView), object: nil)
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -78,6 +80,10 @@ class VideoPlayerView: UIView {
     }
     
     override func layoutSubviews() {
+        if mpVolumeView.superview == nil {
+            mpVolumeView.alpha = 0.001
+            self.window?.insertSubview(mpVolumeView, at: 0)
+        }
         showControls(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
         (controller as? PlayerViewController)?.updateViewState(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
         
@@ -113,6 +119,25 @@ class VideoPlayerView: UIView {
     func playerDidFinishPlaying() {
         nextAction()
     }
+    
+    @objc
+    func onVolumeChanged(note: Notification) {
+        if (note.userInfo?["Reason"] as? String) == "ExplicitVolumeChange" {
+            DispatchQueue.main.async {
+                self.volumeView.isHidden = false
+                let (volumeImage, volumeValue) = self.getVolume()
+                self.volumeIcon.image = volumeImage
+                self.volumePV.progress = volumeValue
+                NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.hideVolumeView), object: nil)
+                self.perform(#selector(self.hideVolumeView), with: nil, afterDelay: 1.2)
+            }
+        }
+    }
+    
+    @objc
+    func hideVolumeView() {
+        volumeView.isHidden = true
+    }
 
     var currIndex = -1
     private var currResource: DownloadResource {
@@ -135,9 +160,9 @@ class VideoPlayerView: UIView {
     let rightBottomView = UIStackView()
     let brightnessView = UIView()
     let brightnessPV = UIProgressView()
-    let volumnView = UIView()
-    let volumnIcon = UIImageView()
-    let volumnPV = UIProgressView()
+    let volumeView = UIView()
+    let volumeIcon = UIImageView()
+    let volumePV = UIProgressView()
     let progressView = UIView()
     let progressLabel = UILabel()
     let progressPV = UIProgressView()
@@ -168,19 +193,19 @@ class VideoPlayerView: UIView {
         brightnessPV.translatesAutoresizingMaskIntoConstraints = false
         brightnessView.addSubview(brightnessPV)
         
-        volumnView.isHidden = true
-        volumnView.layer.cornerRadius = 8
-        volumnView.clipsToBounds = true
-        volumnView.backgroundColor = .black.withAlphaComponent(0.1)
-        volumnView.translatesAutoresizingMaskIntoConstraints = false
-        let (volumnImage, volumnValue) = getVolumn()
-        volumnIcon.image = volumnImage
-        volumnIcon.translatesAutoresizingMaskIntoConstraints = false
-        volumnView.addSubview(volumnIcon)
-        volumnPV.tintColor = .white
-        volumnPV.progress = volumnValue
-        volumnPV.translatesAutoresizingMaskIntoConstraints = false
-        volumnView.addSubview(volumnPV)
+        volumeView.isHidden = true
+        volumeView.layer.cornerRadius = 8
+        volumeView.clipsToBounds = true
+        volumeView.backgroundColor = .black.withAlphaComponent(0.1)
+        volumeView.translatesAutoresizingMaskIntoConstraints = false
+//        let (volumeImage, volumeValue) = getVolume()
+//        volumeIcon.image = volumeImage
+        volumeIcon.translatesAutoresizingMaskIntoConstraints = false
+        volumeView.addSubview(volumeIcon)
+        volumePV.tintColor = .white
+//        volumePV.progress = volumeValue
+        volumePV.translatesAutoresizingMaskIntoConstraints = false
+        volumeView.addSubview(volumePV)
         
         progressView.isHidden = true
         progressView.translatesAutoresizingMaskIntoConstraints = false
@@ -200,11 +225,11 @@ class VideoPlayerView: UIView {
             brightnessPV.trailingAnchor.constraint(equalTo: brightnessView.trailingAnchor, constant: -5),
             brightnessPV.centerYAnchor.constraint(equalTo: brightnessView.centerYAnchor),
             
-            volumnIcon.leadingAnchor.constraint(equalTo: volumnView.leadingAnchor, constant: 5),
-            volumnIcon.centerYAnchor.constraint(equalTo: volumnView.centerYAnchor),
-            volumnPV.leadingAnchor.constraint(equalTo: volumnIcon.trailingAnchor, constant: 5),
-            volumnPV.trailingAnchor.constraint(equalTo: volumnView.trailingAnchor, constant: -5),
-            volumnPV.centerYAnchor.constraint(equalTo: volumnView.centerYAnchor),
+            volumeIcon.leadingAnchor.constraint(equalTo: volumeView.leadingAnchor, constant: 5),
+            volumeIcon.centerYAnchor.constraint(equalTo: volumeView.centerYAnchor),
+            volumePV.leadingAnchor.constraint(equalTo: volumeIcon.trailingAnchor, constant: 5),
+            volumePV.trailingAnchor.constraint(equalTo: volumeView.trailingAnchor, constant: -5),
+            volumePV.centerYAnchor.constraint(equalTo: volumeView.centerYAnchor),
             
             progressLabel.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
             progressLabel.topAnchor.constraint(equalTo: progressView.topAnchor, constant: 5),
@@ -278,7 +303,7 @@ class VideoPlayerView: UIView {
         addSubview(pipBtn)
         
         addSubview(brightnessView)
-        addSubview(volumnView)
+        addSubview(volumeView)
         addSubview(progressView)
         
         NSLayoutConstraint.activate([
@@ -301,10 +326,10 @@ class VideoPlayerView: UIView {
             brightnessView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
             brightnessView.heightAnchor.constraint(equalToConstant: 30),
             
-            volumnView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            volumnView.widthAnchor.constraint(equalToConstant: 120),
-            volumnView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-            volumnView.heightAnchor.constraint(equalToConstant: 30),
+            volumeView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            volumeView.widthAnchor.constraint(equalToConstant: 120),
+            volumeView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            volumeView.heightAnchor.constraint(equalToConstant: 30),
             
             progressView.centerXAnchor.constraint(equalTo: centerXAnchor),
             progressView.widthAnchor.constraint(equalToConstant: 120),
@@ -387,18 +412,18 @@ class VideoPlayerView: UIView {
         }
     }
     
-    let volumeView = MPVolumeView()
+    let mpVolumeView = MPVolumeView()
     var volumeSlider: UISlider?
-    func getVolumn() -> (UIImage, Float) {
+    func getVolume() -> (UIImage, Float) {
         if volumeSlider == nil {
-            volumeSlider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
+            volumeSlider = mpVolumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         }
-        let volumnValue = volumeSlider?.value ?? 0
+        let volumeValue = volumeSlider?.value ?? 0
         
-        return (getVolumnImage(volumnValue), volumnValue)
+        return (getVolumeImage(volumeValue), volumeValue)
     }
     
-    func getVolumnImage(_ value: Float) -> UIImage {
+    func getVolumeImage(_ value: Float) -> UIImage {
         var iconName = "speaker.fill"
         if value > 0.6 {
             iconName = "speaker.wave.3"
@@ -411,9 +436,9 @@ class VideoPlayerView: UIView {
         return UIImage(systemName: iconName, withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))!.withTintColor(.white).withRenderingMode(.alwaysOriginal)
     }
     
-    func setVolumn(_ value: Float) {
+    func setVolume(_ value: Float) {
         if volumeSlider == nil {
-            volumeSlider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
+            volumeSlider = mpVolumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         }
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01) {
             self.volumeSlider?.value = value
@@ -587,8 +612,8 @@ class VideoPlayerView: UIView {
                         brightnessView.isHidden = false
                     } else {
                         mode = 1
-                        startValue = Double(getVolumn().1)
-                        volumnView.isHidden = false
+                        startValue = Double(getVolume().1)
+                        volumeView.isHidden = false
                     }
                 } else {
                     mode = 2
@@ -603,10 +628,10 @@ class VideoPlayerView: UIView {
                     brightnessPV.progress = Float(max(0, min(1, startValue - translation.y / 100.0)))
                     UIScreen.main.brightness = CGFloat(brightnessPV.progress)
                 case 1:
-                    let volumnValue = Float(max(0, min(1, startValue - translation.y / 100.0)))
-                    setVolume(volumnValue)
-                    volumnIcon.image = getVolumnImage(volumnValue)
-                    volumnPV.progress = volumnValue
+                    let volumeValue = Float(max(0, min(1, startValue - translation.y / 100.0)))
+                    setVolume(volumeValue)
+                    volumeIcon.image = getVolumeImage(volumeValue)
+                    volumePV.progress = volumeValue
                 case 2:
                     let interval = max(0, min(player?.currentItem?.duration.seconds ?? 0, startTime.seconds + translation.x))
                     progressLabel.text = CMTime(seconds: interval, preferredTimescale: 1).positionalTime
@@ -624,7 +649,7 @@ class VideoPlayerView: UIView {
             case 0:
                 brightnessView.isHidden = true
             case 1:
-                volumnView.isHidden = true
+                volumeView.isHidden = true
             case 2:
                 if let currentItem = player?.currentItem {
                     player?.seek(to: CMTime(seconds: currentItem.duration.seconds * Double(progressPV.progress), preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
@@ -711,11 +736,7 @@ class VideoPlayerView: UIView {
             }
         }
     }
-    
-    func setVolume(_ value: Float) {
-        player?.volume = value
-    }
-    
+
     func setRate(_ value: Float) {
         player?.rate = value
     }
