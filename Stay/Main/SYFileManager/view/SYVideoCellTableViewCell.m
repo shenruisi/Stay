@@ -11,33 +11,16 @@
 #import "DownloadManager.h"
 #import "ImageHelper.h"
 #import "DataManager.h"
-#import <objc/runtime.h>
 #import "SYProgress.h"
 
 @implementation SYVideoCellTableViewCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
 - (void)setDownloadResource:(DownloadResource *)downloadResource {
-    for (UIView *subView in self.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
     _downloadResource = downloadResource;
-    [self createCell];
 }
 
-
-
-- (void)createCell {
+- (void)createCell:(BOOL)isCurrent {
+    int contentWidth = UIScreen.mainScreen.bounds.size.width;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 8, 160, 90)];
     imageView.layer.cornerRadius = 5;
@@ -77,7 +60,7 @@
     if(_downloadResource.videoDuration > 0) {
         SYProgress *watchProcess = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, 160, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
         
-        watchProcess.progress = _downloadResource.watchProcess / _downloadResource.videoDuration;
+        watchProcess.progress = _downloadResource.watchProcess * 1.0 / _downloadResource.videoDuration;
         watchProcess.bottom = 90;
         [imageView addSubview:watchProcess];
         
@@ -98,51 +81,45 @@
     }
     
     [self.contentView addSubview:imageView];
-    UILabel *hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 160 - 12 - 15 -12 - 50, 15)];
-    if(_downloadResource.status == 2) {
-        hostLabel.width =  self.contentView.width - 160 - 15 - 12 - 12;
-    }
+    UILabel *hostLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentWidth - 160 - 12 - 15 - 12, 15)];
     hostLabel.font = FCStyle.footnote;
     hostLabel.text = _downloadResource.host;
-    hostLabel.textColor = FCStyle.titleGrayColor;
+    hostLabel.textColor = isCurrent ? FCStyle.accent : FCStyle.titleGrayColor;
     hostLabel.left = imageView.right + 15;
     hostLabel.top = imageView.top;
     [self.contentView addSubview:hostLabel];
 
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width - 160 - 12 - 15 -12 - 50, 44)];
-    if(_downloadResource.status == 2) {
-        titleLabel.width =  self.contentView.width - 160 - 15 - 12 - 12;
-    }
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, contentWidth - 160 - 12 - 15 - 12, 44)];
     titleLabel.numberOfLines = 3;
     titleLabel.font = FCStyle.body;
     titleLabel.text = _downloadResource.title;
+    titleLabel.textColor = isCurrent ? FCStyle.accent : FCStyle.fcBlack;
     [titleLabel sizeToFit];
     titleLabel.top = hostLabel.bottom + 2;
     titleLabel.left = imageView.right + 15;
     [self.contentView addSubview:titleLabel];
     
-    CGFloat top = imageView.bottom + 7;
-    
-    UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
-    runBtn.titleLabel.font = FCStyle.footnoteBold;
-   
-    [self.contentView addSubview:runBtn];
-    objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    if (isCurrent) {
+        UILabel *nowLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.right + 15, imageView.bottom - 15, contentWidth - 160 - 12 - 15 - 12, 15)];
+        nowLabel.font = FCStyle.footnoteBold;
+        nowLabel.text = NSLocalizedString(@"NowPlaying", @"");
+        nowLabel.textColor = FCStyle.accent;
+        [self.contentView addSubview:nowLabel];
+    }
 
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 11, 0.5)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  contentWidth - 11, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  imageView.bottom + 6;
     line.left = 12;
     [self.contentView addSubview:line];
-
 }
 
 
-- (void)reloadCell {
+- (void)reloadCell:(BOOL)isCurrent {
     for (UIView *subView in self.contentView.subviews) {
         [subView removeFromSuperview];
     }
-    [self createCell];
+    [self createCell:isCurrent];
 }
 
 - (NSString *)timeFormatted:(NSInteger)totalSeconds

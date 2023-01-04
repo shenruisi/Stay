@@ -8,6 +8,8 @@
 #ifndef Stay_Bridging_Header_h
 #define Stay_Bridging_Header_h
 
+#import "AppDelegate.h"
+
 #import "Main/Style/FCStyle.h"
 
 #import "IAP/FCStore.h"
@@ -22,5 +24,7 @@
 #import "Main/SYFileManager/model/DownloadResource.h"
 
 #import "Main/Data/DataManager/DataManager.h"
+
+#import "SYVideoCellTableViewCell.h"
 
 #endif /* Stay_Bridging_Header_h */

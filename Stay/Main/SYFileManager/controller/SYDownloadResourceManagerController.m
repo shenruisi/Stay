@@ -211,20 +211,21 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     DownloadResource *downloadResource = self.array[indexPath.row];
     if(downloadResource.status == 2){
-        PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:downloadResource];
+        NSArray<DownloadResource *> *resources = [[DataManager shareManager] selectDownloadComplete:self.pathUuid];
+        int currIndex = 0;
+        for (int i = 0; i < resources.count; i++) {
+            if ([downloadResource.downloadUuid isEqualToString:resources[i].downloadUuid]) {
+                currIndex = i;
+                break;
+            }
+        }
+        PlayerViewController *playerController = [[PlayerViewController alloc] initWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:self.pathUuid] initIndex:currIndex];
         playerController.modalPresentationStyle = UIModalPresentationFullScreen;
         [self.navigationController pushViewController:playerController animated:YES];
     }
 }
 
 #pragma cellClickEvent
-
-- (void)playVideo:(UIButton *)sender{
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-    PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:resource];
-    playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self.navigationController pushViewController:playerController animated:YES];
-}
 
 - (void)stopDownload:(UIButton *)sender {
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");

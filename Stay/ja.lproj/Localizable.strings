@@ -118,6 +118,8 @@ LifetimeSubscription="Lifetime";
 OneTimePayment="One-time payment";
 
 Upgrade="Upgrade";
+DownloaderFeature="Downloader";
+DownloaderFeatureDesc="Download videos in Safari";
 iCloudFeature="iCloud Sync";
 iCloudFeatureDesc="Sync userscript between multiple devices";
 DarkModeFeature="Dark Mode";
@@ -233,3 +235,4 @@ urlNotEmpty="Link can not be empty.";
 STOP="Pause";
 CONTINUE="Continue";
 StopDownload="Download paused";
+NowPlaying="Now playing";

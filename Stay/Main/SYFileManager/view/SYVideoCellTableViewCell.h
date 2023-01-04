@@ -14,10 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,strong)DownloadResource *downloadResource;
 
-@property(nonatomic,strong)UIViewController *controller;
-
-
-- (void)reloadCell;
+- (void)reloadCell:(BOOL)isCurrent;
 @end
 
 NS_ASSUME_NONNULL_END

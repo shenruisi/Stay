@@ -163,13 +163,6 @@ UIDocumentPickerDelegate
 
 #pragma cellClickEvent
 
-- (void)playVideo:(UIButton *)sender{
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-    PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:resource];
-    playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [self.navigationController pushViewController:playerController animated:YES];
-}
-
 - (void)stopDownload:(UIButton *)sender {
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
@@ -277,7 +270,15 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         DownloadResource *downloadResource = self.searchData[indexPath.row];
         if(downloadResource.status == 2){
-            PlayerViewController *playerController = [[PlayerViewController alloc] initWithResource:downloadResource];
+            NSArray<DownloadResource *> *resources = [[DataManager shareManager] selectDownloadComplete:downloadResource.firstPath];
+            int currIndex = 0;
+            for (int i = 0; i < resources.count; i++) {
+                if ([downloadResource.downloadUuid isEqualToString:resources[i].downloadUuid]) {
+                    currIndex = i;
+                    break;
+                }
+            }
+            PlayerViewController *playerController = [[PlayerViewController alloc] initWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:downloadResource.firstPath] initIndex:currIndex];
             playerController.modalPresentationStyle = UIModalPresentationFullScreen;
             [self.navigationController pushViewController:playerController animated:YES];
         }
