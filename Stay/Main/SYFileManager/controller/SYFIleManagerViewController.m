@@ -24,6 +24,67 @@
 #endif
 #import "SYDownloadSlideController.h"
 
+@interface _FileEmptyTipsView : UIView
+
+@property (nonatomic, strong) UIImageView *part1Img;
+@property (nonatomic, strong) UIButton *addButton;
+@property (nonatomic, strong) UIViewController *controller;
+@end
+
+@implementation _FileEmptyTipsView
+
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]){
+        [self part1Img];
+//        [self.part1Label sizeToFit];
+        [self addButton];
+//        [self part2Label];
+//        [self.part2Label sizeToFit];
+    }
+    
+    return self;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview{
+    [super willMoveToSuperview:newSuperview];
+    self.part1Img.centerX = self.width / 2;
+    self.part1Img.bottom = self.height / 2;
+    self.addButton.top = self.part1Img.bottom + 29;
+    self.addButton.centerX = self.width / 2;
+//    self.addButton.frame = CGRectMake(self.part1Label.right, y, self.addButton.width, self.addButton.height);
+//    self.part2Label.frame = CGRectMake(self.addButton.right, y, self.part2Label.width, self.part2Label.height);
+}
+
+- (UIImageView *)part1Img{
+    if (nil == _part1Img){
+        _part1Img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 88, 95)];
+        _part1Img.image = [ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:80] color:RGB(138, 138, 138)];
+        [self addSubview:_part1Img];
+    }
+    return _part1Img;
+}
+
+- (UIButton *)addButton{
+    if (nil == _addButton){
+        _addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 175, 29)];
+        [_addButton setTitle:NSLocalizedString(@"UpgradeTo", @"") forState:UIControlStateNormal];
+        _addButton.layer.borderColor = FCStyle.borderGolden.CGColor;
+        _addButton.layer.borderWidth = 1;
+        _addButton.backgroundColor =  FCStyle.backgroundGolden;
+        [_addButton setTitleColor:FCStyle.fcGolden forState:UIControlStateNormal];
+        _addButton.font = FCStyle.subHeadline;
+        _addButton.layer.cornerRadius = 10;
+        [self addSubview:_addButton];
+    }
+    
+    return _addButton;
+}
+
+
+
+
+@end
+
 @interface SYFIleManagerViewController ()<
 UITableViewDelegate,
 UITableViewDataSource,
@@ -40,7 +101,7 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) SYDownloadSlideController *downloadSlideController;
 @property (nonatomic, strong) UITableView *searchTableView;
 @property (nonatomic, strong) UISearchController *searchController;
-
+@property (nonatomic, strong) _FileEmptyTipsView *emptyTipsView;
 @property (nonatomic, strong) NSMutableArray *searchData;
 
 
@@ -78,7 +139,13 @@ UIDocumentPickerDelegate
                                                object:nil];
     
     
-    self.navigationItem.rightBarButtonItems = @[[self addItem]];
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    if(isPro) {
+        self.navigationItem.rightBarButtonItems = @[[self addItem]];
+    }
+    
+    [self emptyTipsView];
 }
 
 - (UIBarButtonItem *)addItem{
@@ -433,6 +500,16 @@ UIDocumentPickerDelegate
     [self.folderSlideController show];
 }
 
+- (void)buyStay:(id)sender {
+#ifdef Mac
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+#endif
+            
+}
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
@@ -451,6 +528,13 @@ UIDocumentPickerDelegate
         _folderSlideController = [[FolderSlideController alloc] initWithFolderTab:nil];
     }
     return _folderSlideController;
+}
+
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    self.emptyTipsView.hidden = isPro;
 }
 
 - (void)dealloc{
@@ -478,6 +562,24 @@ UIDocumentPickerDelegate
     }
     return _searchData;
 }
+
+- (_FileEmptyTipsView *)emptyTipsView{
+    if (nil == _emptyTipsView){
+#ifdef Mac
+        _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
+#else
+        _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:self.view.bounds];
+#endif
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+        _emptyTipsView.hidden = isPro;
+        [_emptyTipsView.addButton addTarget:self action:@selector(buyStay:) forControlEvents:UIControlEventTouchUpInside];
+        _emptyTipsView.backgroundColor = FCStyle.secondaryBackground;
+        [self.view addSubview:_emptyTipsView];
+    }
+    
+    return _emptyTipsView;
+}
+
 
 /*
 #pragma mark - Navigation
