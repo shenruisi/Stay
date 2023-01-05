@@ -24,7 +24,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame BgViewBgColor:(UIColor *)bgViewBgColor BgViewBorderColor:(UIColor *)bgViewBorderColor ProgressViewColor:(UIColor *)progressViewColor {
       if (self = [super initWithFrame:frame]) {
-//          self.layer.cornerRadius = self.bounds.size.height * 0.5;
+          self.layer.cornerRadius = self.bounds.size.height * 0.5;
           self.layer.masksToBounds = YES;
           self.backgroundColor = bgViewBgColor;
 //          self.layer.borderColor = bgViewBorderColor.CGColor;

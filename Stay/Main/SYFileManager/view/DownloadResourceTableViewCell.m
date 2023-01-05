@@ -12,6 +12,7 @@
 #import "ImageHelper.h"
 #import "DataManager.h"
 #import <objc/runtime.h>
+#import "UIColor+Convert.h"
 
 @implementation DownloadResourceTableViewCell
 
@@ -178,8 +179,8 @@
         [self.contentView addSubview:line];
         self.contentView.backgroundColor = [UIColor clearColor];
     } else {
-        self.contentView.backgroundColor =  [FCStyle.accent colorWithAlphaComponent:0.1];
-
+        self.contentView.backgroundColor =  [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+        
         _downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 16)];
         UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
         objc_setAssociatedObject(stop , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -299,6 +300,8 @@
     }
     
 }
+
+
 
 
 @end
