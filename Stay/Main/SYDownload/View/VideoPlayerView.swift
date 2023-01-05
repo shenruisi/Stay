@@ -74,6 +74,9 @@ class VideoPlayerView: UIView {
     }
     
     override func removeFromSuperview() {
+        if currIndex != -1, let currentTime = player?.currentTime() {
+            DataManager.share().updateWatchProgress(Int(currentTime.roundedSeconds), uuid: self.currResource.downloadUuid)
+        }
         player?.pause()
         
         super.removeFromSuperview()
@@ -265,7 +268,7 @@ class VideoPlayerView: UIView {
         titleLabel.font = FCStyle.bodyBold
         titleLabel.textColor = .white
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        lockBtn.setImage(UIImage(systemName: "lock.open", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
+        lockBtn.setImage(UIImage(systemName: "lock.open", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 22)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         lockBtn.addTarget(self, action: #selector(lockAction), for: .touchUpInside)
         lockBtn.translatesAutoresizingMaskIntoConstraints = false
         prevBtn.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
@@ -457,9 +460,6 @@ class VideoPlayerView: UIView {
             }
             return
         }
-        if let currentTime = player?.currentTime() {
-            DataManager.share().updateWatchProgress(Int(currentTime.roundedSeconds), uuid: self.currResource.downloadUuid)
-        }
         controller?.navigationController?.popViewController(animated: true)
         controller = nil
     }
@@ -547,7 +547,7 @@ class VideoPlayerView: UIView {
     @objc
     func lockAction() {
         isLocked = !isLocked
-        lockBtn.setImage(UIImage(systemName: isLocked ? "lock" : "lock.open", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
+        lockBtn.setImage(UIImage(systemName: isLocked ? "lock" : "lock.open", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 22)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         
         toggleControls()
         if let delegate = UIApplication.shared.delegate as? AppDelegate {

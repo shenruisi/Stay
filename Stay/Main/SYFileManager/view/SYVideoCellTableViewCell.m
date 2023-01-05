@@ -58,7 +58,7 @@
     }
     
     if(_downloadResource.videoDuration > 0) {
-        SYProgress *watchProcess = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, 160, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
+        SYProgress *watchProcess = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, 160, 3) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
         
         watchProcess.progress = _downloadResource.watchProcess * 1.0 / _downloadResource.videoDuration;
         watchProcess.bottom = 90;

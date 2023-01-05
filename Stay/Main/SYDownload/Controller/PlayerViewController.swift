@@ -62,7 +62,7 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
         view.addSubview(container)
         
         videoTitleLabel.font = FCStyle.bodyBold
-        videoTitleLabel.textColor = .black
+        videoTitleLabel.textColor = FCStyle.fcBlack
         videoTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(videoTitleLabel)
         
@@ -113,6 +113,7 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
         ])
         
         videoView.play(index: initIndex)
+        setInteractiveRecognizer()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -129,6 +130,13 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.tabBarController?.tabBar.isHidden = false
         navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    var popRecognizer: InteractivePopRecognizer?
+    private func setInteractiveRecognizer() {
+        guard let controller = navigationController else { return }
+        popRecognizer = InteractivePopRecognizer(controller: controller)
+        controller.interactivePopGestureRecognizer?.delegate = popRecognizer
     }
     
     func updateViewState(isLandscape: Bool) {
@@ -168,4 +176,24 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
         videoView.play(index: indexPath.row)
     }
 
+}
+
+class InteractivePopRecognizer: NSObject, UIGestureRecognizerDelegate {
+
+    weak var navigationController: UINavigationController?
+
+    init(controller: UINavigationController) {
+        self.navigationController = controller
+    }
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return navigationController?.viewControllers.count ?? 0 > 1
+    }
+
+    // This is necessary because without it, subviews of your top controller can
+    // cancel out your gesture recognizer on the edge.
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
 }
