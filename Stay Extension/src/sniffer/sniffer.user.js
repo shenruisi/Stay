@@ -276,6 +276,9 @@ const browser = __b;
           videoIdSet.add(videoId);
         }
       }
+      else if(host.indexOf('iesdouyin.com')>-1){
+        videoInfo = handleMobileDouyinVideoInfo(videoDom);
+      }
 
 
 
@@ -337,6 +340,22 @@ const browser = __b;
       videoInfo.poster = videoDom.getAttribute('poster');
       videoInfo.downloadUrl = videoDom.getAttribute('src');
       
+      return videoInfo;
+    }
+
+    function handleMobileDouyinVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      let posterDom = document.querySelector('.video-container img.poster');
+      if(posterDom){
+        videoInfo.poster = posterDom.getAttribute('src');
+      }
+      let titleDom = document.querySelector('.desc .multi-line .multi-line_text');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+
       return videoInfo;
     }
 
