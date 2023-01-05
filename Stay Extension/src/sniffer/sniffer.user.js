@@ -339,6 +339,10 @@ const browser = __b;
       let videoInfo = {};
       videoInfo.poster = videoDom.getAttribute('poster');
       videoInfo.downloadUrl = videoDom.getAttribute('src');
+      if(hostUrl.match(/^.*\/detail\/.*/g)){
+        videoInfo.title = Utils.checkCharLengthAndSubStr(document.querySelector('.weibo-main .weibo-text').textContent);
+        // videoInfo.poster = Utils.completionSourceUrl(document.querySelector('.weibo-main .weibo-media .card-video .mwb-video .m-img-box img').getAttribute('src'));
+      }
       
       return videoInfo;
     }
