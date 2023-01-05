@@ -98,7 +98,30 @@ const browser = __b;
           }
         }
         return downloadUrl;
+      },
+      checkCharLengthAndSubStr: function(text, len=80){
+        if(!text){
+          return '';
+        }
+        let textTemp = text.replace(/[^x00-xff]/g, '01');
+        if(textTemp.length <= len){
+          return text;
+        }else{
+          return text.substr(0, len);
+        }
+      },
+      getUrlPathName: function(srcUrl){
+        let pathName = '';
+        if(this.isURL(srcUrl)){
+          pathName = new URL(srcUrl).pathname;
+        }else{
+          pathName = new URL(hostUrl).pathname;
+        }
+        let pathArr = pathName.split('/');
+        pathArr = pathArr.filter(item=>{if(item&&item!=''){return item}});
+        return pathArr.pop();
       }
+
     }
     
     function startFindVideoInfo(){
@@ -172,15 +195,12 @@ const browser = __b;
           downloadUrl = Utils.completionSourceUrl(downloadUrl);
           // 已存在
           if(downloadUrl && videoUrlSet.size && videoUrlSet.has(downloadUrl)){
+            // console.log('parseVideoNodeList------downloadUrl----already-----in----videoUrlSet----',videoUrlSet)
             return;
           }
          
           // todo fetch other scenarios
           let videoInfo = handleVideoInfoParse(item);
-
-
-
-
 
           // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
           if(!videoInfo.downloadUrl){
@@ -238,12 +258,31 @@ const browser = __b;
       else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoDom);
       }
+      else if(host.indexOf('bilibili.com')>-1){
+        videoInfo = handleBilibiliVideoInfo(videoDom);
+      }
+      else if(host.indexOf('mobile.twitter.com')>-1){
+        videoInfo = handleMobileTwitterVideoInfo(videoDom);
+      }
+      else if(host.indexOf('m.weibo.cn')>-1){
+        let videoId = Utils.getUrlPathName(downloadUrl);
+        if(videoId && videoIdSet.size && videoIdSet.has(videoId)){
+          // console.log('domId------isAlready', videoId);
+          return {};
+        }
+        videoInfo = handleMobileWeiboVideoInfo(videoDom);
+        if(videoInfo && Object.keys(videoInfo).length && videoInfo.downloadUrl){
+          // console.log('-------adddddddddddd-----------------videoId------', videoId);
+          videoIdSet.add(videoId);
+        }
+      }
 
 
 
       if(!downloadUrl){
         downloadUrl = videoInfo.downloadUrl
       }
+      downloadUrl = Utils.completionSourceUrl(downloadUrl);
       if(!poster){
         poster = videoInfo.poster
       }
@@ -254,15 +293,7 @@ const browser = __b;
         qualityList = videoInfo.qualityList;
       }
       if(!title){
-        let pathName = '';
-        if(Utils.isURL(downloadUrl)){
-          pathName = new URL(downloadUrl).pathname;
-        }else{
-          pathName = new URL(hostUrl).pathname;
-        }
-        let pathArr = pathName.split('/');
-        pathArr = pathArr.filter(item=>{if(item&&item!=''){return item}});
-        title = pathArr.pop();
+        title = Utils.getUrlPathName(downloadUrl);
       }
       poster = Utils.completionSourceUrl(poster);
       videoInfo['title'] = title
@@ -270,6 +301,42 @@ const browser = __b;
       videoInfo['downloadUrl'] = downloadUrl;
       videoInfo['hostUrl'] = hostUrl;
       videoInfo['qualityList'] = qualityList;
+      return videoInfo;
+    }
+
+    function handleBilibiliVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+
+      let titleDom = document.querySelector('.main-container .ep-info-pre .ep-info-title');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+
+      return videoInfo;
+    }
+
+    function handleMobileTwitterVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      let titleDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.nextElementSibling.childNodes[1];
+      if(titleDom){
+        titleDom = titleDom.querySelector('.css-1dbjc4n .r-92ivih.r-1t01tom .r-1t982j2.r-1j3t67a .css-1dbjc4n.r-1kw4oii a[data-testid=\'tweetText\'] span');
+        if(titleDom){
+          videoInfo.title = Utils.checkCharLengthAndSubStr(titleDom.textContent);
+        }
+      }
+      return videoInfo;
+    }
+
+    function handleMobileWeiboVideoInfo(videoDom){
+
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      
       return videoInfo;
     }
 

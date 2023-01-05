@@ -102,10 +102,10 @@ export default {
         active: true,
         currentWindow: true
       }, (tabs) => {
-        console.log('--------global.browser.tabs.--snifferFetchVideoInfo-');
+        // console.log('--------global.browser.tabs.--snifferFetchVideoInfo-');
         let message = { from: 'popup', operate: 'snifferFetchVideoInfo'};
         global.browser.tabs.sendMessage(tabs[0].id, message, response => {
-          console.log('snifferFetchVideoInfo---response-----', response);
+          // console.log('snifferFetchVideoInfo---response-----', response);
           if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
             let videoList = response.body.videoInfoList;
             videoList.forEach(item=>{
@@ -260,6 +260,8 @@ export default {
               flex-shrink: 0;
               position: absolute;
               left: 0;
+              align-items: center;
+              justify-content: center;
               img{
                 max-width: 100%;
                 max-height: 100%;
