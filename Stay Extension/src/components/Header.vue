@@ -21,7 +21,8 @@ export default {
     })
 
     const clickStayAction = () => {
-      window.open('stay://');
+      // window.open('stay://');
+      global.openUrlInSafariPopup('stay://');
     }
     const clickStaySwitchAction = (staySwitch) => {
       if(staySwitch == 'start'){

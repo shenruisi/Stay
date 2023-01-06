@@ -49,7 +49,7 @@ export default {
     const store = global.store;
     const localLan = store.state.localeLan;
     locale.value = store.state.localeLan;
-    console.log('localLan====', localLan, store.state.selectedTab);
+    // console.log('localLan====', localLan, store.state.selectedTab);
     // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
       selectedTab: store.state.selectedTab,

@@ -346,12 +346,23 @@ let injectedContentVendor = new Set();
                 window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
             }
         }
+        else if('popup' === request.from){
+            if('windowOpen' === operate){
+                var openUrl = request.openUrl;
+                console.log('openUrl---------',openUrl);
+                // window.open(openUrl, '_self');
+                let targetGun = document.createElement('a');
+                targetGun.href = openUrl;
+                targetGun.click();
+            }
+              
+          }
         return true;
     });
     
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         matchedScripts = response.body;
-        console.log("matchedScripts-", matchedScripts)
+        // console.log("matchedScripts-", matchedScripts)
         let activeCount = 0;
         matchedScripts.forEach((script) => {
             var pageInject = script.installType === "page";

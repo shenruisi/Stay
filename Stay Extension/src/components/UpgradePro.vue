@@ -6,18 +6,20 @@
   </template>
   
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, inject } from 'vue'
 import { useI18n } from 'vue-i18n';
   
 export default {
   name: 'UpgradeProComp',
   setup (props, {emit, expose}) {
     const { t, tm } = useI18n();
+    const global = inject('global');
     const state = reactive({
   
     });
     const upgradeAction = () => {
-      window.open('stay://x-callback-url/pay?');
+      // window.open('stay://x-callback-url/pay?');
+      global.openUrlInSafariPopup('stay://x-callback-url/pay?');
     }
     return {
       ...toRefs(state),

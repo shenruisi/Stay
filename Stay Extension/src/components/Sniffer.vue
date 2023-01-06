@@ -145,7 +145,8 @@ export default {
       }
       let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: item.selectedFolder}];
       let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-      window.open(downloadUrl);
+      // window.open(downloadUrl);
+      global.openUrlInSafariPopup(downloadUrl);
     }
     const changeSelectFolder = (index, event) => {
       const selectOpt = event.target;
@@ -170,7 +171,7 @@ export default {
     }
 
     const contactClick = () => {
-      window.open(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}`);
+      global.openUrlInSafariPopup(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}`);
     }
 
     return {

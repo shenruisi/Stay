@@ -13,12 +13,23 @@ const globalClick = (callback) => {
     callback(event);
   });
 };
+const openUrlInSafariPopup = (openUrl) => {
+  browser.tabs.query({
+    active: true,
+    currentWindow: true
+  }, (tabs) => {
+    let message = { from: 'popup', operate: 'windowOpen', openUrl};
+    global.browser.tabs.sendMessage(tabs[0].id, message, response => {})
+  })
+  window.close();
+}
 // 配置全局变量 页面中使用 inject 接收
 app.provide('global', {
   store,
   browser,
   toast,
-  globalClick
+  globalClick,
+  openUrlInSafariPopup
 });
 
 app.use(i18n).use(store).mount('#app');

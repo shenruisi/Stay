@@ -136,7 +136,10 @@ export default {
     }
     
     const openInAPP = (uuid) => {
-      window.open('stay://x-callback-url/userscript?id='+uuid);
+      // window.open('stay://x-callback-url/userscript?id='+uuid, '_self');
+      let openUrl = 'stay://x-callback-url/userscript?id='+uuid;
+      global.openUrlInSafariPopup(openUrl);
+
     }
 
     const showRegisterMenu = (uuid, active) => {
