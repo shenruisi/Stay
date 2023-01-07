@@ -157,6 +157,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     let remainLabel = UILabel()
     let modeBtn = UIButton()
     let rightBottomView = UIStackView()
+    let rateBtn = UIButton()
     let brightnessView = UIView()
     let brightnessPV = UIProgressView()
     let volumeView = UIView()
@@ -245,7 +246,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             rView.translatesAutoresizingMaskIntoConstraints = false
             rateView.addSubview(rView)
             let rLabel = UILabel()
-            rLabel.font = FCStyle.body
+            rLabel.font = FCStyle.bodyBold
             rLabel.textColor = .white
             rLabel.text = "\(rate)X"
             rLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -335,7 +336,6 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         rightBottomView.alignment = .center
         rightBottomView.spacing = 15
         rightBottomView.translatesAutoresizingMaskIntoConstraints = false
-        let rateBtn = UIButton()
         rateBtn.setTitle("倍速", for: .normal)
         rateBtn.titleLabel?.font = FCStyle.footnote
         rateBtn.setTitleColor(.white, for: .normal)
@@ -639,6 +639,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             for i in 0..<rates.count {
                 rateView.subviews[i].subviews[1].isHidden = i != index
             }
+            rateBtn.setTitle(index == 2 ? "倍数" : "\(rates[index])X", for: .normal)
         }
         rateView.isHidden = true
     }
