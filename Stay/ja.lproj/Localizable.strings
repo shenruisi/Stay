@@ -236,3 +236,5 @@ STOP="Pause";
 CONTINUE="Continue";
 StopDownload="Download paused";
 NowPlaying="Now playing";
+DownloadFailed="Download failed";
+RETRY="Retry";

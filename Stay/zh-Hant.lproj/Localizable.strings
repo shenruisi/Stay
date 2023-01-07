@@ -235,3 +235,5 @@ STOP="點擊暫停";
 CONTINUE="點擊繼續";
 StopDownload="已暫停";
 NowPlaying="正在播放";
+DownloadFailed="下載失敗";
+RETRY="點擊重試";
