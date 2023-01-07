@@ -236,3 +236,4 @@ STOP="Pause";
 CONTINUE="Continue";
 StopDownload="Download paused";
 NowPlaying="Now playing";
+Rate="Speed";

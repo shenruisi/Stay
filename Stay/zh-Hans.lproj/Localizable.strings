@@ -237,3 +237,4 @@ STOP="点击暂停";
 CONTINUE="点击继续";
 StopDownload="已暂停";
 NowPlaying="正在播放";
+Rate="倍速";

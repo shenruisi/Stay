@@ -235,3 +235,4 @@ STOP="點擊暫停";
 CONTINUE="點擊繼續";
 StopDownload="已暫停";
 NowPlaying="正在播放";
+Rate="倍速";
