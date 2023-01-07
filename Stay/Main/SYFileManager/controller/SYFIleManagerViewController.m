@@ -297,7 +297,7 @@ UIDocumentPickerDelegate
         return nil;
     } else {
         UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
-        headrView.backgroundColor = FCStyle.fcWhite;
+        headrView.backgroundColor = FCStyle.secondaryBackground;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
         label.font = FCStyle.headlineBold;
         label.text = NSLocalizedString(@"Folders", @"");
@@ -335,7 +335,8 @@ UIDocumentPickerDelegate
         }
         
         
-        
+        cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+
         cell.contentView.width = self.view.width;
         cell.downloadResource = self.searchData[indexPath.row];
         cell.controller = self;
@@ -404,6 +405,8 @@ UIDocumentPickerDelegate
             [subView removeFromSuperview];
         }
         
+        cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+    
         cell.contentView.width = self.view.width;
         cell.cer = self;
         cell.fctab = [FCShared tabManager].tabs[indexPath.row];
@@ -519,6 +522,7 @@ UIDocumentPickerDelegate
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
         [self.view addSubview:_tableView];
     }
     return _tableView;

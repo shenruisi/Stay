@@ -177,7 +177,8 @@
         line.top =  saveFileBtn.bottom + 6;
         line.left = 12;
         [self.contentView addSubview:line];
-        self.contentView.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+;
     } else {
         self.contentView.backgroundColor =  [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         
