@@ -336,7 +336,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         rightBottomView.alignment = .center
         rightBottomView.spacing = 15
         rightBottomView.translatesAutoresizingMaskIntoConstraints = false
-        rateBtn.setTitle("倍速", for: .normal)
+        rateBtn.setTitle(NSLocalizedString("Rate", comment: ""), for: .normal)
         rateBtn.titleLabel?.font = FCStyle.footnote
         rateBtn.setTitleColor(.white, for: .normal)
         rateBtn.addTarget(self, action: #selector(rateBtnAction), for: .touchUpInside)
@@ -639,7 +639,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             for i in 0..<rates.count {
                 rateView.subviews[i].subviews[1].isHidden = i != index
             }
-            rateBtn.setTitle(index == 2 ? "倍数" : "\(rates[index])X", for: .normal)
+            rateBtn.setTitle(index == 2 ? NSLocalizedString("Rate", comment: "") : "\(rates[index])X", for: .normal)
         }
         rateView.isHidden = true
     }
