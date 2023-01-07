@@ -279,6 +279,9 @@ const browser = __b;
       else if(host.indexOf('iesdouyin.com')>-1){
         videoInfo = handleMobileDouyinVideoInfo(videoDom);
       }
+      else if(host.indexOf('m.toutiao.com')>-1){
+        videoInfo = handleMobileToutiaoVideoInfo(videoDom);
+      }
 
 
 
@@ -356,6 +359,27 @@ const browser = __b;
         videoInfo.poster = posterDom.getAttribute('src');
       }
       let titleDom = document.querySelector('.desc .multi-line .multi-line_text');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+
+      return videoInfo;
+    }
+
+    function handleMobileToutiaoVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      const posterDom = document.querySelector('.video .xgplayer-placeholder .xgplayer-poster')
+      if(posterDom){
+        let posterInfo = posterDom.getAttribute('style');
+        if(posterInfo){
+          let poster = Utils.matchUrlInString(posterInfo);
+          console.log('poster-----',poster);
+          videoInfo.poster = poster;
+        }
+      }
+      const titleDom = document.querySelector('.video .video-header .video-title-wrapper .video-title');
       if(titleDom){
         videoInfo.title = titleDom.textContent;
       }
