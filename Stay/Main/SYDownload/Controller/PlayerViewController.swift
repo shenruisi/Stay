@@ -82,6 +82,7 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.rowHeight = 104.5
+        tableView.backgroundColor = FCStyle.secondaryBackground
         tableView.register(SYVideoCellTableViewCell.self, forCellReuseIdentifier: "SYVideoCellTableViewCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(tableView)
