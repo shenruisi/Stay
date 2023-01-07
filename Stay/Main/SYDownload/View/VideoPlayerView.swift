@@ -10,7 +10,7 @@ import AVFoundation
 import AVKit
 import MediaPlayer
 
-class VideoPlayerView: UIView {
+class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePickerViewDelegate {
     
     override class var layerClass: AnyClass {
         return AVPlayerLayer.self
@@ -43,12 +43,8 @@ class VideoPlayerView: UIView {
         
         playerLayer.player = player
         avPipController = AVPictureInPictureController(playerLayer: playerLayer)
-        
-//        itemOb = player?.observe(\.currentItem) { [weak self] player, _ in
-//            if player.items().count == 1 {
-//                self?.addAllVideosToPlayer()
-//            }
-//        }
+        avPipController?.delegate = self
+
         itemStatusOb = player?.observe(\AVQueuePlayer.currentItem?.status) { [weak self] _, _ in
             if let currentItem = self?.player?.currentItem {
                 if currentItem.status == .readyToPlay {
@@ -161,6 +157,7 @@ class VideoPlayerView: UIView {
     let remainLabel = UILabel()
     let modeBtn = UIButton()
     let rightBottomView = UIStackView()
+    let rateBtn = UIButton()
     let brightnessView = UIView()
     let brightnessPV = UIProgressView()
     let volumeView = UIView()
@@ -169,6 +166,8 @@ class VideoPlayerView: UIView {
     let progressView = UIView()
     let progressLabel = UILabel()
     let progressPV = UIProgressView()
+    let forwardView = UIView()
+    let backwardView = UIView()
     let rateView = UIView()
     let qualityLabel = UILabel()
     func setupControls() {
@@ -178,6 +177,7 @@ class VideoPlayerView: UIView {
         
         airBtn.tintColor = .white
         airBtn.prioritizesVideoDevices = true
+        airBtn.delegate = self
         airBtn.translatesAutoresizingMaskIntoConstraints = false
         pipBtn.setImage(UIImage(systemName: "pip.enter", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         pipBtn.addTarget(self, action: #selector(pipAction), for: .touchUpInside)
@@ -201,12 +201,12 @@ class VideoPlayerView: UIView {
         volumeView.clipsToBounds = true
         volumeView.backgroundColor = .black.withAlphaComponent(0.1)
         volumeView.translatesAutoresizingMaskIntoConstraints = false
-//        let (volumeImage, volumeValue) = getVolume()
-//        volumeIcon.image = volumeImage
+        let (volumeImage, volumeValue) = getVolume()
+        volumeIcon.image = volumeImage
         volumeIcon.translatesAutoresizingMaskIntoConstraints = false
         volumeView.addSubview(volumeIcon)
         volumePV.tintColor = .white
-//        volumePV.progress = volumeValue
+        volumePV.progress = volumeValue
         volumePV.translatesAutoresizingMaskIntoConstraints = false
         volumeView.addSubview(volumePV)
         
@@ -220,6 +220,56 @@ class VideoPlayerView: UIView {
         progressPV.tintColor = .white
         progressPV.translatesAutoresizingMaskIntoConstraints = false
         progressView.addSubview(progressPV)
+        
+        forwardView.isHidden = true
+        forwardView.translatesAutoresizingMaskIntoConstraints = false
+        let forwardImg = UIImageView(image: UIImage(systemName: "forward.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal))
+        forwardImg.translatesAutoresizingMaskIntoConstraints = false
+        forwardView.addSubview(forwardImg)
+        backwardView.isHidden = true
+        backwardView.translatesAutoresizingMaskIntoConstraints = false
+        let backwardImg = UIImageView(image: UIImage(systemName: "backward.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal))
+        backwardImg.translatesAutoresizingMaskIntoConstraints = false
+        backwardView.addSubview(backwardImg)
+        
+        rateView.isHidden = true
+        rateView.translatesAutoresizingMaskIntoConstraints = false
+        let rWidth = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 10
+        let rWidthS = 1.125 * rWidth
+        for (i, rate) in rates.enumerated() {
+            let rView = UIButton()
+            rView.tag = i
+            rView.layer.cornerRadius = 8
+            rView.clipsToBounds = true
+            rView.backgroundColor = .black.withAlphaComponent(0.1)
+            rView.addTarget(self, action: #selector(rateControlAction), for: .touchUpInside)
+            rView.translatesAutoresizingMaskIntoConstraints = false
+            rateView.addSubview(rView)
+            let rLabel = UILabel()
+            rLabel.font = FCStyle.bodyBold
+            rLabel.textColor = .white
+            rLabel.text = "\(rate)X"
+            rLabel.translatesAutoresizingMaskIntoConstraints = false
+            rView.addSubview(rLabel)
+            let flagView = UIView()
+            flagView.isHidden = i != 2
+            flagView.backgroundColor = .white
+            flagView.translatesAutoresizingMaskIntoConstraints = false
+            rView.addSubview(flagView)
+            
+            NSLayoutConstraint.activate([
+                rView.leadingAnchor.constraint(equalTo: rateView.leadingAnchor, constant: rWidthS * CGFloat((i + 1))),
+                rView.widthAnchor.constraint(equalToConstant: rWidth),
+                rView.centerYAnchor.constraint(equalTo: rateView.centerYAnchor),
+                rView.heightAnchor.constraint(equalToConstant: rWidth),
+                rLabel.centerXAnchor.constraint(equalTo: rView.centerXAnchor),
+                rLabel.centerYAnchor.constraint(equalTo: rView.centerYAnchor),
+                flagView.leadingAnchor.constraint(equalTo: rView.leadingAnchor),
+                flagView.trailingAnchor.constraint(equalTo: rView.trailingAnchor),
+                flagView.bottomAnchor.constraint(equalTo: rView.bottomAnchor),
+                flagView.heightAnchor.constraint(equalToConstant: 4),
+            ])
+        }
         
         NSLayoutConstraint.activate([
             brightIcon.leadingAnchor.constraint(equalTo: brightnessView.leadingAnchor, constant: 5),
@@ -239,6 +289,11 @@ class VideoPlayerView: UIView {
             progressPV.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
             progressPV.widthAnchor.constraint(equalToConstant: 100),
             progressPV.bottomAnchor.constraint(equalTo: progressView.bottomAnchor, constant: -5),
+            
+            forwardImg.leadingAnchor.constraint(equalTo: forwardView.leadingAnchor),
+            forwardImg.centerYAnchor.constraint(equalTo: forwardView.centerYAnchor),
+            backwardImg.leadingAnchor.constraint(equalTo: backwardView.leadingAnchor),
+            backwardImg.centerYAnchor.constraint(equalTo: backwardView.centerYAnchor),
         ])
         
         playBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
@@ -281,11 +336,10 @@ class VideoPlayerView: UIView {
         rightBottomView.alignment = .center
         rightBottomView.spacing = 15
         rightBottomView.translatesAutoresizingMaskIntoConstraints = false
-        let rateBtn = UIButton()
-        rateBtn.setTitle("倍速", for: .normal)
+        rateBtn.setTitle(NSLocalizedString("Rate", comment: ""), for: .normal)
         rateBtn.titleLabel?.font = FCStyle.footnote
         rateBtn.setTitleColor(.white, for: .normal)
-        rateBtn.addTarget(self, action: #selector(rateAction), for: .touchUpInside)
+        rateBtn.addTarget(self, action: #selector(rateBtnAction), for: .touchUpInside)
         rightBottomView.addArrangedSubview(rateBtn)
         qualityLabel.layer.cornerRadius = 5
         qualityLabel.clipsToBounds = true
@@ -308,6 +362,8 @@ class VideoPlayerView: UIView {
         addSubview(brightnessView)
         addSubview(volumeView)
         addSubview(progressView)
+        addSubview(forwardView)
+        addSubview(backwardView)
         
         NSLayoutConstraint.activate([
             backBtn.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
@@ -338,6 +394,15 @@ class VideoPlayerView: UIView {
             progressView.widthAnchor.constraint(equalToConstant: 120),
             progressView.centerYAnchor.constraint(equalTo: centerYAnchor),
             progressView.heightAnchor.constraint(equalToConstant: 50),
+            
+            forwardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isLandscape ? -200 : -100),
+            forwardView.widthAnchor.constraint(equalToConstant: 50),
+            forwardView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            forwardView.heightAnchor.constraint(equalToConstant: 30),
+            backwardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: isLandscape ? 200 : 100),
+            backwardView.widthAnchor.constraint(equalToConstant: 50),
+            backwardView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            backwardView.heightAnchor.constraint(equalToConstant: 30),
         ])
         
         addSubview(playBtn)
@@ -351,7 +416,7 @@ class VideoPlayerView: UIView {
             addSubview(prevBtn)
             addSubview(nextBtn)
             addSubview(rightBottomView)
-//            addSubview(rateView)
+            addSubview(rateView)
             
             NSLayoutConstraint.activate([
                 titleLabel.leadingAnchor.constraint(equalTo: backBtn.trailingAnchor, constant: 0),
@@ -362,6 +427,11 @@ class VideoPlayerView: UIView {
                 lockBtn.widthAnchor.constraint(equalToConstant: 30),
                 lockBtn.centerYAnchor.constraint(equalTo: centerYAnchor),
                 lockBtn.heightAnchor.constraint(equalToConstant: 48),
+                
+                rateView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                rateView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                rateView.topAnchor.constraint(equalTo: topAnchor),
+                rateView.bottomAnchor.constraint(equalTo: bottomAnchor),
                 
                 prevBtn.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
                 prevBtn.widthAnchor.constraint(equalToConstant: 30),
@@ -556,8 +626,22 @@ class VideoPlayerView: UIView {
     }
     
     @objc
-    func rateAction() {
-        
+    func rateBtnAction() {
+        rateView.isHidden = false
+    }
+    
+    let rates: [Float] = [0.5, 0.75, 1, 1.25, 1.5, 2, 3]
+    @objc
+    func rateControlAction(sender: UIControl) {
+        let index = sender.tag
+        if index >= 0 && index < rates.count {
+            setRate(rates[index])
+            for i in 0..<rates.count {
+                rateView.subviews[i].subviews[1].isHidden = i != index
+            }
+            rateBtn.setTitle(index == 2 ? NSLocalizedString("Rate", comment: "") : "\(rates[index])X", for: .normal)
+        }
+        rateView.isHidden = true
     }
     
     @objc
@@ -566,7 +650,7 @@ class VideoPlayerView: UIView {
             lockBtn.isHidden = false
             return
         }
-        
+        rateView.isHidden = true
         toggleControls()
     }
     
@@ -581,9 +665,21 @@ class VideoPlayerView: UIView {
         case .began:
             normalRate = player?.rate ?? 0.0
             let location = gestureRecognizer.location(in: self)
-            player?.rate = location.x > self.frame.width / 2 ? (normalRate * 2) : (normalRate / 2)
+            if location.x > self.frame.width / 2 {
+                player?.rate = normalRate * 2
+                forwardView.isHidden = false
+                forwardView.subviews[0].startAlpha(duration: 0.5)
+            } else {
+                player?.rate = -normalRate * 2
+                backwardView.isHidden = false
+                backwardView.subviews[0].startAlpha(duration: 0.5)
+            }
         case .ended, .failed, .cancelled:
             player?.rate = normalRate
+            forwardView.isHidden = true
+            forwardView.subviews[0].stopAlpha()
+            backwardView.isHidden = true
+            backwardView.subviews[0].stopAlpha()
         default:
             break
         }
@@ -746,6 +842,20 @@ class VideoPlayerView: UIView {
         player = nil
     }
     
+    func refreshControls() {
+        showControls(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
+        playBtn.setImage(UIImage(systemName: (player?.rate ?? 0) == 0 ? "play.fill" : "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
+        (controller as? PlayerViewController)?.updateViewState(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
+    }
+    
+    func routePickerViewDidEndPresentingRoutes(_ routePickerView: AVRoutePickerView) {
+        refreshControls()
+    }
+    
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        refreshControls()
+    }
+    
 }
 
 extension CMTime {
@@ -763,4 +873,32 @@ extension CMTime {
             String(format: "%02d:%02d",
                    minute, second)
     }
+}
+
+extension UIView {
+    
+    private static let kAlphaAnimationKey = "alphaanimationkey"
+    
+    @objc
+    func startAlpha(duration: Double = 1){
+        if layer.animation(forKey: UIView.kAlphaAnimationKey) == nil {
+            let alphaAnimation = CABasicAnimation(keyPath: "opacity")
+
+            alphaAnimation.fromValue = 0.5
+            alphaAnimation.toValue = 1.0
+            alphaAnimation.duration = duration
+            alphaAnimation.autoreverses = true
+            alphaAnimation.repeatCount = Float.infinity
+
+            layer.add(alphaAnimation, forKey: UIView.kAlphaAnimationKey)
+        }
+    }
+    
+    @objc
+    func stopAlpha(){
+        if layer.animation(forKey: UIView.kAlphaAnimationKey) != nil {
+            layer.removeAnimation(forKey: UIView.kAlphaAnimationKey)
+        }
+    }
+    
 }

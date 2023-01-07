@@ -237,3 +237,6 @@ STOP="点击暂停";
 CONTINUE="点击继续";
 StopDownload="已暂停";
 NowPlaying="正在播放";
+DownloadFailed="下载失败";
+RETRY="点击重试";
+Rate="倍速";
