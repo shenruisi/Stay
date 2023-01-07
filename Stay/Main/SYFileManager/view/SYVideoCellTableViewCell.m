@@ -22,6 +22,7 @@
 - (void)createCell:(BOOL)isCurrent {
     int contentWidth = UIScreen.mainScreen.bounds.size.width;
     
+    self.contentView.backgroundColor = FCStyle.secondaryBackground;
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 8, 160, 90)];
     imageView.layer.cornerRadius = 5;
     imageView.clipsToBounds = YES;
