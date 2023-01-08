@@ -14,6 +14,8 @@ const browser = __b;
       isContent = true;
       injectParseVideoJS(isContent);
     })
+    // isContent = true;
+    // injectParseVideoJS(isContent);
   } catch (error) {
   }
 
@@ -124,12 +126,25 @@ const browser = __b;
 
     }
     
-    function startFindVideoInfo(){
+    function startFindVideoInfo(completed){
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
-      // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
+      console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
       let flag = videoDoms && videoDoms.length;
+      if(completed && !flag){
+        for(let n = 0; n<5; n++){
+          console.log('startFindVideoInfo------n-----',n);
+          window.setTimeout(()=>{
+            videoDoms = document.querySelectorAll('video');  
+          },300)
+          flag = videoDoms && videoDoms.length;
+          if(flag){
+            console.log('startFindVideoInfo------break-----');
+            break;
+          }
+        }
+      }
       if(flag){
         // console.log('videoDoms---false-----',videoDoms)
         parseVideoNodeList(videoDoms);
@@ -186,10 +201,13 @@ const browser = __b;
           }
           let downloadUrl = item.getAttribute('src');
           if(!downloadUrl){
+            // console.log('parseVideoNodeList--------------downloadUrl=',downloadUrl);
             let sourceDom = item.querySelector('source');
+            // console.log('parseVideoNodeList--------------sourceDom=',sourceDom);
             if(sourceDom){
               item = sourceDom;
               downloadUrl = sourceDom.getAttribute('src');
+              // console.log('parseVideoNodeList--------------sourceDom.downloadUrl=',downloadUrl);
             }
           }
           downloadUrl = Utils.completionSourceUrl(downloadUrl);
@@ -281,6 +299,9 @@ const browser = __b;
       }
       else if(host.indexOf('m.toutiao.com')>-1){
         videoInfo = handleMobileToutiaoVideoInfo(videoDom);
+      }
+      else if(host.indexOf('m.v.qq.com')>-1){
+        videoInfo = handleMobileTenxunVideoInfo(videoDom);
       }
 
 
@@ -384,6 +405,24 @@ const browser = __b;
         videoInfo.title = titleDom.textContent;
       }
 
+      return videoInfo;
+    }
+
+    function handleMobileTenxunVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      const posterDom = document.querySelector('.mod_play .player_container .txp_poster_img');
+      if(posterDom){
+        let poster = posterDom.getAttribute('src');
+        poster = Utils.completionSourceUrl(poster);
+        videoInfo.poster = poster;
+      }
+      const titleDom = document.querySelector('.mod_box .mod_bd .mod_video_info .video_title');
+      if(titleDom){
+        let title = titleDom.textContent;
+        videoInfo.title = title;
+      }
       return videoInfo;
     }
 
@@ -642,12 +681,12 @@ const browser = __b;
       return '';
     }
     
-    startFindVideoInfo();
+    startFindVideoInfo(false);
     document.onreadystatechange = () => {
       console.log('document.readyState==',document.readyState)
       if (document.readyState === 'complete') {
         console.log('readyState-------------------', document.readyState)
-        startFindVideoInfo();
+        startFindVideoInfo(true);
         console.log('readyStateytInitialPlayerResponseytInitialPlayerResponse-----')
       }
     };
