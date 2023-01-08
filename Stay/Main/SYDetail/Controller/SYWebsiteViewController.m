@@ -11,6 +11,8 @@
 @interface SYWebsiteViewController ()
 @property (nonatomic, strong) UIScrollView *matchScrollView;
 @property (nonatomic, strong) UIScrollView *grantScrollView;
+@property (nonatomic, strong) UIScrollView *disableScrollView;
+
 
 @end
 
@@ -22,6 +24,8 @@
 
     if ([self.type isEqualToString:@"grants"]) {
         [self.view addSubview:self.grantScrollView];
+    } else if([self.type isEqualToString:@"disabledWebsites"]) {
+        [self.view addSubview:self.disableScrollView];
     } else {
         [self.view addSubview:self.matchScrollView];
     }
@@ -244,6 +248,47 @@
         _grantScrollView.contentSize = CGSizeMake(self.view.width,top);
     }
     return _grantScrollView;
+}
+
+- (UIScrollView *)disableScrollView {
+    if(_disableScrollView == nil) {
+        _disableScrollView =  [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height)];
+        CGFloat baseLeft = 12;
+        CGFloat top = 22;
+        NSArray *grants = self.scriptDic[@"disabledWebsites"];
+
+        if (grants.count > 0) {
+            for (int i = 0; i < grants.count; i++) {
+                NSString *title  = grants[i];
+                UIView *view = [self baseNote:title];
+                view.top = top;
+                view.left = baseLeft;
+                [_disableScrollView addSubview:view];
+                if (i == 0) {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+                }
+                if (i != grants.count -1) {
+                    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 24 - 23, 1)];
+                    line.backgroundColor = FCStyle.fcSeparator;
+                    line.top = top + 47;
+                    line.left = baseLeft + 23;
+                    [_disableScrollView addSubview:line];
+                }else {
+                    view.layer.cornerRadius = 8;
+                    view.layer.maskedCorners = kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+                
+                if (grants.count == 1) {
+                    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMinXMaxYCorner;
+                }
+
+                top += 48;
+            }
+        }
+        _disableScrollView.contentSize = CGSizeMake(self.view.width,top);
+    }
+    return _disableScrollView;
 }
 
 @end

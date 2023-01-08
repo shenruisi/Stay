@@ -21,6 +21,7 @@
 #import "UIImageView+WebCache.h"
 #import "ImageHelper.h"
 #import "DeviceHelper.h"
+#import "SYWebsiteViewController.h"
 
 #import "QuickAccess.h"
 
@@ -422,52 +423,196 @@
      
      [buttonView addSubview:lineView];
      
-     NSArray *selectedArray = @[@"Matches",@"Grants",NSLocalizedString(@"Whitelist", @""),NSLocalizedString(@"Blacklist", @"")];
-     CGFloat btnLeft = 5;
-     
-     for(int i = 0; i < 4; i++) {
-         CGFloat btnWidth =  (self.view.width - 10 - 42 ) / 4.0;
-         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnLeft, 0, btnWidth, 31)];
-         [btn setTitle:selectedArray[i] forState:UIControlStateNormal];
-         [btn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
-         [btn addTarget:self action:@selector(switchTab:) forControlEvents:UIControlEventTouchUpInside];
-         btn.font = FCStyle.bodyBold;
-         btn.tag = 100 + i;
-         btnLeft += btnWidth + 14;
-         [buttonView addSubview:btn];
+     NSArray *matches = self.script.matches;
+     if (matches.count > 0) {
          
-         if (i == 0) {
-             [buttonView addSubview:self.slideView];
-             self.slideView.left = 5;
-             [buttonView addSubview:self.slideLineView];
-             self.slideLineView.left = 5;
-         }
+         UILabel *matchesLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+         matchesLabel.font = FCStyle.footnote;
+         matchesLabel.textColor = FCStyle.fcSecondaryBlack;
+         matchesLabel.textAlignment = NSTextAlignmentLeft;
+         matchesLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+         matchesLabel.text =NSLocalizedString(@"Matches", @"");
+         matchesLabel.top = top;
+         [cell.contentView addSubview:matchesLabel];
+         
+         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+         countLabel.font = FCStyle.footnote;
+         countLabel.textColor = FCStyle.fcBlack;
+         countLabel.textAlignment = NSTextAlignmentLeft;
+         countLabel.text = [NSString stringWithFormat:@"%ld",matches.count];
+         countLabel.right =  self.view.width - 42;
+         countLabel.centerY = matchesLabel.centerY;
+         [cell.contentView addSubview:countLabel];
+
+         UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+         UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+         image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+         accessory.right = self.view.width - 26;
+         accessory.centerY = matchesLabel.centerY;
+         [accessory setImage:image];
+         accessory.userInteractionEnabled = true;
+         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showMatches)];
+         [cell.contentView addSubview:accessory];
+         
+         UIView *line1 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+         line1.backgroundColor = FCStyle.fcSeparator;
+         line1.top =  matchesLabel.bottom + 8;
+         line1.left = 15;
+         [cell.contentView addSubview:line1];
+         
+         UIView *matchesListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+         matchesListView.left = left;
+         matchesListView.centerY = matchesLabel.centerY;
+         matchesListView.userInteractionEnabled = true;
+         [cell.contentView  addSubview:matchesListView];
+         
+         [matchesListView addGestureRecognizer:tapGesture];
+
+          top = line1.bottom + 13;
+     }
+
+     
+     
+
+     
+     NSArray *grants = self.script.grants;
+     if (grants.count > 0) {
+         
+         UILabel *grantsLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+         grantsLabel.font = FCStyle.footnote;
+         grantsLabel.textColor = FCStyle.fcSecondaryBlack;
+         grantsLabel.textAlignment = NSTextAlignmentLeft;
+         grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+         grantsLabel.text =NSLocalizedString(@"Grants", @"");
+         grantsLabel.top = top;
+         [cell.contentView addSubview:grantsLabel];
+         
+         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+         countLabel.font = FCStyle.footnote;
+         countLabel.textColor = FCStyle.fcBlack;
+         countLabel.textAlignment = NSTextAlignmentLeft;
+         countLabel.text = [NSString stringWithFormat:@"%ld",grants.count];
+         countLabel.centerY = grantsLabel.centerY;
+         countLabel.right =  self.view.width - 42;
+         [cell.contentView addSubview:countLabel];
+         
+         UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+         UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+         image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+         accessory.right = self.view.width - 26;
+         accessory.centerY = grantsLabel.centerY;
+         [accessory setImage:image];
+         accessory.userInteractionEnabled = true;
+         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showGrants)];
+         [cell.contentView addSubview:accessory];
+         
+         UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+         line2.backgroundColor = FCStyle.fcSeparator;
+         line2.top =  grantsLabel.bottom + 8;
+         line2.left = 15;
+         [cell.contentView addSubview:line2];
+         
+         UIView *grantsListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+         grantsListView.left = left;
+         grantsListView.centerY = grantsLabel.centerY;
+         grantsListView.userInteractionEnabled = true;
+         [cell.contentView  addSubview:grantsListView];
+         
+         [grantsListView addGestureRecognizer:tapGesture];
+          top = line2.bottom + 13;
      }
      
-     
-      top = buttonView.bottom;
-     _scrollerTop = top;
-     self.scrollView.top = top;
-     self.scrollView.height = self.view.height - top;
-     [cell.contentView addSubview:self.scrollView];
-     
-     [self.scrollView addSubview:self.matchScrollView];
- //    self.matchScrollView.contentSize = CGSizeMake(self.view.width, self.matchScrollView.contentSize.height + top);
-     self.matchScrollView.height = self.view.height- top;
-     
-     [self.scrollView addSubview:self.grantScrollView];
-     self.grantScrollView.height = self.view.height - top;
+     NSArray *disabledWebsites = self.script.disabledWebsites;
+     if (disabledWebsites.count > 0) {
+         UILabel *grantsLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+         grantsLabel.font = FCStyle.footnote;
+         grantsLabel.textColor = FCStyle.fcSecondaryBlack;
+         grantsLabel.textAlignment = NSTextAlignmentLeft;
+         grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+         grantsLabel.text =NSLocalizedString(@"DisabledWebsites", @"");
+         grantsLabel.top = top;
+         [cell.contentView addSubview:grantsLabel];
+         
+         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+         countLabel.font = FCStyle.footnote;
+         countLabel.textColor = FCStyle.fcBlack;
+         countLabel.textAlignment = NSTextAlignmentLeft;
+         countLabel.text = [NSString stringWithFormat:@"%ld",grants.count];
+         countLabel.centerY = grantsLabel.centerY;
+         countLabel.right =  self.view.width - 42;
+         [cell.contentView addSubview:countLabel];
+         
+         UIImageView *accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 13)];
+         UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+         image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+         accessory.right = self.view.width - 26;
+         accessory.centerY = grantsLabel.centerY;
+         [accessory setImage:image];
+         accessory.userInteractionEnabled = true;
+         UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showDisabledWebsites)];
+         [cell.contentView addSubview:accessory];
+         
+         UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+         line2.backgroundColor = FCStyle.fcSeparator;
+         line2.top =  grantsLabel.bottom + 8;
+         line2.left = 15;
+         [cell.contentView addSubview:line2];
+         
+         UIView *grantsListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+         grantsListView.left = left;
+         grantsListView.centerY = grantsLabel.centerY;
+         grantsListView.userInteractionEnabled = true;
+         [cell.contentView  addSubview:grantsListView];
+         
+         [grantsListView addGestureRecognizer:tapGesture];
 
-     [self.scrollView addSubview:self.whiteTableView];
-     self.whiteTableView.contentSize = CGSizeMake(self.view.width, self.whiteTableView.contentSize.height + top);
-     
-     [self.scrollView addSubview:self.blackTableView];
-     self.blackTableView.contentSize = CGSizeMake(self.view.width, self.blackTableView.contentSize.height + top);
-     [self buildWhiteView];
-     [self buildBlackView];
+     }
     
     return cell;
 }
+
+- (void)showDisabledWebsites {
+     SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+     cer.type = @"disabledWebsites";
+     cer.scriptDic = self.script.toDictionary;
+     if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+         && [QuickAccess splitController].viewControllers.count >= 2){
+         [[QuickAccess secondaryController] pushViewController:cer];
+     }
+     else{
+          [self.navigationController pushViewController:cer animated:true];
+     }
+}
+
+- (void)showGrants{
+    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+    cer.type = @"grants";
+    cer.scriptDic = self.script.toDictionary;
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
+}
+
+- (void)showMatches{
+    SYWebsiteViewController *cer = [[SYWebsiteViewController alloc] init];
+    cer.type = @"matches";
+    cer.scriptDic = self.script.toDictionary;
+    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+        && [QuickAccess splitController].viewControllers.count >= 2){
+        [[QuickAccess secondaryController] pushViewController:cer];
+    }
+    else{
+         [self.navigationController pushViewController:cer animated:true];
+    }
+}
+
 
 - (void)deleteScript:(id)sender {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"是否删除脚本" preferredStyle:UIAlertControllerStyleAlert];
