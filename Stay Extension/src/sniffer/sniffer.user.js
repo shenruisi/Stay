@@ -58,6 +58,7 @@ const browser = __b;
     // Firefox和Chrome早期版本中带有前缀  
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     let videoDoms;  
+    let timerArr = [];
 
     const Utils = {
       isMobile: function(){
@@ -129,31 +130,44 @@ const browser = __b;
     function startFindVideoInfo(completed){
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
-      console.log('startFindVideoInfo---------videoDoms------',videoDoms)
+      // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
       let flag = videoDoms && videoDoms.length;
-      if(completed && !flag){
-        for(let n = 0; n<5; n++){
-          console.log('startFindVideoInfo------n-----',n);
-          window.setTimeout(()=>{
-            videoDoms = document.querySelectorAll('video');  
-          },300)
-          flag = videoDoms && videoDoms.length;
-          if(flag){
-            console.log('startFindVideoInfo------break-----');
-            break;
-          }
-        }
-      }
       if(flag){
         // console.log('videoDoms---false-----',videoDoms)
         parseVideoNodeList(videoDoms);
       }else{
         // console.log('else-------else------',isContent)
         observerVideo()
+        if(completed){
+          afterCompleteQueryVideo()
+        }
       }
-
     }
+
+    function afterCompleteQueryVideo(){
+      for(let i=1; i<10; i++){
+        let timer
+        (function(i){
+          timer = setTimeout(()=>{
+            videoDoms = document.querySelectorAll('video');  
+            // console.log('startFindVideoInfo------i-----',i, new Date().getTime());
+            let flag = videoDoms && videoDoms.length;
+            if(flag){
+              parseVideoNodeList(videoDoms);
+              // console.log('startFindVideoInfo---iiiiiii---break-----');
+              timerArr.forEach(timerItem=>{
+                // console.log('clearTimer---------timerItem-----',timerItem);
+                clearTimeout(timerItem);
+              })
+            }
+          },i*200);
+        })(i)
+        timerArr.push(timer);
+      }
+    }
+
+
 
     function observerVideo(){
       // 创建观察者对象  
@@ -693,11 +707,8 @@ const browser = __b;
       if (document.readyState === 'complete') {
         console.log('readyState-------------------', document.readyState)
         startFindVideoInfo(true);
-        console.log('readyStateytInitialPlayerResponseytInitialPlayerResponse-----')
       }
     };
-    
-    
     
     function handlePageInterceptor(){
       function isVideoLink(url){
