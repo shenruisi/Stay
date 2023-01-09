@@ -18,6 +18,8 @@
 
 @property (nonatomic, strong) NSURLSessionTask *sessionTask;
 @property (nonatomic, assign) NSTimeInterval lastTimestamp;
+@property (nonatomic, assign) int64_t bytesWritten;
+@property (nonatomic, strong) NSData *data;
 @end
 
 @implementation Task
@@ -88,6 +90,7 @@ static DownloadManager *instance = nil;
         if (sessionTask != nil) {
             task.sessionTask = sessionTask;
             task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
+            task.bytesWritten = 0;
             [sessionTask resume];
         } else {
             
@@ -98,6 +101,9 @@ static DownloadManager *instance = nil;
         }
     } else {
         if (task.status == DMStatusPaused) {
+            if (task.data != nil) {
+                task.sessionTask = [self.downloadSession downloadTaskWithResumeData:task.data];
+            }
             [task.sessionTask resume];
             task.status = DMStatusDownloading;
         }
@@ -136,7 +142,13 @@ static DownloadManager *instance = nil;
 - (void)pause:(NSString *)taskId {
     Task *task = self.taskDict[taskId];
     if (task != nil) {
-        [task.sessionTask cancel];
+        if ([task.sessionTask isKindOfClass: [NSURLSessionDownloadTask class]]) {
+            [((NSURLSessionDownloadTask *)task.sessionTask) cancelByProducingResumeData:^(NSData *data) {
+                task.data = data;
+            }];
+        } else {
+            [task.sessionTask cancel];
+        }
         task.status = DMStatusPaused;
         if (task.block != nil) {
             task.block(task.progress, @"", DMStatusPaused);
@@ -213,7 +225,7 @@ static DownloadManager *instance = nil;
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
     NSLog(@"URLSession sessionTask didCompleteWithError : %@", error);
     Task *task = [self getTaskWithSessionTask:sessionTask];
-    if (error != nil && task != nil) {
+    if (error != nil && task != nil && task.status != DMStatusPaused) {
         if (task.block != nil) {
             task.block(0, @"", DMStatusFailed);
         }
@@ -230,17 +242,18 @@ static DownloadManager *instance = nil;
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil) {
+        task.bytesWritten += bytesWritten;
         if (task.block != nil) {
             task.progress = totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
             NSString *speed = @"";
             NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-            if (task.lastTimestamp > 0) {
-                long long speedBS = bytesWritten / (timestamp - task.lastTimestamp);
+            if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {
+                long long speedBS = task.bytesWritten / (timestamp - task.lastTimestamp);
                 speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
+                task.lastTimestamp = timestamp;
+                task.bytesWritten = 0;
+                task.block(task.progress, speed, DMStatusDownloading);
             }
-            task.lastTimestamp = timestamp;
-            NSLog(@"URLSession downloadTask didWriteData / totalBytesExpectedToWrite(speed) : %lld / %lld(%@)", bytesWritten, totalBytesExpectedToWrite, speed);
-            task.block(task.progress, speed, DMStatusDownloading);
         }
     }
 }
