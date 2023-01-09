@@ -421,6 +421,10 @@ const browser = __b;
       const titleDom = document.querySelector('.mod_box .mod_bd .mod_video_info .video_title');
       if(titleDom){
         let title = titleDom.textContent;
+        const sliderDom = document.querySelector('.mod_box .mod_bd .mod_list_slider .slider_box .item.current span');
+        if(sliderDom){
+          title = title + sliderDom.textContent;
+        }
         videoInfo.title = title;
       }
       return videoInfo;
