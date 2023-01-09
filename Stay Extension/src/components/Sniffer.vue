@@ -439,6 +439,8 @@ export default {
                 border-left: 12px solid transparent;
                 overflow: hidden;
                 right: -12px;
+                transform: translateZ(0);
+                top: 6px;
               }
             }
           }
