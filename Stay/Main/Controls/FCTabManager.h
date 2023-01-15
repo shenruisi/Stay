@@ -25,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resetAllTabs;
 
 - (NSString *)tabNameWithUUID:(NSString *)uuid;
-- (UIImage *)tabImageWithUUID:(NSString *)uuid pointSize:(CGFloat)pointSize;
 
 @end
 

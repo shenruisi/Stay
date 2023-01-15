@@ -475,7 +475,7 @@ static DownloadManager *instance = nil;
 - (void)convertM3U8ToMP4:(Task *)task {
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
-    FFmpegSession* session = [FFmpegKit executeAsync:[NSString stringWithFormat:@"-i %@ -vcodec copy -acodec copy %@", [taskPath stringByAppendingPathComponent:@"combined.ts"], task.filePath] withCompleteCallback:^(FFmpegSession* session){
+    FFmpegSession* session = [FFmpegKit executeAsync:[NSString stringWithFormat:@"-i '%@' -vcodec copy -acodec copy '%@'", [taskPath stringByAppendingPathComponent:@"combined.ts"], task.filePath] withCompleteCallback:^(FFmpegSession* session){
         SessionState state = [session getState];
         ReturnCode *returnCode = [session getReturnCode];
         NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:state], returnCode, [session getFailStackTrace]);

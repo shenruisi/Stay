@@ -17,4 +17,5 @@ target 'Stay-Mac' do
  pod 'InterAppCommunication'
  pod 'SDWebImage'
  pod 'SDWebImageSVGKitPlugin'
+ pod 'ffmpeg-kit-ios-full', '~> 4.5.1'
 end

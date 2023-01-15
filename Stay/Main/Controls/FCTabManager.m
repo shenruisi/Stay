@@ -6,7 +6,6 @@
 //
 
 #import "FCTabManager.h"
-#import "ColorHelper.h"
 
 
 @interface FCTabManager(){
@@ -110,23 +109,6 @@
     FCTab *tab = [self tabOfUUID:uuid];
     
     return tab.config.name;
-}
-
-- (UIImage *)tabImageWithUUID:(NSString *)uuid pointSize:(CGFloat)pointSize{
-    UIImage *image = nil;
-    FCTab *tab = [self tabOfUUID:uuid];
-    CGRect rect = CGRectMake(0.0f, 0.0f, pointSize * [UIScreen mainScreen].scale, pointSize * [UIScreen mainScreen].scale);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    UIBezierPath *rounded = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:floor((pointSize/2)*0.9)];
-    CGContextSetFillColorWithColor(context,  [ColorHelper colorFromHex:tab.config.hexColor].CGColor);
-    [rounded fill];
-
-    image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
 }
 
 @end
