@@ -24,6 +24,8 @@
 #endif
 #import "SYDownloadSlideController.h"
 
+static CGFloat kMacToolbar = 50.0;
+
 @interface _FileEmptyTipsView : UIView
 
 @property (nonatomic, strong) UIImageView *part1Img;
