@@ -1,0 +1,6 @@
+framework module M3U8Parser {
+    umbrella header "M3U8Parser.h"
+
+    export *
+    module * { export * }
+}

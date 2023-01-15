@@ -17,6 +17,12 @@
 		15F20BD1281BD09300330A56 /* checkUserscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD0281BD09300330A56 /* checkUserscript.js */; };
 		15F20BD4281BD24800330A56 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD2281BD24800330A56 /* parse-user-script.js */; };
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
+		3C358D4F297394F500118063 /* FWEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4C297394F400118063 /* FWEncryptorAES.m */; };
+		3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4C297394F400118063 /* FWEncryptorAES.m */; };
+		3C358D51297394F500118063 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4D297394F400118063 /* NSData+Base64.m */; };
+		3C358D52297394F500118063 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4D297394F400118063 /* NSData+Base64.m */; };
+		3C358D53297394F500118063 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4E297394F500118063 /* NSData+CommonCrypto.m */; };
+		3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4E297394F500118063 /* NSData+CommonCrypto.m */; };
 		3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
 		3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C72260C288C243900FF0F68 /* SYSubscribeController.swift */; };
 		3C81E717293EF56400AB4B3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
@@ -52,6 +58,30 @@
 		3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
 		3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
 		3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
+		3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
+		3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
+		3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B81297029F40068231A /* M3U8ExtXKey.m */; };
+		3C949B93297029F50068231A /* M3U8ExtXKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B81297029F40068231A /* M3U8ExtXKey.m */; };
+		3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B82297029F40068231A /* M3U8ExtXStreamInfList.m */; };
+		3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B82297029F40068231A /* M3U8ExtXStreamInfList.m */; };
+		3C949B96297029F50068231A /* M3U8ExtXByteRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B83297029F40068231A /* M3U8ExtXByteRange.m */; };
+		3C949B97297029F50068231A /* M3U8ExtXByteRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B83297029F40068231A /* M3U8ExtXByteRange.m */; };
+		3C949B98297029F50068231A /* M3U8LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B85297029F40068231A /* M3U8LineReader.m */; };
+		3C949B99297029F50068231A /* M3U8LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B85297029F40068231A /* M3U8LineReader.m */; };
+		3C949B9A297029F50068231A /* M3U8ExtXMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B89297029F40068231A /* M3U8ExtXMedia.m */; };
+		3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B89297029F40068231A /* M3U8ExtXMedia.m */; };
+		3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B8A297029F40068231A /* M3U8ExtXStreamInf.m */; };
+		3C949B9D297029F50068231A /* M3U8ExtXStreamInf.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B8A297029F40068231A /* M3U8ExtXStreamInf.m */; };
+		3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B8E297029F50068231A /* M3U8MasterPlaylist.m */; };
+		3C949B9F297029F50068231A /* M3U8MasterPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B8E297029F50068231A /* M3U8MasterPlaylist.m */; };
+		3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B8F297029F50068231A /* M3U8ExtXMediaList.m */; };
+		3C949BA1297029F50068231A /* M3U8ExtXMediaList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B8F297029F50068231A /* M3U8ExtXMediaList.m */; };
+		3C949BAE2971813E0068231A /* NSString+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA32971813D0068231A /* NSString+m3u8.m */; };
+		3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA52971813D0068231A /* M3U8SegmentInfo.m */; };
+		3C949BB02971813E0068231A /* M3U8SegmentInfoList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA82971813E0068231A /* M3U8SegmentInfoList.m */; };
+		3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA92971813E0068231A /* NSArray+m3u8.m */; };
+		3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAC2971813E0068231A /* NSURL+m3u8.m */; };
+		3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
@@ -566,6 +596,12 @@
 		15F20BD2281BD24800330A56 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		15F20BD3281BD24800330A56 /* parse-meta-line.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-meta-line.js"; sourceTree = "<group>"; };
 		3755771ACCADED7F63DD2803 /* Pods-Stay-Mac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay-Mac.release.xcconfig"; path = "Target Support Files/Pods-Stay-Mac/Pods-Stay-Mac.release.xcconfig"; sourceTree = "<group>"; };
+		3C358D49297394F200118063 /* FWEncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWEncryptorAES.h; sourceTree = "<group>"; };
+		3C358D4A297394F200118063 /* NSData+CommonCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CommonCrypto.h"; sourceTree = "<group>"; };
+		3C358D4B297394F300118063 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		3C358D4C297394F400118063 /* FWEncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWEncryptorAES.m; sourceTree = "<group>"; };
+		3C358D4D297394F400118063 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		3C358D4E297394F500118063 /* NSData+CommonCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CommonCrypto.m"; sourceTree = "<group>"; };
 		3C72260C288C243900FF0F68 /* SYSubscribeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SYSubscribeController.swift; sourceTree = "<group>"; };
 		3C72260F288C315600FF0F68 /* Stay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stay-Bridging-Header.h"; sourceTree = "<group>"; };
 		3C8388BC292E55B9007563E6 /* DownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadManager.h; sourceTree = "<group>"; };
@@ -587,6 +623,39 @@
 		3C8388EB2934F56C007563E6 /* DMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMStore.m; sourceTree = "<group>"; };
 		3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		3C949B7B297029F30068231A /* M3U8MediaPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8MediaPlaylist.h; sourceTree = "<group>"; };
+		3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8MediaPlaylist.m; sourceTree = "<group>"; };
+		3C949B7D297029F30068231A /* M3U8Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8Parser.h; sourceTree = "<group>"; };
+		3C949B7E297029F40068231A /* M3U8Parser.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = M3U8Parser.modulemap; sourceTree = "<group>"; };
+		3C949B7F297029F40068231A /* M3U8PlaylistModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8PlaylistModel.h; sourceTree = "<group>"; };
+		3C949B80297029F40068231A /* M3U8ExtXStreamInfList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8ExtXStreamInfList.h; sourceTree = "<group>"; };
+		3C949B81297029F40068231A /* M3U8ExtXKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8ExtXKey.m; sourceTree = "<group>"; };
+		3C949B82297029F40068231A /* M3U8ExtXStreamInfList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8ExtXStreamInfList.m; sourceTree = "<group>"; };
+		3C949B83297029F40068231A /* M3U8ExtXByteRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8ExtXByteRange.m; sourceTree = "<group>"; };
+		3C949B84297029F40068231A /* M3U8MasterPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8MasterPlaylist.h; sourceTree = "<group>"; };
+		3C949B85297029F40068231A /* M3U8LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8LineReader.m; sourceTree = "<group>"; };
+		3C949B86297029F40068231A /* M3U8ExtXByteRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8ExtXByteRange.h; sourceTree = "<group>"; };
+		3C949B87297029F40068231A /* M3U8ExtXMediaList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8ExtXMediaList.h; sourceTree = "<group>"; };
+		3C949B88297029F40068231A /* M3U8ExtXKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8ExtXKey.h; sourceTree = "<group>"; };
+		3C949B89297029F40068231A /* M3U8ExtXMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8ExtXMedia.m; sourceTree = "<group>"; };
+		3C949B8A297029F40068231A /* M3U8ExtXStreamInf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8ExtXStreamInf.m; sourceTree = "<group>"; };
+		3C949B8B297029F50068231A /* M3U8ExtXStreamInf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8ExtXStreamInf.h; sourceTree = "<group>"; };
+		3C949B8C297029F50068231A /* M3U8ExtXMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8ExtXMedia.h; sourceTree = "<group>"; };
+		3C949B8D297029F50068231A /* M3U8LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8LineReader.h; sourceTree = "<group>"; };
+		3C949B8E297029F50068231A /* M3U8MasterPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8MasterPlaylist.m; sourceTree = "<group>"; };
+		3C949B8F297029F50068231A /* M3U8ExtXMediaList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8ExtXMediaList.m; sourceTree = "<group>"; };
+		3C949BA22971813D0068231A /* NSString+m3u8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+m3u8.h"; sourceTree = "<group>"; };
+		3C949BA32971813D0068231A /* NSString+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+m3u8.m"; sourceTree = "<group>"; };
+		3C949BA42971813D0068231A /* M3U8TagsAndAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8TagsAndAttributes.h; sourceTree = "<group>"; };
+		3C949BA52971813D0068231A /* M3U8SegmentInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8SegmentInfo.m; sourceTree = "<group>"; };
+		3C949BA62971813D0068231A /* NSArray+m3u8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+m3u8.h"; sourceTree = "<group>"; };
+		3C949BA72971813E0068231A /* M3U8SegmentInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8SegmentInfo.h; sourceTree = "<group>"; };
+		3C949BA82971813E0068231A /* M3U8SegmentInfoList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8SegmentInfoList.m; sourceTree = "<group>"; };
+		3C949BA92971813E0068231A /* NSArray+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+m3u8.m"; sourceTree = "<group>"; };
+		3C949BAA2971813E0068231A /* NSURL+m3u8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+m3u8.h"; sourceTree = "<group>"; };
+		3C949BAB2971813E0068231A /* M3U8SegmentInfoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8SegmentInfoList.h; sourceTree = "<group>"; };
+		3C949BAC2971813E0068231A /* NSURL+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+m3u8.m"; sourceTree = "<group>"; };
+		3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8PlaylistModel.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalItemSwitchView.m; sourceTree = "<group>"; };
@@ -1055,9 +1124,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C358D48297394DD00118063 /* AES */ = {
+			isa = PBXGroup;
+			children = (
+				3C358D49297394F200118063 /* FWEncryptorAES.h */,
+				3C358D4C297394F400118063 /* FWEncryptorAES.m */,
+				3C358D4B297394F300118063 /* NSData+Base64.h */,
+				3C358D4D297394F400118063 /* NSData+Base64.m */,
+				3C358D4A297394F200118063 /* NSData+CommonCrypto.h */,
+				3C358D4E297394F500118063 /* NSData+CommonCrypto.m */,
+			);
+			path = AES;
+			sourceTree = "<group>";
+		};
 		3C8388B8292E469A007563E6 /* Download */ = {
 			isa = PBXGroup;
 			children = (
+				3C358D48297394DD00118063 /* AES */,
+				3C949B7A297029B40068231A /* M3U8 */,
 				3C8388BC292E55B9007563E6 /* DownloadManager.h */,
 				3C8388BD292E55B9007563E6 /* DownloadManager.m */,
 				3C8388E72934E7D5007563E6 /* MyAdditions.h */,
@@ -1094,6 +1178,46 @@
 				3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		3C949B7A297029B40068231A /* M3U8 */ = {
+			isa = PBXGroup;
+			children = (
+				3C949BA72971813E0068231A /* M3U8SegmentInfo.h */,
+				3C949BA52971813D0068231A /* M3U8SegmentInfo.m */,
+				3C949BAB2971813E0068231A /* M3U8SegmentInfoList.h */,
+				3C949BA82971813E0068231A /* M3U8SegmentInfoList.m */,
+				3C949BA42971813D0068231A /* M3U8TagsAndAttributes.h */,
+				3C949BA62971813D0068231A /* NSArray+m3u8.h */,
+				3C949BA92971813E0068231A /* NSArray+m3u8.m */,
+				3C949BA22971813D0068231A /* NSString+m3u8.h */,
+				3C949BA32971813D0068231A /* NSString+m3u8.m */,
+				3C949BAA2971813E0068231A /* NSURL+m3u8.h */,
+				3C949BAC2971813E0068231A /* NSURL+m3u8.m */,
+				3C949B86297029F40068231A /* M3U8ExtXByteRange.h */,
+				3C949B83297029F40068231A /* M3U8ExtXByteRange.m */,
+				3C949B88297029F40068231A /* M3U8ExtXKey.h */,
+				3C949B81297029F40068231A /* M3U8ExtXKey.m */,
+				3C949B8C297029F50068231A /* M3U8ExtXMedia.h */,
+				3C949B89297029F40068231A /* M3U8ExtXMedia.m */,
+				3C949B87297029F40068231A /* M3U8ExtXMediaList.h */,
+				3C949B8F297029F50068231A /* M3U8ExtXMediaList.m */,
+				3C949B8B297029F50068231A /* M3U8ExtXStreamInf.h */,
+				3C949B8A297029F40068231A /* M3U8ExtXStreamInf.m */,
+				3C949B80297029F40068231A /* M3U8ExtXStreamInfList.h */,
+				3C949B82297029F40068231A /* M3U8ExtXStreamInfList.m */,
+				3C949B8D297029F50068231A /* M3U8LineReader.h */,
+				3C949B85297029F40068231A /* M3U8LineReader.m */,
+				3C949B84297029F40068231A /* M3U8MasterPlaylist.h */,
+				3C949B8E297029F50068231A /* M3U8MasterPlaylist.m */,
+				3C949B7B297029F30068231A /* M3U8MediaPlaylist.h */,
+				3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */,
+				3C949B7D297029F30068231A /* M3U8Parser.h */,
+				3C949B7E297029F40068231A /* M3U8Parser.modulemap */,
+				3C949B7F297029F40068231A /* M3U8PlaylistModel.h */,
+				3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */,
+			);
+			path = M3U8;
 			sourceTree = "<group>";
 		};
 		582061A5294C4BB200A32D0C /* Modal */ = {
@@ -2602,6 +2726,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				582061C8294C4C0E00A32D0C /* ModalItemView.m in Sources */,
+				3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
@@ -2612,6 +2737,7 @@
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				582061C6294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
 				582061FA294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
+				3C949B96297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
@@ -2620,15 +2746,20 @@
 				84BA56F62944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58AC12F428607B3400875D6D /* FCConfig.m in Sources */,
 				3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */,
+				3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */,
 				582061F6294C516700A32D0C /* SYDownloadModalViewController.m in Sources */,
+				3C949B98297029F50068231A /* M3U8LineReader.m in Sources */,
 				582061EA294C4CC800A32D0C /* UIView+Layout.m in Sources */,
 				582061C0294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
+				3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
 				58FEB1FE283B5BF900BC2A92 /* LoadingSlideController.m in Sources */,
 				58AC12E42860750800875D6D /* FCShared.m in Sources */,
 				84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */,
+				3C949B9A297029F50068231A /* M3U8ExtXMedia.m in Sources */,
+				3C358D4F297394F500118063 /* FWEncryptorAES.m in Sources */,
 				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
 				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
@@ -2639,6 +2770,7 @@
 				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
+				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
@@ -2647,6 +2779,7 @@
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
 				3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */,
 				5867D154288F88FC00EC822B /* AlertHelper.m in Sources */,
+				3C949BB02971813E0068231A /* M3U8SegmentInfoList.m in Sources */,
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
@@ -2675,8 +2808,10 @@
 				588402C9295D3272002CA227 /* ToastCenter.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
+				3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */,
 				84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
+				3C358D53297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
@@ -2695,9 +2830,11 @@
 				5867D158288F91F900EC822B /* TimeHelper.m in Sources */,
 				582061CC294C4C0E00A32D0C /* ModalSectionView.m in Sources */,
 				582061CE294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
+				3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				582061E2294C4CA400A32D0C /* FCLayoutLabel.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
+				3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				3C8388EC2934F56C007563E6 /* DMStore.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
@@ -2706,6 +2843,7 @@
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
+				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
@@ -2723,8 +2861,11 @@
 				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
+				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
+				3C949BAE2971813E0068231A /* NSString+m3u8.m in Sources */,
 				5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
@@ -2735,6 +2876,7 @@
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */,
+				3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				84E8EA112962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				582061C4294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
@@ -2794,6 +2936,7 @@
 			files = (
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
+				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
@@ -2803,8 +2946,10 @@
 				582061E7294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
 				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
+				3C949B93297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
+				3C949B99297029F50068231A /* M3U8LineReader.m in Sources */,
 				582061CD294C4C0E00A32D0C /* ModalSectionView.m in Sources */,
 				582061CB294C4C0E00A32D0C /* ModalItemClickWithIconView.m in Sources */,
 				5867D151288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
@@ -2820,6 +2965,8 @@
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
+				3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */,
+				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
@@ -2829,10 +2976,12 @@
 				588202552859E73900B2721A /* ScriptDetailModel.m in Sources */,
 				5867D155288F88FC00EC822B /* AlertHelper.m in Sources */,
 				582061C1294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
+				3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58724A2C28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				582061FB294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
 				582061FF294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
+				3C949B9D297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
@@ -2849,6 +2998,7 @@
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				582062032950675900A32D0C /* DisabledWebsites.m in Sources */,
 				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
+				3C949B9F297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
@@ -2907,21 +3057,25 @@
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
 				58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */,
+				3C949B97297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
 				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
 				58D1B45928893D4C009BD608 /* RMAppReceipt.m in Sources */,
+				3C949BA1297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				582061D7294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
+				3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
+				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				849E77D8293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,

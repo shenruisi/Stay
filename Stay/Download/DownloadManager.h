@@ -51,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)remove:(NSString *)taskId;
 - (void)removeAll:(NSString *)key;
 - (void)pause:(NSString *)taskId;
+- (void)pauseAll;
 - (Task *)queryByTaskId:(NSString *)taskId;
 @end
 

@@ -150,7 +150,7 @@
         task.progress = sqlite3_column_double(stmt, 6);
         task.status = sqlite3_column_int(stmt, 7);
         NSString *url = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 2)];
-        task.filePath = [NSString stringWithFormat:@"%@/%@.%@", [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3)], task.taskId, [url containsString:@"m3u8"] ? @"m3u8" : @"mp4"];
+        task.filePath = [NSString stringWithFormat:@"%@/%@.%@", [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3)], task.taskId, @"mp4"];
         [ret addObject:task];
     }
     sqlite3_finalize(stmt);
