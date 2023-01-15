@@ -415,13 +415,17 @@
      top = injectLine.bottom + 10;
      
 //     top = injectLabel.bottom + 25;
-     UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, top, self.view.width, 35)];
-     [cell.contentView addSubview:buttonView];
      
-     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 34, self.view.width, 1)];
-     lineView.backgroundColor = FCStyle.fcShadowLine;
+     UILabel *informationLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+     informationLabel.font = FCStyle.title3Bold;
+     informationLabel.textColor = FCStyle.fcBlack;
+     informationLabel.textAlignment = NSTextAlignmentLeft;
+     informationLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+     informationLabel.text =NSLocalizedString(@"Information", @"");
+     [cell.contentView addSubview:informationLabel];
+
+     top = informationLabel.bottom + 13;
      
-     [buttonView addSubview:lineView];
      
      NSArray *matches = self.script.matches;
      if (matches.count > 0) {
@@ -473,9 +477,7 @@
      }
 
      
-     
 
-     
      NSArray *grants = self.script.grants;
      if (grants.count > 0) {
          
