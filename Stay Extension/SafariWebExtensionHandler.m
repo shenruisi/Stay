@@ -361,6 +361,7 @@
     NSString *url = details[@"url"];
     NSDictionary *headers = details[@"headers"];
     NSString *data = details[@"data"];
+    NSString *overrideMimeType = details[@"overrideMimeType"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:method];
     if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
@@ -369,8 +370,15 @@
         }
     }
     
+    if (overrideMimeType.length == 0){
+        overrideMimeType = @"text/xml";
+    }
     
-    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:overrideMimeType forHTTPHeaderField:@"Content-Type"];
+    
+    if (![data isKindOfClass:[NSNull class]] && data.length > 0){
+        [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     
