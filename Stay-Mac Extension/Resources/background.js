@@ -1,3 +1,4 @@
+/* eslint-disable */
 Date.prototype.dateFormat = function (fmt) {
     fmt = fmt ? fmt : "YYYY-mm-dd HH:MM:SS"
     if (!this || typeof this == "undefined") {
@@ -22,6 +23,9 @@ Date.prototype.dateFormat = function (fmt) {
     return fmt;
 }
 
+
+let videoInfoList = [];
+let videoLinkSet = new Set();
 let matchAppScriptList = [];
 let matchAppScriptConsole = [];
 let gm_console = {};
@@ -362,6 +366,7 @@ function isFullyQualifiedDomain(candidate) {
 }
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
     if ("darkmode" == request.from) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
@@ -418,7 +423,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("fetchScripts" == request.operate) {
             // console.log("background---fetchScripts request==", request);
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: request.url, digest: request.digest }, function (response) {
-//                 console.log("background--fetchScripts---response==",response);
+                // console.log("background--fetchScripts---response==",response);
                 matchAppScriptList = response.body.scripts;
                 if (request.digest == "no"){
                     if (matchAppScriptList.length > 0 && response.body.showBadge){
@@ -991,7 +996,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, active: request.active }, function (response) {
                 sendResponse(response);
             });
-
+        }
+        else if ("setDisabledWebsites" == request.operate) {
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: request.uuid, disabledUrl: request.website, on: request.on }, function (response) {
+                sendResponse(response);
+            });
         }
         else if ("exeScriptManually" == request.operate) {
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTheScript", uuid: request.uuid }, function (response) {
@@ -1036,12 +1045,30 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("background---refreshTargetTabs--", request);
             browser.tabs.reload();
         }
-        // else if ("DARKMODE_SETTING" == request.operate){
-        //     const darkmodeStatus = request.status;
-        //     browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        //         browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "DARKMODE_SETTING", status: darkmodeStatus,  domain: request.domain, enabled: request.enabled });
-        //     });
-        // }
+        else if("fetchFolders" == request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
+                console.log("fetchFolders-----response--",response)
+                sendResponse({ body: response.body })
+            });
+        }
+        return true;
+    }
+    else if ("sniffer" == request.from){
+        if ("VIDEO_INFO_PUSH" == request.operate) {
+            console.log("VIDEO_INFO_PUSH-------",request)
+            if(request.videoLinkSet && request.videoLinkSet.size){
+                videoLinkSet = request.videoLinkSet
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoLinkSet});
+                });
+            }
+            if(request.videoInfoList && request.videoInfoList.length){
+                videoInfoList = request.videoInfoList
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoInfoList});
+                });
+            }
+        }
         return true;
     }
 });
@@ -2932,7 +2959,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             this.config = new ConfigManager();
             this.user = new UserStorage();
             this.getAndSentConnectionMessage = (url, frameURL) => {
-                console.log("getAndSentConnectionMessage----settings-",this.user.settings);
+                // console.log("getAndSentConnectionMessage----settings-",this.user.settings);
 
                 if (this.user.settings) {
                     this.updateAutoState();
@@ -2981,9 +3008,11 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     darkSetings
                 };
                 if(isStayAround && "a" === isStayAround){
+                    // console.log("handleTabMessage---isStayAround=====",isStayAround, this.autoState);
                     const toggleStatus = settings.toggleStatus;
                     const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
                     if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
+                        // console.log("handleTabMessage---toggleStatus=====",toggleStatus, urlIsEnabled);
                         darkSetings.darkState = "dark_mode";
                         const custom = settings.stay_customThemes.find(
                             ({url: urlList}) => isURLInList(url, urlList)
@@ -3194,8 +3223,6 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         } else {
                             isAutoDark = isSystemDarkModeEnabled();
                         }
-                        // isAutoDark = isSystemDarkModeEnabled();
-                        // console.log("automation-----", stay_automation, isAutoDark);
                         break;
                     case "location": {
                         const {latitude, longitude} = auto_location;
@@ -3236,7 +3263,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         async start() {
             await this.config.load({local: true});
             await this.user.loadSettings();
-            console.log(" this.user.settings = ",  this.user.settings);
+            // console.log(" this.user.settings = ",  this.user.settings);
             this.updateAutoState();
             
             logInfo("loaded", this.user.settings);

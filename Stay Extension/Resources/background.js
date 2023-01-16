@@ -904,11 +904,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             );
                     });
                 }else{
-                    // console.log("resp.response ===else==",resp )
+                    if(resp.type.indexOf("text/html") != -1){
+                        resp.response = resp.responseText;
+                    }
+                    console.log("resp.response ===else==",resp )
                     if(reqType !=="undefined" && reqType == "content"){
                         sendResponse(resp);
                     }else{
                         browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+
                             browser.tabs.sendMessage(tabs[0].id, { from: "background", xhrId, operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: resp });
                         });
                     }

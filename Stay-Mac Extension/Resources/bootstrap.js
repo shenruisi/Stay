@@ -1,3 +1,4 @@
+
 /**
  Main entrance of Stay
  1. Fetch inject scripts from SafariWebExtensionHandler
@@ -8,6 +9,7 @@
  background.js passing message to content.js using browser.tabs.sendMessage.
  popup.js passing message to content.js should sendMessage to background.js first.
  */
+/* eslint-disable */
 // console.log("bootstrap inject");
 var __b; if (typeof browser != "undefined") {__b = browser;} if (typeof chrome != "undefined") {__b = chrome;}
 var browser = __b;
@@ -344,12 +346,23 @@ let injectedContentVendor = new Set();
                 window.postMessage({ name: name, response: resp, id: request.id, xhrId: request.xhrId });
             }
         }
+        else if('popup' === request.from){
+            if('windowOpen' === operate){
+                var openUrl = request.openUrl;
+                // console.log('openUrl---------',openUrl);
+                // window.open(openUrl, '_self');
+                let targetGun = document.createElement('a');
+                targetGun.href = openUrl;
+                targetGun.click();
+            }
+              
+          }
         return true;
     });
     
     browser.runtime.sendMessage({ from: "bootstrap", operate: "fetchScripts", url: location.href, digest: "no"}, (response) => {
         matchedScripts = response.body;
-//        console.log("matchedScripts-", matchedScripts)
+        // console.log("matchedScripts-", matchedScripts)
         let activeCount = 0;
         matchedScripts.forEach((script) => {
             var pageInject = script.installType === "page";

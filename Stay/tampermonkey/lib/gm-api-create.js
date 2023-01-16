@@ -1538,7 +1538,7 @@
                         || name !== "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP"){
                             return;
                     }
-                    console.log("name===",name,"response===",response);
+                    // console.log("name===",name,"response===",response);
                     if(response){
                         const { status } = response
                         if( status >= 200 && status < 400){
@@ -1587,7 +1587,7 @@
                     ) return;
                     // console.log("XHR==response=", response);
                     if (name === "RESP_API_XHR_TO_CREATE") {
-                        console.log("RESP_API_XHR_TO_CREATE----");
+                        // console.log("RESP_API_XHR_TO_CREATE----");
                         // ignore
                     } else if (name.includes("ABORT") && details.onabort) {
                         details.onabort(response);
