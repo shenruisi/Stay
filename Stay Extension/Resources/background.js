@@ -904,10 +904,10 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             );
                     });
                 }else{
-                    if(resp.type.indexOf("text/html") != -1){
-                        resp.response = resp.responseText;
-                    }
-                    console.log("resp.response ===else==",resp )
+                    // if(resp.type.indexOf("text/html") != -1){
+                    //     resp.response = resp.responseText;
+                    // }
+                    // console.log("resp.response ===else==",resp )
                     if(reqType !=="undefined" && reqType == "content"){
                         sendResponse(resp);
                     }else{
