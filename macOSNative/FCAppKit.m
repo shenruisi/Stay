@@ -178,30 +178,30 @@
 }
 
 - (NSToolbarItem *)iCloudSync:(NSString *)identifier imageData:(NSData *)imageData{
-    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
-    NSProgressIndicator *indicator = [[NSProgressIndicator alloc] initWithFrame:CGRectMake(5, 0, 20, 20)];
-    CIFilter *colorFilter = [CIFilter filterWithName:@"CIColorClamp"];
-    NSString *colorString = [[NSUserDefaults standardUserDefaults] objectForKey:@"macOSNative.accentColor"];
-    if (colorString.length == 0){
-        colorString = @"#B620E0";
-    }
-    NSColor *accentColor = [self colorWithHexString:colorString alpha:1];
-    NSColor *spaceColor = [accentColor colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];
-    CGFloat redComponent = spaceColor.redComponent;
-    CGFloat greenComponent = spaceColor.greenComponent;
-    CGFloat blueComponent = spaceColor.blueComponent;
-    CIVector *minVector = [[CIVector alloc] initWithX:redComponent Y:greenComponent Z:blueComponent W:0];
-    CIVector *maxVector = [[CIVector alloc] initWithX:redComponent Y:greenComponent Z:blueComponent W:1];
-
-    [colorFilter setDefaults];
-    [colorFilter setValue:minVector forKey:@"inputMinComponents"];
-    [colorFilter setValue:maxVector forKey:@"inputMaxComponents"];
-    indicator.contentFilters = @[colorFilter];
-    [indicator startAnimation:nil];
-    item.view = indicator;
-    item.minSize = CGSizeMake(25, 25);
-    item.maxSize = CGSizeMake(25, 25);
-    return item;
+//    NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+//    NSProgressIndicator *indicator = [[NSProgressIndicator alloc] initWithFrame:CGRectMake(5, 0, 20, 20)];
+//    CIFilter *colorFilter = [CIFilter filterWithName:@"CIColorClamp"];
+//    NSString *colorString = [[NSUserDefaults standardUserDefaults] objectForKey:@"macOSNative.accentColor"];
+//    if (colorString.length == 0){
+//        colorString = @"#B620E0";
+//    }
+//    NSColor *accentColor = [self colorWithHexString:colorString alpha:1];
+//    NSColor *spaceColor = [accentColor colorUsingColorSpace:NSColorSpace.deviceRGBColorSpace];
+//    CGFloat redComponent = spaceColor.redComponent;
+//    CGFloat greenComponent = spaceColor.greenComponent;
+//    CGFloat blueComponent = spaceColor.blueComponent;
+//    CIVector *minVector = [[CIVector alloc] initWithX:redComponent Y:greenComponent Z:blueComponent W:0];
+//    CIVector *maxVector = [[CIVector alloc] initWithX:redComponent Y:greenComponent Z:blueComponent W:1];
+//
+//    [colorFilter setDefaults];
+//    [colorFilter setValue:minVector forKey:@"inputMinComponents"];
+//    [colorFilter setValue:maxVector forKey:@"inputMaxComponents"];
+//    indicator.contentFilters = @[colorFilter];
+//    [indicator startAnimation:nil];
+//    item.view = indicator;
+//    item.minSize = CGSizeMake(25, 25);
+//    item.maxSize = CGSizeMake(25, 25);
+    return nil;
 }
 
 - (NSToolbarItem *)appName:(NSString *)identifier{
