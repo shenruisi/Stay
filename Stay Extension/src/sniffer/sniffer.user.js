@@ -133,6 +133,10 @@ const browser = __b;
       // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
       let flag = videoDoms && videoDoms.length;
+      if(!flag){
+        videoDoms = document.querySelectorAll('.post-content shreddit-player');
+        flag = videoDoms && videoDoms.length;
+      }
       if(flag){
         // console.log('videoDoms---false-----',videoDoms)
         parseVideoNodeList(videoDoms);
@@ -317,6 +321,9 @@ const browser = __b;
       else if(host.indexOf('m.v.qq.com')>-1){
         videoInfo = handleMobileTenxunVideoInfo(videoDom);
       }
+      else if(host.indexOf('www.reddit.com')>-1){
+        videoInfo = handleRedditVideoInfo(videoDom);
+      }
 
 
 
@@ -442,6 +449,17 @@ const browser = __b;
           title = title?title.trim():'';
         }
         videoInfo.title = title;
+      }
+      return videoInfo;
+    }
+
+    function handleRedditVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      const titleDom = document.querySelector('shreddit-app shreddit-title');
+      if(titleDom){
+        videoInfo.title = titleDom.getAttribute('title');
       }
       return videoInfo;
     }
