@@ -481,7 +481,7 @@ static DownloadManager *instance = nil;
         [fileHandle writeData:[NSData dataWithContentsOfFile:[taskPath stringByAppendingPathComponent:tsURL]] error:&err];
         if (err != nil) {
             if (task.block != nil) {
-                task.block(0, @"", DMStatusFailed);
+                task.block(0, @"", DMStatusFailedNoSpace);
             }
             [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
 //                @synchronized (self.taskDict) {
@@ -533,7 +533,7 @@ static DownloadManager *instance = nil;
         // FAILURE
         NSLog(@"Command failed with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
         if (task.block != nil) {
-            task.block(0, @"", DMStatusFailed);
+            task.block(0, @"", DMStatusFailedTranscode);
         }
         [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
 //            @synchronized (self.taskDict) {

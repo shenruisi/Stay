@@ -15,6 +15,8 @@ typedef enum {
     DMStatusComplete,
     DMStatusFailed,
     DMStatusTranscoding,
+    DMStatusFailedNoSpace,
+    DMStatusFailedTranscode,
 } DMStatus;
 
 NS_ASSUME_NONNULL_BEGIN
