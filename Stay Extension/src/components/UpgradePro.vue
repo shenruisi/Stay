@@ -1,7 +1,8 @@
 <template>
-    <div class="upgrade-pro-warpper" @click="upgradeAction">
+    <div class="upgrade-pro-warpper" >
       <div class="upgrade-img"></div>
-      <div class="upgrade-btn">{{t('upgrade_pro')}}</div>
+      <div class="upgrade-btn" @click="upgradeAction">{{t('upgrade_pro')}}</div>
+      <div class="what-con"><slot></slot></div>
     </div>
   </template>
   
@@ -57,6 +58,15 @@ export default {
     font-size: 15px;
     font-weight: 500;
     margin: 20px auto;
+  }
+  .what-con{
+    font-weight: 700;
+    color: var(--dm-font);
+    text-decoration-line: underline;
+    a{
+      color: var(--dm-font);
+    }
+    
   }
 }
 </style>

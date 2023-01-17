@@ -11,7 +11,7 @@
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
-        <UpgradePro v-else></UpgradePro>
+        <UpgradePro v-else><a class="what-it" :href="selectedTab.id == 2?'https://www.craft.do/s/PHKJvkZL92BTep':'https://www.craft.do/s/sYLNHtYc0n2rrV'" target="_blank">{{ selectedTab.id == 2 ? t('what_darkmode') : t('what_downloader') }}</a></UpgradePro>
       </template>
       <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
     </div>
@@ -70,7 +70,7 @@ export default {
       const operate = request.operate;
       if('background' === from){
         if (operate == 'giveDarkmodeConfig'){
-          console.log('giveDarkmodeConfig==res==', request);
+          // console.log('giveDarkmodeConfig==res==', request);
           state.isStayPro = request.isStayAround=='a'?true:false;
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
@@ -82,7 +82,7 @@ export default {
 
     const fetchStayProConfig = () => {
       global.browser.tabs.getSelected(null, (tab) => {
-        console.log('fetchStayProConfig----tab-----', tab);
+        // console.log('fetchStayProConfig----tab-----', tab);
         state.browserUrl = tab.url;
         store.commit('setBrowserUrl', state.browserUrl);
       })
@@ -125,6 +125,9 @@ export default {
     background-color: var(--dm-bg);
     flex: 1;
     // padding-bottom: 52px;
+    a.what-it{
+      color: var(--dm-font);
+    }
   }
 }
 @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {

@@ -7,7 +7,7 @@ export default {
     "state_actived": "Activated",
     "state_manually": "Manually Executed",
     "state_stopped": "Stopped",
-    "null_scripts": "no available scripts were matched",
+    "null_scripts": "No available scripts were matched",
     "null_register_menu": "No register menu item",
     "menu_close": "Close",
     "toast_keep_active": "Please keep the script activated",
@@ -29,7 +29,10 @@ export default {
     "select_folder": "Select Folder",
     "disable_website":"Disable on this website",
     "menu":"MENU",
-    "open_app":"OPEN IN APP"
+    "open_app":"OPEN IN APP",
+    "install_more":"Install more userscripts from Stay Fork",
+    "what_downloader": "What is a downloader?",
+    "what_darkmode" : "What is a dark mode?"
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -60,7 +63,10 @@ export default {
     "select_folder": "选择文件夹",
     "disable_website": "在此网站上禁用",
     "menu":"菜单",
-    "open_app":"在应用里打开"
+    "open_app":"在应用里打开",
+    "install_more":"从Stay Fork安装更多用户脚本",
+    "what_downloader": "什么是下载器？",
+    "what_darkmode" : " 什么是暗黑模式？"
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -91,7 +97,10 @@ export default {
     "select_folder": "選擇文件夾",
     "disable_website": "在此網站上禁用",
     "menu":"菜單",
-    "open_app":"在應用裡打開"
+    "open_app":"在應用裡打開",
+    "install_more":"從Stay Fork安裝更多用戶腳本",
+    "what_downloader": "什麼是下載器？",
+    "what_darkmode" : " 什麼是暗黑模式？"
   }
 }
 /* eslint-disable */

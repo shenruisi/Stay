@@ -37,7 +37,8 @@
       </div>
     </div>
     <div class="null-data" v-else>
-      {{t('null_scripts')}}
+      <div class="null-text">{{t('null_scripts')}}</div>
+      <div class="install-more" @click="installMoreUserscript()">{{ t('install_more') }}</div>
     </div>
     <RegisterMenuItem v-if="showMenu" :registerMenu="registerMenuMap[uuid]"  @closeMenuPopup="closeMenuPopup"></RegisterMenuItem>
   </div>
@@ -216,6 +217,11 @@ export default {
       return true;
     });
 
+    const installMoreUserscript = () => {
+      let openUrl = 'https://stayfork.app';
+      window.open(openUrl);
+    }
+
     return {
       ...toRefs(state),
       t,
@@ -225,7 +231,8 @@ export default {
       handleWebsite,
       handleWebsiteDisabled,
       handleRegisterMenu,
-      closeMenuPopup
+      closeMenuPopup,
+      installMoreUserscript
     };
   }
 }
@@ -285,7 +292,14 @@ export default {
       flex-direction: column;
       flex: 1;
       justify-content: center;
-      color: var(--dm-font);
+      .null-text{
+        color: var(--dm-font);
+      }
+      .install-more{
+        text-decoration-line:underline;
+        color: var(--dm-font-2);
+        margin-top: 20px;
+      }
     }
   }
 </style>

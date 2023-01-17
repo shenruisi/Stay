@@ -96,7 +96,7 @@ export default createStore({
       key: 'stay-popup-vuex-store-persistence',
       // paths是存储state中的那些数据，如果是模块下具体的数据需要加上模块名称，如moudleA.name
       // 修改state后触发才可以看到本地存储数据的的变化。
-      paths: ['moudleA', 'staySwitch', 'selectedTab']
+      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro']
     })
   ]
 });

@@ -349,10 +349,14 @@ let injectedContentVendor = new Set();
         else if('popup' === request.from){
             if('windowOpen' === operate){
                 var openUrl = request.openUrl;
+                var target = request.target;
                 // console.log('openUrl---------',openUrl);
                 // window.open(openUrl, '_self');
                 let targetGun = document.createElement('a');
                 targetGun.href = openUrl;
+                if(target){
+                    targetGun.target=target;
+                }
                 targetGun.click();
             }
               

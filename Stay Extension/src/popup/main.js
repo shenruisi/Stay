@@ -13,12 +13,12 @@ const globalClick = (callback) => {
     callback(event);
   });
 };
-const openUrlInSafariPopup = (openUrl) => {
+const openUrlInSafariPopup = (openUrl, target='') => {
   browser.tabs.query({
     active: true,
     currentWindow: true
   }, (tabs) => {
-    let message = { from: 'popup', operate: 'windowOpen', openUrl};
+    let message = { from: 'popup', operate: 'windowOpen', openUrl, target: target};
     global.browser.tabs.sendMessage(tabs[0].id, message, response => {})
   })
   window.close();

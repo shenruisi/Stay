@@ -869,6 +869,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
                 // console.log("GM_xmlhttpRequest----response---", response);
                 let resp = response.body
+                resp.response = resp.responseText;
                 if (resp.responseType && resp.responseType === "arraybuffer" && resp) {
                     try {
                         const r = new Uint8Array(resp.data).buffer;
@@ -904,15 +905,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             );
                     });
                 }else{
-                    // if(resp.type.indexOf("text/html") != -1){
-                    //     resp.response = resp.responseText;
-                    // }
                     // console.log("resp.response ===else==",resp )
                     if(reqType !=="undefined" && reqType == "content"){
                         sendResponse(resp);
                     }else{
                         browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-
                             browser.tabs.sendMessage(tabs[0].id, { from: "background", xhrId, operate: "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP", response: resp });
                         });
                     }
