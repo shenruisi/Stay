@@ -315,6 +315,14 @@ const browser = __b;
       else if(host.indexOf('iesdouyin.com')>-1){
         videoInfo = handleMobileDouyinVideoInfo(videoDom);
       }
+      else if(host.indexOf('douyin.com')>-1){
+        const pathName = window.location.pathname;
+        if(pathName.indexOf('/video')>-1){
+          videoInfo = handlePCDetailDouyinVideoInfo(videoDom);
+        }else{
+          videoInfo = handlePCHomeDouyinVideoInfo(videoDom);
+        }
+      }
       else if(host.indexOf('m.toutiao.com')>-1){
         videoInfo = handleMobileToutiaoVideoInfo(videoDom);
       }
@@ -405,6 +413,36 @@ const browser = __b;
         videoInfo.title = titleDom.textContent;
       }
 
+      return videoInfo;
+    }
+
+    function handlePCDetailDouyinVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      const titleDom = document.querySelector('div[data-e2e=video-detail] div[data-e2e=detail-video-info] div h2');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+      return videoInfo;
+    }
+
+    function handlePCHomeDouyinVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+
+      let slideDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+      if(slideDom){
+        let posterDom = slideDom.querySelector('.imgBackground img');
+        if(posterDom){
+          videoInfo.poster = posterDom.getAttribute('src');
+        }
+        let titleDom = slideDom.querySelector('.video-info-detail .title span.e_h_fqNj');
+        if(titleDom){
+          videoInfo.title = titleDom.textContent;
+        }
+      }
       return videoInfo;
     }
 
