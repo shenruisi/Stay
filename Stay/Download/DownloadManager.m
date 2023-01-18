@@ -42,6 +42,9 @@
 
 - (nullable instancetype)initWithTaskPath:(NSString *)taskPath {
     NSString *content = [NSString stringWithContentsOfFile:[taskPath stringByAppendingPathComponent:@"M3U8State"] encoding:NSUTF8StringEncoding error:nil];
+    if (content.length == 0) {
+        content = [NSString stringWithContentsOfFile:[taskPath stringByAppendingPathComponent:@"M3U8State_bak"] encoding:NSUTF8StringEncoding error:nil];
+    }
     if (content.length > 0) {
         if (self = [super init]){
             NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
@@ -71,6 +74,7 @@
         }
     }
     NSString *filePath = [taskPath stringByAppendingPathComponent:@"M3U8State"];
+    [NSFileManager.defaultManager moveItemAtPath:filePath toPath:[filePath stringByAppendingString:@"_bak"] error:nil];
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
@@ -472,6 +476,28 @@ static DownloadManager *instance = nil;
         return;
     }
     
+//    NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+//    NSString *content = @"";
+//    for (NSString *tsURL in task.m3u8State.tsURLs) {
+//        content = [content stringByAppendingFormat:@"file '%@'\n", [taskPath stringByAppendingPathComponent:tsURL]];
+//    }
+//    NSString *filePath = [taskPath stringByAppendingPathComponent:@"allts.txt"];
+//    NSError *err;
+//    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+//    if (err != nil) {
+//        if (task.block != nil) {
+//            task.block(0, @"", DMStatusFailedNoSpace);
+//        }
+//        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+////        @synchronized (self.taskDict) {
+////            [self.taskDict removeObjectForKey:task.taskId];
+////        }
+//        return;
+//    }
+//    task.m3u8State.status = 2;
+//    [task.m3u8State saveToPath:taskPath];
+    
+    NSLog(@"FFmpeg : start");
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     NSString *filePath = [taskPath stringByAppendingPathComponent:@"combined.ts"];
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
@@ -491,7 +517,6 @@ static DownloadManager *instance = nil;
             return;
         }
     }
-    
     [fileHandle closeAndReturnError:nil];
     task.m3u8State.status = 2;
     [task.m3u8State saveToPath:taskPath];
@@ -507,7 +532,8 @@ static DownloadManager *instance = nil;
     
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
-    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -vcodec copy -acodec copy '%@'", [taskPath stringByAppendingPathComponent:@"combined.ts"], task.filePath]];
+    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"combined.ts"], task.filePath]];
+//    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-f concat -safe 0 -i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"allts.txt"], task.filePath]];
     
     NSLog(@"FFmpeg : cost %ldms", [session getDuration]);
     NSArray *logs = [session getLogs];
@@ -641,7 +667,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             }
             NSString *requestURL = downloadTask.originalRequest.URL.absoluteString;
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-            NSString *filePath = [taskPath stringByAppendingPathComponent:[requestURL md5]];
+            NSString *filePath = [taskPath stringByAppendingPathComponent:[[requestURL md5] stringByAppendingString:@".ts"]];
             BOOL isKeyURL = NO;
             if (task.m3u8State.keyURL.length == 0) {
                 [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
@@ -649,7 +675,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 if ([task.m3u8State.keyURL isEqualToString:requestURL]) {
                     isKeyURL = YES;
                     [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
-                    task.m3u8State.keyURL = [requestURL md5];
+                    task.m3u8State.keyURL = filePath.lastPathComponent;
                     task.m3u8State.keyData = [NSData dataWithContentsOfFile:filePath];
                 } else {
                     if (task.m3u8State.keyData == nil) {
@@ -669,7 +695,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                     NSString *tsURL = tsURLs[i];
                     if ([tsURL hasPrefix:@"http"] && [tsURL isEqualToString:requestURL]) {
                         task.m3u8State.currCount++;
-                        tsURLs[i] = [requestURL md5];
+                        tsURLs[i] = filePath.lastPathComponent;
                         break;
                     }
                 }
