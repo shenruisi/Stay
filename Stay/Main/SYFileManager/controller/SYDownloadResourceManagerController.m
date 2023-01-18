@@ -17,6 +17,8 @@
 #import "ToastCenter.h"
 #import "SYTextInputViewController.h"
 #import "SYChangeDocSlideController.h"
+#import "DeviceHelper.h"
+#import "QuickAccess.h"
 #if iOS
 #import "Stay-Swift.h"
 #else
@@ -259,7 +261,12 @@
         }
         PlayerViewController *playerController = [[PlayerViewController alloc] initWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:self.pathUuid] initIndex:currIndex];
         playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-        [self.navigationController pushViewController:playerController animated:YES];
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                      && [QuickAccess splitController].viewControllers.count >= 2){
+            [[QuickAccess secondaryController] pushViewController:playerController];
+        } else {
+            [self.navigationController pushViewController:playerController animated:YES];
+        }
     }
 }
 
