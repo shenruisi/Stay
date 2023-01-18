@@ -129,7 +129,7 @@
     if(_downloadResource.status == 2) {
         NSLocale *locale = [NSLocale currentLocale];
 
-        UIButton *savePhotoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
+        UIButton *savePhotoBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 134, 25)];
         [savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [savePhotoBtn setTitle:NSLocalizedString(@"SAVETOPHOTOS", @"") forState:UIControlStateNormal];
         [savePhotoBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
@@ -145,7 +145,7 @@
         [self.contentView addSubview:savePhotoBtn];
 
         
-        UIButton *saveFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 154, 25)];
+        UIButton *saveFileBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 124, 25)];
         [saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [saveFileBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
         [saveFileBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
@@ -164,7 +164,7 @@
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
         runBtn.titleLabel.font = FCStyle.footnoteBold;
        
-        if([@"CN" isEqualToString:locale.countryCode]) {
+        if([@"zh" isEqualToString:locale.languageCode]) {
             saveFileBtn.width = savePhotoBtn.width = 110;
             saveFileBtn.left = savePhotoBtn.right + 9;
         }
@@ -266,14 +266,59 @@
             retryLabel.centerX = stop.centerX;
 
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
+        } else if (_downloadResource.status == 4) {
+            _downloadRateLabel.text = NSLocalizedString(@"Transcoding","");
+        } else if (_downloadResource.status == 5) {
+            UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
+            retryLabel.tintColor = FCStyle.accent;
+            retryLabel.text = NSLocalizedString(@"RETRY","");
+            retryLabel.font = FCStyle.footnoteBold;
+            retryLabel.bottom = imageView.bottom;
+            retryLabel.textColor = FCStyle.accent;
+            [retryLabel sizeToFit];
+            retryLabel.right = self.contentView.width - 10;
+            [self.contentView addSubview:retryLabel];
+        
+            [stop setImage:[ImageHelper sfNamed:@"goforward" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+            
+            [stop addTarget:self.controller action:@selector(retryDownload:) forControlEvents:UIControlEventTouchUpInside];
+
+            stop.bottom = retryLabel.top - 2;
+            stop.right =  self.contentView.width - 26;
+            [self.contentView addSubview:stop];
+            
+            retryLabel.centerX = stop.centerX;
+
+            _downloadRateLabel.text = NSLocalizedString(@"TranscodingFailed","");
+        } else if (_downloadResource.status == 6){
+            UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
+            retryLabel.tintColor = FCStyle.accent;
+            retryLabel.text = NSLocalizedString(@"RETRY","");
+            retryLabel.font = FCStyle.footnoteBold;
+            retryLabel.bottom = imageView.bottom;
+            retryLabel.textColor = FCStyle.accent;
+            [retryLabel sizeToFit];
+            retryLabel.right = self.contentView.width - 10;
+            [self.contentView addSubview:retryLabel];
+        
+            [stop setImage:[ImageHelper sfNamed:@"goforward" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+            
+            [stop addTarget:self.controller action:@selector(retryDownload:) forControlEvents:UIControlEventTouchUpInside];
+
+            stop.bottom = retryLabel.top - 2;
+            stop.right =  self.contentView.width - 26;
+            [self.contentView addSubview:stop];
+            retryLabel.centerX = stop.centerX;
+            _downloadRateLabel.text = NSLocalizedString(@"NOSPACEFAILED","");
         }
         
-        
-        _progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
+        if(_downloadResource.status != 4 || _downloadResource.status != 5 || _downloadResource.status != 6) {
+            _progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
 
-        _progress.top = _downloadRateLabel.bottom + 5;
-        _progress.progress = _downloadResource.downloadProcess / 100;
-        [self.contentView addSubview:_progress];
+            _progress.top = _downloadRateLabel.bottom + 5;
+            _progress.progress = _downloadResource.downloadProcess / 100;
+            [self.contentView addSubview:_progress];
+        }
     }
     
 }

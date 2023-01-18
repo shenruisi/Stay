@@ -42,8 +42,7 @@
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.
     self.tableView.sectionHeaderTopPadding = 0;
-    
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
 
 }
 
@@ -139,7 +138,37 @@
             } else if(status == DMStatusPending) {
                 [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
                 resource.status = 1;
-           }
+            } else if(status == DMStatusTranscoding) {
+                [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
+                resource.status = 4;
+            } else if(status == DMStatusFailedTranscode) {
+                [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
+                resource.status = 5;
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedTranscode", @"")
+                                                                               message:@""
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+               
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                     style:UIAlertActionStyleCancel
+                     handler:^(UIAlertAction * _Nonnull action) {
+                 }];
+                 [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            } else if(status == DMStatusFailedNoSpace) {
+                [[DataManager shareManager]updateDownloadResourceStatus:6 uuid:resource.downloadUuid];
+                resource.status = 6;
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedNoSpace", @"")
+                                                                               message:@""
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+               
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                     style:UIAlertActionStyleCancel
+                     handler:^(UIAlertAction * _Nonnull action) {
+                 }];
+                 [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
             
             dispatch_async(dispatch_get_main_queue(),^{
                 [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
@@ -305,6 +334,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    self.tableView.frame = self.view.bounds;
     self.tabBarController.tabBar.hidden = YES;
     [self reloadData];
 }

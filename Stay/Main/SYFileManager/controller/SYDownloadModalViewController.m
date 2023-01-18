@@ -21,6 +21,7 @@
 #import "SYDownloadResourceManagerController.h"
 #import "SYDownloadFolderChooseModalViewController.h"
 #import "QuickAccess.h"
+#import "DeviceHelper.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,
@@ -330,8 +331,13 @@
         controller.array = [NSMutableArray array];
         [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
 
-        [self.nav pushViewController:controller animated:true];
         
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                      && [QuickAccess splitController].viewControllers.count >= 2){
+            [[QuickAccess secondaryController] pushViewController:controller];
+        } else {
+            [self.nav pushViewController:controller animated:true];
+        }
         [self.navigationController.slideController dismiss];
     } else {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlIsDownloaded", @"")
