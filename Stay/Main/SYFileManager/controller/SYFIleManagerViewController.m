@@ -547,7 +547,8 @@ UIDocumentPickerDelegate
         _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
 #else
         _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:self.view.bounds];
-#endif    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+#endif
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
     self.emptyTipsView.hidden = isPro;
 }
 
