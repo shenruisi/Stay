@@ -31,6 +31,10 @@
 }
 
 - (BOOL)blockAction{
+    return YES;
+}
+
+- (BOOL)dismissable{
     return NO;
 }
 

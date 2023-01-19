@@ -88,7 +88,7 @@
                 
             } else {
                 UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150, 43)];
-                [btn setTitle:NSLocalizedString(@"TYRITLATER","") forState:UIControlStateNormal];
+                [btn setTitle:NSLocalizedString(@"TRYITLATER","") forState:UIControlStateNormal];
                 btn.layer.borderColor = FCStyle.borderColor.CGColor;
                 btn.layer.borderWidth = 1;
                 btn.layer.cornerRadius = 10;
@@ -101,7 +101,7 @@
                 [self.bannerView addSubview:btn];
                 
                 UIButton *addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150, 43)];
-                [addButton setTitle:NSLocalizedString(@"UpgradeTo", @"") forState:UIControlStateNormal];
+                [addButton setTitle:NSLocalizedString(@"Upgrade", @"") forState:UIControlStateNormal];
                 addButton.layer.borderColor = FCStyle.borderGolden.CGColor;
                 addButton.layer.borderWidth = 1;
                 addButton.backgroundColor =  FCStyle.backgroundGolden;
