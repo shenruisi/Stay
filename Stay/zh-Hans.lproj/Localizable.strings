@@ -246,3 +246,5 @@ DOWNLOADPREVOEWDESC1="点击Stay扩展";
 DOWNLOADPREVIEWTITLE2="查看视频列表";
 DOWNLOADPREVIEWDESC2="点击下载按钮打开Stay App";
 TRYITLATER="稍后再试";
+Transcoding="转码中";
+TranscodingFailed="转码失败";

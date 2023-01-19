@@ -245,3 +245,5 @@ DOWNLOADPREVOEWDESC1="Tap the Stay extension";
 DOWNLOADPREVIEWTITLE2="View the video list";
 DOWNLOADPREVIEWDESC2="Tap DOWNLOAD to open Stay App";
 TRYITLATER="Try it later";
+Transcoding="Transcoding";
+TranscodingFailed="Transcoding failed";
