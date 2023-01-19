@@ -101,6 +101,8 @@
         request.key =  cell.downloadResource.firstPath;
         Task *task =  [[DownloadManager shared]  enqueue:request];
         
+        resource.downloadProcess = task.progress;
+        
         task.block = ^(float progress, NSString *speed, DMStatus status) {
             if(status == DMStatusFailed) {
                 [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:resource.downloadUuid];

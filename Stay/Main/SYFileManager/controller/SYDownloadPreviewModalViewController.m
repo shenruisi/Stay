@@ -20,7 +20,7 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.navigationBar.hidden = NO;
-    self.navigationBar.showCancel = YES;
+    self.navigationBar.showCancel = NO;
     self.title = NSLocalizedString(@"DOWNLOADVIDEO", @"");
     
     NSArray *imageArray = @[@"DownloadPreview1",@"DownloadPreview2",@"DownloadPreview3"];
@@ -150,6 +150,8 @@
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 460);
 }
+
+
 
 
 @end
