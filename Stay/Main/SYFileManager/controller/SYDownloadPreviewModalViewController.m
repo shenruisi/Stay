@@ -80,7 +80,7 @@
                 [btn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
 
                 btn.centerX = imageView1.centerX;
-                [btn setTitleColor:FCStyle.popup forState:UIControlStateNormal];
+                [btn setTitleColor:FCStyle.titleGrayColor forState:UIControlStateNormal];
                 btn.top = imageView1.bottom + 20;
                 [self.bannerView addSubview:btn];
                 
@@ -94,7 +94,7 @@
                 btn.layer.cornerRadius = 10;
                 btn.top = imageView1.bottom + 20;
                 btn.font = FCStyle.subHeadline;
-                [btn setTitleColor:FCStyle.popup forState:UIControlStateNormal];
+                [btn setTitleColor:FCStyle.titleGrayColor forState:UIControlStateNormal];
                 [btn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
 
                 btn.left = left;
