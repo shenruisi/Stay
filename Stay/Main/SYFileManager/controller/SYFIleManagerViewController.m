@@ -16,6 +16,9 @@
 #import <objc/runtime.h>
 #import <AVFoundation/AVFoundation.h>
 #import "DownloadResourceTableViewCell.h"
+#import "DeviceHelper.h"
+#import "QuickAccess.h"
+#import "SYDownloadPreviewController.h"
 
 #if iOS
 #import "Stay-Swift.h"
@@ -31,6 +34,7 @@ static CGFloat kMacToolbar = 50.0;
 @property (nonatomic, strong) UIImageView *part1Img;
 @property (nonatomic, strong) UIButton *addButton;
 @property (nonatomic, strong) UIViewController *controller;
+- (void)movePart;
 @end
 
 @implementation _FileEmptyTipsView
@@ -38,10 +42,7 @@ static CGFloat kMacToolbar = 50.0;
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]){
         [self part1Img];
-//        [self.part1Label sizeToFit];
         [self addButton];
-//        [self part2Label];
-//        [self.part2Label sizeToFit];
     }
     
     return self;
@@ -53,8 +54,16 @@ static CGFloat kMacToolbar = 50.0;
     self.part1Img.bottom = self.height / 2;
     self.addButton.top = self.part1Img.bottom + 29;
     self.addButton.centerX = self.width / 2;
+
 //    self.addButton.frame = CGRectMake(self.part1Label.right, y, self.addButton.width, self.addButton.height);
 //    self.part2Label.frame = CGRectMake(self.addButton.right, y, self.part2Label.width, self.part2Label.height);
+}
+
+- (void)movePart {
+    self.part1Img.centerX = self.width / 2;
+    self.part1Img.bottom = self.height / 2;
+    self.addButton.top = self.part1Img.bottom + 29;
+    self.addButton.centerX = self.width / 2;
 }
 
 - (UIImageView *)part1Img{
@@ -84,7 +93,6 @@ static CGFloat kMacToolbar = 50.0;
 
 
 
-
 @end
 
 @interface SYFIleManagerViewController ()<
@@ -105,7 +113,7 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) _FileEmptyTipsView *emptyTipsView;
 @property (nonatomic, strong) NSMutableArray *searchData;
-
+@property (nonatomic, strong) SYDownloadPreviewController *sYDownloadPreviewController;
 
 
 @end
@@ -141,14 +149,30 @@ UIDocumentPickerDelegate
                                                  name:@"app.stay.notification.SYFolderChangeNotification"
                                                object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showUpgrade)
+                                                 name:@"showUpgrade"
+                                               object:nil];
 
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
     if(isPro) {
         self.navigationItem.rightBarButtonItems = @[[self addItem]];
     }
-    
+
     [self emptyTipsView];
+
+}
+
+- (void)showUpgrade {
+#ifdef Mac
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+#endif
+    
 }
 
 - (UIBarButtonItem *)addItem{
@@ -281,9 +305,17 @@ UIDocumentPickerDelegate
                     break;
                 }
             }
+            
+            
+            
             PlayerViewController *playerController = [[PlayerViewController alloc] initWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:downloadResource.firstPath] initIndex:currIndex];
             playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-            [self.navigationController pushViewController:playerController animated:YES];
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                          && [QuickAccess splitController].viewControllers.count >= 2){
+                [[QuickAccess secondaryController] pushViewController:playerController];
+            } else {
+                [self.navigationController pushViewController:playerController animated:YES];
+            }
         }
     } else {
         SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
@@ -543,13 +575,28 @@ UIDocumentPickerDelegate
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.tableView.frame = self.view.bounds;
+    [self emptyTipsView];
+
 #ifdef Mac
-        _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
+        self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
 #else
-        _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:self.view.bounds];
+        self.emptyTipsView.frame = self.view.bounds;
 #endif
+    
+    
+    [self.emptyTipsView movePart];
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
     self.emptyTipsView.hidden = isPro;
+    
+    
+#ifndef Mac
+    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+    if(nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstDownloadGuide"]){
+        self.sYDownloadPreviewController = [[SYDownloadPreviewController alloc] init];
+        [self.sYDownloadPreviewController show];
+        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstDownloadGuide"];
+    }
+#endif
 }
 
 - (void)dealloc{
@@ -586,6 +633,7 @@ UIDocumentPickerDelegate
         _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:self.view.bounds];
 #endif
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+        
         _emptyTipsView.hidden = isPro;
         [_emptyTipsView.addButton addTarget:self action:@selector(buyStay:) forControlEvents:UIControlEventTouchUpInside];
         _emptyTipsView.backgroundColor = FCStyle.secondaryBackground;

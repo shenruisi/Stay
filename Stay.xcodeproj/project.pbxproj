@@ -463,6 +463,10 @@
 		84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
 		84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA932428A63440003E3967 /* SYAppearanceViewController.m */; };
 		84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AC68D027E434E500F356DF /* SYNotesViewController.m */; };
+		84B635162978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */; };
+		84B635172978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */; };
+		84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */; };
+		84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */; };
 		84BA56F62944BC5D00FD4446 /* SYProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA56F52944BC5D00FD4446 /* SYProgress.m */; };
 		84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA56F52944BC5D00FD4446 /* SYProgress.m */; };
 		84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */; };
@@ -987,6 +991,10 @@
 		84AA932428A63440003E3967 /* SYAppearanceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYAppearanceViewController.m; sourceTree = "<group>"; };
 		84AC68CF27E434E500F356DF /* SYNotesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNotesViewController.h; sourceTree = "<group>"; };
 		84AC68D027E434E500F356DF /* SYNotesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNotesViewController.m; sourceTree = "<group>"; };
+		84B635142978BF200000DAF1 /* SYDownloadPreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadPreviewController.h; sourceTree = "<group>"; };
+		84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadPreviewController.m; sourceTree = "<group>"; };
+		84B635182978BF660000DAF1 /* SYDownloadPreviewModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadPreviewModalViewController.h; sourceTree = "<group>"; };
+		84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadPreviewModalViewController.m; sourceTree = "<group>"; };
 		84BA56F42944BC5D00FD4446 /* SYProgress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYProgress.h; sourceTree = "<group>"; };
 		84BA56F52944BC5D00FD4446 /* SYProgress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYProgress.m; sourceTree = "<group>"; };
 		84BA9D11292B11CE00BB28A7 /* SYWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYWebsiteViewController.h; sourceTree = "<group>"; };
@@ -1900,16 +1908,20 @@
 				849E77D6293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m */,
 				849E77CC293C7F5A00AD83D7 /* SYFIleManagerViewController.h */,
 				849E77CD293C7F5A00AD83D7 /* SYFIleManagerViewController.m */,
-				582061F0294C4F2600A32D0C /* SYDownloadSlideController.h */,
 				84E8EA0B2962C20D003846AD /* SYChangeDocSlideController.h */,
 				84E8EA0C2962C20D003846AD /* SYChangeDocSlideController.m */,
 				84E8EA0F2962C280003846AD /* SYChangeDocModelViewController.h */,
 				84E8EA102962C280003846AD /* SYChangeDocModelViewController.m */,
+				582061F0294C4F2600A32D0C /* SYDownloadSlideController.h */,
 				582061F1294C4F2600A32D0C /* SYDownloadSlideController.m */,
 				582061F4294C516700A32D0C /* SYDownloadModalViewController.h */,
 				582061F5294C516700A32D0C /* SYDownloadModalViewController.m */,
 				582061FC294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.h */,
 				582061FD294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m */,
+				84B635142978BF200000DAF1 /* SYDownloadPreviewController.h */,
+				84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */,
+				84B635182978BF660000DAF1 /* SYDownloadPreviewModalViewController.h */,
+				84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -2732,6 +2744,7 @@
 				582061C8294C4C0E00A32D0C /* ModalItemView.m in Sources */,
 				3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
+				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
@@ -2779,6 +2792,7 @@
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
+				84B635162978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */,
 				3C8388C82931ADC5007563E6 /* FCTabConfig.m in Sources */,
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
 				3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */,
@@ -3001,6 +3015,7 @@
 				84E8EA122962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
+				84B635172978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */,
 				3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				582062032950675900A32D0C /* DisabledWebsites.m in Sources */,
@@ -3062,6 +3077,7 @@
 				3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */,
+				84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
