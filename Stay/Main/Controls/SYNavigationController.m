@@ -23,6 +23,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = FCStyle.background;
     self.navigationController.navigationBar.tintColor = FCStyle.fcMacIcon;
+    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 }
 
 - (void)viewWillLayoutSubviews{
