@@ -598,6 +598,28 @@ UIDocumentPickerDelegate
 #endif
 }
 
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+#ifdef Mac
+    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+#else
+        self.tableView.frame = self.view.bounds;
+#endif
+    
+    
+#ifdef Mac
+        self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
+#else
+        self.emptyTipsView.frame = self.view.bounds;
+#endif
+    
+    [self.emptyTipsView movePart];
+
+    
+        [self.tableView reloadData];
+}
+
+
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:@"app.stay.notification.SYFolderChangeNotification"
