@@ -675,9 +675,7 @@ UITableViewDataSource
     
 }
 
--(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
-    NSLog(@"点击图片");
-    
+-(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{    
     UIImageView *clickedImageView = (UIImageView *)tap.view;
     [SYScanImage scanBigImageWithImageView:clickedImageView];
 }

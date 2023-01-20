@@ -353,6 +353,19 @@
     self.tabBarController.tabBar.hidden = NO;
 }
 
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+#ifdef Mac
+    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+#else
+        self.tableView.frame = self.view.bounds;
+#endif
+    
+    
+    [self.tableView reloadData];
+    
+}
+
 
 - (void)reloadData {
     dispatch_async(dispatch_get_main_queue(),^{
