@@ -189,6 +189,7 @@ static DownloadManager *instance = nil;
             NSString *dataFilePath = [self.dataPath stringByAppendingPathComponent:[[request.url md5] stringByAppendingString:@"_data"]];
             NSData *data = [NSData dataWithContentsOfFile:dataFilePath];
             sessionTask = data == nil ? [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:request.url]] : [self.downloadSession downloadTaskWithResumeData:data];
+            [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
         }
         if (sessionTask != nil) {
             @synchronized (self.sessionDict) {
@@ -217,7 +218,12 @@ static DownloadManager *instance = nil;
                             [self.sessionDict removeObjectForKey:sessionState.sessionTask];
                         }
                     }
-                    sessionState.sessionTask = [self.downloadSession downloadTaskWithResumeData:sessionState.data];
+                    NSURLSessionTask *sessionTask = [self.downloadSession downloadTaskWithResumeData:sessionState.data];
+                    sessionState.data = nil;
+                    [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+                    if (sessionTask != nil) {
+                        sessionState.sessionTask = sessionTask;
+                    }
                     if (sessionState.sessionTask != nil) {
                         @synchronized (self.sessionDict) {
                             self.sessionDict[sessionState.sessionTask] = task;
@@ -417,7 +423,10 @@ static DownloadManager *instance = nil;
             NSUInteger count = task.sessionStates.count;
             NSMutableSet<NSString *> *currURLs = [NSMutableSet set];
             for (TaskSessionState *sessionState in task.sessionStates) {
-                [currURLs addObject:sessionState.sessionTask.originalRequest.URL.absoluteString];
+                NSString *url = sessionState.sessionTask.originalRequest.URL.absoluteString;
+                if (url.length > 0) {
+                    [currURLs addObject:url];
+                }
             }
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
             NSString *keyURL = task.m3u8State.keyURL;
@@ -448,6 +457,7 @@ static DownloadManager *instance = nil;
     NSString *dataFilePath = [taskPath stringByAppendingPathComponent:[[tsURL md5] stringByAppendingString:@"_data"]];
     NSData *data = [NSData dataWithContentsOfFile:dataFilePath];
     sessionTask = data == nil ? [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:tsURL]] : [self.downloadSession downloadTaskWithResumeData:data];
+    [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
     if (sessionTask != nil) {
         @synchronized (self.sessionDict) {
             self.sessionDict[sessionTask] = task;
