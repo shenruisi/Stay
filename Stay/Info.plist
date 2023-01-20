@@ -62,5 +62,7 @@
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Stay uses Photo Library to save videos.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Stay uses the camera to save videos.</string>
 </dict>
 </plist>

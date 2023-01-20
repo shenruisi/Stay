@@ -150,6 +150,8 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
     return 10;
 }
 
+
+
 - (void)dismiss {
     self.selfDismiss = YES;
     if ([self preventShortcuts]){}
