@@ -67,9 +67,6 @@
         if(i == 2) {
             
             Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-            
-            isPro = false;
-            
             if(isPro) {
                 UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150, 43)];
                 [btn setTitle:NSLocalizedString(@"TYRIT","") forState:UIControlStateNormal];
@@ -83,9 +80,6 @@
                 [btn setTitleColor:FCStyle.titleGrayColor forState:UIControlStateNormal];
                 btn.top = imageView1.bottom + 20;
                 [self.bannerView addSubview:btn];
-                
-                
-                
             } else {
                 UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150, 43)];
                 [btn setTitle:NSLocalizedString(@"TYRITLATER","") forState:UIControlStateNormal];
@@ -135,8 +129,8 @@
 
 - (UIScrollView *)bannerView {
     if(_bannerView == nil) {
-        _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 15, 333 , 420)];
-        _bannerView.contentSize = CGSizeMake(320 * 3 + 20 * 3, 420);
+        _bannerView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 15, 330 , 420)];
+        _bannerView.contentSize = CGSizeMake(320 * 3 + 30, 420);
         _bannerView.scrollEnabled = true;
         _bannerView.pagingEnabled = true;
         _bannerView.clipsToBounds = NO;

@@ -535,7 +535,6 @@ UIDocumentPickerDelegate
 }
 
 -(void)addFolder:(UITapGestureRecognizer *)tap{
-    NSLog(@"点击图片");
     self.folderSlideController = nil;
     [self.folderSlideController show];
 }

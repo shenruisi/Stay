@@ -1232,8 +1232,6 @@
 }
 
 -(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
-    NSLog(@"点击图片");
-    
     SYBigImageViewController *cer = [[SYBigImageViewController alloc] init];
     cer.modalPresentationStyle = 0;
     cer.imageList = self.scriptDic[@"screenshots"];
