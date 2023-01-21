@@ -217,25 +217,27 @@ static DownloadManager *instance = nil;
     } else {
         if (task.status == DMStatusPaused) {
             for (TaskSessionState *sessionState in task.sessionStates) {
-                if (sessionState.data != nil) {
-                    if (sessionState.sessionTask != nil) {
-                        @synchronized (self.sessionDict) {
-                            [self.sessionDict removeObjectForKey:sessionState.sessionTask];
-                        }
-                    }
-                    NSURLSessionTask *sessionTask = [self.downloadSession downloadTaskWithResumeData:sessionState.data];
-                    sessionState.data = nil;
-                    [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
-                    if (sessionTask != nil) {
-                        sessionState.sessionTask = sessionTask;
-                    }
-                    if (sessionState.sessionTask != nil) {
-                        @synchronized (self.sessionDict) {
-                            self.sessionDict[sessionState.sessionTask] = task;
-                        }
+                if (sessionState.sessionTask != nil) {
+                    @synchronized (self.sessionDict) {
+                        [self.sessionDict removeObjectForKey:sessionState.sessionTask];
                     }
                 }
-                [sessionState.sessionTask resume];
+                NSURLSessionTask *sessionTask;
+                if (sessionState.data != nil) {
+                    sessionTask = [self.downloadSession downloadTaskWithResumeData:sessionState.data];
+                    sessionState.data = nil;
+                    [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+                }
+                if (sessionTask == nil) {
+                    sessionTask = [self.downloadSession downloadTaskWithURL:sessionState.sessionTask.originalRequest.URL];
+                }
+                sessionState.sessionTask = sessionTask;
+                if (sessionState.sessionTask != nil) {
+                    @synchronized (self.sessionDict) {
+                        self.sessionDict[sessionState.sessionTask] = task;
+                    }
+                    [sessionState.sessionTask resume];
+                }
             }
             task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
             task.bytesWritten = 0;
@@ -304,11 +306,13 @@ static DownloadManager *instance = nil;
                 [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 [((NSURLSessionDownloadTask *)sessionState.sessionTask) cancelByProducingResumeData:^(NSData *data) {
                     sessionState.data = data;
-                    dispatch_async(self->_dataQueue, ^{
-                        NSString *dataFilePath = [self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]];
-                        [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
-                        [data writeToFile:dataFilePath options:NSDataWritingAtomic error:nil];
-                    });
+                    if (data != nil) {
+                        dispatch_async(self->_dataQueue, ^{
+                            NSString *dataFilePath = [self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]];
+                            [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
+                            [data writeToFile:dataFilePath options:NSDataWritingAtomic error:nil];
+                        });
+                    }
                 }];
             }
         }
