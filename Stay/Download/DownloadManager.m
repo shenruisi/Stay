@@ -179,6 +179,7 @@ static DownloadManager *instance = nil;
                 if (m3u8State == nil) {
                     [self startM3U8Task:task withURL:[NSURL URLWithString:request.url]];
                 } else {
+                    task.progress = m3u8State.currCount * 1.0 / m3u8State.totalCount;
                     task.m3u8State = m3u8State;
                     task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
                     task.bytesWritten = 0;

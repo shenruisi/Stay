@@ -101,7 +101,7 @@
         request.key =  cell.downloadResource.firstPath;
         Task *task =  [[DownloadManager shared]  enqueue:request];
         
-        resource.downloadProcess = task.progress;
+        resource.downloadProcess = task.progress * 100;
         
         task.block = ^(float progress, NSString *speed, DMStatus status) {
             if(status == DMStatusFailed) {
