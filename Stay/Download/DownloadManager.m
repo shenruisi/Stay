@@ -188,7 +188,12 @@ static DownloadManager *instance = nil;
         } else {
             NSString *dataFilePath = [self.dataPath stringByAppendingPathComponent:[[request.url md5] stringByAppendingString:@"_data"]];
             NSData *data = [NSData dataWithContentsOfFile:dataFilePath];
-            sessionTask = data == nil ? [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:request.url]] : [self.downloadSession downloadTaskWithResumeData:data];
+            if (data != nil) {
+                sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
+            }
+            if (sessionTask == nil) {
+                sessionTask = [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
+            }
             [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
         }
         if (sessionTask != nil) {
@@ -295,6 +300,8 @@ static DownloadManager *instance = nil;
     if (task != nil) {
         @synchronized (task.sessionStates) {
             for (TaskSessionState *sessionState in task.sessionStates) {
+                sessionState.data = nil;
+                [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 [((NSURLSessionDownloadTask *)sessionState.sessionTask) cancelByProducingResumeData:^(NSData *data) {
                     sessionState.data = data;
                     dispatch_async(self->_dataQueue, ^{
@@ -456,7 +463,12 @@ static DownloadManager *instance = nil;
     NSURLSessionTask *sessionTask;
     NSString *dataFilePath = [taskPath stringByAppendingPathComponent:[[tsURL md5] stringByAppendingString:@"_data"]];
     NSData *data = [NSData dataWithContentsOfFile:dataFilePath];
-    sessionTask = data == nil ? [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:tsURL]] : [self.downloadSession downloadTaskWithResumeData:data];
+    if (data != nil) {
+        sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
+    }
+    if (sessionTask == nil) {
+        sessionTask = [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:tsURL]];
+    };
     [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
     if (sessionTask != nil) {
         @synchronized (self.sessionDict) {
