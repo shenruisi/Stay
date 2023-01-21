@@ -16,6 +16,7 @@
 
 #import "FCApp.h"
 #import "FCShared.h"
+#import "QuickAccess.h"
 
 #import "Main/Controls/FCTab.h"
 

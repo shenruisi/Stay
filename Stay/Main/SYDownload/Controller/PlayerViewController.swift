@@ -160,6 +160,10 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.reloadData()
     }
 
+    func isSecondaryMode() -> Bool {
+        return navigationController == nil
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return resources.count
     }

@@ -39,7 +39,7 @@
     for(int i = 0; i < 3; i++) {
         UIImageView *imageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(left, top, width,312)];
         imageView1.image = [UIImage imageNamed:imageArray[i]];
-        imageView1.layer.cornerRadius = 5;
+        imageView1.layer.cornerRadius = 10;
         imageView1.layer.borderColor = FCStyle.borderColor.CGColor;
         imageView1.layer.borderWidth = 1;
         imageView1.clipsToBounds = YES;
@@ -68,8 +68,8 @@
             
             Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
             if(isPro) {
-                UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 150, 43)];
-                [btn setTitle:NSLocalizedString(@"TYRIT","") forState:UIControlStateNormal];
+                UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, width, 43)];
+                [btn setTitle:NSLocalizedString(@"settings.close","") forState:UIControlStateNormal];
                 btn.font = FCStyle.subHeadline;
                 btn.layer.borderColor = FCStyle.borderColor.CGColor;
                 btn.layer.borderWidth = 1;

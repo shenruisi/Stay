@@ -26,9 +26,9 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     private var timeOb: Any?
     
     private let allResources: [DownloadResource]
-    private weak var controller: UIViewController?
+    private weak var controller: PlayerViewController?
     
-    init(reseources: [DownloadResource], controller: UIViewController? = nil) {
+    init(reseources: [DownloadResource], controller: PlayerViewController? = nil) {
         allResources = reseources
         self.controller = controller
         player = AVPlayer()
@@ -85,8 +85,8 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             self.window?.insertSubview(mpVolumeView, at: 0)
         }
         #endif
-        showControls(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
-        (controller as? PlayerViewController)?.updateViewState(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
+        showControls(isLandscape: isLandscapeMode)
+        controller?.updateViewState(isLandscape: isLandscapeMode)
         
         super.layoutSubviews()
     }
@@ -145,6 +145,18 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         allResources[currIndex]
     }
     
+    var isLandscapeMode: Bool {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIApplication.shared.statusBarOrientation.isLandscape
+        } else {
+            #if iOS
+            return controller?.isSecondaryMode() ?? true
+            #else
+            return true
+            #endif
+        }
+    }
+    
     var isControlsShow = true
     let backBtn = UIButton()
     let titleLabel = UILabel()
@@ -158,6 +170,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     let seekBar = UISlider()
     let remainLabel = UILabel()
     let modeBtn = UIButton()
+    let fullBtn = UIButton()
     let rightBottomView = UIStackView()
     let rateBtn = UIButton()
     let brightnessView = UIView()
@@ -318,11 +331,12 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         remainLabel.textAlignment = .center
         remainLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        
         modeBtn.setImage(UIImage(named: "LandModeIcon"), for: .normal)
         modeBtn.addTarget(self, action: #selector(modeAction), for: .touchUpInside)
         modeBtn.translatesAutoresizingMaskIntoConstraints = false
-        
+        fullBtn.setImage(UIImage(systemName: "arrow.up.left.and.arrow.down.right.circle", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
+        fullBtn.addTarget(self, action: #selector(fullAction), for: .touchUpInside)
+        fullBtn.translatesAutoresizingMaskIntoConstraints = false
         
         titleLabel.font = FCStyle.bodyBold
         titleLabel.textColor = .white
@@ -359,6 +373,8 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             $0.removeFromSuperview()
         }
         
+        let isPhone = UIDevice.current.userInterfaceIdiom == .phone
+        
         addSubview(backBtn)
         addSubview(airBtn)
         addSubview(pipBtn)
@@ -371,16 +387,16 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         
         NSLayoutConstraint.activate([
             backBtn.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-            backBtn.widthAnchor.constraint(equalToConstant: 48),
+            backBtn.widthAnchor.constraint(equalToConstant: (isPhone || !isLandscape) ? 48 : 0),
             backBtn.topAnchor.constraint(equalTo: topAnchor, constant: 0),
             backBtn.heightAnchor.constraint(equalToConstant: 48),
             
             pipBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-            pipBtn.widthAnchor.constraint(equalToConstant: 50),
+            pipBtn.widthAnchor.constraint(equalToConstant: (isPhone || !isLandscape) ? 50 : 0),
             pipBtn.topAnchor.constraint(equalTo: topAnchor, constant: 0),
             pipBtn.heightAnchor.constraint(equalToConstant: 50),
             airBtn.trailingAnchor.constraint(equalTo: pipBtn.leadingAnchor, constant: 0),
-            airBtn.widthAnchor.constraint(equalToConstant: 40),
+            airBtn.widthAnchor.constraint(equalToConstant: (isPhone || !isLandscape) ? 40 : 0),
             airBtn.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             airBtn.heightAnchor.constraint(equalToConstant: 40),
             
@@ -419,16 +435,17 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             addSubview(lockBtn)
             addSubview(prevBtn)
             addSubview(nextBtn)
+            addSubview(fullBtn)
             addSubview(rightBottomView)
             addSubview(rateView)
             
             NSLayoutConstraint.activate([
                 titleLabel.leadingAnchor.constraint(equalTo: backBtn.trailingAnchor, constant: 0),
-                titleLabel.widthAnchor.constraint(equalToConstant: 260),
+                titleLabel.widthAnchor.constraint(equalToConstant: isPhone ? 260 : 0),
                 titleLabel.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
                 
                 lockBtn.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
-                lockBtn.widthAnchor.constraint(equalToConstant: 30),
+                lockBtn.widthAnchor.constraint(equalToConstant: isPhone ? 30 : 0),
                 lockBtn.centerYAnchor.constraint(equalTo: centerYAnchor),
                 lockBtn.heightAnchor.constraint(equalToConstant: 48),
                 
@@ -458,7 +475,11 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                 seekBar.leadingAnchor.constraint(equalTo: currLabel.trailingAnchor, constant: 4),
                 seekBar.trailingAnchor.constraint(equalTo: remainLabel.leadingAnchor, constant: -4),
                 seekBar.centerYAnchor.constraint(equalTo: currLabel.centerYAnchor),
-                rightBottomView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+                fullBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+                fullBtn.widthAnchor.constraint(equalToConstant: !isPhone ? 30 : 0),
+                fullBtn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+                fullBtn.heightAnchor.constraint(equalToConstant: 48),
+                rightBottomView.trailingAnchor.constraint(equalTo: fullBtn.leadingAnchor, constant: -5),
                 rightBottomView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -13),
                 
             ])
@@ -475,7 +496,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                 currLabel.widthAnchor.constraint(equalToConstant: 60),
                 currLabel.centerYAnchor.constraint(equalTo: playBtn.centerYAnchor),
                 modeBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
-                modeBtn.widthAnchor.constraint(equalToConstant: 40),
+                modeBtn.widthAnchor.constraint(equalToConstant: isPhone ? 40 : 0),
                 modeBtn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
                 modeBtn.heightAnchor.constraint(equalToConstant: 50),
                 remainLabel.trailingAnchor.constraint(equalTo: modeBtn.leadingAnchor, constant: 0),
@@ -534,7 +555,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     
     @objc
     func backAction() {
-        if UIApplication.shared.statusBarOrientation.isLandscape {
+        if UIDevice.current.userInterfaceIdiom == .phone && isLandscapeMode {
             #if iOS
             if #available(iOS 16.0, *) {
                 controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
@@ -629,6 +650,19 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
         }
         #endif
+    }
+    
+    @objc
+    func fullAction() {
+        resetControlHide()
+        if UIDevice.current.userInterfaceIdiom != .phone {
+            let splitController = QuickAccess.splitController()
+            if splitController?.displayMode != .secondaryOnly {
+                splitController?.preferredDisplayMode = .secondaryOnly
+            } else if splitController?.displayMode == .secondaryOnly {
+                splitController?.preferredDisplayMode = .oneBesideSecondary
+            }
+        }
     }
     
     var isLocked = false
@@ -837,7 +871,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             }
             currIndex = index
             titleLabel.text = currResource.title
-            (controller as? PlayerViewController)?.refreshCurrVideo()
+            controller?.refreshCurrVideo()
             let asset = AVURLAsset(url: URL(fileURLWithPath: currResource.allPath))
             let item = AVPlayerItem(asset: asset)
             player?.replaceCurrentItem(with: item)
@@ -861,9 +895,9 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     }
     
     func refreshControls() {
-        showControls(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
+        showControls(isLandscape: isLandscapeMode)
         playBtn.setImage(UIImage(systemName: (player?.rate ?? 0) == 0 ? "play.fill" : "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
-        (controller as? PlayerViewController)?.updateViewState(isLandscape: UIApplication.shared.statusBarOrientation.isLandscape)
+        controller?.updateViewState(isLandscape: isLandscapeMode)
     }
     
     func routePickerViewDidEndPresentingRoutes(_ routePickerView: AVRoutePickerView) {
