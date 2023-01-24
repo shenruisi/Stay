@@ -73,8 +73,6 @@
     if(resource.status == 2) {
         if (cell == nil) {
             cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
         }
     } else {
         cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellIDR"];
@@ -269,6 +267,7 @@
         } else {
             [self.navigationController pushViewController:playerController animated:YES];
         }
+
     }
 }
 

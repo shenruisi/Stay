@@ -34,7 +34,11 @@
     }
     _downloadResource = downloadResource;
     [self createCell];
+    self.selectedBackgroundView = [[UIView alloc] initWithFrame:self.frame];
+    self.selectedBackgroundView.backgroundColor =  [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
 }
+
+
 
 - (void)createCell {
     
@@ -176,9 +180,7 @@
         line.backgroundColor = FCStyle.fcSeparator;
         line.top =  saveFileBtn.bottom + 6;
         line.left = 12;
-        [self.contentView addSubview:line];
-        self.contentView.backgroundColor = FCStyle.secondaryBackground;
-;
+        [self.contentView addSubview:line];;
     } else {
         self.contentView.backgroundColor =  [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         
