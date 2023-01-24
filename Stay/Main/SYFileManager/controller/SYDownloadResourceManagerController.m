@@ -91,7 +91,7 @@
     cell.downloadResource = self.array[indexPath.row];
     cell.controller = self;
     
-    if( cell.downloadResource.status == 0) {
+    if( cell.downloadResource.status == 0 || cell.downloadResource.status == 4) {
         FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
         Request *request = [[Request alloc] init];
         request.url =  cell.downloadResource.downloadUrl;
