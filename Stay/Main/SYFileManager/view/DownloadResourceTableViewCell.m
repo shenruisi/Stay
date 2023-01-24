@@ -312,7 +312,7 @@
             _downloadRateLabel.text = NSLocalizedString(@"NOSPACEFAILED","");
         }
         
-        if(_downloadResource.status != 4 || _downloadResource.status != 5 || _downloadResource.status != 6) {
+        if(_downloadResource.status != 4 && _downloadResource.status != 5 && _downloadResource.status != 6) {
             _progress = [[SYProgress alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width, 2) BgViewBgColor:FCStyle.borderColor BgViewBorderColor:FCStyle.borderColor ProgressViewColor:FCStyle.accent];
 
             _progress.top = _downloadRateLabel.bottom + 5;
