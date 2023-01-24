@@ -302,6 +302,11 @@ const browser = __b;
       }
       else if(host.indexOf('m.weibo.cn')>-1){
         let videoId = Utils.getUrlPathName(downloadUrl);
+        const adDom = document.querySelector('#player .video-ads .ytp-ad-player-overlay');
+        // 过滤广告
+        if(adDom){
+          return {};
+        }
         if(videoId && videoIdSet.size && videoIdSet.has(videoId)){
           // console.log('domId------isAlready', videoId);
           return {};

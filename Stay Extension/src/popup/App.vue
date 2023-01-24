@@ -20,7 +20,6 @@
 </template>
 <script>
 import { inject, ref, reactive, watch, toRefs } from 'vue';
-import { useStore } from 'vuex';
 import Header from '../components/Header.vue';
 import TabMenu from '../components/TabMenu.vue';
 import DarkMode from '../components/DarkMode.vue';

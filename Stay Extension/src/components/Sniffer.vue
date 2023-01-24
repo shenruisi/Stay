@@ -202,6 +202,10 @@ export default {
       padding: 40px 10px;
       font-size: 16px;
       font-weight: 400;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       .null-title{
         color: var(--dm-font);
       }
