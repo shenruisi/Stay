@@ -717,6 +717,23 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 }
             }
             if (!isKeyURL) {
+                unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+                if (fileSize < 2000) {
+                    if (task.block != nil) {
+                        task.block(0, @"", DMStatusFailed);
+                    }
+                    for (TaskSessionState *sessionState in task.sessionStates) {
+                        @synchronized (self.sessionDict) {
+                            [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+                        }
+                        [sessionState.sessionTask cancel];
+                    }
+                    [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+                    @synchronized (self.taskDict) {
+                        [self.taskDict removeObjectForKey:task.taskId];
+                    }
+                    return;
+                }
                 NSMutableArray<NSString *> *tsURLs = task.m3u8State.tsURLs;
                 for (int i = 0; i < tsURLs.count; i++) {
                     NSString *tsURL = tsURLs[i];
