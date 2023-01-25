@@ -590,6 +590,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         resetControlHide()
         if player?.rate == 0 {
             player?.play()
+            addPeriodicTimeObserver()
             playBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         } else {
             player?.pause()
@@ -859,6 +860,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     func pause() {
         player?.pause()
         removePeriodicTimeObserver()
+        playBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
     }
     
     func play() {
@@ -869,7 +871,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     func play(index: Int) {
         if currIndex != index {
             if currIndex != -1, let currentTime = player?.currentTime() {
-                currResource.watchProcess = Int(currentTime.roundedSeconds)
+                currResource.watchProcess = currentTime == player?.currentItem?.duration ? 0 : Int(currentTime.roundedSeconds)
                 DataManager.share().updateWatchProgress(currResource.watchProcess, uuid: self.currResource.downloadUuid)
             }
             currIndex = index
