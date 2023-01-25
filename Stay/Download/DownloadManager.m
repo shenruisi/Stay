@@ -748,6 +748,17 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
         } else {
             [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:nil];
             [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[downloadTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+            unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:task.filePath error:nil] fileSize];
+            if (fileSize < 2000) {
+                if (task.block != nil) {
+                    task.block(0, @"", DMStatusFailed);
+                }
+                [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+                @synchronized (self.taskDict) {
+                    [self.taskDict removeObjectForKey:task.taskId];
+                }
+                return;
+            }
             if (task.block != nil) {
                 task.block(1, @"", DMStatusComplete);
             }
