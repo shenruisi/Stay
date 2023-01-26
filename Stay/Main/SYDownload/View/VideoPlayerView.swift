@@ -475,12 +475,13 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                 seekBar.leadingAnchor.constraint(equalTo: currLabel.trailingAnchor, constant: 4),
                 seekBar.trailingAnchor.constraint(equalTo: remainLabel.leadingAnchor, constant: -4),
                 seekBar.centerYAnchor.constraint(equalTo: currLabel.centerYAnchor),
-                fullBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+                fullBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
                 fullBtn.widthAnchor.constraint(equalToConstant: !isPhone ? 30 : 0),
                 fullBtn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
                 fullBtn.heightAnchor.constraint(equalToConstant: 48),
                 rightBottomView.trailingAnchor.constraint(equalTo: fullBtn.leadingAnchor, constant: -5),
-                rightBottomView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -13),
+                rightBottomView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+                rightBottomView.heightAnchor.constraint(equalToConstant: 48),
                 
             ])
         } else {
@@ -589,6 +590,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         resetControlHide()
         if player?.rate == 0 {
             player?.play()
+            addPeriodicTimeObserver()
             playBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         } else {
             player?.pause()
@@ -823,6 +825,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             seekBar.isHidden = true
             remainLabel.isHidden = true
             modeBtn.isHidden = true
+            fullBtn.isHidden = true
             prevBtn.isHidden = true
             nextBtn.isHidden = true
             rightBottomView.isHidden = true
@@ -838,6 +841,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
             seekBar.isHidden = false
             remainLabel.isHidden = false
             modeBtn.isHidden = false
+            fullBtn.isHidden = false
             prevBtn.isHidden = false
             nextBtn.isHidden = false
             rightBottomView.isHidden = false
@@ -856,6 +860,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     func pause() {
         player?.pause()
         removePeriodicTimeObserver()
+        playBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
     }
     
     func play() {
@@ -866,7 +871,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     func play(index: Int) {
         if currIndex != index {
             if currIndex != -1, let currentTime = player?.currentTime() {
-                currResource.watchProcess = Int(currentTime.roundedSeconds)
+                currResource.watchProcess = currentTime == player?.currentItem?.duration ? 0 : Int(currentTime.roundedSeconds)
                 DataManager.share().updateWatchProgress(currResource.watchProcess, uuid: self.currResource.downloadUuid)
             }
             currIndex = index

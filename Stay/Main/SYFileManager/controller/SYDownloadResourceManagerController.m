@@ -73,8 +73,6 @@
     if(resource.status == 2) {
         if (cell == nil) {
             cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
         }
     } else {
         cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellIDR"];
@@ -91,7 +89,7 @@
     cell.downloadResource = self.array[indexPath.row];
     cell.controller = self;
     
-    if( cell.downloadResource.status == 0) {
+    if( cell.downloadResource.status == 0 || cell.downloadResource.status == 4) {
         FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
         Request *request = [[Request alloc] init];
         request.url =  cell.downloadResource.downloadUrl;
@@ -269,6 +267,7 @@
         } else {
             [self.navigationController pushViewController:playerController animated:YES];
         }
+
     }
 }
 
