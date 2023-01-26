@@ -18,7 +18,7 @@
 @end
  
 @implementation PlaceholderController
-
+ 
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.view.backgroundColor = FCStyle.background;

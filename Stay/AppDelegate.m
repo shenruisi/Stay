@@ -194,18 +194,9 @@
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
                 self.syDownloadSlideController = [[SYDownloadSlideController alloc] init];
-                self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];
-                
-                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-                    && [QuickAccess splitController].viewControllers.count >= 2){
-                    self.syDownloadSlideController.controller = [QuickAccess secondaryController];
-                }
-                else{
-                    UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
-                
-                    self.syDownloadSlideController.controller = nav;
-                }
-                
+                UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                self.syDownloadSlideController.controller = nav;
+                self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];;
                 [self.syDownloadSlideController show];
             }
         }
@@ -232,6 +223,13 @@
             return [self getCurrentNCFrom:((UINavigationController *)vc).presentedViewController];
         }
         return [self getCurrentNCFrom:((UINavigationController *)vc).topViewController];
+    }
+    else if ([vc isKindOfClass:[UISplitViewController class]]){
+        UISplitViewController *svc = (UISplitViewController *)vc;
+        if (svc.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
+            svc.preferredDisplayMode = UISplitViewControllerDisplayModeOneBesideSecondary;
+        }
+        return [self getCurrentNCFrom:svc.viewControllers[0]];
     }
     else if ([vc isKindOfClass:[UIViewController class]]) {
         if (vc.presentedViewController) {

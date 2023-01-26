@@ -331,13 +331,7 @@
         controller.array = [NSMutableArray array];
         [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
 
-        
-        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-                      && [QuickAccess splitController].viewControllers.count >= 2){
-            [[QuickAccess secondaryController] pushViewController:controller];
-        } else {
-            [self.nav pushViewController:controller animated:true];
-        }
+        [self.nav pushViewController:controller animated:true];
         [self.navigationController.slideController dismiss];
     } else {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlIsDownloaded", @"")
