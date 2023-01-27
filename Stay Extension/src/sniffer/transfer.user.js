@@ -15,7 +15,7 @@ const browser = __b;
   function mergeVideoInfoList(){
     let videoInfoListRes = [];
     let hostUrl = window.location.href;
-    console.log('mergeVideoInfoList-------',hostUrl)
+    // console.log('mergeVideoInfoList-------',hostUrl)
     if(videoInfoList.length){
       let videnLen = videoInfoList.length
       let isValidAmount = 0;

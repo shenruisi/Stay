@@ -33,11 +33,11 @@
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
 
         if (grants.includes('GM_listValues')) {
-            source += 'function GM_listValues (){ return __stroge}\n\nwindow.GM_listValues = GM_listValues;\n';
+            source += 'GM_listValues =' + GM_listValues_sync.toString() + '\n\nwindow.GM_listValues = GM_listValues;\n';
         }
 
         if (grants.includes('GM.listValues')) {
-            source += 'GM.listValues = ' + _fillStroge.toString() + '\n\n';
+            source += 'GM.listValues = ' + GM_listValues_async.toString() + '\n\n';
         }
 
         if (grants.includes('GM_deleteValue')) {
@@ -259,6 +259,7 @@
         return JSON.stringify(info);
     }
 
+    // content
     function _fillStroge() {
         return new Promise((resolve, reject) => {
             browser.storage.local.get(null, (res) => {
@@ -273,6 +274,7 @@
                     })
                     // console.log("GM_listValues==-----------resp==", resp);
                     resolve(resp)
+                    // resolve(respKeys)
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
                         resolve(response.body);
@@ -282,6 +284,39 @@
         });
     }
 
+    function GM_listValues_async() {
+        return new Promise((resolve, reject) => {
+            browser.storage.local.get(null, (res) => {
+                // console.log("GM_listValues====", res);
+                if(res){
+                    let respKeys = [];
+                    Object.keys(res).forEach((localKey) => {
+                        if(localKey.startsWith(_uuid)){
+                            let key = localKey.replace(_uuid+"_", "");
+                            // resp[key] = res[localKey];
+                            respKeys.push(key)
+                        }
+                    })
+                    resolve(respKeys)
+                }else{
+                    browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
+                        resolve(response.body);
+                    });
+                }
+            })
+        });
+    }
+
+    function GM_listValues_sync(){
+        let valuesMap = __stroge || {};
+        let listValues = [];
+        Object.keys(valuesMap).forEach((key) => {
+            listValues.push(key)
+        })
+
+        return listValues;
+        
+    }
 
     function _fillAllResourceTextStroge() {
         return new Promise((resolve, reject) => {
@@ -894,7 +929,8 @@
                 gmFunName.push("GM.listValues");
             } 
             else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
-                api += `function GM_listValues(){ return __listValuesStroge;}\nwindow.GM_listValues = GM_listValues;\n`;
+                api += `${GM_listValues}\n`;
+                api += `window.GM_listValues = GM_listValues;\n`;
                 gmFunName.push("GM_listValues");
             }
             else if (grant === "GM.deleteValue" && !gmFunName.includes("GM_deleteValue_Async")) {
@@ -1059,13 +1095,24 @@
                 const callback = e => {
                     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_LIST_VALUES") return;
                     // console.log("GM_listValues_Async----response=", e.data);
-                    let res = e.data ? (e.data.response ? e.data.response.body : {}): {};
+                    let res = e.data ? (e.data.response ? e.data.response.body : []): [];
                     resolve(res);
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
                 window.postMessage({ id: _uuid, pid: pid, name: "API_LIST_VALUES" });
             });
+        }
+
+        function GM_listValues(){
+            let valuesMap = __listValuesStroge || {};
+            let listValues = [];
+            Object.keys(valuesMap).forEach((key) => {
+                listValues.push(key)
+            })
+
+            return listValues;
+            
         }
         
 
