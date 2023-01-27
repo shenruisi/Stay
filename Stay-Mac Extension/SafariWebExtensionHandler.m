@@ -12,6 +12,7 @@
 #import "Stroge.h"
 #import "SharedStorageManager.h"
 #import "API.h"
+#import "FCShared.h"
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < 110000
 NSString * const SFExtensionMessageKey = @"message";
@@ -314,6 +315,24 @@ NSString * const SFExtensionMessageKey = @"message";
     else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
         NSDictionary *details = message[@"details"];
         body = [self xmlHttpRequestProxy:details];
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchFolders"]){
+        NSMutableArray<NSDictionary *> *datas = [[NSMutableArray alloc] init];
+        [FCShared.tabManager resetAllTabs];
+        NSArray *tabs = FCShared.tabManager.tabs;
+        SharedStorageManager.shared.userDefaults = nil;
+        NSString *selectedUUID = SharedStorageManager.shared.userDefaults.lastFolderUUID;
+        if (selectedUUID.length == 0) {
+            selectedUUID = ((FCTab *)[tabs objectAtIndex:0]).uuid;
+        }
+        for (FCTab *tab in tabs) {
+            [datas addObject:@{
+                @"uuid": tab.uuid,
+                @"name": tab.config.name,
+                @"selected": @([selectedUUID isEqualToString:tab.uuid]),
+            }];
+        }
+        body = datas;
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

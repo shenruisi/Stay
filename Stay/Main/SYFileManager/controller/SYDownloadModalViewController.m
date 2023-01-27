@@ -301,6 +301,7 @@
             request.fileName = [request.fileName stringByAppendingString:@".mp4"];
         }
         request.key = tab.uuid;
+        SharedStorageManager.shared.userDefaults.lastFolderUUID = tab.uuid;
         Task *task = [[DownloadManager shared] enqueue:request];
 
         resource.status = 0;
