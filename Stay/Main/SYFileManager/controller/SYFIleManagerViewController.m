@@ -306,9 +306,7 @@ UIDocumentPickerDelegate
                 }
             }
             
-            
-            
-            PlayerViewController *playerController = [[PlayerViewController alloc] initWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:downloadResource.firstPath] initIndex:currIndex];
+            PlayerViewController *playerController = [PlayerViewController controllerWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:downloadResource.firstPath] initIndex:currIndex];
             playerController.modalPresentationStyle = UIModalPresentationFullScreen;
             if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
                           && [QuickAccess splitController].viewControllers.count >= 2){
