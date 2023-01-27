@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 
 @objc
-class PlayerViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UITableViewDelegate {
     
     let resources: [DownloadResource]
     let folderName: String
@@ -129,6 +129,7 @@ class PlayerViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        videoView.pause()
         self.tabBarController?.tabBar.isHidden = false
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }

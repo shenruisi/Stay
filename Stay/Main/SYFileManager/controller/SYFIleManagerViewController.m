@@ -596,6 +596,7 @@ UIDocumentPickerDelegate
         [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstDownloadGuide"];
     }
 #endif
+    
 }
 
 - (void)viewWillLayoutSubviews{
