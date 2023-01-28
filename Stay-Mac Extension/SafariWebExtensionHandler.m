@@ -123,6 +123,23 @@ NSString * const SFExtensionMessageKey = @"message";
     return matched;
 }
 
+- (NSString *)disabledWebsitesCheck:(NSDictionary *)userscript url:(NSString *)url{
+    NSArray *blacklist = userscript[@"disabledWebsites"];
+    if (blacklist.count > 0){
+        for (NSString *black in blacklist){
+            @autoreleasepool {
+                NSRegularExpression *blackExpr = [self convert2GlobsRegExp:black];
+                NSArray<NSTextCheckingResult *> *result = [blackExpr matchesInString:url options:0 range:NSMakeRange(0, url.length)];
+                if (result.count > 0){
+                    return black;
+                }
+            }
+        }
+    }
+
+    return nil;
+}
+
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context
 {
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
@@ -150,7 +167,14 @@ NSString * const SFExtensionMessageKey = @"message";
                 continue;
             }
             
-            if (digest.length == 0 || [digest isEqualToString:@"no"]){
+            NSString *disabledUrl = nil;
+            if ((disabledUrl = [self disabledWebsitesCheck:data url:url]) != nil){
+                if (requireCompleteScript){
+                    continue;
+                }
+            }
+            
+            if (requireCompleteScript){
                 NSArray<NSDictionary *> *requireUrlsAndCodes = [self getUserScriptRequireListByUserScript:data];
                 NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
                 if (requireUrlsAndCodes != nil) {
@@ -160,6 +184,11 @@ NSString * const SFExtensionMessageKey = @"message";
                 UserscriptInfo *info = [self getInfoWithUUID:data[@"uuid"]];
                 mulDic[@"content"] = info.content[@"content"];
                 mulDic[@"otherContent"] = info.content[@"otherContent"];
+                [datas replaceObjectAtIndex:i withObject:mulDic];
+            }
+            else{
+                NSMutableDictionary *mulDic = [NSMutableDictionary dictionaryWithDictionary:data];
+                mulDic[@"disabledUrl"] = disabledUrl;
                 [datas replaceObjectAtIndex:i withObject:mulDic];
             }
             
@@ -348,6 +377,7 @@ NSString * const SFExtensionMessageKey = @"message";
     NSString *url = details[@"url"];
     NSDictionary *headers = details[@"headers"];
     NSString *data = details[@"data"];
+    NSString *overrideMimeType = details[@"overrideMimeType"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:method];
     if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
@@ -356,8 +386,15 @@ NSString * const SFExtensionMessageKey = @"message";
         }
     }
     
+    if (overrideMimeType.length == 0){
+        overrideMimeType = @"text/xml";
+    }
     
-    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:overrideMimeType forHTTPHeaderField:@"Content-Type"];
+    
+    if (![data isKindOfClass:[NSNull class]] && data.length > 0){
+        [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     
