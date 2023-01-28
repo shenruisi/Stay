@@ -146,30 +146,33 @@
             } else if(status == DMStatusFailedTranscode) {
                 [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
                 resource.status = 5;
-                
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedTranscode", @"")
-                                                                               message:@""
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-               
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                     style:UIAlertActionStyleCancel
-                     handler:^(UIAlertAction * _Nonnull action) {
-                 }];
-                 [alert addAction:cancel];
-                [self presentViewController:alert animated:YES completion:nil];
+                dispatch_async(dispatch_get_main_queue(),^{
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedTranscode", @"")
+                                                                                   message:@""
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                   
+                    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                         style:UIAlertActionStyleCancel
+                         handler:^(UIAlertAction * _Nonnull action) {
+                     }];
+                     [alert addAction:cancel];
+                    [self presentViewController:alert animated:YES completion:nil];
+                });
             } else if(status == DMStatusFailedNoSpace) {
                 [[DataManager shareManager]updateDownloadResourceStatus:6 uuid:resource.downloadUuid];
                 resource.status = 6;
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedNoSpace", @"")
-                                                                               message:@""
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-               
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                     style:UIAlertActionStyleCancel
-                     handler:^(UIAlertAction * _Nonnull action) {
-                 }];
-                 [alert addAction:cancel];
-                [self presentViewController:alert animated:YES completion:nil];
+                dispatch_async(dispatch_get_main_queue(),^{
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedNoSpace", @"")
+                                                                                   message:@""
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                   
+                    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                         style:UIAlertActionStyleCancel
+                         handler:^(UIAlertAction * _Nonnull action) {
+                     }];
+                     [alert addAction:cancel];
+                    [self presentViewController:alert animated:YES completion:nil];
+                });
             }
             
             dispatch_async(dispatch_get_main_queue(),^{
