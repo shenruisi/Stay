@@ -548,8 +548,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         }
                     })
                     // console.log("GM_listValues==----background-------resp==", resp);
-                    // sendResponse({body:resp});
-                    sendResponse({body:respKeys});
+                    sendResponse({body:resp});
+                    // sendResponse({body:respKeys});
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
                         sendResponse(response?response:{body:{}});
