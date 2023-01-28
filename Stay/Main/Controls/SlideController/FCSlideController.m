@@ -79,7 +79,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
     if ([self from] == FCPresentingFromBottom){
         [self.navView setFrame:CGRectMake((windowSize.width - self.navView.frame.size.width)/2,
                                           windowSize.height + navViewHeight,
-                                          self.navView.frame.size.width,
+                                            self.navView.frame.size.width,
                                           navViewHeight)];
     }
     else if ([self from] == FCPresentingFromTop){

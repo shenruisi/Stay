@@ -198,6 +198,7 @@
                 self.syDownloadSlideController.controller = nav;
                 self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];;
                 [self.syDownloadSlideController show];
+                break;
             }
         }
             
