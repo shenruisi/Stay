@@ -912,9 +912,9 @@
         let gmFunVals = [];
         let grants = userscript.grants;
         let resourceUrls = userscript.resourceUrls||{};
-        let api = `${getValueList}\n`;
+        let api = `${__page_getValueList}\n`;
         api += `${GM_getAllResourceText}\nwindow.GM_getAllResourceText = GM_getAllResourceText;\n`;
-        api += 'let __listValuesStroge = await getValueList() || {};\n';
+        api += 'let __listValuesStroge = await __page_getValueList() || {};\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText() || {};\n';
         api += 'let __RMC_CONTEXT = {};\n';
@@ -930,13 +930,13 @@
                 gmFunName.push("unsafeWindow");
             } 
             else if (grant === "GM.listValues" && !gmFunName.includes("GM.listValues")) {
-                api += `${GM_listValues_Async}\n`;
-                gmFunVals.push("listValues: GM_listValues_Async");
+                api += `${page_GM_listValues_Async}\n`;
+                gmFunVals.push("listValues: page_GM_listValues_Async");
                 gmFunName.push("GM.listValues");
             } 
             else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
-                api += `${GM_listValues}\n`;
-                api += `window.GM_listValues = GM_listValues;\n`;
+                api += `${page_GM_listValues}\n`;
+                api += `window.GM_listValues = page_GM_listValues;\n`;
                 gmFunName.push("GM_listValues");
             }
             else if (grant === "GM.deleteValue" && !gmFunName.includes("GM_deleteValue_Async")) {
@@ -1095,7 +1095,7 @@
             }
         })
 
-        function GM_listValues_Async() {
+        function page_GM_listValues_Async() {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -1115,7 +1115,7 @@
         }
 
         // get value list with key
-        function getValueList() {
+        function __page_getValueList() {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -1130,7 +1130,7 @@
             });
         }
 
-        function GM_listValues(){
+        function page_GM_listValues(){
             let valuesMap = __listValuesStroge || {};
             let listValues = [];
             Object.keys(valuesMap).forEach((key) => {
