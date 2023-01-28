@@ -395,6 +395,7 @@ let injectedContentVendor = new Set();
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
                                 if (pageInject){
+                                    console.log("requireCodes---",urlCodeDic.name,urlCodeDic.code);
                                     $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
                                 }
                                 else{

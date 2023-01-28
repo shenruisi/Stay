@@ -772,7 +772,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier,status,platforms,stay_only) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO user_config_script (uuid, name, namespace, author, version, desc, homepage, icon, includes,maches,excludes,runAt,grants,noFrames,content,active,requireUrls,sourcePage,updateUrl,downloadUrl,notes,resourceUrl,update_time,switch,license,iCloud_identifier,status,platforms,stay_only,inject_info) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -854,6 +854,15 @@
         //        sqlite3_bind_text(statement, 29, [scrpitDetail.plafroms UTF8String], -1,NULL);
         sqlite3_bind_int(statement, 29, stayOnly);
 //        sqlite3_bind_text(statement, 29, [scrpitDetail.plafroms UTF8String], -1,NULL);
+        
+        NSString *injectInto = @"Auto";
+        if (scrpitDetail.injectInto.length > 0){
+            injectInto = [NSString stringWithFormat:@"%@%@",
+                                    [scrpitDetail.injectInto substringToIndex:1].uppercaseString,
+                                    [scrpitDetail.injectInto substringFromIndex:1]
+            ];
+        }
+        sqlite3_bind_text(statement, 30, [injectInto UTF8String], -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
