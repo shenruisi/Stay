@@ -125,9 +125,10 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     @objc
     func onVolumeChanged(note: Notification) {
         if (note.userInfo?["Reason"] as? String) == "ExplicitVolumeChange" {
+            let volume = note.userInfo?["Volume"] as? Float
             DispatchQueue.main.async {
                 self.volumeView.isHidden = false
-                let (volumeImage, volumeValue) = self.getVolume()
+                let (volumeImage, volumeValue) = volume != nil ? (self.getVolumeImage(volume!), volume!) : self.getVolume()
                 self.volumeIcon.image = volumeImage
                 self.volumePV.progress = volumeValue
                 NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.hideVolumeView), object: nil)
