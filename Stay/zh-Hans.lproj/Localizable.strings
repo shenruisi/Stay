@@ -249,3 +249,6 @@ TRYITLATER="稍后再试";
 Transcoding="转码中";
 TranscodingFailed="转码失败";
 urlIsDownloaded="该视频已下载";
+FolderName="名称";
+FolderNameIsEmpty="文件夹名称不能为空";
+Preview="预览";

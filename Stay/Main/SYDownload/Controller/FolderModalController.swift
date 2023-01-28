@@ -68,7 +68,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
         contentView.addSubview(nameContainer)
         nameInput.textColor = FCStyle.fcBlack
         nameInput.font = FCStyle.body
-        nameInput.placeholder = NSLocalizedString("PinName", comment: "")
+        nameInput.placeholder = NSLocalizedString("FolderName", comment: "")
         nameInput.autocorrectionType = .no
         nameInput.delegate = self
         nameInput.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
@@ -180,7 +180,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
         confirmBtn.backgroundColor = FCStyle.accent
         confirmBtn.layer.cornerRadius = 10
         confirmBtn.clipsToBounds = true
-        confirmBtn.setTitle(folderTab != nil ? NSLocalizedString("Save", comment: "") : NSLocalizedString("Create", comment: ""), for: .normal)
+        confirmBtn.setTitle(folderTab != nil ? NSLocalizedString("settings.save", comment: "") : NSLocalizedString("settings.create", comment: ""), for: .normal)
         confirmBtn.titleLabel?.font = FCStyle.bodyBold
         confirmBtn.addTarget(self, action: #selector(confirm), for: .touchUpInside)
         confirmBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -287,10 +287,10 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
     func confirm() {
         var alert: UIAlertController? = nil
         if nameInput.text?.count == 0 {
-            alert = UIAlertController(title: NSLocalizedString("PinNameIsEmpty", comment: ""), message: nil, preferredStyle: .alert)
+            alert = UIAlertController(title: NSLocalizedString("FolderNameIsEmpty", comment: ""), message: nil, preferredStyle: .alert)
         }
         if alert != nil {
-            alert!.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .destructive, handler: nil))
+            alert!.addAction(UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .destructive, handler: nil))
             FCApp.keyWindow.rootViewController?.present(alert!, animated: true, completion: nil)
         } else {
             if folderTab != nil {

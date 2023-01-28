@@ -246,7 +246,7 @@ const browser = __b;
           videoList.push(videoInfo);
         })
         window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
-        console.log('parseVideoNodeList-----------result---------',videoList);
+        // console.log('parseVideoNodeList-----------result---------',videoList);
         if(isContent){
           let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
           browser.runtime.sendMessage(message, (response) => {});
@@ -460,7 +460,7 @@ const browser = __b;
         let posterInfo = posterDom.getAttribute('style');
         if(posterInfo){
           let poster = Utils.matchUrlInString(posterInfo);
-          console.log('poster-----',poster);
+          // console.log('poster-----',poster);
           videoInfo.poster = poster;
         }
       }
@@ -744,9 +744,9 @@ const browser = __b;
     
     function getYoutubeVideoPosterByDom(){
       const overlayImg = document.querySelector('.ytp-cued-thumbnail-overlay-image');
-      console.log(overlayImg)
+      // console.log(overlayImg)
       if(overlayImg){
-        console.log('overlayImg-------',overlayImg);
+        // console.log('overlayImg-------',overlayImg);
         let imgText = overlayImg.getAttribute('style');
         if(imgText){
           return Utils.matchUrlInString(imgText);
@@ -764,9 +764,9 @@ const browser = __b;
     
     startFindVideoInfo(false);
     document.onreadystatechange = () => {
-      console.log('document.readyState==',document.readyState)
+      // console.log('document.readyState==',document.readyState)
       if (document.readyState === 'complete') {
-        console.log('readyState-------------------', document.readyState)
+        // console.log('readyState-------------------', document.readyState)
         startFindVideoInfo(true);
       }
     };
@@ -787,7 +787,7 @@ const browser = __b;
         if (isVideoLink(url)){
           if (!uniqueUrls.has(url)){
             uniqueUrls.add(url);
-            console.log('VIDEO_LINK_CAPTURE: ' + url);
+            // console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
             if(isContent){
               let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
@@ -812,7 +812,7 @@ const browser = __b;
         if (isVideoLink(url)){
           if (!uniqueUrls.has(url)){
             uniqueUrls.add(url);
-            console.log('VIDEO_LINK_CAPTURE: ' + url);
+            // console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
             if(isContent){
               let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
@@ -837,7 +837,7 @@ const browser = __b;
     // console.log('snifffer.user----->e.data.name=',name);
     if(name === 'VIDEO_LINK_CAPTURE'){
       let tempSet = e.data.urls ? e.data.urls : new Set();
-      console.log('snifffer.VIDEO_LINK_CAPTURE----->tempSet=',tempSet);
+      // console.log('snifffer.VIDEO_LINK_CAPTURE----->tempSet=',tempSet);
       // videoLinkSet = new Set( [ ...tempSet, ...videoLinkSet ] )
       videoLinkSet = tempSet
       // console.log('snifffer.VIDEO_LINK_CAPTURE----->videoLinkSet=',videoLinkSet);
@@ -849,7 +849,7 @@ const browser = __b;
       videoInfoList = videoInfoListTemp
       // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoListTemp=',videoInfoListTemp);
       // videoInfoList.push(...videoInfoListTemp)
-      console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoList=',videoInfoList);
+      // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoList=',videoInfoList);
       let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList};
       browser.runtime.sendMessage(message, (response) => {});
     }

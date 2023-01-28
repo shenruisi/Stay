@@ -11,9 +11,29 @@ import AVKit
 @objc
 class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UITableViewDelegate {
     
-    let resources: [DownloadResource]
-    let folderName: String
-    let initIndex: Int
+    private static var shared: PlayerViewController?
+    
+    @objc
+    class func controller(resources: [DownloadResource], folderName: String, initIndex: Int) -> PlayerViewController {
+        if shared == nil {
+            shared = PlayerViewController(resources: resources, folderName: folderName, initIndex: initIndex)
+        } else {
+            shared?.resources = resources
+            shared?.folderName = folderName
+            shared?.initIndex = initIndex
+            shared?.videoView.allResources = resources
+            shared?.videoView.controller = shared
+            shared?.videoView.currIndex = -1
+            shared?.setRightBarItems()
+            shared?.videoView.play(index: initIndex)
+        }
+        
+        return shared!
+    }
+    
+    var resources: [DownloadResource]
+    var folderName: String
+    var initIndex: Int
     @objc
     init(resources: [DownloadResource], folderName: String, initIndex: Int) {
         self.resources = resources
@@ -53,7 +73,7 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         view.backgroundColor = .black
         
-        videoView = VideoPlayerView(reseources: resources, controller: self)
+        videoView = VideoPlayerView(resources: resources, controller: self)
         videoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(videoView)
         
@@ -112,6 +132,7 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
             tableView.topAnchor.constraint(equalTo: line.bottomAnchor, constant: 46),
             tableView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
         ])
+        setRightBarItems()
         
         videoView.play(index: initIndex)
         setInteractiveRecognizer()
@@ -132,6 +153,17 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         videoView.pause()
         self.tabBarController?.tabBar.isHidden = false
         navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    func setRightBarItems() {
+        if isSecondaryMode() {
+            let airBtn = AVRoutePickerView()
+            airBtn.prioritizesVideoDevices = true
+            airBtn.delegate = videoView
+            rightBarButtonItems = [UIBarButtonItem(customView: airBtn)]
+        } else {
+            rightBarButtonItems = []
+        }
     }
     
     var popRecognizer: InteractivePopRecognizer?

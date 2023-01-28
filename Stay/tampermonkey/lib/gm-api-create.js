@@ -33,11 +33,11 @@
         source += 'browser.runtime.sendMessage({ from: "gm-apis", uuid: _uuid, operate: "clear_GM_log" });\n';
 
         if (grants.includes('GM_listValues')) {
-            source += 'function GM_listValues (){ return __stroge}\n\nwindow.GM_listValues = GM_listValues;\n';
+            source += 'GM_listValues =' + GM_listValues_sync.toString() + '\n\nwindow.GM_listValues = GM_listValues;\n';
         }
 
         if (grants.includes('GM.listValues')) {
-            source += 'GM.listValues = ' + _fillStroge.toString() + '\n\n';
+            source += 'GM.listValues = ' + GM_listValues_async.toString() + '\n\n';
         }
 
         if (grants.includes('GM_deleteValue')) {
@@ -259,12 +259,13 @@
         return JSON.stringify(info);
     }
 
+    // content
     function _fillStroge() {
         return new Promise((resolve, reject) => {
             browser.storage.local.get(null, (res) => {
                 // console.log("GM_listValues====", res);
+                let resp = {};
                 if(res){
-                    let resp = {};
                     Object.keys(res).forEach((localKey) => {
                         if(localKey.startsWith(_uuid)){
                             let key = localKey.replace(_uuid+"_", "");
@@ -273,6 +274,7 @@
                     })
                     // console.log("GM_listValues==-----------resp==", resp);
                     resolve(resp)
+                    // resolve(respKeys)
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
                         resolve(response.body);
@@ -282,6 +284,44 @@
         });
     }
 
+    // return keys array
+    function GM_listValues_async() {
+        return new Promise((resolve, reject) => {
+            browser.storage.local.get(null, (res) => {
+                // console.log("GM_listValues====", res);
+                if(res){
+                    let respKeys = [];
+                    Object.keys(res).forEach((localKey) => {
+                        if(localKey.startsWith(_uuid)){
+                            let key = localKey.replace(_uuid+"_", "");
+                            // resp[key] = res[localKey];
+                            respKeys.push(key)
+                        }
+                    })
+                    resolve(respKeys)
+                }else{
+                    browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
+                        let valuesMap = response.body
+                        Object.keys(valuesMap).forEach((localKey) => {
+                            respKeys.push(localKey)
+                        })
+                        resolve(respKeys);
+                    });
+                }
+            })
+        });
+    }
+
+    function GM_listValues_sync(){
+        let valuesMap = __stroge || {};
+        let listValues = [];
+        Object.keys(valuesMap).forEach((key) => {
+            listValues.push(key)
+        })
+
+        return listValues;
+        
+    }
 
     function _fillAllResourceTextStroge() {
         return new Promise((resolve, reject) => {
@@ -872,9 +912,9 @@
         let gmFunVals = [];
         let grants = userscript.grants;
         let resourceUrls = userscript.resourceUrls||{};
-        let api = `${GM_listValues_Async}\n`;
+        let api = `${__page_getValueList}\n`;
         api += `${GM_getAllResourceText}\nwindow.GM_getAllResourceText = GM_getAllResourceText;\n`;
-        api += 'let __listValuesStroge = await GM_listValues_Async() || {};\n';
+        api += 'let __listValuesStroge = await __page_getValueList() || {};\n';
         api += 'let __resourceUrlStroge = ' + JSON.stringify(resourceUrls)+';\n';
         api += 'let __resourceTextStroge = await GM_getAllResourceText() || {};\n';
         api += 'let __RMC_CONTEXT = {};\n';
@@ -890,11 +930,13 @@
                 gmFunName.push("unsafeWindow");
             } 
             else if (grant === "GM.listValues" && !gmFunName.includes("GM.listValues")) {
-                gmFunVals.push("listValues: GM_listValues_Async");
+                api += `${page_GM_listValues_Async}\n`;
+                gmFunVals.push("listValues: page_GM_listValues_Async");
                 gmFunName.push("GM.listValues");
             } 
             else if (grant === "GM_listValues" && !gmFunName.includes("GM_listValues")){
-                api += `function GM_listValues(){ return __listValuesStroge;}\nwindow.GM_listValues = GM_listValues;\n`;
+                api += `${page_GM_listValues}\n`;
+                api += `window.GM_listValues = page_GM_listValues;\n`;
                 gmFunName.push("GM_listValues");
             }
             else if (grant === "GM.deleteValue" && !gmFunName.includes("GM_deleteValue_Async")) {
@@ -1053,7 +1095,27 @@
             }
         })
 
-        function GM_listValues_Async() {
+        function page_GM_listValues_Async() {
+            const pid = Math.random().toString(36).substring(1, 9);
+            return new Promise(resolve => {
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_LIST_VALUES") return;
+                    // console.log("GM_listValues_Async----response=", e.data);
+                    let res = e.data ? (e.data.response ? e.data.response.body : {}): {};
+                    let respKeys = [];
+                    Object.keys(res).forEach((localKey) => {
+                        respKeys.push(localKey)
+                    })
+                    resolve(respKeys);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ id: _uuid, pid: pid, name: "API_LIST_VALUES" });
+            });
+        }
+
+        // get value list with key
+        function __page_getValueList() {
             const pid = Math.random().toString(36).substring(1, 9);
             return new Promise(resolve => {
                 const callback = e => {
@@ -1066,6 +1128,17 @@
                 window.addEventListener("message", callback);
                 window.postMessage({ id: _uuid, pid: pid, name: "API_LIST_VALUES" });
             });
+        }
+
+        function page_GM_listValues(){
+            let valuesMap = __listValuesStroge || {};
+            let listValues = [];
+            Object.keys(valuesMap).forEach((key) => {
+                listValues.push(key)
+            })
+
+            return listValues;
+            
         }
         
 

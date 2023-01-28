@@ -538,15 +538,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 // console.log("GM_listValues==background==", res);
                 if(res){
                     let resp = {};
+                    let respKeys = [];
                     Object.keys(res).forEach((localKey) => {
                         if(localKey.startsWith(uuid)){
                             // console.log("GM_listValues==background====localKey====", localKey);
                             let key = localKey.replace(uuid+"_", "");
                             resp[key] = res[localKey];
+                            respKeys.push(key);
                         }
                     })
                     // console.log("GM_listValues==----background-------resp==", resp);
                     sendResponse({body:resp});
+                    // sendResponse({body:respKeys});
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
                         sendResponse(response?response:{body:{}});
