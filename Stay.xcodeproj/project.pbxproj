@@ -87,6 +87,7 @@
 		3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA92971813E0068231A /* NSArray+m3u8.m */; };
 		3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAC2971813E0068231A /* NSURL+m3u8.m */; };
 		3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */; };
+		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
@@ -2726,6 +2727,7 @@
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
 				3C8388D829335636007563E6 /* FCTab.m in Sources */,
 				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
+				3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */,
 				58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */,
 				58639D1828644BEB00AA80D5 /* Stroge.m in Sources */,
 				5867D16528920E4C00EC822B /* UserDefaultsExRO.m in Sources */,

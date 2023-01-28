@@ -337,7 +337,11 @@
         NSMutableArray<NSDictionary *> *datas = [[NSMutableArray alloc] init];
         [FCShared.tabManager resetAllTabs];
         NSArray *tabs = FCShared.tabManager.tabs;
-        NSString *selectedUUID = ((FCTab *)[tabs objectAtIndex:0]).uuid;
+        SharedStorageManager.shared.userDefaults = nil;
+        NSString *selectedUUID = SharedStorageManager.shared.userDefaults.lastFolderUUID;
+        if (selectedUUID.length == 0) {
+            selectedUUID = ((FCTab *)[tabs objectAtIndex:0]).uuid;
+        }
         for (FCTab *tab in tabs) {
             [datas addObject:@{
                 @"uuid": tab.uuid,

@@ -248,3 +248,6 @@ TRYITLATER="Try it later";
 Transcoding="Transcoding";
 TranscodingFailed="Transcoding failed";
 urlIsDownloaded="This video has been downloaded";
+FolderName="Name";
+FolderNameIsEmpty="Folder name can not be empty";
+Preview="Preview";

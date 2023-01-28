@@ -25,11 +25,11 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     private var itemStatusOb: NSKeyValueObservation?
     private var timeOb: Any?
     
-    private let allResources: [DownloadResource]
-    private weak var controller: PlayerViewController?
+    var allResources: [DownloadResource]
+    weak var controller: PlayerViewController?
     
-    init(reseources: [DownloadResource], controller: PlayerViewController? = nil) {
-        allResources = reseources
+    init(resources: [DownloadResource], controller: PlayerViewController? = nil) {
+        allResources = resources
         self.controller = controller
         player = AVPlayer()
         
@@ -71,7 +71,8 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     
     override func removeFromSuperview() {
         if currIndex != -1, let currentTime = player?.currentTime() {
-            DataManager.share().updateWatchProgress(Int(currentTime.roundedSeconds), uuid: self.currResource.downloadUuid)
+            currResource.watchProcess = Int(currentTime.roundedSeconds)
+            DataManager.share().updateWatchProgress(currResource.watchProcess, uuid: self.currResource.downloadUuid)
         }
         player?.pause()
         
@@ -858,6 +859,10 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     }
     
     func pause() {
+        if currIndex != -1, let currentTime = player?.currentTime() {
+            currResource.watchProcess = Int(currentTime.roundedSeconds)
+            DataManager.share().updateWatchProgress(currResource.watchProcess, uuid: self.currResource.downloadUuid)
+        }
         player?.pause()
         removePeriodicTimeObserver()
         playBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
@@ -866,6 +871,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     func play() {
         player?.play()
         addPeriodicTimeObserver()
+        playBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
     }
     
     func play(index: Int) {
