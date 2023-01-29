@@ -337,7 +337,15 @@ const browser = __b;
       else if(host.indexOf('www.reddit.com')>-1){
         videoInfo = handleRedditVideoInfo(videoDom);
       }
-
+      // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
+      else if(host.indexOf('cn.pornhub.com')>-1){
+        const adDom = document.querySelector('.mgp_adRollContainer .mgp_adRollSkipButton');
+        // 过滤广告
+        if(adDom){
+          return {};
+        }
+        videoInfo = handlePornhubVideoInfo(videoDom);
+      }
 
 
       if(!downloadUrl){
@@ -505,6 +513,30 @@ const browser = __b;
         videoInfo.title = titleDom.getAttribute('title');
       }
       return videoInfo;
+    }
+
+    function handlePornhubVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      const titleDom = document.querySelector('#videoShow .categoryTags .headerWrap h1');
+      if(titleDom){
+        let title = titleDom.textContent;
+        if(title){
+          videoInfo.title = title.trim();
+        }
+      }
+      if(!videoInfo.title){
+        videoInfo.title = window.VIDEO_SHOW?window.VIDEO_SHOW.videoTitle:'';
+      }
+      const posterDom = document.querySelector('#videoPlayerPlaceholder img.videoElementPoster');
+      if(posterDom){
+        videoInfo.poster = posterDom.getAttribute('src');
+      }
+      if(!videoInfo.poster){
+        videoInfo.poster = window.VIDEO_SHOW?window.VIDEO_SHOW.videoImage:'';
+      }
+      return videoInfo
     }
 
     /**
