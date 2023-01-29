@@ -541,7 +541,7 @@
          countLabel.font = FCStyle.footnote;
          countLabel.textColor = FCStyle.fcBlack;
          countLabel.textAlignment = NSTextAlignmentLeft;
-         countLabel.text = [NSString stringWithFormat:@"%ld",grants.count];
+         countLabel.text = [NSString stringWithFormat:@"%ld",disabledWebsites.count];
          countLabel.centerY = grantsLabel.centerY;
          countLabel.right =  self.view.width - 42;
          [cell.contentView addSubview:countLabel];
