@@ -200,6 +200,7 @@
                 self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];;
                 [self.syDownloadSlideController show];
                 break;
+
             }
         }
             
