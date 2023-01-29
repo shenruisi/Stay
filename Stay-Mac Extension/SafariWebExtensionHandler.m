@@ -170,6 +170,8 @@ NSString * const SFExtensionMessageKey = @"message";
             NSString *disabledUrl = nil;
             if ((disabledUrl = [self disabledWebsitesCheck:data url:url]) != nil){
                 if (requireCompleteScript){
+                    [datas removeObjectAtIndex:i];
+                    i--;
                     continue;
                 }
             }

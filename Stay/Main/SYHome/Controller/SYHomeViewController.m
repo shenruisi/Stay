@@ -751,7 +751,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].activateChanged.content = @{};
     [[SharedStorageManager shared].activateChanged flush];
-    [ToastDebugger log:@"activateChanged"];
     
     [SharedStorageManager shared].runsRecord = nil;
     for (NSString *uuid in [SharedStorageManager shared].runsRecord.contentDic.allKeys){
@@ -759,7 +758,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     [SharedStorageManager shared].runsRecord.contentDic = [NSMutableDictionary dictionary];
     [[SharedStorageManager shared].runsRecord flush];
-    [ToastDebugger log:@"runsRecord"];
     
     [SharedStorageManager shared].disabledWebsites = nil;
     for (NSString *uuid in [SharedStorageManager shared].disabledWebsites.contentDic.allKeys){
@@ -767,19 +765,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         NSArray *disableWebsites = (NSArray *)[SharedStorageManager shared].disabledWebsites.contentDic[uuid];
         [[DataManager shareManager] updateScriptConfigDisableWebsite:[disableWebsites componentsJoinedByString:@","] numberId:uuid];
     }
+    [SharedStorageManager shared].disabledWebsites.contentDic = [NSMutableDictionary dictionary];
+    [[SharedStorageManager shared].disabledWebsites flush];
     
     [self reloadTableView];
     [self.tableView reloadData];
     [self initScrpitContent];
-    [ToastDebugger log:@"initScrpitContent"];
-    
-    [ToastDebugger log:@"iCloudSyncIfNeeded Start"];
+
     [self iCloudSyncIfNeeded];
     
     [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
                    isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
              isExtension:NO];
-    [ToastDebugger log:@"API"];
 }
 
 - (void)iCloudSyncIfNeeded{

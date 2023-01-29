@@ -120,6 +120,8 @@
             NSString *disabledUrl = nil;
             if ((disabledUrl = [self disabledWebsitesCheck:data url:url]) != nil){
                 if (requireCompleteScript){
+                    [datas removeObjectAtIndex:i];
+                    i--;
                     continue;
                 }
             }
@@ -213,24 +215,25 @@
         NSString *uuid = message[@"uuid"];
         NSString *disabledUrl = message[@"disabledUrl"];
         BOOL on = [message[@"on"] boolValue];
+        NSMutableArray *disabledWebsites = [[NSMutableArray alloc] init];
         if (datas != NULL && datas.count > 0) {
             for(int i = 0; i < datas.count;i++) {
                 NSDictionary *dic = datas[i];
                 if([dic[@"uuid"] isEqualToString:uuid]) {
                     NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
-                    NSMutableArray *array = [NSMutableArray arrayWithArray:[mdic objectForKey:@"disabledWebsites"]];
+                    disabledWebsites = [NSMutableArray arrayWithArray:[mdic objectForKey:@"disabledWebsites"]];
                     if (on){
-                        if (![array containsObject:disabledUrl]){
-                            [array addObject:disabledUrl];
+                        if (![disabledWebsites containsObject:disabledUrl]){
+                            [disabledWebsites addObject:disabledUrl];
                         }
                     }
                     else{
-                        if ([array containsObject:disabledUrl]){
-                            [array removeObject:disabledUrl];
+                        if ([disabledWebsites containsObject:disabledUrl]){
+                            [disabledWebsites removeObject:disabledUrl];
                         }
                     }
                     
-                    [mdic setValue:array forKey:@"disabledWebsites"];
+                    [mdic setValue:disabledWebsites forKey:@"disabledWebsites"];
                     [datas replaceObjectAtIndex:i withObject:mdic];
                     [SharedStorageManager shared].userscriptHeaders.content = datas;
                     [[SharedStorageManager shared].userscriptHeaders flush];
@@ -239,11 +242,9 @@
             }
         }
         
+        
         NSMutableDictionary<NSString *,NSArray *> *changed = [NSMutableDictionary dictionaryWithDictionary:[SharedStorageManager shared].disabledWebsites.contentDic];
-        NSMutableArray *array = [NSMutableArray arrayWithArray:changed[uuid]];
-        if (![array containsObject:disabledUrl]){
-            [array addObject:disabledUrl];
-        }
+        changed[uuid] = disabledWebsites;
         [SharedStorageManager shared].disabledWebsites.contentDic = changed;
         [[SharedStorageManager shared].disabledWebsites flush];
     }
