@@ -193,13 +193,15 @@
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
+                if(!self.syDownloadSlideController.isShown) {
+                    [self.syDownloadSlideController dismiss];
+                    self.syDownloadSlideController = nil;
+                }
                 self.syDownloadSlideController = [[SYDownloadSlideController alloc] init];
                 UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
                 self.syDownloadSlideController.controller = nav;
                 self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];;
-                if(!self.syDownloadSlideController.isShown) {
-                    [self.syDownloadSlideController show];
-                }
+                [self.syDownloadSlideController show];
             }
         }
             
