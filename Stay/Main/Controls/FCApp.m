@@ -18,7 +18,8 @@
             }
         }
         if ([UIApplication sharedApplication].windows.count > 0){
-            return [UIApplication sharedApplication].windows[0];
+            //return [UIApplication sharedApplication].windows[0];
+            return [UIApplication sharedApplication].keyWindow;
         }
         else return nil;
     } else {
