@@ -193,7 +193,7 @@
         if(arrays != nil && arrays.count > 0) {
             for(int i = 0;i < arrays.count; i++) {
                 NSDictionary *dic = arrays[i];
-                if(!self.syDownloadSlideController.isShown) {
+                if(self.syDownloadSlideController != nil && self.syDownloadSlideController.isShown) {
                     [self.syDownloadSlideController dismiss];
                     self.syDownloadSlideController = nil;
                 }
