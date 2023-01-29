@@ -37,8 +37,9 @@
         plImg.centerY = 45;
         plImg.contentMode = UIViewContentModeScaleAspectFit;
         [imageView addSubview:plImg];
-    
-        [imageView sd_setImageWithURL:([_downloadResource.icon hasPrefix:@"http"] ? [NSURL URLWithString:_downloadResource.icon] : [NSURL fileURLWithPath:_downloadResource.icon])  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        NSString *path_document = NSHomeDirectory();
+
+        [imageView sd_setImageWithURL:([_downloadResource.icon hasPrefix:@"http"] ? [NSURL URLWithString:_downloadResource.icon] : [NSURL fileURLWithPath:[path_document stringByAppendingString:_downloadResource.icon]])  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if(error == nil) {
                 plImg.hidden = true;
             }

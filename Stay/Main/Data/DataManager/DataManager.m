@@ -2274,7 +2274,9 @@
     
     NSString *path_document = NSHomeDirectory();
     //设置一个图片的存储路径
-    NSString *imagePath = [path_document stringByAppendingString:[NSString stringWithFormat:@"/Documents/%@.jpg",[NSUUID UUID].UUIDString]];
+    NSString *imageDocPath = [NSString stringWithFormat:@"/Documents/%@.jpg",[NSUUID UUID].UUIDString];
+    
+    NSString *imagePath = [path_document stringByAppendingString:imageDocPath];
     [UIImageJPEGRepresentation(image, 100) writeToFile:imagePath options:0 error:nil];
 
     sqlite3 *sqliteHandle = NULL;
@@ -2307,7 +2309,7 @@
         sqlite3_close(sqliteHandle);
         return;
     }
-    sqlite3_bind_text(stmt, 1, [imagePath UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 1, [imageDocPath UTF8String], -1, NULL);
     sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
