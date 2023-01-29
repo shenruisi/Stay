@@ -197,7 +197,9 @@
                 UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
                 self.syDownloadSlideController.controller = nav;
                 self.syDownloadSlideController.dic = [NSMutableDictionary dictionaryWithDictionary:dic];;
-                [self.syDownloadSlideController show];
+                if(!self.syDownloadSlideController.isShown) {
+                    [self.syDownloadSlideController show];
+                }
             }
         }
             
