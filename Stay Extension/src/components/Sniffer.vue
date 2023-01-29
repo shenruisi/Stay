@@ -112,8 +112,16 @@ export default {
               item.selectedFolder = state.selectedFolder;
               item.selectedFolderText = state.selectedFolderText;
               if(item.qualityList && item.qualityList.length ){
-                item.selectedQuality = item.qualityList[0].downloadUrl;
-                item.selectedQualityText = item.qualityList[0].qualityLabel;
+                item.qualityList.forEach(quality=>{
+                  if(item.downloadUrl == quality.downloadUrl){
+                    item.selectedQuality = quality.downloadUrl;
+                    item.selectedQualityText = quality.qualityLabel;
+                  }
+                })
+                if(!item.selectedQuality){
+                  item.selectedQuality = item.qualityList[0].downloadUrl;
+                  item.selectedQualityText = item.qualityList[0].qualityLabel;
+                }
               }
             });
             state.videoList = videoList;

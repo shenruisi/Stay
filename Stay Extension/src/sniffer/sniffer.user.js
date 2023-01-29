@@ -382,19 +382,10 @@ const browser = __b;
       }
       // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
       else if(host.indexOf('cn.pornhub.com')>-1){
-        const adDom = document.querySelector('.mgp_adRollContainer .mgp_adRollSkipButton');
-        // 过滤广告
-        if(adDom){
-          return {};
-        }
         videoInfo = handlePornhubVideoInfo(videoDom);
       }
 
-      if(videoInfo){
-
-      }
-
-      if(!downloadUrl){
+      if(videoInfo.downloadUrl){
         downloadUrl = videoInfo.downloadUrl
       }
       downloadUrl = Utils.completionSourceUrl(downloadUrl);
@@ -574,24 +565,78 @@ const browser = __b;
       let videoInfo = {};
       videoInfo.poster = videoDom.getAttribute('poster');
       videoInfo.downloadUrl = videoDom.getAttribute('src');
-      const titleDom = document.querySelector('#videoShow .categoryTags .headerWrap h1');
-      if(titleDom){
-        let title = titleDom.textContent;
-        if(title){
-          videoInfo.title = title.trim();
+      let videoDetailDom = videoDom.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+      if(videoDetailDom && videoDetailDom.classList.contains('playerWrapper')){
+        // video detail info
+        const titleDom = document.querySelector('#videoShow .categoryTags .headerWrap h1');
+        if(titleDom){
+          let title = titleDom.textContent;
+          if(title){
+            videoInfo.title = title.trim();
+          }
+        }
+        if(!videoInfo.title){
+          videoInfo.title = window.VIDEO_SHOW?window.VIDEO_SHOW.videoTitle:'';
+        }
+        const posterDom = document.querySelector('#videoPlayerPlaceholder img.videoElementPoster');
+        if(posterDom){
+          videoInfo.poster = posterDom.getAttribute('src');
+        }
+        if(!videoInfo.poster){
+          videoInfo.poster = window.VIDEO_SHOW?window.VIDEO_SHOW.videoImage:'';
+        }
+
+        if(window.VIDEO_SHOW){
+          let playerId = window.VIDEO_SHOW.playerId;
+          // console.log('playerId=========',playerId);
+          if(playerId){
+            let idArr = playerId.split('_');
+            // console.log('idArr=========',idArr);
+            if(idArr.length>1){
+              let flashvarsId = 'flashvars_' + idArr[1];
+              // console.log('flashvarsId=========',flashvarsId);
+              let mediaDefinitions = window[flashvarsId].mediaDefinitions;
+              // console.log('mediaDefinitions===========',mediaDefinitions)
+              if(mediaDefinitions && mediaDefinitions.length){
+                let qualityList = []
+                let defaultQuality = '';
+                mediaDefinitions.forEach(item=>{
+                  if('hls' == item.format && typeof item.quality == 'string'){
+                    qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
+                  }
+                  if('number' == typeof item.defaultQuality){
+                    defaultQuality = item.defaultQuality;
+                  }
+                })
+                // console.log('qualityList========',qualityList)
+                // console.log('defaultQuality========',defaultQuality, typeof defaultQuality)
+                videoInfo['qualityList'] = qualityList;
+                if(qualityList.length){
+                  qualityList.forEach(item=>{
+                    if(item.quality == defaultQuality){
+                      videoInfo.downloadUrl = item.downloadUrl;
+                    }
+                  })
+                }
+              }
+            }
+          }
+        }
+        return videoInfo
+      }
+      let videoLiDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode;
+      if(videoLiDom && 'li' == videoLiDom.tagName.toLowerCase()){
+        let videoThumbDom = videoLiDom.querySelector('.videoWrapper .singleVideo a img.videoThumb');
+        if(videoThumbDom){
+          videoInfo.title = videoThumbDom.getAttribute('alt');
+          if(videoInfo.title){
+            videoInfo.title = '[Related videos] ' + videoInfo.title;
+          }
+          videoInfo.poster = videoThumbDom.getAttribute('src');
+          return videoInfo;
         }
       }
-      if(!videoInfo.title){
-        videoInfo.title = window.VIDEO_SHOW?window.VIDEO_SHOW.videoTitle:'';
-      }
-      const posterDom = document.querySelector('#videoPlayerPlaceholder img.videoElementPoster');
-      if(posterDom){
-        videoInfo.poster = posterDom.getAttribute('src');
-      }
-      if(!videoInfo.poster){
-        videoInfo.poster = window.VIDEO_SHOW?window.VIDEO_SHOW.videoImage:'';
-      }
-      return videoInfo
+      return videoInfo;
     }
 
     /**
