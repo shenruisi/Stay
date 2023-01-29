@@ -252,3 +252,5 @@ urlIsDownloaded="该视频已下载";
 FolderName="名称";
 FolderNameIsEmpty="文件夹名称不能为空";
 Preview="预览";
+DisabledWebsites="屏蔽网址";
+FailedTranscode="转码失败";
