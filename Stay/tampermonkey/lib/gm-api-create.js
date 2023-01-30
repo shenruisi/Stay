@@ -381,7 +381,7 @@
     function GM_getValue(key, defaultValue) {
         // console.log("GM_getValue-----typeof value =", typeof key );
         browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid }, (response) => {
-            __stroge[key]=response.body
+            __stroge[key]=response
             // console.log("GM_getValue-----value -----=====", response);
         });
         return !__stroge || typeof __stroge[key] === "undefined" || __stroge[key] == null ? defaultValue : __stroge[key];
@@ -392,7 +392,7 @@
             browser.runtime.sendMessage({ from: "gm-apis", operate: "GM_getValue", key: key, defaultValue: defaultValue, uuid: _uuid }, (response) => {
                 // console.log("getValue_p-----typeof response------ =",response );
                 resolve(response);
-                __stroge[key]=response.body
+                __stroge[key]=response
             });
         });
     }
@@ -1218,14 +1218,15 @@
                 type = "object";
             }
             return new Promise(resolve => {
-                const callback = e => {
-                    if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
-                    // console.log("GM_getValueAsync----res----", e.data);
-                    resolve(e.data.response?e.data.response:defaultValue);
-                    window.removeEventListener("message", callback);
-                };
-                window.addEventListener("message", callback);
-                window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE", key: key, defaultValue: value, type: type });
+                resolve(__listValuesStroge[key]);
+                // const callback = e => {
+                //     if (e.data.pid !== pid || e.data.id !== _uuid || e.data.name !== "RESP_GET_VALUE") return;
+                //     // console.log("GM_getValueAsync----res----", e.data);
+                //     resolve(e.data.response?e.data.response:defaultValue);
+                //     window.removeEventListener("message", callback);
+                // };
+                // window.addEventListener("message", callback);
+                // window.postMessage({ id: _uuid, pid: pid, name: "API_GET_VALUE", key: key, defaultValue: value, type: type });
             });
         }
 
