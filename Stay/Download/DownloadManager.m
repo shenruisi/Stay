@@ -36,6 +36,8 @@
 @property (nonatomic, strong) NSString *keyURL;
 @property (nonatomic, strong) NSData *keyData;
 @property (nonatomic, strong) NSString *keyIV;
+@property (nonatomic, strong) NSString *mapURL;
+@property (nonatomic, assign) int mediaType; // 0:ts 1:fmp4
 @end
 
 @implementation M3U8State
@@ -51,10 +53,12 @@
             self.totalCount = lines[0].intValue;
             self.currCount = lines[1].intValue;
             self.status = lines[2].intValue;
-            self.keyURL = lines[3];
-            self.keyIV = lines[4];
+            self.mediaType = lines[3].intValue;
+            self.keyURL = lines[4];
+            self.keyIV = lines[5];
+            self.mapURL = lines[6];
             self.tsURLs = [NSMutableArray array];
-            for (int i = 5; i < lines.count; i++) {
+            for (int i = 7; i < lines.count; i++) {
                 [self.tsURLs addObject:lines[i]];
             }
             return self;
@@ -65,9 +69,9 @@
 }
 
 - (void)saveToPath:(NSString *)taskPath {
-    NSString *content = [NSString stringWithFormat:@"%lu\n%lu\n%d\n%@\n%@",
-                         (unsigned long)_totalCount, (unsigned long)_currCount, _status,
-                         _keyURL == nil ? @"" : _keyURL, _keyIV == nil ? @"" : _keyIV];
+    NSString *content = [NSString stringWithFormat:@"%lu\n%lu\n%d\n%d\n%@\n%@\n%@",
+                         (unsigned long)_totalCount, (unsigned long)_currCount, _status, _mediaType,
+                         _keyURL == nil ? @"" : _keyURL, _keyIV == nil ? @"" : _keyIV, _mapURL == nil ? @"" : _mapURL];
     @synchronized (_tsURLs) {
         for (NSString *tsURL in _tsURLs) {
             content = [content stringByAppendingFormat:@"\n%@", tsURL];
@@ -396,6 +400,13 @@ static DownloadManager *instance = nil;
             NSUInteger segmentCount = model.mainMediaPl.segmentList.count;
             m3u8State.totalCount = segmentCount;
             m3u8State.tsURLs = [NSMutableArray array];
+            if (model.mainMediaPl.mapURL.length > 0) {
+                m3u8State.mapURL = model.mainMediaPl.mapURL;
+                m3u8State.mediaType = 1;
+                [m3u8State.tsURLs addObject:model.mainMediaPl.mapURL];
+            } else {
+                m3u8State.mediaType = 0;
+            }
             for (int i = 0; i < segmentCount; i++) {
                 M3U8SegmentInfo *segInfo = [model.mainMediaPl.segmentList segmentInfoAtIndex:i];
                 [m3u8State.tsURLs addObject:segInfo.urlString];
@@ -526,7 +537,7 @@ static DownloadManager *instance = nil;
     
     NSLog(@"FFmpeg : start");
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-    NSString *filePath = [taskPath stringByAppendingPathComponent:@"combined.ts"];
+    NSString *filePath = [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"];
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
     for (NSString *tsURL in task.m3u8State.tsURLs) {
@@ -559,7 +570,7 @@ static DownloadManager *instance = nil;
     
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
-    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"combined.ts"], task.filePath]];
+    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"], task.filePath]];
 //    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-f concat -safe 0 -i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"allts.txt"], task.filePath]];
     
     NSLog(@"FFmpeg : cost %ldms", [session getDuration]);
@@ -717,22 +728,24 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 }
             }
             if (!isKeyURL) {
-                unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
-                if (fileSize < 2000) {
-                    if (task.block != nil) {
-                        task.block(0, @"", DMStatusFailed);
-                    }
-                    for (TaskSessionState *sessionState in task.sessionStates) {
-                        @synchronized (self.sessionDict) {
-                            [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+                if (![task.m3u8State.mapURL isEqualToString:requestURL]) {
+                    unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+                    if (fileSize < 2000) {
+                        if (task.block != nil) {
+                            task.block(0, @"", DMStatusFailed);
                         }
-                        [sessionState.sessionTask cancel];
+                        for (TaskSessionState *sessionState in task.sessionStates) {
+                            @synchronized (self.sessionDict) {
+                                [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+                            }
+                            [sessionState.sessionTask cancel];
+                        }
+                        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+                        @synchronized (self.taskDict) {
+                            [self.taskDict removeObjectForKey:task.taskId];
+                        }
+                        return;
                     }
-                    [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-                    @synchronized (self.taskDict) {
-                        [self.taskDict removeObjectForKey:task.taskId];
-                    }
-                    return;
                 }
                 NSMutableArray<NSString *> *tsURLs = task.m3u8State.tsURLs;
                 for (int i = 0; i < tsURLs.count; i++) {

@@ -86,6 +86,13 @@
             break;
         }
         
+        if ([line hasPrefix:M3U8_EXT_X_MAP]) {
+            line = [line stringByReplacingOccurrencesOfString:M3U8_EXT_X_MAP withString:@""];
+            NSURL *uri = [NSURL URLWithString:line.m3u_attributesFromAssignmentByComma[M3U8_EXT_X_MAP_URI]];
+            self.mapURL = uri.scheme ? uri.absoluteString : (self.originalURL != nil ? [NSURL URLWithString:uri.absoluteString relativeToURL:[self.originalURL URLByDeletingLastPathComponent]].absoluteString : [NSURL URLWithString:uri.absoluteString relativeToURL:self.baseURL].absoluteString);
+            continue;
+        }
+        
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         if (self.originalURL) {
             [params setObject:self.originalURL forKey:M3U8_URL];
