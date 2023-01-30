@@ -381,7 +381,7 @@ const browser = __b;
         videoInfo = handleRedditVideoInfo(videoDom);
       }
       // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
-      else if(host.indexOf('cn.pornhub.com')>-1){
+      else if(host.indexOf('pornhub.com')>-1){
         videoInfo = handlePornhubVideoInfo(videoDom);
       }
 
