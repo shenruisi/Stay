@@ -252,3 +252,4 @@ FolderNameIsEmpty="文件夾名稱不能為空";
 Preview="預覽";
 DisabledWebsites="屏蔽網址";
 FailedTranscode="轉碼失敗";
+FailedNoSpace="空間不足";
