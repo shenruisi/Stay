@@ -27,6 +27,7 @@ typedef enum {
 
 @property (readonly, nonatomic, copy) NSURL *originalURL;
 
+@property (nonatomic, strong) NSString *mapURL;
 @property (readonly, nonatomic, strong) M3U8SegmentInfoList *segmentList;
 
 /** live or replay */
