@@ -254,3 +254,4 @@ Preview="Preview";
 DisabledWebsites="Disabled websites";
 FailedTranscode="Transcode failed";
 FailedNoSpace="Not enough space";
+needNotDelete="You need to keep at least one folder";
