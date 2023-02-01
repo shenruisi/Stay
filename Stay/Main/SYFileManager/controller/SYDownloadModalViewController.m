@@ -138,11 +138,11 @@
         };
         if(self.dic != NULL && self.dic[@"downloadUrl"] != nil) {
             inputEntity.text = self.dic[@"downloadUrl"];
-            linkElement.enable = NO;
+//            linkElement.enable = NO;
         }
         linkElement.generalEntity = generalEntity;
         linkElement.inputEntity = inputEntity;
-        linkElement.tapEnabled = NO;
+//        linkElement.tapEnabled = NO;
         linkElement.type = ModalItemElementTypeInput;
         linkElement.renderMode = ModalItemElementRenderModeSingle;
         linkElement.action = ^(ModalItemElement * _Nonnull element) {
