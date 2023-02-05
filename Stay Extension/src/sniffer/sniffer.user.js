@@ -384,6 +384,12 @@ const browser = __b;
       else if(host.indexOf('pornhub.com')>-1){
         videoInfo = handlePornhubVideoInfo(videoDom);
       }
+      else if(host.indexOf('facebook.com')>-1){
+        videoInfo = handleFacebookVideoInfo(videoDom);
+      }// https://www.instagram.com
+      else if(host.indexOf('instagram.com')>-1){
+        videoInfo = handleInstagramVideoInfo(videoDom);
+      }
 
       if(videoInfo.downloadUrl){
         downloadUrl = videoInfo.downloadUrl
@@ -639,6 +645,62 @@ const browser = __b;
       return videoInfo;
     }
 
+    function handleFacebookVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      let videoDetailDom = videoDom.parentElement.parentElement.parentElement.parentElement.parentElement;
+      if(videoDetailDom && videoDetailDom.classList.contains('displayed') && 'container' == videoDetailDom.getAttribute('data-type')){
+        let imgDom = videoDetailDom.querySelector('div[data-type=\'video\'] img.img');
+        if(imgDom){
+          videoInfo.poster = imgDom.getAttribute('src');
+        }
+        let titleDom = videoDetailDom.querySelector('div.displayed > div[data-type=\'container\'] > div[data-type=\'container\'] > div[data-type=\'container\'] > div[data-type=\'text\'] > div.native-text');
+        if(titleDom){
+          videoInfo.title = titleDom.textContent;
+        }
+      }
+      return videoInfo;
+    }
+
+    function handleInstagramVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      let videoDetailDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+      if(videoDetailDom && videoDetailDom.classList.contains('_ab8w') && videoDetailDom.classList.contains('_ab94') && 
+      videoDetailDom.classList.contains('_ab99') && videoDetailDom.classList.contains('_ab9h') && videoDetailDom.classList.contains('_ab9m') && 
+      videoDetailDom.classList.contains('_ab9p') && videoDetailDom.classList.contains('_abcm')){
+        // console.log('handleInstagramVideoInfo--------------',videoDetailDom);
+        let posterDom = videoDetailDom.querySelector('._aatk .x1uhb9sk .x10l6tqk .x78zum5 img.x5yr21d');
+        // console.log('posterDom-----------',posterDom)
+        if(posterDom){
+          videoInfo.poster = posterDom.getAttribute('src');
+        }
+        let titleDom = videoDetailDom.querySelector('._ab9f div._ae1h._ae1i ._ae2s div._ae5q._akdn div div div');
+        // console.log('titleDom-----------',titleDom)
+        if(titleDom && titleDom.textContent){
+          videoInfo.title = titleDom.textContent.replace('... more', '');
+        }
+      }else{
+        videoDetailDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode;
+        console.log(videoDetailDom.classList, 'videoDetailDom.classList.contains(\'_a8b4\') ===', videoDetailDom.classList.contains('_a8b4') )
+        if(videoDetailDom && videoDetailDom.classList.contains('_a8b4') && videoDetailDom.classList.contains('_acjh')){
+          // let posterDom = videoDetailDom.querySelector('div > div div.xryxfnj.x1nhvcw1 div.xxk0z11.x1qihbgi a.x1i10hfl._a6hd div._aagu div._aagv img');
+          // if(posterDom){
+          //   videoInfo.poster = posterDom.getAttribute('src');
+          // }
+          let titleDom = videoDetailDom.querySelector('div > div > div.x9f619.x1d8287x.xz4gly6  div.x6ikm8r.x10wlt62 span');
+          if(titleDom){
+            videoInfo.title = titleDom.textContent;
+          }
+        }
+      }
+      return videoInfo;
+    }
+
     /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
@@ -794,7 +856,7 @@ const browser = __b;
       let videoInfo = {};
       const playerResp = window.ytInitialPlayerResponse;
       // console.log('playerResp-------', playerResp);
-      if(playerResp && playerResp.videoDetails && playerResp.streamingData && videoId === playerResp.videoDetails.videoId){
+      if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
         const videoDetails = playerResp.videoDetails;
         let detailTitle = videoDetails.title?videoDetails.title:'';
         videoInfo['title'] = detailTitle;
@@ -805,13 +867,13 @@ const browser = __b;
             // console.log('thumbnails-----',thumbnails);
             videoInfo['poster'] =  thumbnails.pop().url;
           }
-          // else{
-          //   videoInfo['poster'] = getYoutubeVideoPosterByDom();
-          // }
+          else{
+            videoInfo['poster'] = getYoutubeVideoPosterByDom();
+          }
         }
-        // else{
-        //   videoInfo['poster'] = getYoutubeVideoPosterByDom();
-        // }
+        else{
+          videoInfo['poster'] = getYoutubeVideoPosterByDom();
+        }
         // console.log('playerResp-------videoDetails-------------', videoDetails);
         const streamingData = playerResp.streamingData;
         // const adaptiveFormats = streamingData.adaptiveFormats;
@@ -892,6 +954,13 @@ const browser = __b;
           return Utils.matchUrlInString(imgText);
         }
       }
+      const bgStyle = document.querySelector('.video-wrapper .background-style-black');
+      if(bgStyle){
+        let imgText = bgStyle.getAttribute('style');
+        if(imgText){
+          return Utils.matchUrlInString(imgText);
+        }
+      }
       return '';
     }
     
@@ -945,7 +1014,7 @@ const browser = __b;
         if (isVideoLink(url)){
           if (!uniqueUrls.has(url)){
             uniqueUrls.add(url);
-            // console.log('VIDEO_LINK_CAPTURE: ' + url);
+            console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
             if(isContent){
               let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};

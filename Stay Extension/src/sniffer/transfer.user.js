@@ -108,6 +108,7 @@ const browser = __b;
       if('VIDEO_INFO_PUSH' === operate){
         if(request.videoLinkSet && request.videoLinkSet.size){
           videoLinkSet = request.videoLinkSet
+          console.log('videoLinkSet--------', videoLinkSet);
         }
         if(request.videoInfoList && request.videoInfoList.length){
           videoInfoList = request.videoInfoList
