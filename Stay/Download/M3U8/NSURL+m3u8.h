@@ -25,4 +25,8 @@
  */
 - (void)m3u_loadAsyncCompletion:(void (^)(M3U8PlaylistModel *model, NSError *error))completion;
 
+- (nullable NSDictionary *)getHeaders;
+
+- (NSURLRequest *)getRequest;
+
 @end

@@ -12,6 +12,8 @@
 #import "M3U8Parser.h"
 #import <ffmpegkit/FFmpegKit.h>
 #import "FWEncryptorAES.h"
+#import "NSString+m3u8.h"
+#import "NSURL+m3u8.h"
 
 @implementation Request
 
@@ -197,7 +199,7 @@ static DownloadManager *instance = nil;
                 sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
             }
             if (sessionTask == nil) {
-                sessionTask = [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
+                sessionTask = [self.downloadSession downloadTaskWithRequest:[request.url getRequest]];
             }
             [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
         }
@@ -234,7 +236,7 @@ static DownloadManager *instance = nil;
                     [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 }
                 if (sessionTask == nil) {
-                    sessionTask = [self.downloadSession downloadTaskWithURL:sessionState.sessionTask.originalRequest.URL];
+                    sessionTask = [self.downloadSession downloadTaskWithRequest:[sessionState.sessionTask.originalRequest.URL getRequest]];
                 }
                 sessionState.sessionTask = sessionTask;
                 if (sessionState.sessionTask != nil) {
@@ -483,7 +485,7 @@ static DownloadManager *instance = nil;
         sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
     }
     if (sessionTask == nil) {
-        sessionTask = [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:tsURL]];
+        sessionTask = [self.downloadSession downloadTaskWithRequest:[tsURL getRequest]];
     };
     [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
     if (sessionTask != nil) {

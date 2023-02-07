@@ -27,4 +27,8 @@
 
 - (NSString *)m3u_stringByTrimmingQuoteMark;
 
+- (nullable instancetype)initWithContentsOfURL:(NSURL *)url headers:(NSDictionary *)headers encoding:(NSStringEncoding)enc error:(NSError **)error;
+
+- (NSURLRequest *)getRequest;
+
 @end

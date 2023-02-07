@@ -7,6 +7,7 @@
 //
 
 #import "NSString+m3u8.h"
+#import "NSURL+m3u8.h"
 #import "M3U8SegmentInfo.h"
 #import "M3U8SegmentInfoList.h"
 #import "M3U8ExtXStreamInf.h"
@@ -143,6 +144,22 @@
     NSArray<NSString *> *keyValues = [self componentsSeparatedByString:mark];
     
     return [keyValues m3u_attributesFromAssignmentByMark:mark];
+}
+
+- (nullable instancetype)initWithContentsOfURL:(NSURL *)url headers:(NSDictionary *)headers encoding:(NSStringEncoding)enc error:(NSError **)error {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    for (NSString *key in headers.allKeys) {
+        [request addValue:headers[key] forHTTPHeaderField:key];
+    }
+    NSData *received = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:error];
+    if(received != nil) {
+        return [self initWithData:received encoding:enc];
+    }
+    return nil;
+}
+
+- (NSURLRequest *)getRequest {
+    return [[NSURL URLWithString:self] getRequest];
 }
 
 @end
