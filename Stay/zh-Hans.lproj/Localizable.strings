@@ -54,6 +54,9 @@ settings.termOfUse="使用条款";
 settings.privacyPolicy="隐私策略";
 settings.plan="开发计划";
 settings.getStarted="开始使用";
+settings.DOWNLOAD="下载";
+settings.M3U8Concurrency="M3U8下载并发数";
+settings.Concurrency="并发数";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "确认";

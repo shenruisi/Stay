@@ -63,6 +63,8 @@
 		3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
 		3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
 		3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
+		3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C919713299297D500485423 /* SYConcurrencyViewController.m */; };
+		3C919715299297D500485423 /* SYConcurrencyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C919713299297D500485423 /* SYConcurrencyViewController.m */; };
 		3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
 		3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
 		3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B81297029F40068231A /* M3U8ExtXKey.m */; };
@@ -637,6 +639,8 @@
 		3C8388EB2934F56C007563E6 /* DMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMStore.m; sourceTree = "<group>"; };
 		3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		3C919712299297D500485423 /* SYConcurrencyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYConcurrencyViewController.h; sourceTree = "<group>"; };
+		3C919713299297D500485423 /* SYConcurrencyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYConcurrencyViewController.m; sourceTree = "<group>"; };
 		3C949B7B297029F30068231A /* M3U8MediaPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8MediaPlaylist.h; sourceTree = "<group>"; };
 		3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8MediaPlaylist.m; sourceTree = "<group>"; };
 		3C949B7D297029F30068231A /* M3U8Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8Parser.h; sourceTree = "<group>"; };
@@ -2253,6 +2257,8 @@
 				84AA932328A63440003E3967 /* SYAppearanceViewController.h */,
 				84AA932428A63440003E3967 /* SYAppearanceViewController.m */,
 				3C72260C288C243900FF0F68 /* SYSubscribeController.swift */,
+				3C919712299297D500485423 /* SYConcurrencyViewController.h */,
+				3C919713299297D500485423 /* SYConcurrencyViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2879,6 +2885,7 @@
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				3C8388EC2934F56C007563E6 /* DMStore.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
+				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
@@ -3083,6 +3090,7 @@
 				588202692859E73900B2721A /* SharedStorageManager.m in Sources */,
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
 				3C8388C72931ADC5007563E6 /* FCTab.m in Sources */,
+				3C919715299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,

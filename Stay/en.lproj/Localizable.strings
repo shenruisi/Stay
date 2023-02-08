@@ -56,6 +56,9 @@ settings.termOfUse="Term Of Use";
 settings.privacyPolicy="Privacy Policy";
 settings.plan="Plan";
 settings.getStarted="Get Started";
+settings.DOWNLOAD="DOWNLOAD";
+settings.M3U8Concurrency="M3U8 download concurrency";
+settings.Concurrency="Concurrency";
 
 unsupportedFileFormat = "Unsupported file format.";
 ok = "OK";

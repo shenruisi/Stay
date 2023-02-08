@@ -14,6 +14,7 @@
 #import "FWEncryptorAES.h"
 #import "NSString+m3u8.h"
 #import "NSURL+m3u8.h"
+#import "FCConfig.h"
 
 @implementation Request
 
@@ -117,6 +118,7 @@
     dispatch_queue_t _dataQueue;
     dispatch_queue_t _m3u8StateQueue;
     dispatch_queue_t _m3u8TranscodeQueue;
+    NSInteger _m3u8Concurrency;
 }
 
 @property (nonatomic, strong) NSString *dataPath;
@@ -144,6 +146,7 @@ static DownloadManager *instance = nil;
         _dataQueue = dispatch_queue_create([@"downloader.session.data.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
         _m3u8StateQueue = dispatch_queue_create([@"downloader.m3u8.state.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
         _m3u8TranscodeQueue = dispatch_queue_create([@"downloader.m3u8.transcode.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
+        _m3u8Concurrency = [[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency];
     }
     
     return self;
@@ -395,6 +398,10 @@ static DownloadManager *instance = nil;
     return _downloadSession;
 }
 
+- (void)setM3U8Concurrency:(int)concurrency {
+    _m3u8Concurrency = concurrency;
+}
+
 - (void)startM3U8Task:(Task *)task withURL:(NSURL *)url {
     [url m3u_loadAsyncCompletion:^(M3U8PlaylistModel *model, NSError *error) {
         if (model != nil) {
@@ -462,7 +469,7 @@ static DownloadManager *instance = nil;
                     if ([tsURL hasPrefix:@"http"] && ![currURLs containsObject:tsURL]) {
                         [self addTsSession:tsURL withTaskPath:taskPath andTask:task];
                         count++;
-                        if (count > 3) {
+                        if (count >= _m3u8Concurrency) {
                             break;
                         }
                     }
