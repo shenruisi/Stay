@@ -390,6 +390,7 @@ static DownloadManager *instance = nil;
 - (NSURLSession *)downloadSession {
     if (nil == _downloadSession) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"normal.downloader"];
+        config.HTTPMaximumConnectionsPerHost = 65535;
         config.shouldUseExtendedBackgroundIdleMode = YES;
         [config setHTTPAdditionalHeaders:@{@"User-Agent" : @"Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Mobile/15E148 Safari/604.1"}];
         _downloadSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
