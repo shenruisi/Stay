@@ -207,6 +207,7 @@ static DownloadManager *instance = nil;
             [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
         }
         if (sessionTask != nil) {
+            sessionTask.priority = 1.0;
             @synchronized (self.sessionDict) {
                 self.sessionDict[sessionTask] = task;
             }
@@ -243,6 +244,7 @@ static DownloadManager *instance = nil;
                 }
                 sessionState.sessionTask = sessionTask;
                 if (sessionState.sessionTask != nil) {
+                    sessionState.sessionTask.priority = 1.0;
                     @synchronized (self.sessionDict) {
                         self.sessionDict[sessionState.sessionTask] = task;
                     }
@@ -497,6 +499,7 @@ static DownloadManager *instance = nil;
     };
     [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
     if (sessionTask != nil) {
+        sessionTask.priority = 1.0;
         @synchronized (self.sessionDict) {
             self.sessionDict[sessionTask] = task;
         }
