@@ -252,6 +252,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, strong) NSMutableArray *datas;
 // 搜索结果数组
+@property (nonatomic, strong) NSMutableArray *activeDatas;
+@property (nonatomic, strong) NSMutableArray *stopDatas;
+
+
 @property (nonatomic, strong) NSMutableArray *results;
 
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
@@ -272,6 +276,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, assign) NSInteger selectedRow;
 
 @property (nonatomic, strong) _EmptyTipsView *emptyTipsView;
+
+@property (nonatomic, assign) NSInteger selectedIdx;
+
 @end
 
 @implementation SYHomeViewController
@@ -302,6 +309,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
     self.selectedRow = -1;
+    self.selectedIdx = 0;
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
     self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
@@ -319,8 +327,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self.searchController.searchBar setTintColor:FCStyle.accent];
     
     self.navigationItem.hidesSearchBarWhenScrolling = false;
-    [_datas removeAllObjects];
-    [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+   
+    [self checkData];
+    
     [self initScrpitContent];
     
 #ifdef Mac
@@ -420,6 +429,23 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 
+- (void)checkData {
+    [_datas removeAllObjects];
+    [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+    
+    [self.activeDatas removeAllObjects];
+    [self.stopDatas removeAllObjects];
+    
+    if(_datas != NULL && _datas.count > 0) {
+        for(UserScript *script in _datas) {
+            if(script.active) {
+                [_activeDatas addObject:script];
+            } else {
+                [_stopDatas addObject:script];
+            }
+        }
+    }
+}
 
 - (void)iCloudDidChangeHandler:(NSNotification *)note{
     [self.customView refreshIcon];
@@ -1113,10 +1139,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         return self.results.count;
     }
     
-    return self.datas.count;
+    if(_selectedIdx == 1) {
+        return self.stopDatas.count;
+    } else {
+        return self.activeDatas.count;
+    }
 }
 
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if([tableView isEqual:self.searchController.view]) {
+        return nil;
+    } else {
+        return [self createTableHeaderView];
+    }
+
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HomeDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
@@ -1130,7 +1168,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     if (self.searchController.active ) {
         model = _results[indexPath.row];
     } else {
-        model = _datas[indexPath.row];
+        if(_selectedIdx == 1) {
+            model = self.stopDatas[indexPath.row];
+        } else {
+            model =   self.activeDatas[indexPath.row];
+        }
     }
 //#ifndef Mac
 ////    cell.backgroundColor = FCStyle.secondaryBackground;
@@ -1167,7 +1209,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
             cell.selected = NO;
         }
-        UserScript *userscript = _datas[indexPath.row];
+        UserScript *userscript;
+        if(_selectedIdx == 1) {
+            userscript = self.stopDatas[indexPath.row];
+        } else {
+            userscript = self.activeDatas[indexPath.row];
+        }
+        
         self.selectedRow = indexPath.row;
         self.selectedUUID = userscript.uuid;
         [[QuickAccess secondaryController] pushViewController:
@@ -1181,7 +1229,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             cer.script = model;
             [self.navigationController pushViewController:cer animated:true];
         } else {
-            UserScript *model = _datas[indexPath.row];
+            UserScript *model;
+            if(_selectedIdx == 1) {
+                model = self.stopDatas[indexPath.row];
+            } else {
+                model = self.activeDatas[indexPath.row];
+            }
             SYDetailViewController *cer = [[SYDetailViewController alloc] init];
             cer.script = model;
             cer.isSearch = false;
@@ -1191,6 +1244,13 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 100.f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if([tableView isEqual:self.searchController.view]) {
+        return 0.1;
+    }
+    return 50;
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1207,7 +1267,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
                 
-                UserScript *model = weakSelf.datas[indexPath.row];
+                UserScript *model;
+                if(weakSelf.selectedIdx == 1) {
+                    model = weakSelf.stopDatas[indexPath.row];
+                } else {
+                    model = weakSelf.activeDatas[indexPath.row];
+                }
                 [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
                 [tableView setEditing:NO animated:YES];
                 [self reloadTableView];
@@ -1258,7 +1323,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 
-                UserScript *model = weakSelf.datas[indexPath.row];
+                UserScript *model;
+                if(weakSelf.selectedIdx == 1) {
+                    model = weakSelf.stopDatas[indexPath.row];
+                } else {
+                    model = weakSelf.activeDatas[indexPath.row];
+                }
                 [[DataManager shareManager] deleteScriptInUserScriptByNumberId: model.uuid];
                 [tableView setEditing:NO animated:YES];
                 [self reloadTableView];
@@ -1296,7 +1366,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         deleteAction.backgroundColor = RGB(224, 32, 32);
         
         UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            UserScript *model = weakSelf.datas[indexPath.row];
+                UserScript *model;
+                if(weakSelf.selectedIdx == 1) {
+                    model = weakSelf.stopDatas[indexPath.row];
+                } else {
+                    model = weakSelf.activeDatas[indexPath.row];
+                }
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
@@ -1315,7 +1390,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                 [weakSelf initScrpitContent];
                 [tableView reloadData];
         }];
-        UserScript *model = _datas[indexPath.row];
+        UserScript *model;
+        
+        if(_selectedIdx == 1) {
+            model = self.stopDatas[indexPath.row];
+        } else {
+            model = self.activeDatas[indexPath.row];
+        }
+        
         if (model.active) {
             stopAction.image = [UIImage imageNamed:@"stop"];
             stopAction.backgroundColor = FCStyle.accent;
@@ -1328,7 +1410,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
      
         UIContextualAction *shareAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             self.sYSelectTabViewController = nil;
-            UserScript *model = weakSelf.datas[indexPath.row];
+            UserScript *model;
+            if(weakSelf.selectedIdx == 1) {
+                model = weakSelf.stopDatas[indexPath.row];
+            } else {
+                model = weakSelf.activeDatas[indexPath.row];
+            }
             self.sYSelectTabViewController.url = model.downloadUrl;
             self.sYSelectTabViewController.content = model.content;
             [tableView setEditing:NO animated:YES];
@@ -1344,6 +1431,41 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
+}
+
+- (UIView *)createTableHeaderView {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
+    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Activated", @""),NSLocalizedString(@"Stopped", @""),nil];
+    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
+    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
+    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
+    segmentedControl.backgroundColor = FCStyle.secondaryPopup;
+    segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
+    segmentedControl.selectedSegmentIndex = _selectedIdx;
+    CGFloat left = (self.view.width - 200) / 2;
+    segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
+    [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
+    [view addSubview:segmentedControl];
+    view.backgroundColor = FCStyle.background;
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 0.5)];
+    line.backgroundColor = FCStyle.fcSeparator;
+    line.top = 49.5;
+    [view addSubview:line];
+    return  view;
+}
+
+- (void)segmentControllerAction:(UISegmentedControl *)segment
+{
+    NSInteger index = segment.selectedSegmentIndex;
+    if(index == 1) {
+        _selectedIdx = 1;
+        [self reloadTableView];
+        [self.tableView reloadData];
+    } else {
+        _selectedIdx = 0;
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)import{
@@ -1501,15 +1623,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void) reloadTableView {
     
-    [_datas removeAllObjects];
-    [_datas addObjectsFromArray:[[DataManager shareManager] findScript:1]];
+    [self checkData];
+    
+    long count = 0;
+
+    if(_selectedIdx == 1) {
+        count = self.stopDatas.count;
+    } else {
+        count = self.activeDatas.count;
+    }
     
     self.tableView.hidden = _datas.count == 0;
     self.emptyTipsView.hidden = _datas.count > 0;
-    
+
     NSString *scriptCount = @"";
-    if (_datas.count > 0){
-        scriptCount = [NSString stringWithFormat:@"(%ld)",_datas.count];
+    if (count > 0){
+        scriptCount = [NSString stringWithFormat:@"(%ld)",count];
     }
     self.navigationItem.title = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"settings.library","Library"),scriptCount];
     
@@ -1546,6 +1675,20 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
     return _datas;
+}
+
+- (NSMutableArray *)activeDatas {
+    if (_activeDatas == nil) {
+        _activeDatas = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _activeDatas;
+}
+
+- (NSMutableArray *)stopDatas {
+    if (_stopDatas == nil) {
+        _stopDatas = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _stopDatas;
 }
 
 - (NSArray<UserScript *> *)userscripts{
@@ -1704,9 +1847,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (_EmptyTipsView *)emptyTipsView{
     if (nil == _emptyTipsView){
 #ifdef Mac
-        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
+        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar + 50, self.view.width, self.view.height - kMacToolbar)];
 #else
         _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:self.view.bounds];
+        _emptyTipsView.top = self.view.top + 50;
 #endif
         _emptyTipsView.hidden = YES;
         [_emptyTipsView.addButton addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];

@@ -22,6 +22,8 @@
 #import "ImageHelper.h"
 #import "DeviceHelper.h"
 #import "SYWebsiteViewController.h"
+#import "SYSubmitScriptSlideController.h"
+#import "SYReportSlideController.h"
 
 #import "QuickAccess.h"
 
@@ -42,7 +44,8 @@
 @property (nonatomic, assign) bool needExpand;
 
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
-
+@property (nonatomic, strong) SYSubmitScriptSlideController *sYSubmitScriptSlideController;
+@property (nonatomic, strong) SYReportSlideController *sYReportSlideController;
 
 @end
 
@@ -570,10 +573,115 @@
          [cell.contentView  addSubview:grantsListView];
          
          [grantsListView addGestureRecognizer:tapGesture];
-
+          top = line2.bottom + 13;
+     
      }
+
+     
+     UILabel *interactionLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+     interactionLabel.font = FCStyle.title3Bold;
+     interactionLabel.textColor = FCStyle.fcBlack;
+     interactionLabel.textAlignment = NSTextAlignmentLeft;
+     interactionLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+     interactionLabel.text =NSLocalizedString(@"Interaction", @"");
+     [cell.contentView addSubview:interactionLabel];
+
+     top = interactionLabel.bottom + 13;
+
     
+     if(self.script.downloadUrl != NULL && self.script.downloadUrl.length > 0) {
+          NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+           [set addCharactersInString:@"#"];
+          NSURL *url = [NSURL URLWithString:[self.script.downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]];
+          if(![url.host containsString:@"stayfork.app"]) {
+               UILabel *grantsLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+               grantsLabel.font = FCStyle.body;
+               grantsLabel.textColor = FCStyle.accent;
+               grantsLabel.textAlignment = NSTextAlignmentLeft;
+               grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+               grantsLabel.text =NSLocalizedString(@"Submit to Stay Fork", @"");
+               grantsLabel.top = top;
+               [cell.contentView addSubview:grantsLabel];
+               
+               
+               UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+               line2.backgroundColor = FCStyle.fcSeparator;
+               line2.top =  grantsLabel.bottom + 8;
+               line2.left = 15;
+               [cell.contentView addSubview:line2];
+               top = line2.bottom + 13;
+               UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showSubmitView)];
+               UIView *grantsListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+               grantsListView.left = left;
+               grantsListView.centerY = grantsLabel.centerY;
+               grantsListView.userInteractionEnabled = true;
+               [grantsListView addGestureRecognizer:tapGesture];
+               [cell.contentView  addSubview:grantsListView];
+               
+               UIImageView *upImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 19)];
+               UIImage *image = [UIImage systemImageNamed:@"arrow.up"
+                                        withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+               image = [image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+               upImageView.right = self.view.width - 26;
+               upImageView.centerY = grantsLabel.centerY;
+               [upImageView setImage:image];
+               [cell.contentView addSubview:upImageView];
+               
+          }
+          
+     }
+     
+     UILabel *reportLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 250 , 21)];
+     reportLabel.font = FCStyle.body;
+     reportLabel.textColor = FCStyle.accent;
+     reportLabel.textAlignment = NSTextAlignmentLeft;
+     reportLabel.lineBreakMode= NSLineBreakByTruncatingTail;
+     reportLabel.text =NSLocalizedString(@"Report a problem", @"");
+     reportLabel.top = top;
+     [cell.contentView addSubview:reportLabel];
+     
+     UIView *line3 = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width - 30, 0.5)];
+     line3.backgroundColor = FCStyle.fcSeparator;
+     line3.top =  reportLabel.bottom + 8;
+     line3.left = 15;
+     [cell.contentView addSubview:line3];
+     
+     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showReportView)];
+     UIView *reportView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 21)];
+     reportView.left = left;
+     reportView.centerY = reportLabel.centerY;
+     reportView.userInteractionEnabled = true;
+     [reportView addGestureRecognizer:tapGesture];
+     [cell.contentView  addSubview:reportView];
+     
+     
+     UIImageView *upImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 21, 19)];
+     UIImage *image = [UIImage systemImageNamed:@"exclamationmark.bubble"
+                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+     image = [image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+     upImageView.right = self.view.width - 26;
+     upImageView.centerY = reportLabel.centerY;
+     [upImageView setImage:image];
+     [cell.contentView addSubview:upImageView];
+     
+     
+     
+     
     return cell;
+}
+
+- (void)showReportView {
+     if(!self.sYReportSlideController.isShown) {
+          [self.sYReportSlideController show];
+     }
+}
+
+- (void)showSubmitView {
+     if(!self.sYSubmitScriptSlideController.isShown) {
+          self.sYSubmitScriptSlideController.controller = self.navigationController;
+          self.sYSubmitScriptSlideController.script = self.script;
+          [self.sYSubmitScriptSlideController show];
+     }
 }
 
 - (void)showDisabledWebsites {
@@ -1331,6 +1439,19 @@
     return _sYTextInputViewController;
 }
 
+- (SYSubmitScriptSlideController *)sYSubmitScriptSlideController {
+     if(nil == _sYSubmitScriptSlideController) {
+          _sYSubmitScriptSlideController = [[SYSubmitScriptSlideController alloc] init];
+     }
+     return _sYSubmitScriptSlideController;
+}
+
+- (SYReportSlideController *)sYReportSlideController {
+     if(nil == _sYReportSlideController) {
+          _sYReportSlideController = [[SYReportSlideController alloc] init];
+     }
+     return _sYReportSlideController;
+}
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
