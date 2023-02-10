@@ -56,6 +56,9 @@ settings.termOfUse="Term Of Use";
 settings.privacyPolicy="Privacy Policy";
 settings.plan="Plan";
 settings.getStarted="Get Started";
+settings.DOWNLOAD="DOWNLOAD";
+settings.M3U8Concurrency="M3U8 download concurrency";
+settings.Concurrency="Concurrency";
 
 unsupportedFileFormat = "対応していないファイルタイプ";
 ok = "OK";
@@ -218,6 +221,9 @@ Name="Name";
 Title="Title";
 SaveTo="Save to";
 StartDownload="Start download";
+Parse="Parse";
+Parsing="Parsing...";
+ParseFailed="Parse failed";
 
 Downloader="Downloader";
 SearchVideo="Search download videos";

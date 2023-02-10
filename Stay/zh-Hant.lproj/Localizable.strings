@@ -54,6 +54,9 @@ settings.termOfUse="使用條款";
 settings.privacyPolicy="隱私策略";
 settings.plan="開發計劃";
 settings.getStarted="開始使用";
+settings.DOWNLOAD="下載";
+settings.M3U8Concurrency="M3U8下載並發數";
+settings.Concurrency="並發數";
 
 unsupportedFileFormat = "不支持的文件格式";
 ok = "確認";
@@ -217,6 +220,9 @@ Name="名稱";
 Title="標題";
 SaveTo="保存到";
 StartDownload="開始下載";
+Parse="解析";
+Parsing="解析中...";
+ParseFailed="解析失敗";
 
 Downloader="下載器";
 SearchVideo="搜索已下載的視頻";

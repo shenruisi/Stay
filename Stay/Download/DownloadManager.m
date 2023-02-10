@@ -12,6 +12,9 @@
 #import "M3U8Parser.h"
 #import <ffmpegkit/FFmpegKit.h>
 #import "FWEncryptorAES.h"
+#import "NSString+m3u8.h"
+#import "NSURL+m3u8.h"
+#import "FCConfig.h"
 
 @implementation Request
 
@@ -115,6 +118,7 @@
     dispatch_queue_t _dataQueue;
     dispatch_queue_t _m3u8StateQueue;
     dispatch_queue_t _m3u8TranscodeQueue;
+    NSInteger _m3u8Concurrency;
 }
 
 @property (nonatomic, strong) NSString *dataPath;
@@ -142,6 +146,7 @@ static DownloadManager *instance = nil;
         _dataQueue = dispatch_queue_create([@"downloader.session.data.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
         _m3u8StateQueue = dispatch_queue_create([@"downloader.m3u8.state.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
         _m3u8TranscodeQueue = dispatch_queue_create([@"downloader.m3u8.transcode.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
+        _m3u8Concurrency = [[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency];
     }
     
     return self;
@@ -197,11 +202,12 @@ static DownloadManager *instance = nil;
                 sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
             }
             if (sessionTask == nil) {
-                sessionTask = [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:request.url]];
+                sessionTask = [self.downloadSession downloadTaskWithRequest:[request.url getRequest]];
             }
             [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
         }
         if (sessionTask != nil) {
+            sessionTask.priority = 1.0;
             @synchronized (self.sessionDict) {
                 self.sessionDict[sessionTask] = task;
             }
@@ -234,10 +240,11 @@ static DownloadManager *instance = nil;
                     [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 }
                 if (sessionTask == nil) {
-                    sessionTask = [self.downloadSession downloadTaskWithURL:sessionState.sessionTask.originalRequest.URL];
+                    sessionTask = [self.downloadSession downloadTaskWithRequest:[sessionState.sessionTask.originalRequest.URL getRequest]];
                 }
                 sessionState.sessionTask = sessionTask;
                 if (sessionState.sessionTask != nil) {
+                    sessionState.sessionTask.priority = 1.0;
                     @synchronized (self.sessionDict) {
                         self.sessionDict[sessionState.sessionTask] = task;
                     }
@@ -385,12 +392,17 @@ static DownloadManager *instance = nil;
 - (NSURLSession *)downloadSession {
     if (nil == _downloadSession) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"normal.downloader"];
+        config.HTTPMaximumConnectionsPerHost = 65535;
         config.shouldUseExtendedBackgroundIdleMode = YES;
         [config setHTTPAdditionalHeaders:@{@"User-Agent" : @"Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Mobile/15E148 Safari/604.1"}];
         _downloadSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     }
     
     return _downloadSession;
+}
+
+- (void)setM3U8Concurrency:(int)concurrency {
+    _m3u8Concurrency = concurrency;
 }
 
 - (void)startM3U8Task:(Task *)task withURL:(NSURL *)url {
@@ -460,7 +472,7 @@ static DownloadManager *instance = nil;
                     if ([tsURL hasPrefix:@"http"] && ![currURLs containsObject:tsURL]) {
                         [self addTsSession:tsURL withTaskPath:taskPath andTask:task];
                         count++;
-                        if (count > 3) {
+                        if (count >= _m3u8Concurrency) {
                             break;
                         }
                     }
@@ -483,10 +495,11 @@ static DownloadManager *instance = nil;
         sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
     }
     if (sessionTask == nil) {
-        sessionTask = [self.downloadSession downloadTaskWithURL:[NSURL URLWithString:tsURL]];
+        sessionTask = [self.downloadSession downloadTaskWithRequest:[tsURL getRequest]];
     };
     [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
     if (sessionTask != nil) {
+        sessionTask.priority = 1.0;
         @synchronized (self.sessionDict) {
             self.sessionDict[sessionTask] = task;
         }

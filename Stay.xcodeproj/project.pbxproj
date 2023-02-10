@@ -63,6 +63,8 @@
 		3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
 		3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
 		3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
+		3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C919713299297D500485423 /* SYConcurrencyViewController.m */; };
+		3C919715299297D500485423 /* SYConcurrencyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C919713299297D500485423 /* SYConcurrencyViewController.m */; };
 		3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
 		3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
 		3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B81297029F40068231A /* M3U8ExtXKey.m */; };
@@ -87,6 +89,8 @@
 		3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA92971813E0068231A /* NSArray+m3u8.m */; };
 		3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAC2971813E0068231A /* NSURL+m3u8.m */; };
 		3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */; };
+		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
+		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
@@ -351,6 +355,10 @@
 		58AC12ED2860781F00875D6D /* FCCarbon.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12EC2860781F00875D6D /* FCCarbon.m */; };
 		58AC12F428607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
+		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
+		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
+		58C663882990F11B00B00110 /* sinffer.js in Resources */ = {isa = PBXBuildFile; fileRef = 58C663872990F11B00B00110 /* sinffer.js */; };
+		58C663892990F11B00B00110 /* sinffer.js in Resources */ = {isa = PBXBuildFile; fileRef = 58C663872990F11B00B00110 /* sinffer.js */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
 		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
 		58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */; };
@@ -641,6 +649,8 @@
 		3C8388EB2934F56C007563E6 /* DMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMStore.m; sourceTree = "<group>"; };
 		3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		3C919712299297D500485423 /* SYConcurrencyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYConcurrencyViewController.h; sourceTree = "<group>"; };
+		3C919713299297D500485423 /* SYConcurrencyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYConcurrencyViewController.m; sourceTree = "<group>"; };
 		3C949B7B297029F30068231A /* M3U8MediaPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8MediaPlaylist.h; sourceTree = "<group>"; };
 		3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8MediaPlaylist.m; sourceTree = "<group>"; };
 		3C949B7D297029F30068231A /* M3U8Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8Parser.h; sourceTree = "<group>"; };
@@ -674,6 +684,8 @@
 		3C949BAB2971813E0068231A /* M3U8SegmentInfoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8SegmentInfoList.h; sourceTree = "<group>"; };
 		3C949BAC2971813E0068231A /* NSURL+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+m3u8.m"; sourceTree = "<group>"; };
 		3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8PlaylistModel.m; sourceTree = "<group>"; };
+		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
+		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalItemSwitchView.m; sourceTree = "<group>"; };
@@ -857,6 +869,9 @@
 		58AC12EC2860781F00875D6D /* FCCarbon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCCarbon.m; sourceTree = "<group>"; };
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
+		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
+		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
+		58C663872990F11B00B00110 /* sinffer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sinffer.js; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
 		58CF689D286D917800A52B2B /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		58CF689F286D91B200A52B2B /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
@@ -1616,6 +1631,16 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		58C663792990E04300B00110 /* VideoParser */ = {
+			isa = PBXGroup;
+			children = (
+				58C663872990F11B00B00110 /* sinffer.js */,
+				58C6637A2990E05F00B00110 /* VideoParser.h */,
+				58C6637B2990E05F00B00110 /* VideoParser.m */,
+			);
+			path = VideoParser;
+			sourceTree = "<group>";
+		};
 		58D1B44D28893D27009BD608 /* IAP */ = {
 			isa = PBXGroup;
 			children = (
@@ -1939,6 +1964,8 @@
 				84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */,
 				84B635182978BF660000DAF1 /* SYDownloadPreviewModalViewController.h */,
 				84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */,
+				3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */,
+				3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -2218,6 +2245,7 @@
 		84F48319273A75D300217BB3 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				58C663792990E04300B00110 /* VideoParser */,
 				84BDC83D27455CA2005367C6 /* SYDefines.h */,
 				84C1ED242765E29D00651DF9 /* NSString+Urlencode.h */,
 				84C1ED252765E29D00651DF9 /* NSString+Urlencode.m */,
@@ -2259,6 +2287,8 @@
 				84AA932328A63440003E3967 /* SYAppearanceViewController.h */,
 				84AA932428A63440003E3967 /* SYAppearanceViewController.m */,
 				3C72260C288C243900FF0F68 /* SYSubscribeController.swift */,
+				3C919712299297D500485423 /* SYConcurrencyViewController.h */,
+				3C919713299297D500485423 /* SYConcurrencyViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2504,6 +2534,7 @@
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
+				58C663882990F11B00B00110 /* sinffer.js in Resources */,
 				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
@@ -2603,6 +2634,7 @@
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
+				58C663892990F11B00B00110 /* sinffer.js in Resources */,
 				588202862859E73900B2721A /* more@3x.png in Resources */,
 				588202872859E73900B2721A /* typescript.html in Resources */,
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
@@ -2859,6 +2891,7 @@
 				58FEB1FA283B5B3E00BC2A92 /* ModalViewController.m in Sources */,
 				3C358D53297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */,
+				58C6637C2990E05F00B00110 /* VideoParser.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
@@ -2885,6 +2918,7 @@
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				3C8388EC2934F56C007563E6 /* DMStore.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
+				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
@@ -2910,6 +2944,7 @@
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				8460E47C2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
@@ -2989,6 +3024,7 @@
 				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				588402CA295D3272002CA227 /* ToastCenter.m in Sources */,
+				3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
 				582061E7294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
@@ -3092,6 +3128,7 @@
 				588202692859E73900B2721A /* SharedStorageManager.m in Sources */,
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
 				3C8388C72931ADC5007563E6 /* FCTab.m in Sources */,
+				3C919715299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
@@ -3123,6 +3160,7 @@
 				58D1B45928893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				3C949BA1297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
+				58C6637D2990E05F00B00110 /* VideoParser.m in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				3C358D592973E59500118063 /* NSURL+m3u8.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
@@ -3423,7 +3461,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 117;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -3438,7 +3476,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.6;
+				MARKETING_VERSION = 2.3.7;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -3457,7 +3495,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 117;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -3472,7 +3510,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.6;
+				MARKETING_VERSION = 2.3.7;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -3496,7 +3534,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 117;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3524,7 +3562,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.6;
+				MARKETING_VERSION = 2.3.7;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -3549,7 +3587,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 117;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3577,7 +3615,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.6;
+				MARKETING_VERSION = 2.3.7;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;

@@ -35,7 +35,7 @@
 
 - (id)initWithURL:(NSURL *)URL error:(NSError **)error {
     
-    NSString *str = [[NSString alloc] initWithContentsOfURL:URL encoding:NSUTF8StringEncoding error:error];
+    NSString *str = [[NSString alloc] initWithContentsOfURL:URL headers:[URL getHeaders] encoding:NSUTF8StringEncoding error:error];
     if (*error) {
         return nil;
     }
