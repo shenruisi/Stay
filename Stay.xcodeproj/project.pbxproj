@@ -89,6 +89,8 @@
 		3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA92971813E0068231A /* NSArray+m3u8.m */; };
 		3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAC2971813E0068231A /* NSURL+m3u8.m */; };
 		3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */; };
+		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
+		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
@@ -674,6 +676,8 @@
 		3C949BAB2971813E0068231A /* M3U8SegmentInfoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8SegmentInfoList.h; sourceTree = "<group>"; };
 		3C949BAC2971813E0068231A /* NSURL+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+m3u8.m"; sourceTree = "<group>"; };
 		3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8PlaylistModel.m; sourceTree = "<group>"; };
+		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
+		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalItemSwitchView.m; sourceTree = "<group>"; };
@@ -1944,6 +1948,8 @@
 				84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */,
 				84B635182978BF660000DAF1 /* SYDownloadPreviewModalViewController.h */,
 				84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */,
+				3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */,
+				3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -2911,6 +2917,7 @@
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
+				3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				3C949BAE2971813E0068231A /* NSString+m3u8.m in Sources */,
@@ -2989,6 +2996,7 @@
 				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				588402CA295D3272002CA227 /* ToastCenter.m in Sources */,
+				3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
 				582061E7294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,

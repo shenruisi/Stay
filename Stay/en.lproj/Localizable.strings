@@ -221,6 +221,9 @@ Name="Name";
 Title="Title";
 SaveTo="Save to";
 StartDownload="Start download";
+Parse="Parse";
+Parsing="Parsing...";
+ParseFailed="Parse failed";
 
 Downloader="Downloader";
 SearchVideo="Search download videos";

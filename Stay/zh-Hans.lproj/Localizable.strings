@@ -222,6 +222,9 @@ Name="名称";
 Title="标题";
 SaveTo="保存到";
 StartDownload="开始下载";
+Parse="解析";
+Parsing="解析中...";
+ParseFailed="解析失败";
 
 Downloader="下载器";
 SearchVideo="搜索已下载的视频";

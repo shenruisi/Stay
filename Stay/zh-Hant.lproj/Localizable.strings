@@ -220,6 +220,9 @@ Name="名稱";
 Title="標題";
 SaveTo="保存到";
 StartDownload="開始下載";
+Parse="解析";
+Parsing="解析中...";
+ParseFailed="解析失敗";
 
 Downloader="下載器";
 SearchVideo="搜索已下載的視頻";
