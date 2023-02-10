@@ -20,6 +20,7 @@
 #import "TimeHelper.h"
 #import "SYAboutViewController.h"
 #import "SYAppearanceViewController.h"
+#import "SYConcurrencyViewController.h"
 #import "SYFlashViewController.h"
 #import "SharedStorageManager.h"
 
@@ -479,6 +480,56 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 @end
 
+@interface _MoreNoteCell : _MoreTableViewCell
+
+@property (nonatomic, strong) UILabel *noteLabel;
+@end
+
+
+@implementation _MoreNoteCell
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self noteLabel];
+    }
+    
+    return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    [self.noteLabel sizeToFit];
+    self.noteLabel.frame = CGRectMake(self.width - 41 - self.noteLabel.width,
+                                          (self.height - self.noteLabel.height) / 2,
+                                          self.noteLabel.width,
+                                          self.noteLabel.height);
+}
+
+- (void)setEntity:(NSDictionary<NSString *, NSString *>  *)entity{
+    [super setEntity:entity];
+    
+    NSString *type = entity[@"type"];
+    if ([@"M3U8Concurrency" isEqualToString:type]) {
+        self.noteLabel.text = [@([[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency]) stringValue];
+    } else {
+        self.noteLabel.text = nil;
+    }
+}
+
+
+- (UILabel *)noteLabel{
+    if (nil == _noteLabel){
+        _noteLabel = [[UILabel alloc] init];
+        _noteLabel.font = FCStyle.footnote;
+        _noteLabel.textColor = FCStyle.fcSecondaryBlack;
+        [self addSubview:_noteLabel];
+    }
+    return _noteLabel;
+}
+
+@end
+
 @interface SYMoreViewController ()<
  UITableViewDelegate,
  UITableViewDataSource
@@ -577,6 +628,9 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     else if ([entity[@"type"] isEqualToString:@"badge"]){
         cell = [[_BadgeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
+    else if ([entity[@"type"] isEqualToString:@"M3U8Concurrency"]){
+        cell = [[_MoreNoteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
     else{
         cell = [[_MoreTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
@@ -633,6 +687,14 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             [self presentViewController:cer animated:YES completion:nil];
 #endif
 
+        }  else if([type isEqualToString:@"M3U8Concurrency"]) {
+#ifdef Mac
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYConcurrencyViewController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController pushViewController:[[SYConcurrencyViewController alloc] init] animated:YES];
+#endif
         }
     }
 }
@@ -806,6 +868,14 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                     @{
                       @"type":@"iCloudOperate",
                     }
+                ]
+            },
+            @{
+                @"section":NSLocalizedString(@"settings.DOWNLOAD",@""),
+                @"cells":@[
+                    @{@"title":NSLocalizedString(@"settings.M3U8Concurrency",@""),
+                      @"type":@"M3U8Concurrency",
+                    },
                 ]
             },
             @{

@@ -46,6 +46,8 @@
 #import <Bugsnag/Bugsnag.h>
 #endif
 
+#import "VideoParser.h"
+
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
@@ -206,6 +208,13 @@
             
     }];
     
+    
+    [[VideoParser shared] parse:@"https://m.toutiao.com/video/7182409246737334787/?from_page_type=feed&upstream_biz=toutiao_m&W2atIF=1" completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
+        NSLog(@"videoItems %@",videoItems);
+    }];
+    [[VideoParser shared] parse:@"http://xhslink.com/qJdpan" completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
+        NSLog(@"videoItems %@",videoItems);
+    }];
     
     return YES;
 }

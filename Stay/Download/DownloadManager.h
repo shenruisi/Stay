@@ -56,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pause:(NSString *)taskId;
 - (void)pauseAll;
 - (Task *)queryByTaskId:(NSString *)taskId;
+
+- (void)setM3U8Concurrency:(int)concurrency;
 @end
 
 NS_ASSUME_NONNULL_END

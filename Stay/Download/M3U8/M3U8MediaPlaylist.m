@@ -52,7 +52,7 @@
     
     self.originalURL = URL;
     
-    NSString *string = [[NSString alloc] initWithContentsOfURL:URL encoding:NSUTF8StringEncoding error:error];
+    NSString *string = [[NSString alloc] initWithContentsOfURL:URL headers:[URL getHeaders] encoding:NSUTF8StringEncoding error:error];
     
     return [self initWithContent:string type:type baseURL:URL.m3u_realBaseURL];
 }

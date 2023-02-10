@@ -42,6 +42,7 @@ static FCConfig *k_config = nil;
         [self setStringValueOfKey:GroupUserDefaultsKeyDeviceUUID value:deviceID setWhenNil:YES];
         [SharedStorageManager shared].userDefaultsExRO.deviceID = deviceID;
         [self setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"System" setWhenNil:YES];
+        [self setIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency value:10 setWhenNil:YES];
     }
     
     return self;
