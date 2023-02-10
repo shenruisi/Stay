@@ -6,10 +6,13 @@
 //
 
 #import "ModalViewController.h"
+#import "UserScript.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SYReportModalViewController : ModalViewController
+
+@property (nonatomic, strong) UserScript *script;
 
 @end
 

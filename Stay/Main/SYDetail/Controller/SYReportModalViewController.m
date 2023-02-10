@@ -101,7 +101,6 @@
 
     if(btn.selected) {
         btn.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
-    
         [self.errors addObject:btn.titleLabel.text];
     } else {
         btn.backgroundColor = FCStyle.background;
@@ -110,7 +109,7 @@
 }
 
 - (void)reportError {
-    NSString *url = [NSString stringWithFormat:@"mailto:feedback@fastclip.app?subject=Feedback-%@",NSLocalizedString(@"FeedbackEnabling", @"")];
+    NSString *url = [NSString stringWithFormat:@"mailto:feedback@fastclip.app?subject=Feedback-subject%@&body=%@",self.script.name, self.errors[0]];
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[url  stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
                                        options:@{} completionHandler:^(BOOL succeed){}];

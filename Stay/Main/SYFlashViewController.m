@@ -56,15 +56,12 @@
             [QuickAccess primaryController].selectedIndex = 1;
         }
 #else
-    if (FCDeviceTypeIPad == [DeviceHelper type]){
-        
-    } else {
+    if (FCDeviceTypeIPhone == [DeviceHelper type]){
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
             ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 1;
         }
     }
 #endif
-//    nav.tabBarController.selectedIndex = 1;
 }
 
 - (FirstFlashView *)firstView {
@@ -93,5 +90,12 @@
     return _firstView;
 }
 
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"closeFlash"
+                                                  object:nil];
+    
+}
 
 @end
