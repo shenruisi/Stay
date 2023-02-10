@@ -201,8 +201,10 @@
     }
     
     
+    NSArray *tags = [self.tagElements.text componentsSeparatedByString:@","];
+    
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-        [[SYNetworkUtils shareInstance] requestPOST: @"https://api.shenyin.name/stay-fork/submit?collector" params:@{@"biz":@{@"uuid":self.script.uuid,@"script_url":self.script.downloadUrl,@"platforms":self.platforms,@"mail":self.emailElements.text,@"tags":self.tagElements.text }} successBlock:^(NSString * _Nonnull responseObject) {
+        [[SYNetworkUtils shareInstance] requestPOST: @"https://api.shenyin.name/stay-fork/submit?collector" params:@{@"biz":@{@"uuid":self.script.uuid,@"script_url":self.script.downloadUrl,@"platforms":self.platforms,@"mail":self.emailElements.text,@"tags":tags }} successBlock:^(NSString * _Nonnull responseObject) {
             
             UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"UploadSuccess", @"")
                                                                            message:@""

@@ -255,6 +255,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, strong) NSMutableArray *activeDatas;
 @property (nonatomic, strong) NSMutableArray *stopDatas;
 
+@property (nonatomic, strong) NSMutableArray *handStopDatas;
+
+@property (nonatomic, strong) NSMutableArray *handActiveDatas;
+
 
 @property (nonatomic, strong) NSMutableArray *results;
 
@@ -445,6 +449,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }
     }
+    
+    if(self.handActiveDatas.count > 0) {
+        [_stopDatas replaceObjectsInRange:NSMakeRange(0,0)
+                     withObjectsFromArray:self.handActiveDatas];
+    }
+    
+    if(self.handStopDatas.count > 0) {
+        [_activeDatas replaceObjectsInRange:NSMakeRange(0,0)
+                     withObjectsFromArray:self.handStopDatas];
+    }
+    
+    
 }
 
 - (void)iCloudDidChangeHandler:(NSNotification *)note{
@@ -1374,12 +1390,21 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                 }
                 if (model.active == 1) {
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+                    
+                    model.active = 0;
+                    [weakSelf.handStopDatas addObject:model];
+                    [weakSelf.handActiveDatas removeObject:model];
+                    
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
                         @"uuid":model.uuid
                     }];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 } else if (model.active == 0) {
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+                    
+                    model.active = 1;
+                    [weakSelf.handActiveDatas addObject:model];
+                    [weakSelf.handStopDatas removeObject:model];
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
                         @"uuid":model.uuid
                     }];
@@ -1457,6 +1482,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)segmentControllerAction:(UISegmentedControl *)segment
 {
     NSInteger index = segment.selectedSegmentIndex;
+    [self.handStopDatas removeAllObjects];
+    [self.handActiveDatas removeAllObjects];
     if(index == 1) {
         _selectedIdx = 1;
         [self reloadTableView];
@@ -1859,6 +1886,20 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
     return _emptyTipsView;
+}
+
+- (NSMutableArray *)handStopDatas {
+    if(nil ==  _handStopDatas) {
+        _handStopDatas = [NSMutableArray array];
+    }
+    return _handStopDatas;
+}
+
+- (NSMutableArray *)handActiveDatas {
+    if (nil == _handActiveDatas) {
+        _handActiveDatas = [NSMutableArray array];
+    }
+    return _handActiveDatas;
 }
 
 - (NSString *)getNowDate {
