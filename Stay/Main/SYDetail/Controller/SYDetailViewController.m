@@ -673,6 +673,7 @@
 - (void)showReportView {
      if(!self.sYReportSlideController.isShown) {
           self.sYReportSlideController.script = self.script;
+          self.sYReportSlideController.controller = self.navigationController;
           [self.sYReportSlideController show];
      }
 }
