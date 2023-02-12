@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYReportModalViewController : ModalViewController
 
 @property (nonatomic, strong) UserScript *script;
+@property(nonatomic,strong) UINavigationController *nav;
 
 @end
 

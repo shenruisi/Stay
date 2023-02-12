@@ -26,6 +26,7 @@
     if (nil == _navController){
         SYReportModalViewController *cer = [[SYReportModalViewController alloc] init];
         cer.script = self.script;
+        cer.nav = self.controller;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer slideController:self];
         
     }

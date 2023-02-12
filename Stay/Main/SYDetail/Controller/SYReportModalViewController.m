@@ -15,8 +15,9 @@
 
 @interface SYReportModalViewController()
 @property (nonatomic, strong) UITextView *others;
-@property (nonatomic, strong) NSMutableArray *errors;
+@property (nonatomic, strong) NSString *errors;
 @property (nonatomic, strong) UIButton *submitButton;
+@property (nonatomic, strong) NSMutableArray *btnArray;
 
 @end
 
@@ -44,6 +45,7 @@
     CGFloat btnTop = platformLabel.bottom + 12;
     for(int i = 0; i < 3;i++) {
         UIButton *btn = [self createBtn:array[i] tag:i];
+        [self.btnArray addObject:btn];
         btn.left = btnleft;
         btn.top = btnTop;
   
@@ -63,7 +65,7 @@
     otherLabel.textColor = FCStyle.fcSecondaryBlack;
     otherLabel.textAlignment = NSTextAlignmentLeft;
     otherLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-    otherLabel.text =NSLocalizedString(@"Others", @"");
+    otherLabel.text =NSLocalizedString(@"DETAILS", @"");
     otherLabel.top = top;
     [self.view addSubview:otherLabel];
     
@@ -97,19 +99,58 @@
 
 - (void)changeBtnStatus:(UIButton *)btn {
     
+    for (UIButton *oldBtn in self.btnArray) {
+        if (![oldBtn isEqual:btn]) {
+            oldBtn.selected = NO;
+            oldBtn.backgroundColor = FCStyle.background;
+        }
+    }
+    
     btn.selected = !btn.selected;
 
     if(btn.selected) {
         btn.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
-        [self.errors addObject:btn.titleLabel.text];
+        self.errors = btn.titleLabel.text;
     } else {
         btn.backgroundColor = FCStyle.background;
-        [self.errors removeObject:btn.titleLabel.text];
+        self.errors = btn.titleLabel.text;
     }
 }
 
 - (void)reportError {
-    NSString *url = [NSString stringWithFormat:@"mailto:feedback@fastclip.app?subject=Feedback-subject%@&body=%@",self.script.name, self.errors[0]];
+    
+    if(self.errors == NULL || self.errors.length <= 0) {
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"TypeNotEmpty", @"")
+                                                                       message:@""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        
+        }];
+        [onlyOneAlert addAction:onlyOneConform];
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+        return;
+    }
+    
+    if(self.others.text == NULL || self.others.text.length <= 0) {
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"DetailsNotEmpty", @"")
+                                                                       message:@""
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        
+        }];
+        [onlyOneAlert addAction:onlyOneConform];
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+        return;
+    }
+    
+    
+    NSString *url = [NSString stringWithFormat:@"mailto:feedback@fastclip.app?subject=Feedback-subject%@&body=%@",self.script.name, [NSString stringWithFormat:@"%@%@",self.errors,self.others.text]];
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[url  stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]
                                        options:@{} completionHandler:^(BOOL succeed){}];
@@ -144,6 +185,13 @@
     }
     
     return _submitButton;
+}
+
+- (NSMutableArray *)btnArray {
+    if (nil == _btnArray) {
+        _btnArray = [NSMutableArray array];
+    }
+    return _btnArray;
 }
 
 - (CGSize)mainViewSize{
