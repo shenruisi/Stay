@@ -223,6 +223,11 @@ StartDownload="開始下載";
 Parse="解析";
 Parsing="解析中...";
 ParseFailed="解析失敗";
+Quit="退出";
+ParseWeb="網頁解析中...";
+DownloadLink="下載鏈接";
+Copy="複製";
+SelectVideos="請選擇視頻";
 
 Downloader="下載器";
 SearchVideo="搜索已下載的視頻";
