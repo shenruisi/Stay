@@ -65,6 +65,8 @@
 		3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
 		3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C919713299297D500485423 /* SYConcurrencyViewController.m */; };
 		3C919715299297D500485423 /* SYConcurrencyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C919713299297D500485423 /* SYConcurrencyViewController.m */; };
+		3C91971C299688D900485423 /* SYParseDownloadModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C91971B299688D900485423 /* SYParseDownloadModalViewController.m */; };
+		3C91971D299688D900485423 /* SYParseDownloadModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C91971B299688D900485423 /* SYParseDownloadModalViewController.m */; };
 		3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
 		3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */; };
 		3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949B81297029F40068231A /* M3U8ExtXKey.m */; };
@@ -651,6 +653,8 @@
 		3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		3C919712299297D500485423 /* SYConcurrencyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYConcurrencyViewController.h; sourceTree = "<group>"; };
 		3C919713299297D500485423 /* SYConcurrencyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYConcurrencyViewController.m; sourceTree = "<group>"; };
+		3C91971A299688D900485423 /* SYParseDownloadModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseDownloadModalViewController.h; sourceTree = "<group>"; };
+		3C91971B299688D900485423 /* SYParseDownloadModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseDownloadModalViewController.m; sourceTree = "<group>"; };
 		3C949B7B297029F30068231A /* M3U8MediaPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8MediaPlaylist.h; sourceTree = "<group>"; };
 		3C949B7C297029F30068231A /* M3U8MediaPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8MediaPlaylist.m; sourceTree = "<group>"; };
 		3C949B7D297029F30068231A /* M3U8Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8Parser.h; sourceTree = "<group>"; };
@@ -1966,6 +1970,8 @@
 				84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */,
 				3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */,
 				3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */,
+				3C91971A299688D900485423 /* SYParseDownloadModalViewController.h */,
+				3C91971B299688D900485423 /* SYParseDownloadModalViewController.m */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -2885,6 +2891,7 @@
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
 				588402C9295D3272002CA227 /* ToastCenter.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
+				3C91971C299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
 				3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 				3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */,
 				84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
@@ -3093,6 +3100,7 @@
 				3C358D572973E58800118063 /* NSArray+m3u8.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				3C358D582973E58B00118063 /* NSString+m3u8.m in Sources */,
+				3C91971D299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
 				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,
 				582061D1294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,

@@ -224,6 +224,11 @@ StartDownload="Start download";
 Parse="Parse";
 Parsing="Parsing...";
 ParseFailed="Parse failed";
+Quit="Quit";
+ParseWeb="Parsing Webpage...";
+DownloadLink="Download Link";
+Copy="Copy";
+SelectVideos="Please select videos";
 
 Downloader="Downloader";
 SearchVideo="Search download videos";

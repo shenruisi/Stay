@@ -14,6 +14,8 @@
 #import "ModalSectionView.h"
 #import "FCStyle.h"
 #import "VideoParser.h"
+#import "SYDownloadModalViewController.h"
+#import "SYParseDownloadModalViewController.h"
 
 @interface SYParseModalViewController()<
  UITableViewDelegate,
@@ -24,6 +26,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<ModalItemElement *> *linkElements;
 @property (nonatomic, strong) UIButton *parseButton;
+@property (nonatomic, strong) SYParseDownloadModalViewController *parseDownloadController;
 @end
 
 @implementation SYParseModalViewController
@@ -162,25 +165,45 @@
         return;
     }
     
-    
-    
     NSString *link = self.linkElements[0].inputEntity.text;
     NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:@"\\s*https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]\\s*" options:NSRegularExpressionCaseInsensitive error:nil];
     NSTextCheckingResult *result = [regExp firstMatchInString:link options:0 range:NSMakeRange(0, [link length])];
     if (result != nil) {
-        [self.parseButton setEnabled:NO];
-        [self.parseButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Parsing", @"")
-                                                                                 attributes:@{
-                             NSForegroundColorAttributeName : UIColor.whiteColor,
-                             NSFontAttributeName : FCStyle.bodyBold}]
-                                        forState:UIControlStateNormal];
         NSString *targetUrl = [[link substringWithRange:[result rangeAtIndex:0]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        self.linkElements[0].inputEntity.text = targetUrl;
-        [self.tableView reloadData];
-        
-        [[VideoParser shared] parse:targetUrl completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
-            NSLog(@"videoItems %@",videoItems);
-        }];
+        NSURL *linkURL = [NSURL URLWithString:targetUrl];
+        if (linkURL != nil && ([linkURL.lastPathComponent hasSuffix:@".mp4"] || [linkURL.lastPathComponent hasSuffix:@".m3u8"])) {
+            SYDownloadModalViewController *cer = [[SYDownloadModalViewController alloc] init];
+            cer.dic = [NSMutableDictionary dictionaryWithDictionary:self.dic];
+            cer.dic[@"downloadUrl"] = targetUrl;
+            if(cer.dic[@"title"] == nil) {
+                cer.dic[@"title"] = linkURL.lastPathComponent;
+            }
+            cer.nav = self.nav;
+            [self.navigationController pushModalViewController:cer];
+        } else {
+            [self.parseButton setEnabled:NO];
+            [self.parseButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Parsing", @"")
+                                                                                     attributes:@{
+                                 NSForegroundColorAttributeName : UIColor.whiteColor,
+                                 NSFontAttributeName : FCStyle.bodyBold}]
+                                            forState:UIControlStateNormal];
+            
+            self.linkElements[0].inputEntity.text = targetUrl;
+            [self.tableView reloadData];
+            
+            self.parseDownloadController.nav = self.nav;
+            [self.navigationController pushModalViewController:self.parseDownloadController];
+            [self.parseDownloadController setData:[NSArray array]];
+            
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
+//            dispatch_get_main_queue(), ^{
+//                [self.parseDownloadController setData:[NSArray arrayWithObject:@{}]];
+//            });
+            [[VideoParser shared] parse:targetUrl completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
+                NSLog(@"videoItems %@",videoItems);
+                [self.parseDownloadController setData:videoItems];
+            }];
+        }
     } else {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"ParseFailed", @"")
                                                                        message:@""
@@ -223,38 +246,19 @@
     return _tableView;
 }
 
+- (SYParseDownloadModalViewController *)parseDownloadController {
+    if (nil == _parseDownloadController) {
+        _parseDownloadController = [[SYParseDownloadModalViewController alloc] init];
+    }
+    
+    return _parseDownloadController;
+}
+
 - (void)clear{
 }
 
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 220);
-}
-
-- (UIViewController *)findCurrentShowingViewControllerFrom:(UIViewController *)vc
-{
-    // 递归方法 Recursive method
-    UIViewController *currentShowingVC;
-    if ([vc presentedViewController]) {
-        // 当前视图是被presented出来的
-        UIViewController *nextRootVC = [vc presentedViewController];
-        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
-
-    } else if ([vc isKindOfClass:[UITabBarController class]]) {
-        // 根视图为UITabBarController
-        UIViewController *nextRootVC = [(UITabBarController *)vc selectedViewController];
-        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
-
-    } else if ([vc isKindOfClass:[UINavigationController class]]){
-        // 根视图为UINavigationController
-        UIViewController *nextRootVC = [(UINavigationController *)vc visibleViewController];
-        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
-
-    } else {
-        // 根视图为非导航类
-        currentShowingVC = vc;
-    }
-
-    return currentShowingVC;
 }
 
 @end
