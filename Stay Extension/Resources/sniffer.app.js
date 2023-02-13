@@ -30,7 +30,7 @@
       return res[1];
     },
     matchUrlInString: function(imgText){
-      const urlReg = new RegExp('(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
+      const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
       const imgMatchs = imgText.match(urlReg);
       //   poster = imgMatchs && imgMatchs.length ? imgMatchs[0] : '';
       if(imgMatchs && imgMatchs.length){
