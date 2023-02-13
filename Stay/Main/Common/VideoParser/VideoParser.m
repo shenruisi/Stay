@@ -47,7 +47,7 @@ static VideoParser *_kVideoParser;
         [config setPreferences:preferences];
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
-        NSString *sinffer = [self _getScript:@"sinffer"];
+        NSString *sinffer = [self _getScript:@"sniffer.app"];
         WKUserScript *userscript = [[WKUserScript alloc] initWithSource:sinffer injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
         [wkUController addUserScript:userscript];
         config.userContentController = wkUController;
