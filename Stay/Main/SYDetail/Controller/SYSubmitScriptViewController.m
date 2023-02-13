@@ -183,6 +183,21 @@
         [onlyOneAlert addAction:onlyOneConform];
         [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
         return;
+    } else {
+        if(![self isValidateEmail:self.emailElements.text]) {
+            UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"EmailError", @"")
+                                                                           message:@""
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+            
+            }];
+            [onlyOneAlert addAction:onlyOneConform];
+            [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+            return;
+        }
     }
     
     if(self.tagElements.text == NULL || self.tagElements.text.length <= 0) {
@@ -291,6 +306,19 @@
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 380);
 }
+
+-(BOOL)isValidateEmail:(NSString *)mail
+
+{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+
+    return [emailTest evaluateWithObject:mail];
+
+}
+
+
 
 
 @end
