@@ -442,11 +442,13 @@
          matchesLabel.top = top;
          [cell.contentView addSubview:matchesLabel];
          
-         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 25 , 15)];
          countLabel.font = FCStyle.footnote;
          countLabel.textColor = FCStyle.fcBlack;
          countLabel.textAlignment = NSTextAlignmentLeft;
          countLabel.text = [NSString stringWithFormat:@"%ld",matches.count];
+          [countLabel sizeToFit];
+
          countLabel.right =  self.view.width - 42;
          countLabel.centerY = matchesLabel.centerY;
          [cell.contentView addSubview:countLabel];
@@ -493,11 +495,13 @@
          grantsLabel.top = top;
          [cell.contentView addSubview:grantsLabel];
          
-         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 25 , 15)];
          countLabel.font = FCStyle.footnote;
          countLabel.textColor = FCStyle.fcBlack;
          countLabel.textAlignment = NSTextAlignmentLeft;
          countLabel.text = [NSString stringWithFormat:@"%ld",grants.count];
+          
+          [countLabel sizeToFit];
          countLabel.centerY = grantsLabel.centerY;
          countLabel.right =  self.view.width - 42;
          [cell.contentView addSubview:countLabel];
@@ -540,11 +544,13 @@
          grantsLabel.top = top;
          [cell.contentView addSubview:grantsLabel];
          
-         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+         UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 25 , 15)];
          countLabel.font = FCStyle.footnote;
          countLabel.textColor = FCStyle.fcBlack;
          countLabel.textAlignment = NSTextAlignmentLeft;
          countLabel.text = [NSString stringWithFormat:@"%ld",disabledWebsites.count];
+          [countLabel sizeToFit];
+
          countLabel.centerY = grantsLabel.centerY;
          countLabel.right =  self.view.width - 42;
          [cell.contentView addSubview:countLabel];
@@ -599,7 +605,7 @@
                grantsLabel.textColor = FCStyle.accent;
                grantsLabel.textAlignment = NSTextAlignmentLeft;
                grantsLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-               grantsLabel.text =NSLocalizedString(@"Submit to Stay Fork", @"");
+               grantsLabel.text =NSLocalizedString(@"SubmittoStayFork", @"");
                grantsLabel.top = top;
                [cell.contentView addSubview:grantsLabel];
                
@@ -636,7 +642,7 @@
      reportLabel.textColor = FCStyle.accent;
      reportLabel.textAlignment = NSTextAlignmentLeft;
      reportLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-     reportLabel.text =NSLocalizedString(@"Report a problem", @"");
+     reportLabel.text =NSLocalizedString(@"Reportaproblem", @"");
      reportLabel.top = top;
      [cell.contentView addSubview:reportLabel];
      
@@ -1300,7 +1306,7 @@
 
      
      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 58)];
-     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 90, 15)];
+     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 90, 16)];
      title.text = name;
      title.font = FCStyle.footnote;
      title.textColor = FCStyle.fcSecondaryBlack;
@@ -1319,7 +1325,7 @@
           imageView.top = title.bottom + 6;
           [view addSubview:imageView];
      } else {
-          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 15)];
+          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 16)];
           descLabel.font = FCStyle.subHeadlineBold;
           descLabel.textColor = descColor;
           descLabel.text = desc;
