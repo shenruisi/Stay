@@ -510,11 +510,12 @@
         matchesLabel.top = infoTop;
         [cell.contentView addSubview:matchesLabel];
         
-        UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+        UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 25 , 15)];
         countLabel.font = FCStyle.footnote;
         countLabel.textColor = FCStyle.fcBlack;
         countLabel.textAlignment = NSTextAlignmentLeft;
         countLabel.text = [NSString stringWithFormat:@"%ld",matches.count];
+        [countLabel sizeToFit];
         countLabel.right =  self.view.width - 42;
         countLabel.centerY = matchesLabel.centerY;
         [cell.contentView addSubview:countLabel];
@@ -563,11 +564,12 @@
         grantsLabel.top = infoTop;
         [cell.contentView addSubview:grantsLabel];
         
-        UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 20 , 15)];
+        UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(left , top, 25 , 15)];
         countLabel.font = FCStyle.footnote;
         countLabel.textColor = FCStyle.fcBlack;
         countLabel.textAlignment = NSTextAlignmentLeft;
         countLabel.text = [NSString stringWithFormat:@"%ld",grants.count];
+        [countLabel sizeToFit];
         countLabel.centerY = grantsLabel.centerY;
         countLabel.right =  self.view.width - 42;
         [cell.contentView addSubview:countLabel];
@@ -1341,7 +1343,7 @@
 
      
      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 58)];
-     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 15)];
+     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 18)];
      title.text = name;
      title.font = FCStyle.footnote;
      title.textColor = FCStyle.fcSecondaryBlack;
@@ -1360,7 +1362,7 @@
           imageView.top = title.bottom + 6;
           [view addSubview:imageView];
      } else {
-          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 15)];
+          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 18)];
           descLabel.font = FCStyle.subHeadlineBold;
           descLabel.textColor = descColor;
           descLabel.text = desc;
