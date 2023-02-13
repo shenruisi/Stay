@@ -75,7 +75,7 @@ const browser = __b;
         return res[1];
       },
       matchUrlInString: function(imgText){
-        const urlReg = new RegExp('(https?|http)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
+        const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
         const imgMatchs = imgText.match(urlReg);
         //   poster = imgMatchs && imgMatchs.length ? imgMatchs[0] : '';
         if(imgMatchs && imgMatchs.length){
@@ -152,9 +152,49 @@ const browser = __b;
         }
         return uuid.join('');
       }
-    
-
     }
+
+    /**
+     * longPress原型对象方法
+     * longPress
+     */
+    // Object.prototype.longPress = function (fun) {
+    //   const $this = this;
+    //   //定时器
+    //   let timeOutEvent = 0;
+
+    //   //开始按
+    //   $this.addEventListener('touchstart', function(event) {
+    //     //这里设置定时器，定义长按500毫秒触发长按事件，时间可以自己改，个人感觉500毫秒非常合适
+    //     timeOutEvent = setTimeout(function(){
+    //       longPressFun()
+    //     },500);
+    //   }, false);
+
+    //   //手释放，如果在500毫秒内就释放，则取消长按事件，此时可以执行onclick应该执行的事件
+    //   $this.addEventListener('touchend', function(event) {
+    //     clearTimeout(timeOutEvent);
+    //     if(timeOutEvent!=0){
+    //       //这里写要执行的内容（尤如onclick事件）
+    //       alert('你这是点击，不是长按');
+    //     }
+    //   }, false);
+
+    //   //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+    //   $this.addEventListener('touchmove', function(event){
+    //     clearTimeout(timeOutEvent);//清除定时器
+    //     timeOutEvent = 0;
+    //   }, false)
+  
+    //   //真正长按后应该执行的内容
+    //   function longPressFun(){
+    //     timeOutEvent = 0;
+    //     fun();
+    //     //执行长按要执行的内容，如弹出菜单
+    //     alert('长按事件触发发');
+    //   }
+
+    // }
     
     function startFindVideoInfo(completed){
       // console.log('---------------startFindVideoInfo---------------')
@@ -201,8 +241,6 @@ const browser = __b;
       }
     }
 
-
-
     function observerVideo(){
       // 创建观察者对象  
       const observer = new MutationObserver(function(mutations) {  
@@ -240,7 +278,6 @@ const browser = __b;
     }
     
     function parseVideoNodeList(videoDoms){
-      
       // console.log('parseVideoNodeList-----------------start------------------', videoDoms)
       if(videoDoms && videoDoms.length){
         let videoCount = videoDoms.length
@@ -407,6 +444,9 @@ const browser = __b;
       }// https://www.instagram.com
       else if(host.indexOf('instagram.com')>-1){
         videoInfo = handleInstagramVideoInfo(videoDom);
+      }
+      else if(host.indexOf('xiaohongshu.com')>-1){
+        videoInfo = handleXiaohongshuVideoInfo(videoDom);
       }
 
       if(videoInfo.downloadUrl){
@@ -751,6 +791,30 @@ const browser = __b;
           if(titleDom){
             videoInfo.title = titleDom.textContent;
           }
+        }
+      }
+      return videoInfo;
+    }
+
+    function handleXiaohongshuVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      const bgDom = document.querySelector('.video-container .video-banner .img-box');
+      if(bgDom){
+        let posterInfo = bgDom.getAttribute('style');
+        let poster = Utils.matchUrlInString(posterInfo);
+        if(poster){
+          videoInfo.poster = Utils.completionSourceUrl(poster);
+        }
+      }
+      const titleDom = document.querySelector('.video-container .stage-bottom .author-desc-wrapper .author-desc');
+      if(titleDom){
+        let title = titleDom.textContent;
+        if(title){
+          title = title.replace(/^展开/g, '');
+          videoInfo.title = Utils.checkCharLengthAndSubStr(title);
         }
       }
       return videoInfo;
