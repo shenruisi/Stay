@@ -17,6 +17,10 @@ typedef enum{
 
 @interface DeviceHelper : NSObject
 @property (class, nonatomic, readonly) FCDeviceType type;
+@property (class, readonly) NSString *uuid;
+
++ (void)saveUUID:(NSString *)uuid;
++ (void)reset;
 @end
 
 NS_ASSUME_NONNULL_END

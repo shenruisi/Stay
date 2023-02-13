@@ -157,6 +157,8 @@
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
+		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; };
 		584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateCollectionController.m */; };
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
@@ -747,6 +749,8 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
+		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
 		584C05A728607F4E00E07DDF /* NavigateCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateCollectionController.m; sourceTree = "<group>"; };
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
@@ -1326,6 +1330,8 @@
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */,
+				583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */,
 				582061E9294C4CC800A32D0C /* UIView+Layout.h */,
 				582061E8294C4CC600A32D0C /* UIView+Layout.m */,
 				584C05AB286179D000E07DDF /* ImageHelper.h */,
@@ -2853,6 +2859,7 @@
 				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
+				583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
@@ -3179,6 +3186,7 @@
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
+				583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
