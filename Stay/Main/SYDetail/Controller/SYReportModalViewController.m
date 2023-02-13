@@ -26,7 +26,7 @@
 - (void)viewDidLoad {
     self.navigationBar.hidden = NO;
     self.navigationBar.showCancel = NO;
-    self.title = NSLocalizedString(@"Report a problem", @"");
+    self.title = NSLocalizedString(@"Reportaproblem", @"");
     
     CGFloat left = 14;
     CGFloat top = 0;
@@ -40,7 +40,7 @@
     platformLabel.top = top;
     [self.view addSubview:platformLabel];
     
-    NSArray *array = @[@"Userscript not working",@"Violation of user pricacy",@"Do not know how to use"];
+    NSArray *array = @[@"Userscriptnotworking",@"Violationofuserpricacy",@"Donotknowhowtouse"];
     CGFloat btnleft = 14;
     CGFloat btnTop = platformLabel.bottom + 12;
     for(int i = 0; i < 3;i++) {

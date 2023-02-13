@@ -25,7 +25,7 @@
 - (void)viewDidLoad {
     self.navigationBar.hidden = NO;
     self.navigationBar.showCancel = NO;
-    self.title = NSLocalizedString(@"Submit to Stay Fork", @"");
+    self.title = NSLocalizedString(@"SubmittoStayFork", @"");
     
     
     CGFloat left = 14;
