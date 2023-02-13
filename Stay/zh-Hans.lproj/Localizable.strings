@@ -267,3 +267,10 @@ DisabledWebsites="屏蔽网址";
 FailedTranscode="转码失败";
 FailedNoSpace="空间不足";
 needNotDelete="您至少需要保留一个文件夹";
+
+INTERACTION="互动";
+DETAILS="详细描述";
+SplitBySpace="Split By Space";
+PlatformNotEmpty="Please select at least one available platform.";
+TagNotEmpty="Please enter at least one tag.";
+EmailNotEmpty="Please enter your contact email first.";
