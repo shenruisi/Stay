@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #if iOS || Mac
 #import "iCloudService.h"
+#import "ToastCenter.h"
 #endif
 #import "FCTabManager.h"
 NS_ASSUME_NONNULL_BEGIN
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 #if iOS || Mac
 @property (class, readonly, strong) iCloudService *iCloudService;
+@property (class, readonly, strong) ToastCenter *toastCenter;
 #endif
 @property (class, readonly, strong) FCTabManager *tabManager;
 

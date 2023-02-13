@@ -228,6 +228,7 @@ ParseWeb="網頁解析中...";
 DownloadLink="下載鏈接";
 Copy="複製";
 SelectVideos="請選擇視頻";
+Copied="已復制";
 
 Downloader="下載器";
 SearchVideo="搜索已下載的視頻";

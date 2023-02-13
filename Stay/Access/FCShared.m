@@ -37,6 +37,17 @@ static iCloudService *_iCloudService = nil;
     });
     return _iCloudService;
 }
+
+static ToastCenter *_toastCenter = nil;
++ (ToastCenter *)toastCenter{
+    static dispatch_once_t onceTokenToastCenter;
+    dispatch_once(&onceTokenToastCenter, ^{
+        if (nil == _toastCenter){
+            _toastCenter = [[ToastCenter alloc] init];
+        }
+    });
+    return _toastCenter;
+}
 #endif
 
 static FCTabManager *_tabManager = nil;

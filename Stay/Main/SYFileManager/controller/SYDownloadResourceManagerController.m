@@ -30,7 +30,6 @@
  UIDocumentPickerDelegate
 >
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) ToastCenter *toastCenter;
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 @property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
 @end
@@ -327,7 +326,7 @@
                               withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
     image = [image imageWithTintColor:FCStyle.fcBlack
                         renderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.toastCenter show:image
+    [FCShared.toastCenter show:image
                      mainTitle:NSLocalizedString(@"Video", @"")
                 secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
 }
@@ -338,7 +337,7 @@
                               withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
     image = [image imageWithTintColor:FCStyle.fcBlack
                         renderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.toastCenter show:image
+    [FCShared.toastCenter show:image
                      mainTitle:NSLocalizedString(@"Video", @"")
                 secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
 }
@@ -398,15 +397,6 @@
 
     }
     return _sYTextInputViewController;
-}
-
-
-- (ToastCenter *)toastCenter{
-    if (nil == _toastCenter){
-        _toastCenter = [[ToastCenter alloc] init];
-    }
-    
-    return _toastCenter;
 }
 
 @end

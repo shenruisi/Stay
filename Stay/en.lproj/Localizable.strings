@@ -229,6 +229,7 @@ ParseWeb="Parsing Webpage...";
 DownloadLink="Download Link";
 Copy="Copy";
 SelectVideos="Please select videos";
+Copied="Copied";
 
 Downloader="Downloader";
 SearchVideo="Search download videos";
