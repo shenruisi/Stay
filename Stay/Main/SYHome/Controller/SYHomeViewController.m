@@ -302,6 +302,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = FCStyle.background;
+
     self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
     NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
     if([@"System" isEqual:type]) {
@@ -316,7 +318,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     self.selectedIdx = 0;
     self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
-    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+//    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
@@ -1689,7 +1691,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+//        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableView.backgroundColor = FCStyle.background;
         [self.view addSubview:_tableView];
     }
     

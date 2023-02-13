@@ -40,7 +40,7 @@
     platformLabel.top = top;
     [self.view addSubview:platformLabel];
     
-    NSArray *array = @[@"Userscriptnotworking",@"Violationofuserpricacy",@"Donotknowhowtouse"];
+    NSArray *array = @[NSLocalizedString(@"Userscriptnotworking",@""),NSLocalizedString(@"Violationofuserpricacy",@""),NSLocalizedString(@"Donotknowhowtouse",@"")];
     CGFloat btnleft = 14;
     CGFloat btnTop = platformLabel.bottom + 12;
     for(int i = 0; i < 3;i++) {
