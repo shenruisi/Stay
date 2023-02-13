@@ -1,5 +1,4 @@
 /**
- * 自动嗅探video资源
  * 解析页面video标签
  */
 let __b; 
@@ -158,43 +157,43 @@ const browser = __b;
      * longPress原型对象方法
      * longPress
      */
-    // Object.prototype.longPress = function (fun) {
-    //   const $this = this;
-    //   //定时器
-    //   let timeOutEvent = 0;
+    Object.prototype.longPress = function (fun) {
+      const $this = this;
+      //定时器
+      let timeOutEvent = 0;
 
-    //   //开始按
-    //   $this.addEventListener('touchstart', function(event) {
-    //     //这里设置定时器，定义长按500毫秒触发长按事件，时间可以自己改，个人感觉500毫秒非常合适
-    //     timeOutEvent = setTimeout(function(){
-    //       longPressFun()
-    //     },500);
-    //   }, false);
+      //开始按
+      $this.addEventListener('touchstart', function(event) {
+        //这里设置定时器，定义长按500毫秒触发长按事件，时间可以自己改，个人感觉500毫秒非常合适
+        timeOutEvent = setTimeout(function(){
+          longPressFun()
+        },500);
+      }, false);
 
-    //   //手释放，如果在500毫秒内就释放，则取消长按事件，此时可以执行onclick应该执行的事件
-    //   $this.addEventListener('touchend', function(event) {
-    //     clearTimeout(timeOutEvent);
-    //     if(timeOutEvent!=0){
-    //       //这里写要执行的内容（尤如onclick事件）
-    //       alert('你这是点击，不是长按');
-    //     }
-    //   }, false);
+      //手释放，如果在500毫秒内就释放，则取消长按事件，此时可以执行onclick应该执行的事件
+      $this.addEventListener('touchend', function(event) {
+        clearTimeout(timeOutEvent);
+        if(timeOutEvent!=0){
+          //这里写要执行的内容（尤如onclick事件
+          alert('你这是点击，不是长按');
+        }
+      }, false);
 
-    //   //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
-    //   $this.addEventListener('touchmove', function(event){
-    //     clearTimeout(timeOutEvent);//清除定时器
-    //     timeOutEvent = 0;
-    //   }, false)
+      //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+      $this.addEventListener('touchmove', function(event){
+        clearTimeout(timeOutEvent);//清除定时器
+        timeOutEvent = 0;
+      }, false)
   
-    //   //真正长按后应该执行的内容
-    //   function longPressFun(){
-    //     timeOutEvent = 0;
-    //     fun();
-    //     //执行长按要执行的内容，如弹出菜单
-    //     alert('长按事件触发发');
-    //   }
+      //真正长按后应该执行的内容
+      function longPressFun(){
+        timeOutEvent = 0;
+        fun();
+        //执行长按要执行的内容，如弹出菜单
+        alert('长按事件触发发');
+      }
 
-    // }
+    }
     
     function startFindVideoInfo(completed){
       // console.log('---------------startFindVideoInfo---------------')
@@ -376,7 +375,7 @@ const browser = __b;
     
     /**
      * 获取页面上video标签获取视频信息
-     * @return videoInfo{videoKey(从原页面中取到的video唯一标识), downloadUrl, poster, title, hostUrl, qualityList, videoUuid(嗅探给video标签生成的uuid)}
+     * @return videoInfo{videoKey(从原页面中取到的video唯一标识), downloadUrl, poster, title, hostUrl, qualityList, videoUuid(解析给video标签生成的uuid)}
      * 
      * qualityList[{downloadUrl,qualityLabel, quality }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb

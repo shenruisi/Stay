@@ -1,5 +1,5 @@
 /**
- * 自动嗅探video资源
+ * 自动解析video资源
  * 解析页面video标签
  */
 (function () {
@@ -294,7 +294,7 @@
     
   /**
      * 获取页面上video标签获取视频信息
-     * @return videoInfo{videoKey(从原页面中取到的video唯一标识), downloadUrl, poster, title, hostUrl, qualityList, videoUuid(嗅探给video标签生成的uuid)}
+     * @return videoInfo{videoKey(从原页面中取到的video唯一标识), downloadUrl, poster, title, hostUrl, qualityList, videoUuid(解析给video标签生成的uuid)}
      * 
      * qualityList[{downloadUrl,qualityLabel, quality }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb
