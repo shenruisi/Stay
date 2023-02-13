@@ -420,6 +420,7 @@
         [self.startButton setEnabled:YES];
         self.startButton.backgroundColor = FCStyle.accent;
         [self.tableView setHidden:YES];
+        [self.tableView reloadData];
     } else {
         for (NSDictionary *dic in data) {
             BOOL founded = NO;
