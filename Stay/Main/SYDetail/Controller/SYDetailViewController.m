@@ -589,7 +589,7 @@
      interactionLabel.textColor = FCStyle.fcBlack;
      interactionLabel.textAlignment = NSTextAlignmentLeft;
      interactionLabel.lineBreakMode= NSLineBreakByTruncatingTail;
-     interactionLabel.text =NSLocalizedString(@"Interaction", @"");
+     interactionLabel.text =NSLocalizedString(@"InteractionDetail", @"");
      [cell.contentView addSubview:interactionLabel];
 
      top = interactionLabel.bottom + 13;
@@ -1306,7 +1306,7 @@
 
      
      UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 58)];
-     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 90, 16)];
+     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 90, 17)];
      title.text = name;
      title.font = FCStyle.footnote;
      title.textColor = FCStyle.fcSecondaryBlack;
@@ -1325,7 +1325,7 @@
           imageView.top = title.bottom + 6;
           [view addSubview:imageView];
      } else {
-          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 16)];
+          UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, 80, 17)];
           descLabel.font = FCStyle.subHeadlineBold;
           descLabel.textColor = descColor;
           descLabel.text = desc;
