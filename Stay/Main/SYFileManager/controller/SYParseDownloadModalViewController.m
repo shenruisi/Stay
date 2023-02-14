@@ -432,6 +432,25 @@
             }
             if (!founded) {
                 NSMutableDictionary *item = [NSMutableDictionary dictionaryWithDictionary:dic];
+                NSArray *qualityList = item[@"qualityList"];
+                if (qualityList.count > 0) {
+                    NSString *downloadUrl = item[@"downloadUrl"];
+                    NSString *selectedQuality;
+                    NSString *selectedDownloadUrl;
+                    for (NSDictionary *qulity in qualityList) {
+                        if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                            selectedQuality = qulity[@"qualityLabel"];
+                            selectedDownloadUrl = qulity[@"downloadUrl"];
+                            break;
+                        }
+                    }
+                    if (selectedQuality.length == 0) {
+                        selectedQuality = qualityList[0][@"qualityLabel"];
+                        selectedDownloadUrl = qualityList[0][@"downloadUrl"];
+                    }
+                    item[@"selectedQuality"] = selectedQuality;
+                    item[@"selectedDownloadUrl"] = selectedDownloadUrl;
+                }
                 if (item[@"uuid"] == nil) {
                     NSString *selectedUUID = SharedStorageManager.shared.userDefaults.lastFolderUUID;
                     if (selectedUUID.length == 0) {
