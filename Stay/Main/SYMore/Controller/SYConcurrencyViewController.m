@@ -95,7 +95,7 @@ UITableViewDataSource
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.Concurrency",@"Concurrency");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
-#if Mac
+#if FC_MAC
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
 }
@@ -128,7 +128,7 @@ UITableViewDataSource
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-#ifdef Mac
+#ifdef FC_MAC
     return 35.0;
 #else
     return 45.0;

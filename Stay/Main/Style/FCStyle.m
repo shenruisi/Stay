@@ -120,7 +120,7 @@
 }
 
 + (UIColor *)fcMacIcon{
-#ifdef iOS
+#ifdef FC_IOS
     return [self accent];
 #else
     return [UIColor colorNamed:@"FCMacIconColor"];
@@ -141,7 +141,7 @@
 }
 
 + (UIFont *)title1{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:28];
 #else
     return [UIFont systemFontOfSize:26];
@@ -149,7 +149,7 @@
 }
 
 + (UIFont *)title1Bold{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:28];
 #else
     return [UIFont boldSystemFontOfSize:26];
@@ -157,7 +157,7 @@
 }
 
 + (UIFont *)title3{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:20];
 #else
     return [UIFont systemFontOfSize:16];
@@ -165,7 +165,7 @@
 }
 
 + (UIFont *)title3Bold{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:20];
 #else
     return [UIFont boldSystemFontOfSize:16];
@@ -173,7 +173,7 @@
 }
 
 + (UIFont *)headline {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:17];
 #else
     return [UIFont systemFontOfSize:15];
@@ -181,7 +181,7 @@
 }
 
 + (UIFont *)headlineBold {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:17];
 #else
     return [UIFont boldSystemFontOfSize:15];
@@ -189,7 +189,7 @@
 }
 
 + (UIFont *)subHeadline {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:15];
 #else
     return [UIFont systemFontOfSize:13];
@@ -197,7 +197,7 @@
 }
 
 + (UIFont *)subHeadlineBold {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:15];
 #else
     return [UIFont boldSystemFontOfSize:13];
@@ -205,7 +205,7 @@
 }
 
 + (UIFont *)body {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:16];
 #else
     return [UIFont systemFontOfSize:14];
@@ -213,7 +213,7 @@
 }
 
 + (UIFont *)bodyBold {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:16];
 #else
     return [UIFont boldSystemFontOfSize:14];
@@ -221,7 +221,7 @@
 }
 
 + (UIFont *)footnote {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:13];
 #else
     return [UIFont systemFontOfSize:11];
@@ -229,7 +229,7 @@
 }
 
 + (UIFont *)footnoteBold {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:13];
 #else
     return [UIFont boldSystemFontOfSize:11];
@@ -237,7 +237,7 @@
 }
 
 + (UIFont *)sfFootnote {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:13];
 #else
     return [UIFont systemFontOfSize:18];
@@ -245,7 +245,7 @@
 }
 
 + (UIFont *)sfActbar {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:17];
 #else
     return [UIFont systemFontOfSize:18];
@@ -253,7 +253,7 @@
 }
 
 + (UIFont *)sfNavigationBar {
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:17];
 #else
     return [UIFont systemFontOfSize:13];
@@ -261,7 +261,7 @@
 }
 
 + (UIFont *)sfSecondaryIcon{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:15];
 #else
     return [UIFont systemFontOfSize:13];
@@ -269,7 +269,7 @@
 }
 
 + (UIFont *)cellIcon{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:20];
 #else
     return [UIFont systemFontOfSize:18];
@@ -278,7 +278,7 @@
 }
 
 + (UIFont *)sfIcon{
-#ifdef iOS
+#ifdef FC_IOS
     return [UIFont systemFontOfSize:22];
 #else
     return [UIFont systemFontOfSize:20];

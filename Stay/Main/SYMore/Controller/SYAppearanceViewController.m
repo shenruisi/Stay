@@ -10,7 +10,7 @@
 #import "FCConfig.h"
 #import <objc/runtime.h>
 #import "ImageHelper.h"
-#ifdef Mac
+#ifdef FC_MAC
 #import "FCShared.h"
 #import "Plugin.h"
 #endif
@@ -101,7 +101,7 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
             [btn setBackgroundColor:[self colorWithHexString:color alpha:1]];
             btn.frame = CGRectMake(0, 0, 23, 23);
             btn.layer.cornerRadius = 11.5;
-#ifdef Mac
+#ifdef FC_MAC
             btn.frame = CGRectMake(0, 0, 18, 18);
             btn.layer.cornerRadius = 9;
 #endif
@@ -109,7 +109,7 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
             btn.centerY = 14.5;
             btn.centerX = 14.5;
             
-#ifdef Mac
+#ifdef FC_MAC
             view.frame = CGRectMake(0, 0, 24, 24);
             btn.centerY = 12;
             btn.centerX = 12;
@@ -125,14 +125,14 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
                 view.layer.borderColor = [self colorWithHexString:color alpha:0.5].CGColor;
                 view.layer.cornerRadius = 14.5;
 
-#ifdef Mac
+#ifdef FC_MAC
                 view.layer.cornerRadius = 12;
 #endif
 
             }
             
             [view addSubview:btn];
-#ifdef Mac
+#ifdef FC_MAC
             view.centerY = 17.5;
 #else
             view.centerY = 22.5;
@@ -220,7 +220,7 @@ UITableViewDataSource
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeThemeColor:) name:@"changeThemeColor" object:nil];
     // Do any additional setup after loading the view.
-#if Mac
+#if FC_MAC
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
 }
@@ -270,7 +270,7 @@ UITableViewDataSource
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-#ifdef Mac
+#ifdef FC_MAC
     return 35.0;
 #else
     return 45.0;
@@ -293,7 +293,7 @@ UITableViewDataSource
                                            options:@{} completionHandler:^(BOOL succeed){}];
     } else if([@"System" isEqual:type]) {
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
-#if Mac
+#if FC_MAC
         for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
             [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
         }
@@ -303,7 +303,7 @@ UITableViewDataSource
     } else if([@"Dark" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-#if Mac
+#if FC_MAC
         for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
             [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
         }
@@ -312,7 +312,7 @@ UITableViewDataSource
         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"Dark"];
     }else if([@"Light" isEqual:type]){
         [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
-#if Mac
+#if FC_MAC
         for(UIWindow *window in [[UIApplication sharedApplication] windows]) {
             [window setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
         }
@@ -379,7 +379,7 @@ UITableViewDataSource
     }
     [self.tableView reloadData];
 
-#ifndef Mac
+#ifndef FC_MAC
     for (UINavigationController *navigationController in self.navigationController.tabBarController.viewControllers){
         for (UIBarButtonItem *item in navigationController.topViewController.navigationItem.leftBarButtonItems){
             item.image = [item.image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -391,7 +391,7 @@ UITableViewDataSource
 #endif
     
     
-//#ifdef Mac
+//#ifdef FC_MAC
 //    [FCShared.plugin.appKit accentColorChanged:color];
 //    for(int i = 0; i < 3; i++){
 //        UITabBarItem *item = [QuickAccess  primaryController].tabBar.items[i];

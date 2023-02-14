@@ -5,7 +5,7 @@
 //  Created by ris on 2021/10/15.
 //
 
-#ifndef Mac
+#ifndef FC_MAC
 #import <UMCommon/UMCommon.h>
 #endif
 #import "AppDelegate.h"
@@ -29,11 +29,11 @@
 #import "DownloadManager.h"
 #import "SYDownloadSlideController.h"
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "Plugin.h"
 #endif
 
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -42,7 +42,7 @@
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
 
-#ifdef iOS
+#ifdef FC_IOS
 #import <Bugsnag/Bugsnag.h>
 #endif
 
@@ -62,7 +62,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-#ifndef Mac
+#ifndef FC_MAC
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
     [Bugsnag start];
 #endif
@@ -114,13 +114,13 @@
             });
         }];
     
-#ifdef Mac
+#ifdef FC_MAC
     [FCShared.plugin load];
 #endif
     
      
     [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
-#ifdef Mac
+#ifdef FC_MAC
         if ([QuickAccess primaryController] != nil){
             [QuickAccess primaryController].selectedIndex = 3;
             [[QuickAccess primaryController].selectedViewController presentViewController:
@@ -143,7 +143,7 @@
         NSString *themeId = inputParameters[@"id"];
         SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
         cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",themeId];
-        #ifdef Mac
+        #ifdef FC_MAC
             [[QuickAccess secondaryController] pushViewController:cer];
         #else
             UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
@@ -158,7 +158,7 @@
         if(entity == nil) {
             SYNoDownLoadDetailViewController *cer = [[SYNoDownLoadDetailViewController alloc] init];
             cer.uuid = uuid;
-            #ifdef Mac
+            #ifdef FC_MAC
                 [[QuickAccess secondaryController] pushViewController:cer];
             #else
                 UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
@@ -167,7 +167,7 @@
         } else {
             SYDetailViewController *cer = [[SYDetailViewController alloc] init];
             cer.script = [[DataManager shareManager] selectScriptByUuid:uuid];
-            #ifdef Mac
+            #ifdef FC_MAC
                 [[QuickAccess secondaryController] pushViewController:cer];
             #else
                 UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];

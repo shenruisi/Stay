@@ -24,7 +24,7 @@ class SYSubscribeController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = FCStyle.background
         self.title = NSLocalizedString("Upgrade", comment: "")
-        #if Mac
+        #if FC_MAC
         let barItem = UIBarButtonItem(title:NSLocalizedString("settings.close", comment: "") , style: .plain, target: self, action: #selector(cancelAction))
         barItem.tintColor = FCStyle.accent
         navigationItem.leftBarButtonItem = barItem

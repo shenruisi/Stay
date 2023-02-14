@@ -20,7 +20,7 @@
 #import "QuickAccess.h"
 #import "SYDownloadPreviewController.h"
 
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -165,7 +165,7 @@ UIDocumentPickerDelegate
 }
 
 - (void)showUpgrade {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
                                animated:YES completion:^{}];
@@ -538,7 +538,7 @@ UIDocumentPickerDelegate
 }
 
 - (void)buyStay:(id)sender {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
                                animated:YES completion:^{}];
@@ -574,7 +574,7 @@ UIDocumentPickerDelegate
     self.tableView.frame = self.view.bounds;
     [self emptyTipsView];
 
-#ifdef Mac
+#ifdef FC_MAC
         self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
 #else
         self.emptyTipsView.frame = self.view.bounds;
@@ -586,7 +586,7 @@ UIDocumentPickerDelegate
     self.emptyTipsView.hidden = isPro;
     
     
-#ifndef Mac
+#ifndef FC_MAC
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstDownloadGuide"]){
         self.sYDownloadPreviewController = [[SYDownloadPreviewController alloc] init];
@@ -599,14 +599,14 @@ UIDocumentPickerDelegate
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef Mac
+#ifdef FC_MAC
     [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #else
         self.tableView.frame = self.view.bounds;
 #endif
     
     
-#ifdef Mac
+#ifdef FC_MAC
         self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
 #else
         self.emptyTipsView.frame = self.view.bounds;
@@ -647,7 +647,7 @@ UIDocumentPickerDelegate
 
 - (_FileEmptyTipsView *)emptyTipsView{
     if (nil == _emptyTipsView){
-#ifdef Mac
+#ifdef FC_MAC
         _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
 #else
         _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:self.view.bounds];

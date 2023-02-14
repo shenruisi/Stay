@@ -80,7 +80,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     }
     
     override func layoutSubviews() {
-        #if iOS
+        #if FC_IOS
         if mpVolumeView.superview == nil {
             mpVolumeView.alpha = 0.001
             self.window?.insertSubview(mpVolumeView, at: 0)
@@ -151,7 +151,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         if UIDevice.current.userInterfaceIdiom == .phone {
             return UIApplication.shared.statusBarOrientation.isLandscape
         } else {
-            #if iOS
+            #if FC_IOS
             return controller?.isSecondaryMode() ?? true
             #else
             return true
@@ -322,7 +322,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         currLabel.textAlignment = .center
         currLabel.translatesAutoresizingMaskIntoConstraints = false
         seekBar.tintColor = .white
-        #if iOS
+        #if FC_IOS
         seekBar.setThumbImage(UIImage(systemName: "circle.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 10)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
         #endif
         seekBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
@@ -513,12 +513,12 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         }
     }
     
-    #if iOS
+    #if FC_IOS
     let mpVolumeView = MPVolumeView()
     var volumeSlider: UISlider?
     #endif
     func getVolume() -> (UIImage, Float) {
-        #if iOS
+        #if FC_IOS
         if volumeSlider == nil {
             volumeSlider = mpVolumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         }
@@ -544,7 +544,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     }
     
     func setVolume(_ value: Float) {
-        #if iOS
+        #if FC_IOS
         if volumeSlider == nil {
             volumeSlider = mpVolumeView.subviews.first(where: { $0 is UISlider }) as? UISlider
         }
@@ -559,7 +559,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     @objc
     func backAction() {
         if UIDevice.current.userInterfaceIdiom == .phone && isLandscapeMode {
-            #if iOS
+            #if FC_IOS
             if #available(iOS 16.0, *) {
                 controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
                 let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
@@ -645,7 +645,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     @objc
     func modeAction() {
         resetControlHide()
-        #if iOS
+        #if FC_IOS
         if #available(iOS 16.0, *) {
             controller?.setNeedsUpdateOfSupportedInterfaceOrientations()
             let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene

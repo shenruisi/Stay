@@ -19,7 +19,7 @@
 #import "SYChangeDocSlideController.h"
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -356,7 +356,7 @@
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef Mac
+#ifdef FC_MAC
     [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #else
         self.tableView.frame = self.view.bounds;

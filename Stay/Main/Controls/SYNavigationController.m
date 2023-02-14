@@ -103,7 +103,7 @@ typedef enum  {
 }
 
 - (void)setTintColor:(UIColor *)color{
-#ifndef Mac
+#ifndef FC_MAC
     self.navigationBar.tintColor = color;
     self.placeholderController.navigationItem.leftBarButtonItem.tintColor = color;
     for (UIBarButtonItem *item in self.placeholderController.navigationItem.leftBarButtonItems){

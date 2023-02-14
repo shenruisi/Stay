@@ -30,7 +30,7 @@
     cell.backgroundColor = FCStyle.secondaryPopup;
     [cell addSubview:self.titleLabel];
     [cell addSubview:self.switchButton];
-#ifdef Mac
+#ifdef FC_MAC
     self.switchButton.top = 12;
 #else
     self.switchButton.top = 8;

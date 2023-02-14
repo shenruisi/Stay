@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "NavigateViewController.h"
 @interface SYExpandViewController : NavigateViewController
 #else

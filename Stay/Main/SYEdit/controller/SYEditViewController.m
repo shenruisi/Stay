@@ -91,7 +91,7 @@
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef Mac
+#ifdef FC_MAC
     self.syCodeMirrorView.frame = self.view.bounds;
 //    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
 //    [self.syCodeMirrorView reload];
