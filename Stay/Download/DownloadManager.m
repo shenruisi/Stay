@@ -175,18 +175,18 @@ static DownloadManager *instance = nil;
         } else {
             task = tasks[0];
         }
-        task.isM3U8 = [request.url containsString:@"m3u8"];
+        task.isM3U8 = [request.url containsString:@"m3u8"] || request.m3u8Content.length > 0;
         NSURLSessionTask *sessionTask;
         if (task.isM3U8) {
 //            sessionTask = [self.assetDownloadURLSession assetDownloadTaskWithURLAsset:[AVURLAsset assetWithURL:[NSURL URLWithString:request.url]] assetTitle:request.fileName assetArtworkData:nil options:nil];
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:taskId];
             if (![[NSFileManager defaultManager] fileExistsAtPath:taskPath]) {
                 [NSFileManager.defaultManager createDirectoryAtPath:taskPath withIntermediateDirectories:YES attributes:nil error:nil];
-                [self startM3U8Task:task withURL:[NSURL URLWithString:request.url]];
+                [self startM3U8Task:task withURL:[NSURL URLWithString:request.url] withContent:request.m3u8Content];
             } else {
                 M3U8State *m3u8State = [[M3U8State alloc] initWithTaskPath:taskPath];
                 if (m3u8State == nil) {
-                    [self startM3U8Task:task withURL:[NSURL URLWithString:request.url]];
+                    [self startM3U8Task:task withURL:[NSURL URLWithString:request.url] withContent:request.m3u8Content];
                 } else {
                     task.progress = m3u8State.currCount * 1.0 / m3u8State.totalCount;
                     task.m3u8State = m3u8State;
@@ -405,7 +405,7 @@ static DownloadManager *instance = nil;
     _m3u8Concurrency = concurrency;
 }
 
-- (void)startM3U8Task:(Task *)task withURL:(NSURL *)url {
+- (void)startM3U8Task:(Task *)task withURL:(NSURL *)url withContent:(NSString *)content {
     [url m3u_loadAsyncCompletion:^(M3U8PlaylistModel *model, NSError *error) {
         if (model != nil) {
             M3U8State *m3u8State = [[M3U8State alloc] init];
@@ -443,7 +443,7 @@ static DownloadManager *instance = nil;
                 [self.taskDict removeObjectForKey:task.taskId];
             }
         }
-    }];
+    } withContent:content];
 }
 
 - (void)resumeM3U8Task:(Task *)task {
