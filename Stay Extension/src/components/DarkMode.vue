@@ -17,17 +17,17 @@
 </template>
 
 <script>
-import { reactive, inject, toRefs } from 'vue'
+import { reactive, inject, toRefs, watch } from 'vue'
 import { useI18n } from 'vue-i18n';
 import { getHostname } from '../utils/util'
 export default {
   name: 'DarkModeComp',
-  props:['siteEnabled', 'darkmodeToggleStatus'],
+  props:['siteEnabled', 'darkmodeToggleStatus', 'browserUrl'],
   setup (props, {emit, expose}) {
     const { t, tm } = useI18n();
     const global = inject('global');
     const store = global.store;
-    const hostName = getHostname(store.state.browserUrl);
+    const hostName = getHostname(props.browserUrl || store.state.browserUrl);
     const state = reactive({
       browserUrl: store.state.browserUrl,
       isStayPro: store.state.isStayPro,
@@ -40,6 +40,16 @@ export default {
         {status:'off', name: t('darkmode_off'), isSelected: props.darkmodeToggleStatus==='off'}
       ]
     });
+
+    watch(
+      props,
+      (newProps) => {
+        // 接收到的props的值
+        state.browserUrl = newProps.browserUrl;
+        state.hostName = getHostname(newProps.browserUrl);
+      },
+      { immediate: true, deep: true }
+    );
 
     const dakmodeSetingClick = (status) => {
       console.log('dakmodeSetingClick-----',status);

@@ -633,11 +633,9 @@ let injectedContentVendor = new Set();
             });
         }
         else if ("API_GET_REXOURCE_TEXT_SYNC" === name || "API_GET_REXOURCE_TEXT" === name) {
-            // console.log("API_GET_REXOURCE_TEXT e.data=========",  e);
             message.operate = "GM_getResourceText";
             message.url = e.data.url;
             browser.runtime.sendMessage(message, (response) => {
-                // console.log("background---API_GET_REXOURCE_TEXT---", response)
                 if ("API_GET_REXOURCE_TEXT" === name) {
                     window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_REXOURCE_TEXT", response: response });
                 }

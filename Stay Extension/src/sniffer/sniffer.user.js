@@ -150,51 +150,147 @@ const browser = __b;
           }
         }
         return uuid.join('');
+      },
+      isBase64(str){
+        if(!str){
+          return false;
+        }
+        if(/^data:.*\w+;base64,/.test(str)){
+          return true;
+        }
+        if(str === '' || str.trim() === ''){
+          return false;
+        }
+        try{
+          return window.btoa(window.atob(str)) == str;
+        }catch(err){
+          return false;
+        }
+      },
+      isDark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      },
+      parseToDOM(str){
+        let divDom = document.createElement('template');
+        if(typeof str == 'string'){
+          divDom.innerHTML = str;
+          return divDom.content;
+        }
+        return str;
+      },
+      getHostname(url) {
+        if(!url){
+          return ''
+        }
+        try {
+          return new URL(url).hostname.toLowerCase();
+        } catch (error) {
+          return url.split('/')[0].toLowerCase();
+        }
       }
     }
 
     /**
-     * longPress原型对象方法
-     * longPress
+     * 长按功能，长按 700ms 以上即可调用回调方法
+     *
+     * @class
      */
-    // Object.prototype.longPress = function (fun) {
-    //   const $this = this;
-    //   //定时器
-    //   let timeOutEvent = 0;
+    class LongPress {
+      /**
+       * 构造器
+       *
+       * @public
+       * @param {String} dom 需要长按的 DOM 对象
+       * @param {function} callback 长按触发的回调函数
+       */
+      constructor(dom, callback) {
+        this.dom = dom;
+        this.timer = 0;
+        this.init(callback);
+      }
 
-    //   //开始按
-    //   $this.addEventListener('touchstart', function(event) {
-    //     //这里设置定时器，定义长按500毫秒触发长按事件，时间可以自己改，个人感觉500毫秒非常合适
-    //     timeOutEvent = setTimeout(function(){
-    //       longPressFun()
-    //     },500);
-    //   }, false);
+      /**
+       * 初始化
+       *
+       * @private
+       * @param {function} callback 回调函数
+       */
+      init(callback) {
+        this.touchstart(callback);
+        this.touchend();
+        this.touchmove();
+        this.bindLongPressEventFlag();
+      }
 
-    //   //手释放，如果在500毫秒内就释放，则取消长按事件，此时可以执行onclick应该执行的事件
-    //   $this.addEventListener('touchend', function(event) {
-    //     clearTimeout(timeOutEvent);
-    //     if(timeOutEvent!=0){
-    //       //这里写要执行的内容（尤如onclick事件
-    //       alert('你这是点击，不是长按');
-    //     }
-    //   }, false);
+      /**
+       * 标记是否绑定过长按事件
+       */
+      bindLongPressEventFlag(){
+        this.dom.setAttribute('stay-long-press', 'yes');
+        // this.dom.eventList['stayLongPress'] = 'yes';
+      }
 
-    //   //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
-    //   $this.addEventListener('touchmove', function(event){
-    //     clearTimeout(timeOutEvent);//清除定时器
-    //     timeOutEvent = 0;
-    //   }, false)
-  
-    //   //真正长按后应该执行的内容
-    //   function longPressFun(){
-    //     timeOutEvent = 0;
-    //     fun();
-    //     //执行长按要执行的内容，如弹出菜单
-    //     alert('长按事件触发发');
-    //   }
+      /**
+       * 手指按下时开启定时器，700 毫秒后触发回调函数
+       *
+       * @private
+       * @param {function} callback 回调函数
+       */
+      touchstart(callback) {
+        this.dom.addEventListener('touchstart', function(event) {
+          // 清除默认行为
+          event.preventDefault();
 
-    // }
-    
+          // this.dom.addEventListener('contextmenu', function(e){
+          //   e.preventDefault();
+          // })
+          // 开启定时器
+          this.timer = setTimeout(() => {
+            event.preventDefault();
+            if (typeof callback === 'function') {
+              callback();
+              this.timer = 0;
+            } else {
+              console.error('callback is not a function!');
+            }
+          }, 600);
+        }, false);
+      }
+
+      /**
+       * 手指抬起时清除定时器，无论按住时间是否达到 700 毫秒的阈值
+       *
+       * @private
+       */
+      touchend() {
+        this.dom.addEventListener('touchend', function(event) {
+          // 清除默认行为
+          event.preventDefault();
+          // 清除定时器
+          clearTimeout(this.timer);
+
+          if(this.timer!=0){
+            console.log(event)
+            //这里写要执行的内容click事件
+            // alert('你这是点击，不是长按');
+          }
+          return false;
+        });
+      }
+
+      /**
+       * 如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+       */
+      touchmove() {
+        this.dom.addEventListener('touchmove', function(event){
+          // event.preventDefault();
+          clearTimeout(this.timer);//清除定时器
+          this.timer = 0;
+          return false;
+        })
+      }
+    }
+
     function startFindVideoInfo(completed){
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
@@ -252,16 +348,16 @@ const browser = __b;
               // console.log('mutation.videoDoms-----',videoDoms)
               host = window.location.host;
               parseVideoNodeList(videoDoms);
-              throw new Error('endloop');
+              // throw new Error('endloop');
             }
           });  
         } catch (e) {
-          if(e.message === 'endloop') {
-            // 随后,你还可以停止观察  
-            // observer.disconnect(); 
-          }else{
-            throw e
-          }
+          // if(e.message === 'endloop') {
+          //   // 随后,你还可以停止观察  
+          //   // observer.disconnect(); 
+          // }else{
+          //   throw e
+          // }
         }
       });
         /**
@@ -292,9 +388,12 @@ const browser = __b;
             videoUuid = Utils.generateUuid();
             item.setAttribute('stay-sniffing', videoUuid);
           }
+          const videoDom = item;
+          // console.log('parseVideoNodeList---------------item=',item);
           let downloadUrl = item.getAttribute('src');
+          // console.log('parseVideoNodeList-------1-------downloadUrl=',downloadUrl);
           if(!downloadUrl){
-            // console.log('parseVideoNodeList--------------downloadUrl=',downloadUrl);
+            // console.log('parseVideoNodeList--------2------downloadUrl=',downloadUrl);
             let sourceDom = item.querySelector('source');
             // console.log('parseVideoNodeList--------------sourceDom=',sourceDom);
             if(sourceDom){
@@ -305,12 +404,11 @@ const browser = __b;
           }
           if(!downloadUrl){
             nullCount++;
+            // console.log('parseVideoNodeList--------nullCount++');
             return;
           }
-          downloadUrl = Utils.completionSourceUrl(downloadUrl);
           // todo fetch other scenarios
-          let videoInfo = handleVideoInfoParse(item);
-          videoInfo.videoUuid = videoUuid;
+          let videoInfo = handleVideoInfoParse(item, videoDom, videoUuid);
           // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
           if(!videoInfo.downloadUrl){
             nullCount++;
@@ -319,7 +417,6 @@ const browser = __b;
           // console.log('parseVideoNodeList------videoList---------',videoList)
           // 已存在
           // videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid
-          checkVideoExist(videoInfo)
           // console.log('parseVideoNodeList------videoList--2222-------',videoList)
         })
         if(nullCount == videoCount){
@@ -333,6 +430,7 @@ const browser = __b;
       // window.webkit.messageHandlers.stayapp.postMessage(videoList);
       window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
       if(isContent){
+        // console.log('isContent----------------------');
         let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
         browser.runtime.sendMessage(message, (response) => {});
       }
@@ -340,9 +438,15 @@ const browser = __b;
 
     /**
      * check video if exist
+     * @param {Object} dom  添加长按事件的dom对象 
      * @param {Object} videoInfo 
      */
-    function checkVideoExist(videoInfo){
+    function checkVideoExist(dom, videoInfo){
+      let downloadUrl = videoInfo.downloadUrl;
+      if(!Utils.isURL(downloadUrl)){
+        videoInfo.downloadUrl = hostUrl;
+      }
+      addLongPress(dom, videoInfo);
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
         // console.log('parseVideoNodeList----------has exost, and modify-------');
         videoList.forEach(item=>{
@@ -372,6 +476,221 @@ const browser = __b;
         videoList.push(videoInfo);
       }
     }
+
+    /**
+     * 添加长按事件
+     * @param {Object} dom 
+     * @returns 
+     */
+    function addLongPress(dom, videoInfo){
+      if(!dom){
+        return;
+      }
+      let stayLongPress = dom.getAttribute('stay-long-press');
+      if(stayLongPress && stayLongPress == 'yes'){
+        // console.log('addLongPress already bind stay long press------1------');
+        return;
+      }
+      dom.style.userSelect = 'none';
+      // if(dom.eventList && dom.eventList['stayLongPress'] == 'yes'){
+      //   console.log('addLongPress already bind stay long press-----2-------');
+      //   return;
+      // }
+      
+      new LongPress(dom, ()=>{
+        addSinfferModal(dom, videoInfo);
+      });
+      
+    }
+
+    function addSinfferModal(videoDom, videoInfo){
+      let modalDom = document.querySelector('#__stay_sinffer_modal');
+      if(modalDom){
+        modalDom.style.display = 'block';
+      }else{
+        modalDom = createModal();
+      }
+      
+      // window.open(downloadUrl);
+      function createModal(){
+        let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
+        let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
+        let vWidth = videoDom.clientWidth;
+        let vHeight = videoDom.clientHeight;
+        let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        let top = videoDom.getBoundingClientRect().top;
+        let left = videoDom.getBoundingClientRect().left;
+        let imgPadding = 'padding: 0 '+left+'px;';
+        let posterHeight = vHeight;
+        if((top == 0 && bodyClientHeight == vHeight)){
+          posterHeight = 224;
+        }
+        // console.log('top----',top);
+        let vTop = 'top:'+ top + 'px;';
+        if(top<0){
+          vTop = 'top:0px;';
+        }else{
+          if(top>(bodyClientHeight/2) || (top == 0 && bodyClientHeight == vHeight)){
+            vTop = 'top: 50%;transform: translate(0, -50%);';
+          }
+        }
+        let downloadBg = 'background-color: rgb(54, 54, 57);';
+        let downloadColor = 'rgb(247,247,247)';
+        let bg = 'background-color: rgba(255, 255, 255, 0.4);';
+        let fontColor = 'color:#000000;'
+        let downloadIcon = 'https://res.stayfork.app/scripts/923EC60A7EB6B878317747AF29D99104/icon.png';
+        if(Utils.isDark()){
+          bg = 'background-color: rgba(0, 0, 0, 0.4);';
+          fontColor = 'color:#DCDCDC;'
+          downloadIcon = 'https://res.stayfork.app/scripts/0031EAA96B967DA000F1BFA809FADE21/icon.png';
+          // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
+          downloadColor = 'rgb(247,247,247)';
+        }
+        let sinfferStyle = `<style id="__style_sinffer_style">
+          ._stay-sinffer-popup{
+            width:222px;padding-top: 10px;box-sizing: border-box;border-radius:8px;margin-top: 12px;${downloadBg}
+            position: absolute;
+            top: 100%;
+            z-index:999999;
+          }
+          ._stay-sinffer-title{
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100%;
+            line-height: 18px;
+            word-break:break-all;
+            word-wrap:break-word;
+            color: ${downloadColor};
+            -webkit-box-orient: vertical;
+            -webkit-user-select: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            text-align: left;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+          }
+          ._stay-sinffer-download{
+            width:100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-start;
+            padding: 10px;
+            border-top: 0.5px solid rgb(247,247,247);
+          }
+          ._stay-download{
+            box-sizing: border-box;
+            width:100%;
+            padding-right: 20px;
+            position: relative;
+            color: ${downloadColor};
+            text-align:left;
+            font-size: 16px;
+          }
+          ._stay-download::after{
+            content:"";
+            background: url(${downloadIcon}) no-repeat 50% 50%;  
+            background-size: 14px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translate(0, -52%);
+            width: 14px;
+            height: 20px;
+          }
+          ._stay-quality-item{
+            border: 1px solid ${downloadColor};
+            height: 30px;
+            display: flex;
+            position: relative;
+            margin-right: 8px;
+            padding-left: 8px;
+            padding-right: 24px;
+            align-items: center;
+            -webkit-border-radius: 4px;
+            color: ${downloadColor};
+          }
+          ._stay-quality-item::after{
+            content:"";
+            background: url(${downloadIcon}) no-repeat 50% 50%;  
+            background-size: 12px;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translate(0, -52%);
+            width: 12px;
+            height: 17px;
+          }
+        </style>`;
+        let borderRadius = '';
+        let videoImg = 'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
+        let posterCon = '<div style="width:'+vWidth+'px;height:'+posterHeight+'px;margin:0 auto;display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items: center;"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/><span style="padding-top: 30px;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
+        if(videoInfo.poster){
+          borderRadius = 'border-radius: 10px;'
+          posterCon = '<img style="width:100%; max-height: 100%; '+borderRadius+'" src="'+videoInfo.poster+'"/>'
+        }
+        
+        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-download _stay-click-download">Download</div>`;
+        let qualityList = videoInfo.qualityList;
+        if(qualityList && qualityList.length){
+          
+          let qualityItem = '';
+          qualityList.forEach(item=>{
+            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
+            downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
+            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item _stay-click-download">${item.qualityLabel}</div>`
+          })
+
+          downloadCon = qualityItem;
+
+        }
+        let sinfferModal = [
+          '<div id="__stay_sinffer_modal" style="position: fixed; z-index: 9999999; width: 100%; height: 100%; text-align: center; '+ bg +' -webkit-backdrop-filter: blur(8px); top: 0px; -webkit-overflow-scrolling: touch;margin: 0 auto;">',
+          '<div style="width:100%;position:relative;'+vTop+borderRadius+'display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items: center;'+imgPadding+'">',
+          posterCon,
+          '<div class="_stay-sinffer-popup">',
+          '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
+          '<div class="_stay-sinffer-download">',
+          downloadCon,
+          '</div>',
+          '</div>',
+          '</div>',
+          '</div>'
+        ];
+        document.body.append(Utils.parseToDOM(sinfferStyle));
+        document.body.append(Utils.parseToDOM(sinfferModal.join('')));
+        return document.querySelector('#__stay_sinffer_modal');
+      }
+
+      modalDom.addEventListener('touchmove', e =>{ 
+        e.preventDefault();
+      }, false);
+      modalDom.addEventListener('touchstart', e =>{ 
+        e.preventDefault();
+        // modalDom.style.display = 'none';
+        document.body.removeChild(modalDom);
+        document.body.removeChild(document.querySelector('#__style_sinffer_style'));
+
+      }, false);
+
+      const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-click-download');
+      if(downloadItems && downloadItems.length){
+        for(let i=0; i<downloadItems.length; i++){
+          (function(n){
+            downloadItems[i].addEventListener('touchstart', e=>{
+              // console.log('e---------',e);
+              let openUrl = e.target.getAttribute('stay-download');
+              let targetGun = document.createElement('a');
+              targetGun.href = openUrl;
+              targetGun.click();
+            })
+          })(i)
+        }
+      }
+    }
+    
     
     /**
      * 获取页面上video标签获取视频信息
@@ -380,7 +699,7 @@ const browser = __b;
      * qualityList[{downloadUrl,qualityLabel, quality }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb
      */
-    function handleVideoInfoParse(videoDom){
+    function handleVideoInfoParse(videoDom, longPressDom, videoUuid){
       let videoInfo = {};
       let poster = videoDom.getAttribute('poster');
       let title = videoDom.getAttribute('title');
@@ -400,6 +719,13 @@ const browser = __b;
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
         const videoId = Utils.queryURLParams(hostUrl, 'v');
+        let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
+        if(!playerDom){
+          playerDom = document.querySelector('#player-control-overlay');
+        }
+        if(playerDom){
+          longPressDom = playerDom;
+        }
         videoInfo = handleYoutubeVideoInfo(title, videoId);
       }
       else if(host.indexOf('baidu.com')>-1){
@@ -426,6 +752,7 @@ const browser = __b;
         }
       }
       else if(host.indexOf('m.toutiao.com')>-1){
+        longPressDom = document.querySelector('.video .xgplayer-wrapper .xgplayer-mobile .trigger');
         videoInfo = handleMobileToutiaoVideoInfo(videoDom);
       }
       else if(host.indexOf('m.v.qq.com')>-1){
@@ -470,16 +797,19 @@ const browser = __b;
       videoInfo['downloadUrl'] = downloadUrl;
       videoInfo['hostUrl'] = hostUrl;
       videoInfo['qualityList'] = qualityList;
+      videoInfo['videoUuid'] = videoUuid;
+
+      if(downloadUrl){
+        checkVideoExist(longPressDom, videoInfo) 
+      }
+
       return videoInfo;
     }
 
     function setTimeoutParseVideoInfoByWindow(){
+      // console.log('setTimeoutParseVideoInfoByWindow-------')
       setTimeout(()=>{
-        let videoInfo = parseVideoInfoByWindow()
-        if(!videoInfo.downloadUrl){
-          return;
-        }
-        checkVideoExist(videoInfo)
+        parseVideoInfoByWindow()
       },300)
     }
     
@@ -488,9 +818,19 @@ const browser = __b;
       let host = window.location.host;
       hostUrl = window.location.href;
       videoInfo.hostUrl = hostUrl;
+      let dom = null;
       if(host.indexOf('pornhub.com')>-1){
+        dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper .mgp_videoPoster img');
+        if(!dom){
+          dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
+        }
         videoInfo = parsePornhubVideoInfoByWindow(videoInfo);
       }
+
+      if(!videoInfo.downloadUrl){
+        return;
+      }
+      checkVideoExist(dom, videoInfo);
       // console.log('parseVideoInfoByWindow------', videoInfo)
       return videoInfo;
     }
@@ -714,7 +1054,7 @@ const browser = __b;
                 if('hls' == item.format && typeof item.quality == 'string'){
                   qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
                 }
-                if('boolean' == typeof item.defaultQuality && item.defaultQuality ){
+                if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
                   defaultQuality = item.defaultQuality;
                   if(!videoInfo.downloadUrl){
                     videoInfo.downloadUrl = item.videoUrl;

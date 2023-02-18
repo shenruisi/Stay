@@ -399,7 +399,7 @@ export default {
               text-overflow: ellipsis;
               display: inline-block;
               -webkit-box-orient: vertical;
-              padding-right: 6px;
+              padding-right: 16px;
               text-align: center;
               &::after{
                 background: url("../assets/images/dropdown.png") no-repeat 50% 50%;  

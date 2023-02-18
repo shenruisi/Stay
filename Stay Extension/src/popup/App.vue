@@ -6,8 +6,8 @@
       <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
       <template v-if="selectedTab.id==2 || selectedTab.id==3">
         <template v-if="isStayPro">
-          <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled"></DarkMode>
-          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer>
+          <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
+          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl"></Sniffer>
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
@@ -83,7 +83,9 @@ export default {
       global.browser.tabs.getSelected(null, (tab) => {
         // console.log('fetchStayProConfig----tab-----', tab);
         state.browserUrl = tab.url;
-        store.commit('setBrowserUrl', state.browserUrl);
+        // console.log('state.browserUrl----tab-----', state.browserUrl);
+        store.commit('setBrowserUrl', tab.url);
+        // console.log('store.state.browserUrl====',store.state.browserUrl);
       })
       global.browser.runtime.sendMessage({ type: 'popup', operate: 'FETCH_DARKMODE_CONFIG'}, (response) => {})
     }
