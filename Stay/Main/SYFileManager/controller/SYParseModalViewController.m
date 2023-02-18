@@ -181,13 +181,6 @@
             cer.nav = self.nav;
             [self.navigationController pushModalViewController:cer];
         } else {
-            [self.parseButton setEnabled:NO];
-            [self.parseButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Parsing", @"")
-                                                                                     attributes:@{
-                                 NSForegroundColorAttributeName : UIColor.whiteColor,
-                                 NSFontAttributeName : FCStyle.bodyBold}]
-                                            forState:UIControlStateNormal];
-            
             self.linkElements[0].inputEntity.text = targetUrl;
             [self.tableView reloadData];
             

@@ -69,7 +69,7 @@
 
 
 - (UIButton *)button{
-#ifdef Mac
+#ifdef FC_MAC
     if (nil == _button){
         _button = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width - 200)/2,
                                                              self.label.frame.origin.y + self.label.frame.size.height+10,
@@ -94,7 +94,7 @@
 }
 
 - (UILabel *)guide{
-#ifdef Mac
+#ifdef FC_MAC
     if (nil == _guide){
         _guide = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                            self.button.frame.origin.y + self.button.frame.size.height+10,
@@ -114,7 +114,7 @@
 }
 
 - (void)enableExtension:(id)sender{
-#ifdef Mac
+#ifdef FC_MAC
    [FCShared.plugin.carbon enableExtension];
 #endif
     

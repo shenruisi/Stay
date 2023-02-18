@@ -31,7 +31,7 @@
 
 - (void)setSelected:(BOOL)selected{
     [super setSelected:selected];
-#ifdef Mac
+#ifdef FC_MAC
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
 #else
     UIViewController *rootController = [QuickAccess rootController];
@@ -52,7 +52,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
-#ifdef Mac
+#ifdef FC_MAC
     self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
 #else
     UIViewController *rootController = [QuickAccess rootController];

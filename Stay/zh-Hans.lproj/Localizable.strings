@@ -230,6 +230,7 @@ ParseWeb="网页解析中...";
 DownloadLink="下载链接";
 Copy="复制";
 SelectVideos="请选择视频";
+Copied="已复制";
 
 Downloader="下载器";
 SearchVideo="搜索已下载的视频";

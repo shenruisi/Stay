@@ -208,6 +208,7 @@
 
 - (void)copyAction:(UIView *)sender {
     UIPasteboard.generalPasteboard.string = self.linkLabel.text;
+    [FCShared.toastCenter show:[ImageHelper sfNamed:@"checkmark.circle.fill" font:FCStyle.sfIcon color:FCStyle.fcBlack] mainTitle:NSLocalizedString(@"DownloadLink", @"") secondaryTitle:NSLocalizedString(@"Copied", @"")];
 }
 
 - (void)qualityAction:(UIView *)sender {
@@ -269,6 +270,7 @@
         _titleText.layer.cornerRadius = 10;
         _titleText.clipsToBounds = YES;
         _titleText.backgroundColor = FCStyle.secondaryPopup;
+        _titleText.textContainerInset = UIEdgeInsetsMake(4, 0, 4, 0);
         _titleText.delegate = self;
         _titleText.translatesAutoresizingMaskIntoConstraints = NO;
     }
@@ -335,7 +337,9 @@
 @interface SYParseDownloadModalViewController()<
  UITableViewDelegate,
  UITableViewDataSource
->
+> {
+    NSInteger _curCount;
+}
 
 @property (nonatomic, strong) NSMutableArray<NSMutableDictionary *> *dataSource;
 @property (nonatomic, strong) UITableView *tableView;
@@ -385,10 +389,14 @@
     NSMutableDictionary *entity = self.dataSource[indexPath.row];
     if (entity[@"isSelected"]) {
         [entity removeObjectForKey:@"isSelected"];
+        _curCount--;
     } else {
         entity[@"isSelected"] = @(YES);
+        _curCount++;
     }
     [tableView reloadData];
+    [self.startButton setEnabled:_curCount > 0];
+    self.startButton.backgroundColor = _curCount > 0 ? FCStyle.accent : FCStyle.tertiaryBackground;
 }
 
 - (NSMutableArray<NSMutableDictionary *> *)dataSource{
@@ -401,6 +409,7 @@
 
 - (void)setData:(NSArray<NSDictionary *> *)data {
     if (data.count == 0) {
+        _curCount = 0;
         [self.dataSource removeAllObjects];
         [self.emptyView setHidden:NO];
         [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Quit", @"")
@@ -408,7 +417,10 @@
                              NSForegroundColorAttributeName : UIColor.whiteColor,
                              NSFontAttributeName : FCStyle.bodyBold}]
                                         forState:UIControlStateNormal];
+        [self.startButton setEnabled:YES];
+        self.startButton.backgroundColor = FCStyle.accent;
         [self.tableView setHidden:YES];
+        [self.tableView reloadData];
     } else {
         for (NSDictionary *dic in data) {
             BOOL founded = NO;
@@ -420,6 +432,25 @@
             }
             if (!founded) {
                 NSMutableDictionary *item = [NSMutableDictionary dictionaryWithDictionary:dic];
+                NSArray *qualityList = item[@"qualityList"];
+                if (qualityList.count > 0) {
+                    NSString *downloadUrl = item[@"downloadUrl"];
+                    NSString *selectedQuality;
+                    NSString *selectedDownloadUrl;
+                    for (NSDictionary *qulity in qualityList) {
+                        if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                            selectedQuality = qulity[@"qualityLabel"];
+                            selectedDownloadUrl = qulity[@"downloadUrl"];
+                            break;
+                        }
+                    }
+                    if (selectedQuality.length == 0) {
+                        selectedQuality = qualityList[0][@"qualityLabel"];
+                        selectedDownloadUrl = qualityList[0][@"downloadUrl"];
+                    }
+                    item[@"selectedQuality"] = selectedQuality;
+                    item[@"selectedDownloadUrl"] = selectedDownloadUrl;
+                }
                 if (item[@"uuid"] == nil) {
                     NSString *selectedUUID = SharedStorageManager.shared.userDefaults.lastFolderUUID;
                     if (selectedUUID.length == 0) {
@@ -429,6 +460,7 @@
                 }
                 if (self.dataSource.count == 0) {
                     item[@"isSelected"] = @(YES);
+                    _curCount = 1;
                 }
                 [self.dataSource addObject:item];
             }

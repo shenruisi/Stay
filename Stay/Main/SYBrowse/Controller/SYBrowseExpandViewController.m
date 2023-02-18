@@ -22,7 +22,7 @@
 #import "UserscriptUpdateManager.h"
 #import "SharedStorageManager.h"
 #import "SYNetworkUtils.h"
-#ifdef Mac
+#ifdef FC_MAC
 #import "QuickAccess.h"
 #endif
 
@@ -210,7 +210,7 @@
     SYDetailViewController *cer = [[SYDetailViewController alloc] init];
     cer.isSearch = false;
     cer.script = model;
-#ifdef Mac
+#ifdef FC_MAC
     [[QuickAccess secondaryController] pushViewController:cer];
 #else
     [self.navigationController pushViewController:cer animated:true];

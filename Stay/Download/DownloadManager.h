@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *fileName;
 @property (nonatomic, strong) NSString *fileType;
 @property (nonatomic ,strong) NSString *key;
+@property (nonatomic ,strong) NSString *m3u8Content;
 @end
 
 @interface Task : NSObject

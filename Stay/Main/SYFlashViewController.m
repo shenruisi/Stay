@@ -51,7 +51,7 @@
 
 - (void)closeFlash {
     [self dismissViewControllerAnimated:YES completion:nil];
-#ifdef Mac
+#ifdef FC_MAC
         if ([QuickAccess primaryController] != nil){
             [QuickAccess primaryController].selectedIndex = 1;
         }

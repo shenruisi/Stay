@@ -9,7 +9,7 @@
 #import "SYMoreViewController.h"
 #import "FCStyle.h"
 #import "FCConfig.h"
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -649,7 +649,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     } else {
         NSString *type = dict[@"type"];
         if ([type isEqualToString:@"subscription"]) {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
                                animated:YES completion:^{}];
@@ -658,7 +658,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 #endif
             
         } else if([type isEqualToString:@"about"]) {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYAboutViewController alloc] init]]
                                animated:YES completion:^{}];
@@ -666,7 +666,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             [self.navigationController pushViewController:[[SYAboutViewController alloc] init] animated:YES];
 #endif
         }  else if([type isEqualToString:@"appearance"]) {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYAppearanceViewController alloc] init]]
                                animated:YES completion:^{}];
@@ -674,7 +674,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             [self.navigationController pushViewController:[[SYAppearanceViewController alloc] init] animated:YES];
 #endif
         } else if ([type isEqualToString:@"getStarted"]) {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYFlashViewController alloc] init]]
                                animated:YES completion:^{}];
@@ -688,7 +688,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 #endif
 
         }  else if([type isEqualToString:@"M3U8Concurrency"]) {
-#ifdef Mac
+#ifdef FC_MAC
             [self presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYConcurrencyViewController alloc] init]]
                                animated:YES completion:^{}];
@@ -700,7 +700,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-#ifdef Mac
+#ifdef FC_MAC
     return 35.0;
 #else
     return 45.0;
@@ -881,7 +881,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             @{
                 @"section":NSLocalizedString(@"Interaction",@""),
                 @"cells":@[
-#ifndef Mac
+#ifndef FC_MAC
                     @{@"title":NSLocalizedString(@"settings.getStarted",@""),
                       @"type":@"getStarted",
                     },

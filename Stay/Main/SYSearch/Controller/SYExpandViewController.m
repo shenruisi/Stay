@@ -15,7 +15,7 @@
 #import "SYEditViewController.h"
 #import <objc/runtime.h>
 #import "FCStyle.h"
-#ifdef Mac
+#ifdef FC_MAC
 #import "QuickAccess.h"
 #endif
 
@@ -190,7 +190,7 @@
     SYDetailViewController *cer = [[SYDetailViewController alloc] init];
     cer.isSearch = false;
     cer.script = model;
-#ifdef Mac
+#ifdef FC_MAC
     [[QuickAccess secondaryController] pushViewController:cer];
 #else
     [self.navigationController pushViewController:cer animated:true];
@@ -219,7 +219,7 @@
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
-#ifdef Mac
+#ifdef FC_MAC
                 [[QuickAccess secondaryController] pushViewController:cer];
 #else
                 [self.navigationController pushViewController:cer animated:true];

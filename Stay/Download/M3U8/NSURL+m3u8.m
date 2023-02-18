@@ -22,9 +22,19 @@
     return baseURL;
 }
 
-- (void)m3u_loadAsyncCompletion:(void (^)(M3U8PlaylistModel *model, NSError *error))completion {
+- (void)m3u_loadAsyncCompletion:(void (^)(M3U8PlaylistModel *model, NSError *error))completion withContent:(NSString *)content {
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         NSError *err = nil;
+        if (content.length > 0) {
+            M3U8PlaylistModel *listModel = [[M3U8PlaylistModel alloc] initWithString:content
+                                                                         originalURL:self baseURL:self.m3u_realBaseURL error:&err];
+            if (!err) {
+                completion(listModel, err);
+                return;
+            } else {
+                err = nil;
+            }
+        }
         NSString *str = [[NSString alloc] initWithContentsOfURL:self headers:[self getHeaders]
                                                        encoding:NSUTF8StringEncoding error:&err];
         

@@ -13,7 +13,7 @@
 #import "LoadingSlideController.h"
 #import "FCStyle.h"
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "QuickAccess.h"
 #endif
 
@@ -81,7 +81,7 @@
                 SYEditViewController *cer = [[SYEditViewController alloc] init];
                 cer.content = str;
                 cer.downloadUrl = downloadUrl;
-#ifdef Mac
+#ifdef FC_MAC
                 [[QuickAccess secondaryController] pushViewController:cer];
 #else
                 [self.navigationController pushViewController:cer animated:true];

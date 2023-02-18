@@ -19,7 +19,7 @@
 #import "SYChangeDocSlideController.h"
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -30,7 +30,6 @@
  UIDocumentPickerDelegate
 >
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) ToastCenter *toastCenter;
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 @property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
 @end
@@ -327,7 +326,7 @@
                               withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
     image = [image imageWithTintColor:FCStyle.fcBlack
                         renderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.toastCenter show:image
+    [FCShared.toastCenter show:image
                      mainTitle:NSLocalizedString(@"Video", @"")
                 secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
 }
@@ -338,7 +337,7 @@
                               withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
     image = [image imageWithTintColor:FCStyle.fcBlack
                         renderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.toastCenter show:image
+    [FCShared.toastCenter show:image
                      mainTitle:NSLocalizedString(@"Video", @"")
                 secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
 }
@@ -357,7 +356,7 @@
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef Mac
+#ifdef FC_MAC
     [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #else
         self.tableView.frame = self.view.bounds;
@@ -398,15 +397,6 @@
 
     }
     return _sYTextInputViewController;
-}
-
-
-- (ToastCenter *)toastCenter{
-    if (nil == _toastCenter){
-        _toastCenter = [[ToastCenter alloc] init];
-    }
-    
-    return _toastCenter;
 }
 
 @end

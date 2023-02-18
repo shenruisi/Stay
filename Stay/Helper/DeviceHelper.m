@@ -13,7 +13,7 @@
 @implementation DeviceHelper
 
 + (FCDeviceType)type{
-#ifdef Mac
+#ifdef FC_MAC
     return FCDeviceTypeMac;
 #else
     return  [[[UIDevice currentDevice].model lowercaseString] isEqualToString:@"iphone"] ? FCDeviceTypeIPhone : FCDeviceTypeIPad;
