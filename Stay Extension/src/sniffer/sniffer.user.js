@@ -187,6 +187,65 @@ const browser = __b;
         } catch (error) {
           return url.split('/')[0].toLowerCase();
         }
+      },
+      div(a, b) {
+        let c, d, e = 0,
+          f = 0;
+        try {
+          e = a.toString().split('.')[1].length;
+        } catch (g) {
+          e = 0;
+        }
+        try {
+          f = b.toString().split('.')[1].length;
+        } catch (g) {
+          f = 0;
+        }
+        c = Number(a.toString().replace('.', ''));
+        d = Number(b.toString().replace('.', ''));
+        return this.mul(c / d, Math.pow(10, f - e));
+      },
+      sub(a, b) {
+        let c, d, e;
+        try {
+          c = a.toString().split('.')[1].length;
+        } catch (f) {
+          c = 0;
+        }
+        try {
+          d = b.toString().split('.')[1].length;
+        } catch (f) {
+          d = 0;
+        }
+        e = Math.pow(10, Math.max(c, d));
+        return (this.mul(a, e) - this.mul(b, e)) / e;
+      },
+      mul(a,b){
+        let c = 0,
+          d = a.toString(),
+          e = b.toString();
+        try {
+          c += d.split('.')[1].length;
+        } catch (f) {}
+        try {
+          c += e.split('.')[1].length;
+        } catch (f) {}
+        return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c);  
+      },
+      add(a,b){
+        let c, d, e;
+        try {
+          c = a.toString().split('.')[1].length;
+        } catch (f) {
+          c = 0;
+        }
+        try {
+          d = b.toString().split('.')[1].length;
+        } catch (f) {
+          d = 0;
+        }
+        e = Math.pow(10, Math.max(c, d));
+        return  (this.mul(a, e) + this.mul(b, e)) / e;
       }
     }
 
@@ -492,10 +551,7 @@ const browser = __b;
         return;
       }
       dom.style.userSelect = 'none';
-      // if(dom.eventList && dom.eventList['stayLongPress'] == 'yes'){
-      //   console.log('addLongPress already bind stay long press-----2-------');
-      //   return;
-      // }
+
       
       new LongPress(dom, ()=>{
         addSinfferModal(dom, videoInfo);
@@ -504,59 +560,188 @@ const browser = __b;
     }
 
     function addSinfferModal(videoDom, videoInfo){
+      let vWidth = videoDom.clientWidth;
+      let vHeight = videoDom.clientHeight;
+      let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let top = videoDom.getBoundingClientRect().top;
+      let left = videoDom.getBoundingClientRect().left;
+      left = left ? left : 5;
+      // 算出16:9的宽高
+      let posterWidth = vWidth;
+      let posterHeight = Utils.div(Utils.mul(posterWidth, 9), 16);
+      // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
+
       let modalDom = document.querySelector('#__stay_sinffer_modal');
-      if(modalDom){
-        modalDom.style.display = 'block';
-      }else{
+      if(!modalDom){
         modalDom = createModal();
       }
-      
+      modalDom.style.visibility = 'visible';
+      const popupDom = document.querySelector('#__stay_sinffer_modal ._stay-sinffer-popup');
+      const modalContent = document.querySelector('#__stay_sinffer_modal .__stay-sinffer-content');
+      modalContent.classList.add('__stay-trans');
+
+      setTimeout(function(){
+        modalDom.classList.add('__stay-show-modal');
+        popupDom.style.visibility = 'visible';
+      }, 600)
+
+
       // window.open(downloadUrl);
       function createModal(){
         let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
         let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-        let vWidth = videoDom.clientWidth;
-        let vHeight = videoDom.clientHeight;
-        let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        let top = videoDom.getBoundingClientRect().top;
-        let left = videoDom.getBoundingClientRect().left;
-        let imgPadding = 'padding: 0 '+left+'px;';
-        let posterHeight = vHeight;
-        if((top == 0 && bodyClientHeight == vHeight)){
-          posterHeight = 224;
-        }
-        // console.log('top----',top);
-        let vTop = 'top:'+ top + 'px;';
-        if(top<0){
-          vTop = 'top:0px;';
-        }else{
-          if(top>(bodyClientHeight/2) || (top == 0 && bodyClientHeight == vHeight)){
-            vTop = 'top: 50%;transform: translate(0, -50%);';
-          }
-        }
-        let downloadBg = 'background-color: rgb(54, 54, 57);';
-        let downloadColor = 'rgb(247,247,247)';
-        let bg = 'background-color: rgba(255, 255, 255, 0.4);';
+        let downloadBg = 'background-color: rgb(247,247,247);';
+        let downloadColor = 'rgb(54, 54, 57)';
+        let bg = 'background-color: rgba(0, 0, 0, 0.4);';
+        let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
         let downloadIcon = 'https://res.stayfork.app/scripts/923EC60A7EB6B878317747AF29D99104/icon.png';
         if(Utils.isDark()){
-          bg = 'background-color: rgba(0, 0, 0, 0.4);';
+          // bg = 'background-color: rgba(0, 0, 0, 0.4);';
+          posterbg = 'background-color: rgba(0, 0, 0, 1);';
           fontColor = 'color:#DCDCDC;'
+          downloadBg = 'background-color: rgb(54, 54, 57);';
           downloadIcon = 'https://res.stayfork.app/scripts/0031EAA96B967DA000F1BFA809FADE21/icon.png';
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
         }
+        
+        let borderRadius = '';
+        let videoImg = 'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
+        let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
+        if(videoInfo.poster){
+          borderRadius = 'border-radius: 10px;'
+          posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
+        }
+        let countH = 1;
+        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">Download</div>`;
+        let qualityList = videoInfo.qualityList;
+        if(qualityList && qualityList.length){
+          let qualityItem = '';
+          countH = 0
+          qualityList.forEach(item=>{
+            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
+            downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
+            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}</div>`
+            countH = countH + 1;
+          })
+          downloadCon = qualityItem;
+        }
+        // 动画开始位置
+        let transPos = top;
+        // 计算高度
+        let vTop = top;
+        if(top<0){
+          vTop = 0;
+        }else if(top == 0){
+          // 处理全屏的top
+          if(bodyClientHeight == vHeight){
+            vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
+          }
+        }else{
+          let paddingHeight = Utils.add(10, 36);
+          let modalContentHeight = Utils.add(Utils.add(posterHeight, paddingHeight), Utils.add(Utils.mul(countH, 38), 36));
+          // 内容+定位的top 超出屏幕高度, 则可展示内容的top
+          if(top>Utils.sub(bodyClientHeight, modalContentHeight)){
+            vTop = Utils.sub(bodyClientHeight, modalContentHeight);
+          }
+        }
         let sinfferStyle = `<style id="__style_sinffer_style">
-          ._stay-sinffer-popup{
-            width:222px;padding-top: 10px;box-sizing: border-box;border-radius:8px;margin-top: 12px;${downloadBg}
+          .__stay-modal-box{
+            position: fixed; 
+            z-index: 9999999; 
+            width: 100%; 
+            height: 100%; 
+            text-align: center; 
+            top: 0px;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 auto;
+            transition: all 0.6s;
+            box-sizing: border-box;
+            visibility: hidden;
+          }
+          .__stay-show-modal{
+            ${bg}
+            -webkit-backdrop-filter: blur(8px); 
+          }
+          .__stay-sinffer-content{
+            width:100%;
             position: absolute;
-            top: 100%;
+            left: 0;
+            -webkit-transform: translate3d(0, ${transPos}px, 0);
+            transform: translate3d(0, ${transPos}px, 0);
+            will-change: transform;
+            -webkit-transition: -webkit-transform .4s cubic-bezier(0,0,.25,1) 80ms;
+            transition: transform .4s cubic-bezier(0,0,.25,1) 80ms;
+            box-sizing: border-box;
+          }
+          .__stay-trans{
+            -webkit-transform: translate3d(0,${vTop}px,0);
+            transform: translate3d(0,${vTop}px,0);
+          }
+          __stay-content{
+            width:100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            justify-items: center;
+            align-items: center;
+          }
+          ._stay-sinffer-popup{
+            width:230px;padding-top: 10px;box-sizing: border-box;border-radius:10px;
+            ${downloadBg}
+            position: relative;
+            margin: 16px auto 0 auto;
             z-index:999999;
+            visibility: hidden;
+            animation: fadein .5s;
+          }
+          .__stay-sinffer-poster{
+            width: 100%;
+            height: ${posterHeight}px;
+            padding: ${left}px;
+            margin:0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            justify-items: center;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 0px 10px rgba(54,54,57,0.1);
+            transition: All 0.4s ease-in-out;
+            -webkit-transition: All 0.4s ease-in-out;
+            -moz-transition: All 0.4s ease-in-out;
+            -o-transition: All 0.4s ease-in-out;
+            animation-name: zoom;
+            animation-duration: 0.6s;
+          }
+          .__stay-poster-box{
+            width:100%;
+            height:100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            ${posterbg}
+            border-radius: 10px;
+            box-shadow: 0 0px 10px rgba(54,54,57,0.1);
+          }
+          .__stay-default-poster{
+            width:80px;
+            height:60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            justify-items: center;
+            align-items: center;
+            box-sizing: border-box;
           }
           ._stay-sinffer-title{
             padding-left: 10px;
             padding-right: 10px;
             width: 100%;
+            height:36px;
             line-height: 18px;
             word-break:break-all;
             word-wrap:break-word;
@@ -577,10 +762,9 @@ const browser = __b;
             box-sizing: border-box;
             display: flex;
             justify-content: flex-start;
-            padding: 10px;
-            border-top: 0.5px solid rgb(247,247,247);
           }
-          ._stay-download{
+          ._stay-quality-item{
+            height: 38px;
             box-sizing: border-box;
             width:100%;
             padding-right: 20px;
@@ -588,8 +772,12 @@ const browser = __b;
             color: ${downloadColor};
             text-align:left;
             font-size: 16px;
+            border-top: 0.5px solid ${downloadColor};
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
           }
-          ._stay-download::after{
+          ._stay-quality-item::after{
             content:"";
             background: url(${downloadIcon}) no-repeat 50% 50%;  
             background-size: 14px;
@@ -600,56 +788,32 @@ const browser = __b;
             width: 14px;
             height: 20px;
           }
-          ._stay-quality-item{
-            border: 1px solid ${downloadColor};
-            height: 30px;
-            display: flex;
-            position: relative;
-            margin-right: 8px;
-            padding-left: 8px;
-            padding-right: 24px;
-            align-items: center;
-            -webkit-border-radius: 4px;
-            color: ${downloadColor};
+          @keyframes zoom {
+            0% {transform: scale(1.05)}
+            100% {transform: scale(1);${borderRadius}}
           }
-          ._stay-quality-item::after{
-            content:"";
-            background: url(${downloadIcon}) no-repeat 50% 50%;  
-            background-size: 12px;
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translate(0, -52%);
-            width: 12px;
-            height: 17px;
+          @keyframes fadein {
+            0% {
+              transform: translate(0, -100%);
+            }
+            100% {
+              transform: none;
+            }
+          }
+          @keyframes fadeout {
+              0% {
+                transform: translate(0,100%);
+              }
+              100% {
+                  transform: none;
+              }
           }
         </style>`;
-        let borderRadius = '';
-        let videoImg = 'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
-        let posterCon = '<div style="width:'+vWidth+'px;height:'+posterHeight+'px;margin:0 auto;display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items: center;"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/><span style="padding-top: 30px;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
-        if(videoInfo.poster){
-          borderRadius = 'border-radius: 10px;'
-          posterCon = '<img style="width:100%; max-height: 100%; '+borderRadius+'" src="'+videoInfo.poster+'"/>'
-        }
-        
-        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-download _stay-click-download">Download</div>`;
-        let qualityList = videoInfo.qualityList;
-        if(qualityList && qualityList.length){
-          
-          let qualityItem = '';
-          qualityList.forEach(item=>{
-            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
-            downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item _stay-click-download">${item.qualityLabel}</div>`
-          })
-
-          downloadCon = qualityItem;
-
-        }
         let sinfferModal = [
-          '<div id="__stay_sinffer_modal" style="position: fixed; z-index: 9999999; width: 100%; height: 100%; text-align: center; '+ bg +' -webkit-backdrop-filter: blur(8px); top: 0px; -webkit-overflow-scrolling: touch;margin: 0 auto;">',
-          '<div style="width:100%;position:relative;'+vTop+borderRadius+'display: flex;flex-direction: column;justify-content: center;justify-items: center;align-items: center;'+imgPadding+'">',
-          posterCon,
+          '<div id="__stay_sinffer_modal" class="__stay-modal-box" >',
+          '<div class="__stay-sinffer-content">',
+          '<div class="__stay-content">',
+          '<div class="__stay-sinffer-poster">'+posterCon+'</div>',
           '<div class="_stay-sinffer-popup">',
           '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
           '<div class="_stay-sinffer-download">',
@@ -657,8 +821,10 @@ const browser = __b;
           '</div>',
           '</div>',
           '</div>',
+          '</div>',
           '</div>'
         ];
+        
         document.body.append(Utils.parseToDOM(sinfferStyle));
         document.body.append(Utils.parseToDOM(sinfferModal.join('')));
         return document.querySelector('#__stay_sinffer_modal');
@@ -670,12 +836,16 @@ const browser = __b;
       modalDom.addEventListener('touchstart', e =>{ 
         e.preventDefault();
         // modalDom.style.display = 'none';
-        document.body.removeChild(modalDom);
-        document.body.removeChild(document.querySelector('#__style_sinffer_style'));
+        modalDom.classList.remove('__stay-show-modal');
+        popupDom.style.animation = 'fadeout .5s;';
 
+        setTimeout(() => {
+          document.body.removeChild(modalDom);
+          document.body.removeChild(document.querySelector('#__style_sinffer_style'));
+        }, 500);
       }, false);
 
-      const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-click-download');
+      const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-quality-item');
       if(downloadItems && downloadItems.length){
         for(let i=0; i<downloadItems.length; i++){
           (function(n){
