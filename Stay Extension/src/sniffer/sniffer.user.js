@@ -545,13 +545,27 @@ const browser = __b;
       if(!dom){
         return;
       }
+      if(!Utils.isMobile()){
+        return;
+      }
       let stayLongPress = dom.getAttribute('stay-long-press');
       if(stayLongPress && stayLongPress == 'yes'){
         // console.log('addLongPress already bind stay long press------1------');
         return;
       }
-      dom.style.userSelect = 'none';
-
+      const sinfferUnselectDom = document.querySelector('#__style_sinffer_unselect');
+      if(!sinfferUnselectDom){
+        let sinfferUnselect=`<style id="__style_sinffer_unselect">
+          .__stay-unselect{
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+        </style>`;
+        document.body.append(Utils.parseToDOM(sinfferUnselect));
+      }
+      dom.classList.add('__stay-unselect');
       
       new LongPress(dom, ()=>{
         addSinfferModal(dom, videoInfo);
@@ -762,6 +776,8 @@ const browser = __b;
             box-sizing: border-box;
             display: flex;
             justify-content: flex-start;
+            flex-direction: column;
+            align-items: center;
           }
           ._stay-quality-item{
             height: 38px;
@@ -943,6 +959,15 @@ const browser = __b;
       }
       else if(host.indexOf('xiaohongshu.com')>-1){
         videoInfo = handleXiaohongshuVideoInfo(videoDom);
+      }
+      // https://jable.tv/videos/dvaj-605/
+      else if(host.indexOf('jable.tv')>-1){
+        let plyrPreviewDom = document.querySelector('.plyr--video .plyr__video-wrapper .plyr__preview-scrubbing');
+        if(plyrPreviewDom){
+          console.log('plyrPreviewDom-----',plyrPreviewDom)
+          longPressDom = plyrPreviewDom;
+        }
+        videoInfo = handleJableVideoInfo(videoDom);
       }
 
       if(videoInfo.downloadUrl){
@@ -1327,6 +1352,20 @@ const browser = __b;
         }
       }
       return videoInfo;
+    }
+
+    function handleJableVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      const titleDom = document.querySelector('.video-info .info-header .header-left h4');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+
+      return videoInfo;
+
     }
 
     /**
