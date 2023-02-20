@@ -190,9 +190,12 @@
         NSMutableArray *ret = [[NSMutableArray alloc] init];
         ModalItemElement *saveToElement = [[ModalItemElement alloc] init];
         generalEntity = [[ModalItemDataEntityGeneral alloc] init];
-        NSString *uuid = FCShared.tabManager.tabs[0].uuid;
-        if(self.dic != NULL && self.dic[@"uuid"] != nil) {
-            uuid = self.dic[@"uuid"];
+        NSString *uuid = self.dic[@"uuid"];
+        if(uuid.length == 0) {
+            uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
+            if(uuid.length == 0) {
+                uuid = FCShared.tabManager.tabs[0].uuid;
+            }
         }
         generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
         generalEntity.uuid = uuid;
