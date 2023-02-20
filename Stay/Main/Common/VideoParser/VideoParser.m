@@ -47,17 +47,21 @@ static VideoParser *_kVideoParser;
         [config setPreferences:preferences];
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
+//        NSString *ua = [self _getScript:@"ua.user"];
+//        WKUserScript *uaUserscript = [[WKUserScript alloc] initWithSource:ua injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+//        [wkUController addUserScript:uaUserscript];
         NSString *sinffer = [self _getScript:@"sniffer.app"];
-        WKUserScript *userscript = [[WKUserScript alloc] initWithSource:sinffer injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        [wkUController addUserScript:userscript];
+        WKUserScript *snifferUserscript = [[WKUserScript alloc] initWithSource:sinffer injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+        [wkUController addUserScript:snifferUserscript];
         config.userContentController = wkUController;
         
         _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
         _webView.navigationDelegate = self;
-        [_webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString *userAgent, NSError *error) {
-                NSString *newUserAgent = [userAgent stringByAppendingString:@" Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1"];
-                [config.defaultWebpagePreferences setValue:newUserAgent forKey:@"_webUserAgent"];
-            }];
+//        [_webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString *userAgent, NSError *error) {
+//                NSString *newUserAgent = [userAgent stringByAppendingString:@" "];
+//                [config.defaultWebpagePreferences se]
+//                [config.defaultWebpagePreferences setValue:newUserAgent forKey:@"_webUserAgent"];
+//            }];
     }
     
     return _webView;
