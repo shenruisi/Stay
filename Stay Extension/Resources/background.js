@@ -367,7 +367,7 @@ function isFullyQualifiedDomain(candidate) {
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const requestFrom = request.from;
-    if ("darkmode" == request.from) {
+    if ("darkmode" == requestFrom || "sniffer" == requestFrom) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
                 sendResponse({ body: response.body })

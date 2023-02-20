@@ -403,7 +403,9 @@
     else if(host.indexOf('xiaohongshu.com')>-1){
       videoInfo = handleXiaohongshuVideoInfo(videoDom);
     }
-
+    else if(host.indexOf('jable.tv')>-1){
+      videoInfo = handleJableVideoInfo(videoDom);
+    }
     if(videoInfo.downloadUrl){
       downloadUrl = videoInfo.downloadUrl
     }
@@ -418,7 +420,7 @@
       qualityList = videoInfo.qualityList;
     }
     if(!title){
-      title = Utils.getUrlPathName(downloadUrl);
+      title = document.title;
     }
     poster = Utils.completionSourceUrl(poster);
     videoInfo['title'] = title
@@ -778,6 +780,19 @@
     return videoInfo;
   }
   
+  function handleJableVideoInfo(videoDom){
+    let videoInfo = {};
+    videoInfo.poster = videoDom.getAttribute('poster') || '';
+    videoInfo.downloadUrl = videoDom.getAttribute('src');
+    videoInfo.title = videoDom.getAttribute('title');
+    const titleDom = document.querySelector('.video-info .info-header .header-left h4');
+    if(titleDom){
+      videoInfo.title = titleDom.textContent;
+    }
+
+    return videoInfo;
+
+  }
   /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}

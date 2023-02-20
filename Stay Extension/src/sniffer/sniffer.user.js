@@ -13,11 +13,9 @@ const browser = __b;
       isContent = true;
       injectParseVideoJS(isContent);
     })
-    // isContent = true;
-    // injectParseVideoJS(isContent);
   } catch (error) {
   }
-
+  
   function handleInjectScript(){
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     let contentHost = window.location.host;
@@ -541,13 +539,19 @@ const browser = __b;
      * @param {Object} dom 
      * @returns 
      */
-    function addLongPress(dom, videoInfo){
+    async function addLongPress(dom, videoInfo){
       if(!dom){
         return;
       }
+      const isStayAround = await getStayAround();
+      if(isStayAround!='a'){
+        return;
+      }
+
       if(!Utils.isMobile()){
         return;
       }
+
       let stayLongPress = dom.getAttribute('stay-long-press');
       if(stayLongPress && stayLongPress == 'yes'){
         // console.log('addLongPress already bind stay long press------1------');
@@ -573,15 +577,42 @@ const browser = __b;
       
     }
 
+    function getStayAround(){
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          browser.runtime.sendMessage({from: 'sinffer', operate: 'GET_STAY_AROUND'}, (response) => {
+            console.log('GET_STAY_AROUND---------',response)
+            if(response.body && JSON.stringify(response.body)!='{}'){
+              let isStayAround = response.body;
+              console.log('isStayAround---------',isStayAround)
+            // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
+            }
+          });
+        }else{
+          const pid = Math.random().toString(36).substring(1, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'RESP_GET_STAY_AROUND') return;
+            console.log('RESP_GET_STAY_AROUND----response=', e.data);
+            let isStayAround = e.data ? (e.data.response ? e.data.response.body : {}): 'b';
+            console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayAround);
+            window.removeEventListener('message', callback);
+          };
+          window.addEventListener('message', callback);
+          window.postMessage({ pid: pid, name: 'GET_STAY_AROUND' });
+        }
+      })
+    }
+
     function addSinfferModal(videoDom, videoInfo){
       let vWidth = videoDom.clientWidth;
       let vHeight = videoDom.clientHeight;
       let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
       let top = videoDom.getBoundingClientRect().top;
       let left = videoDom.getBoundingClientRect().left;
-      left = left ? left : 5;
+      left = 10;
       // 算出16:9的宽高
-      let posterWidth = vWidth;
+      let posterWidth = bodyClientWidth;
       let posterHeight = Utils.div(Utils.mul(posterWidth, 9), 16);
       // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
@@ -597,12 +628,12 @@ const browser = __b;
       setTimeout(function(){
         modalDom.classList.add('__stay-show-modal');
         popupDom.style.visibility = 'visible';
-      }, 600)
+      }, 400)
 
 
       // window.open(downloadUrl);
       function createModal(){
-        let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
+        let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: ''}];
         let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
         let downloadBg = 'background-color: rgb(247,247,247);';
         let downloadColor = 'rgb(54, 54, 57)';
@@ -625,7 +656,8 @@ const browser = __b;
         let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
         if(videoInfo.poster){
           borderRadius = 'border-radius: 10px;'
-          posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
+          // posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
+          posterCon = `<div class="__stay-video-poster" style="background:url('${videoInfo.poster}') 50% 50% no-repeat;background-size: cover;"></div>`;
         }
         let countH = 1;
         let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">Download</div>`;
@@ -634,7 +666,7 @@ const browser = __b;
           let qualityItem = '';
           countH = 0
           qualityList.forEach(item=>{
-            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: 'EF95BD4E-B580-4892-B454-09FD657C951E'}];
+            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: ''}];
             downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
             qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}</div>`
             countH = countH + 1;
@@ -729,6 +761,16 @@ const browser = __b;
             -o-transition: All 0.4s ease-in-out;
             animation-name: zoom;
             animation-duration: 0.6s;
+          }
+          .__stay-video-poster{
+            // object-fit: contain;
+            // object-position: center;
+            width:100%;
+            height:100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 10px;
+           
           }
           .__stay-poster-box{
             width:100%;
@@ -858,7 +900,7 @@ const browser = __b;
         setTimeout(() => {
           document.body.removeChild(modalDom);
           document.body.removeChild(document.querySelector('#__style_sinffer_style'));
-        }, 500);
+        }, 300);
       }, false);
 
       const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-quality-item');
@@ -963,8 +1005,11 @@ const browser = __b;
       // https://jable.tv/videos/dvaj-605/
       else if(host.indexOf('jable.tv')>-1){
         let plyrPreviewDom = document.querySelector('.plyr--video .plyr__video-wrapper .plyr__preview-scrubbing');
-        if(plyrPreviewDom){
+        if(!plyrPreviewDom){
+          plyrPreviewDom = document.querySelector('.plyr--video .plyr__video-wrapper .plyr__poster');
           console.log('plyrPreviewDom-----',plyrPreviewDom)
+        }
+        if(plyrPreviewDom){
           longPressDom = plyrPreviewDom;
         }
         videoInfo = handleJableVideoInfo(videoDom);
@@ -984,7 +1029,7 @@ const browser = __b;
         qualityList = videoInfo.qualityList;
       }
       if(!title){
-        title = Utils.getUrlPathName(downloadUrl);
+        title = document.title;
       }
       poster = Utils.completionSourceUrl(poster);
       videoInfo['title'] = title

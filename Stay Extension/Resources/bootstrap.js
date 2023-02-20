@@ -498,6 +498,12 @@ let injectedContentVendor = new Set();
         const name = e.data.name;
         const pid = e.data.pid;
         let message = { from: "gm-apis", uuid: __uuid };
+        if(name == "GET_STAY_AROUND"){
+            message = {from: "sniffer", operate: "GET_STAY_AROUND"}
+            browser.runtime.sendMessage(message, (response) => {
+                window.postMessage({ pid: pid, name: "RESP_GET_STAY_AROUND", response: response });
+            });
+        }
         if (name === "API_LIST_VALUES") {
             message.operate = "GM_listValues";
             browser.runtime.sendMessage(message, (response) => {
