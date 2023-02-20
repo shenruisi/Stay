@@ -102,7 +102,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         timeOb = player?.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] time in
             guard let currentItem = self?.player?.currentItem else { return }
             if self?.isSliding == false {
-                self?.seekBar.setValue(Float(time.seconds / currentItem.duration.seconds), animated: false)
+                self?.seekBar.value = time.seconds / currentItem.duration.seconds
             }
             self?.currLabel.text = time.positionalTime
 //            self?.remainLabel.text = currentItem.duration.positionalTime
@@ -169,7 +169,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     let prevBtn = UIButton()
     let nextBtn = UIButton()
     let currLabel = UILabel()
-    let seekBar = UISlider()
+    let seekBar = MySlider()
     let remainLabel = UILabel()
     let modeBtn = UIButton()
     let fullBtn = UIButton()
@@ -321,10 +321,6 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
         currLabel.text = "00:00"
         currLabel.textAlignment = .center
         currLabel.translatesAutoresizingMaskIntoConstraints = false
-        seekBar.tintColor = .white
-        #if FC_IOS
-        seekBar.setThumbImage(UIImage(systemName: "circle.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 10)))?.withTintColor(.white).withRenderingMode(.alwaysOriginal), for: .normal)
-        #endif
         seekBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
         seekBar.translatesAutoresizingMaskIntoConstraints = false
         remainLabel.font = FCStyle.footnote
@@ -477,6 +473,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                 seekBar.leadingAnchor.constraint(equalTo: currLabel.trailingAnchor, constant: 4),
                 seekBar.trailingAnchor.constraint(equalTo: remainLabel.leadingAnchor, constant: -4),
                 seekBar.centerYAnchor.constraint(equalTo: currLabel.centerYAnchor),
+                seekBar.heightAnchor.constraint(equalToConstant: 12),
                 fullBtn.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
                 fullBtn.widthAnchor.constraint(equalToConstant: !isPhone ? 30 : 0),
                 fullBtn.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
@@ -508,6 +505,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                 seekBar.leadingAnchor.constraint(equalTo: currLabel.trailingAnchor, constant: 4),
                 seekBar.trailingAnchor.constraint(equalTo: remainLabel.leadingAnchor, constant: -4),
                 seekBar.centerYAnchor.constraint(equalTo: playBtn.centerYAnchor),
+                seekBar.heightAnchor.constraint(equalToConstant: 12),
                 
             ])
         }
@@ -618,7 +616,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
     
     var isSliding = false
     @objc
-    func onSliderValChanged(slider: UISlider, event: UIEvent) {
+    func onSliderValChanged(slider: MySlider, event: UIEvent) {
         resetControlHide()
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -626,12 +624,12 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                 isSliding = true
             case .moved:
                 break
-            case .ended:
+            case .ended, .cancelled:
                 if let currentItem = player?.currentItem {
                     player?.seek(to: CMTime(seconds: currentItem.duration.seconds * Double(slider.value), preferredTimescale: CMTimeScale(NSEC_PER_SEC))) { [weak self] _ in
                         self?.isSliding = false
                         if let time = self?.player?.currentTime(), let currentItem = self?.player?.currentItem {
-                            self?.seekBar.setValue(Float(time.seconds / currentItem.duration.seconds), animated: false)
+                            self?.seekBar.value = time.seconds / currentItem.duration.seconds
                             self?.currLabel.text = time.positionalTime
                         }
                     }
@@ -771,7 +769,7 @@ class VideoPlayerView: UIView, AVPictureInPictureControllerDelegate, AVRoutePick
                     mode = 2
                     startTime = player?.currentTime() ?? CMTime(seconds: 0, preferredTimescale: 1)
                     progressLabel.text = startTime.positionalTime
-                    progressPV.progress = seekBar.value
+                    progressPV.progress = Float(seekBar.value)
                     progressView.isHidden = false
                 }
             } else {
