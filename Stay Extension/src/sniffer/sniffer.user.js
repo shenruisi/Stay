@@ -585,6 +585,7 @@ const browser = __b;
             if(response.body && JSON.stringify(response.body)!='{}'){
               let isStayAround = response.body;
               console.log('isStayAround---------',isStayAround)
+              resolve(isStayAround);
             // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
             }
           });
@@ -595,6 +596,7 @@ const browser = __b;
             console.log('RESP_GET_STAY_AROUND----response=', e.data);
             let isStayAround = e.data ? (e.data.response ? e.data.response.body : {}): 'b';
             console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayAround);
+            resolve(isStayAround);
             window.removeEventListener('message', callback);
           };
           window.addEventListener('message', callback);

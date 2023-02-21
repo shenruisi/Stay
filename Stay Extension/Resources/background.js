@@ -367,7 +367,7 @@ function isFullyQualifiedDomain(candidate) {
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const requestFrom = request.from;
-    if ("darkmode" == requestFrom || "sniffer" == requestFrom) {
+    if ("darkmode" == requestFrom) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
                 sendResponse({ body: response.body })
@@ -1072,6 +1072,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoInfoList});
                 });
             }
+        }
+        else if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                sendResponse({ body: response.body })
+            });
         }
         return true;
     }
