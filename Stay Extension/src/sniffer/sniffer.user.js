@@ -472,7 +472,7 @@ const browser = __b;
             self.timer = setTimeout(() => {
               // console.log('------------------targetPageX----------targetPageY-----------');
               // 清除默认行为
-              // event.preventDefault();
+              event.preventDefault();
               if (typeof callback === 'function') {
                 callback();
                 self.timer = 0;
@@ -875,6 +875,7 @@ const browser = __b;
         let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
         let downloadBg = 'background-color: rgb(247,247,247);';
         let downloadColor = 'rgb(54, 54, 57)';
+        let lineColor = '#E0E0E0';
         let bg = 'background-color: rgba(0, 0, 0, 0.4);';
         let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
@@ -887,13 +888,14 @@ const browser = __b;
           downloadIcon = 'https://res.stayfork.app/scripts/0031EAA96B967DA000F1BFA809FADE21/icon.png';
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
+          lineColor = '#37372F';
         }
         
         let borderRadius = '';
         let videoImg = 'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
         let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px; -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
         if(videoInfo.poster){
-          borderRadius = 'border-radius: 10px;'
+          borderRadius = 'border-radius: 15px;'
           // posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
           posterCon = `<div class="__stay-video-poster" style="background:url('${videoInfo.poster}') 50% 50% no-repeat;background-size: cover;"></div>`;
         }
@@ -973,7 +975,7 @@ const browser = __b;
             align-items: center;
           }
           ._stay-sinffer-popup{
-            width:230px;padding-top: 10px;box-sizing: border-box;border-radius:10px;
+            width:230px;padding-top: 10px;box-sizing: border-box;border-radius:15px;
             ${downloadBg}
             position: relative;
             margin: 16px auto 0 auto;
@@ -1011,7 +1013,7 @@ const browser = __b;
             height:100%;
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 10px;
+            border-radius: 15px;
            
           }
           .__stay-poster-box{
@@ -1072,8 +1074,8 @@ const browser = __b;
             color: ${downloadColor};
             text-align:left;
             font-size: 16px;
-            border-top: 0.5px solid ${downloadColor};
-            padding: 0 10px;
+            border-top: 0.5px solid ${lineColor};
+            padding: 0 15px;
             display: flex;
             align-items: center;
           }
@@ -1082,7 +1084,7 @@ const browser = __b;
             background: url(${downloadIcon}) no-repeat 50% 50%;  
             background-size: 14px;
             position: absolute;
-            right: 8px;
+            right: 15px;
             top: 50%;
             transform: translate(0, -52%);
             width: 14px;
