@@ -171,7 +171,9 @@
     if (result != nil) {
         NSString *targetUrl = [[link substringWithRange:[result rangeAtIndex:0]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSURL *linkURL = [NSURL URLWithString:targetUrl];
-        if (linkURL != nil && ([linkURL.lastPathComponent hasSuffix:@".mp4"] || [linkURL.lastPathComponent hasSuffix:@".m3u8"])) {
+        if (linkURL != nil && ([linkURL.lastPathComponent hasSuffix:@".mp4"]
+                               || [linkURL.lastPathComponent hasSuffix:@".m3u8"]
+                               || [linkURL.host containsString:@"googlevideo.com"])) {
             SYDownloadModalViewController *cer = [[SYDownloadModalViewController alloc] init];
             cer.dic = [NSMutableDictionary dictionaryWithDictionary:self.dic];
             cer.dic[@"downloadUrl"] = targetUrl;
@@ -188,12 +190,7 @@
             [self.navigationController pushModalViewController:self.parseDownloadController];
             [self.parseDownloadController setData:[NSArray array]];
             
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
-//            dispatch_get_main_queue(), ^{
-//                [self.parseDownloadController setData:[NSArray arrayWithObject:@{}]];
-//            });
             [[VideoParser shared] parse:targetUrl completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
-                NSLog(@"videoItems %@",videoItems);
                 [self.parseDownloadController setData:videoItems];
             }];
         }
