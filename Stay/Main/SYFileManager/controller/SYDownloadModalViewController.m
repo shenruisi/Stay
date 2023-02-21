@@ -50,9 +50,12 @@
 - (void)viewWillAppear{
     [super viewWillAppear];
     
-    NSString *uuid = FCShared.tabManager.tabs[0].uuid;
-    if(self.dic != NULL && self.dic[@"uuid"] != nil) {
-        uuid = self.dic[@"uuid"];
+    NSString *uuid = self.dic[@"uuid"];
+    if(uuid.length == 0) {
+        uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
+        if(uuid.length == 0) {
+            uuid = FCShared.tabManager.tabs[0].uuid;
+        }
     }
     ModalItemElement *element = self.saveToElements.firstObject;
     element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
