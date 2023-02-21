@@ -348,6 +348,129 @@ const browser = __b;
       }
     }
 
+    /**
+     * 长按功能，长按 700ms 以上即可调用回调方法
+     *
+     * @class
+     */
+    class DocumentLongPress {
+      /**
+       * 构造器
+       *
+       * @public
+       * @param {String} dom 需要长按的 DOM 对象
+       * @param {function} callback 长按触发的回调函数
+       */
+      constructor(dom, callback) {
+        this.dom = dom;
+        // this.startTime = 0; // 触摸起始时间
+        // this.endTime = 0; // 触摸终止时间
+        this.timer = 0; 
+        this.distance = 10; // 触摸距离值
+        this.domPageStartX = this.dom.getBoundingClientRect().left;
+        this.domPageStartY = document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
+
+        this.domPageEndX = this.domPageStartX + this.dom.clientWidth;
+        this.domPageEndY = this.domPageStartY + this.dom.clientHeight;
+        this.init(callback);
+      }
+
+      /**
+       * 初始化
+       *
+       * @private
+       * @param {function} callback 回调函数
+       */
+      init(callback) {
+        this.touchstart(callback);
+        this.touchend();
+        this.touchmove();
+        this.bindLongPressEventFlag();
+      }
+
+      /**
+       * 标记是否绑定过长按事件
+       */
+      bindLongPressEventFlag(){
+        this.dom.setAttribute('stay-long-press', 'yes');
+        // this.dom.eventList['stayLongPress'] = 'yes';
+      }
+
+      /**
+       * 手指按下时开启定时器，700 毫秒后触发回调函数
+       *
+       * @private
+       * @param {function} callback 回调函数
+       */
+      touchstart(callback) {
+        const self = this;
+        document.addEventListener('touchstart', function(event) {
+          let target = event.changedTouches[0];
+          const targetPageX = target.pageX;
+          const targetPageY = target.pageY;
+          event.preventDefault();
+          if(Math.abs(target.pageX - targetPageX) <= self.distance &&
+          targetPageX >= self.domPageStartX && targetPageX <= self.domPageEndX && 
+          targetPageY >= self.domPageStartY && targetPageY <= self.domPageEndY){
+            let classList = target.target.classList;
+            if(!classList.contains('__stay-unselect')){
+              classList.add('__stay-unselect')
+            }
+            self.timer = setTimeout(() => {
+              // console.log('check---------------targetPageX----------targetPageY-----------');
+              
+              // console.log('targetPageX----------targetPageY-----------');
+              // 清除默认行为
+              event.preventDefault();
+              if (typeof callback === 'function') {
+                callback();
+                self.timer = 0;
+              } else {
+                console.error('callback is not a function!');
+              }
+            }, 600);
+          }
+          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
+          
+        }, false);
+      }
+
+      /**
+       * 手指抬起时清除定时器，无论按住时间是否达到 600 毫秒的阈值
+       *
+       * @private
+       */
+      touchend() {
+        const self = this;
+        document.addEventListener('touchend', function(event) {
+         
+          // 清除定时器
+          clearTimeout(self.timer);
+
+          if(self.timer!=0){
+            self.timer = 0;
+            // console.log(event)
+            //这里写要执行的内容click事件
+            // alert('你这是点击，不是长按');
+          }
+          return false;
+        });
+      }
+
+      /**
+       * 如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+       */
+      touchmove() {
+        const self = this;
+        document.addEventListener('touchmove', function(event){
+          // event.preventDefault();
+          clearTimeout(self.timer);//清除定时器
+          self.timer = 0;
+          return false;
+        })
+      }
+    }
+
     function startFindVideoInfo(completed){
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
@@ -560,7 +683,7 @@ const browser = __b;
       const sinfferUnselectDom = document.querySelector('#__style_sinffer_unselect');
       if(!sinfferUnselectDom){
         let sinfferUnselect=`<style id="__style_sinffer_unselect">
-          .__stay-unselect{
+          .__stay-unselect, video{
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -571,7 +694,7 @@ const browser = __b;
       }
       dom.classList.add('__stay-unselect');
       
-      new LongPress(dom, ()=>{
+      new DocumentLongPress(dom, ()=>{
         addSinfferModal(dom, videoInfo);
       });
       
@@ -581,10 +704,10 @@ const browser = __b;
       return new Promise((resolve, reject) => {
         if(isContent){
           browser.runtime.sendMessage({from: 'sinffer', operate: 'GET_STAY_AROUND'}, (response) => {
-            console.log('GET_STAY_AROUND---------',response)
+            // console.log('GET_STAY_AROUND---------',response)
             if(response.body && JSON.stringify(response.body)!='{}'){
               let isStayAround = response.body;
-              console.log('isStayAround---------',isStayAround)
+              // console.log('isStayAround---------',isStayAround)
               resolve(isStayAround);
             // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
             }
@@ -593,9 +716,9 @@ const browser = __b;
           const pid = Math.random().toString(36).substring(1, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'RESP_GET_STAY_AROUND') return;
-            console.log('RESP_GET_STAY_AROUND----response=', e.data);
+            // console.log('RESP_GET_STAY_AROUND----response=', e.data);
             let isStayAround = e.data ? (e.data.response ? e.data.response.body : {}): 'b';
-            console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayAround);
+            // console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayAround);
             resolve(isStayAround);
             window.removeEventListener('message', callback);
           };
@@ -727,7 +850,7 @@ const browser = __b;
             -webkit-transform: translate3d(0,${vTop}px,0);
             transform: translate3d(0,${vTop}px,0);
           }
-          __stay-content{
+          .__stay-content{
             width:100%;
             position: relative;
             display: flex;
@@ -748,7 +871,7 @@ const browser = __b;
           .__stay-sinffer-poster{
             width: 100%;
             height: ${posterHeight}px;
-            padding: ${left}px;
+            padding: 0 ${left}px;
             margin:0 auto;
             display: flex;
             flex-direction: column;
@@ -949,13 +1072,13 @@ const browser = __b;
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
         const videoId = Utils.queryURLParams(hostUrl, 'v');
-        let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
-        if(!playerDom){
-          playerDom = document.querySelector('#player-control-overlay');
-        }
-        if(playerDom){
-          longPressDom = playerDom;
-        }
+        // let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
+        // if(!playerDom){
+        //   playerDom = document.querySelector('#player-control-overlay');
+        // }
+        // if(playerDom){
+        //   longPressDom = playerDom;
+        // }
         videoInfo = handleYoutubeVideoInfo(title, videoId);
       }
       else if(host.indexOf('baidu.com')>-1){
@@ -982,7 +1105,7 @@ const browser = __b;
         }
       }
       else if(host.indexOf('m.toutiao.com')>-1){
-        longPressDom = document.querySelector('.video .xgplayer-wrapper .xgplayer-mobile .trigger');
+        // longPressDom = document.querySelector('.video .xgplayer-wrapper .xgplayer-mobile .trigger');
         videoInfo = handleMobileToutiaoVideoInfo(videoDom);
       }
       else if(host.indexOf('m.v.qq.com')>-1){
@@ -1006,14 +1129,6 @@ const browser = __b;
       }
       // https://jable.tv/videos/dvaj-605/
       else if(host.indexOf('jable.tv')>-1){
-        let plyrPreviewDom = document.querySelector('.plyr--video .plyr__video-wrapper .plyr__preview-scrubbing');
-        if(!plyrPreviewDom){
-          plyrPreviewDom = document.querySelector('.plyr--video .plyr__video-wrapper .plyr__poster');
-          console.log('plyrPreviewDom-----',plyrPreviewDom)
-        }
-        if(plyrPreviewDom){
-          longPressDom = plyrPreviewDom;
-        }
         videoInfo = handleJableVideoInfo(videoDom);
       }
 
