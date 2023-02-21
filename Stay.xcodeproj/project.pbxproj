@@ -92,6 +92,8 @@
 		3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA92971813E0068231A /* NSArray+m3u8.m */; };
 		3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAC2971813E0068231A /* NSURL+m3u8.m */; };
 		3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */; };
+		3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA742AB29A2180100AB9F12 /* MySlider.swift */; };
+		3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA742AB29A2180100AB9F12 /* MySlider.swift */; };
 		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
@@ -694,6 +696,7 @@
 		3C949BAB2971813E0068231A /* M3U8SegmentInfoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8SegmentInfoList.h; sourceTree = "<group>"; };
 		3C949BAC2971813E0068231A /* NSURL+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+m3u8.m"; sourceTree = "<group>"; };
 		3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8PlaylistModel.m; sourceTree = "<group>"; };
+		3CA742AB29A2180100AB9F12 /* MySlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySlider.swift; sourceTree = "<group>"; };
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
@@ -1233,6 +1236,7 @@
 			children = (
 				3C8388E129335C68007563E6 /* RoundedBorderView.swift */,
 				3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */,
+				3CA742AB29A2180100AB9F12 /* MySlider.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2825,6 +2829,7 @@
 				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
+				3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
@@ -3077,6 +3082,7 @@
 				3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
+				3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
