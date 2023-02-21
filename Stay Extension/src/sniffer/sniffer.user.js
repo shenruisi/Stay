@@ -294,24 +294,36 @@ const browser = __b;
        * @param {function} callback 回调函数
        */
       touchstart(callback) {
-        this.dom.addEventListener('touchstart', function(event) {
+        const self = this;
+        self.dom.removeEventListener('touchstart', function(event) {
+          handleLongPress(event);
+        })
+
+        self.dom.addEventListener('touchstart', function(event) {
+          // console.log('this.dom----touchstart-----',event)
           // 清除默认行为
           event.preventDefault();
+          handleLongPress(event);
+        }, false);
 
-          // this.dom.addEventListener('contextmenu', function(e){
-          //   e.preventDefault();
-          // })
+        function handleLongPress(event){
+          let target = event.changedTouches[0];
+          try {
+            target.target.click();
+          } catch (error) {
+            
+          }
           // 开启定时器
-          this.timer = setTimeout(() => {
+          self.timer = setTimeout(() => {
             event.preventDefault();
             if (typeof callback === 'function') {
               callback();
-              this.timer = 0;
+              self.timer = 0;
             } else {
               console.error('callback is not a function!');
             }
           }, 600);
-        }, false);
+        }
       }
 
       /**
@@ -320,31 +332,53 @@ const browser = __b;
        * @private
        */
       touchend() {
-        this.dom.addEventListener('touchend', function(event) {
+        const self = this;
+        self.dom.removeEventListener('touchend', function(event) {
+          handleTouchend(event)
+        });
+        self.dom.addEventListener('touchend', function(event) {
+          handleTouchend(event)
+        });
+
+        function handleTouchend(event){
           // 清除默认行为
           event.preventDefault();
           // 清除定时器
-          clearTimeout(this.timer);
+          clearTimeout(self.timer);
 
-          if(this.timer!=0){
-            console.log(event)
+          if(self.timer!=0){
+            try {
+              let target = event.changedTouches[0];
+              target.target.click();
+            } catch (error) {
+              
+            }
+            // console.log(event)
             //这里写要执行的内容click事件
             // alert('你这是点击，不是长按');
           }
           return false;
-        });
+        }
       }
 
       /**
        * 如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
        */
       touchmove() {
-        this.dom.addEventListener('touchmove', function(event){
+        const self = this;
+        self.dom.removeEventListener('touchmove', function(event){
           // event.preventDefault();
-          clearTimeout(this.timer);//清除定时器
-          this.timer = 0;
-          return false;
+          handleTouchmove(event);
         })
+        self.dom.addEventListener('touchmove', function(event){
+          // event.preventDefault();
+          handleTouchmove(event);
+        })
+        function handleTouchmove(event){
+          clearTimeout(self.timer);//清除定时器
+          self.timer = 0;
+          return false;
+        }
       }
     }
 
@@ -404,24 +438,41 @@ const browser = __b;
        */
       touchstart(callback) {
         const self = this;
+        document.removeEventListener('touchstart', function(event){
+          handleTargetEvent(event)
+        });
         document.addEventListener('touchstart', function(event) {
+          // console.log('touchstart-------',event);
+          handleTargetEvent(event)
+        }, false);
+
+        function handleTargetEvent(event){
+          event.preventDefault();
+          event.stopPropagation();
           let target = event.changedTouches[0];
           const targetPageX = target.pageX;
           const targetPageY = target.pageY;
-          event.preventDefault();
+          // console.log('check---------------targetPageX----------targetPageY-----------');
+          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
           if(Math.abs(target.pageX - targetPageX) <= self.distance &&
           targetPageX >= self.domPageStartX && targetPageX <= self.domPageEndX && 
           targetPageY >= self.domPageStartY && targetPageY <= self.domPageEndY){
             let classList = target.target.classList;
+            // console.log('start----------targetPageX----------targetPageY----------classList----',classList);
             if(!classList.contains('__stay-unselect')){
+              // console.log('start----------classList.add---------------------');
               classList.add('__stay-unselect')
             }
-            self.timer = setTimeout(() => {
-              // console.log('check---------------targetPageX----------targetPageY-----------');
+            try {
+              target.target.click();
+            } catch (error) {
               
-              // console.log('targetPageX----------targetPageY-----------');
+            }
+            
+            self.timer = setTimeout(() => {
+              // console.log('------------------targetPageX----------targetPageY-----------');
               // 清除默认行为
-              event.preventDefault();
+              // event.preventDefault();
               if (typeof callback === 'function') {
                 callback();
                 self.timer = 0;
@@ -431,8 +482,8 @@ const browser = __b;
             }, 600);
           }
           // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
-          
-        }, false);
+          return false;
+        }
       }
 
       /**
@@ -442,19 +493,32 @@ const browser = __b;
        */
       touchend() {
         const self = this;
+        document.removeEventListener('touchend', function(event){
+          touchEndCallback(event);
+        })
         document.addEventListener('touchend', function(event) {
-         
+          // console.log('touchend-------',event);
+          touchEndCallback(event)
+        });
+
+        function touchEndCallback(event){
           // 清除定时器
           clearTimeout(self.timer);
 
           if(self.timer!=0){
             self.timer = 0;
+            try {
+              let target = event.changedTouches[0];
+              target.target.click();
+            } catch (error) {
+              
+            }
             // console.log(event)
             //这里写要执行的内容click事件
             // alert('你这是点击，不是长按');
           }
           return false;
-        });
+        }
       }
 
       /**
@@ -462,12 +526,20 @@ const browser = __b;
        */
       touchmove() {
         const self = this;
-        document.addEventListener('touchmove', function(event){
+        document.removeEventListener('touchmove', function(event){
           // event.preventDefault();
+          touchmoveCallback();
+        });
+        document.addEventListener('touchmove', function(event){
+          // console.log('touchmove-------',event);
+          // event.preventDefault();
+          touchmoveCallback();
+        })
+        function touchmoveCallback(){
           clearTimeout(self.timer);//清除定时器
           self.timer = 0;
           return false;
-        })
+        }
       }
     }
 
@@ -689,10 +761,40 @@ const browser = __b;
             -ms-user-select: none;
             user-select: none;
           }
+          .__stay-touch-action{
+            touch-action: none!important;
+          }
         </style>`;
         document.body.append(Utils.parseToDOM(sinfferUnselect));
       }
       dom.classList.add('__stay-unselect');
+
+      const hostUrl = videoInfo.hostUrl;
+      // console.log('addLongPress--------hostUrl=====',hostUrl)
+      if(hostUrl.indexOf('youtube.com')>-1){
+        const playerOverlay = document.querySelector('#player-control-overlay');
+        if(playerOverlay){
+          if(!playerOverlay.classList.contains('__stay-touch-action')){
+            playerOverlay.classList.add('__stay-touch-action');
+          }
+          if(!playerOverlay.classList.contains('__stay-unselect')){
+            playerOverlay.classList.add('__stay-unselect');
+          }
+        }
+        const playerBg = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
+        if(playerBg){
+          if(!playerBg.classList.contains('__stay-touch-action')){
+            playerBg.classList.add('__stay-touch-action');
+          }
+          if(!playerBg.classList.contains('__stay-unselect')){
+            playerBg.classList.add('__stay-unselect');
+          }
+        }
+        // console.log('addLongPress--------LongPress=====',hostUrl)
+        new LongPress(dom, ()=>{
+          addSinfferModal(dom, videoInfo);
+        })
+      }
       
       new DocumentLongPress(dom, ()=>{
         addSinfferModal(dom, videoInfo);
@@ -735,10 +837,21 @@ const browser = __b;
       let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
       let top = videoDom.getBoundingClientRect().top;
       let left = videoDom.getBoundingClientRect().left;
-      left = 10;
+      // console.log('videoDom.tagName====',videoDom.tagName)
+      if('VIDEO' == videoDom.tagName){
+        // console.log('videoDom.parentNode====',videoDom.parentNode)
+        top = videoDom.parentNode.getBoundingClientRect().top;
+        left = videoDom.parentNode.getBoundingClientRect().left;
+      }
       // 算出16:9的宽高
       let posterWidth = bodyClientWidth;
       let posterHeight = Utils.div(Utils.mul(posterWidth, 9), 16);
+      if(vHeight<Utils.div(bodyClientHeight, 2)){
+        posterHeight = vHeight;
+      }
+
+      left = 10;
+      
       // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
       let modalDom = document.querySelector('#__stay_sinffer_modal');
@@ -778,7 +891,7 @@ const browser = __b;
         
         let borderRadius = '';
         let videoImg = 'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
-        let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
+        let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px; -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
         if(videoInfo.poster){
           borderRadius = 'border-radius: 10px;'
           // posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
@@ -870,6 +983,10 @@ const browser = __b;
           }
           .__stay-sinffer-poster{
             width: 100%;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
             height: ${posterHeight}px;
             padding: 0 ${left}px;
             margin:0 auto;
@@ -1023,9 +1140,11 @@ const browser = __b;
         popupDom.style.animation = 'fadeout .5s;';
 
         setTimeout(() => {
-          document.body.removeChild(modalDom);
+          if(modalDom){
+            document.body.removeChild(modalDom);
+          }
           document.body.removeChild(document.querySelector('#__style_sinffer_style'));
-        }, 300);
+        }, 200);
       }, false);
 
       const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-quality-item');
@@ -1072,13 +1191,14 @@ const browser = __b;
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
         const videoId = Utils.queryURLParams(hostUrl, 'v');
-        // let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
-        // if(!playerDom){
-        //   playerDom = document.querySelector('#player-control-overlay');
-        // }
-        // if(playerDom){
-        //   longPressDom = playerDom;
-        // }
+        let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
+        if(!playerDom){
+          playerDom = document.querySelector('#player-control-overlay');
+          
+        }
+        if(playerDom){
+          longPressDom = playerDom;
+        }
         videoInfo = handleYoutubeVideoInfo(title, videoId);
       }
       else if(host.indexOf('baidu.com')>-1){
