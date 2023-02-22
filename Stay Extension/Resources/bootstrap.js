@@ -501,10 +501,11 @@ let injectedContentVendor = new Set();
         if(name == "GET_STAY_AROUND"){
             message = {from: "sniffer", operate: "GET_STAY_AROUND"}
             browser.runtime.sendMessage(message, (response) => {
+                console.log('GET_STAY_AROUND-----',response)
                 window.postMessage({ pid: pid, name: "RESP_GET_STAY_AROUND", response: response });
             });
         }
-        if (name === "API_LIST_VALUES") {
+        else if (name === "API_LIST_VALUES") {
             message.operate = "GM_listValues";
             browser.runtime.sendMessage(message, (response) => {
                 // console.log("GM_listValues----response=", response);

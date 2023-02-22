@@ -650,7 +650,6 @@ const browser = __b;
             item.setAttribute('stay-sniffing', videoUuid);
           }
           const videoDom = item;
-          // console.log('parseVideoNodeList---------------item=',item);
           let downloadUrl = item.getAttribute('src');
           // console.log('parseVideoNodeList-------1-------downloadUrl=',downloadUrl);
           if(!downloadUrl){
@@ -699,17 +698,18 @@ const browser = __b;
 
     /**
      * check video if exist
-     * @param {Object} dom  添加长按事件的dom对象 
+     * @param {Object} videoDom  视频截图 
+     * @param {Object} posDom    添加长按事件的dom对象 
      * @param {Object} videoInfo 
      */
-    function checkVideoExist(dom, videoInfo){
+    function checkVideoExist(videoDom, posDom, videoInfo){
       let downloadUrl = videoInfo.downloadUrl;
       if(!Utils.isURL(downloadUrl)){
         videoInfo.downloadUrl = hostUrl;
       }
-      addLongPress(dom, videoInfo);
+      addLongPress(videoDom, posDom, videoInfo);
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
-        // console.log('parseVideoNodeList----------has exost, and modify-------');
+        // console.log('parseVideoNodeList----------has exist, and modify-------',videoInfo, videoList);
         videoList.forEach(item=>{
           if(item.videoUuid == videoInfo.videoUuid || item.videoUuid == videoInfo.videoKey){
             item.downloadUrl = videoInfo.downloadUrl;
@@ -723,7 +723,7 @@ const browser = __b;
         })
         // console.log('parseVideoNodeList------videoList---modify------',videoList)
       }else{
-        // console.log('parseVideoNodeList----------has not, and push-------');
+        // console.log('parseVideoNodeList----------has not, and push-------',videoInfo);
         if(videoInfo.videoKey){
           videoIdSet.add(videoInfo.videoKey);
           if(!videoInfo.videoUuid){
@@ -733,22 +733,27 @@ const browser = __b;
         if(videoInfo.videoUuid){
           videoIdSet.add(videoInfo.videoUuid);
         }
-        // console.log('checkVideoExist----------',videoInfo);
+        // console.log('checkVideoExist----------',videoInfo, videoIdSet);
         videoList.push(videoInfo);
       }
     }
 
     /**
      * 添加长按事件
-     * @param {Object} dom 
+     * @param {Object} videoDom   视频video dom对象
+     * @param {Object} posDom     视频区域
+     * @param {Object} videoInfo  视频信息
      * @returns 
      */
-    async function addLongPress(dom, videoInfo){
-      if(!dom){
-        // console.log('---------null')
+    async function addLongPress(videoDom, posDom, videoInfo){
+      // console.log('----addLongPress-----start------')
+      if(!posDom){
+        // console.log('----posDomposDomposDomposDomposDom-----null')
         return;
       }
+      // console.log('----getStayAround-----start------')
       const isStayAround = await getStayAround();
+      // console.log('----isStayAround-----',isStayAround)
       if(isStayAround!='a'){
         return;
       }
@@ -756,8 +761,8 @@ const browser = __b;
       if(!Utils.isMobile()){
         return;
       }
-
-      let stayLongPress = dom.getAttribute('stay-long-press');
+      // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
+      let stayLongPress = posDom.getAttribute('stay-long-press');
       if(stayLongPress && stayLongPress == 'yes'){
         // console.log('addLongPress already bind stay long press------1------');
         return;
@@ -778,7 +783,7 @@ const browser = __b;
         </style>`;
         document.body.append(Utils.parseToDOM(sinfferUnselect));
       }
-      dom.classList.add('__stay-unselect');
+      posDom.classList.add('__stay-unselect');
 
       const hostUrl = videoInfo.hostUrl;
       // console.log('addLongPress--------hostUrl=====',hostUrl)
@@ -802,10 +807,17 @@ const browser = __b;
           }
         }
         // console.log('addLongPress--------LongPress=====',hostUrl)
-        new LongPress(dom, ()=>{
-          addSinfferModal(dom, videoInfo);
+        new LongPress(posDom, ()=>{
+          addSinfferModal(videoDom, posDom, videoInfo);
         })
-      }else if(hostUrl.indexOf('pornhub.com')>-1){
+      }
+      else if(hostUrl.indexOf('mobile.twitter.com')>-1){
+        // console.log('----------------mobile.twitter.com-----', posDom);
+        // new LongPress(posDom, ()=>{
+        //   addSinfferModal(videoDom, posDom, videoInfo);
+        // })
+      }
+      else if(hostUrl.indexOf('pornhub.com')>-1){
         // let dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
         // if(!dom){
         //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
@@ -826,8 +838,8 @@ const browser = __b;
         // })
       }
       
-      new DocumentLongPress(dom, ()=>{
-        addSinfferModal(dom, videoInfo);
+      new DocumentLongPress(posDom, ()=>{
+        addSinfferModal(videoDom, posDom, videoInfo);
       });
       
     }
@@ -835,7 +847,8 @@ const browser = __b;
     function getStayAround(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          browser.runtime.sendMessage({from: 'sinffer', operate: 'GET_STAY_AROUND'}, (response) => {
+          // console.log('getStayAround-----true');
+          browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
             // console.log('GET_STAY_AROUND---------',response)
             if(response.body && JSON.stringify(response.body)!='{}'){
               let isStayAround = response.body;
@@ -845,6 +858,7 @@ const browser = __b;
             }
           });
         }else{
+          // console.log('getStayAround-----false');
           const pid = Math.random().toString(36).substring(1, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'RESP_GET_STAY_AROUND') return;
@@ -860,28 +874,33 @@ const browser = __b;
       })
     }
 
-    function addSinfferModal(videoDom, videoInfo){
-      let vWidth = videoDom.clientWidth;
-      let vHeight = videoDom.clientHeight;
+    /**
+     * 添加长按事件
+     * @param {Object} videoDom   视频video dom对象   用于截图,视频播放/暂停判断
+     * @param {Object} posDom     视频区域            用于绑定长按事件
+     * @param {Object} videoInfo  视频信息            用于popup信息展示
+     * @returns 
+     */
+    function addSinfferModal(videoDom, posDom, videoInfo){
+      let vWidth = posDom.clientWidth;
+      let vHeight = posDom.clientHeight;
       let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
-      let top = videoDom.getBoundingClientRect().top;
-      let left = videoDom.getBoundingClientRect().left;
+      let top = posDom.getBoundingClientRect().top;
+      let left = posDom.getBoundingClientRect().left;
       // console.log('videoDom.tagName====',videoDom.tagName)
-      if('VIDEO' == videoDom.tagName){
+      if('VIDEO' == posDom.tagName){
         // console.log('videoDom.parentNode====',videoDom.parentNode)
-        top = videoDom.parentNode.getBoundingClientRect().top;
-        left = videoDom.parentNode.getBoundingClientRect().left;
+        top = posDom.parentNode.getBoundingClientRect().top;
+        left = posDom.parentNode.getBoundingClientRect().left;
       }
+      left = 10;
       // 算出16:9的宽高
       let posterWidth = bodyClientWidth;
       let posterHeight = Utils.div(Utils.mul(posterWidth, 9), 16);
       if(vHeight<Utils.div(bodyClientHeight, 2)){
         posterHeight = vHeight;
       }
-
-      left = 10;
-      
       // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
       let modalDom = document.querySelector('#__stay_sinffer_modal');
@@ -1166,6 +1185,8 @@ const browser = __b;
         return document.querySelector('#__stay_sinffer_modal');
       }
 
+      captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
+
       modalDom.addEventListener('touchmove', e =>{ 
         e.preventDefault();
       }, false);
@@ -1198,6 +1219,38 @@ const browser = __b;
         }
       }
     }
+
+
+    /**
+     * 
+     * @param {object} videoDom 
+     * @param {number} width 
+     * @param {number} height 
+     */
+    function captureVideoAndDrawing(videoDom, width, height){
+      if(!videoDom){
+        return null;
+      }
+      videoDom.setAttribute('crossOrigin', 'anonymous');  //添加srossOrigin属性，解决跨域问题
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('crossOrigin', 'anonymous');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      // draw the current video frame on the canvas
+      ctx.drawImage(videoDom, 0, 0, canvas.width, canvas.height);
+      // let dataURL = canvas.toDataURL('image/png');  //将图片转成base64格式
+      // console.log('----dataURL-',dataURL)
+      
+      // // extract the image data from the canvas
+      // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      // console.log('----imageData-',imageData)
+      // // get the pixel data from the image data 
+      // const pixelData = imageData.data;
+      // // pixelData contains the RGB values of each pixel in the video frame
+      // console.log(pixelData);
+    }
     
     
     /**
@@ -1207,14 +1260,14 @@ const browser = __b;
      * qualityList[{downloadUrl,qualityLabel, quality }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb
      */
-    function handleVideoInfoParse(videoDom, longPressDom, videoUuid){
+    function handleVideoInfoParse(videoSnifferDom, videoDom, videoUuid){
       let videoInfo = {};
-      let poster = videoDom.getAttribute('poster');
-      let title = videoDom.getAttribute('title');
-      let downloadUrl = videoDom.getAttribute('src');
+      let poster = videoSnifferDom.getAttribute('poster');
+      let title = videoSnifferDom.getAttribute('title');
+      let downloadUrl = videoSnifferDom.getAttribute('src');
       let qualityList = [];
       hostUrl = window.location.href;
-
+      let longPressDom = videoDom;
       downloadUrl = Utils.completionSourceUrl(downloadUrl);
 
       if(!poster){
@@ -1230,7 +1283,6 @@ const browser = __b;
         let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
         if(!playerDom){
           playerDom = document.querySelector('#player-control-overlay');
-          
         }
         if(playerDom){
           longPressDom = playerDom;
@@ -1238,54 +1290,62 @@ const browser = __b;
         videoInfo = handleYoutubeVideoInfo(title, videoId);
       }
       else if(host.indexOf('baidu.com')>-1){
-        videoInfo = handleBaiduVideoInfo(videoDom);
+        videoInfo = handleBaiduVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('bilibili.com')>-1){
-        videoInfo = handleBilibiliVideoInfo(videoDom);
+        videoInfo = handleBilibiliVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('mobile.twitter.com')>-1){
-        videoInfo = handleMobileTwitterVideoInfo(videoDom);
+        // console.log('parse---------mobile.twitter.com');
+        let playerDom = document.querySelector('.r-eqz5dr .r-1pi2tsx .r-1pi2tsx .r-1udh08x .r-1p0dtai div.css-1dbjc4n.r-6koalj.r-eqz5dr.r-1pi2tsx.r-13qz1uu');
+        if(!playerDom){
+          console.log('--------playerDom--------is null----------');
+        }
+        if(playerDom){
+          longPressDom = playerDom;
+        }
+        videoInfo = handleMobileTwitterVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('m.weibo.cn')>-1){
-        videoInfo = handleMobileWeiboVideoInfo(videoDom);
+        videoInfo = handleMobileWeiboVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('iesdouyin.com')>-1){
-        videoInfo = handleMobileDouyinVideoInfo(videoDom);
+        videoInfo = handleMobileDouyinVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('douyin.com')>-1){
         const pathName = window.location.pathname;
         if(pathName.indexOf('/video')>-1){
-          videoInfo = handlePCDetailDouyinVideoInfo(videoDom);
+          videoInfo = handlePCDetailDouyinVideoInfo(videoSnifferDom);
         }else{
-          videoInfo = handlePCHomeDouyinVideoInfo(videoDom);
+          videoInfo = handlePCHomeDouyinVideoInfo(videoSnifferDom);
         }
       }
       else if(host.indexOf('m.toutiao.com')>-1){
         // longPressDom = document.querySelector('.video .xgplayer-wrapper .xgplayer-mobile .trigger');
-        videoInfo = handleMobileToutiaoVideoInfo(videoDom);
+        videoInfo = handleMobileToutiaoVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('m.v.qq.com')>-1){
-        videoInfo = handleMobileTenxunVideoInfo(videoDom);
+        videoInfo = handleMobileTenxunVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('www.reddit.com')>-1){
-        videoInfo = handleRedditVideoInfo(videoDom);
+        videoInfo = handleRedditVideoInfo(videoSnifferDom);
       }
       // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
       else if(host.indexOf('pornhub.com')>-1){
-        videoInfo = handlePornhubVideoInfo(videoDom);
+        videoInfo = handlePornhubVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('facebook.com')>-1){
-        videoInfo = handleFacebookVideoInfo(videoDom);
+        videoInfo = handleFacebookVideoInfo(videoSnifferDom);
       }// https://www.instagram.com
       else if(host.indexOf('instagram.com')>-1){
-        videoInfo = handleInstagramVideoInfo(videoDom);
+        videoInfo = handleInstagramVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('xiaohongshu.com')>-1){
-        videoInfo = handleXiaohongshuVideoInfo(videoDom);
+        videoInfo = handleXiaohongshuVideoInfo(videoSnifferDom);
       }
       // https://jable.tv/videos/dvaj-605/
       else if(host.indexOf('jable.tv')>-1){
-        videoInfo = handleJableVideoInfo(videoDom);
+        videoInfo = handleJableVideoInfo(videoSnifferDom);
       }
 
       if(videoInfo.downloadUrl){
@@ -1312,8 +1372,9 @@ const browser = __b;
       videoInfo['qualityList'] = qualityList;
       videoInfo['videoUuid'] = videoUuid;
 
+      // console.log('parse---------mobile.twitter.com------longPressDom-',longPressDom, ',videoInfo========',videoInfo);
       if(downloadUrl){
-        checkVideoExist(longPressDom, videoInfo) 
+        checkVideoExist(videoDom, longPressDom, videoInfo) 
       }
 
       return videoInfo;
@@ -1331,17 +1392,17 @@ const browser = __b;
       let host = window.location.host;
       hostUrl = window.location.href;
       videoInfo.hostUrl = hostUrl;
-      let dom = null;
+      let posDom = null;
       if(host.indexOf('pornhub.com')>-1){
-        dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper .mgp_videoPoster img');
-        if(!dom){
-          dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
+        posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper .mgp_videoPoster img');
+        if(!posDom){
+          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
         }
-        if(!dom){
-          dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
+        if(!posDom){
+          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
         }
-        if(!dom){
-          dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
+        if(!posDom){
+          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
         }
         videoInfo = parsePornhubVideoInfoByWindow(videoInfo);
       }
@@ -1349,7 +1410,7 @@ const browser = __b;
       if(!videoInfo.downloadUrl){
         return;
       }
-      checkVideoExist(dom, videoInfo);
+      checkVideoExist(null, posDom, videoInfo);
       // console.log('parseVideoInfoByWindow------', videoInfo)
       return videoInfo;
     }
@@ -1694,12 +1755,15 @@ const browser = __b;
 
     /**
      * 解析baidu视频信息
-     * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
+     * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList,videoKey,videoUuid}
      * keyName{sd(标清),hd(高清),sc(超清), 1080p(蓝光)}
      * qualityList[{downloadUrl,qualityLabel, quality, keyName }]
      */
     function handleBaiduVideoInfo(videoDom){
       let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
       /*--activity.baidu.com--*/ 
       // window.PAGE_DATA.remote.mainVideoList
       // window.PAGE_DATA.remote.moreVideoList
@@ -1714,11 +1778,12 @@ const browser = __b;
           videoInfo['downloadUrl'] = mainVideo.videoUrl;
           if(moreVideoList && moreVideoList.length){
             moreVideoList.forEach(item=>{
-              if(videoUrlSet.size && videoUrlSet.has(item.videoUrl)){
+              if(videoIdSet.size && (videoIdSet.has(item.vid))){
                 return;
               }
+              videoIdSet.add(item.vid);
               // more video
-              videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl});
+              videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
             })
           }
           return videoInfo;

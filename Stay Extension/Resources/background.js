@@ -1051,7 +1051,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("fetchFolders" == request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
-                console.log("fetchFolders-----response--",response)
+                // console.log("fetchFolders-----response--",response)
                 sendResponse({ body: response.body })
             });
         }
@@ -1059,7 +1059,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if ("sniffer" == request.from){
         if ("VIDEO_INFO_PUSH" == request.operate) {
-            console.log("VIDEO_INFO_PUSH-------",request)
+            // console.log("VIDEO_INFO_PUSH-------",request)
             if(request.videoLinkSet && request.videoLinkSet.size){
                 videoLinkSet = request.videoLinkSet
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {

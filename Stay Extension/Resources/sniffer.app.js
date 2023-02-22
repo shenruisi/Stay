@@ -815,11 +815,12 @@
         videoInfo['downloadUrl'] = mainVideo.videoUrl;
         if(moreVideoList && moreVideoList.length){
           moreVideoList.forEach(item=>{
-            if(videoUrlSet.size && videoUrlSet.has(item.videoUrl)){
+            if(videoIdSet.size && (videoIdSet.has(item.vid))){
               return;
             }
+            videoIdSet.add(item.vid);
             // more video
-            videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl});
+            videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
           })
         }
         return videoInfo;
