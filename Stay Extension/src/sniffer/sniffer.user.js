@@ -310,6 +310,9 @@ const browser = __b;
           let target = event.changedTouches[0];
           try {
             target.target.click();
+            // target.addEventListener('contextmenu', function(e){
+            //   e.preventDefault();
+            // });
           } catch (error) {
             
           }
@@ -322,7 +325,7 @@ const browser = __b;
             } else {
               console.error('callback is not a function!');
             }
-          }, 600);
+          }, 500);
         }
       }
 
@@ -443,6 +446,8 @@ const browser = __b;
         });
         document.addEventListener('touchstart', function(event) {
           // console.log('touchstart-------',event);
+          event.preventDefault();
+          event.stopPropagation();
           handleTargetEvent(event)
         }, false);
 
@@ -458,13 +463,16 @@ const browser = __b;
           targetPageX >= self.domPageStartX && targetPageX <= self.domPageEndX && 
           targetPageY >= self.domPageStartY && targetPageY <= self.domPageEndY){
             let classList = target.target.classList;
-            // console.log('start----------targetPageX----------targetPageY----------classList----',classList);
+            // console.log('start----------event----',event);
             if(!classList.contains('__stay-unselect')){
               // console.log('start----------classList.add---------------------');
               classList.add('__stay-unselect')
             }
             try {
               target.target.click();
+              // target.addEventListener('contextmenu', function(e){
+              //   e.preventDefault();
+              // });
             } catch (error) {
               
             }
@@ -472,6 +480,7 @@ const browser = __b;
             self.timer = setTimeout(() => {
               // console.log('------------------targetPageX----------targetPageY-----------');
               // 清除默认行为
+              event.stopPropagation();
               event.preventDefault();
               if (typeof callback === 'function') {
                 callback();
@@ -479,7 +488,7 @@ const browser = __b;
               } else {
                 console.error('callback is not a function!');
               }
-            }, 600);
+            }, 500);
           }
           // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
           return false;
@@ -736,6 +745,7 @@ const browser = __b;
      */
     async function addLongPress(dom, videoInfo){
       if(!dom){
+        // console.log('---------null')
         return;
       }
       const isStayAround = await getStayAround();
@@ -760,6 +770,7 @@ const browser = __b;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            -webkit-touch-callout: none;
           }
           .__stay-touch-action{
             touch-action: none!important;
@@ -794,6 +805,25 @@ const browser = __b;
         new LongPress(dom, ()=>{
           addSinfferModal(dom, videoInfo);
         })
+      }else if(hostUrl.indexOf('pornhub.com')>-1){
+        // let dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
+        // if(!dom){
+        //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
+        // }
+        // if(!dom){
+        //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
+        // }
+        // if(dom){
+        //   if(!dom.classList.contains('__stay-touch-action')){
+        //     dom.classList.add('__stay-touch-action');
+        //   }
+        //   if(!dom.classList.contains('__stay-unselect')){
+        //     dom.classList.add('__stay-unselect');
+        //   }
+        // }
+        // new LongPress(dom, ()=>{
+        //   addSinfferModal(dom, videoInfo);
+        // })
       }
       
       new DocumentLongPress(dom, ()=>{
@@ -879,13 +909,13 @@ const browser = __b;
         let bg = 'background-color: rgba(0, 0, 0, 0.4);';
         let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
-        let downloadIcon = 'https://res.stayfork.app/scripts/923EC60A7EB6B878317747AF29D99104/icon.png';
+        let downloadIcon = 'https://res.stayfork.app/scripts/8DF5C8391ED58046174D714911AD015E/icon.png';
         if(Utils.isDark()){
           // bg = 'background-color: rgba(0, 0, 0, 0.4);';
           posterbg = 'background-color: rgba(0, 0, 0, 1);';
           fontColor = 'color:#DCDCDC;'
           downloadBg = 'background-color: rgb(54, 54, 57);';
-          downloadIcon = 'https://res.stayfork.app/scripts/0031EAA96B967DA000F1BFA809FADE21/icon.png';
+          downloadIcon = 'https://res.stayfork.app/scripts/CFFCD2186E164262E0E776A545327605/icon.png';
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
           lineColor = '#37372F';
@@ -1038,8 +1068,8 @@ const browser = __b;
             box-sizing: border-box;
           }
           ._stay-sinffer-title{
-            padding-left: 10px;
-            padding-right: 10px;
+            padding-left: 15px;
+            padding-right: 15px;
             width: 100%;
             height:36px;
             line-height: 18px;
@@ -1078,6 +1108,10 @@ const browser = __b;
             padding: 0 15px;
             display: flex;
             align-items: center;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
           }
           ._stay-quality-item::after{
             content:"";
@@ -1289,7 +1323,7 @@ const browser = __b;
       // console.log('setTimeoutParseVideoInfoByWindow-------')
       setTimeout(()=>{
         parseVideoInfoByWindow()
-      },300)
+      },400)
     }
     
     function parseVideoInfoByWindow(){
@@ -1303,9 +1337,15 @@ const browser = __b;
         if(!dom){
           dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
         }
+        if(!dom){
+          dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
+        }
+        if(!dom){
+          dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
+        }
         videoInfo = parsePornhubVideoInfoByWindow(videoInfo);
       }
-
+      // console.log('pornhub------------------',dom);
       if(!videoInfo.downloadUrl){
         return;
       }
