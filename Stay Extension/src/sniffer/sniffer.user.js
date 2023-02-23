@@ -307,6 +307,9 @@ const browser = __b;
         }, false);
 
         function handleLongPress(event){
+          if(isHidden(self.dom)){
+            return;
+          }
           let target = event.changedTouches[0];
           try {
             target.target.click();
@@ -344,6 +347,9 @@ const browser = __b;
         });
 
         function handleTouchend(event){
+          if(isHidden(self.dom)){
+            return;
+          }
           // 清除默认行为
           event.preventDefault();
           // 清除定时器
@@ -378,11 +384,46 @@ const browser = __b;
           handleTouchmove(event);
         })
         function handleTouchmove(event){
+          if(isHidden(self.dom)){
+            return;
+          }
           clearTimeout(self.timer);//清除定时器
           self.timer = 0;
           return false;
         }
       }
+    }
+
+    function isHidden(el) {
+      if(!el){
+        return true;
+      }
+      let style = window.getComputedStyle(el);//el即DOM元素
+      if(!style){
+        return false;
+      }
+      return (style.display === 'none' || style.visibility === 'hidden') 
+    }
+    /**
+     * 判断当前target是否是显示的video或video所在位置的dom
+     * 1、判断当前target是否是video标签
+     * 2、是video标签，在判断是否有src,或者childNodes是否有Source标签及其src信息，再判断
+     * 3、不是video标签
+     *    3.1、判断该target是否展示，展示则true, 不展示则false;
+     *    3.2、document.querySelectorAll('video'); ，没有则false,有再判断是否有src及childNodes是否有Source内容，空则false
+     * @param {*} target 
+     * @returns 
+     */
+    function checkTargetIfShowOnScreen(target){
+      if(!target){
+        return true;
+      }
+
+
+
+
+      return true;
+
     }
 
     /**
@@ -404,12 +445,28 @@ const browser = __b;
         // this.endTime = 0; // 触摸终止时间
         this.timer = 0; 
         this.distance = 10; // 触摸距离值
-        this.domPageStartX = this.dom.getBoundingClientRect().left;
-        this.domPageStartY = document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
+        // this.domPageStartX = this.dom.getBoundingClientRect().left;
+        // this.domPageStartY = document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
 
-        this.domPageEndX = this.domPageStartX + this.dom.clientWidth;
-        this.domPageEndY = this.domPageStartY + this.dom.clientHeight;
+        // this.domPageEndX = this.domPageStartX + this.dom.clientWidth;
+        // this.domPageEndY = this.domPageStartY + this.dom.clientHeight;
         this.init(callback);
+      }
+
+      getDomPageStartX(){
+        return this.dom.getBoundingClientRect().left;
+      }
+
+      getDomPageStartY(){
+        return document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
+      }
+
+      getDomPageEndX(){
+        return this.getDomPageStartX() + this.dom.clientWidth;
+      }
+
+      getDomPageEndY(){
+        return this.getDomPageStartY() + this.dom.clientHeight;
       }
 
       /**
@@ -458,10 +515,10 @@ const browser = __b;
           const targetPageX = target.pageX;
           const targetPageY = target.pageY;
           // console.log('check---------------targetPageX----------targetPageY-----------');
-          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
-          if(Math.abs(target.pageX - targetPageX) <= self.distance &&
-          targetPageX >= self.domPageStartX && targetPageX <= self.domPageEndX && 
-          targetPageY >= self.domPageStartY && targetPageY <= self.domPageEndY){
+          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+          if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
+          targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
+          targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
             let classList = target.target.classList;
             // console.log('start----------event----',event);
             if(!classList.contains('__stay-unselect')){
@@ -511,6 +568,9 @@ const browser = __b;
         });
 
         function touchEndCallback(event){
+          if(isHidden(self.dom)){
+            return;
+          }
           // 清除定时器
           clearTimeout(self.timer);
 
@@ -545,6 +605,9 @@ const browser = __b;
           touchmoveCallback();
         })
         function touchmoveCallback(){
+          if(isHidden(self.dom)){
+            return;
+          }
           clearTimeout(self.timer);//清除定时器
           self.timer = 0;
           return false;
@@ -987,7 +1050,7 @@ const browser = __b;
         // console.log('videoDom----1--',videoDom);
         const canvas = captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
         
-        console.log('posterCon----3--',posterCon);
+        // console.log('posterCon----3--',posterCon);
         
         let sinfferStyle = `<style id="__style_sinffer_style">
           .__stay-modal-box{
@@ -1238,7 +1301,7 @@ const browser = __b;
      * @param {number} height 
      */
     function captureVideoAndDrawing(videoDom, width, height){
-      console.log('captureVideoAndDrawing-------',videoDom.tagName);
+      // console.log('captureVideoAndDrawing-------',videoDom.tagName);
       if(!videoDom || 'VIDEO' != videoDom.tagName){
         return null;
       }
@@ -1252,7 +1315,7 @@ const browser = __b;
 
       // draw the current video frame on the canvas
       ctx.drawImage(videoDom, 0, 0, canvas.width, canvas.height);
-      console.log(canvas)
+      // console.log(canvas)
       
 
       if(canvas){
@@ -1331,7 +1394,7 @@ const browser = __b;
         // console.log('parse---------mobile.twitter.com');
         let playerDom = document.querySelector('.r-eqz5dr .r-1pi2tsx .r-1pi2tsx .r-1udh08x .r-1p0dtai div.css-1dbjc4n.r-6koalj.r-eqz5dr.r-1pi2tsx.r-13qz1uu');
         if(!playerDom){
-          console.log('--------playerDom--------is null----------');
+          // console.log('--------playerDom--------is null----------');
         }
         if(playerDom){
           longPressDom = playerDom;
