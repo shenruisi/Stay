@@ -501,7 +501,7 @@ let injectedContentVendor = new Set();
         if(name == "GET_STAY_AROUND"){
             message = {from: "sniffer", operate: "GET_STAY_AROUND"}
             browser.runtime.sendMessage(message, (response) => {
-                console.log('GET_STAY_AROUND-----',response)
+                // console.log('GET_STAY_AROUND-----',response)
                 window.postMessage({ pid: pid, name: "RESP_GET_STAY_AROUND", response: response });
             });
         }

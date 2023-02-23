@@ -105,7 +105,7 @@ export default {
         // console.log('--------global.browser.tabs.--snifferFetchVideoInfo-');
         let message = { from: 'popup', operate: 'snifferFetchVideoInfo'};
         global.browser.tabs.sendMessage(tabs[0].id, message, response => {
-          console.log('snifferFetchVideoInfo---response-----', response);
+          // console.log('snifferFetchVideoInfo---response-----', response);
           if(response.body && response.body.videoInfoList && response.body.videoInfoList.length){
             let videoList = response.body.videoInfoList;
             videoList.forEach(item=>{

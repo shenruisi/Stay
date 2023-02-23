@@ -352,7 +352,7 @@ const browser = __b;
           if(self.timer!=0){
             try {
               let target = event.changedTouches[0];
-              target.target.click();
+              // target.target.click();
             } catch (error) {
               
             }
@@ -469,7 +469,7 @@ const browser = __b;
               classList.add('__stay-unselect')
             }
             try {
-              target.target.click();
+              // target.target.click();
               // target.addEventListener('contextmenu', function(e){
               //   e.preventDefault();
               // });
@@ -928,26 +928,19 @@ const browser = __b;
         let bg = 'background-color: rgba(0, 0, 0, 0.4);';
         let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
-        let downloadIcon = 'https://res.stayfork.app/scripts/8DF5C8391ED58046174D714911AD015E/icon.png';
+        let downloadIcon = isContent?browser.runtime.getURL('img/popup-download-light.png'):'https://res.stayfork.app/scripts/8DF5C8391ED58046174D714911AD015E/icon.png';
         if(Utils.isDark()){
           // bg = 'background-color: rgba(0, 0, 0, 0.4);';
           posterbg = 'background-color: rgba(0, 0, 0, 1);';
           fontColor = 'color:#DCDCDC;'
           downloadBg = 'background-color: rgb(54, 54, 57);';
-          downloadIcon = 'https://res.stayfork.app/scripts/CFFCD2186E164262E0E776A545327605/icon.png';
+          downloadIcon = isContent?browser.runtime.getURL('img/popup-download-dark.png'):'https://res.stayfork.app/scripts/CFFCD2186E164262E0E776A545327605/icon.png';
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
           lineColor = '#37372F';
         }
         
-        let borderRadius = '';
-        let videoImg = 'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
-        let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px; -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
-        if(videoInfo.poster){
-          borderRadius = 'border-radius: 15px;'
-          // posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
-          posterCon = `<div class="__stay-video-poster" style="background:url('${videoInfo.poster}') 50% 50% no-repeat;background-size: cover;"></div>`;
-        }
+        
         let countH = 1;
         let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">Download</div>`;
         let qualityList = videoInfo.qualityList;
@@ -981,6 +974,21 @@ const browser = __b;
             vTop = Utils.sub(bodyClientHeight, modalContentHeight);
           }
         }
+       
+
+        let borderRadius = '';
+        let videoImg = isContent?browser.runtime.getURL('img/video-default.png'):'https://res.stayfork.app/scripts/BB8CD00276006365956C32A6556696AD/icon.png';//browser.runtime.getURL('img/video-default.png');
+        let posterCon = '<div class="__stay-poster-box" ><div class="__stay-default-poster"><img style="max-width:100%;max-height:100%;" src="'+videoImg+'"/></div><span style="font-size:13px;padding-top: 20px; -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;'+fontColor+'">'+Utils.getHostname(videoInfo.hostUrl)+'</span></div>';
+        if(videoInfo.poster){
+          borderRadius = 'border-radius: 15px;'
+          // posterCon = '<img style="max-width:100%; max-height: 100%; box-shadow: 0 0px 10px rgba(54,54,57,0.1);'+borderRadius+'" src="'+videoInfo.poster+'"/>'
+          posterCon = `<div class="__stay-video-poster" style="background:url('${videoInfo.poster}') 50% 50% no-repeat;background-size: cover;"></div>`;
+        }
+        // console.log('videoDom----1--',videoDom);
+        const canvas = captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
+        
+        console.log('posterCon----3--',posterCon);
+        
         let sinfferStyle = `<style id="__style_sinffer_style">
           .__stay-modal-box{
             position: fixed; 
@@ -1182,10 +1190,12 @@ const browser = __b;
         
         document.body.append(Utils.parseToDOM(sinfferStyle));
         document.body.append(Utils.parseToDOM(sinfferModal.join('')));
+        // document.querySelector
+
         return document.querySelector('#__stay_sinffer_modal');
       }
 
-      captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
+      
 
       modalDom.addEventListener('touchmove', e =>{ 
         e.preventDefault();
@@ -1228,28 +1238,50 @@ const browser = __b;
      * @param {number} height 
      */
     function captureVideoAndDrawing(videoDom, width, height){
-      if(!videoDom){
+      console.log('captureVideoAndDrawing-------',videoDom.tagName);
+      if(!videoDom || 'VIDEO' != videoDom.tagName){
         return null;
       }
+      videoDom.setAttribute('autoplay', 'autoplay');
       videoDom.setAttribute('crossOrigin', 'anonymous');  //添加srossOrigin属性，解决跨域问题
       const canvas = document.createElement('canvas');
-      canvas.setAttribute('crossOrigin', 'anonymous');
+      // canvas.setAttribute('crossOrigin', 'anonymous');
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
 
       // draw the current video frame on the canvas
       ctx.drawImage(videoDom, 0, 0, canvas.width, canvas.height);
+      console.log(canvas)
+      
+
+      if(canvas){
+        // let dataURL = canvas.toDataURL('image/png');  //将图片转成base64格式
+        // console.log('----dataURL-',dataURL);
+        // let newImg = document.createElement('img');
+        // newImg.src = dataURL;
+        // document.body.appendChild(newImg);
+
+        // canvas.toBlob(function(blob) {
+        //   let newImg = document.createElement('img');
+        //   console.log('toBlob--1----');
+        //   let url = window.URL.createObjectURL(blob);
+        //   console.log('toBlob--2----');
+        //   newImg.onload = function() {
+        //     window.URL.revokeObjectURL(url);
+        //   };
+        //   newImg.src = url;
+        //   // posterCon = newImg.toString();
+        //   console.log('toBlob--3----',newImg);
+        //   document.body.appendChild(newImg);
+        // });
+      }
+
+      // let dataURL = window.URL.createObjectURL(canvas.toBlob());
       // let dataURL = canvas.toDataURL('image/png');  //将图片转成base64格式
       // console.log('----dataURL-',dataURL)
       
-      // // extract the image data from the canvas
-      // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      // console.log('----imageData-',imageData)
-      // // get the pixel data from the image data 
-      // const pixelData = imageData.data;
-      // // pixelData contains the RGB values of each pixel in the video frame
-      // console.log(pixelData);
+      return canvas;
     }
     
     
