@@ -75,7 +75,7 @@ export default {
 
     const fetchSnifferFolder = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchFolders'}, (response) => {
-        console.log('fetchSnifferFolder---response-----', response);
+        // console.log('fetchSnifferFolder---response-----', response);
         try {
           if(response.body){
             state.folderOptions = [{name: t('select_folder'), uuid: ''}, ...response.body];
@@ -179,7 +179,7 @@ export default {
     }
 
     const contactClick = () => {
-      global.openUrlInSafariPopup(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}`);
+      global.openUrlInSafariPopup(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}&body=${encodeURIComponent(props.browserUrl)}`);
     }
 
     return {
