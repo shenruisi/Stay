@@ -358,6 +358,7 @@ export default {
               line-height: 25px;
               // padding: 2px 0;
               border-radius: 8px;
+              user-select: none;
             }
           }
         }
@@ -377,6 +378,7 @@ export default {
             padding-right: 4px;
             height: 24px;
             line-height: 24px;
+            user-select: none;
           }
           .select-options{
             height: 24px;

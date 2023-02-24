@@ -950,6 +950,7 @@
     const playerResp = window.ytInitialPlayerResponse;
     // console.log('playerResp-------', playerResp);
     if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
+      // console.log('hello- - - - - - -   playerResp   ----');
       const videoDetails = playerResp.videoDetails;
       let detailTitle = videoDetails.title?videoDetails.title:'';
       videoInfo['title'] = detailTitle;
@@ -960,30 +961,27 @@
           // console.log('thumbnails-----',thumbnails);
           videoInfo['poster'] =  thumbnails.pop().url;
         }
-        else{
-          if(playerResp.microformat && playerResp.microformat.playerMicroformatRenderer 
-            && playerResp.microformat.playerMicroformatRenderer.thumbnail 
-            && playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails.length){
-            videoInfo['poster'] = playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
-          }
-        }
       }
-      if(!videoInfo['poster']){
-        videoInfo['poster'] = getYoutubeVideoPosterByDom();
+      if(playerResp.microformat && playerResp.microformat.playerMicroformatRenderer 
+          && playerResp.microformat.playerMicroformatRenderer.thumbnail 
+          && playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails.length){
+        // console.log('playerResp.microformat.playerMicroformatRenderer-----',playerResp.microformat.playerMicroformatRenderer);
+        videoInfo['poster'] = playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
       }
-     
+       
       // console.log('playerResp-------videoDetails-------------', videoDetails);
       const streamingData = playerResp.streamingData;
-      // const adaptiveFormats = streamingData.adaptiveFormats;
+      const adaptiveFormats = streamingData.adaptiveFormats;
       const formats = streamingData.formats;
+      const qualityFormatsList = adaptiveFormats || formats;
       title = title ? title : '';
       // 取画质的时候防止原视频有广告
-      if(formats && formats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
+      if(qualityFormatsList && qualityFormatsList.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
         // console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
         // * qualityList[{downloadUrl, qualityLabel, quality}]
         let qualityList = []
         let qualitySet = new Set();
-        formats.forEach(item=>{
+        qualityFormatsList.forEach(item=>{
           let mimeType = item.mimeType;
           if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
             qualitySet.add(item.quality)
@@ -997,8 +995,11 @@
       }else{
         videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
         videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+      }
+      if(!videoInfo['poster']){
         videoInfo['poster'] = getYoutubeVideoPosterByDom();
       }
+
     }else{
       videoInfo = {};
       videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
