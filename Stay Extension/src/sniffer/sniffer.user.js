@@ -2019,12 +2019,18 @@ const browser = __b;
             videoInfo['poster'] =  thumbnails.pop().url;
           }
           else{
-            videoInfo['poster'] = getYoutubeVideoPosterByDom();
+            if(playerResp.microformat && playerResp.microformat.playerMicroformatRenderer 
+              && playerResp.microformat.playerMicroformatRenderer.thumbnail 
+              && playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails.length){
+              videoInfo['poster'] = playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
+            }
+            
           }
         }
-        else{
+        if(!videoInfo['poster']){
           videoInfo['poster'] = getYoutubeVideoPosterByDom();
         }
+       
         // console.log('playerResp-------videoDetails-------------', videoDetails);
         const streamingData = playerResp.streamingData;
         // const adaptiveFormats = streamingData.adaptiveFormats;
