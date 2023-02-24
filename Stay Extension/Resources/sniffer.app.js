@@ -973,7 +973,7 @@
       const streamingData = playerResp.streamingData;
       const adaptiveFormats = streamingData.adaptiveFormats;
       const formats = streamingData.formats;
-      const qualityFormatsList = adaptiveFormats || formats;
+      const qualityFormatsList = formats;
       title = title ? title : '';
       // 取画质的时候防止原视频有广告
       if(qualityFormatsList && qualityFormatsList.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
