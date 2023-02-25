@@ -19,6 +19,7 @@
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
 #import "SYDownloadPreviewController.h"
+#import "ColorHelper.h"
 
 #if iOS
 #import "Stay-Swift.h"
@@ -268,7 +269,7 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return self.searchData.count;
     } else {
-        return [FCShared tabManager].tabs.count;
+        return [FCShared tabManager].tabs.count + 1;
     }
 }
 
@@ -316,12 +317,23 @@ UIDocumentPickerDelegate
             }
         }
     } else {
-        SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-        controller.pathUuid = [FCShared tabManager].tabs[indexPath.row].uuid;
-        controller.title = [FCShared tabManager].tabs[indexPath.row].config.name;
-        controller.array = [NSMutableArray array];
-        [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
-        [self.navigationController pushViewController:controller animated:TRUE];
+        
+        if(indexPath.row != 0) {
+            SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
+            controller.pathUuid = [FCShared tabManager].tabs[indexPath.row - 1].uuid;
+            controller.title = [FCShared tabManager].tabs[indexPath.row - 1].config.name;
+            controller.array = [NSMutableArray array];
+            [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
+            [self.navigationController pushViewController:controller animated:TRUE];
+        } else {
+            NSArray *documentTypes = @[@"public.folder"];
+
+            UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
+
+            documentPicker.delegate = self;
+            documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:documentPicker animated:YES completion:nil];
+        }
     }
 }
 
@@ -429,22 +441,72 @@ UIDocumentPickerDelegate
         
         return cell;
     } else {
-        DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
-        if (cell == nil) {
-            cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+        
+        
+        if(indexPath.row == 0) {
+            NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+            UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
-        for (UIView *subView in cell.contentView.subviews) {
-            [subView removeFromSuperview];
-        }
+            
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 13, 27, 20)];
+            [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:20] color: RGB(146, 209, 243)]];
+            imageView.contentMode = UIViewContentModeBottom;
+            [cell.contentView addSubview:imageView];
+
+            
+            UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.self.view.width - 100, 18)];
+            name.text = @"Undefined";
+            if (dic != NULL) {
+                name.text = dic[@"fileName"];
+            }
+            name.font = FCStyle.body;
+            [name sizeToFit];
+            name.centerY = imageView.centerY;
+            name.left = imageView.right + 7;
+            [cell.contentView addSubview:name];
+            
+            UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.self.view.width - 100, 18)];
+            subTitle.text = @"On My iPhone";
+            subTitle.font = FCStyle.footnoteBold;
+            subTitle.textColor = FCStyle.titleGrayColor;
+            [subTitle sizeToFit];
+            subTitle.centerY = imageView.centerY;
+            subTitle.left = name.right + 2;
+            [cell.contentView addSubview:subTitle];
+            
+            
+            UIImageView *rightIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 15)];
+            [rightIcon setImage:[ImageHelper sfNamed:@"chevron.right" font:[UIFont systemFontOfSize:15] color: FCStyle.grayNoteColor]];
+            rightIcon.centerY = imageView.centerY;
+            rightIcon.right = self.view.width - 20;
+            rightIcon.contentMode = UIViewContentModeBottom;
+            [cell.contentView addSubview:rightIcon];
+            
+            
+            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
+            line.backgroundColor = FCStyle.fcSeparator;
+            line.bottom =  imageView.bottom + 13;
+            line.left = 10;
+            [cell.contentView addSubview:line];
+            return  cell;
+        } else {
+            DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
+            if (cell == nil) {
+                cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            for (UIView *subView in cell.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            
+            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
         
-        cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-    
-        cell.contentView.width = self.view.width;
-        cell.cer = self;
-        cell.fctab = [FCShared tabManager].tabs[indexPath.row];
-        
-        return cell;
+            cell.contentView.width = self.view.width;
+            cell.cer = self;
+            cell.fctab = [FCShared tabManager].tabs[indexPath.row - 1];
+            
+            return cell;
+        }
     }
 }
 
@@ -452,89 +514,129 @@ UIDocumentPickerDelegate
     //Fixed retains self
     __weak SYFIleManagerViewController *weakSelf = self;
     
-        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-                    
-            
-            
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDeleteTab", @"")
-                                                                           message:@""
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction * _Nonnull action) {
+    
+    if ([tableView isEqual:self.tableView] && indexPath.row > 0) {
+        
+    
+    
+            UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                        
                 
-                if([FCShared tabManager].tabs.count == 1){
-                    UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needNotDelete", @"")
-                                                                                   message:@""
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDeleteTab", @"")
+                                                                               message:@""
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
                     
-                    UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                                      style:UIAlertActionStyleDefault
-                                                                    handler:^(UIAlertAction * _Nonnull action) {
-                    
+                    if([FCShared tabManager].tabs.count == 1){
+                        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needNotDelete", @"")
+                                                                                       message:@""
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
                         
+                        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
                         
-                    }];
-                    
-                    [onlyOneAlert addAction:onlyOneConform];
+                            
+                            
+                        }];
+                        
+                        [onlyOneAlert addAction:onlyOneConform];
 
-                    
-                    [self presentViewController:onlyOneAlert animated:YES completion:nil];
-                } else {
-                    FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
-                      
-                    NSArray *resources = [[DataManager shareManager] selectDownloadResourceByPath:tab.uuid];
-                    
-                    if(resources != nil) {
-                        for (int i = 0; i < resources.count; i++) {
-                            DownloadResource * resource =  resources[i];
-                            if (resource.status == 2) {
-                                NSFileManager *defaultManager;
-                                defaultManager = [NSFileManager defaultManager];
-                                [defaultManager removeItemAtPath:resource.allPath error:nil];
-                            } else {
-                                [[DownloadManager shared] remove:resource.downloadUuid];
+                        
+                        [self presentViewController:onlyOneAlert animated:YES completion:nil];
+                    } else {
+                        FCTab *tab = [FCShared tabManager].tabs[indexPath.row - 1];
+                          
+                        NSArray *resources = [[DataManager shareManager] selectDownloadResourceByPath:tab.uuid];
+                        
+                        if(resources != nil) {
+                            for (int i = 0; i < resources.count; i++) {
+                                DownloadResource * resource =  resources[i];
+                                if (resource.status == 2) {
+                                    NSFileManager *defaultManager;
+                                    defaultManager = [NSFileManager defaultManager];
+                                    [defaultManager removeItemAtPath:resource.allPath error:nil];
+                                } else {
+                                    [[DownloadManager shared] remove:resource.downloadUuid];
+                                }
                             }
                         }
+                        
+                        [[DataManager shareManager] deleteVideoByuuidPath:tab.uuid];
+                        [[FCShared tabManager] deleteTab:tab];
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            [weakSelf.tableView  reloadData];
+                        });
                     }
-                    
-                    [[DataManager shareManager] deleteVideoByuuidPath:tab.uuid];
-                    [[FCShared tabManager] deleteTab:tab];
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [weakSelf.tableView  reloadData];
-                    });
-                }
-            
+                
+                }];
+                [alert addAction:conform];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                     style:UIAlertActionStyleCancel
+                     handler:^(UIAlertAction * _Nonnull action) {
+                 }];
+                 [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+                [tableView setEditing:NO animated:YES];
             }];
-            [alert addAction:conform];
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
-                 style:UIAlertActionStyleCancel
-                 handler:^(UIAlertAction * _Nonnull action) {
-             }];
-             [alert addAction:cancel];
-            [self presentViewController:alert animated:YES completion:nil];
+            deleteAction.image = [UIImage imageNamed:@"delete"];
+            deleteAction.backgroundColor = RGB(224, 32, 32);
+            
+        UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+            weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
+            [self.folderSlideController show];
             [tableView setEditing:NO animated:YES];
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
         
-    UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
-        weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
-        [self.folderSlideController show];
-        [tableView setEditing:NO animated:YES];
-    }];
-    
-    changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+        changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
 
-    changeTitleAction.backgroundColor = FCStyle.accent;
-    
-    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
+        changeTitleAction.backgroundColor = FCStyle.accent;
+        
+        return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
+    } else {
+        return NULL;
+    }
 }
 
 -(void)addFolder:(UITapGestureRecognizer *)tap{
     self.folderSlideController = nil;
     [self.folderSlideController show];
+}
+
+#pragma mark - UIDocumentPickerDelegate
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
+    //获取授权
+    BOOL fileUrlAuthozied = [urls.firstObject startAccessingSecurityScopedResource];
+    if (fileUrlAuthozied) {
+        //通过文件协调工具来得到新的文件地址，以此得到文件保护功能
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
+        NSError *error;
+
+        [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
+            //读取文件
+            NSString *fileName = [newURL lastPathComponent];
+            dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSUserDefaults standardUserDefaults] setObject:@{@"fileName":fileName ,
+                                                               @"url": [newURL absoluteString],
+                                    
+                                                             }
+                                                      forKey:@"MY_PHONE_STORAGE"];
+            
+            [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                [self.tableView reloadData];
+                });
+            [self dismissViewControllerAnimated:YES completion:NULL];
+        }];
+        [urls.firstObject stopAccessingSecurityScopedResource];
+    } else {
+        //授权失败
+    }
 }
 
 - (void)buyStay:(id)sender {

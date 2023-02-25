@@ -55,7 +55,7 @@
     
     [self setUpOneChildViewController:searchController image:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.grid.2x2.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[1] tag:2];
     
-    [self setUpOneChildViewController:syFIleManagerController image:[ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[2] tag:3];
+    [self setUpOneChildViewController:syFIleManagerController image:[ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:nil tag:3];
     
     
     [self setUpOneChildViewController:syMoreController image:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:normalColor] selectImage:[ImageHelper sfNamed:@"gearshape.fill" font:[UIFont systemFontOfSize:18] color:FCStyle.accent]  title:titleArray[3] tag:4];
