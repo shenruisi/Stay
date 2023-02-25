@@ -99,7 +99,7 @@ UITableViewDataSource
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.about",@"About");
     
-#if Mac
+#if FC_MAC
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
     
@@ -159,7 +159,7 @@ UITableViewDataSource
     if(indexPath.section == 0) {
         return 215;
     }
-#ifdef Mac
+#ifdef FC_MAC
     return 35.0;
 #else
     return 45.0;
@@ -281,7 +281,7 @@ UITableViewDataSource
 - (UITableView *)tableView{
     if (nil == _tableView){
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
-//#if Mac
+//#if FC_MAC
 //        _tableView.width = 540;
 //#endif
         _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;

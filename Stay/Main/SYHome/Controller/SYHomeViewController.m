@@ -31,7 +31,7 @@
 #import "FCStyle.h"
 #import <CommonCrypto/CommonDigest.h>
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
 #endif
@@ -288,7 +288,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @implementation SYHomeViewController
 
 - (void)loadView{
-#ifdef Mac
+#ifdef FC_MAC
     ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
 //    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
     self.view = view;
@@ -338,7 +338,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     [self initScrpitContent];
     
-#ifdef Mac
+#ifdef FC_MAC
     [self line];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigateViewDidShow:)
@@ -415,7 +415,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
 
-#ifndef Mac
+#ifndef FC_MAC
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
         SYFlashViewController *cer = [[SYFlashViewController alloc] init];
@@ -769,7 +769,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
-#ifdef Mac
+#ifdef FC_MAC
         self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
         self.tableView.frame = self.view.bounds;
@@ -1131,7 +1131,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (CGFloat)safeAreaInsetsLeft{
-#ifdef Mac
+#ifdef FC_MAC
     return 250.0;
 #else
     return 0.0;
@@ -1140,7 +1140,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef Mac
+#ifdef FC_MAC
     [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #endif
     
@@ -1192,7 +1192,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             model =   self.activeDatas[indexPath.row];
         }
     }
-//#ifndef Mac
+//#ifndef FC_MAC
 ////    cell.backgroundColor = FCStyle.secondaryBackground;
 //#endif
     cell.contentView.backgroundColor = FCStyle.secondaryBackground;
@@ -1519,7 +1519,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self reloadTableView];
     [self initScrpitContent];
     dispatch_async(dispatch_get_main_queue(), ^{
-#ifdef Mac
+#ifdef FC_MAC
         self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
         self.tableView.frame = self.view.bounds;
@@ -1759,7 +1759,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (_iCloudView *)customView{
     if (nil == _customView){
-#ifdef Mac
+#ifdef FC_MAC
         _customView = [[_iCloudView alloc] initWithFrame:CGRectMake(0, 0, 25, 18)];
 #else
         _customView = [[_iCloudView alloc] initWithFrame:CGRectMake(0, 0, 30, 22)];
@@ -1876,7 +1876,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (_EmptyTipsView *)emptyTipsView{
     if (nil == _emptyTipsView){
-#ifdef Mac
+#ifdef FC_MAC
         _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar + 50, self.view.width, self.view.height - kMacToolbar)];
 #else
         _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:self.view.bounds];
@@ -1929,7 +1929,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return _sYSelectTabViewController;
 }
 
-#ifdef Mac
+#ifdef FC_MAC
 - (void)navigateViewDidShow:(NSNotification *)note{
     UIViewController *viewController = note.object;
     if ([viewController isKindOfClass:[SYDetailViewController class]]){
@@ -2022,7 +2022,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                                     name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                   object:nil];
     
-#ifdef Mac
+#ifdef FC_MAC
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"app.stay.notification.NCCDidShowViewControllerNotification"
                                                   object:nil];

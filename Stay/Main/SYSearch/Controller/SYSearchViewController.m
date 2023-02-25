@@ -16,7 +16,7 @@
 #import "SYExpandViewController.h"
 #import <objc/runtime.h>
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
 #import "QuickAccess.h"
@@ -113,7 +113,7 @@ CGFloat kMacToolbar = 50.0;
 @implementation SYSearchViewController
 
 - (void)loadView{
-#ifdef Mac
+#ifdef FC_MAC
     ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
     self.view = view;
 #else
@@ -137,7 +137,7 @@ CGFloat kMacToolbar = 50.0;
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef Mac
+#ifdef FC_MAC
     if (self.datas.count > 0){
         [self.line setFrame:CGRectMake(0,kMacToolbar-1,self.view.frame.size.width,1)];
         [self.tableView setFrame:CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar)];
@@ -177,7 +177,7 @@ CGFloat kMacToolbar = 50.0;
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
         [[ScriptMananger shareManager] refreshData];
-#ifdef Mac
+#ifdef FC_MAC
         self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
         self.tableView.frame = self.view.bounds;
@@ -306,7 +306,7 @@ CGFloat kMacToolbar = 50.0;
     SYExpandViewController *cer = [[SYExpandViewController alloc] init];
     cer.data = array;
     cer.title = titleName;
-#ifdef Mac
+#ifdef FC_MAC
     [[QuickAccess secondaryController] pushViewController:cer];
 #else
     [self.navigationController pushViewController:cer animated:true];

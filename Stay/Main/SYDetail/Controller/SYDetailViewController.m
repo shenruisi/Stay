@@ -320,7 +320,7 @@
 
      if(descDetailLabel.height > 70) {
           if (!_needExpand) {
-      #ifdef Mac
+      #ifdef FC_MAC
               descDetailLabel.height = 70;
       #else
               descDetailLabel.height = 62;
@@ -1153,7 +1153,7 @@
 
 - (UIButton *)actBtn {
     if (_actBtn == nil) {
-#ifdef Mac
+#ifdef FC_MAC
         _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 50 + 20, 90, 30)];
 #else
         _actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 28 + 91, 90, 30)];

@@ -367,7 +367,7 @@ function isFullyQualifiedDomain(candidate) {
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const requestFrom = request.from;
-    if ("darkmode" == request.from) {
+    if ("darkmode" == requestFrom) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
                 sendResponse({ body: response.body })
@@ -1051,7 +1051,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("fetchFolders" == request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
-                console.log("fetchFolders-----response--",response)
+                // console.log("fetchFolders-----response--",response)
                 sendResponse({ body: response.body })
             });
         }
@@ -1059,7 +1059,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if ("sniffer" == request.from){
         if ("VIDEO_INFO_PUSH" == request.operate) {
-            console.log("VIDEO_INFO_PUSH-------",request)
+            // console.log("VIDEO_INFO_PUSH-------",request)
             if(request.videoLinkSet && request.videoLinkSet.size){
                 videoLinkSet = request.videoLinkSet
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -1072,6 +1072,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoInfoList});
                 });
             }
+        }
+        else if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                sendResponse({ body: response.body })
+            });
         }
         return true;
     }

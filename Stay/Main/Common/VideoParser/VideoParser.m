@@ -47,17 +47,21 @@ static VideoParser *_kVideoParser;
         [config setPreferences:preferences];
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
+//        NSString *ua = [self _getScript:@"ua.user"];
+//        WKUserScript *uaUserscript = [[WKUserScript alloc] initWithSource:ua injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+//        [wkUController addUserScript:uaUserscript];
         NSString *sinffer = [self _getScript:@"sniffer.app"];
-        WKUserScript *userscript = [[WKUserScript alloc] initWithSource:sinffer injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-        [wkUController addUserScript:userscript];
+        WKUserScript *snifferUserscript = [[WKUserScript alloc] initWithSource:sinffer injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+        [wkUController addUserScript:snifferUserscript];
         config.userContentController = wkUController;
         
         _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
         _webView.navigationDelegate = self;
-       
-//        NSURL *url = [NSURL URLWithString:urlStr];
-//        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-//        [_wkwebView loadRequest:request];
+//        [_webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString *userAgent, NSError *error) {
+//                NSString *newUserAgent = [userAgent stringByAppendingString:@" "];
+//                [config.defaultWebpagePreferences se]
+//                [config.defaultWebpagePreferences setValue:newUserAgent forKey:@"_webUserAgent"];
+//            }];
     }
     
     return _webView;

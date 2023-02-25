@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "NavigateViewController.h"
 @interface SYBrowseViewController : NavigateViewController
 #else

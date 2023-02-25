@@ -4,23 +4,22 @@ const { defineConfig } = require('@vue/cli-service');
 // const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
 // 复制文件到指定目录
-// const copyFiles = [
-//   	{
-//     	from: path.resolve("src/assets"),
-//     	to: path.resolve("dist/assets")
-//   	},
-//   	{
-// 	    from: path.resolve("src/plugins/inject.js"),
-// 	    to: path.resolve("dist/js")
-//   	}
-// ];
+const copyFiles = [
+  {
+    from: path.resolve('src/assets/images/popup-download-dark.png'),
+    to: path.resolve('Resources/popup/img')
+  },
+  {
+    from: path.resolve('src/assets/images/popup-download-light.png'),
+    to: path.resolve('Resources/popup/img')
+  }
+];
 
 // 复制插件
 const plugins = [
-  	// new CopyWebpackPlugin({
-  // 	patterns: copyFiles
-  	// }),
-	
+  new CopyWebpackPlugin({
+    patterns: copyFiles
+  }),
 ];
 
 // 页面文件

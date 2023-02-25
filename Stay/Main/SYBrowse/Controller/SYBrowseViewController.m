@@ -32,7 +32,7 @@
 #import "SharedStorageManager.h"
 #import <CommonCrypto/CommonDigest.h>
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
 #import "FCShared.h"
@@ -153,7 +153,7 @@
     if([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
-#ifdef Mac
+#ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
@@ -169,7 +169,7 @@
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
-#ifdef Mac
+#ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
@@ -219,7 +219,7 @@
     } else {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
-#ifdef Mac
+#ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
@@ -337,7 +337,7 @@
     if([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"]) {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
-#ifdef Mac
+#ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
         SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
@@ -347,7 +347,7 @@
     } else if([url.scheme isEqualToString:@"safari-http"] || [url.scheme isEqualToString:@"safari-https"]) {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
-#ifdef Mac
+#ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[[urlStr stringByReplacingOccurrencesOfString:@"safari-" withString:@""] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
@@ -360,7 +360,7 @@
             NSString *str= [SYNetworkUtils getParamByName:@"id" URLString:url.absoluteString];
 
             cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",str];
-            #ifdef Mac
+            #ifdef FC_MAC
                 [[QuickAccess secondaryController] pushViewController:cer];
             #else
                 [self.navigationController pushViewController:cer animated:true];
@@ -394,7 +394,7 @@
     } else {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
          [set addCharactersInString:@"#"];
-#ifdef Mac
+#ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
 #else
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlStr stringByAddingPercentEncodingWithAllowedCharacters:set]]];
@@ -1318,7 +1318,7 @@ UIPopoverPresentationControllerDelegate
 //                cer.content = str;
 //                cer.downloadUrl = downloadUrl;
 //                cer.platforms = platforms;
-//#ifdef Mac
+//#ifdef FC_MAC
 //                [[QuickAccess secondaryController] pushViewController:cer];
 //#else
 //                [self.navigationController pushViewController:cer animated:true];

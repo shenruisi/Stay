@@ -42,7 +42,7 @@ static API *instance = nil;
         _deviceType = @"mac";
         _deviceName = [[NSHost currentHost] localizedName];
 #else
-#ifdef Mac
+#ifdef FC_MAC
         _deviceType = @"mac";
 #else
         _deviceType = [[UIDevice currentDevice].model lowercaseString];
@@ -122,7 +122,7 @@ static API *instance = nil;
 #ifdef MacNative
     type = @"mac";
 #else
-#ifdef Mac
+#ifdef FC_MAC
     type = @"mac";
 #else
     type = [[UIDevice currentDevice].model lowercaseString];

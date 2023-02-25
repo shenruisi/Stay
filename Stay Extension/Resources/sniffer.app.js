@@ -107,16 +107,42 @@
       }
       return uuid.join('');
     },
-    Decode64: function(str) {
+    decodeBase64: function(str) {
       return decodeURIComponent(window.atob(str).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
+    },
+    isBase64(str){
+      if(!str){
+        return false;
+      }
+      if(/^data:.*\w+;base64,/.test(str)){
+        return true;
+      }
+      if(str === '' || str.trim() === ''){
+        return false;
+      }
+      try{
+        return window.btoa(window.atob(str)) == str;
+      }catch(err){
+        return false;
+      }
+    },
+    getHostname(url) {
+      if(!url){
+        return ''
+      }
+      try {
+        return new URL(url).hostname.toLowerCase();
+      } catch (error) {
+        return url.split('/')[0].toLowerCase();
+      }
     }
-    
 
   }
     
   function startFindVideoInfo(completed){
+    observerVideo()
     // console.log('---------------startFindVideoInfo---------------')
     videoDoms = document.querySelectorAll('video');  
     // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
@@ -136,7 +162,7 @@
         afterCompleteQueryVideo()
       }
     }
-    observerVideo()
+    // observerVideo()
   }
 
   function afterCompleteQueryVideo(){
@@ -175,16 +201,16 @@
             // console.log('mutation.videoDoms-----',videoDoms)
             host = window.location.host;
             parseVideoNodeList(videoDoms);
-            throw new Error('endloop');
+            // throw new Error('endloop');
           }
         });  
       } catch (e) {
-        if(e.message === 'endloop') {
-          // 随后,你还可以停止观察  
-          // observer.disconnect(); 
-        }else{
-          throw e
-        }
+        // if(e.message === 'endloop') {
+        //   // 随后,你还可以停止观察  
+        //   // observer.disconnect(); 
+        // }else{
+        //   throw e
+        // }
       }
     });
     /**
@@ -200,9 +226,10 @@
   }
     
   function parseVideoNodeList(videoDoms){
-      
+    // window.webkit.messageHandlers.stayapp.postMessage("videoInfo1");
     // console.log('parseVideoNodeList-----------------start------------------', videoDoms)
     if(videoDoms && videoDoms.length){
+      // window.webkit.messageHandlers.stayapp.postMessage("videoInfo5");
       let videoCount = videoDoms.length
       let nullCount = 0;
       let videoNodeList = Array.from(videoDoms)
@@ -227,6 +254,7 @@
             // console.log('parseVideoNodeList--------------sourceDom.downloadUrl=',downloadUrl);
           }
         }
+        // window.webkit.messageHandlers.stayapp.postMessage("videoInfo2");
         if(!downloadUrl){
           nullCount++;
           return;
@@ -234,15 +262,16 @@
         downloadUrl = Utils.completionSourceUrl(downloadUrl);
         // todo fetch other scenarios
         let videoInfo = handleVideoInfoParse(item);
+        // window.webkit.messageHandlers.stayapp.postMessage(videoInfo);
         videoInfo.videoUuid = videoUuid;
         // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
         if(!videoInfo.downloadUrl){
           nullCount++;
           return;
         }
-        console.log('parseVideoNodeList------videoList---------',videoList)
+        // console.log('parseVideoNodeList------videoList---------',videoList)
         // 已存在
-        // videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid
+        // videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid, m3u8Content
         checkVideoExist(videoInfo)
         // console.log('parseVideoNodeList------videoList--2222-------',videoList)
       })
@@ -250,18 +279,26 @@
         setTimeoutParseVideoInfoByWindow();
       }
     }else{
-      console.log('start------parseVideoInfoByWindow--------');
+      // window.webkit.messageHandlers.stayapp.postMessage("videoInfo3");
+      // console.log('start------parseVideoInfoByWindow--------');
       setTimeoutParseVideoInfoByWindow();
     }
-    console.log('parseVideoNodeList-----------result---------',videoList);
+    // window.webkit.messageHandlers.stayapp.postMessage("videoInfo4");
+    // console.log('parseVideoNodeList-----------result---------',videoList);
     window.webkit.messageHandlers.stayapp.postMessage(videoList);
   }
 
   /**
-     * check video if exist
-     * @param {Object} videoInfo 
-     */
+   * check video if exist
+   * @param {Object} videoInfo  {videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid, m3u8Content}
+   */
   function checkVideoExist(videoInfo){
+    videoInfo.hostUrl = Utils.getHostname(videoInfo.hostUrl);
+    let downloadUrl = videoInfo.downloadUrl;
+    if(Utils.isBase64(downloadUrl)){
+      downloadUrl = downloadUrl.replace(/^data:.*\w+;base64,/, '');
+      videoInfo.m3u8Content = Utils.decodeBase64(downloadUrl);
+    }
     if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
       // console.log('parseVideoNodeList----------has exost, and modify-------');
       videoList.forEach(item=>{
@@ -269,7 +306,7 @@
           item.downloadUrl = videoInfo.downloadUrl;
           item.poster = videoInfo.poster?videoInfo.poster:'';
           item.title = videoInfo.title
-          item.hostUrl = videoInfo.hostUrl
+          item.hostUrl = videoInfo.hostUrl;
           item.qualityList = videoInfo.qualityList?videoInfo.qualityList:[];
           // console.log('checkVideoExist----------item===',item);
         }
@@ -366,7 +403,9 @@
     else if(host.indexOf('xiaohongshu.com')>-1){
       videoInfo = handleXiaohongshuVideoInfo(videoDom);
     }
-
+    else if(host.indexOf('jable.tv')>-1){
+      videoInfo = handleJableVideoInfo(videoDom);
+    }
     if(videoInfo.downloadUrl){
       downloadUrl = videoInfo.downloadUrl
     }
@@ -381,7 +420,7 @@
       qualityList = videoInfo.qualityList;
     }
     if(!title){
-      title = Utils.getUrlPathName(downloadUrl);
+      title = document.title;
     }
     poster = Utils.completionSourceUrl(poster);
     videoInfo['title'] = title
@@ -393,14 +432,13 @@
   }
 
   function setTimeoutParseVideoInfoByWindow(){
+    // console.log('setTimeoutParseVideoInfoByWindow-------')
     setTimeout(()=>{
-      let videoInfo = parseVideoInfoByWindow()
-      if(!videoInfo.downloadUrl){
-        return;
-      }
-      checkVideoExist(videoInfo)
+      parseVideoInfoByWindow()
     },300)
   }
+
+  
     
   function parseVideoInfoByWindow(){
     let videoInfo = {}
@@ -410,6 +448,11 @@
     if(host.indexOf('pornhub.com')>-1){
       videoInfo = parsePornhubVideoInfoByWindow(videoInfo);
     }
+
+    if(!videoInfo.downloadUrl){
+      return;
+    }
+    checkVideoExist(videoInfo);
     // console.log('parseVideoInfoByWindow------', videoInfo)
     return videoInfo;
   }
@@ -633,13 +676,12 @@
               if('hls' == item.format && typeof item.quality == 'string'){
                 qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
               }
-              if('boolean' == typeof item.defaultQuality && item.defaultQuality ){
+              if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
                 defaultQuality = item.defaultQuality;
                 if(!videoInfo.downloadUrl){
                   videoInfo.downloadUrl = item.videoUrl;
                 }
               }
-
             })
             // console.log('qualityList========',qualityList)
             // console.log('defaultQuality========',defaultQuality, typeof defaultQuality)
@@ -738,6 +780,19 @@
     return videoInfo;
   }
   
+  function handleJableVideoInfo(videoDom){
+    let videoInfo = {};
+    videoInfo.poster = videoDom.getAttribute('poster') || '';
+    videoInfo.downloadUrl = videoDom.getAttribute('src');
+    videoInfo.title = videoDom.getAttribute('title');
+    const titleDom = document.querySelector('.video-info .info-header .header-left h4');
+    if(titleDom){
+      videoInfo.title = titleDom.textContent;
+    }
+
+    return videoInfo;
+
+  }
   /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
@@ -760,11 +815,12 @@
         videoInfo['downloadUrl'] = mainVideo.videoUrl;
         if(moreVideoList && moreVideoList.length){
           moreVideoList.forEach(item=>{
-            if(videoUrlSet.size && videoUrlSet.has(item.videoUrl)){
+            if(videoIdSet.size && (videoIdSet.has(item.vid))){
               return;
             }
+            videoIdSet.add(item.vid);
             // more video
-            videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl});
+            videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
           })
         }
         return videoInfo;
@@ -894,6 +950,7 @@
     const playerResp = window.ytInitialPlayerResponse;
     // console.log('playerResp-------', playerResp);
     if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
+      // console.log('hello- - - - - - -   playerResp   ----');
       const videoDetails = playerResp.videoDetails;
       let detailTitle = videoDetails.title?videoDetails.title:'';
       videoInfo['title'] = detailTitle;
@@ -904,25 +961,27 @@
           // console.log('thumbnails-----',thumbnails);
           videoInfo['poster'] =  thumbnails.pop().url;
         }
-        else{
-          videoInfo['poster'] = getYoutubeVideoPosterByDom();
-        }
       }
-      else{
-        videoInfo['poster'] = getYoutubeVideoPosterByDom();
+      if(playerResp.microformat && playerResp.microformat.playerMicroformatRenderer 
+          && playerResp.microformat.playerMicroformatRenderer.thumbnail 
+          && playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails.length){
+        // console.log('playerResp.microformat.playerMicroformatRenderer-----',playerResp.microformat.playerMicroformatRenderer);
+        videoInfo['poster'] = playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
       }
+       
       // console.log('playerResp-------videoDetails-------------', videoDetails);
       const streamingData = playerResp.streamingData;
-      // const adaptiveFormats = streamingData.adaptiveFormats;
+      const adaptiveFormats = streamingData.adaptiveFormats;
       const formats = streamingData.formats;
+      const qualityFormatsList = formats;
       title = title ? title : '';
       // 取画质的时候防止原视频有广告
-      if(formats && formats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
+      if(qualityFormatsList && qualityFormatsList.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
         // console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
         // * qualityList[{downloadUrl, qualityLabel, quality}]
         let qualityList = []
         let qualitySet = new Set();
-        formats.forEach(item=>{
+        qualityFormatsList.forEach(item=>{
           let mimeType = item.mimeType;
           if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
             qualitySet.add(item.quality)
@@ -936,8 +995,11 @@
       }else{
         videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
         videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+      }
+      if(!videoInfo['poster']){
         videoInfo['poster'] = getYoutubeVideoPosterByDom();
       }
+
     }else{
       videoInfo = {};
       videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();

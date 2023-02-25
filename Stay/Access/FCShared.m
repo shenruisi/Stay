@@ -7,13 +7,13 @@
 
 #import "FCShared.h"
 
-#ifdef Mac
+#ifdef FC_MAC
 #import "Plugin.h"
 #endif
 
 @implementation FCShared
 
-#ifdef Mac
+#ifdef FC_MAC
 static Plugin *_plugin = nil;
 + (Plugin *)plugin{
     static dispatch_once_t onceTokenPlugin;
@@ -26,7 +26,7 @@ static Plugin *_plugin = nil;
 }
 #endif
 
-#if iOS || Mac
+#if FC_IOS || FC_MAC
 static iCloudService *_iCloudService = nil;
 + (iCloudService *)iCloudService{
     static dispatch_once_t onceToken_iCloudService;
@@ -36,6 +36,17 @@ static iCloudService *_iCloudService = nil;
         }
     });
     return _iCloudService;
+}
+
+static ToastCenter *_toastCenter = nil;
++ (ToastCenter *)toastCenter{
+    static dispatch_once_t onceTokenToastCenter;
+    dispatch_once(&onceTokenToastCenter, ^{
+        if (nil == _toastCenter){
+            _toastCenter = [[ToastCenter alloc] init];
+        }
+    });
+    return _toastCenter;
 }
 #endif
 

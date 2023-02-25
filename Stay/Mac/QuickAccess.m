@@ -6,7 +6,7 @@
 //
 
 #import "QuickAccess.h"
-#ifdef Mac
+#ifdef FC_MAC
 #import "SceneCenter.h"
 #endif
 #import "FCApp.h"
@@ -14,7 +14,7 @@
 @implementation QuickAccess
 
 + (nullable UISplitViewController *)splitController{
-#ifdef Mac
+#ifdef FC_MAC
     UIWindowScene *windowScene = [[SceneCenter shared] sceneForIdentifier:SCENE_Main];
     if (windowScene){
         return (UISplitViewController *)windowScene.windows[0].rootViewController;
@@ -45,7 +45,7 @@
 
 
 + (nullable UIViewController *)rootController{
-#ifdef Mac
+#ifdef FC_MAC
     UIWindowScene *windowScene = [[SceneCenter shared] sceneForIdentifier:SCENE_Main];
     if (windowScene){
         return windowScene.windows[0].rootViewController;

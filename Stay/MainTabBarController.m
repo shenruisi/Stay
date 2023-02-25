@@ -14,7 +14,7 @@
 #import "SYFIleManagerViewController.h"
 #import "FCStyle.h"
 #import "ImageHelper.h"
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -76,7 +76,7 @@
     navC.tabBarItem.image = image;
     selectImage = [selectImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [navC.tabBarItem setSelectedImage:selectImage];
-#ifdef Mac
+#ifdef FC_MAC
     navC.tabBarItem.imageInsets = UIEdgeInsetsMake(3, 3, 0, 3);
 #else
     navC.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);

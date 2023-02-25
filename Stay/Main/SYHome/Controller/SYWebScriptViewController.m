@@ -48,7 +48,7 @@
     [self.view addSubview:self.progressView];
     [self.wkwebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
     
-#ifdef iOS
+#ifdef FC_IOS
     self.navigationItem.leftBarButtonItems = @[self.backBtn,self.closeBtn];
 #endif
     

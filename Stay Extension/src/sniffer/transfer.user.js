@@ -15,7 +15,7 @@ const browser = __b;
   function mergeVideoInfoList(){
     let videoInfoListRes = [];
     let hostUrl = window.location.href;
-    // console.log('mergeVideoInfoList-------',hostUrl)
+    // console.log('mergeVideoInfoList-------',hostUrl, videoInfoList, videoLinkSet)
     if(videoInfoList.length){
       let videnLen = videoInfoList.length
       let isValidAmount = 0;
@@ -56,23 +56,27 @@ const browser = __b;
             videoInfoListRes.push(item);
           }
         });
+        if(!videoLinkSet || videoLinkSet.size==0){
+          return videoInfoListRes;
+        }
         // 有效视频信息videoInfoListRes与videoLinkSet进行合并
         if(videoInfoListRes.length){
           let array = [...videoLinkSet];
+          
           let videoUrlArr = [];
           videoInfoListRes.forEach(videoItem=>{
             videoUrlArr.push(videoItem.downloadUrl);
           })
           array.forEach(item=>{
             if(!videoUrlArr.includes(item)){
-              videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl),hostUrl: hostUrl,qualityList:[]})
+              videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl),hostUrl: getHostname(hostUrl),qualityList:[]})
             }
           })
         }else{
           // videoInfoList中没有有效链接，以videoLinkSet返回
           let array = [...videoLinkSet];
           array.forEach(item=>{
-            videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl),hostUrl: hostUrl,qualityList:[]})
+            videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl),hostUrl: getHostname(hostUrl),qualityList:[]})
           })
         }
       }
@@ -80,7 +84,16 @@ const browser = __b;
     return videoInfoListRes;
   }
 
-  
+  function getHostname(url) {
+    if(!url){
+      return ''
+    }
+    try {
+      return new URL(url).hostname.toLowerCase();
+    } catch (error) {
+      return url.split('/')[0].toLowerCase();
+    }
+  }
 
   function isURL(s) {
     if(!s){

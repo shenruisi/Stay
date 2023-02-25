@@ -7,6 +7,7 @@
 
 #import "FCConfig.h"
 #import "SharedStorageManager.h"
+#import "DeviceHelper.h"
 
 @interface FCConfig(){
     NSUserDefaults *_groupUserDefaults;
@@ -36,8 +37,15 @@ static FCConfig *k_config = nil;
         [self setBoolValueOfKey:GroupUserDefaultsKeySyncEnabled value:NO setWhenNil:YES];
         [self setStringValueOfKey:GroupUserDefaultsKeyLastSync value:@"" setWhenNil:YES];
         NSString *deviceID = [self getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID];
-        if (deviceID.length == 0){
-            deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+        if (deviceID.length > 0){
+            [DeviceHelper saveUUID:deviceID];
+        }
+        else{
+            deviceID = [DeviceHelper uuid];
+            if (deviceID.length == 0){
+                deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+                [DeviceHelper saveUUID:deviceID];
+            }
         }
         [self setStringValueOfKey:GroupUserDefaultsKeyDeviceUUID value:deviceID setWhenNil:YES];
         [SharedStorageManager shared].userDefaultsExRO.deviceID = deviceID;

@@ -92,6 +92,8 @@
 		3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BA92971813E0068231A /* NSArray+m3u8.m */; };
 		3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAC2971813E0068231A /* NSURL+m3u8.m */; };
 		3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */; };
+		3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA742AB29A2180100AB9F12 /* MySlider.swift */; };
+		3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA742AB29A2180100AB9F12 /* MySlider.swift */; };
 		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
@@ -157,6 +159,9 @@
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
+		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		583C633C299BC42800F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateCollectionController.m */; };
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
@@ -359,6 +364,8 @@
 		58AC12ED2860781F00875D6D /* FCCarbon.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12EC2860781F00875D6D /* FCCarbon.m */; };
 		58AC12F428607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
+		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
+		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
@@ -689,6 +696,7 @@
 		3C949BAB2971813E0068231A /* M3U8SegmentInfoList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M3U8SegmentInfoList.h; sourceTree = "<group>"; };
 		3C949BAC2971813E0068231A /* NSURL+m3u8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+m3u8.m"; sourceTree = "<group>"; };
 		3C949BAD2971813E0068231A /* M3U8PlaylistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M3U8PlaylistModel.m; sourceTree = "<group>"; };
+		3CA742AB29A2180100AB9F12 /* MySlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySlider.swift; sourceTree = "<group>"; };
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
@@ -747,6 +755,8 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
+		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
 		584C05A728607F4E00E07DDF /* NavigateCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateCollectionController.m; sourceTree = "<group>"; };
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
@@ -874,6 +884,7 @@
 		58AC12EC2860781F00875D6D /* FCCarbon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCCarbon.m; sourceTree = "<group>"; };
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
+		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
@@ -1225,6 +1236,7 @@
 			children = (
 				3C8388E129335C68007563E6 /* RoundedBorderView.swift */,
 				3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */,
+				3CA742AB29A2180100AB9F12 /* MySlider.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1326,6 +1338,8 @@
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */,
+				583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */,
 				582061E9294C4CC800A32D0C /* UIView+Layout.h */,
 				582061E8294C4CC600A32D0C /* UIView+Layout.m */,
 				584C05AB286179D000E07DDF /* ImageHelper.h */,
@@ -1639,6 +1653,7 @@
 		58C663792990E04300B00110 /* VideoParser */ = {
 			isa = PBXGroup;
 			children = (
+				58AFD76229A1BA43001D412F /* ua.user.js */,
 				58C6637A2990E05F00B00110 /* VideoParser.h */,
 				58C6637B2990E05F00B00110 /* VideoParser.m */,
 			);
@@ -2539,6 +2554,7 @@
 				84C1ED4C277AB93E00651DF9 /* homepage-selected@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
+				58AFD76329A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
 				8496DFB827592C260075ABD5 /* more@3x.png in Resources */,
 				8410C841275E028A005531EC /* typescript.html in Resources */,
@@ -2640,6 +2656,7 @@
 				588202832859E73900B2721A /* homepage-selected@3x.png in Resources */,
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
+				58AFD76429A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
 				588202862859E73900B2721A /* more@3x.png in Resources */,
 				588202872859E73900B2721A /* typescript.html in Resources */,
@@ -2648,6 +2665,7 @@
 				5882028A2859E73900B2721A /* Main.html in Resources */,
 				5882028B2859E73900B2721A /* editor.html in Resources */,
 				5882028C2859E73900B2721A /* codemirror.css in Resources */,
+				583C633C299BC42800F53B14 /* sniffer.app.js in Resources */,
 				5882028D2859E73900B2721A /* webback@3x.png in Resources */,
 				5882028E2859E73900B2721A /* supported-apis.js in Resources */,
 				5882028F2859E73900B2721A /* stay-taskloop.js in Resources */,
@@ -2811,6 +2829,7 @@
 				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
+				3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
@@ -2853,6 +2872,7 @@
 				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
+				583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
@@ -3062,6 +3082,7 @@
 				3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
+				3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
@@ -3179,6 +3200,7 @@
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
+				583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
@@ -3549,7 +3571,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"iOS=1",
+					"FC_IOS=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
@@ -3572,7 +3594,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 2.3.7;
 				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
+				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_IOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -3602,7 +3624,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"iOS=1",
+					"FC_IOS=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
@@ -3625,7 +3647,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 2.3.7;
 				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D iOS";
+				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_IOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -3748,7 +3770,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"Mac=1",
+					"FC_MAC=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
@@ -3771,7 +3793,7 @@
 				);
 				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D Mac";
+				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_MAC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = Stay;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3805,7 +3827,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",
-					"Mac=1",
+					"FC_MAC=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				GENERATE_PKGINFO_FILE = NO;
@@ -3828,7 +3850,7 @@
 				);
 				MARKETING_VERSION = 2.3.4;
 				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D Mac";
+				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_MAC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = Stay;
 				PROVISIONING_PROFILE_SPECIFIER = "";

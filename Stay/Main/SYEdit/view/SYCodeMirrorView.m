@@ -50,7 +50,7 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
 
         config.userContentController = wkUController;
-#ifdef Mac
+#ifdef FC_MAC
         _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,self.width,self.height) configuration:config];
 #else
         _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.height) configuration:config];

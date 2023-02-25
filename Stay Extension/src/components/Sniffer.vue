@@ -75,7 +75,7 @@ export default {
 
     const fetchSnifferFolder = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchFolders'}, (response) => {
-        console.log('fetchSnifferFolder---response-----', response);
+        // console.log('fetchSnifferFolder---response-----', response);
         try {
           if(response.body){
             state.folderOptions = [{name: t('select_folder'), uuid: ''}, ...response.body];
@@ -179,7 +179,7 @@ export default {
     }
 
     const contactClick = () => {
-      global.openUrlInSafariPopup(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}`);
+      global.openUrlInSafariPopup(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}&body=${encodeURIComponent(props.browserUrl)}`);
     }
 
     return {
@@ -358,6 +358,7 @@ export default {
               line-height: 25px;
               // padding: 2px 0;
               border-radius: 8px;
+              user-select: none;
             }
           }
         }
@@ -377,6 +378,7 @@ export default {
             padding-right: 4px;
             height: 24px;
             line-height: 24px;
+            user-select: none;
           }
           .select-options{
             height: 24px;
@@ -399,7 +401,7 @@ export default {
               text-overflow: ellipsis;
               display: inline-block;
               -webkit-box-orient: vertical;
-              padding-right: 6px;
+              padding-right: 16px;
               text-align: center;
               &::after{
                 background: url("../assets/images/dropdown.png") no-repeat 50% 50%;  

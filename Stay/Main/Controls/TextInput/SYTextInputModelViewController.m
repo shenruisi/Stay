@@ -55,7 +55,7 @@
 }
 
 - (CGSize)mainViewSize{
-#ifdef Mac
+#ifdef FC_MAC
     CGFloat width = 300;
 #else
     CGFloat width = kScreenWidth - 30;

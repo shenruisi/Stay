@@ -10,12 +10,12 @@
 //#import "ViewController.h"
 #import "MainTabBarController.h"
 #import "IACManager.h"
-#ifdef Mac
+#ifdef FC_MAC
 #import "SceneCenter.h"
 #else
 #import "PadSplitViewController.h"
 #endif
-#if iOS
+#if FC_IOS
 #import "Stay-Swift.h"
 #else
 #import "Stay-Swift.h"
@@ -30,7 +30,7 @@
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
 
     UIWindowScene *windowScene = (UIWindowScene *)scene;
-#ifdef Mac
+#ifdef FC_MAC
     UIWindow *window = [[SceneCenter shared] connectScene:@"app.stay.scene.main"
                            windowScene:windowScene
                           sceneSession:session];
