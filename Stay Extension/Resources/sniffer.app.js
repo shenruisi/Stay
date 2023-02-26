@@ -196,12 +196,13 @@
       try{
         mutations.forEach(function(mutation) {  
           // todo
+          host = window.location.host;
           videoDoms = document.querySelectorAll('video');
-          if('VIDEO' === mutation.target.nodeName && videoDoms && videoDoms.length){
+          const mutationDoms = mutation.target.querySelectorAll('video');
+          if(('VIDEO' === mutation.target.nodeName || (mutationDoms && mutationDoms.length)) && videoDoms && videoDoms.length){
             // console.log('mutation.videoDoms-----',videoDoms)
-            host = window.location.host;
-            parseVideoNodeList(videoDoms);
             // throw new Error('endloop');
+            parseVideoNodeList(videoDoms);
           }
         });  
       } catch (e) {
@@ -298,6 +299,8 @@
     if(Utils.isBase64(downloadUrl)){
       downloadUrl = downloadUrl.replace(/^data:.*\w+;base64,/, '');
       videoInfo.m3u8Content = Utils.decodeBase64(downloadUrl);
+    }else{
+      videoInfo.downloadUrl = window.encodeURI(videoInfo.downloadUrl);
     }
     if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
       // console.log('parseVideoNodeList----------has exost, and modify-------');
@@ -406,6 +409,11 @@
     else if(host.indexOf('jable.tv')>-1){
       videoInfo = handleJableVideoInfo(videoDom);
     }
+    else if(host.indexOf('hxaa79.com')>-1){
+      videoInfo = handleHxaa79VideoInfo(videoDom);
+    }
+
+
     if(videoInfo.downloadUrl){
       downloadUrl = videoInfo.downloadUrl
     }
@@ -421,6 +429,9 @@
     }
     if(!title){
       title = document.title;
+    }
+    if(!title){
+      title = Utils.getUrlPathName(downloadUrl);
     }
     poster = Utils.completionSourceUrl(poster);
     videoInfo['title'] = title
@@ -673,8 +684,8 @@
             let qualityList = []
             let defaultQuality = '';
             mediaDefinitions.forEach(item=>{
-              if('hls' == item.format && typeof item.quality == 'string'){
-                qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
+              if('hls' == item.format && typeof item.quality == 'string' && item.videoUrl){
+                qualityList.push({downloadUrl: window.encodeURI(item.videoUrl), qualityLabel:item.quality, quality: Number(item.quality)})
               }
               if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
                 defaultQuality = item.defaultQuality;
@@ -686,13 +697,6 @@
             // console.log('qualityList========',qualityList)
             // console.log('defaultQuality========',defaultQuality, typeof defaultQuality)
             videoInfo['qualityList'] = qualityList;
-            if(qualityList.length){
-              qualityList.forEach(item=>{
-                if(item.quality == defaultQuality){
-                  videoInfo.downloadUrl = item.downloadUrl;
-                }
-              })
-            }
           }
         }
       }
@@ -789,10 +793,21 @@
     if(titleDom){
       videoInfo.title = titleDom.textContent;
     }
-
     return videoInfo;
-
   }
+
+  function handleHxaa79VideoInfo(videoDom){
+    let videoInfo = {};
+    videoInfo.poster = videoDom.getAttribute('poster') || '';
+    videoInfo.downloadUrl = videoDom.getAttribute('src');
+    videoInfo.title = videoDom.getAttribute('title');
+    const titleDom = document.querySelector('.play_main .play_main_1');
+    if(titleDom){
+      videoInfo.title = titleDom.textContent;
+    }
+    return videoInfo;
+  }
+
   /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
@@ -818,9 +833,12 @@
             if(videoIdSet.size && (videoIdSet.has(item.vid))){
               return;
             }
-            videoIdSet.add(item.vid);
-            // more video
-            videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
+            if(Utils.isURL(item.videoUrl)){
+
+              videoIdSet.add(item.vid);
+              // more video
+              videoList.push({title:item.title,poster:item.poster,downloadUrl: window.encodeURI(item.videoUrl),hostUrl:hostUrl,videoUuid:item.vid });
+            }
           })
         }
         return videoInfo;

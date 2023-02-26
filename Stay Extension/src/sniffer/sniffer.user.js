@@ -49,8 +49,7 @@ const browser = __b;
     let host = window.location.host;
     // console.log('------------injectParseVideoJS-----start------------------')
     let videoList = [];
-    // 获取到的video Url数组
-    let videoUrlSet = new Set();
+    // 获取到的videoId 集合
     let videoIdSet = new Set();
     // Firefox和Chrome早期版本中带有前缀  
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -270,7 +269,7 @@ const browser = __b;
        * 初始化
        *
        * @private
-       * @param {function} callback 回调函数
+       
        */
       init(callback) {
         this.touchstart(callback);
@@ -296,42 +295,48 @@ const browser = __b;
       touchstart(callback) {
         const self = this;
         self.dom.removeEventListener('touchstart', function(event) {
-          handleLongPress(event);
+          event.preventDefault();
+          event.stopPropagation();
+          self.handleLongPress(event, callback);
         })
 
         self.dom.addEventListener('touchstart', function(event) {
-          // console.log('this.dom----touchstart-----',event)
-          // 清除默认行为
+          console.log('this.dom----touchstart-----',event)
           event.preventDefault();
-          handleLongPress(event);
+          event.stopPropagation();
+          self.timer = setTimeout((e, fun) => {
+            self.handleLongPress(e, fun);
+          }, 700, event, callback);
+          return false;
         }, false);
 
-        function handleLongPress(event){
-          if(isHidden(self.dom)){
-            return;
-          }
-          let target = event.changedTouches[0];
-          try {
-            target.target.click();
-            // target.addEventListener('contextmenu', function(e){
-            //   e.preventDefault();
-            // });
-          } catch (error) {
-            
-          }
-          // 开启定时器
-          self.timer = setTimeout(() => {
-            event.preventDefault();
-            if (typeof callback === 'function') {
-              callback();
-              self.timer = 0;
-            } else {
-              console.error('callback is not a function!');
-            }
-          }, 500);
-        }
       }
 
+      handleLongPress(event, callback){
+        // 清除默认行为
+        // event.preventDefault();
+        // event.stopPropagation();
+        if(isHidden(this.dom)){
+          return;
+        }
+        let target = event.changedTouches[0];
+        try {
+          // target.target.click();
+          target.target.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+          });
+        } catch (error) {
+          
+        }
+        // 开启定时器
+        if (typeof callback === 'function') {
+          callback();
+          this.timer = 0;
+        } else {
+          console.error('callback is not a function!');
+        }
+        
+      }
       /**
        * 手指抬起时清除定时器，无论按住时间是否达到 700 毫秒的阈值
        *
@@ -340,33 +345,42 @@ const browser = __b;
       touchend() {
         const self = this;
         self.dom.removeEventListener('touchend', function(event) {
+          event.preventDefault();
           handleTouchend(event)
         });
         self.dom.addEventListener('touchend', function(event) {
-          handleTouchend(event)
+          // 清除默认行为
+          // event.preventDefault();
+          console.log('this.dom--------touchend------', event);
+          event.stopPropagation();
+          handleTouchend(event);
+          return false;
+        });
+
+        self.dom.addEventListener('touchcancel', function(event) {
+          event.stopPropagation();
+          event.preventDefault();
+          console.log('this.dom-----touchcancel-------',event);
+          handleTouchend(event);
+          return false;
         });
 
         function handleTouchend(event){
           if(isHidden(self.dom)){
             return;
           }
-          // 清除默认行为
-          event.preventDefault();
+          
           // 清除定时器
           clearTimeout(self.timer);
-
           if(self.timer!=0){
             try {
               let target = event.changedTouches[0];
-              // target.target.click();
+              target.target.click();
             } catch (error) {
               
             }
-            // console.log(event)
-            //这里写要执行的内容click事件
-            // alert('你这是点击，不是长按');
           }
-          return false;
+          
         }
       }
 
@@ -380,8 +394,10 @@ const browser = __b;
           handleTouchmove(event);
         })
         self.dom.addEventListener('touchmove', function(event){
+          console.log('this.dom-----touchmove-------',event);
           // event.preventDefault();
           handleTouchmove(event);
+          return false;
         })
         function handleTouchmove(event){
           if(isHidden(self.dom)){
@@ -389,7 +405,6 @@ const browser = __b;
           }
           clearTimeout(self.timer);//清除定时器
           self.timer = 0;
-          return false;
         }
       }
     }
@@ -445,11 +460,6 @@ const browser = __b;
         // this.endTime = 0; // 触摸终止时间
         this.timer = 0; 
         this.distance = 10; // 触摸距离值
-        // this.domPageStartX = this.dom.getBoundingClientRect().left;
-        // this.domPageStartY = document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
-
-        // this.domPageEndX = this.domPageStartX + this.dom.clientWidth;
-        // this.domPageEndY = this.domPageStartY + this.dom.clientHeight;
         this.init(callback);
       }
 
@@ -458,7 +468,7 @@ const browser = __b;
       }
 
       getDomPageStartY(){
-        return document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
+        return (document.documentElement.scrollTop || window.pageYOffset) + this.dom.getBoundingClientRect().top;
       }
 
       getDomPageEndX(){
@@ -473,7 +483,6 @@ const browser = __b;
        * 初始化
        *
        * @private
-       * @param {function} callback 回调函数
        */
       init(callback) {
         this.touchstart(callback);
@@ -498,57 +507,59 @@ const browser = __b;
        */
       touchstart(callback) {
         const self = this;
-        document.removeEventListener('touchstart', function(event){
-          handleTargetEvent(event)
+        document.body.removeEventListener('touchstart', function(event){
+          event.preventDefault();
+          event.stopPropagation();
+          self.handleTargetEvent(event, callback);
+          return false;
         });
-        document.addEventListener('touchstart', function(event) {
-          // console.log('touchstart-------',event);
+        document.body.addEventListener('touchstart', function(event) {
+          console.log('touchstart-------',event);
           event.preventDefault();
           event.stopPropagation();
-          handleTargetEvent(event)
+          self.handleTargetEvent(event, callback);
+          return false;
         }, false);
+      }
 
-        function handleTargetEvent(event){
-          event.preventDefault();
+      handleTargetEvent(event, callback){
+        const self = this;
+        let target = event.changedTouches[0];
+        const targetPageX = target.pageX;
+        const targetPageY = target.pageY;
+        console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+        if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
+        targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
+        targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
+          console.log('start-------', new Date().getTime());
           event.stopPropagation();
-          let target = event.changedTouches[0];
-          const targetPageX = target.pageX;
-          const targetPageY = target.pageY;
-          // console.log('check---------------targetPageX----------targetPageY-----------');
-          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
-          if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
-          targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
-          targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
-            let classList = target.target.classList;
-            // console.log('start----------event----',event);
-            if(!classList.contains('__stay-unselect')){
-              // console.log('start----------classList.add---------------------');
-              classList.add('__stay-unselect')
-            }
+          event.preventDefault();
+          this.timer = window.setTimeout((curTarget, fun) => {
+            self.timer = 0;
             try {
-              // target.target.click();
-              // target.addEventListener('contextmenu', function(e){
-              //   e.preventDefault();
-              // });
-            } catch (error) {
-              
-            }
-            
-            self.timer = setTimeout(() => {
-              // console.log('------------------targetPageX----------targetPageY-----------');
-              // 清除默认行为
-              event.stopPropagation();
-              event.preventDefault();
-              if (typeof callback === 'function') {
-                callback();
-                self.timer = 0;
+              let classList = curTarget.target.classList;
+              console.log('start----------event----',event);
+              if(!classList.contains('__stay-unselect')){
+                classList.add('__stay-unselect')
+              }
+              if(!classList.contains('__stay-touch-action')){
+                classList.add('__stay-touch-action');
+              }
+              console.log('end-------', new Date().getTime());
+              if (typeof fun === 'function') {
+                fun();
               } else {
                 console.error('callback is not a function!');
               }
-            }, 500);
-          }
-          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
-          return false;
+              // curTarget.target.click();
+              curTarget.target.addEventListener('contextmenu', function(e){
+                e.preventDefault();
+              });
+            } catch (error) {
+              
+            }
+          }, 700, target, callback);
+          console.log('end.end-------', new Date().getTime());
         }
       }
 
@@ -559,34 +570,53 @@ const browser = __b;
        */
       touchend() {
         const self = this;
-        document.removeEventListener('touchend', function(event){
-          touchEndCallback(event);
+        document.body.removeEventListener('touchend', function(event){
+          event.stopPropagation();
+          event.preventDefault();
+          self.touchEndCallback(event);
+          // return false;
         })
-        document.addEventListener('touchend', function(event) {
-          // console.log('touchend-------',event);
-          touchEndCallback(event)
+        // document.removeEventListener('touchcancel', function(event){
+        //   event.stopPropagation();
+        //   event.preventDefault();
+        //   self.touchEndCallback(event);
+        //   return false;
+        // }, true)
+        // document.addEventListener('touchcancel', function(event) {
+        //   event.stopPropagation();
+        //   event.preventDefault();
+        //   console.log('touchcancel-------',event);
+        //   self.touchEndCallback(event)
+        //   return false;
+        // }, true);
+        document.body.addEventListener('touchend', function(event) {
+          // event.stopPropagation();
+          // event.preventDefault();
+          console.log('touchend-------',event);
+
+          self.touchEndCallback(event)
+          return false;
         });
 
-        function touchEndCallback(event){
-          if(isHidden(self.dom)){
-            return;
-          }
-          // 清除定时器
-          clearTimeout(self.timer);
+       
 
-          if(self.timer!=0){
-            self.timer = 0;
-            try {
-              let target = event.changedTouches[0];
-              target.target.click();
-            } catch (error) {
-              
-            }
-            // console.log(event)
-            //这里写要执行的内容click事件
-            // alert('你这是点击，不是长按');
+      }
+
+
+      touchEndCallback(event){
+        if(isHidden(this.dom)){
+          return;
+        }
+        console.log('touchEndCallback-------', this.timer);
+        // 清除定时器
+        window.clearTimeout(this.timer);
+        if(this.timer!=0){
+          try {
+            let target = event.changedTouches[0];
+            target.target.click();
+          } catch (error) {
+            
           }
-          return false;
         }
       }
 
@@ -595,27 +625,33 @@ const browser = __b;
        */
       touchmove() {
         const self = this;
-        document.removeEventListener('touchmove', function(event){
-          // event.preventDefault();
+        document.body.removeEventListener('touchmove', function(event){
+          event.preventDefault();
+          event.stopPropagation();
           touchmoveCallback();
         });
-        document.addEventListener('touchmove', function(event){
-          // console.log('touchmove-------',event);
-          // event.preventDefault();
+        document.body.addEventListener('touchmove', function(event){
+          console.log('touchmove-------',event);
+          event.preventDefault();
+          event.stopPropagation();
           touchmoveCallback();
+          return false;
         })
         function touchmoveCallback(){
           if(isHidden(self.dom)){
             return;
           }
-          clearTimeout(self.timer);//清除定时器
+          window.clearTimeout(self.timer);//清除定时器
           self.timer = 0;
           return false;
         }
       }
+
+
     }
 
     function startFindVideoInfo(completed){
+      observerVideo();
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
       // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
@@ -635,7 +671,7 @@ const browser = __b;
           afterCompleteQueryVideo()
         }
       }
-      observerVideo()
+      
     }
 
     function afterCompleteQueryVideo(){
@@ -661,18 +697,20 @@ const browser = __b;
     }
 
     function observerVideo(){
+      // console.log('observerVideo-------------');
       // 创建观察者对象  
       const observer = new MutationObserver(function(mutations) {  
         // console.log('----------------MutationObserver---------------',mutations)
         try{
           mutations.forEach(function(mutation) {  
             // todo
+            host = window.location.host;
             videoDoms = document.querySelectorAll('video');
-            if('VIDEO' === mutation.target.nodeName && videoDoms && videoDoms.length){
+            const mutationDoms = mutation.target.querySelectorAll('video');
+            if(('VIDEO' === mutation.target.nodeName || (mutationDoms && mutationDoms.length)) && videoDoms && videoDoms.length){
               // console.log('mutation.videoDoms-----',videoDoms)
-              host = window.location.host;
-              parseVideoNodeList(videoDoms);
               // throw new Error('endloop');
+              parseVideoNodeList(videoDoms);
             }
           });  
         } catch (e) {
@@ -770,6 +808,7 @@ const browser = __b;
       if(!Utils.isURL(downloadUrl)){
         videoInfo.downloadUrl = hostUrl;
       }
+      videoInfo.downloadUrl = window.encodeURI(videoInfo.downloadUrl);
       addLongPress(videoDom, posDom, videoInfo);
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
         // console.log('parseVideoNodeList----------has exist, and modify-------',videoInfo, videoList);
@@ -847,6 +886,7 @@ const browser = __b;
         document.body.append(Utils.parseToDOM(sinfferUnselect));
       }
       posDom.classList.add('__stay-unselect');
+      posDom.classList.add('__stay-touch-action');
 
       const hostUrl = videoInfo.hostUrl;
       // console.log('addLongPress--------hostUrl=====',hostUrl)
@@ -881,24 +921,23 @@ const browser = __b;
         // })
       }
       else if(hostUrl.indexOf('pornhub.com')>-1){
-        // let dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
         // if(!dom){
         //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
         // }
         // if(!dom){
         //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
         // }
-        // if(dom){
-        //   if(!dom.classList.contains('__stay-touch-action')){
-        //     dom.classList.add('__stay-touch-action');
-        //   }
-        //   if(!dom.classList.contains('__stay-unselect')){
-        //     dom.classList.add('__stay-unselect');
-        //   }
-        // }
-        // new LongPress(dom, ()=>{
-        //   addSinfferModal(dom, videoInfo);
-        // })
+        if(posDom){
+          if(!posDom.classList.contains('__stay-touch-action')){
+            posDom.classList.add('__stay-touch-action');
+          }
+          if(!posDom.classList.contains('__stay-unselect')){
+            posDom.classList.add('__stay-unselect');
+          }
+        }
+        new LongPress(posDom, ()=>{
+          addSinfferModal(videoDom, posDom, videoInfo);
+        })
       }
       
       new DocumentLongPress(posDom, ()=>{
@@ -1024,9 +1063,12 @@ const browser = __b;
         let vTop = top;
         if(top<0){
           vTop = 0;
+          if(bodyClientHeight <= vHeight){
+            vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
+          }
         }else if(top == 0){
           // 处理全屏的top
-          if(bodyClientHeight == vHeight){
+          if(bodyClientHeight <= vHeight){
             vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
           }
         }else{
@@ -1262,9 +1304,11 @@ const browser = __b;
 
       modalDom.addEventListener('touchmove', e =>{ 
         e.preventDefault();
+        e.stopPropagation();
       }, false);
       modalDom.addEventListener('touchstart', e =>{ 
         e.preventDefault();
+        // e.stopPropagation();
         // modalDom.style.display = 'none';
         modalDom.classList.remove('__stay-show-modal');
         popupDom.style.animation = 'fadeout .5s;';
@@ -1379,6 +1423,10 @@ const browser = __b;
         if(!playerDom){
           playerDom = document.querySelector('#player-control-overlay');
         }
+        // 短视频
+        if(!playerDom){
+          playerDom = document.querySelector('.carousel-wrapper .video-wrapper .reel-player-overlay-main-content');
+        }
         if(playerDom){
           longPressDom = playerDom;
         }
@@ -1427,6 +1475,10 @@ const browser = __b;
       }
       // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
       else if(host.indexOf('pornhub.com')>-1){
+        let dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer');
+        if(dom){
+          longPressDom = dom;
+        }
         videoInfo = handlePornhubVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('facebook.com')>-1){
@@ -1441,6 +1493,10 @@ const browser = __b;
       // https://jable.tv/videos/dvaj-605/
       else if(host.indexOf('jable.tv')>-1){
         videoInfo = handleJableVideoInfo(videoSnifferDom);
+      }
+      // ztawxd5l.hxaa79.com
+      else if(host.indexOf('hxaa79.com')>-1){
+        videoInfo = handleHxaa79VideoInfo(videoSnifferDom);
       }
 
       if(videoInfo.downloadUrl){
@@ -1458,6 +1514,9 @@ const browser = __b;
       }
       if(!title){
         title = document.title;
+      }
+      if(!title){
+        title = Utils.getUrlPathName(downloadUrl);
       }
       poster = Utils.completionSourceUrl(poster);
       videoInfo['title'] = title
@@ -1490,12 +1549,12 @@ const browser = __b;
       let posDom = null;
       if(host.indexOf('pornhub.com')>-1){
         posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper .mgp_videoPoster img');
-        if(!posDom){
-          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
-        }
-        if(!posDom){
-          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
-        }
+        // if(!posDom){
+        //   posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
+        // }
+        // if(!posDom){
+        //   posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
+        // }
         if(!posDom){
           posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
         }
@@ -1726,8 +1785,8 @@ const browser = __b;
               let qualityList = []
               let defaultQuality = '';
               mediaDefinitions.forEach(item=>{
-                if('hls' == item.format && typeof item.quality == 'string'){
-                  qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
+                if('hls' == item.format && typeof item.quality == 'string' && item.videoUrl){
+                  qualityList.push({downloadUrl: window.encodeURI(item.videoUrl), qualityLabel:item.quality, quality: Number(item.quality)})
                 }
                 if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
                   defaultQuality = item.defaultQuality;
@@ -1740,13 +1799,6 @@ const browser = __b;
               // console.log('qualityList========',qualityList)
               // console.log('defaultQuality========',defaultQuality, typeof defaultQuality)
               videoInfo['qualityList'] = qualityList;
-              if(qualityList.length){
-                qualityList.forEach(item=>{
-                  if(item.quality == defaultQuality){
-                    videoInfo.downloadUrl = item.downloadUrl;
-                  }
-                })
-              }
             }
           }
         }
@@ -1795,7 +1847,7 @@ const browser = __b;
         }
       }else{
         videoDetailDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode;
-        console.log(videoDetailDom.classList, 'videoDetailDom.classList.contains(\'_a8b4\') ===', videoDetailDom.classList.contains('_a8b4') )
+        // console.log(videoDetailDom.classList, 'videoDetailDom.classList.contains(\'_a8b4\') ===', videoDetailDom.classList.contains('_a8b4') )
         if(videoDetailDom && videoDetailDom.classList.contains('_a8b4') && videoDetailDom.classList.contains('_acjh')){
           // let posterDom = videoDetailDom.querySelector('div > div div.xryxfnj.x1nhvcw1 div.xxk0z11.x1qihbgi a.x1i10hfl._a6hd div._aagu div._aagv img');
           // if(posterDom){
@@ -1848,6 +1900,18 @@ const browser = __b;
 
     }
 
+    function handleHxaa79VideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      const titleDom = document.querySelector('.play_main .play_main_1');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+      return videoInfo;
+    }
+
     /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList,videoKey,videoUuid}
@@ -1876,9 +1940,11 @@ const browser = __b;
               if(videoIdSet.size && (videoIdSet.has(item.vid))){
                 return;
               }
-              videoIdSet.add(item.vid);
-              // more video
-              videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
+              if(Utils.isURL(item.videoUrl)){
+                videoIdSet.add(item.vid);
+                // more video
+                videoList.push({title:item.title,poster:item.poster,downloadUrl:window.encodeURI(item.videoUrl),hostUrl:hostUrl,videoUuid:item.vid });
+              }
             })
           }
           return videoInfo;
@@ -2043,7 +2109,7 @@ const browser = __b;
             let mimeType = item.mimeType;
             if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
               qualitySet.add(item.quality)
-              qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality})
+              qualityList.push({downloadUrl: window.encodeURI(item.url), qualityLabel:item.qualityLabel, quality: item.quality})
             }
           });
           if(qualityList && qualityList.length){
