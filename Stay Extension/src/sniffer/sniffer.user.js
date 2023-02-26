@@ -295,27 +295,37 @@ const browser = __b;
       touchstart(callback) {
         const self = this;
         self.dom.removeEventListener('touchstart', function(event) {
-          event.preventDefault();
-          event.stopPropagation();
+          // event.preventDefault();
+          // event.stopPropagation();
           self.handleLongPress(event, callback);
         })
 
         self.dom.addEventListener('touchstart', function(event) {
-          console.log('this.dom----touchstart-----',event)
-          event.preventDefault();
-          event.stopPropagation();
+          // console.log('this.dom----touchstart-----',event)
+          self.handleTargetTouchend(event.target);
           self.timer = setTimeout((e, fun) => {
             self.handleLongPress(e, fun);
-          }, 700, event, callback);
+          }, 600, event, callback);
           return false;
         }, false);
 
       }
 
+      handleTargetTouchend(target){
+        const self = this;
+        if(!target){
+          return;
+        }
+        
+        target.addEventListener('touchend', (event)=>{
+          // clearTimeout(self.timer);
+          self.handleTouchend(event, target);
+        })
+      }
+
       handleLongPress(event, callback){
-        // 清除默认行为
-        // event.preventDefault();
-        // event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
         if(isHidden(this.dom)){
           return;
         }
@@ -345,42 +355,33 @@ const browser = __b;
       touchend() {
         const self = this;
         self.dom.removeEventListener('touchend', function(event) {
-          event.preventDefault();
-          handleTouchend(event)
+          self.handleTouchend(event, null)
         });
         self.dom.addEventListener('touchend', function(event) {
-          // 清除默认行为
-          // event.preventDefault();
-          console.log('this.dom--------touchend------', event);
-          event.stopPropagation();
-          handleTouchend(event);
+          self.handleTouchend(event, null);
           return false;
         });
+      }
 
-        self.dom.addEventListener('touchcancel', function(event) {
-          event.stopPropagation();
-          event.preventDefault();
-          console.log('this.dom-----touchcancel-------',event);
-          handleTouchend(event);
-          return false;
-        });
-
-        function handleTouchend(event){
-          if(isHidden(self.dom)){
-            return;
-          }
-          
-          // 清除定时器
-          clearTimeout(self.timer);
-          if(self.timer!=0){
-            try {
-              let target = event.changedTouches[0];
-              target.target.click();
-            } catch (error) {
-              
+      handleTouchend(event, isTarget){
+        const self = this;
+        // console.log('this.dom----handleTouchend-----isTarget', isTarget, event);
+        if(isHidden(this.dom)){
+          return;
+        }
+        event.stopPropagation();
+        // 清除定时器
+        clearTimeout(this.timer);
+        if(this.timer!=0){
+          try {
+            if(isTarget){
+              isTarget.removeEventListener('touchend', (event)=>{
+                clearTimeout(self.timer);
+              })
             }
+          } catch (error) {
+            
           }
-          
         }
       }
 
@@ -394,7 +395,7 @@ const browser = __b;
           handleTouchmove(event);
         })
         self.dom.addEventListener('touchmove', function(event){
-          console.log('this.dom-----touchmove-------',event);
+          // console.log('this.dom-----touchmove-------',event);
           // event.preventDefault();
           handleTouchmove(event);
           return false;
@@ -458,7 +459,7 @@ const browser = __b;
         this.dom = dom;
         // this.startTime = 0; // 触摸起始时间
         // this.endTime = 0; // 触摸终止时间
-        this.timer = 0; 
+        this.stayLongPressTimer = 0; 
         this.distance = 10; // 触摸距离值
         this.init(callback);
       }
@@ -508,44 +509,61 @@ const browser = __b;
       touchstart(callback) {
         const self = this;
         document.body.removeEventListener('touchstart', function(event){
-          event.preventDefault();
-          event.stopPropagation();
+          // event.preventDefault();
+          // event.stopPropagation();
           self.handleTargetEvent(event, callback);
           return false;
         });
         document.body.addEventListener('touchstart', function(event) {
           console.log('touchstart-------',event);
-          event.preventDefault();
-          event.stopPropagation();
+          // event.preventDefault();
+          // event.stopPropagation();
+          self.handleTargetTouchend(event.target);
           self.handleTargetEvent(event, callback);
           return false;
         }, false);
       }
 
+      handleTargetTouchend(target){
+        const self = this;
+        if(!target){
+          return;
+        }
+        // target.stopPropagation();
+        // target.stopPropagation();
+        target.addEventListener('touchend', (event)=>{
+          // event.stopPropagation();
+          self.touchEndCallback(event, target);
+          // clearTimeout(self.stayLongPressTimer);
+        })
+      }
+
       handleTargetEvent(event, callback){
+        event.stopPropagation();
+        event.preventDefault();
         const self = this;
         let target = event.changedTouches[0];
         const targetPageX = target.pageX;
         const targetPageY = target.pageY;
-        console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+        // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
         if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
-          console.log('start-------', new Date().getTime());
-          event.stopPropagation();
-          event.preventDefault();
-          this.timer = window.setTimeout((curTarget, fun) => {
-            self.timer = 0;
+          // console.log('start-------', new Date().getTime());
+          // event.stopPropagation();
+          // event.preventDefault();
+          this.stayLongPressTimer = window.setTimeout((curTarget, fun) => {
+            self.stayLongPressTimer = 0;
             try {
               let classList = curTarget.target.classList;
-              console.log('start----------event----',event);
+              // console.log('start----------event----',event);
               if(!classList.contains('__stay-unselect')){
                 classList.add('__stay-unselect')
               }
               if(!classList.contains('__stay-touch-action')){
                 classList.add('__stay-touch-action');
               }
-              console.log('end-------', new Date().getTime());
+              // console.log('end-------', new Date().getTime());
               if (typeof fun === 'function') {
                 fun();
               } else {
@@ -558,8 +576,8 @@ const browser = __b;
             } catch (error) {
               
             }
-          }, 700, target, callback);
-          console.log('end.end-------', new Date().getTime());
+          }, 600, target, callback);
+          // console.log('end.end-------', new Date().getTime());
         }
       }
 
@@ -569,51 +587,45 @@ const browser = __b;
        * @private
        */
       touchend() {
+        // console.log('handle------touchend---' );
         const self = this;
         document.body.removeEventListener('touchend', function(event){
-          event.stopPropagation();
-          event.preventDefault();
-          self.touchEndCallback(event);
+          // event.stopPropagation();
+          self.touchEndCallback(event, null);
           // return false;
         })
-        // document.removeEventListener('touchcancel', function(event){
-        //   event.stopPropagation();
-        //   event.preventDefault();
-        //   self.touchEndCallback(event);
-        //   return false;
-        // }, true)
-        // document.addEventListener('touchcancel', function(event) {
-        //   event.stopPropagation();
-        //   event.preventDefault();
-        //   console.log('touchcancel-------',event);
-        //   self.touchEndCallback(event)
-        //   return false;
-        // }, true);
         document.body.addEventListener('touchend', function(event) {
           // event.stopPropagation();
           // event.preventDefault();
-          console.log('touchend-------',event);
-
-          self.touchEndCallback(event)
+          // console.log('touchend-------',event);
+          self.touchEndCallback(event, null)
           return false;
         });
-
-       
-
       }
 
 
-      touchEndCallback(event){
+      touchEndCallback(event, isTarget){
+        const self = this;
+        // event.preventDefault();
+        event.stopPropagation();
         if(isHidden(this.dom)){
           return;
         }
-        console.log('touchEndCallback-------', this.timer);
+        // console.log('touchEndCallback----event------isTarget-', isTarget, event);
         // 清除定时器
-        window.clearTimeout(this.timer);
-        if(this.timer!=0){
+        clearTimeout(this.stayLongPressTimer);
+        if(this.stayLongPressTimer!=0){
           try {
             let target = event.changedTouches[0];
-            target.target.click();
+            if(isTarget){
+              isTarget.removeEventListener('touchend', (event)=>{
+                // clearTimeout(this.stayLongPressTimer);
+                self.touchEndCallback(event, null)
+              })
+            }
+            // event.target.preventDefault();
+            // event.target.stopPropagation();
+            // target.target.click();
           } catch (error) {
             
           }
@@ -631,7 +643,7 @@ const browser = __b;
           touchmoveCallback();
         });
         document.body.addEventListener('touchmove', function(event){
-          console.log('touchmove-------',event);
+          // console.log('touchmove-------',event);
           event.preventDefault();
           event.stopPropagation();
           touchmoveCallback();
@@ -641,8 +653,8 @@ const browser = __b;
           if(isHidden(self.dom)){
             return;
           }
-          window.clearTimeout(self.timer);//清除定时器
-          self.timer = 0;
+          window.clearTimeout(self.stayLongPressTimer);//清除定时器
+          self.stayLongPressTimer = 0;
           return false;
         }
       }
