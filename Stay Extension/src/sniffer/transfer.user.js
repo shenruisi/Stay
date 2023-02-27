@@ -8,13 +8,15 @@ const browser = __b;
 (function(){
   let videoInfoList = [];
   let videoLinkSet = new Set();
+  let videoPageUrl = '';
+  let currentTabUrl = window.location.href;
   /**
      * 合并 videoInfoList 和 videoLinkSet
      * @returns videoInfoListRes
      */
   function mergeVideoInfoList(){
     let videoInfoListRes = [];
-    let hostUrl = window.location.href;
+    
     // console.log('mergeVideoInfoList-------',hostUrl, videoInfoList, videoLinkSet)
     if(videoInfoList.length){
       let videnLen = videoInfoList.length
@@ -39,7 +41,7 @@ const browser = __b;
             if(isValidAmount == 1){
               let array = [...videoLinkSet];
               array.forEach(item=>{
-                videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl), hostUrl:hostUrl,qualityList:[]})
+                videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, videoPageUrl), hostUrl:videoPageUrl,qualityList:[]})
               })
               return videoInfoListRes;
             }
@@ -69,14 +71,14 @@ const browser = __b;
           })
           array.forEach(item=>{
             if(!videoUrlArr.includes(item)){
-              videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl),hostUrl: getHostname(hostUrl),qualityList:[]})
+              videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, videoPageUrl),hostUrl: getHostname(videoPageUrl),qualityList:[]})
             }
           })
         }else{
           // videoInfoList中没有有效链接，以videoLinkSet返回
           let array = [...videoLinkSet];
           array.forEach(item=>{
-            videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, hostUrl),hostUrl: getHostname(hostUrl),qualityList:[]})
+            videoInfoListRes.push({downloadUrl:item,poster:'',title: getLastPathName(item, videoPageUrl),hostUrl: getHostname(videoPageUrl),qualityList:[]})
           })
         }
       }
@@ -119,9 +121,10 @@ const browser = __b;
     const operate = request.operate;
     if('background' === requestFrom){
       if('VIDEO_INFO_PUSH' === operate){
+        videoPageUrl = request.videoPageUrl;
         if(request.videoLinkSet && request.videoLinkSet.size){
           videoLinkSet = request.videoLinkSet
-          console.log('videoLinkSet--------', videoLinkSet);
+          // console.log('videoLinkSet--------', videoLinkSet);
         }
         if(request.videoInfoList && request.videoInfoList.length){
           videoInfoList = request.videoInfoList
@@ -132,6 +135,12 @@ const browser = __b;
     else if('popup' === requestFrom){
       if('snifferFetchVideoInfo' === operate){
         let videoListRes = mergeVideoInfoList();
+        if(videoListRes.length){
+          videoListRes.filter((item, i, arr)=>{
+            return currentTabUrl.indexOf(item.hostUrl);        
+          })
+        }
+        
         sendResponse({body: {videoInfoList : videoListRes}});
       }
         

@@ -23,7 +23,7 @@ Date.prototype.dateFormat = function (fmt) {
     return fmt;
 }
 
-
+let videoPageUrl = '';
 let videoInfoList = [];
 let videoLinkSet = new Set();
 let matchAppScriptList = [];
@@ -1062,14 +1062,16 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log("VIDEO_INFO_PUSH-------",request)
             if(request.videoLinkSet && request.videoLinkSet.size){
                 videoLinkSet = request.videoLinkSet
+                videoPageUrl= request.videoPageUrl
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoLinkSet});
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH", videoPageUrl, videoLinkSet});
                 });
             }
             if(request.videoInfoList && request.videoInfoList.length){
                 videoInfoList = request.videoInfoList
+                videoPageUrl = request.videoPageUrl
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoInfoList});
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoPageUrl, videoInfoList});
                 });
             }
         }

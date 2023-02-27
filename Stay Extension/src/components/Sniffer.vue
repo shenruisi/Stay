@@ -12,7 +12,7 @@
             </div>
             <div class="info">
               <div class="title">{{getHostname(item.hostUrl)}}</div>
-              <div class="name">{{item.title}}</div>
+              <div class="name" v-html="item.title"></div>
             </div>
           </div>
           <div class="download"><div class="btn" @click="downloadClickAction(item)">{{ t("download") }}</div></div>
@@ -332,6 +332,9 @@ export default {
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
                 line-height: 17px;
+                span{
+                  font-weight: 700;
+                }
               }
 
             }
