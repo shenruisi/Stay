@@ -7,8 +7,6 @@
   let host = window.location.host;
   // console.log('------------injectParseVideoJS-----start------------------')
   let videoList = [];
-  // 获取到的video Url数组
-  let videoUrlSet = new Set();
   let videoIdSet = new Set();
   // Firefox和Chrome早期版本中带有前缀  
   const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -1021,11 +1019,17 @@
     }else{
       videoInfo = {};
       videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
-      // poster img
-      videoInfo['poster'] = getYoutubeVideoPosterByDom();
       videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
       // console.log('videoInfo----------',videoInfo);
     }
+    let posterImg = getYoutubeVideoPosterByDom();
+    if(videoId != playerResp.videoDetails.videoId){
+      posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    }
+    if(!posterImg){
+      posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    }
+    videoInfo['poster'] = posterImg;
     return videoInfo;
   }
     

@@ -1,21 +1,24 @@
 /**
  * 解析页面video标签
  */
+
 let __b; 
 if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
 const browser = __b;
 (function () {
-  let isContent = false;
+  let isStayAround = '';
   try {
+    // for page
     handleInjectScript();
     document.addEventListener('securitypolicyviolation', (e) => {
-      // console.log('securitypolicyviolation--------', isContent)
-      isContent = true;
-      injectParseVideoJS(isContent);
+      // for content
+      injectParseVideoJS(true);
     })
   } catch (error) {
   }
-  
+  /**
+   * for page 
+   */ 
   function handleInjectScript(){
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     let contentHost = window.location.host;
@@ -45,6 +48,7 @@ const browser = __b;
 
 
   function injectParseVideoJS(isContent){
+    let isStayAround = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
     // console.log('------------injectParseVideoJS-----start------------------')
@@ -509,15 +513,11 @@ const browser = __b;
       touchstart(callback) {
         const self = this;
         document.body.removeEventListener('touchstart', function(event){
-          // event.preventDefault();
-          // event.stopPropagation();
           self.handleTargetEvent(event, callback);
           return false;
         });
         document.body.addEventListener('touchstart', function(event) {
-          console.log('touchstart-------',event);
-          // event.preventDefault();
-          // event.stopPropagation();
+          // console.log('touchstart-------',event);
           self.handleTargetTouchend(event.target);
           self.handleTargetEvent(event, callback);
           return false;
@@ -550,8 +550,6 @@ const browser = __b;
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
           // console.log('start-------', new Date().getTime());
-          // event.stopPropagation();
-          // event.preventDefault();
           this.stayLongPressTimer = window.setTimeout((curTarget, fun) => {
             self.stayLongPressTimer = 0;
             try {
@@ -606,7 +604,6 @@ const browser = __b;
 
       touchEndCallback(event, isTarget){
         const self = this;
-        // event.preventDefault();
         event.stopPropagation();
         if(isHidden(this.dom)){
           return;
@@ -616,16 +613,12 @@ const browser = __b;
         clearTimeout(this.stayLongPressTimer);
         if(this.stayLongPressTimer!=0){
           try {
-            let target = event.changedTouches[0];
             if(isTarget){
               isTarget.removeEventListener('touchend', (event)=>{
                 // clearTimeout(this.stayLongPressTimer);
                 self.touchEndCallback(event, null)
               })
             }
-            // event.target.preventDefault();
-            // event.target.stopPropagation();
-            // target.target.click();
           } catch (error) {
             
           }
@@ -852,6 +845,7 @@ const browser = __b;
       }
     }
 
+    
     /**
      * 添加长按事件
      * @param {Object} videoDom   视频video dom对象
@@ -860,14 +854,17 @@ const browser = __b;
      * @returns 
      */
     async function addLongPress(videoDom, posDom, videoInfo){
-      // console.log('----addLongPress-----start------')
+      // console.log('----addLongPress-----start------');
       if(!posDom){
-        // console.log('----posDomposDomposDomposDomposDom-----null')
+        // console.log('----posDomposDomposDomposDomposDom-----null');
         return;
       }
-      // console.log('----getStayAround-----start------')
-      const isStayAround = await getStayAround();
-      // console.log('----isStayAround-----',isStayAround)
+      // console.log('----getStayAround-----start------');
+      if(!isStayAround){
+        const isStayProTemp = await getStayAround();
+        isStayAround = isStayProTemp;
+      }
+      // console.log('----isStayAround-----',isStayAround);
       if(isStayAround!='a'){
         return;
       }
@@ -927,18 +924,9 @@ const browser = __b;
         })
       }
       else if(hostUrl.indexOf('mobile.twitter.com')>-1){
-        // console.log('----------------mobile.twitter.com-----', posDom);
-        // new LongPress(posDom, ()=>{
-        //   addSinfferModal(videoDom, posDom, videoInfo);
-        // })
+        
       }
       else if(hostUrl.indexOf('pornhub.com')>-1){
-        // if(!dom){
-        //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
-        // }
-        // if(!dom){
-        //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
-        // }
         if(posDom){
           if(!posDom.classList.contains('__stay-touch-action')){
             posDom.classList.add('__stay-touch-action');
@@ -965,25 +953,25 @@ const browser = __b;
           browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
             // console.log('GET_STAY_AROUND---------',response)
             if(response.body && JSON.stringify(response.body)!='{}'){
-              let isStayAround = response.body;
-              // console.log('isStayAround---------',isStayAround)
-              resolve(isStayAround);
+              // console.log('isStayAround---------', response.body)
+              resolve( response.body);
             // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
             }
           });
         }else{
           // console.log('getStayAround-----false');
-          const pid = Math.random().toString(36).substring(1, 9);
+          const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
-            if (e.data.pid !== pid || e.data.name !== 'RESP_GET_STAY_AROUND') return;
+            if (e.data.pid !== pid || e.data.name !== 'GET_STAY_AROUND_RESP') return;
             // console.log('RESP_GET_STAY_AROUND----response=', e.data);
-            let isStayAround = e.data ? (e.data.response ? e.data.response.body : {}): 'b';
-            // console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayAround);
-            resolve(isStayAround);
+            let isStayPro = e.data ? (e.data.response ? e.data.response.body : 'b'): 'b';
+            // console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayPro);
+            resolve(isStayPro);
             window.removeEventListener('message', callback);
           };
+          // console.log('getStayAround-----false-----start---pid=',pid);
+          window.postMessage({ id: pid, pid: pid, name: 'GET_STAY_AROUND' });
           window.addEventListener('message', callback);
-          window.postMessage({ pid: pid, name: 'GET_STAY_AROUND' });
         }
       })
     }
@@ -1002,7 +990,7 @@ const browser = __b;
       let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
       let top = posDom.getBoundingClientRect().top;
       let left = posDom.getBoundingClientRect().left;
-      // console.log('videoDom.tagName====',videoDom.tagName)
+      // console.log('videoDom.tagName====',videoDom, posDom)
       if('VIDEO' == posDom.tagName){
         // console.log('videoDom.parentNode====',videoDom.parentNode)
         top = posDom.parentNode.getBoundingClientRect().top;
@@ -1015,7 +1003,7 @@ const browser = __b;
       if(vHeight<Utils.div(bodyClientHeight, 2)){
         posterHeight = vHeight;
       }
-      // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
+      console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
       let modalDom = document.querySelector('#__stay_sinffer_modal');
       if(!modalDom){
@@ -2139,11 +2127,19 @@ const browser = __b;
       }else{
         videoInfo = {};
         videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
-        // poster img
-        videoInfo['poster'] = getYoutubeVideoPosterByDom();
         videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
         // console.log('videoInfo----------',videoInfo);
       }
+
+      let posterImg = getYoutubeVideoPosterByDom();
+      if(videoId != playerResp.videoDetails.videoId){
+        posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      }
+      if(!posterImg){
+        posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      }
+      videoInfo['poster'] = posterImg;
+
       return videoInfo;
     }
     
@@ -2289,6 +2285,14 @@ const browser = __b;
       // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoList=',videoInfoList);
       let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList};
       browser.runtime.sendMessage(message, (response) => {});
+    }
+    else if(name === 'GET_STAY_AROUND'){
+      let pid = e.data.pid;
+      // console.log('GET_STAY_AROUND----->GET_STAY_AROUND=',pid);
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
+        // console.log('sniffer--------GET_STAY_AROUND-----',response)
+        window.postMessage({pid:pid, name: 'GET_STAY_AROUND_RESP', response: response });
+      });
     }
   })
 })()
