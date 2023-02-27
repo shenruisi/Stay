@@ -1,4 +1,5 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const { defineConfig } = require('@vue/cli-service');
 // const CompressionWebpackPlugin = require('compression-webpack-plugin');
@@ -20,6 +21,22 @@ const plugins = [
   new CopyWebpackPlugin({
     patterns: copyFiles
   }),
+  new UglifyJsPlugin({
+    uglifyOptions: {
+      // 删除注释
+      output: {
+        comments: false
+      },
+      warnings: false,
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: process.env.NODE_ENV === 'production'?['console.log']:[] //移除console
+      }
+    },
+    sourceMap: false,
+    parallel: true
+  })
 ];
 
 // 页面文件
@@ -66,15 +83,28 @@ module.exports = defineConfig({
     }
   },
   chainWebpack: config => {
+    // 开启压缩js代码
+    config.optimization.minimize(true)
+    config.optimization.delete('splitChunks')
     if (process.env.NODE_ENV === 'production') {
       config.output.filename('js/[name].js').end()
       config.output.chunkFilename('js/[name].js').end()
+      config.optimization
+        .minimize(true)
+        .minimizer('terser')
+        .tap(args => {
+          let { terserOptions } = args[0];
+          terserOptions.compress.drop_console = true;
+          terserOptions.compress.drop_debugger = true;
+          return args
+        });
     }
     config.module.rule('images').set('parser', {
       dataUrlCondition: {
 			  maxSize: 1 * 1024, // 4KiB
       },
     });
+    
     // 开启gzip压缩
     // config.plugins.push(
     // 	new CompressionWebpackPlugin({

@@ -39,7 +39,7 @@
             "run_at": "document_start"
         },
         {
-            "js": ["popup/js/chunk-vendors.js", "popup/js/sniffer.js"],
+            "js": ["popup/js/sniffer.js"],
             "matches": [ "*://*/*" ],
             "all_frames": true,
             "run_at": "document_start"

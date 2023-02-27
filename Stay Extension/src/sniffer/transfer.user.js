@@ -58,6 +58,7 @@ const browser = __b;
             videoInfoListRes.push(item);
           }
         });
+        
         if(!videoLinkSet || videoLinkSet.size==0){
           return videoInfoListRes;
         }

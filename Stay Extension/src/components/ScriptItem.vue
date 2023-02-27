@@ -215,7 +215,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: start;
+      align-items: flex-start;
       flex: 1;
       .script-icon{
         position: absolute;
@@ -301,7 +301,7 @@ export default {
     .website-cell{
       width: 100%;
       display: flex;
-      justify-content: start;
+      justify-content: flex-start;
       align-items: center;
       position: relative;
       padding: 4px 0 2px 0;
@@ -408,7 +408,7 @@ export default {
       width: 100%;
       padding: 2px 0;
       display: flex;
-      justify-content: start;
+      justify-content: flex-start;
       align-items: center;
       position: relative;
       .cell-icon{

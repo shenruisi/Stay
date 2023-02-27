@@ -6,7 +6,6 @@ let __b;
 if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
 const browser = __b;
 (function () {
-  let isStayAround = '';
   try {
     // for page
     handleInjectScript();
@@ -1014,9 +1013,11 @@ const browser = __b;
       const modalContent = document.querySelector('#__stay_sinffer_modal .__stay-sinffer-content');
       modalContent.classList.add('__stay-trans');
 
-      setTimeout(function(){
+      let visibleTimer = setTimeout(function(){
         modalDom.classList.add('__stay-show-modal');
         popupDom.style.visibility = 'visible';
+        clearTimeout(visibleTimer);
+        visibleTimer = 0;
       }, 400)
 
 
@@ -1317,11 +1318,13 @@ const browser = __b;
         modalDom.classList.remove('__stay-show-modal');
         popupDom.style.animation = 'fadeout .5s;';
 
-        setTimeout(() => {
+        let removeTimer = setTimeout(() => {
           if(modalDom){
             document.body.removeChild(modalDom);
           }
           document.body.removeChild(document.querySelector('#__style_sinffer_style'));
+          clearTimeout(removeTimer);
+          removeTimer = 0;
         }, 200);
       }, false);
 
@@ -1540,8 +1543,10 @@ const browser = __b;
 
     function setTimeoutParseVideoInfoByWindow(){
       // console.log('setTimeoutParseVideoInfoByWindow-------')
-      setTimeout(()=>{
-        parseVideoInfoByWindow()
+      let loadingTimer = setTimeout(()=>{
+        parseVideoInfoByWindow();
+        clearTimeout(loadingTimer);
+        loadingTimer = 0;
       },400)
     }
     
@@ -1580,11 +1585,13 @@ const browser = __b;
 
       let titleDom = document.querySelector('.main-container .ep-info-pre .ep-info-title');
       if(!titleDom){
-        setTimeout(function(){
+        let bilibiliTimer = setTimeout(function(){
           titleDom = document.querySelector('.video .share-video-info .title-wrapper .title-name span');
           if(titleDom){
             videoInfo.title = titleDom.textContent;
           }
+          clearTimeout(bilibiliTimer);
+          bilibiliTimer = 0;
           return videoInfo;
         }, 200)
       }
@@ -2216,6 +2223,9 @@ const browser = __b;
       }
     };
     
+    /**
+     * @discarded 废弃请求拦截
+     */
     function handlePageInterceptor(){
       function isVideoLink(url){
         let re = /^(https?:\/\/|\/).*\.(mp4|m3u8)$/;
@@ -2227,12 +2237,12 @@ const browser = __b;
       XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
         
       XMLHttpRequest.prototype.open = function(method, url, async, user, password){
-        // console.log('OPEN_URL',url);
+        console.log('OPEN_URL',url);
         this.reallyOpen(method,url,async,user,password);
         if (isVideoLink(url)){
           if (!uniqueUrls.has(url)){
             uniqueUrls.add(url);
-            // console.log('VIDEO_LINK_CAPTURE: ' + url);
+            console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
             if(isContent){
               let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
@@ -2269,7 +2279,7 @@ const browser = __b;
       };
     }
 
-    handlePageInterceptor();
+    // handlePageInterceptor();
 
   }
 
@@ -2280,29 +2290,22 @@ const browser = __b;
     if (!e || !e.data || !e.data.name) return;
     const name = e.data.name;
     // console.log('snifffer.user----->e.data.name=',name);
+    // @discarded  VIDEO_LINK_CAPTURE
     if(name === 'VIDEO_LINK_CAPTURE'){
       let tempSet = e.data.urls ? e.data.urls : new Set();
-      // console.log('snifffer.VIDEO_LINK_CAPTURE----->tempSet=',tempSet);
-      // videoLinkSet = new Set( [ ...tempSet, ...videoLinkSet ] )
       videoLinkSet = tempSet
-      // console.log('snifffer.VIDEO_LINK_CAPTURE----->videoLinkSet=',videoLinkSet);
       let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH', videoPageUrl, videoLinkSet};
       browser.runtime.sendMessage(message, (response) => {});
     }
     else if(name === 'VIDEO_INFO_CAPTURE'){
       let videoInfoListTemp = e.data.videoList ? e.data.videoList : [];
       videoInfoList = videoInfoListTemp
-      // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoListTemp=',videoInfoListTemp);
-      // videoInfoList.push(...videoInfoListTemp)
-      // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoList=',videoInfoList);
       let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH', videoPageUrl, videoInfoList};
       browser.runtime.sendMessage(message, (response) => {});
     }
     else if(name === 'GET_STAY_AROUND'){
       let pid = e.data.pid;
-      // console.log('GET_STAY_AROUND----->GET_STAY_AROUND=',pid);
       browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
-        // console.log('sniffer--------GET_STAY_AROUND-----',response)
         window.postMessage({pid:pid, name: 'GET_STAY_AROUND_RESP', response: response });
       });
     }

@@ -244,7 +244,7 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     flex:1;
     .matched-script-box{
