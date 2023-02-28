@@ -123,6 +123,22 @@ const browser = __b;
           return text.substr(0, len);
         }
       },
+      isChinese(obj){
+        if(!obj){
+          return false;
+        }
+        if(/.*[u4e00-u9fa5]+.*$/.test(obj)){
+          return true;
+        }
+        return false;
+      },
+      urlEncodeChinese(urlStr){
+        if(!urlStr){
+          return urlStr;
+        }
+        let reg = new RegExp('[\\u4E00-\\u9FFF]','g');
+        return urlStr.replace(reg, function(match) {return window.encodeURI(match)})
+      },
       getUrlPathName: function(srcUrl){
         let pathName = '';
         if(this.isURL(srcUrl)){
@@ -823,7 +839,8 @@ const browser = __b;
       if(!Utils.isURL(downloadUrl)){
         videoInfo.downloadUrl = hostUrl;
       }
-      videoInfo.downloadUrl = window.encodeURI(videoInfo.downloadUrl);
+      
+      // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
       addLongPress(videoDom, posDom, videoInfo);
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
         // console.log('parseVideoNodeList----------has exist, and modify-------',videoInfo, videoList);
@@ -1809,7 +1826,7 @@ const browser = __b;
               let defaultQuality = '';
               mediaDefinitions.forEach(item=>{
                 if('hls' == item.format && typeof item.quality == 'string' && item.videoUrl){
-                  qualityList.push({downloadUrl: window.encodeURI(item.videoUrl), qualityLabel:item.quality, quality: Number(item.quality)})
+                  qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
                 }
                 if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
                   defaultQuality = item.defaultQuality;
@@ -1966,7 +1983,7 @@ const browser = __b;
               if(Utils.isURL(item.videoUrl)){
                 videoIdSet.add(item.vid);
                 // more video
-                videoList.push({title:item.title,poster:item.poster,downloadUrl:window.encodeURI(item.videoUrl),hostUrl:hostUrl,videoUuid:item.vid });
+                videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
               }
             })
           }
@@ -2137,7 +2154,7 @@ const browser = __b;
             let mimeType = item.mimeType;
             if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
               qualitySet.add(item.quality)
-              qualityList.push({downloadUrl: window.encodeURI(item.url), qualityLabel:item.qualityLabel, quality: item.quality})
+              qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality})
             }
           });
           if(qualityList && qualityList.length){
