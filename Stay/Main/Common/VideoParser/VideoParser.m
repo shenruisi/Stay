@@ -46,6 +46,7 @@ static VideoParser *_kVideoParser;
         [preferences setValue:@YES forKey:@"allowFileAccessFromFileURLs"];
         [config setPreferences:preferences];
         config.applicationNameForUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
+        
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
         
@@ -53,11 +54,12 @@ static VideoParser *_kVideoParser;
             WKUserContentController *userContentController = [[WKUserContentController alloc] init];
             [userContentController addUserScript:viewportScript];
         
-//        NSString *ua = [self _getScript:@"ua.user"];
-//        WKUserScript *uaUserscript = [[WKUserScript alloc] initWithSource:ua
-//                                                            injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-//                                                         forMainFrameOnly:YES];
-//        [wkUController addUserScript:uaUserscript];
+        NSString *ua = [self _getScript:@"ua.user"];
+        WKUserScript *uaUserscript = [[WKUserScript alloc] initWithSource:ua
+                                                            injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                                         forMainFrameOnly:YES];
+        [wkUController addUserScript:uaUserscript];
+        
         NSString *sinffer = [self _getScript:@"sniffer.app"];
         WKUserScript *snifferUserscript = [[WKUserScript alloc] initWithSource:sinffer
                                                                  injectionTime:WKUserScriptInjectionTimeAtDocumentStart
