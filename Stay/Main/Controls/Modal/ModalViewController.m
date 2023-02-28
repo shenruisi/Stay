@@ -94,6 +94,7 @@
 - (void)viewWillAppear{}
 - (void)viewDidAppear{}
 - (void)viewWillDisappear{}
+- (void)viewDisappearIntermediate{}
 - (void)viewDidDisappear{}
 - (void)viewDidLoad{}
 @end
