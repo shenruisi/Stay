@@ -6,7 +6,7 @@
 //
 
 #import "VideoParser.h"
-
+#import "FCApp.h"
 
 @interface VideoParser()<
  WKNavigationDelegate,
@@ -48,6 +48,11 @@ static VideoParser *_kVideoParser;
         config.applicationNameForUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
+        
+        WKUserScript *viewportScript = [[WKUserScript alloc] initWithSource:@"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'); document.head.appendChild(meta);" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+            WKUserContentController *userContentController = [[WKUserContentController alloc] init];
+            [userContentController addUserScript:viewportScript];
+        
 //        NSString *ua = [self _getScript:@"ua.user"];
 //        WKUserScript *uaUserscript = [[WKUserScript alloc] initWithSource:ua
 //                                                            injectionTime:WKUserScriptInjectionTimeAtDocumentStart
@@ -60,7 +65,7 @@ static VideoParser *_kVideoParser;
         [wkUController addUserScript:snifferUserscript];
         config.userContentController = wkUController;
         
-        _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
+        _webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 375, 834) configuration:config];
         _webView.navigationDelegate = self;
 //        [_webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(NSString *userAgent, NSError *error) {
 //                NSString *newUserAgent = [userAgent stringByAppendingString:@" "];
