@@ -32,7 +32,8 @@ export default {
     "open_app":"OPEN IN APP",
     "install_more":"Install more userscripts from Stay Fork",
     "what_downloader": "What is a downloader?",
-    "what_darkmode" : "What is a dark mode?"
+    "what_darkmode" : "What is a dark mode?",
+    'ad': 'Ad'
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -66,7 +67,8 @@ export default {
     "open_app":"在应用里打开",
     "install_more":"从Stay Fork安装更多用户脚本",
     "what_downloader": "什么是下载器？",
-    "what_darkmode" : " 什么是暗黑模式？"
+    "what_darkmode" : " 什么是暗黑模式？",
+    'ad': '广告'
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -100,7 +102,8 @@ export default {
     "open_app":"在應用裡打開",
     "install_more":"從Stay Fork安裝更多用戶腳本",
     "what_downloader": "什麼是下載器？",
-    "what_darkmode" : " 什麼是暗黑模式？"
+    "what_darkmode" : " 什麼是暗黑模式？",
+    'ad': '廣告'
   }
 }
 /* eslint-disable */

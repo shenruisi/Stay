@@ -60,9 +60,15 @@ const browser = __b;
     let timerArr = [];
 
     const Utils = {
-      isMobile: function(){
+      isMobileOrIpad: function(){
         const userAgentInfo = navigator.userAgent;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
+        let getArr = Agents.filter(i => userAgentInfo.includes(i));
+        return getArr.length ? true : false;
+      },
+      isMobile: function(){
+        const userAgentInfo = navigator.userAgent;
+        let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
         return getArr.length ? true : false;
       },
@@ -96,14 +102,19 @@ const browser = __b;
           if(/^\/\//i.test(downloadUrl)){
             downloadUrl = window.location.protocol+downloadUrl;
           }else{
-            downloadUrl = window.location.origin+downloadUrl;
+            if(/^\//i.test(downloadUrl)){
+              downloadUrl = window.location.origin+downloadUrl;
+            }
           }
         }
         return downloadUrl;
       },
-      checkCharLengthAndSubStr: function(text, len=80){
+      checkCharLengthAndSubStr: function(text, len){
         if(!text){
           return '';
+        }
+        if(!len){
+          len=80
         }
         let textTemp = text.replace(/[^x00-xff]/g, '01');
         if(textTemp.length <= len){
@@ -372,7 +383,7 @@ const browser = __b;
         if(isHidden(this.dom)){
           return;
         }
-        event.stopPropagation();
+        // event.stopPropagation();
         // 清除定时器
         clearTimeout(this.timer);
         if(this.timer!=0){
@@ -603,7 +614,7 @@ const browser = __b;
 
       touchEndCallback(event, isTarget){
         const self = this;
-        event.stopPropagation();
+        // event.stopPropagation();
         if(isHidden(this.dom)){
           return;
         }
@@ -823,6 +834,7 @@ const browser = __b;
             item.title = videoInfo.title
             item.hostUrl = videoInfo.hostUrl
             item.qualityList = videoInfo.qualityList?videoInfo.qualityList:[];
+            item.type= videoInfo.type?videoInfo.type:'';
             // console.log('checkVideoExist----------item===',item);
           }
           return item;
@@ -1043,9 +1055,8 @@ const browser = __b;
           lineColor = '#37372F';
         }
         
-        
         let countH = 1;
-        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">Download</div>`;
+        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">${videoInfo.type == 'ad'? 'Ad':'Download'}</div>`;
         let qualityList = videoInfo.qualityList;
         if(qualityList && qualityList.length){
           let qualityItem = '';
@@ -1058,6 +1069,7 @@ const browser = __b;
           })
           downloadCon = qualityItem;
         }
+        
         // 动画开始位置
         let transPos = top;
         // 计算高度
@@ -1526,14 +1538,14 @@ const browser = __b;
         title = Utils.getUrlPathName(downloadUrl);
       }
       poster = Utils.completionSourceUrl(poster);
-      videoInfo['title'] = title
+      videoInfo['title'] = (videoInfo.type && videoInfo.type=='ad')?('<span style="font-weight: 700;">Ad·</span>'+title):title;
       videoInfo['poster'] = poster;
       videoInfo['downloadUrl'] = downloadUrl;
       videoInfo['hostUrl'] = hostUrl;
       videoInfo['qualityList'] = qualityList;
       videoInfo['videoUuid'] = videoUuid;
 
-      // console.log('parse---------mobile.twitter.com------longPressDom-',longPressDom, ',videoInfo========',videoInfo);
+      // console.log('parse------videoInfo========',videoInfo);
       if(downloadUrl){
         checkVideoExist(videoDom, longPressDom, videoInfo) 
       }
@@ -2146,7 +2158,10 @@ const browser = __b;
         // console.log('videoInfo----------',videoInfo);
       }
 
-      let posterImg = getYoutubeVideoPosterByDom();
+      let posterImg = videoInfo['poster'];
+      if(!posterImg){
+        posterImg = getYoutubeVideoPosterByDom();
+      }
       if(videoId != playerResp.videoDetails.videoId){
         posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
       }
@@ -2155,11 +2170,21 @@ const browser = __b;
       }
       videoInfo['poster'] = posterImg;
 
-      if(videoInfo['downloadUrl'] && videoInfo['downloadUrl'].indexOf('pltype=adhost')){
-        videoInfo['title'] = '<span>Ad·</span>' + videoInfo['title'];
+      if(checkAdForYoutube(videoInfo['downloadUrl'])){
+        videoInfo['type'] = 'ad';
       }
-
       return videoInfo;
+    }
+
+    function checkAdForYoutube(downloadUrl){
+      if((downloadUrl && downloadUrl.indexOf('pltype=adhost')>-1)){
+        return true;
+      }
+      const adPlayer = document.querySelector('#container .video-ads');
+      if(adPlayer && !isHidden(adPlayer)){
+        return true;
+      }
+      return false;
     }
     
     /**

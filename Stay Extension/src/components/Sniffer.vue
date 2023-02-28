@@ -15,7 +15,7 @@
               <div class="name" v-html="item.title"></div>
             </div>
           </div>
-          <div class="download"><div class="btn" @click="downloadClickAction(item)">{{ t("download") }}</div></div>
+          <div class="download"><div class="btn" @click="downloadClickAction(item)">{{ item.type=='ad'? t("ad"): t("download")}}</div></div>
         </div>
         <div class="video-download-info">
           <div class="label-txt">{{ t("save_to_folder") }}&nbsp;:</div>
