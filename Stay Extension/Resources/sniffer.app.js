@@ -50,7 +50,9 @@
         if(/^\/\//i.test(downloadUrl)){
           downloadUrl = window.location.protocol+downloadUrl;
         }else{
-          downloadUrl = window.location.origin+downloadUrl;
+          if(/^\//i.test(downloadUrl)){
+            downloadUrl = window.location.origin+downloadUrl;
+          }
         }
       }
       return downloadUrl;

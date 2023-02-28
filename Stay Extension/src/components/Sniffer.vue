@@ -15,7 +15,7 @@
               <div class="name" v-html="item.title"></div>
             </div>
           </div>
-          <div class="download"><div class="btn" @click="downloadClickAction(item)">{{ item.type=='ad'? t("ad"): t("download")}}</div></div>
+          <div class="download"><div class="btn" @click="downloadClickAction(item)">{{item.type=='ad'? (t("download") + ' ' + t("ad")) : t("download") }}</div></div>
         </div>
         <div class="video-download-info">
           <div class="label-txt">{{ t("save_to_folder") }}&nbsp;:</div>
@@ -252,7 +252,7 @@ export default {
           justify-items: center;
           align-items: center;
           padding-bottom: 4px;
-          padding-right: 100px;
+          padding-right: 110px;
           position: relative;
           user-select: none;
           .img-info{
@@ -341,7 +341,7 @@ export default {
 
           }
           .download{
-            width: 100px;
+            width: 110px;
             height: 100%;
             flex: 1;
             display: flex;
@@ -352,7 +352,7 @@ export default {
             right: 0;
             user-select: none;
             .btn{
-              width: 94px;
+              width: 100px;
               background-color: var(--dm-bg-f7);
               color: var(--s-main);
               font-size: 13px;
