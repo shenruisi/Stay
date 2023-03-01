@@ -31,4 +31,16 @@
     return decodedString;
 }
 
+-(NSString *)safeEncode
+{
+    NSString *encodedString = (NSString *)
+    CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                    (CFStringRef)self,
+                    (CFStringRef)@"%",
+                     NULL,
+                     kCFStringEncodingUTF8));
+    
+    return encodedString;
+}
+
 @end

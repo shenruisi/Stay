@@ -9,6 +9,7 @@
 #import "FCApp.h"
 #import "ModalItemElement.h"
 #import "UIView+Layout.h"
+#import "NSString+Urlencode.h"
 #import "ModalItemView.h"
 #import "ModalItemViewFactory.h"
 #import "ModalSectionView.h"
@@ -279,7 +280,7 @@
 
     
     DownloadResource *resource = [[DownloadResource alloc] init];
-    NSString *downLoadUrl = self.linkElements[0].inputEntity.text;
+    NSString *downLoadUrl = [self.linkElements[0].inputEntity.text safeEncode];
     resource.title = self.nameElements[0].inputEntity.text;
 
     resource.downloadUrl = downLoadUrl;
