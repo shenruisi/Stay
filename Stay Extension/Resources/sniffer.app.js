@@ -299,8 +299,6 @@
     if(Utils.isBase64(downloadUrl)){
       downloadUrl = downloadUrl.replace(/^data:.*\w+;base64,/, '');
       videoInfo.m3u8Content = Utils.decodeBase64(downloadUrl);
-    }else{
-      videoInfo.downloadUrl = window.encodeURI(videoInfo.downloadUrl);
     }
     if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
       // console.log('parseVideoNodeList----------has exost, and modify-------');
@@ -685,7 +683,7 @@
             let defaultQuality = '';
             mediaDefinitions.forEach(item=>{
               if('hls' == item.format && typeof item.quality == 'string' && item.videoUrl){
-                qualityList.push({downloadUrl: window.encodeURI(item.videoUrl), qualityLabel:item.quality, quality: Number(item.quality)})
+                qualityList.push({downloadUrl: item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
               }
               if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
                 defaultQuality = item.defaultQuality;
@@ -837,7 +835,7 @@
 
               videoIdSet.add(item.vid);
               // more video
-              videoList.push({title:item.title,poster:item.poster,downloadUrl: window.encodeURI(item.videoUrl),hostUrl:hostUrl,videoUuid:item.vid });
+              videoList.push({title:item.title,poster:item.poster,downloadUrl: item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
             }
           })
         }
