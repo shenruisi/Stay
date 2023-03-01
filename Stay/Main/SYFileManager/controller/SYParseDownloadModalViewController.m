@@ -45,6 +45,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.contentView.backgroundColor = FCStyle.popup;
         
         UIStackView *stackV = [[UIStackView alloc] init];
         stackV.axis = UILayoutConstraintAxisVertical;
