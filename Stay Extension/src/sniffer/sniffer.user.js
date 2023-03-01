@@ -1073,7 +1073,7 @@ const browser = __b;
         }
         
         let countH = 1;
-        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">${videoInfo.type == 'ad'? 'Ad':'Download'}</div>`;
+        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">${videoInfo.type == 'ad'? 'Download Ad':'Download'}</div>`;
         let qualityList = videoInfo.qualityList;
         if(qualityList && qualityList.length){
           let qualityItem = '';
