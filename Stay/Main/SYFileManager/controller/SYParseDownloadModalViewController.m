@@ -13,6 +13,7 @@
 #import "ColorHelper.h"
 #import "UIImageView+WebCache.h"
 #import "NSString+Urlencode.h"
+#import "UIColor+Convert.h"
 #import "VideoParser.h"
 #import "DownloadResource.h"
 #import "DataManager.h"
@@ -188,7 +189,7 @@
         btn.clipsToBounds = YES;
         btn.layer.borderWidth = 0.5;
         if ([dic[@"qualityLabel"] isEqualToString:selectedQuality]) {
-            btn.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.11];
+            btn.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
             btn.layer.borderColor = UIColor.clearColor.CGColor;
         } else {
             btn.backgroundColor = FCStyle.secondaryPopup;
