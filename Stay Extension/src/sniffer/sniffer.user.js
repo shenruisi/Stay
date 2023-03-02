@@ -79,6 +79,13 @@ const browser = __b;
         if (!res[1]) return '';
         return res[1];
       },
+      queryParams: function(path, name) {
+        if(!path){
+          return '';
+        }
+        let url = 'https;//stap.app?'+path;
+        return this.queryURLParams(url, name);
+      },
       matchUrlInString: function(imgText){
         const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
         const imgMatchs = imgText.match(urlReg);

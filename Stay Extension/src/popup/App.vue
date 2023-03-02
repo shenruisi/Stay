@@ -55,8 +55,8 @@ export default {
       localLan,
       browserUrl: '',
       isStayPro: store.state.isStayPro,
-      darkmodeToggleStatus: 'on',
-      siteEnabled: true,
+      darkmodeToggleStatus: store.state.darkmodeToggleStatus,
+      siteEnabled: store.state.siteEnabled,
     })
     
     const setTabName = (selectedTab) => {
@@ -73,7 +73,9 @@ export default {
           state.isStayPro = request.isStayAround=='a'?true:false;
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
+          store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
           state.siteEnabled = request.enabled;
+          store.commit('setSiteEnabled', state.siteEnabled);
         }
       }
       return true;
