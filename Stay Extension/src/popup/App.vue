@@ -7,7 +7,7 @@
       <template v-if="selectedTab.id==2 || selectedTab.id==3">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
-          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl"></Sniffer>
+          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
@@ -57,6 +57,7 @@ export default {
       isStayPro: store.state.isStayPro,
       darkmodeToggleStatus: store.state.darkmodeToggleStatus,
       siteEnabled: store.state.siteEnabled,
+      longPressStatus: store.state.longPressStatus,
     })
     
     const setTabName = (selectedTab) => {
@@ -90,6 +91,10 @@ export default {
         // console.log('store.state.browserUrl====',store.state.browserUrl);
       })
       global.browser.runtime.sendMessage({ type: 'popup', operate: 'FETCH_DARKMODE_CONFIG'}, (response) => {})
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'getLongPressStatus'}, (response) => {
+        console.log('getLongPressStatus====',response);
+        state.longPressStatus = response.longPressStatus;
+      })
     }
 
     fetchStayProConfig();

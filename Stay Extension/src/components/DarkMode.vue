@@ -115,6 +115,7 @@ export default {
     justify-items: center;
     align-items: center;
     position: relative;
+    user-select: none;
   }
   .darkmode-setting .setting:first-child{
     border-top-left-radius: 6px;
@@ -137,6 +138,7 @@ export default {
     justify-items: center;
     text-align: center;
     flex-flow: column;
+    user-select: none;
   }
   .darkmode-pro .darkmode-setting .active {
     color: var(--dm-bg);
