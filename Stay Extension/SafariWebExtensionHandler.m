@@ -352,6 +352,16 @@
         }
         body = datas;
     }
+    else if ([message[@"type"] isEqualToString:@"yt_element"]){
+        NSString *path = message[@"path"];
+        NSDictionary *response = [[API shared] downloadYoutube:path];
+        NSString *code;
+        if ((code = response[@"biz"][@"code"]) != nil){
+            body = @{
+                @"code" : code
+            };
+        }
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,

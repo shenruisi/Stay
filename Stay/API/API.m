@@ -25,6 +25,8 @@
 
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 //static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
+//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
 static API *instance = nil;
 + (instancetype)shared{
  static dispatch_once_t onceToken;
@@ -113,6 +115,39 @@ static API *instance = nil;
 ////                   NSLog(@"%@",response);
 //
 //        }] resume];
+}
+
+- (NSDictionary *)downloadYoutube:(NSString *)path{
+    NSString *reqUrl = [NSString stringWithFormat:@"%@download/youtube",STAY_FORK_END_POINT];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    NSDictionary *param = @{
+        @"biz": @{
+            @"path":path
+        }
+    };
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:param
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:nil];
+    
+    [request setHTTPBody:data];
+    __block NSDictionary *ret;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request
+                    completionHandler:^(NSData *data,
+                                        NSURLResponse *response,
+                                        NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        if (nil == error && [httpResponse statusCode] == 200){
+            ret = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        }
+        dispatch_semaphore_signal(sem);
+    
+    }] resume];
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    return ret;
 }
 
 - (NSString *)queryDeviceType {
