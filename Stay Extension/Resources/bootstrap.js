@@ -498,11 +498,12 @@ let injectedContentVendor = new Set();
         const name = e.data.name;
         const pid = e.data.pid;
         let message = { from: "gm-apis", uuid: __uuid };
-        if(name == "GET_STAY_AROUND"){
+        if(name === "GET_STAY_AROUND"){
+            // console.log('bootstrap---GET_STAY_AROUND----pid-',pid,',name=',name)
             message = {from: "sniffer", operate: "GET_STAY_AROUND"}
             browser.runtime.sendMessage(message, (response) => {
-                // console.log('GET_STAY_AROUND-----',response)
-                window.postMessage({ pid: pid, name: "RESP_GET_STAY_AROUND", response: response });
+                // console.log('bootstrap---GET_STAY_AROUND-----',response)
+                window.postMessage({ pid: pid, name: "GET_STAY_AROUND_RESP", response: response });
             });
         }
         else if (name === "API_LIST_VALUES") {
@@ -694,4 +695,9 @@ let injectedContentVendor = new Set();
             browser.runtime.sendMessage(message);
         } 
     })
+
+    // browser.runtime.sendMessage({from: "sniffer", operate: "GET_STAY_AROUND"}, (response) => {
+    //     console.log('bootstrap---GET_STAY_AROUND-----',response)
+    //     window.postMessage({name: "GET_STAY_AROUND_RESP", response: response });
+    // });
 })();

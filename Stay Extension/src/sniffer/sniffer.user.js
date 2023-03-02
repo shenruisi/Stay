@@ -1,21 +1,23 @@
 /**
  * 解析页面video标签
  */
+
 let __b; 
 if (typeof window.browser !== 'undefined') { __b = window.browser; } if (typeof window.chrome !== 'undefined') { __b = window.chrome; }
 const browser = __b;
 (function () {
-  let isContent = false;
   try {
+    // for page
     handleInjectScript();
     document.addEventListener('securitypolicyviolation', (e) => {
-      // console.log('securitypolicyviolation--------', isContent)
-      isContent = true;
-      injectParseVideoJS(isContent);
+      // for content
+      injectParseVideoJS(true);
     })
   } catch (error) {
   }
-  
+  /**
+   * for page 
+   */ 
   function handleInjectScript(){
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     let contentHost = window.location.host;
@@ -45,12 +47,12 @@ const browser = __b;
 
 
   function injectParseVideoJS(isContent){
+    let isStayAround = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
     // console.log('------------injectParseVideoJS-----start------------------')
     let videoList = [];
-    // 获取到的video Url数组
-    let videoUrlSet = new Set();
+    // 获取到的videoId 集合
     let videoIdSet = new Set();
     // Firefox和Chrome早期版本中带有前缀  
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -58,9 +60,15 @@ const browser = __b;
     let timerArr = [];
 
     const Utils = {
-      isMobile: function(){
+      isMobileOrIpad: function(){
         const userAgentInfo = navigator.userAgent;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
+        let getArr = Agents.filter(i => userAgentInfo.includes(i));
+        return getArr.length ? true : false;
+      },
+      isMobile: function(){
+        const userAgentInfo = navigator.userAgent;
+        let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
         return getArr.length ? true : false;
       },
@@ -94,14 +102,19 @@ const browser = __b;
           if(/^\/\//i.test(downloadUrl)){
             downloadUrl = window.location.protocol+downloadUrl;
           }else{
-            downloadUrl = window.location.origin+downloadUrl;
+            if(/^\//i.test(downloadUrl)){
+              downloadUrl = window.location.origin+downloadUrl;
+            }
           }
         }
         return downloadUrl;
       },
-      checkCharLengthAndSubStr: function(text, len=80){
+      checkCharLengthAndSubStr: function(text, len){
         if(!text){
           return '';
+        }
+        if(!len){
+          len=80
         }
         let textTemp = text.replace(/[^x00-xff]/g, '01');
         if(textTemp.length <= len){
@@ -109,6 +122,22 @@ const browser = __b;
         }else{
           return text.substr(0, len);
         }
+      },
+      isChinese(obj){
+        if(!obj){
+          return false;
+        }
+        if(/.*[u4e00-u9fa5]+.*$/.test(obj)){
+          return true;
+        }
+        return false;
+      },
+      urlEncodeChinese(urlStr){
+        if(!urlStr){
+          return urlStr;
+        }
+        let reg = new RegExp('[\\u4E00-\\u9FFF]','g');
+        return urlStr.replace(reg, function(match) {return window.encodeURI(match)})
       },
       getUrlPathName: function(srcUrl){
         let pathName = '';
@@ -270,7 +299,7 @@ const browser = __b;
        * 初始化
        *
        * @private
-       * @param {function} callback 回调函数
+       
        */
       init(callback) {
         this.touchstart(callback);
@@ -296,42 +325,58 @@ const browser = __b;
       touchstart(callback) {
         const self = this;
         self.dom.removeEventListener('touchstart', function(event) {
-          handleLongPress(event);
+          // event.preventDefault();
+          // event.stopPropagation();
+          self.handleLongPress(event, callback);
         })
 
         self.dom.addEventListener('touchstart', function(event) {
           // console.log('this.dom----touchstart-----',event)
-          // 清除默认行为
-          event.preventDefault();
-          handleLongPress(event);
+          self.handleTargetTouchend(event.target);
+          self.timer = setTimeout((e, fun) => {
+            self.handleLongPress(e, fun);
+          }, 600, event, callback);
+          return false;
         }, false);
 
-        function handleLongPress(event){
-          if(isHidden(self.dom)){
-            return;
-          }
-          let target = event.changedTouches[0];
-          try {
-            target.target.click();
-            // target.addEventListener('contextmenu', function(e){
-            //   e.preventDefault();
-            // });
-          } catch (error) {
-            
-          }
-          // 开启定时器
-          self.timer = setTimeout(() => {
-            event.preventDefault();
-            if (typeof callback === 'function') {
-              callback();
-              self.timer = 0;
-            } else {
-              console.error('callback is not a function!');
-            }
-          }, 500);
-        }
       }
 
+      handleTargetTouchend(target){
+        const self = this;
+        if(!target){
+          return;
+        }
+        
+        target.addEventListener('touchend', (event)=>{
+          // clearTimeout(self.timer);
+          self.handleTouchend(event, target);
+        })
+      }
+
+      handleLongPress(event, callback){
+        event.preventDefault();
+        event.stopPropagation();
+        if(isHidden(this.dom)){
+          return;
+        }
+        let target = event.changedTouches[0];
+        try {
+          // target.target.click();
+          target.target.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+          });
+        } catch (error) {
+          
+        }
+        // 开启定时器
+        if (typeof callback === 'function') {
+          callback();
+          this.timer = 0;
+        } else {
+          console.error('callback is not a function!');
+        }
+        
+      }
       /**
        * 手指抬起时清除定时器，无论按住时间是否达到 700 毫秒的阈值
        *
@@ -340,33 +385,33 @@ const browser = __b;
       touchend() {
         const self = this;
         self.dom.removeEventListener('touchend', function(event) {
-          handleTouchend(event)
+          self.handleTouchend(event, null)
         });
         self.dom.addEventListener('touchend', function(event) {
-          handleTouchend(event)
-        });
-
-        function handleTouchend(event){
-          if(isHidden(self.dom)){
-            return;
-          }
-          // 清除默认行为
-          event.preventDefault();
-          // 清除定时器
-          clearTimeout(self.timer);
-
-          if(self.timer!=0){
-            try {
-              let target = event.changedTouches[0];
-              // target.target.click();
-            } catch (error) {
-              
-            }
-            // console.log(event)
-            //这里写要执行的内容click事件
-            // alert('你这是点击，不是长按');
-          }
+          self.handleTouchend(event, null);
           return false;
+        });
+      }
+
+      handleTouchend(event, isTarget){
+        const self = this;
+        // console.log('this.dom----handleTouchend-----isTarget', isTarget, event);
+        if(isHidden(this.dom)){
+          return;
+        }
+        // event.stopPropagation();
+        // 清除定时器
+        clearTimeout(this.timer);
+        if(this.timer!=0){
+          try {
+            if(isTarget){
+              isTarget.removeEventListener('touchend', (event)=>{
+                clearTimeout(self.timer);
+              })
+            }
+          } catch (error) {
+            
+          }
         }
       }
 
@@ -380,8 +425,10 @@ const browser = __b;
           handleTouchmove(event);
         })
         self.dom.addEventListener('touchmove', function(event){
+          // console.log('this.dom-----touchmove-------',event);
           // event.preventDefault();
           handleTouchmove(event);
+          return false;
         })
         function handleTouchmove(event){
           if(isHidden(self.dom)){
@@ -389,7 +436,6 @@ const browser = __b;
           }
           clearTimeout(self.timer);//清除定时器
           self.timer = 0;
-          return false;
         }
       }
     }
@@ -443,13 +489,8 @@ const browser = __b;
         this.dom = dom;
         // this.startTime = 0; // 触摸起始时间
         // this.endTime = 0; // 触摸终止时间
-        this.timer = 0; 
+        this.stayLongPressTimer = 0; 
         this.distance = 10; // 触摸距离值
-        // this.domPageStartX = this.dom.getBoundingClientRect().left;
-        // this.domPageStartY = document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
-
-        // this.domPageEndX = this.domPageStartX + this.dom.clientWidth;
-        // this.domPageEndY = this.domPageStartY + this.dom.clientHeight;
         this.init(callback);
       }
 
@@ -458,7 +499,7 @@ const browser = __b;
       }
 
       getDomPageStartY(){
-        return document.documentElement.scrollTop || window.pageYOffset + this.dom.getBoundingClientRect().top;
+        return (document.documentElement.scrollTop || window.pageYOffset) + this.dom.getBoundingClientRect().top;
       }
 
       getDomPageEndX(){
@@ -473,7 +514,6 @@ const browser = __b;
        * 初始化
        *
        * @private
-       * @param {function} callback 回调函数
        */
       init(callback) {
         this.touchstart(callback);
@@ -498,57 +538,70 @@ const browser = __b;
        */
       touchstart(callback) {
         const self = this;
-        document.removeEventListener('touchstart', function(event){
-          handleTargetEvent(event)
+        document.body.removeEventListener('touchstart', function(event){
+          self.handleTargetEvent(event, callback);
+          return false;
         });
-        document.addEventListener('touchstart', function(event) {
+        document.body.addEventListener('touchstart', function(event) {
           // console.log('touchstart-------',event);
-          event.preventDefault();
-          event.stopPropagation();
-          handleTargetEvent(event)
+          self.handleTargetTouchend(event.target);
+          self.handleTargetEvent(event, callback);
+          return false;
         }, false);
+      }
 
-        function handleTargetEvent(event){
-          event.preventDefault();
-          event.stopPropagation();
-          let target = event.changedTouches[0];
-          const targetPageX = target.pageX;
-          const targetPageY = target.pageY;
-          // console.log('check---------------targetPageX----------targetPageY-----------');
-          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
-          if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
-          targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
-          targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
-            let classList = target.target.classList;
-            // console.log('start----------event----',event);
-            if(!classList.contains('__stay-unselect')){
-              // console.log('start----------classList.add---------------------');
-              classList.add('__stay-unselect')
-            }
+      handleTargetTouchend(target){
+        const self = this;
+        if(!target){
+          return;
+        }
+        // target.stopPropagation();
+        // target.stopPropagation();
+        target.addEventListener('touchend', (event)=>{
+          // event.stopPropagation();
+          self.touchEndCallback(event, target);
+          // clearTimeout(self.stayLongPressTimer);
+        })
+      }
+
+      handleTargetEvent(event, callback){
+        event.stopPropagation();
+        event.preventDefault();
+        const self = this;
+        let target = event.changedTouches[0];
+        const targetPageX = target.pageX;
+        const targetPageY = target.pageY;
+        // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+        if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
+        targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
+        targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
+          // console.log('start-------', new Date().getTime());
+          this.stayLongPressTimer = window.setTimeout((curTarget, fun) => {
+            self.stayLongPressTimer = 0;
             try {
-              // target.target.click();
-              // target.addEventListener('contextmenu', function(e){
-              //   e.preventDefault();
-              // });
-            } catch (error) {
-              
-            }
-            
-            self.timer = setTimeout(() => {
-              // console.log('------------------targetPageX----------targetPageY-----------');
-              // 清除默认行为
-              event.stopPropagation();
-              event.preventDefault();
-              if (typeof callback === 'function') {
-                callback();
-                self.timer = 0;
+              let classList = curTarget.target.classList;
+              // console.log('start----------event----',event);
+              if(!classList.contains('__stay-unselect')){
+                classList.add('__stay-unselect')
+              }
+              if(!classList.contains('__stay-touch-action')){
+                classList.add('__stay-touch-action');
+              }
+              // console.log('end-------', new Date().getTime());
+              if (typeof fun === 'function') {
+                fun();
               } else {
                 console.error('callback is not a function!');
               }
-            }, 500);
-          }
-          // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.domPageStartX, 'this.domPageStartY=',self.domPageStartY ,'this.domPageEndX=',self.domPageEndX,',this.domPageEndY=',self.domPageEndY);
-          return false;
+              // curTarget.target.click();
+              curTarget.target.addEventListener('contextmenu', function(e){
+                e.preventDefault();
+              });
+            } catch (error) {
+              
+            }
+          }, 600, target, callback);
+          // console.log('end.end-------', new Date().getTime());
         }
       }
 
@@ -558,35 +611,43 @@ const browser = __b;
        * @private
        */
       touchend() {
+        // console.log('handle------touchend---' );
         const self = this;
-        document.removeEventListener('touchend', function(event){
-          touchEndCallback(event);
+        document.body.removeEventListener('touchend', function(event){
+          // event.stopPropagation();
+          self.touchEndCallback(event, null);
+          // return false;
         })
-        document.addEventListener('touchend', function(event) {
+        document.body.addEventListener('touchend', function(event) {
+          // event.stopPropagation();
+          // event.preventDefault();
           // console.log('touchend-------',event);
-          touchEndCallback(event)
-        });
-
-        function touchEndCallback(event){
-          if(isHidden(self.dom)){
-            return;
-          }
-          // 清除定时器
-          clearTimeout(self.timer);
-
-          if(self.timer!=0){
-            self.timer = 0;
-            try {
-              let target = event.changedTouches[0];
-              target.target.click();
-            } catch (error) {
-              
-            }
-            // console.log(event)
-            //这里写要执行的内容click事件
-            // alert('你这是点击，不是长按');
-          }
+          self.touchEndCallback(event, null)
           return false;
+        });
+      }
+
+
+      touchEndCallback(event, isTarget){
+        const self = this;
+        // event.stopPropagation();
+        if(isHidden(this.dom)){
+          return;
+        }
+        // console.log('touchEndCallback----event------isTarget-', isTarget, event);
+        // 清除定时器
+        clearTimeout(this.stayLongPressTimer);
+        if(this.stayLongPressTimer!=0){
+          try {
+            if(isTarget){
+              isTarget.removeEventListener('touchend', (event)=>{
+                // clearTimeout(this.stayLongPressTimer);
+                self.touchEndCallback(event, null)
+              })
+            }
+          } catch (error) {
+            
+          }
         }
       }
 
@@ -595,27 +656,33 @@ const browser = __b;
        */
       touchmove() {
         const self = this;
-        document.removeEventListener('touchmove', function(event){
-          // event.preventDefault();
+        document.body.removeEventListener('touchmove', function(event){
+          event.preventDefault();
+          event.stopPropagation();
           touchmoveCallback();
         });
-        document.addEventListener('touchmove', function(event){
+        document.body.addEventListener('touchmove', function(event){
           // console.log('touchmove-------',event);
-          // event.preventDefault();
+          event.preventDefault();
+          event.stopPropagation();
           touchmoveCallback();
+          return false;
         })
         function touchmoveCallback(){
           if(isHidden(self.dom)){
             return;
           }
-          clearTimeout(self.timer);//清除定时器
-          self.timer = 0;
+          window.clearTimeout(self.stayLongPressTimer);//清除定时器
+          self.stayLongPressTimer = 0;
           return false;
         }
       }
+
+
     }
 
     function startFindVideoInfo(completed){
+      observerVideo();
       // console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
       // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
@@ -635,7 +702,7 @@ const browser = __b;
           afterCompleteQueryVideo()
         }
       }
-      observerVideo()
+      
     }
 
     function afterCompleteQueryVideo(){
@@ -661,18 +728,20 @@ const browser = __b;
     }
 
     function observerVideo(){
+      // console.log('observerVideo-------------');
       // 创建观察者对象  
       const observer = new MutationObserver(function(mutations) {  
         // console.log('----------------MutationObserver---------------',mutations)
         try{
           mutations.forEach(function(mutation) {  
             // todo
+            host = window.location.host;
             videoDoms = document.querySelectorAll('video');
-            if('VIDEO' === mutation.target.nodeName && videoDoms && videoDoms.length){
+            const mutationDoms = mutation.target.querySelectorAll('video');
+            if(('VIDEO' === mutation.target.nodeName || (mutationDoms && mutationDoms.length)) && videoDoms && videoDoms.length){
               // console.log('mutation.videoDoms-----',videoDoms)
-              host = window.location.host;
-              parseVideoNodeList(videoDoms);
               // throw new Error('endloop');
+              parseVideoNodeList(videoDoms);
             }
           });  
         } catch (e) {
@@ -770,6 +839,8 @@ const browser = __b;
       if(!Utils.isURL(downloadUrl)){
         videoInfo.downloadUrl = hostUrl;
       }
+      
+      // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
       addLongPress(videoDom, posDom, videoInfo);
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
         // console.log('parseVideoNodeList----------has exist, and modify-------',videoInfo, videoList);
@@ -780,6 +851,7 @@ const browser = __b;
             item.title = videoInfo.title
             item.hostUrl = videoInfo.hostUrl
             item.qualityList = videoInfo.qualityList?videoInfo.qualityList:[];
+            item.type= videoInfo.type?videoInfo.type:'';
             // console.log('checkVideoExist----------item===',item);
           }
           return item;
@@ -801,6 +873,7 @@ const browser = __b;
       }
     }
 
+    
     /**
      * 添加长按事件
      * @param {Object} videoDom   视频video dom对象
@@ -809,14 +882,17 @@ const browser = __b;
      * @returns 
      */
     async function addLongPress(videoDom, posDom, videoInfo){
-      // console.log('----addLongPress-----start------')
+      // console.log('----addLongPress-----start------');
       if(!posDom){
-        // console.log('----posDomposDomposDomposDomposDom-----null')
+        // console.log('----posDomposDomposDomposDomposDom-----null');
         return;
       }
-      // console.log('----getStayAround-----start------')
-      const isStayAround = await getStayAround();
-      // console.log('----isStayAround-----',isStayAround)
+      // console.log('----getStayAround-----start------');
+      if(!isStayAround){
+        const isStayProTemp = await getStayAround();
+        isStayAround = isStayProTemp;
+      }
+      // console.log('----isStayAround-----',isStayAround);
       if(isStayAround!='a'){
         return;
       }
@@ -847,6 +923,7 @@ const browser = __b;
         document.body.append(Utils.parseToDOM(sinfferUnselect));
       }
       posDom.classList.add('__stay-unselect');
+      posDom.classList.add('__stay-touch-action');
 
       const hostUrl = videoInfo.hostUrl;
       // console.log('addLongPress--------hostUrl=====',hostUrl)
@@ -875,30 +952,20 @@ const browser = __b;
         })
       }
       else if(hostUrl.indexOf('mobile.twitter.com')>-1){
-        // console.log('----------------mobile.twitter.com-----', posDom);
-        // new LongPress(posDom, ()=>{
-        //   addSinfferModal(videoDom, posDom, videoInfo);
-        // })
+        
       }
       else if(hostUrl.indexOf('pornhub.com')>-1){
-        // let dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
-        // if(!dom){
-        //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
-        // }
-        // if(!dom){
-        //   dom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
-        // }
-        // if(dom){
-        //   if(!dom.classList.contains('__stay-touch-action')){
-        //     dom.classList.add('__stay-touch-action');
-        //   }
-        //   if(!dom.classList.contains('__stay-unselect')){
-        //     dom.classList.add('__stay-unselect');
-        //   }
-        // }
-        // new LongPress(dom, ()=>{
-        //   addSinfferModal(dom, videoInfo);
-        // })
+        if(posDom){
+          if(!posDom.classList.contains('__stay-touch-action')){
+            posDom.classList.add('__stay-touch-action');
+          }
+          if(!posDom.classList.contains('__stay-unselect')){
+            posDom.classList.add('__stay-unselect');
+          }
+        }
+        new LongPress(posDom, ()=>{
+          addSinfferModal(videoDom, posDom, videoInfo);
+        })
       }
       
       new DocumentLongPress(posDom, ()=>{
@@ -914,25 +981,25 @@ const browser = __b;
           browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
             // console.log('GET_STAY_AROUND---------',response)
             if(response.body && JSON.stringify(response.body)!='{}'){
-              let isStayAround = response.body;
-              // console.log('isStayAround---------',isStayAround)
-              resolve(isStayAround);
+              // console.log('isStayAround---------', response.body)
+              resolve( response.body);
             // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
             }
           });
         }else{
           // console.log('getStayAround-----false');
-          const pid = Math.random().toString(36).substring(1, 9);
+          const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
-            if (e.data.pid !== pid || e.data.name !== 'RESP_GET_STAY_AROUND') return;
+            if (e.data.pid !== pid || e.data.name !== 'GET_STAY_AROUND_RESP') return;
             // console.log('RESP_GET_STAY_AROUND----response=', e.data);
-            let isStayAround = e.data ? (e.data.response ? e.data.response.body : {}): 'b';
-            // console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayAround);
-            resolve(isStayAround);
+            let isStayPro = e.data ? (e.data.response ? e.data.response.body : 'b'): 'b';
+            // console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayPro);
+            resolve(isStayPro);
             window.removeEventListener('message', callback);
           };
+          // console.log('getStayAround-----false-----start---pid=',pid);
+          window.postMessage({ id: pid, pid: pid, name: 'GET_STAY_AROUND' });
           window.addEventListener('message', callback);
-          window.postMessage({ pid: pid, name: 'GET_STAY_AROUND' });
         }
       })
     }
@@ -951,7 +1018,7 @@ const browser = __b;
       let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
       let top = posDom.getBoundingClientRect().top;
       let left = posDom.getBoundingClientRect().left;
-      // console.log('videoDom.tagName====',videoDom.tagName)
+      // console.log('videoDom.tagName====',videoDom, posDom)
       if('VIDEO' == posDom.tagName){
         // console.log('videoDom.parentNode====',videoDom.parentNode)
         top = posDom.parentNode.getBoundingClientRect().top;
@@ -964,7 +1031,7 @@ const browser = __b;
       if(vHeight<Utils.div(bodyClientHeight, 2)){
         posterHeight = vHeight;
       }
-      // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
+      console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
       let modalDom = document.querySelector('#__stay_sinffer_modal');
       if(!modalDom){
@@ -975,9 +1042,11 @@ const browser = __b;
       const modalContent = document.querySelector('#__stay_sinffer_modal .__stay-sinffer-content');
       modalContent.classList.add('__stay-trans');
 
-      setTimeout(function(){
+      let visibleTimer = setTimeout(function(){
         modalDom.classList.add('__stay-show-modal');
         popupDom.style.visibility = 'visible';
+        clearTimeout(visibleTimer);
+        visibleTimer = 0;
       }, 400)
 
 
@@ -1003,9 +1072,8 @@ const browser = __b;
           lineColor = '#37372F';
         }
         
-        
         let countH = 1;
-        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">Download</div>`;
+        let downloadCon = `<div stay-download="${downloadUrl}" class="_stay-quality-item ">${videoInfo.type == 'ad'? 'Download Ad':'Download'}</div>`;
         let qualityList = videoInfo.qualityList;
         if(qualityList && qualityList.length){
           let qualityItem = '';
@@ -1018,15 +1086,19 @@ const browser = __b;
           })
           downloadCon = qualityItem;
         }
+        
         // 动画开始位置
         let transPos = top;
         // 计算高度
         let vTop = top;
         if(top<0){
           vTop = 0;
+          if(bodyClientHeight <= vHeight){
+            vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
+          }
         }else if(top == 0){
           // 处理全屏的top
-          if(bodyClientHeight == vHeight){
+          if(bodyClientHeight <= vHeight){
             vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
           }
         }else{
@@ -1177,6 +1249,10 @@ const browser = __b;
             box-sizing: border-box;
             font-size: 16px;
           }
+          ._stay-sinffer-title span{
+            font-weight: 600;
+            color: ${fontColor}
+          }
           ._stay-sinffer-download{
             width:100%;
             box-sizing: border-box;
@@ -1262,18 +1338,22 @@ const browser = __b;
 
       modalDom.addEventListener('touchmove', e =>{ 
         e.preventDefault();
+        e.stopPropagation();
       }, false);
       modalDom.addEventListener('touchstart', e =>{ 
         e.preventDefault();
+        // e.stopPropagation();
         // modalDom.style.display = 'none';
         modalDom.classList.remove('__stay-show-modal');
         popupDom.style.animation = 'fadeout .5s;';
 
-        setTimeout(() => {
+        let removeTimer = setTimeout(() => {
           if(modalDom){
             document.body.removeChild(modalDom);
           }
           document.body.removeChild(document.querySelector('#__style_sinffer_style'));
+          clearTimeout(removeTimer);
+          removeTimer = 0;
         }, 200);
       }, false);
 
@@ -1374,15 +1454,19 @@ const browser = __b;
       }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
-        const videoId = Utils.queryURLParams(hostUrl, 'v');
+        
         let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
         if(!playerDom){
           playerDom = document.querySelector('#player-control-overlay');
         }
+        // 短视频
+        if(!playerDom){
+          playerDom = document.querySelector('.carousel-wrapper .video-wrapper .reel-player-overlay-main-content');
+        }
         if(playerDom){
           longPressDom = playerDom;
         }
-        videoInfo = handleYoutubeVideoInfo(title, videoId);
+        videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoSnifferDom);
@@ -1427,6 +1511,10 @@ const browser = __b;
       }
       // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
       else if(host.indexOf('pornhub.com')>-1){
+        let dom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer');
+        if(dom){
+          longPressDom = dom;
+        }
         videoInfo = handlePornhubVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('facebook.com')>-1){
@@ -1441,6 +1529,10 @@ const browser = __b;
       // https://jable.tv/videos/dvaj-605/
       else if(host.indexOf('jable.tv')>-1){
         videoInfo = handleJableVideoInfo(videoSnifferDom);
+      }
+      // ztawxd5l.hxaa79.com
+      else if(host.indexOf('hxaa79.com')>-1){
+        videoInfo = handleHxaa79VideoInfo(videoSnifferDom);
       }
 
       if(videoInfo.downloadUrl){
@@ -1459,15 +1551,18 @@ const browser = __b;
       if(!title){
         title = document.title;
       }
+      if(!title){
+        title = Utils.getUrlPathName(downloadUrl);
+      }
       poster = Utils.completionSourceUrl(poster);
-      videoInfo['title'] = title
+      videoInfo['title'] = (videoInfo.type && videoInfo.type=='ad')?('<span style="font-weight: 700;">Ad·</span>'+title):title;
       videoInfo['poster'] = poster;
       videoInfo['downloadUrl'] = downloadUrl;
       videoInfo['hostUrl'] = hostUrl;
       videoInfo['qualityList'] = qualityList;
       videoInfo['videoUuid'] = videoUuid;
 
-      // console.log('parse---------mobile.twitter.com------longPressDom-',longPressDom, ',videoInfo========',videoInfo);
+      // console.log('parse------videoInfo========',videoInfo);
       if(downloadUrl){
         checkVideoExist(videoDom, longPressDom, videoInfo) 
       }
@@ -1477,8 +1572,10 @@ const browser = __b;
 
     function setTimeoutParseVideoInfoByWindow(){
       // console.log('setTimeoutParseVideoInfoByWindow-------')
-      setTimeout(()=>{
-        parseVideoInfoByWindow()
+      let loadingTimer = setTimeout(()=>{
+        parseVideoInfoByWindow();
+        clearTimeout(loadingTimer);
+        loadingTimer = 0;
       },400)
     }
     
@@ -1490,12 +1587,12 @@ const browser = __b;
       let posDom = null;
       if(host.indexOf('pornhub.com')>-1){
         posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper .mgp_videoPoster img');
-        if(!posDom){
-          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
-        }
-        if(!posDom){
-          posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
-        }
+        // if(!posDom){
+        //   posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper video');
+        // }
+        // if(!posDom){
+        //   posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .playerFlvContainer .mgp_controls');
+        // }
         if(!posDom){
           posDom = document.querySelector('#videoShow #videoPlayerPlaceholder .mgp_videoWrapper');
         }
@@ -1517,11 +1614,13 @@ const browser = __b;
 
       let titleDom = document.querySelector('.main-container .ep-info-pre .ep-info-title');
       if(!titleDom){
-        setTimeout(function(){
+        let bilibiliTimer = setTimeout(function(){
           titleDom = document.querySelector('.video .share-video-info .title-wrapper .title-name span');
           if(titleDom){
             videoInfo.title = titleDom.textContent;
           }
+          clearTimeout(bilibiliTimer);
+          bilibiliTimer = 0;
           return videoInfo;
         }, 200)
       }
@@ -1726,7 +1825,7 @@ const browser = __b;
               let qualityList = []
               let defaultQuality = '';
               mediaDefinitions.forEach(item=>{
-                if('hls' == item.format && typeof item.quality == 'string'){
+                if('hls' == item.format && typeof item.quality == 'string' && item.videoUrl){
                   qualityList.push({downloadUrl:item.videoUrl, qualityLabel:item.quality, quality: Number(item.quality)})
                 }
                 if(item.defaultQuality && ('boolean' == typeof item.defaultQuality || 'number' == typeof item.defaultQuality) ){
@@ -1740,13 +1839,6 @@ const browser = __b;
               // console.log('qualityList========',qualityList)
               // console.log('defaultQuality========',defaultQuality, typeof defaultQuality)
               videoInfo['qualityList'] = qualityList;
-              if(qualityList.length){
-                qualityList.forEach(item=>{
-                  if(item.quality == defaultQuality){
-                    videoInfo.downloadUrl = item.downloadUrl;
-                  }
-                })
-              }
             }
           }
         }
@@ -1795,7 +1887,7 @@ const browser = __b;
         }
       }else{
         videoDetailDom = videoDom.parentNode.parentNode.parentNode.parentNode.parentNode;
-        console.log(videoDetailDom.classList, 'videoDetailDom.classList.contains(\'_a8b4\') ===', videoDetailDom.classList.contains('_a8b4') )
+        // console.log(videoDetailDom.classList, 'videoDetailDom.classList.contains(\'_a8b4\') ===', videoDetailDom.classList.contains('_a8b4') )
         if(videoDetailDom && videoDetailDom.classList.contains('_a8b4') && videoDetailDom.classList.contains('_acjh')){
           // let posterDom = videoDetailDom.querySelector('div > div div.xryxfnj.x1nhvcw1 div.xxk0z11.x1qihbgi a.x1i10hfl._a6hd div._aagu div._aagv img');
           // if(posterDom){
@@ -1848,6 +1940,18 @@ const browser = __b;
 
     }
 
+    function handleHxaa79VideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      const titleDom = document.querySelector('.play_main .play_main_1');
+      if(titleDom){
+        videoInfo.title = titleDom.textContent;
+      }
+      return videoInfo;
+    }
+
     /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList,videoKey,videoUuid}
@@ -1876,9 +1980,11 @@ const browser = __b;
               if(videoIdSet.size && (videoIdSet.has(item.vid))){
                 return;
               }
-              videoIdSet.add(item.vid);
-              // more video
-              videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
+              if(Utils.isURL(item.videoUrl)){
+                videoIdSet.add(item.vid);
+                // more video
+                videoList.push({title:item.title,poster:item.poster,downloadUrl:item.videoUrl,hostUrl:hostUrl,videoUuid:item.vid });
+              }
             })
           }
           return videoInfo;
@@ -2002,9 +2108,14 @@ const browser = __b;
      * 解析Youtube视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
      */
-    function handleYoutubeVideoInfo(title, videoId){
+    function handleYoutubeVideoInfo(videoSnifferDom){
+      const videoId = Utils.queryURLParams(hostUrl, 'v');
       // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
       let videoInfo = {};
+      videoInfo.poster = videoSnifferDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
+      let title = videoSnifferDom.getAttribute('title');
+      videoInfo.title = title;
       const playerResp = window.ytInitialPlayerResponse;
       // console.log('playerResp-------', playerResp);
       if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
@@ -2057,16 +2168,40 @@ const browser = __b;
         if(!videoInfo['poster']){
           videoInfo['poster'] = getYoutubeVideoPosterByDom();
         }
-
       }else{
         videoInfo = {};
         videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
-        // poster img
-        videoInfo['poster'] = getYoutubeVideoPosterByDom();
         videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
         // console.log('videoInfo----------',videoInfo);
       }
+
+      let posterImg = videoInfo['poster'];
+      if(!posterImg){
+        posterImg = getYoutubeVideoPosterByDom();
+      }
+      if(videoId != playerResp.videoDetails.videoId){
+        posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      }
+      if(!posterImg){
+        posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+      }
+      videoInfo['poster'] = posterImg;
+
+      if(checkAdForYoutube(videoInfo['downloadUrl'])){
+        videoInfo['type'] = 'ad';
+      }
       return videoInfo;
+    }
+
+    function checkAdForYoutube(downloadUrl){
+      if((downloadUrl && downloadUrl.indexOf('pltype=adhost')>-1)){
+        return true;
+      }
+      const adPlayer = document.querySelector('#container .video-ads');
+      if(adPlayer && !isHidden(adPlayer)){
+        return true;
+      }
+      return false;
     }
     
     /**
@@ -2130,6 +2265,9 @@ const browser = __b;
       }
     };
     
+    /**
+     * @discarded 废弃请求拦截
+     */
     function handlePageInterceptor(){
       function isVideoLink(url){
         let re = /^(https?:\/\/|\/).*\.(mp4|m3u8)$/;
@@ -2141,12 +2279,12 @@ const browser = __b;
       XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
         
       XMLHttpRequest.prototype.open = function(method, url, async, user, password){
-        // console.log('OPEN_URL',url);
+        console.log('OPEN_URL',url);
         this.reallyOpen(method,url,async,user,password);
         if (isVideoLink(url)){
           if (!uniqueUrls.has(url)){
             uniqueUrls.add(url);
-            // console.log('VIDEO_LINK_CAPTURE: ' + url);
+            console.log('VIDEO_LINK_CAPTURE: ' + url);
             window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
             if(isContent){
               let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
@@ -2183,34 +2321,35 @@ const browser = __b;
       };
     }
 
-    handlePageInterceptor();
+    // handlePageInterceptor();
 
   }
 
-
+  let videoPageUrl = window.location.href;
   let videoInfoList = [];
   let videoLinkSet = new Set();
   window.addEventListener('message', (e) => {
     if (!e || !e.data || !e.data.name) return;
     const name = e.data.name;
     // console.log('snifffer.user----->e.data.name=',name);
+    // @discarded  VIDEO_LINK_CAPTURE
     if(name === 'VIDEO_LINK_CAPTURE'){
       let tempSet = e.data.urls ? e.data.urls : new Set();
-      // console.log('snifffer.VIDEO_LINK_CAPTURE----->tempSet=',tempSet);
-      // videoLinkSet = new Set( [ ...tempSet, ...videoLinkSet ] )
       videoLinkSet = tempSet
-      // console.log('snifffer.VIDEO_LINK_CAPTURE----->videoLinkSet=',videoLinkSet);
-      let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet};
+      let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH', videoPageUrl, videoLinkSet};
       browser.runtime.sendMessage(message, (response) => {});
     }
     else if(name === 'VIDEO_INFO_CAPTURE'){
       let videoInfoListTemp = e.data.videoList ? e.data.videoList : [];
       videoInfoList = videoInfoListTemp
-      // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoListTemp=',videoInfoListTemp);
-      // videoInfoList.push(...videoInfoListTemp)
-      // console.log('snifffer.VIDEO_INFO_CAPTURE----->videoInfoList=',videoInfoList);
-      let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList};
+      let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH', videoPageUrl, videoInfoList};
       browser.runtime.sendMessage(message, (response) => {});
+    }
+    else if(name === 'GET_STAY_AROUND'){
+      let pid = e.data.pid;
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
+        window.postMessage({pid:pid, name: 'GET_STAY_AROUND_RESP', response: response });
+      });
     }
   })
 })()

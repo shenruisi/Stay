@@ -9,6 +9,7 @@
 #import "FCApp.h"
 #import "ModalItemElement.h"
 #import "UIView+Layout.h"
+#import "NSString+Urlencode.h"
 #import "ModalItemView.h"
 #import "ModalItemViewFactory.h"
 #import "ModalSectionView.h"
@@ -166,11 +167,11 @@
     }
     
     NSString *link = self.linkElements[0].inputEntity.text;
-    NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:@"\\s*https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]\\s*" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:@"\\s*https?://[^，]+\\s*" options:NSRegularExpressionCaseInsensitive error:nil];
     NSTextCheckingResult *result = [regExp firstMatchInString:link options:0 range:NSMakeRange(0, [link length])];
     if (result != nil) {
         NSString *targetUrl = [[link substringWithRange:[result rangeAtIndex:0]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSURL *linkURL = [NSURL URLWithString:targetUrl];
+        NSURL *linkURL = [NSURL URLWithString:[targetUrl safeEncode]];
         if (linkURL != nil && ([linkURL.lastPathComponent hasSuffix:@".mp4"]
                                || [linkURL.lastPathComponent hasSuffix:@".m3u8"]
                                || [linkURL.host containsString:@"googlevideo.com"])) {
@@ -190,7 +191,7 @@
             [self.navigationController pushModalViewController:self.parseDownloadController];
             [self.parseDownloadController setData:[NSArray array]];
             
-            [[VideoParser shared] parse:targetUrl completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
+            [[VideoParser shared] parse:[targetUrl safeEncode] completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
                 [self.parseDownloadController setData:videoItems];
             }];
         }

@@ -109,7 +109,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   flex: 1;
   padding-bottom: 52px;
   .hide-temp{
@@ -122,7 +122,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     background-color: var(--dm-bg);
     flex: 1;
     // padding-bottom: 52px;

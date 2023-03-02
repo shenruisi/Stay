@@ -12,6 +12,8 @@
 #import "ImageHelper.h"
 #import "ColorHelper.h"
 #import "UIImageView+WebCache.h"
+#import "NSString+Urlencode.h"
+#import "UIColor+Convert.h"
 #import "VideoParser.h"
 #import "DownloadResource.h"
 #import "DataManager.h"
@@ -44,6 +46,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
         self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.contentView.backgroundColor = FCStyle.popup;
         
         UIStackView *stackV = [[UIStackView alloc] init];
         stackV.axis = UILayoutConstraintAxisVertical;
@@ -186,7 +189,7 @@
         btn.clipsToBounds = YES;
         btn.layer.borderWidth = 0.5;
         if ([dic[@"qualityLabel"] isEqualToString:selectedQuality]) {
-            btn.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.11];
+            btn.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
             btn.layer.borderColor = UIColor.clearColor.CGColor;
         } else {
             btn.backgroundColor = FCStyle.secondaryPopup;
@@ -512,7 +515,7 @@
         for (NSMutableDictionary *item in self.dataSource) {
             if (item[@"isSelected"]) {
                 DownloadResource *resource = [[DownloadResource alloc] init];
-                NSString *downLoadUrl = item[@"selectedDownloadUrl"] ? item[@"selectedDownloadUrl"] : item[@"downloadUrl"];
+                NSString *downLoadUrl = [item[@"selectedDownloadUrl"] ? item[@"selectedDownloadUrl"] : item[@"downloadUrl"] safeEncode];
                 resource.title = item[@"title"];
                 resource.downloadUrl = downLoadUrl;
                 resource.icon = item[@"poster"];

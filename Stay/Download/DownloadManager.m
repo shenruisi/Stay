@@ -761,12 +761,14 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                     }
                 }
                 NSMutableArray<NSString *> *tsURLs = task.m3u8State.tsURLs;
-                for (int i = 0; i < tsURLs.count; i++) {
-                    NSString *tsURL = tsURLs[i];
-                    if ([tsURL hasPrefix:@"http"] && [tsURL isEqualToString:requestURL]) {
-                        task.m3u8State.currCount++;
-                        tsURLs[i] = filePath.lastPathComponent;
-                        break;
+                @synchronized (tsURLs) {
+                    for (int i = 0; i < tsURLs.count; i++) {
+                        NSString *tsURL = tsURLs[i];
+                        if ([tsURL hasPrefix:@"http"] && [tsURL isEqualToString:requestURL]) {
+                            task.m3u8State.currCount++;
+                            tsURLs[i] = filePath.lastPathComponent;
+                            break;
+                        }
                     }
                 }
             }
