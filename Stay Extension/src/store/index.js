@@ -29,7 +29,7 @@ export default createStore({
     isStayPro: false,
     browserUrl: '',
     selectedTab: {id: 1, name: 'matched_scripts_tab'},
-    darkmodeToggleStatus: 'on',
+    darkmodeToggleStatus: 'auto',
     siteEnabled: true,
     longPressStatus: 'on'
   },

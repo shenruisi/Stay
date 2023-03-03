@@ -48,6 +48,7 @@ const browser = __b;
 
   function injectParseVideoJS(isContent){
     let isStayAround = '';
+    let longPressStatus = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
     // console.log('------------injectParseVideoJS-----start------------------')
@@ -894,6 +895,18 @@ const browser = __b;
         // console.log('----posDomposDomposDomposDomposDom-----null');
         return;
       }
+      if(!Utils.isMobile()){
+        return;
+      }
+
+      if(!longPressStatus){
+        longPressStatus = await getLongPressStatus();
+      }
+
+      if(longPressStatus && longPressStatus == 'off'){
+        return;
+      }
+
       // console.log('----getStayAround-----start------');
       if(!isStayAround){
         const isStayProTemp = await getStayAround();
@@ -904,9 +917,7 @@ const browser = __b;
         return;
       }
 
-      if(!Utils.isMobile()){
-        return;
-      }
+      
       // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
       let stayLongPress = posDom.getAttribute('stay-long-press');
       if(stayLongPress && stayLongPress == 'yes'){
@@ -1006,6 +1017,30 @@ const browser = __b;
           };
           // console.log('getStayAround-----false-----start---pid=',pid);
           window.postMessage({ id: pid, pid: pid, name: 'GET_STAY_AROUND' });
+          window.addEventListener('message', callback);
+        }
+      })
+    }
+
+    function getLongPressStatus(){
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          console.log('getLongPressStatus-----true');
+          browser.runtime.sendMessage({from: 'popup', operate: 'getLongPressStatus'}, (response) => {
+            console.log('getLongPressStatus---------',response)
+            let longPressStatusRes = response&&response.longPressStatus?response.longPressStatus:'on';
+            resolve(longPressStatusRes);
+          });
+        }else{
+          console.log('getLongPressStatus-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'GET_LONG_PRESS_STATUS_RESP') return;
+            console.log('getLongPressStatus---------',e.data.longPressStatusRes)
+            resolve(e.data.longPressStatusRes);
+            window.removeEventListener('message', callback);
+          };
+          window.postMessage({ id: pid, pid: pid, name: 'GET_LONG_PRESS_STATUS' });
           window.addEventListener('message', callback);
         }
       })
@@ -2356,6 +2391,13 @@ const browser = __b;
       let pid = e.data.pid;
       browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
         window.postMessage({pid:pid, name: 'GET_STAY_AROUND_RESP', response: response });
+      });
+    }
+    else if(name === 'GET_LONG_PRESS_STATUS'){
+      let pid = e.data.pid;
+      browser.runtime.sendMessage({from: 'popup', operate: 'getLongPressStatus'}, (response) => {
+        let longPressStatusRes = response&&response.longPressStatus?response.longPressStatus:'on';
+        window.postMessage({pid:pid, name: 'GET_LONG_PRESS_STATUS_RESP', longPressStatusRes});
       });
     }
   })

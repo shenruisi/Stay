@@ -200,7 +200,7 @@ export default {
     }
 
     const longPressSwitchClick = () => {
-      console.log('longPressSwitchClick====')
+      // console.log('longPressSwitchClick====')
       if(state.longPressStatus == 'on'){
         state.longPressStatus = 'off';
       }else{
@@ -208,7 +208,12 @@ export default {
       }
       state.longPressSwitch = state.longPressStatus == 'on' ? t('switch_on') : t('switch_off');
       store.commit('setLongPressStatus', state.longPressStatus);
-      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.longPressStatus, operate: 'setLongPressStatus'}, (response) => {});
+      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.longPressStatus, operate: 'setLongPressStatus'}, (response) => {
+        console.log('longPressSwitchClick----response',response)
+        if(response){
+          global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
+        }
+      });
     }
 
     return {
@@ -264,11 +269,11 @@ export default {
     .long-press-switch{
       width: 90%;
       position: fixed;
-      bottom: 100px;
+      bottom: 90px;
       height: 42px;
       border-radius: 8px;
       left: 5%;
-      border: .5px solid var(--dm-bd);
+      border: 1px solid var(--dm-bd);
       background-color: var(--dm-bg-f7);
       display: flex;
       padding: 0 20px;
@@ -287,12 +292,27 @@ export default {
       }
       .switch{
         width: 20%;
-        text-align: right;
         color: var(--dm-font-2);
         height: 100%;
         display: flex;
         align-items: center;
+        justify-content: center;
         user-select: none;
+        position: relative;
+        &::after{
+          content: '';
+          position: absolute;
+          right: -7px;
+          background: url('../assets/images/option.png') 50% 50% no-repeat;
+          top: 50%;
+          transform: translate(0, -50%);
+          width: 26px;
+          height: 36px;
+          top: 50%;
+          background-size: 50%;
+          transform: translateY(-50%);
+          object-fit: contain;
+        }
       }
     }
     .sniffer-video-box{
