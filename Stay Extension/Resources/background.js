@@ -1059,7 +1059,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             let longPressStatus = 'on';
             browser.storage.local.get("long_press_status", (res) => {
                 // console.log("getLongPressStatus-------long_press_status,--------res=",res)
-                if(res){
+                if(res && res["long_press_status"]){
                     longPressStatus = res["long_press_status"]
                 }
                 sendResponse({longPressStatus});
@@ -1390,7 +1390,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         isStayAround: "",
         siteListDisabled: [],
         siteListEnabled:[], // 暂时没用
-        toggleStatus:"on", //on,off,auto
+        toggleStatus:"auto", //on,off,auto
         // 当toggleStatus=auto的时候，automation默认等于time
         stay_automation: "system",
         // 当toggleStatus=auto的时候, 如果选择系统配色方案，又分为跟随系统的OnOff,还是Scheme（暗黑/明亮模式）

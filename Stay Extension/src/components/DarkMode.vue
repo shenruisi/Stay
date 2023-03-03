@@ -49,6 +49,11 @@ export default {
         state.hostName = getHostname(newProps.browserUrl);
         state.siteEnabled = newProps.siteEnabled;
         state.darkmodeToggleStatus = newProps.darkmodeToggleStatus;
+        state.darkmodeSettings = [
+          {status:'on', name: t('darkmode_on'), isSelected: newProps.darkmodeToggleStatus==='on'},
+          {status:'auto', name: t('darkmode_auto'), isSelected: newProps.darkmodeToggleStatus==='auto'},
+          {status:'off', name: t('darkmode_off'), isSelected: newProps.darkmodeToggleStatus==='off'}
+        ]
       },
       { immediate: true, deep: true }
     );

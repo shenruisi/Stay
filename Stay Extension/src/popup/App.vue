@@ -93,7 +93,8 @@ export default {
       global.browser.runtime.sendMessage({ type: 'popup', operate: 'FETCH_DARKMODE_CONFIG'}, (response) => {})
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'getLongPressStatus'}, (response) => {
         console.log('getLongPressStatus====',response);
-        state.longPressStatus = response.longPressStatus;
+        let longPressStatus = response.longPressStatus ? response.longPressStatus : 'on';
+        state.longPressStatus = longPressStatus;
       })
     }
 
