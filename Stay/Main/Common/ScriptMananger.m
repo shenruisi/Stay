@@ -61,6 +61,8 @@
                                         scriptEntity.updateScript = userScript;
                                         scriptEntity.needUpdate = true;
                                         [self updateScript];
+                                    } else {
+                                        scriptEntity.needUpdate = false;
                                     }
                                 } else {
                                     [[SYNetworkUtils shareInstance] requestGET:scrpit.downloadUrl params:nil successBlock:^(NSString * _Nonnull responseObject) {
@@ -74,6 +76,8 @@
                                                 [self updateScript];
 
 
+                                            }else {
+                                                scriptEntity.needUpdate = false;
                                             }
                                         }
                                     } failBlock:^(NSError * _Nonnull error) {
@@ -100,6 +104,8 @@
                                     scriptEntity.updateScript = userScript;
                                     scriptEntity.needUpdate = true;
                                     [self updateScript];
+                                }else {
+                                    scriptEntity.needUpdate = false;
                                 }
                             }
                         }
@@ -131,6 +137,8 @@
             if (scriptEntity.updateScript != NULL && [scritp.version isEqualToString:scriptEntity.updateScript.version]) {
                 scriptEntity.needUpdate = false;
                 scriptEntity.updateScript = nil;
+            } else if(scriptEntity.updateScript == nil || scriptEntity.updateScript.content == nil) {
+                scriptEntity.needUpdate = false;
             }
         }
     }

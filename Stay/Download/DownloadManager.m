@@ -548,7 +548,7 @@ static DownloadManager *instance = nil;
 //    task.m3u8State.status = 2;
 //    [task.m3u8State saveToPath:taskPath];
     
-    NSLog(@"FFmpeg : start");
+//    NSLog(@"FFmpeg : start");
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     NSString *filePath = [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"];
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
@@ -586,14 +586,14 @@ static DownloadManager *instance = nil;
     FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"], task.filePath]];
 //    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-f concat -safe 0 -i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"allts.txt"], task.filePath]];
     
-    NSLog(@"FFmpeg : cost %ldms", [session getDuration]);
-    NSArray *logs = [session getLogs];
-    for (Log *log in logs) {
-        NSLog(@"FFmpeg : %@", [log getMessage]);
-    }
+//    NSLog(@"FFmpeg : cost %ldms", [session getDuration]);
+//    NSArray *logs = [session getLogs];
+//    for (Log *log in logs) {
+//        NSLog(@"FFmpeg : %@", [log getMessage]);
+//    }
     
     ReturnCode *returnCode = [session getReturnCode];
-    NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
+//    NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
     if ([ReturnCode isSuccess:returnCode]) {
         [[NSFileManager defaultManager] removeItemAtPath:taskPath error:nil];
         if (task.block != nil) {
@@ -608,7 +608,7 @@ static DownloadManager *instance = nil;
 
     } else {
         // FAILURE
-        NSLog(@"Command failed with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
+//        NSLog(@"Command failed with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
         if (task.block != nil) {
             task.block(0, @"", DMStatusFailedTranscode);
         }
@@ -620,7 +620,7 @@ static DownloadManager *instance = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
-    NSLog(@"URLSession assetDownloadTask totalTimeRangesLoaded / timeRangeExpectedToLoad : %f / %f", CMTimeGetSeconds(loadedTimeRanges[0].CMTimeRangeValue.duration), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
+//    NSLog(@"URLSession assetDownloadTask totalTimeRangesLoaded / timeRangeExpectedToLoad : %f / %f", CMTimeGetSeconds(loadedTimeRanges[0].CMTimeRangeValue.duration), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
     Task *task = [self getTaskWithSessionTask:assetDownloadTask];
     if (task != nil) {
         float progress = 0.0;
@@ -635,7 +635,7 @@ static DownloadManager *instance = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
-    NSLog(@"URLSession assetDownloadTask didFinishDownloadingToURL : %@", location);
+//    NSLog(@"URLSession assetDownloadTask didFinishDownloadingToURL : %@", location);
     Task *task = [self getTaskWithSessionTask:assetDownloadTask];
     if (task != nil && assetDownloadTask.error == nil) {
         [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:nil];
@@ -650,7 +650,7 @@ static DownloadManager *instance = nil;
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
-    NSLog(@"URLSession sessionTask didCompleteWithError : %@", error);
+//    NSLog(@"URLSession sessionTask didCompleteWithError : %@", error);
     Task *task = [self getTaskWithSessionTask:sessionTask];
     if (task != nil && task.status != DMStatusPaused) {
         @synchronized (self.sessionDict) {
@@ -693,7 +693,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
             if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {
                 long long speedBS = task.bytesWritten / (timestamp - task.lastTimestamp);
-                NSLog([NSString stringWithFormat:@"speedBS : %ld, bytesWritten : %ld, time : %f", speedBS, task.bytesWritten, timestamp - task.lastTimestamp]);
+//                NSLog([NSString stringWithFormat:@"speedBS : %ld, bytesWritten : %ld, time : %f", speedBS, task.bytesWritten, timestamp - task.lastTimestamp]);
                 speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
                 task.lastTimestamp = timestamp;
                 task.bytesWritten = 0;
@@ -704,7 +704,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
-    NSLog(@"URLSession downloadTask didFinishDownloadingToURL : %@", location);
+//    NSLog(@"URLSession downloadTask didFinishDownloadingToURL : %@", location);
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil && downloadTask.error == nil) {
         if (task.isM3U8) {

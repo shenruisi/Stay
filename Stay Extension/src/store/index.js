@@ -28,7 +28,10 @@ export default createStore({
     staySwitch: 'start', // start,cease
     isStayPro: false,
     browserUrl: '',
-    selectedTab: {id: 1, name: 'matched_scripts_tab'}
+    selectedTab: {id: 1, name: 'matched_scripts_tab'},
+    darkmodeToggleStatus: 'auto',
+    siteEnabled: true,
+    longPressStatus: 'on'
   },
   getters: {
     localLanGetter: (state) => {
@@ -45,6 +48,15 @@ export default createStore({
     },
     selectedTabGetter: (state) => {
       return state.selectedTab;
+    },
+    darkmodeToggleStatusGetter: (state) => {
+      return state.darkmodeToggleStatus;
+    },
+    siteEnabledGetter: (state) => {
+      return state.siteEnabled;
+    },
+    longPressStatusGetter: (state) => {
+      return state.longPressStatus;
     }
   },
   // vuex的store状态更新的唯一方式：提交 mutation
@@ -63,6 +75,15 @@ export default createStore({
     },
     setSelectedTab: (state, data) => {
       state.selectedTab = data;
+    },
+    setDarkmodeToggleStatus: (state, data) => {
+      state.darkmodeToggleStatus = data;
+    },
+    setSiteEnabled: (state, data) => {
+      state.siteEnabled = data;
+    },
+    setLongPressStatus: (state, data) => {
+      state.longPressStatus = data;
     }
   },
   // 异步操作在action中进行，再传递到mutation
@@ -81,6 +102,15 @@ export default createStore({
     },
     setSelectedTabAsync: ({ commit }, data) => {
       commit('setSelectedTab', data);
+    },
+    setDarkmodeToggleStatusAsync: ({ commit }, data) => {
+      commit('setDarkmodeToggleStatus', data);
+    },
+    setSiteEnabledAsync: ({ commit }, data) => {
+      commit('setSiteEnabled', data);
+    },
+    setLongPressStatusAsync: ({ commit }, data) => {
+      commit('setLongPressStatus', data);
     }
   },
   // 当应用变得复杂时，state中管理的变量变多，store对象就有可能变得相当臃肿。为了解决这个问题，
@@ -96,7 +126,7 @@ export default createStore({
       key: 'stay-popup-vuex-store-persistence',
       // paths是存储state中的那些数据，如果是模块下具体的数据需要加上模块名称，如moudleA.name
       // 修改state后触发才可以看到本地存储数据的的变化。
-      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro']
+      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro', 'darkmodeToggleStatus', 'siteEnabled', 'longPressStatus']
     })
   ]
 });

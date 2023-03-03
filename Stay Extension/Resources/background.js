@@ -1055,6 +1055,26 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ body: response.body })
             });
         }
+        else if("getLongPressStatus" == request.operate){
+            let longPressStatus = 'on';
+            browser.storage.local.get("long_press_status", (res) => {
+                // console.log("getLongPressStatus-------long_press_status,--------res=",res)
+                if(res){
+                    longPressStatus = res["long_press_status"]
+                }
+                sendResponse({longPressStatus});
+            });
+        }
+        else if("setLongPressStatus" == request.operate){
+            let longPressStatus = request.longPressStatus;
+            if(longPressStatus){
+                let statusMap = {}
+                statusMap.long_press_status = longPressStatus;
+                browser.storage.local.set(statusMap, (res) => {
+                    sendResponse(longPressStatus);
+                });
+            }
+        }
         return true;
     }
     else if ("sniffer" == request.from){

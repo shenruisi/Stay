@@ -32,8 +32,8 @@ export default {
       browserUrl: store.state.browserUrl,
       isStayPro: store.state.isStayPro,
       hostName,
-      darkmodeToggleStatus: props.darkmodeToggleStatus,
-      siteEnabled: props.siteEnabled,
+      darkmodeToggleStatus: store.state.darkmodeToggleStatus,
+      siteEnabled: store.state.siteEnabled,
       darkmodeSettings: [
         {status:'on', name: t('darkmode_on'), isSelected: props.darkmodeToggleStatus==='on'},
         {status:'auto', name: t('darkmode_auto'), isSelected: props.darkmodeToggleStatus==='auto'},
@@ -47,12 +47,14 @@ export default {
         // 接收到的props的值
         state.browserUrl = newProps.browserUrl;
         state.hostName = getHostname(newProps.browserUrl);
+        state.siteEnabled = newProps.siteEnabled;
+        state.darkmodeToggleStatus = newProps.darkmodeToggleStatus;
       },
       { immediate: true, deep: true }
     );
 
     const dakmodeSetingClick = (status) => {
-      console.log('dakmodeSetingClick-----',status);
+      console.log('dakmodeSetingClick-----',status, state.darkmodeToggleStatus);
       if(state.darkmodeToggleStatus === status){
         return;
       }
@@ -69,9 +71,10 @@ export default {
 
     const handleDarkmodeProSetting = () => {
       if (state.darkmodeToggleStatus){
-        console.log('state.darkmodeToggleStatus-----',state.darkmodeToggleStatus);
+        store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
+        // console.log('state.darkmodeToggleStatus-----',state.darkmodeToggleStatus);
         global.browser.runtime.sendMessage({ type: 'popup', operate: 'DARKMODE_SETTING', isStayAround: state.isStayPro?'a':'b', status: state.darkmodeToggleStatus, domain: state.hostName, enabled: state.siteEnabled }, (response) => {
-          // console.log("DARKMODE_SETTING response----", response)
+          // console.log("DARKMODE_SETTING response----", response);
         })
       }
     }
@@ -79,6 +82,7 @@ export default {
     const changeWebsiteAllowEnabled = (event) => {
       const disabled = event.target.checked;
       state.siteEnabled = disabled;
+      store.commit('setSiteEnabled', state.siteEnabled);
       handleDarkmodeProSetting();
     }
     
@@ -111,6 +115,7 @@ export default {
     justify-items: center;
     align-items: center;
     position: relative;
+    user-select: none;
   }
   .darkmode-setting .setting:first-child{
     border-top-left-radius: 6px;
@@ -133,6 +138,7 @@ export default {
     justify-items: center;
     text-align: center;
     flex-flow: column;
+    user-select: none;
   }
   .darkmode-pro .darkmode-setting .active {
     color: var(--dm-bg);
