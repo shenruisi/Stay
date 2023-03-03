@@ -370,12 +370,12 @@ UITableViewDataSource
     [userDefaults setObject:color forKey:@"themeColor"];
     [userDefaults synchronize];
     [[UINavigationBar appearance] setTintColor:[FCStyle colorWithHexString:color alpha:1]];
-    NSArray *list = @[@"rectangle.stack.fill",@"square.grid.2x2.fill",@"gearshape.fill"];
-    for(int i = 0; i < 3; i++){
+    NSArray *list = @[@"rectangle.stack.fill",@"square.grid.2x2.fill",@"square.and.arrow.down.fill",@"gearshape.fill"];
+    for(int i = 0; i < 4; i++){
         UITabBarItem *item =  self.navigationController.tabBarController.tabBar.items[i];
         NSString *imageName = list[i];
         item.selectedImage =  [ImageHelper sfNamed:imageName font:[UIFont systemFontOfSize:18] color:FCStyle.accent];
-        
+            
     }
     [self.tableView reloadData];
 
