@@ -46,7 +46,7 @@
     </div>
     <div class="long-press-switch"  >
       <div class="switch-text">{{  t('longpress') }}</div>
-      <div class="switch" @click="longPressSwitchClick">{{ longPressSwitch }}</div>
+      <div class="switch" :class="longPressStatusRes=='on'?'switch-on':'switch-off'" @click="longPressSwitchClick">{{ longPressSwitch }}</div>
     </div>
   </div>
 </template>
@@ -77,7 +77,7 @@ export default {
         // }
       ],
       longPressSwitch: props.longPressStatus == 'on' ? t('switch_on') : t('switch_off'),
-      longPressStatus: props.longPressStatus
+      longPressStatusRes: props.longPressStatus
     });
 
     watch(
@@ -85,7 +85,7 @@ export default {
       (newProps) => {
         // 接收到的props的值
         state.browserUrl = newProps.browserUrl;
-        state.longPressStatus = newProps.longPressStatus;
+        state.longPressStatusRes = newProps.longPressStatus;
         state.longPressSwitch = newProps.longPressStatus == 'on' ? t('switch_on') : t('switch_off');
       },
       { immediate: true, deep: true }
@@ -201,15 +201,15 @@ export default {
 
     const longPressSwitchClick = () => {
       // console.log('longPressSwitchClick====')
-      if(state.longPressStatus == 'on'){
-        state.longPressStatus = 'off';
+      if(state.longPressStatusRes == 'on'){
+        state.longPressStatusRes = 'off';
       }else{
-        state.longPressStatus = 'on';
+        state.longPressStatusRes = 'on';
       }
-      state.longPressSwitch = state.longPressStatus == 'on' ? t('switch_on') : t('switch_off');
-      store.commit('setLongPressStatus', state.longPressStatus);
-      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.longPressStatus, operate: 'setLongPressStatus'}, (response) => {
-        console.log('longPressSwitchClick----response',response)
+      state.longPressSwitch = state.longPressStatusRes == 'on' ? t('switch_on') : t('switch_off');
+      store.commit('setLongPressStatus', state.longPressStatusRes);
+      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.longPressStatusRes, operate: 'setLongPressStatus'}, (response) => {
+        // console.log('longPressSwitchClick----response',response)
         if(response){
           global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
         }
@@ -302,16 +302,25 @@ export default {
         &::after{
           content: '';
           position: absolute;
-          right: -7px;
-          background: url('../assets/images/option.png') 50% 50% no-repeat;
+          right: 0px;
+          /* background: url(../img/option.png) 50% 50% no-repeat; */
+          /* background-size: 50%; */
+          width: 10px;
+          height: 10px;
           top: 50%;
-          transform: translate(0, -50%);
-          width: 26px;
-          height: 36px;
-          top: 50%;
-          background-size: 50%;
           transform: translateY(-50%);
           object-fit: contain;
+          border-radius: 50%;
+        }
+      }
+      .switch-on{
+        &::after{
+          background: var(--s-main);
+        }
+      }
+      .switch-off{
+        &::after{
+          background: var(--dm-bd);
         }
       }
     }
