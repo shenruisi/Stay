@@ -19,7 +19,7 @@ const openUrlInSafariPopup = (openUrl, target='') => {
     currentWindow: true
   }, (tabs) => {
     let message = { from: 'popup', operate: 'windowOpen', openUrl, target: target};
-    global.browser.tabs.sendMessage(tabs[0].id, message, response => {})
+    browser.tabs.sendMessage(tabs[0].id, message, response => {})
   })
   window.close();
 }
