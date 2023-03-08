@@ -519,28 +519,6 @@ static DownloadManager *instance = nil;
         return;
     }
     
-//    NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-//    NSString *content = @"";
-//    for (NSString *tsURL in task.m3u8State.tsURLs) {
-//        content = [content stringByAppendingFormat:@"file '%@'\n", [taskPath stringByAppendingPathComponent:tsURL]];
-//    }
-//    NSString *filePath = [taskPath stringByAppendingPathComponent:@"allts.txt"];
-//    NSError *err;
-//    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
-//    if (err != nil) {
-//        if (task.block != nil) {
-//            task.block(0, @"", DMStatusFailedNoSpace);
-//        }
-//        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-////        @synchronized (self.taskDict) {
-////            [self.taskDict removeObjectForKey:task.taskId];
-////        }
-//        return;
-//    }
-//    task.m3u8State.status = 2;
-//    [task.m3u8State saveToPath:taskPath];
-    
-//    NSLog(@"FFmpeg : start");
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     NSString *filePath = [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"];
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
@@ -553,9 +531,6 @@ static DownloadManager *instance = nil;
                 task.block(0, @"", DMStatusFailedNoSpace);
             }
             [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-//                @synchronized (self.taskDict) {
-//                    [self.taskDict removeObjectForKey:task.taskId];
-//                }
             [fileHandle closeAndReturnError:&err];
             return;
         }
@@ -576,13 +551,6 @@ static DownloadManager *instance = nil;
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
     FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"], task.filePath]];
-//    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-f concat -safe 0 -i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"allts.txt"], task.filePath]];
-    
-//    NSLog(@"FFmpeg : cost %ldms", [session getDuration]);
-//    NSArray *logs = [session getLogs];
-//    for (Log *log in logs) {
-//        NSLog(@"FFmpeg : %@", [log getMessage]);
-//    }
     
     ReturnCode *returnCode = [session getReturnCode];
 //    NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
@@ -605,9 +573,6 @@ static DownloadManager *instance = nil;
             task.block(0, @"", DMStatusFailedTranscode);
         }
         [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-//            @synchronized (self.taskDict) {
-//                [self.taskDict removeObjectForKey:task.taskId];
-//            }
     }
 }
 
