@@ -126,7 +126,6 @@
 @property (nonatomic, strong) NSMutableDictionary<NSURLSessionTask *, Task *> *sessionDict;
 @property (nonatomic, strong) DMStore *store;
 @property (nonatomic, strong) NSURLSession *downloadSession;
-@property (nonatomic, strong) AVAssetDownloadURLSession *assetDownloadURLSession;
 @end
 
 @implementation DownloadManager
@@ -178,7 +177,6 @@ static DownloadManager *instance = nil;
         task.isM3U8 = [request.url containsString:@"m3u8"] || request.m3u8Content.length > 0;
         NSURLSessionTask *sessionTask;
         if (task.isM3U8) {
-//            sessionTask = [self.assetDownloadURLSession assetDownloadTaskWithURLAsset:[AVURLAsset assetWithURL:[NSURL URLWithString:request.url]] assetTitle:request.fileName assetArtworkData:nil options:nil];
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:taskId];
             if (![[NSFileManager defaultManager] fileExistsAtPath:taskPath]) {
                 [NSFileManager.defaultManager createDirectoryAtPath:taskPath withIntermediateDirectories:YES attributes:nil error:nil];
@@ -380,15 +378,6 @@ static DownloadManager *instance = nil;
     return _store;
 }
 
-- (AVAssetDownloadURLSession *)assetDownloadURLSession {
-    if (nil == _assetDownloadURLSession) {
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"m3u8.downloader"];
-        _assetDownloadURLSession = [AVAssetDownloadURLSession sessionWithConfiguration:config assetDownloadDelegate:self delegateQueue:nil];
-    }
-    
-    return _assetDownloadURLSession;
-}
-
 - (NSURLSession *)downloadSession {
     if (nil == _downloadSession) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"normal.downloader"];
@@ -428,6 +417,9 @@ static DownloadManager *instance = nil;
                         m3u8State.keyURL = [NSURL URLWithString:m3u8State.keyURL relativeToURL:[[NSURL URLWithString:segInfo.urlString] URLByDeletingLastPathComponent]].absoluteString;
                     }
                     m3u8State.keyIV = segInfo.xKey.iV;
+                    if (m3u8State.keyIV == nil) {
+                        m3u8State.keyIV = @"";
+                    }
                 }
             }
             task.m3u8State = m3u8State;
@@ -616,36 +608,6 @@ static DownloadManager *instance = nil;
 //            @synchronized (self.taskDict) {
 //                [self.taskDict removeObjectForKey:task.taskId];
 //            }
-    }
-}
-
-- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad {
-//    NSLog(@"URLSession assetDownloadTask totalTimeRangesLoaded / timeRangeExpectedToLoad : %f / %f", CMTimeGetSeconds(loadedTimeRanges[0].CMTimeRangeValue.duration), CMTimeGetSeconds(timeRangeExpectedToLoad.duration));
-    Task *task = [self getTaskWithSessionTask:assetDownloadTask];
-    if (task != nil) {
-        float progress = 0.0;
-        for (NSValue *value in loadedTimeRanges) {
-            progress += CMTimeGetSeconds(value.CMTimeRangeValue.duration) / CMTimeGetSeconds(timeRangeExpectedToLoad.duration);
-        }
-        task.progress = progress;
-        if (task.block != nil) {
-            task.block(progress, @"", DMStatusDownloading);
-        }
-    }
-}
-
-- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location {
-//    NSLog(@"URLSession assetDownloadTask didFinishDownloadingToURL : %@", location);
-    Task *task = [self getTaskWithSessionTask:assetDownloadTask];
-    if (task != nil && assetDownloadTask.error == nil) {
-        [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:nil];
-        if (task.block != nil) {
-            task.block(1, @"", DMStatusComplete);
-        }
-        [self.store update:task.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
-        @synchronized (self.taskDict) {
-            [self.taskDict removeObjectForKey:task.taskId];
-        }
     }
 }
 

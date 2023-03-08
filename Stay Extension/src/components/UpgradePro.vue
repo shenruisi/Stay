@@ -22,7 +22,7 @@ export default {
     });
     const upgradeAction = () => {
       // window.open('stay://x-callback-url/pay?');
-      global.openUrlInSafariPopup('stay://x-callback-url/pay?');
+      global.openUrlInSafariPopup('stay://x-callback-url/pay');
     }
     return {
       ...toRefs(state),
