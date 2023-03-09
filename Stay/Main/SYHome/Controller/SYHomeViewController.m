@@ -59,6 +59,7 @@
 #import "HomeDetailCell.h"
 #import "DeviceHelper.h"
 #import "ToastDebugger.h"
+#import "VideoParser.h"
 //#import <Bugsnag/Bugsnag.h>
 
 static CGFloat kMacToolbar = 50.0;
@@ -1505,6 +1506,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     if (!self.importSlideController.isShown){
         [self.importSlideController show];
     }
+    
+//    [self.view addSubview:[VideoParser shared].webView];
+//    [[VideoParser shared] parse:@"https://v.douyin.com/SDy4T6J/"
+//                completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
+//        NSLog(@"videoItems %@",videoItems);
+//    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
