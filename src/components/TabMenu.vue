@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-fotter-wrapper">
+  <div class="popup-fotter-wrapper" :class="isMobile?'mobile':'mac'">
     <div class="fotter-box">
       <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="tabClickAction(item.id)">
         <div class="tab-img" :key="item.name" v-if="item.name == 'matched_scripts_tab'">
@@ -25,7 +25,7 @@
 
 <script>
 import { reactive, toRefs } from 'vue'
-
+import { isMobile } from '../utils/util'
 export default {
   name: 'DarkModeComp',
   props: ['tabId'],
@@ -37,7 +37,8 @@ export default {
         {id: 3, selected: 0, name: 'downloader_tab'},
         {id: 4, selected: 0, name: 'console_tab'}
       ],
-      selectedTabId: props.tabId
+      selectedTabId: props.tabId,
+      isMobile: isMobile()
     });
 
     const tabClickAction = (tabId) => {
@@ -65,7 +66,7 @@ export default {
 .popup-fotter-wrapper{
   width: 100%;
   position: fixed;
-  height: 72px;
+  
   bottom: 0;
   left: 0;
   right: 0;
@@ -74,6 +75,12 @@ export default {
   z-index: 999;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  &.mobile{
+    height: 72px;
+  }
+  &.mac{
+    height: 60px;
+  }
   .fotter-box{
     position: relative;
     width: 100%;

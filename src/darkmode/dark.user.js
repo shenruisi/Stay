@@ -6114,7 +6114,7 @@
 
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { type, data, stayDarkSettings, darkSetings, error, id, from, operate} = request
-        // console.log("data===request=",request);
+        console.log("data===request=",request);
         if (MessageType.BG_FETCH_RESPONSE  === type) {
             const resolve = resolvers$1.get(id);
             const reject = rejectors.get(id);
@@ -6127,7 +6127,7 @@
             }
             
         }else if(MessageType.BG_ADD_DYNAMIC_THEME === type){
-            // console.log("data==BG_ADD_DYNAMIC_THEME===",data, stayDarkSettings);
+            console.log("data==BG_ADD_DYNAMIC_THEME===",data, stayDarkSettings);
             if((document.querySelector(".noir") && document.querySelector(".noir-root"))){
                 cleanupDarkmode();
             }else{
@@ -6135,7 +6135,7 @@
             }
             handleDarkSettingsForStorage(darkSetings);
         }else if(MessageType.BG_CLEAN_UP === type){
-            // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
+            console.log("data==BG_CLEAN_UP===",stayDarkSettings);
             cleanupDarkmode();
             handleDarkSettingsForStorage(darkSetings);
         }

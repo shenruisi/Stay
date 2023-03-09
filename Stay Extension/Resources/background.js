@@ -1100,6 +1100,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ body: response.body })
             });
         }
+        else if ("fetchYoutubeDecodeFun" === request.operate){
+            let path = request.pathUuid;
+            let location = request.pathUrl;
+            browser.runtime.sendNativeMessage("application.id", { type: "yt_element", path, location}, function (response) {
+                console.log('fetchYoutubeDecodeFun----', response)
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }
 });

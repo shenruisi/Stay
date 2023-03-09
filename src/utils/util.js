@@ -12,7 +12,7 @@ export function isEmail(s) {
  * 手机号码
  * @param {*} s
  */
-export function isMobile(s) {
+export function isMobilePhone(s) {
   return /^1[0-9]{10}$/.test(s);
 }
 
@@ -171,4 +171,10 @@ export function getLevel2domain(url) {
   }
 }
 
+export function isMobile(){
+  const userAgentInfo = navigator.userAgent;
+  let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod'];
+  let getArr = Agents.filter(i => userAgentInfo.includes(i));
+  return getArr.length ? true : false;
+}
 

@@ -362,6 +362,7 @@ static DownloadManager *instance = nil;
                 }
             }
             [self.taskDict removeObjectForKey:t.taskId];
+            [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:t.taskId] error:nil];
         }
     }
     [self.store removeAll:key];
@@ -487,13 +488,7 @@ static DownloadManager *instance = nil;
             task.bytesWritten = 0;
             [self resumeM3U8Task:task];
         } else {
-            if (task.block != nil) {
-                task.block(0, @"", DMStatusFailed);
-            }
-            [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-            @synchronized (self.taskDict) {
-                [self.taskDict removeObjectForKey:task.taskId];
-            }
+            [self taskFailed:task];
         }
     } withContent:content];
 }
@@ -617,14 +612,8 @@ static DownloadManager *instance = nil;
     ReturnCode *returnCode = [session getReturnCode];
 //    NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
     if ([ReturnCode isSuccess:returnCode]) {
-        [[NSFileManager defaultManager] removeItemAtPath:taskPath error:nil];
-        if (task.block != nil) {
-            task.block(1, @"", DMStatusComplete);
-        }
-        [self.store update:task.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
-        @synchronized (self.taskDict) {
-            [self.taskDict removeObjectForKey:task.taskId];
-        }
+        task.m3u8State.status = 3;
+        [self taskComplete:task];
     } else if ([ReturnCode isCancel:returnCode]) {
         // CANCEL
 
@@ -656,11 +645,22 @@ static DownloadManager *instance = nil;
     if (task.sessionStates == nil) {
         task.sessionStates = [NSMutableArray array];
     }
+    NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     int status = task.normalState.status;
     if (status == 2) {
         
     } else if (status == 1) {
-        
+        if (task.normalState.audioUrl.length > 0) {
+            
+        } else {
+            if ([task.normalState.videoType isEqualToString:@"mp4"]) {
+                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]];
+                [NSFileManager.defaultManager moveItemAtPath:filePath toPath:task.filePath error:nil];
+                task.normalState.status = 3;
+                [self taskComplete:task];
+                return;
+            }
+        }
     } else {
         if (task.sessionStates.count > 0) {
             return;
@@ -685,26 +685,30 @@ static DownloadManager *instance = nil;
         @synchronized (self.sessionDict) {
             [self.sessionDict removeObjectForKey:sessionTask];
         }
-        @synchronized (task.sessionStates) {
-            for (int i = task.sessionStates.count - 1; i >= 0; i--) {
-                if (task.sessionStates[i].sessionTask == sessionTask) {
-                    [task.sessionStates removeObjectAtIndex:i];
-                    break;
-                }
-            }
-        }
+        [self removeSessionTask:sessionTask fromTask:task];
     }
     if (error != nil && task != nil && task.status != DMStatusPaused) {
         if (task.isM3U8) {
             [self resumeM3U8Task:task];
+        } else if (task.isNormal) {
+            if ([task.normalState.videoUrl isEqualToString:sessionTask.originalRequest.URL.absoluteString]) {
+                for (TaskSessionState *sessionState in task.sessionStates) {
+                    @synchronized (self.sessionDict) {
+                        [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+                    }
+                    [sessionState.sessionTask cancel];
+                }
+                [self taskFailed:task];
+            } else {
+                if (task.normalState.status == 1) {
+                    if (task.block != nil) {
+                        task.block(0, @"", DMStatusFailedTranscode);
+                    }
+                    [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+                }
+            }
         } else {
-            if (task.block != nil) {
-                task.block(0, @"", DMStatusFailed);
-            }
-            [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-            @synchronized (self.taskDict) {
-                [self.taskDict removeObjectForKey:task.taskId];
-            }
+            [self taskFailed:task];
         }
     }
 }
@@ -737,14 +741,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil && downloadTask.error == nil) {
         if (task.isM3U8) {
-            @synchronized (task.sessionStates) {
-                for (int i = task.sessionStates.count - 1; i >= 0; i--) {
-                    if (task.sessionStates[i].sessionTask == downloadTask) {
-                        [task.sessionStates removeObjectAtIndex:i];
-                        break;
-                    }
-                }
-            }
+            [self removeSessionTask:downloadTask fromTask:task];
             NSString *requestURL = downloadTask.originalRequest.URL.absoluteString;
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
             NSString *filePath = [taskPath stringByAppendingPathComponent:[[requestURL md5] stringByAppendingString:@".ts"]];
@@ -773,19 +770,13 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 if (![task.m3u8State.mapURL isEqualToString:requestURL]) {
                     unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
                     if (fileSize < 2000) {
-                        if (task.block != nil) {
-                            task.block(0, @"", DMStatusFailed);
-                        }
                         for (TaskSessionState *sessionState in task.sessionStates) {
                             @synchronized (self.sessionDict) {
                                 [self.sessionDict removeObjectForKey:sessionState.sessionTask];
                             }
                             [sessionState.sessionTask cancel];
                         }
-                        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-                        @synchronized (self.taskDict) {
-                            [self.taskDict removeObjectForKey:task.taskId];
-                        }
+                        [self taskFailed:task];
                         return;
                     }
                 }
@@ -802,33 +793,92 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 }
             }
             [self resumeM3U8Task:task];
+        } else if (task.isNormal) {
+            [self removeSessionTask:downloadTask fromTask:task];
+            if ([task.normalState.videoUrl isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
+                NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]];
+                [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
+                unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+                if (fileSize < 2000) {
+                    for (TaskSessionState *sessionState in task.sessionStates) {
+                        @synchronized (self.sessionDict) {
+                            [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+                        }
+                        [sessionState.sessionTask cancel];
+                    }
+                    [self taskFailed:task];
+                    return;
+                }
+                task.normalState.status = 1;
+                [self resumNormalTask:task];
+            } else {
+                NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.audioType]];
+                [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
+                unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+                if (fileSize < 2000) {
+                    if (task.normalState.status == 1) {
+                        if (task.block != nil) {
+                            task.block(0, @"", DMStatusFailedTranscode);
+                        }
+                        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+                    }
+                    return;
+                }
+                if (task.normalState.status == 1) {
+                    task.normalState.status = 2;
+                    [self resumNormalTask:task];
+                }
+            }
         } else {
             [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:nil];
             [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[downloadTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
             unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:task.filePath error:nil] fileSize];
             if (fileSize < 2000) {
-                if (task.block != nil) {
-                    task.block(0, @"", DMStatusFailed);
-                }
-                [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-                @synchronized (self.taskDict) {
-                    [self.taskDict removeObjectForKey:task.taskId];
-                }
+                [self taskFailed:task];
                 return;
             }
-            if (task.block != nil) {
-                task.block(1, @"", DMStatusComplete);
-            }
-            [self.store update:task.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
-            @synchronized (self.taskDict) {
-                [self.taskDict removeObjectForKey:task.taskId];
-            }
+            [self taskComplete:task];
         }
     }
 }
 
 - (nullable Task *)getTaskWithSessionTask:(NSURLSessionTask *)sessionTask {
     return self.sessionDict[sessionTask];
+}
+
+- (void)removeSessionTask:(NSURLSessionTask *)sessionTask fromTask:(Task *)task {
+    @synchronized (task.sessionStates) {
+        for (int i = (int)task.sessionStates.count - 1; i >= 0; i--) {
+            if (task.sessionStates[i].sessionTask == sessionTask) {
+                [task.sessionStates removeObjectAtIndex:i];
+                break;
+            }
+        }
+    }
+}
+
+- (void)taskFailed:(Task *)task {
+    if (task.block != nil) {
+        task.block(0, @"", DMStatusFailed);
+    }
+    [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+    @synchronized (self.taskDict) {
+        [self.taskDict removeObjectForKey:task.taskId];
+    }
+}
+
+- (void)taskComplete:(Task *)task {
+    if (task.block != nil) {
+        task.block(1, @"", DMStatusComplete);
+    }
+    [self.store update:task.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
+    @synchronized (self.taskDict) {
+        [self.taskDict removeObjectForKey:task.taskId];
+    }
+    NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+    [[NSFileManager defaultManager] removeItemAtPath:taskPath error:nil];
 }
 
 @end

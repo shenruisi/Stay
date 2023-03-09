@@ -21,7 +21,7 @@
 
     "content_scripts": [
         {
-            "js": ["fallback.js","dark.user.js"],
+            "js": ["popup/js/fallback.js","popup/js/darkmode.js"],
             "matches": [
                 "<all_urls>"
             ],
@@ -42,7 +42,7 @@
             "run_at": "document_end"
         },
         {
-            "js": ["popup/js/chunk-vendors.js", "popup/js/sniffer.js"],
+            "js": ["popup/js/sniffer.js"],
             "matches": [ "*://*/*" ],
             "all_frames": true,
             "run_at": "document_start"
@@ -71,5 +71,6 @@
         "https://translate.google.com"
     ],
     "web_accessible_resources": ["*"],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "permissions": ["<all_urls>","activeTab","tabs","nativeMessaging","alarms","storage","cookies"]
 }

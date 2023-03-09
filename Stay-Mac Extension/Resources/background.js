@@ -23,7 +23,7 @@ Date.prototype.dateFormat = function (fmt) {
     return fmt;
 }
 
-
+let videoPageUrl = '';
 let videoInfoList = [];
 let videoLinkSet = new Set();
 let matchAppScriptList = [];
@@ -367,7 +367,7 @@ function isFullyQualifiedDomain(candidate) {
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const requestFrom = request.from;
-    if ("darkmode" == request.from) {
+    if ("darkmode" == requestFrom) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
                 sendResponse({ body: response.body })
@@ -538,15 +538,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 // console.log("GM_listValues==background==", res);
                 if(res){
                     let resp = {};
+                    let respKeys = [];
                     Object.keys(res).forEach((localKey) => {
                         if(localKey.startsWith(uuid)){
                             // console.log("GM_listValues==background====localKey====", localKey);
                             let key = localKey.replace(uuid+"_", "");
                             resp[key] = res[localKey];
+                            respKeys.push(key);
                         }
                     })
                     // console.log("GM_listValues==----background-------resp==", resp);
                     sendResponse({body:resp});
+                    // sendResponse({body:respKeys});
                 }else{
                     browser.runtime.sendNativeMessage("application.id", { type: request.operate, uuid: uuid }, function (response) {
                         sendResponse(response?response:{body:{}});
@@ -869,6 +872,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
                 // console.log("GM_xmlhttpRequest----response---", response);
                 let resp = response.body
+                resp.response = resp.responseText;
                 if (resp.responseType && resp.responseType === "arraybuffer" && resp) {
                     try {
                         const r = new Uint8Array(resp.data).buffer;
@@ -1047,27 +1051,62 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("fetchFolders" == request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
-                console.log("fetchFolders-----response--",response)
+                // console.log("fetchFolders-----response--",response)
                 sendResponse({ body: response.body })
             });
+        }
+        else if("getLongPressStatus" == request.operate){
+            let longPressStatus = 'on';
+            browser.storage.local.get("long_press_status", (res) => {
+                // console.log("getLongPressStatus-------long_press_status,--------res=",res)
+                if(res && res["long_press_status"]){
+                    longPressStatus = res["long_press_status"]
+                }
+                sendResponse({longPressStatus});
+            });
+        }
+        else if("setLongPressStatus" == request.operate){
+            let longPressStatus = request.longPressStatus;
+            if(longPressStatus){
+                let statusMap = {}
+                statusMap.long_press_status = longPressStatus;
+                browser.storage.local.set(statusMap, (res) => {
+                    sendResponse(longPressStatus);
+                });
+            }
         }
         return true;
     }
     else if ("sniffer" == request.from){
         if ("VIDEO_INFO_PUSH" == request.operate) {
-            console.log("VIDEO_INFO_PUSH-------",request)
+            // console.log("VIDEO_INFO_PUSH-------",request)
             if(request.videoLinkSet && request.videoLinkSet.size){
                 videoLinkSet = request.videoLinkSet
+                videoPageUrl= request.videoPageUrl
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoLinkSet});
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH", videoPageUrl, videoLinkSet});
                 });
             }
             if(request.videoInfoList && request.videoInfoList.length){
                 videoInfoList = request.videoInfoList
+                videoPageUrl = request.videoPageUrl
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoInfoList});
+                    browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "VIDEO_INFO_PUSH",  videoPageUrl, videoInfoList});
                 });
             }
+        }
+        else if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                sendResponse({ body: response.body })
+            });
+        }
+        else if ("fetchYoutubeDecodeFun" === request.operate){
+            let path = request.pathUuid;
+            let location = request.pathUrl;
+            browser.runtime.sendNativeMessage("application.id", { type: "yt_element", path, location}, function (response) {
+                console.log('fetchYoutubeDecodeFun----', response)
+                sendResponse({ body: response.body })
+            });
         }
         return true;
     }
@@ -1359,7 +1398,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         isStayAround: "",
         siteListDisabled: [],
         siteListEnabled:[], // 暂时没用
-        toggleStatus:"on", //on,off,auto
+        toggleStatus:"auto", //on,off,auto
         // 当toggleStatus=auto的时候，automation默认等于time
         stay_automation: "system",
         // 当toggleStatus=auto的时候, 如果选择系统配色方案，又分为跟随系统的OnOff,还是Scheme（暗黑/明亮模式）
@@ -3165,7 +3204,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         let siteListDisabled = setting["siteListDisabled"];
                         let domain = request.domain;
                         let enabled = request.enabled;
-                        
+                        // console.log("addListener--DARKMODE_SETTING--",request, setting);
                         if(enabled){
                             if(siteListDisabled.includes(domain)){
                                 siteListDisabled.splice(siteListDisabled.indexOf(domain), 1);

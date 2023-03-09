@@ -34,8 +34,8 @@ app.provide('global', {
 
 app.use(i18n).use(store).mount('#app');
 if (!(navigator.userAgent.match(/(iPhone|iPod|Android|ios|iOS|Backerry|WebOS|Symbian|Windows Phone|Phone)/i))) {
-  document.body.style.height = '480px';
-  document.body.style.width = '400px';
+  document.body.style.height = '460px';
+  document.body.style.width = '375px';
   let tagImgs = document.querySelectorAll('.popup-fotter-wrapper .fotter-box .tab-item .tab-img');
   tagImgs.forEach(item=>{
     item.style.top = 0;

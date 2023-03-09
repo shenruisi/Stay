@@ -424,6 +424,7 @@ export default {
         font-weight: 700;
         border-radius: 8px;
         background-color: var(--dm-bg-f7);
+        cursor: default;
       }
       .menu{
         &::before{

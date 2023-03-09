@@ -349,10 +349,14 @@ let injectedContentVendor = new Set();
         else if('popup' === request.from){
             if('windowOpen' === operate){
                 var openUrl = request.openUrl;
+                var target = request.target;
                 // console.log('openUrl---------',openUrl);
                 // window.open(openUrl, '_self');
                 let targetGun = document.createElement('a');
                 targetGun.href = openUrl;
+                if(target){
+                    targetGun.target=target;
+                }
                 targetGun.click();
             }
               
@@ -391,6 +395,7 @@ let injectedContentVendor = new Set();
                         script.requireCodes.forEach((urlCodeDic)=>{
                             if (urlCodeDic.url == url){
                                 if (pageInject){
+                                    console.log("requireCodes---",urlCodeDic.name,urlCodeDic.code);
                                     $_injectRequiredInPage(urlCodeDic.name,urlCodeDic.code);
                                 }
                                 else{
@@ -493,7 +498,15 @@ let injectedContentVendor = new Set();
         const name = e.data.name;
         const pid = e.data.pid;
         let message = { from: "gm-apis", uuid: __uuid };
-        if (name === "API_LIST_VALUES") {
+        if(name === "GET_STAY_AROUND"){
+            // console.log('bootstrap---GET_STAY_AROUND----pid-',pid,',name=',name)
+            message = {from: "sniffer", operate: "GET_STAY_AROUND"}
+            browser.runtime.sendMessage(message, (response) => {
+                // console.log('bootstrap---GET_STAY_AROUND-----',response)
+                window.postMessage({ pid: pid, name: "GET_STAY_AROUND_RESP", response: response });
+            });
+        }
+        else if (name === "API_LIST_VALUES") {
             message.operate = "GM_listValues";
             browser.runtime.sendMessage(message, (response) => {
                 // console.log("GM_listValues----response=", response);
@@ -628,11 +641,9 @@ let injectedContentVendor = new Set();
             });
         }
         else if ("API_GET_REXOURCE_TEXT_SYNC" === name || "API_GET_REXOURCE_TEXT" === name) {
-            // console.log("API_GET_REXOURCE_TEXT e.data=========",  e);
             message.operate = "GM_getResourceText";
             message.url = e.data.url;
             browser.runtime.sendMessage(message, (response) => {
-                // console.log("background---API_GET_REXOURCE_TEXT---", response)
                 if ("API_GET_REXOURCE_TEXT" === name) {
                     window.postMessage({ id: __uuid, pid: pid, name: "RESP_GET_REXOURCE_TEXT", response: response });
                 }
@@ -684,4 +695,9 @@ let injectedContentVendor = new Set();
             browser.runtime.sendMessage(message);
         } 
     })
+
+    // browser.runtime.sendMessage({from: "sniffer", operate: "GET_STAY_AROUND"}, (response) => {
+    //     console.log('bootstrap---GET_STAY_AROUND-----',response)
+    //     window.postMessage({name: "GET_STAY_AROUND_RESP", response: response });
+    // });
 })();
