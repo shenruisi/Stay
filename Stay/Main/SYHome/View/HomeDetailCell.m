@@ -143,10 +143,10 @@
     
     CGFloat rightWidth = 0;
     
-    if(entity != nil && entity.needUpdate && !dic.updateSwitch){
+    if(entity != nil && entity.needUpdate && !dic.updateSwitch && entity.updateScript != NULL && entity.updateScript.content != NULL){
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(0, 0, 60, 25);
-  
+
         [btn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
         [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         btn.titleLabel.font = FCStyle.footnoteBold;

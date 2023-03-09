@@ -33,7 +33,10 @@ export default {
     "install_more":"Install more userscripts from Stay Fork",
     "what_downloader": "What is a downloader?",
     "what_darkmode" : "What is a dark mode?",
-    'ad': 'Ad'
+    'ad': 'Ad',
+    'longpress': 'Long press to get video',
+    'switch_off': 'Off',
+    'switch_on': 'On',
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -68,7 +71,10 @@ export default {
     "install_more":"从Stay Fork安装更多用户脚本",
     "what_downloader": "什么是下载器？",
     "what_darkmode" : " 什么是暗黑模式？",
-    'ad': '广告'
+    'ad': '广告',
+    'longpress': '长按获取视频',
+    'switch_off': '关',
+    'switch_on': '开',
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -103,7 +109,10 @@ export default {
     "install_more":"從Stay Fork安裝更多用戶腳本",
     "what_downloader": "什麼是下載器？",
     "what_darkmode" : " 什麼是暗黑模式？",
-    'ad': '廣告'
+    'ad': '廣告',
+    'longpress': '長按獲取視頻',
+    'switch_on': '開',
+    'switch_off': '關',
   }
 }
 /* eslint-disable */

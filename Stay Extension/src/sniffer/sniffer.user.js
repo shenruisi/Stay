@@ -48,6 +48,7 @@ const browser = __b;
 
   function injectParseVideoJS(isContent){
     let isStayAround = '';
+    let longPressStatus = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
     // console.log('------------injectParseVideoJS-----start------------------')
@@ -78,6 +79,13 @@ const browser = __b;
         if (!res) return '';
         if (!res[1]) return '';
         return res[1];
+      },
+      queryParams: function(path, name) {
+        if(!path){
+          return '';
+        }
+        let url = 'https;//stap.app?'+path;
+        return this.queryURLParams(url, name);
       },
       matchUrlInString: function(imgText){
         const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
@@ -543,7 +551,7 @@ const browser = __b;
           return false;
         });
         document.body.addEventListener('touchstart', function(event) {
-          // console.log('touchstart-------',event);
+          console.log('touchstart-------',event);
           self.handleTargetTouchend(event.target);
           self.handleTargetEvent(event, callback);
           return false;
@@ -571,7 +579,7 @@ const browser = __b;
         let target = event.changedTouches[0];
         const targetPageX = target.pageX;
         const targetPageY = target.pageY;
-        // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+        console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
         if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
@@ -882,11 +890,23 @@ const browser = __b;
      * @returns 
      */
     async function addLongPress(videoDom, posDom, videoInfo){
-      // console.log('----addLongPress-----start------');
+      console.log('----addLongPress-----start------');
       if(!posDom){
-        // console.log('----posDomposDomposDomposDomposDom-----null');
+        console.log('----posDomposDomposDomposDomposDom-----null',posDom);
         return;
       }
+      if(!Utils.isMobile()){
+        return;
+      }
+
+      if(!longPressStatus){
+        longPressStatus = await getLongPressStatus();
+      }
+
+      if(longPressStatus && longPressStatus == 'off'){
+        return;
+      }
+
       // console.log('----getStayAround-----start------');
       if(!isStayAround){
         const isStayProTemp = await getStayAround();
@@ -897,10 +917,8 @@ const browser = __b;
         return;
       }
 
-      if(!Utils.isMobile()){
-        return;
-      }
-      // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
+      
+      console.log('addLongPress-------------',videoDom, posDom, videoInfo)
       let stayLongPress = posDom.getAttribute('stay-long-press');
       if(stayLongPress && stayLongPress == 'yes'){
         // console.log('addLongPress already bind stay long press------1------');
@@ -967,6 +985,18 @@ const browser = __b;
           addSinfferModal(videoDom, posDom, videoInfo);
         })
       }
+      else if(hostUrl.indexOf('muiplayer.js.org')>-1){
+        let posterDom = document.querySelector('#mplayer-media-wrapper');
+        if(!posterDom){
+          posterDom = document.querySelector('#mplayer-cover');
+        }
+        if(posterDom){
+          // posDom = posterDom;
+          new LongPress(posterDom, ()=>{
+            addSinfferModal(videoDom, posterDom, videoInfo);
+          })
+        }
+      }
       
       new DocumentLongPress(posDom, ()=>{
         addSinfferModal(videoDom, posDom, videoInfo);
@@ -999,6 +1029,30 @@ const browser = __b;
           };
           // console.log('getStayAround-----false-----start---pid=',pid);
           window.postMessage({ id: pid, pid: pid, name: 'GET_STAY_AROUND' });
+          window.addEventListener('message', callback);
+        }
+      })
+    }
+
+    function getLongPressStatus(){
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          console.log('getLongPressStatus-----true');
+          browser.runtime.sendMessage({from: 'popup', operate: 'getLongPressStatus'}, (response) => {
+            console.log('getLongPressStatus---------',response)
+            let longPressStatusRes = response&&response.longPressStatus?response.longPressStatus:'on';
+            resolve(longPressStatusRes);
+          });
+        }else{
+          console.log('getLongPressStatus-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'GET_LONG_PRESS_STATUS_RESP') return;
+            console.log('getLongPressStatus---------',e.data.longPressStatusRes)
+            resolve(e.data.longPressStatusRes);
+            window.removeEventListener('message', callback);
+          };
+          window.postMessage({ id: pid, pid: pid, name: 'GET_LONG_PRESS_STATUS' });
           window.addEventListener('message', callback);
         }
       })
@@ -1430,9 +1484,9 @@ const browser = __b;
     
     /**
      * 获取页面上video标签获取视频信息
-     * @return videoInfo{videoKey(从原页面中取到的video唯一标识), downloadUrl, poster, title, hostUrl, qualityList, videoUuid(解析给video标签生成的uuid)}
+     * @return videoInfo{videoKey(从原页面中取到的video唯一标识), downloadUrl, poster, title, hostUrl, qualityList, videoUuid(解析给video标签生成的uuid), audioUrl（音频url）, protect(视频是否受保护, true/false)}
      * 
-     * qualityList[{downloadUrl,qualityLabel, quality }]
+     * qualityList[{downloadUrl,qualityLabel, quality, audioUrl（音频url）, protect(视频是否受保护, true/false) }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb
      */
     function handleVideoInfoParse(videoSnifferDom, videoDom, videoUuid){
@@ -2349,6 +2403,13 @@ const browser = __b;
       let pid = e.data.pid;
       browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
         window.postMessage({pid:pid, name: 'GET_STAY_AROUND_RESP', response: response });
+      });
+    }
+    else if(name === 'GET_LONG_PRESS_STATUS'){
+      let pid = e.data.pid;
+      browser.runtime.sendMessage({from: 'popup', operate: 'getLongPressStatus'}, (response) => {
+        let longPressStatusRes = response&&response.longPressStatus?response.longPressStatus:'on';
+        window.postMessage({pid:pid, name: 'GET_LONG_PRESS_STATUS_RESP', longPressStatusRes});
       });
     }
   })

@@ -44,16 +44,21 @@
         <span class="mail-to" @click="contactClick">{{t('contact_us')}}</span>
       </div>
     </div>
+    <div class="long-press-switch"  >
+      <div class="switch-text">{{  t('longpress') }}</div>
+      <div class="switch" :class="longPressStatusRes=='on'?'switch-on':'switch-off'" @click="longPressSwitchClick">{{ longPressSwitch }}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import { reactive, getCurrentInstance, inject, toRefs } from 'vue'
+import { reactive, getCurrentInstance, inject, toRefs, watch } from 'vue'
 import { getDomain, getHostname, getFilenameByUrl, getLevel2domain, getFiletypeByUrl } from '../utils/util'
 import { useI18n } from 'vue-i18n';
+import store from '../store';
 export default {
   name: 'SnifferComp',
-  props: ['browserUrl'],
+  props: ['browserUrl', 'longPressStatus'],
   setup (props, {emit, expose}) {
     const { proxy } = getCurrentInstance();
     const { t, tm } = useI18n();
@@ -70,9 +75,21 @@ export default {
         //   qualityList:[],
         //   selectedQuality: ''
         // }
-      ]
+      ],
+      longPressSwitch: props.longPressStatus == 'on' ? t('switch_on') : t('switch_off'),
+      longPressStatusRes: props.longPressStatus
     });
 
+    watch(
+      props,
+      (newProps) => {
+        // 接收到的props的值
+        state.browserUrl = newProps.browserUrl;
+        state.longPressStatusRes = newProps.longPressStatus;
+        state.longPressSwitch = newProps.longPressStatus == 'on' ? t('switch_on') : t('switch_off');
+      },
+      { immediate: true, deep: true }
+    );
     const fetchSnifferFolder = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchFolders'}, (response) => {
         // console.log('fetchSnifferFolder---response-----', response);
@@ -182,6 +199,23 @@ export default {
       global.openUrlInSafariPopup(`mailto:feedback@fastclip.app?subject=${t('sniffer_none')}&body=${encodeURIComponent(props.browserUrl)}`);
     }
 
+    const longPressSwitchClick = () => {
+      // console.log('longPressSwitchClick====')
+      if(state.longPressStatusRes == 'on'){
+        state.longPressStatusRes = 'off';
+      }else{
+        state.longPressStatusRes = 'on';
+      }
+      state.longPressSwitch = state.longPressStatusRes == 'on' ? t('switch_on') : t('switch_off');
+      store.commit('setLongPressStatus', state.longPressStatusRes);
+      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.longPressStatusRes, operate: 'setLongPressStatus'}, (response) => {
+        // console.log('longPressSwitchClick----response',response)
+        if(response){
+          global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
+        }
+      });
+    }
+
     return {
       ...toRefs(state),
       t,
@@ -194,7 +228,8 @@ export default {
       downloadClickAction,
       changeSelectQuality,
       changeSelectFolder,
-      contactClick
+      contactClick,
+      longPressSwitchClick,
     };
   }
 }
@@ -228,6 +263,64 @@ export default {
           color: var(--dm-font);
           font-weight: 700;
           padding-left: 2px;
+        }
+      }
+    }
+    .long-press-switch{
+      width: 90%;
+      position: fixed;
+      bottom: 90px;
+      height: 42px;
+      border-radius: 8px;
+      left: 5%;
+      border: 1px solid var(--dm-bd);
+      background-color: var(--dm-bg-f7);
+      display: flex;
+      padding: 0 20px;
+      justify-content: center;
+      justify-items: center;
+      align-items: center;
+      user-select: none;
+      .switch-text{
+        width: 80%;
+        text-align: left;
+        color: var(--dm-font);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        user-select: none;
+      }
+      .switch{
+        width: 20%;
+        color: var(--dm-font-2);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        position: relative;
+        &::after{
+          content: '';
+          position: absolute;
+          right: 0px;
+          /* background: url(../img/option.png) 50% 50% no-repeat; */
+          /* background-size: 50%; */
+          width: 10px;
+          height: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          object-fit: contain;
+          border-radius: 50%;
+        }
+      }
+      .switch-on{
+        &::after{
+          background: var(--s-main);
+        }
+      }
+      .switch-off{
+        &::after{
+          background: var(--dm-bd);
         }
       }
     }
