@@ -115,7 +115,11 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) _FileEmptyTipsView *emptyTipsView;
 @property (nonatomic, strong) NSMutableArray *searchData;
 @property (nonatomic, strong) SYDownloadPreviewController *sYDownloadPreviewController;
-
+@property (nonatomic, strong) UIButton *downloadBtn;
+@property (nonatomic, strong) UIButton *downloadingBtn;
+@property (nonatomic, strong) UIView *slideLine;
+@property (nonatomic, assign) NSInteger selectedIdx;
+@property (nonatomic, strong) NSMutableArray *videoArray;
 
 @end
 
@@ -163,6 +167,29 @@ UIDocumentPickerDelegate
 
     [self emptyTipsView];
 
+    
+    [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+    if(self.videoArray.count > 0) {
+      [self.downloadingBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count] forState:UIControlStateNormal];
+      [self.downloadingBtn sizeToFit];
+    }
+
+    UIView *topHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 25)];
+    
+    self.downloadBtn.left = 70;
+    self.downloadingBtn.left = self.downloadBtn.right + 53;
+    self.downloadingBtn.centerY =  self.downloadBtn.centerY;
+    self.slideLine.centerX = self.downloadBtn.centerX;
+    self.slideLine.top = self.downloadBtn.bottom + 5;
+    [topHeaderView addSubview:self.downloadBtn];
+    [topHeaderView addSubview:self.downloadingBtn];
+    [topHeaderView addSubview:self.slideLine];
+    self.navigationItem.titleView = topHeaderView;
+    
+    self.selectedIdx = 0;
+    
+//    [[DataManager shareManager] selectAllUnDownloadComplete];
+    
 }
 
 - (void)showUpgrade {
@@ -188,46 +215,11 @@ UIDocumentPickerDelegate
     return _addItem;
 }
 
-
-#pragma cellClickEvent
-
-- (void)stopDownload:(UIButton *)sender {
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-    [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
-    [[DownloadManager shared] pause:resource.downloadUuid];
-    [self.searchTableView reloadData];
+#pragma mark - UISearchResultsUpdating
+- (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
+    NSString *inputStr = searchController.searchBar.text;
+    return;
 }
-
-- (void)retryDownload:(UIButton *)sender {
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
-    [self.searchTableView reloadData];
-}
-
-- (void)continueDownload:(UIButton *)sender {
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
-    [self.searchTableView reloadData];
-}
-
-
-- (void)saveToFile:(UIButton *)sender {
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
-    UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
-
-    documentPicker.delegate = self;
-    [self presentViewController:documentPicker animated:YES completion:nil];
-}
-- (void)saveToPhoto:(UIButton *)sender {
-    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
-
-    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
-    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
-        UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-    }
-}
-
 #pragma mark -searchBarDelegate
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -252,6 +244,63 @@ UIDocumentPickerDelegate
 }
 
 
+
+#pragma cellClickEvent
+
+- (void)stopDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
+    [[DownloadManager shared] pause:resource.downloadUuid];
+    if(self.selectedIdx == 1) {
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+        [self.tableView reloadData];
+    }
+    [self.searchTableView reloadData];
+    
+}
+
+- (void)retryDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+    [self.searchTableView reloadData];
+    if(self.selectedIdx == 1) {
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+        [self.tableView reloadData];
+    }
+}
+
+- (void)continueDownload:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+    [self.searchTableView reloadData];
+    if(self.selectedIdx == 1) {
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+        [self.tableView reloadData];
+    }
+}
+
+
+- (void)saveToFile:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+    UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForExportingURLs:@[url] asCopy:YES];
+
+    documentPicker.delegate = self;
+    [self presentViewController:documentPicker animated:YES completion:nil];
+}
+- (void)saveToPhoto:(UIButton *)sender {
+    DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
+
+    NSURL *url = [NSURL fileURLWithPath:resource.allPath];
+    if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(url.relativePath)){
+        UISaveVideoAtPathToSavedPhotosAlbum(url.relativePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+
 - (void)buildFolder:(id)sender{
     [self.tableView reloadData];
 }
@@ -269,7 +318,11 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return self.searchData.count;
     } else {
-        return [FCShared tabManager].tabs.count + 1;
+        if(self.selectedIdx == 1) {
+            return self.videoArray.count;
+        } else {
+            return [FCShared tabManager].tabs.count + 1;
+        }
     }
 }
 
@@ -277,7 +330,11 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return 137;
     } else {
-        return 46;
+        if(self.selectedIdx == 1) {
+            return 128;
+        } else {
+            return 59;
+        }
     }
 }
 
@@ -290,7 +347,11 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return 0.1f;
     } else {
-        return 38;
+        if(self.selectedIdx == 1) {
+            return 0.1f;
+        } else {
+            return 38;
+        }
     }
 }
 
@@ -341,6 +402,11 @@ UIDocumentPickerDelegate
     if([tableView isEqual:self.searchTableView]) {
         return nil;
     } else {
+        
+        if(self.selectedIdx == 1) {
+            return nil;
+        }
+        
         UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
         headrView.backgroundColor = FCStyle.secondaryBackground;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
@@ -442,70 +508,203 @@ UIDocumentPickerDelegate
         return cell;
     } else {
         
-        
-        if(indexPath.row == 0) {
-            NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-            UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if(self.selectedIdx == 1) {
+            DownloadResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadResourcecellID"];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 13, 27, 20)];
-            [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:20] color: RGB(146, 209, 243)]];
-            imageView.contentMode = UIViewContentModeBottom;
-            [cell.contentView addSubview:imageView];
-
+            DownloadResource *resource= self.videoArray[indexPath.row];
             
-            UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.self.view.width - 100, 18)];
-            name.text = @"Undefined";
-            if (dic != NULL) {
-                name.text = dic[@"fileName"];
-            }
-            name.font = FCStyle.body;
-            [name sizeToFit];
-            name.centerY = imageView.centerY;
-            name.left = imageView.right + 7;
-            [cell.contentView addSubview:name];
-            
-            UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.self.view.width - 100, 18)];
-            subTitle.text = @"On My iPhone";
-            subTitle.font = FCStyle.footnoteBold;
-            subTitle.textColor = FCStyle.titleGrayColor;
-            [subTitle sizeToFit];
-            subTitle.centerY = imageView.centerY;
-            subTitle.left = name.right + 2;
-            [cell.contentView addSubview:subTitle];
-            
-            
-            UIImageView *rightIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 15)];
-            [rightIcon setImage:[ImageHelper sfNamed:@"chevron.right" font:[UIFont systemFontOfSize:15] color: FCStyle.grayNoteColor]];
-            rightIcon.centerY = imageView.centerY;
-            rightIcon.right = self.view.width - 20;
-            rightIcon.contentMode = UIViewContentModeBottom;
-            [cell.contentView addSubview:rightIcon];
-            
-            
-            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
-            line.backgroundColor = FCStyle.fcSeparator;
-            line.bottom =  imageView.bottom + 13;
-            line.left = 10;
-            [cell.contentView addSubview:line];
-            return  cell;
-        } else {
-            DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
-            if (cell == nil) {
-                cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+            if(resource.status == 2) {
+                if (cell == nil) {
+                    cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
+                }
+            } else {
+                cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellIDR"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
+            
             for (UIView *subView in cell.contentView.subviews) {
                 [subView removeFromSuperview];
             }
             
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-        
-            cell.contentView.width = self.view.width;
-            cell.cer = self;
-            cell.fctab = [FCShared tabManager].tabs[indexPath.row - 1];
             
+            
+            cell.contentView.width = self.view.width;
+            cell.downloadResource = resource;
+            cell.controller = self;
+            
+            if( cell.downloadResource.status == 0 || cell.downloadResource.status == 4) {
+                FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
+                Request *request = [[Request alloc] init];
+                request.url =  cell.downloadResource.downloadUrl;
+                request.fileDir = tab.path;
+                request.fileName = [cell.downloadResource.allPath lastPathComponent];
+                request.fileType = @"video";
+                request.key =  cell.downloadResource.firstPath;
+                Task *task =  [[DownloadManager shared]  enqueue:request];
+                
+                resource.downloadProcess = task.progress * 100;
+                
+                task.block = ^(float progress, NSString *speed, DMStatus status) {
+                    if(status == DMStatusFailed) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:resource.downloadUuid];
+                        cell.downloadResource.status = 3;
+                    } else if(status == DMStatusDownloading) {
+                        if(resource.status != 0) {
+                            [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
+                        }
+        //                [[DataManager shareManager] updateDownloadResourcProcess:progress * 100 uuid:cell.downloadResource.downloadUuid];
+                        resource.status = 0;
+                        resource.downloadProcess = progress * 100;
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            cell.progress.progress = progress;
+                            cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
+                            [cell.downloadRateLabel sizeToFit];
+                            cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                            cell.downloadSpeedLabel.text = speed;
+                        });
+                        
+                        return;
+                    } else if(status == DMStatusComplete) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:resource.downloadUuid];
+                        AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:resource.allPath]];
+                        if (resource.icon.length == 0) {
+                            AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
+                            CMTime time = CMTimeMake(1, 1);
+                            CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:nil error:nil];
+                            if (imageRef != nil) {
+                                UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
+                                [[DataManager shareManager] updateIconByuuid:thumbnail uuid:resource.downloadUuid];
+                            }
+                            CGImageRelease(imageRef);
+                        }
+                        [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:resource.downloadUuid];
+                        resource.status = 2;
+//                        [self reloadData];
+                    } else if(status == DMStatusPending) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
+                        resource.status = 1;
+                    } else if(status == DMStatusTranscoding) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
+                        resource.status = 4;
+                    } else if(status == DMStatusFailedTranscode) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
+                        resource.status = 5;
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedTranscode", @"")
+                                                                                           message:@""
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                           
+                            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction * _Nonnull action) {
+                             }];
+                             [alert addAction:cancel];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        });
+                    } else if(status == DMStatusFailedNoSpace) {
+                        [[DataManager shareManager]updateDownloadResourceStatus:6 uuid:resource.downloadUuid];
+                        resource.status = 6;
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedNoSpace", @"")
+                                                                                           message:@""
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                           
+                            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction * _Nonnull action) {
+                             }];
+                             [alert addAction:cancel];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        });
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
+                    });
+                };
+            }
             return cell;
+        } else {
+        
+        
+            if(indexPath.row == 0) {
+                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+                UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 18, 27, 20)];
+                [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
+                imageView.contentMode = UIViewContentModeBottom;
+                [cell.contentView addSubview:imageView];
+
+                
+                UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
+                name.text = @"Undefined";
+                if (dic != NULL) {
+                    name.text = dic[@"fileName"];
+                }
+                name.font = FCStyle.body;
+                [name sizeToFit];
+    //            name.centerY = imageView.centerY;
+                name.left = imageView.right + 7;
+                [cell.contentView addSubview:name];
+                
+                UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
+                subTitle.text = @"On My iPhone";
+                subTitle.font = FCStyle.footnoteBold;
+                subTitle.textColor = FCStyle.titleGrayColor;
+                [subTitle sizeToFit];
+                subTitle.bottom = name.bottom;
+                subTitle.left = name.right + 2;
+                [cell.contentView addSubview:subTitle];
+                
+                
+                UIImageView *rightIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 15)];
+                [rightIcon setImage:[ImageHelper sfNamed:@"chevron.right" font:[UIFont systemFontOfSize:15] color: FCStyle.grayNoteColor]];
+                rightIcon.centerY = imageView.centerY;
+                rightIcon.right = self.view.width - 20;
+                rightIcon.contentMode = UIViewContentModeBottom;
+                [cell.contentView addSubview:rightIcon];
+                
+                
+                UIButton *setDicBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 144, 25)];
+                [setDicBtn setTitle:@"Setup Directory" forState:UIControlStateNormal];
+                if (dic != NULL) {
+                    [setDicBtn setTitle:@"Change Directory" forState:UIControlStateNormal];
+                }
+                [setDicBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+                [setDicBtn addTarget:self action:@selector(changeFileDir:) forControlEvents:UIControlEventTouchUpInside];
+                setDicBtn.layer.cornerRadius = 10;
+                setDicBtn.backgroundColor = FCStyle.background;
+                setDicBtn.font = FCStyle.footnoteBold;
+                setDicBtn.centerY = imageView.centerY;
+                setDicBtn.right = rightIcon.left - 16;
+                [cell.contentView addSubview:setDicBtn];
+                UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
+                line.backgroundColor = FCStyle.fcSeparator;
+                line.bottom =  imageView.bottom + 22;
+                line.left = 10;
+                [cell.contentView addSubview:line];
+                return  cell;
+            } else {
+                DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
+                if (cell == nil) {
+                    cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+                    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                }
+                for (UIView *subView in cell.contentView.subviews) {
+                    [subView removeFromSuperview];
+                }
+                
+                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            
+                cell.contentView.width = self.view.width;
+                cell.cer = self;
+                cell.fctab = [FCShared tabManager].tabs[indexPath.row - 1];
+                
+                return cell;
+                
+            }
         }
     }
 }
@@ -699,6 +898,47 @@ UIDocumentPickerDelegate
     
 }
 
+
+- (void)changeDownloadTab:(UIButton *)sender {
+    if ([sender isEqual:self.downloadBtn]) {
+        if(self.selectedIdx == 1) {
+            self.downloadBtn.selected = true;
+            self.downloadingBtn.selected = false;
+            self.selectedIdx = 0;
+            [UIView animateWithDuration:0.25F animations:^{
+                self.slideLine.width  = 53;
+                self.slideLine.centerX = self.downloadBtn.centerX;
+            }];
+            [self.tableView reloadData];
+        }
+    } else {
+        if(self.selectedIdx == 0) {
+            self.downloadBtn.selected = false;
+            self.downloadingBtn.selected = true;
+            self.selectedIdx = 1;
+            [UIView animateWithDuration:0.25F animations:^{
+                self.slideLine.width  = 70;
+                self.slideLine.centerX = self.downloadingBtn.centerX;
+            }];
+            [self.videoArray removeAllObjects];
+            [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+
+            [self.tableView reloadData];
+        }
+    }
+}
+
+- (void)changeFileDir:(UIButton *)sender {
+    NSArray *documentTypes = @[@"public.folder"];
+
+    UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
+
+    documentPicker.delegate = self;
+    documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:documentPicker animated:YES completion:nil];
+}
+
+
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef FC_MAC
@@ -765,7 +1005,51 @@ UIDocumentPickerDelegate
     return _emptyTipsView;
 }
 
+- (UIButton *)downloadBtn {
+    if(_downloadBtn == nil) {
+        _downloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 78, 18)];
+        [_downloadBtn setTitle:NSLocalizedString(@"Download","Download") forState:UIControlStateNormal];
+        [_downloadBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
+        [_downloadBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
+        [_downloadBtn addTarget:self action:@selector(changeDownloadTab:) forControlEvents:UIControlEventTouchUpInside];
 
+        _downloadBtn.font = FCStyle.body;
+        _downloadBtn.selected = true;
+        
+    }
+    
+    return  _downloadBtn;
+}
+
+- (UIButton *)downloadingBtn {
+    if(_downloadingBtn == nil) {
+        _downloadingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 78, 18)];
+        [_downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
+        [_downloadingBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
+        [_downloadingBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
+        [_downloadingBtn addTarget:self action:@selector(changeDownloadTab:) forControlEvents:UIControlEventTouchUpInside];
+        _downloadingBtn.font = FCStyle.body;
+    }
+    
+    return  _downloadingBtn;
+}
+
+- (UIView *)slideLine {
+    if (_slideLine == nil) {
+        _slideLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 2)];
+        _slideLine.backgroundColor = FCStyle.accent;
+    }
+    return _slideLine;
+}
+
+
+- (NSArray *)videoArray {
+    if (_videoArray == nil) {
+        _videoArray = [NSMutableArray array];
+    }
+    
+    return _videoArray;
+}
 /*
 #pragma mark - Navigation
 
