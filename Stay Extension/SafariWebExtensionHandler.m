@@ -354,6 +354,7 @@
     }
     else if ([message[@"type"] isEqualToString:@"yt_element"]){
         NSString *path = message[@"path"];
+        NSString *location = message[@"location"];
         NSDictionary *response = [[API shared] downloadYoutube:path];
         NSString *code;
         if ((code = response[@"biz"][@"code"]) != nil){

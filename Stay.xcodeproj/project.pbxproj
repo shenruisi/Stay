@@ -1335,6 +1335,13 @@
 			path = Debugger;
 			sourceTree = "<group>";
 		};
+		583A10B229B831CC00BA4A11 /* AdBlock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AdBlock;
+			sourceTree = "<group>";
+		};
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1443,6 +1450,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				583A10B229B831CC00BA4A11 /* AdBlock */,
 				5839C315293051CC00CCBAE5 /* Debugger */,
 				3C8388B8292E469A007563E6 /* Download */,
 				58DF3FF22898D4050029E1AA /* API */,
