@@ -31,8 +31,8 @@
 }
 
 - (void)createFileCell:(FCTab *)fCTab {
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 13, 27, 20)];
-    [imageView setImage:[ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:20] color: [ColorHelper colorFromHex:fCTab.config.hexColor]]];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 27, 20)];
+    [imageView setImage:[ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:26] color: [ColorHelper colorFromHex:fCTab.config.hexColor]]];
     imageView.contentMode = UIViewContentModeBottom;
     [self.contentView addSubview:imageView];
 
@@ -41,7 +41,7 @@
     name.text = fCTab.config.name;
     name.font = FCStyle.body;
     [name sizeToFit];
-    name.centerY = imageView.centerY;
+    name.top = 13;
     name.left = imageView.right + 7;
     [self.contentView addSubview:name];
     
@@ -56,7 +56,7 @@
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 10, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.bottom =  imageView.bottom + 13;
+    line.bottom =  imageView.bottom + 22;
     line.left = 10;
     [self.contentView addSubview:line];
     

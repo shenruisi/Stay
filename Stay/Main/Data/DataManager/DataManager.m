@@ -117,6 +117,11 @@
         [self createTable];
     }
     
+    if(![self isExitedColumnInDownload:@"protect"]) {
+        [self addColumn:@"download_resource" column:@"protect" type:@"INTEGER"];
+        [self addColumn:@"download_resource" column:@"audioUrl"];
+    }
+    
     return;
 }
 
@@ -310,6 +315,44 @@
     }
     
     NSString *sql = @"select count(*) from sqlite_master where name='user_config_script' and sql like '%%%@%%'";
+    sql = [NSString stringWithFormat:sql,column];
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return true;
+    }
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    int activite = 0;
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        activite = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return activite == 0? false:true;
+}
+
+
+- (BOOL)isExitedColumnInDownload:(NSString *)column {
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        NSLog(@"数据库文件打开失败");
+        return true;
+    }
+    
+    NSString *sql = @"select count(*) from sqlite_master where name='download_resource' and sql like '%%%@%%'";
     sql = [NSString stringWithFormat:sql,column];
     sqlite3_stmt *stmt = NULL;
     result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -1740,7 +1783,7 @@
         return;
     }
     
-    NSString *sql = @"INSERT INTO download_resource (title,icon,host,download_url,download_uuid,status,download_process,watch_process,firstPath,allPath,type,update_time,create_time,use_info) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO download_resource (title,icon,host,download_url,download_uuid,status,download_process,watch_process,firstPath,allPath,type,update_time,create_time,use_info,protect,audioUrl) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     sqlite3_stmt *statement;
     
@@ -1770,7 +1813,10 @@
             sqlite3_bind_text(statement, 14,NULL, -1,NULL);
 
         }
-
+        
+        int protect = resource.protect ?1:0;
+        sqlite3_bind_int(statement, 15, protect);
+        sqlite3_bind_text(statement, 16, resource.audioUrl !=NULL? [resource.audioUrl UTF8String]:NULL,-1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -2192,6 +2238,11 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
+        
+        int protect = sqlite3_column_int(stmt, 16);
+        resource.protect = protect == 1? true:false;
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+
         [scriptList addObject:resource];
     }
     sqlite3_finalize(stmt);
@@ -2261,6 +2312,10 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
+        int protect = sqlite3_column_int(stmt, 16);
+        resource.protect = protect == 1? true:false;
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+
         [scriptList addObject:resource];
     }
     sqlite3_finalize(stmt);
@@ -2379,6 +2434,9 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
+        int protect = sqlite3_column_int(stmt, 16);
+        resource.protect = protect == 1? true:false;
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
         [scriptList addObject:resource];
     }
     sqlite3_finalize(stmt);
@@ -2553,6 +2611,75 @@
         sqlite3_finalize(stmt);
     }
     sqlite3_close(sqliteHandle);
+}
+
+- (NSArray *)selectAllUnDownloadComplete {
+    NSMutableArray *scriptList = [NSMutableArray array];
+    
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        return scriptList;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"SELECT * FROM download_resource where status != 2 order by create_time desc";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return scriptList;
+        
+    }
+    
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    while(sqlite3_step(stmt) == SQLITE_ROW) {
+        
+        DownloadResource *resource = [[DownloadResource alloc] init];
+        
+        
+        //第几列字段是从0开始
+        resource.title = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 1)== NULL?"":(const char *)sqlite3_column_text(stmt, 1)];
+        resource.icon = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 2)== NULL?"":(const char *)sqlite3_column_text(stmt, 2)];
+        resource.host = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3) == NULL?"":(const char *)sqlite3_column_text(stmt, 3)];
+        resource.downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 4)== NULL?"":(const char *)sqlite3_column_text(stmt, 4)];
+        resource.downloadUuid =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 5)== NULL?"":(const char *)sqlite3_column_text(stmt, 5)];
+        resource.status = sqlite3_column_int(stmt, 6);;
+        resource.downloadProcess = sqlite3_column_double(stmt, 7);;
+        resource.watchProcess = sqlite3_column_int(stmt, 8);
+        resource.videoDuration = sqlite3_column_int(stmt, 9);
+        resource.firstPath =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 10)== NULL?"":(const char *)sqlite3_column_text(stmt, 10)];
+        resource.allPath =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 11)== NULL?"":(const char *)sqlite3_column_text(stmt, 11)];
+        resource.type =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 12)== NULL?"":(const char *)sqlite3_column_text(stmt, 12)];
+        resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
+        resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
+        resource.sort = sqlite3_column_int(stmt, 15);
+        int protect = sqlite3_column_int(stmt, 16);
+        resource.protect = protect == 1? true:false;
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+        [scriptList addObject:resource];
+    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+    
+    return scriptList;
 }
 
 

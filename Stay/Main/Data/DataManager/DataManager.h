@@ -79,5 +79,5 @@
 
 - (void)deleteVideoByuuidPath:(NSString *)uuid;
 
-
+- (NSArray *)selectAllUnDownloadComplete;
 @end

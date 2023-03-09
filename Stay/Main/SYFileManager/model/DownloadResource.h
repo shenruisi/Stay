@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *createTime;
 @property(nonatomic, assign) NSInteger sort;
 @property (nonatomic, copy) NSDictionary *useInfo;
+@property (nonatomic, assign) BOOL protect;
+@property (nonatomic, copy) NSString *audioUrl;
+
 
 @end
 
