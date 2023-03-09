@@ -25,8 +25,8 @@
 
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 //static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
-//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
-static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
 static API *instance = nil;
 + (instancetype)shared{
  static dispatch_once_t onceToken;
