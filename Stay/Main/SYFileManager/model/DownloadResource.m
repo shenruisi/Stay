@@ -28,6 +28,8 @@
     copyed.createTime = [self.createTime copy];
     copyed.sort = self.sort;
     copyed.useInfo = [self.useInfo copy];
+    copyed.audioUrl = [self.audioUrl copy];
+    copyed.protect = self.protect;
     return copyed;
 }
 
