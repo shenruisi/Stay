@@ -87,11 +87,56 @@
 
 @end
 
+@interface NormalState : NSObject
+
+@property (nonatomic, assign) int mode; // 0:no range
+@property (nonatomic, assign) int status; // 0:start 1: video downloaded 2: audio downloaded 3: convert to mp4 success
+@property (nonatomic, strong) NSString *videoUrl;
+@property (nonatomic, strong) NSString *videoType;
+@property (nonatomic, strong) NSString *audioUrl;
+@property (nonatomic, strong) NSString *audioType;
+@end
+
+@implementation NormalState
+
+- (nullable instancetype)initWithTaskPath:(NSString *)taskPath {
+    NSString *content = [NSString stringWithContentsOfFile:[taskPath stringByAppendingPathComponent:@"NormalState"] encoding:NSUTF8StringEncoding error:nil];
+    if (content.length == 0) {
+        content = [NSString stringWithContentsOfFile:[taskPath stringByAppendingPathComponent:@"NormalState_bak"] encoding:NSUTF8StringEncoding error:nil];
+    }
+    if (content.length > 0) {
+        if (self = [super init]){
+            NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
+            self.mode = lines[0].intValue;
+            self.status = lines[1].intValue;
+            self.videoUrl = lines[2];
+            self.videoType = lines[3];
+            self.audioUrl = lines[4];
+            self.audioType = lines[5];
+            return self;
+        }
+    }
+    
+    return nil;
+}
+
+- (void)saveToPath:(NSString *)taskPath {
+    NSString *content = [NSString stringWithFormat:@"%d\n%d\n%@\n%@\n%@\n%@",
+                         _mode, _status, _videoUrl, _videoType == nil ? @"mp4" : _videoType, _audioUrl == nil ? @"" : _audioUrl, _audioType == nil ? @"m4a" : _audioType];
+    NSString *filePath = [taskPath stringByAppendingPathComponent:@"NormalState"];
+    [NSFileManager.defaultManager moveItemAtPath:filePath toPath:[filePath stringByAppendingString:@"_bak"] error:nil];
+    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+}
+
+@end
+
 
 @interface Task()
 
 @property (nonatomic, assign) BOOL isM3U8;
 @property (nonatomic, strong) M3U8State *m3u8State;
+@property (nonatomic, assign) BOOL isNormal;
+@property (nonatomic, strong) NormalState *normalState;
 @property (nonatomic, strong) NSMutableArray<TaskSessionState *> *sessionStates;
 @property (nonatomic, assign) NSTimeInterval lastTimestamp;
 @property (nonatomic, assign) int64_t bytesWritten;
@@ -116,8 +161,8 @@
 
 @interface DownloadManager()<AVAssetDownloadDelegate, NSURLSessionDownloadDelegate> {
     dispatch_queue_t _dataQueue;
-    dispatch_queue_t _m3u8StateQueue;
-    dispatch_queue_t _m3u8TranscodeQueue;
+    dispatch_queue_t _stateQueue;
+    dispatch_queue_t _transcodeQueue;
     NSInteger _m3u8Concurrency;
 }
 
@@ -143,8 +188,8 @@ static DownloadManager *instance = nil;
 - (instancetype)init {
     if (self = [super init]){
         _dataQueue = dispatch_queue_create([@"downloader.session.data.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
-        _m3u8StateQueue = dispatch_queue_create([@"downloader.m3u8.state.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
-        _m3u8TranscodeQueue = dispatch_queue_create([@"downloader.m3u8.transcode.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
+        _stateQueue = dispatch_queue_create([@"downloader.task.state.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
+        _transcodeQueue = dispatch_queue_create([@"downloader.task.transcode.queue" UTF8String], DISPATCH_QUEUE_SERIAL);
         _m3u8Concurrency = [[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency];
     }
     
@@ -199,25 +244,37 @@ static DownloadManager *instance = nil;
             if (data != nil) {
                 sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
             }
-            if (sessionTask == nil) {
-                sessionTask = [self.downloadSession downloadTaskWithRequest:[request.url getRequest]];
+            if (sessionTask != nil) {
+                sessionTask.priority = 1.0;
+                @synchronized (self.sessionDict) {
+                    self.sessionDict[sessionTask] = task;
+                }
+                TaskSessionState *sessionState = [[TaskSessionState alloc] init];
+                sessionState.sessionTask = sessionTask;
+                task.sessionStates = [NSMutableArray arrayWithObject:sessionState];
+                task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
+                task.bytesWritten = 0;
+                [sessionTask resume];
+                task.status = DMStatusDownloading;
+            } else {
+                task.isNormal = YES;
+                NSString *taskPath = [self.dataPath stringByAppendingPathComponent:taskId];
+                if (![[NSFileManager defaultManager] fileExistsAtPath:taskPath]) {
+                    [NSFileManager.defaultManager createDirectoryAtPath:taskPath withIntermediateDirectories:YES attributes:nil error:nil];
+                    [self startNormalTask:task withRequest:request];
+                } else {
+                    NormalState *normalState = [[NormalState alloc] initWithTaskPath:taskPath];
+                    if (normalState == nil) {
+                        [self startNormalTask:task withRequest:request];
+                    } else {
+                        task.normalState = normalState;
+                        task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
+                        task.bytesWritten = 0;
+                        [self resumeM3U8Task:task];
+                    }
+                }
             }
             [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
-        }
-        if (sessionTask != nil) {
-            sessionTask.priority = 1.0;
-            @synchronized (self.sessionDict) {
-                self.sessionDict[sessionTask] = task;
-            }
-            TaskSessionState *sessionState = [[TaskSessionState alloc] init];
-            sessionState.sessionTask = sessionTask;
-            task.sessionStates = [NSMutableArray arrayWithObject:sessionState];
-            task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
-            task.bytesWritten = 0;
-            [sessionTask resume];
-            task.status = DMStatusDownloading;
-        } else {
-            
         }
         
         @synchronized (self.taskDict) {
@@ -225,6 +282,7 @@ static DownloadManager *instance = nil;
         }
     } else {
         if (task.status == DMStatusPaused) {
+            NSString *dirPath = (task.isM3U8 || task.isNormal) ? [self.dataPath stringByAppendingPathComponent:task.taskId] : self.dataPath;
             for (TaskSessionState *sessionState in task.sessionStates) {
                 if (sessionState.sessionTask != nil) {
                     @synchronized (self.sessionDict) {
@@ -235,7 +293,7 @@ static DownloadManager *instance = nil;
                 if (sessionState.data != nil) {
                     sessionTask = [self.downloadSession downloadTaskWithResumeData:sessionState.data];
                     sessionState.data = nil;
-                    [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+                    [NSFileManager.defaultManager removeItemAtPath:[dirPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 }
                 if (sessionTask == nil) {
                     sessionTask = [self.downloadSession downloadTaskWithRequest:[sessionState.sessionTask.originalRequest.URL getRequest]];
@@ -253,6 +311,8 @@ static DownloadManager *instance = nil;
             task.bytesWritten = 0;
             if (task.isM3U8) {
                 [self resumeM3U8Task:task];
+            } else if (task.isNormal) {
+                [self resumNormalTask:task];
             }
             task.status = DMStatusDownloading;
         }
@@ -476,7 +536,9 @@ static DownloadManager *instance = nil;
             }
         }
     }
-    [task.m3u8State saveToPath:[self.dataPath stringByAppendingPathComponent:task.taskId]];
+    dispatch_async(self->_stateQueue, ^{
+        [task.m3u8State saveToPath:[self.dataPath stringByAppendingPathComponent:task.taskId]];
+    });
 }
 
 - (void)addTsSession:(NSString *)tsURL withTaskPath:(NSString *)taskPath andTask:(Task *)task {
@@ -508,7 +570,7 @@ static DownloadManager *instance = nil;
     if (task.block != nil) {
         task.block(0, @"", DMStatusTranscoding);
     }
-    dispatch_async(self->_m3u8TranscodeQueue, ^{
+    dispatch_async(self->_transcodeQueue, ^{
         [self combineM3U8Ts:task];
         [self convertM3U8ToMP4:task];
     });
@@ -519,28 +581,6 @@ static DownloadManager *instance = nil;
         return;
     }
     
-//    NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-//    NSString *content = @"";
-//    for (NSString *tsURL in task.m3u8State.tsURLs) {
-//        content = [content stringByAppendingFormat:@"file '%@'\n", [taskPath stringByAppendingPathComponent:tsURL]];
-//    }
-//    NSString *filePath = [taskPath stringByAppendingPathComponent:@"allts.txt"];
-//    NSError *err;
-//    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
-//    if (err != nil) {
-//        if (task.block != nil) {
-//            task.block(0, @"", DMStatusFailedNoSpace);
-//        }
-//        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-////        @synchronized (self.taskDict) {
-////            [self.taskDict removeObjectForKey:task.taskId];
-////        }
-//        return;
-//    }
-//    task.m3u8State.status = 2;
-//    [task.m3u8State saveToPath:taskPath];
-    
-//    NSLog(@"FFmpeg : start");
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     NSString *filePath = [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"];
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
@@ -553,9 +593,6 @@ static DownloadManager *instance = nil;
                 task.block(0, @"", DMStatusFailedNoSpace);
             }
             [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-//                @synchronized (self.taskDict) {
-//                    [self.taskDict removeObjectForKey:task.taskId];
-//                }
             [fileHandle closeAndReturnError:&err];
             return;
         }
@@ -576,13 +613,6 @@ static DownloadManager *instance = nil;
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
     FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:task.m3u8State.mediaType == 1 ? @"combined.mp4" : @"combined.ts"], task.filePath]];
-//    FFmpegSession* session = [FFmpegKit execute:[NSString stringWithFormat:@"-f concat -safe 0 -i '%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:@"allts.txt"], task.filePath]];
-    
-//    NSLog(@"FFmpeg : cost %ldms", [session getDuration]);
-//    NSArray *logs = [session getLogs];
-//    for (Log *log in logs) {
-//        NSLog(@"FFmpeg : %@", [log getMessage]);
-//    }
     
     ReturnCode *returnCode = [session getReturnCode];
 //    NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
@@ -605,10 +635,47 @@ static DownloadManager *instance = nil;
             task.block(0, @"", DMStatusFailedTranscode);
         }
         [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
-//            @synchronized (self.taskDict) {
-//                [self.taskDict removeObjectForKey:task.taskId];
-//            }
     }
+}
+
+- (void)startNormalTask:(Task *)task withRequest:(Request *)request {
+    NormalState *normalState = [[NormalState alloc] init];
+    normalState.videoUrl = request.url;
+    normalState.videoType = [request.url containsString:@"webm"] ? @"webm" : @"mp4";
+    normalState.audioUrl = request.audioUrl;
+    if (request.audioUrl.length > 0) {
+        normalState.audioType = [request.audioUrl containsString:@"webm"] ? @"webm" : @"mp4";
+    }
+    task.normalState = normalState;
+    task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
+    task.bytesWritten = 0;
+    [self resumNormalTask:task];
+}
+
+- (void)resumNormalTask:(Task *)task {
+    if (task.sessionStates == nil) {
+        task.sessionStates = [NSMutableArray array];
+    }
+    int status = task.normalState.status;
+    if (status == 2) {
+        
+    } else if (status == 1) {
+        
+    } else {
+        if (task.sessionStates.count > 0) {
+            return;
+        }
+        @synchronized (task.sessionStates) {
+            NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+            [self addTsSession:task.normalState.videoUrl withTaskPath:taskPath andTask:task];
+            if (task.normalState.audioUrl.length > 0) {
+                [self addTsSession:task.normalState.audioUrl withTaskPath:taskPath andTask:task];
+            }
+        }
+    }
+    dispatch_async(self->_stateQueue, ^{
+        [task.normalState saveToPath:[self.dataPath stringByAppendingPathComponent:task.taskId]];
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
