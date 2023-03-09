@@ -3204,7 +3204,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         let siteListDisabled = setting["siteListDisabled"];
                         let domain = request.domain;
                         let enabled = request.enabled;
-                        
+                        // console.log("addListener--DARKMODE_SETTING--",request, setting);
                         if(enabled){
                             if(siteListDisabled.includes(domain)){
                                 siteListDisabled.splice(siteListDisabled.indexOf(domain), 1);

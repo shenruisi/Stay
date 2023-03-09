@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "watch": "vue-cli-service build --watch --mode && cp -r Resources/popup/ ../Stay-Mac' 'Extension/Resources/popup",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build production && cp -r Resources/popup/ ../Stay-Mac' 'Extension/Resources/popup",
-    "lint": "vue-cli-service lint",
-    "cp": "cp -r Resources/popup/ ../Stay-Mac' 'Extension/Resources/popup"
+    "watch:iphone": "vue-cli-service build development --watch --mode iphone",
+    "watch:mac": "vue-cli-service build development --watch --mode mac",
+    "build:iphone": "vue-cli-service build production --mode iphone",
+    "build:mac": "vue-cli-service build production --mode mac",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "babel-plugin-dynamic-import-node": "^2.3.3",

@@ -3,16 +3,19 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const { defineConfig } = require('@vue/cli-service');
 // const CompressionWebpackPlugin = require('compression-webpack-plugin');
+console.log('process.env.NODE_ENV-------',process.env.NODE_ENV)
+console.log('process.env.VUE_APP_INFO-------',process.env.VUE_APP_INFO)
+console.log('process.env.BASE_URL-------',process.env.BASE_URL)
 
 // 复制文件到指定目录
 const copyFiles = [
   {
     from: path.resolve('src/assets/images/popup-download-dark.png'),
-    to: path.resolve('Resources/popup/img')
+    to: path.resolve(process.env.BASE_URL+'/img')
   },
   {
     from: path.resolve('src/assets/images/popup-download-light.png'),
-    to: path.resolve('Resources/popup/img')
+    to: path.resolve(process.env.BASE_URL + '/img')
   }
 ];
 
@@ -55,7 +58,7 @@ chromeName.forEach(name => {
 module.exports = defineConfig({
   pages,
   publicPath: './',
-  outputDir:'Resources/popup',
+  outputDir: process.env.BASE_URL,
   productionSourceMap: false,
   runtimeCompiler: false,
   filenameHashing: false,

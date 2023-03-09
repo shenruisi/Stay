@@ -44,7 +44,7 @@
         <span class="mail-to" @click="contactClick">{{t('contact_us')}}</span>
       </div>
     </div>
-    <div class="long-press-switch"  >
+    <div class="long-press-switch"  v-if="isMobile">
       <div class="switch-text">{{  t('longpress') }}</div>
       <div class="switch" :class="longPressStatusRes=='on'?'switch-on':'switch-off'" @click="longPressSwitchClick">{{ longPressSwitch }}</div>
     </div>
@@ -53,7 +53,7 @@
 
 <script>
 import { reactive, getCurrentInstance, inject, toRefs, watch } from 'vue'
-import { getDomain, getHostname, getFilenameByUrl, getLevel2domain, getFiletypeByUrl } from '../utils/util'
+import { getDomain, getHostname, getFilenameByUrl, getLevel2domain, getFiletypeByUrl, isMobile } from '../utils/util'
 import { useI18n } from 'vue-i18n';
 import store from '../store';
 export default {
@@ -77,7 +77,8 @@ export default {
         // }
       ],
       longPressSwitch: props.longPressStatus == 'on' ? t('switch_on') : t('switch_off'),
-      longPressStatusRes: props.longPressStatus
+      longPressStatusRes: props.longPressStatus,
+      isMobile: isMobile()
     });
 
     watch(

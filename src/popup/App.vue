@@ -1,5 +1,5 @@
 <template>
-  <div class="stay-popup-warpper">
+  <div class="stay-popup-warpper" :class="isMobile?'mobile':'mac'">
     <!-- <div class="hide-temp"></div> -->
     <Header>{{t(selectedTab.name)}}</Header>
     <div class="tab-content">
@@ -15,7 +15,7 @@
       </template>
       <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
     </div>
-    <TabMenu :tabId="selectedTab.id" @setTabName="setTabName"></TabMenu>
+    <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>
   </div>
 </template>
 <script>
@@ -28,6 +28,7 @@ import ConsolePusher from '../components/ConsolePusher.vue';
 import UpgradePro from '../components/UpgradePro.vue';
 import MatchedScript from '../components/MatchedScript.vue';
 import { useI18n } from 'vue-i18n';
+import { isMobile } from '../utils/util'
 
 
 export default {
@@ -48,7 +49,7 @@ export default {
     const store = global.store;
     const localLan = store.state.localeLan;
     locale.value = store.state.localeLan;
-    // console.log('localLan====', localLan, store.state.selectedTab);
+    console.log('localLan====', localLan, store.state.selectedTab);
     // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
       selectedTab: store.state.selectedTab,
@@ -58,6 +59,7 @@ export default {
       darkmodeToggleStatus: store.state.darkmodeToggleStatus,
       siteEnabled: store.state.siteEnabled,
       longPressStatus: store.state.longPressStatus,
+      isMobile: isMobile()
     })
     
     const setTabName = (selectedTab) => {
@@ -70,7 +72,7 @@ export default {
       const operate = request.operate;
       if('background' === from){
         if (operate == 'giveDarkmodeConfig'){
-          // console.log('giveDarkmodeConfig==res==', request);
+          console.log('giveDarkmodeConfig==res==', request);
           state.isStayPro = request.isStayAround=='a'?true:false;
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
@@ -83,12 +85,13 @@ export default {
     });
 
     const fetchStayProConfig = () => {
+      console.log('fetchStayProConfig----start-----');
       global.browser.tabs.getSelected(null, (tab) => {
-        // console.log('fetchStayProConfig----tab-----', tab);
+        console.log('fetchStayProConfig----tab-----', tab);
         state.browserUrl = tab.url;
-        // console.log('state.browserUrl----tab-----', state.browserUrl);
+        console.log('state.browserUrl----tab-----', state.browserUrl);
         store.commit('setBrowserUrl', tab.url);
-        // console.log('store.state.browserUrl====',store.state.browserUrl);
+        console.log('store.state.browserUrl====',store.state.browserUrl);
       })
       global.browser.runtime.sendMessage({ type: 'popup', operate: 'FETCH_DARKMODE_CONFIG'}, (response) => {})
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'getLongPressStatus'}, (response) => {
@@ -119,7 +122,12 @@ export default {
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  padding-bottom: 52px;
+  &.mac{
+    padding-bottom: 60px;
+  }
+  &.iphone{
+    padding-bottom: 52px;
+  }
   .hide-temp{
     height: 38px;
     width: 100%;
@@ -141,7 +149,12 @@ export default {
 }
 @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
   .stay-popup-warpper{
-    padding-bottom: 80px;
+    &.mac{
+      padding-bottom: 60px;
+    }
+    &.iphone{
+      padding-bottom: 80px;
+    }
     // padding-bottom: calc(52px + env(safe-area-inset-bottom));
     // margin-bottom: constant(safe-area-inset-bottom);
     // margin-bottom: env(safe-area-inset-bottom);  
