@@ -270,7 +270,7 @@ static DownloadManager *instance = nil;
                         task.normalState = normalState;
                         task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
                         task.bytesWritten = 0;
-                        [self resumeM3U8Task:task];
+                        [self resumNormalTask:task];
                     }
                 }
             }
@@ -679,7 +679,7 @@ static DownloadManager *instance = nil;
         task.block(0, @"", DMStatusTranscoding);
     }
     dispatch_async(self->_transcodeQueue, ^{
-        
+        [self convertNormalToMP4:task];
     });
 }
 
@@ -690,9 +690,9 @@ static DownloadManager *instance = nil;
     
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
-    NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c copy '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
+    NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c:v mpeg4 -c:a aac '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
     if (task.normalState.audioUrl.length > 0) {
-        command = [NSString stringWithFormat:@"-i '%@.%@' -i '%@.%@' -c copy '%@'",
+        command = [NSString stringWithFormat:@"-i '%@.%@' -i '%@.%@' -c:v mpeg4 -c:a aac '%@'",
                    [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType,
                    [taskPath stringByAppendingPathComponent:[task.normalState.audioUrl md5]], task.normalState.audioType,
                    task.filePath];
@@ -701,6 +701,27 @@ static DownloadManager *instance = nil;
 }
 
 - (void)ffmpegExecute:(NSString *)command forTask:(Task *)task {
+    __block double duration = 0;
+    [FFmpegKitConfig enableLogCallback:^(Log *log) {
+        if (duration == 0) {
+            if ([log.getMessage rangeOfString:@"\\d{2,}:\\d\\d:\\d\\d" options:NSRegularExpressionSearch].length > 0) {
+                NSArray<NSString *> *times = [log.getMessage componentsSeparatedByString:@":"];
+                duration = times[0].doubleValue * 3600 + times[1].doubleValue * 60 + times[2].doubleValue;
+            }
+        }
+        NSLog(@"ffmpeg log: %@", log.getMessage);
+    }];
+    [FFmpegKitConfig enableStatisticsCallback:^(Statistics *statistics) {
+        if (duration > 0) {
+            if (task.block != nil) {
+                int remain = (duration - statistics.getTime / 1000.0) * (statistics.getTime / 1000.0 / statistics.getSpeed);
+                if (remain > 0) {
+                    task.block(0, [self timeFormatted:remain], DMStatusTranscoding);
+                }
+            }
+        }
+        NSLog(@"ffmpeg stat: %d", statistics.getTime);
+    }];
     FFmpegSession* session = [FFmpegKit execute:command];
     
     ReturnCode *returnCode = [session getReturnCode];
@@ -722,6 +743,18 @@ static DownloadManager *instance = nil;
             task.block(0, @"", DMStatusFailedTranscode);
         }
         [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
+    }
+}
+
+- (NSString *)timeFormatted:(int)totalSeconds {
+    int seconds = totalSeconds % 60;
+    int minutes = (totalSeconds / 60) % 60;
+    int hours = totalSeconds / 3600;
+
+    if(hours == 0) {
+        return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+    } else {
+        return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
     }
 }
 
