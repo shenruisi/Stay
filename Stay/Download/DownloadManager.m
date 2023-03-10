@@ -709,18 +709,19 @@ static DownloadManager *instance = nil;
                 duration = times[0].doubleValue * 3600 + times[1].doubleValue * 60 + times[2].doubleValue;
             }
         }
-        NSLog(@"ffmpeg log: %@", log.getMessage);
+//        NSLog(@"ffmpeg log: %@", log.getMessage);
     }];
     [FFmpegKitConfig enableStatisticsCallback:^(Statistics *statistics) {
         if (duration > 0) {
-            if (task.block != nil) {
-                int remain = (duration - statistics.getTime / 1000.0) * (statistics.getTime / 1000.0 / statistics.getSpeed);
+            if (task.block != nil && statistics.getTime > 0) {
+                int remain = (duration - statistics.getTime / 1000.0) / statistics.getSpeed;
+//                NSLog(@"ffmpeg remain: %d", remain);
                 if (remain > 0) {
                     task.block(0, [self timeFormatted:remain], DMStatusTranscoding);
                 }
             }
         }
-        NSLog(@"ffmpeg stat: %d", statistics.getTime);
+//        NSLog(@"ffmpeg stat: %d", statistics.getTime);
     }];
     FFmpegSession* session = [FFmpegKit execute:command];
     
