@@ -1103,9 +1103,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("fetchYoutubeDecodeFun" === request.operate){
             let path = request.pathUuid;
             let location = request.pathUrl;
+            // console.log('fetchYoutubeDecodeFun----path=',path, ",location=",location)
             browser.runtime.sendNativeMessage("application.id", { type: "yt_element", path, location}, function (response) {
-                console.log('fetchYoutubeDecodeFun----', response)
-                sendResponse({ body: response.body })
+                // console.log('fetchYoutubeDecodeFun----', response)
+                let decodeFunStr = '';
+                if(response && response.body && response.body.code){
+                    decodeFunStr = response.body.code;
+                }
+                sendResponse({ decodeFun: decodeFunStr })
             });
         }
         return true;

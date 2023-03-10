@@ -24,7 +24,7 @@ const browser = __b;
     let scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
-    let injectJSContent = `\n\nlet handleVideoInfo = ${injectParseVideoJS}\n\nhandleVideoInfo(false);`;
+    let injectJSContent = `\n\n ${injectParseVideoJS}\n\ninjectParseVideoJS(false);`;
     scriptTag.appendChild(document.createTextNode(injectJSContent));
     // console.log('document.body--------------------------',document.body)
     if (document.body) {
@@ -45,14 +45,20 @@ const browser = __b;
     }
   }
 
+  function handleInjectParseVideoJS(isContent){
 
-  function injectParseVideoJS(isContent){
+    // handleInjectParseVideoJS(isContent);
+  }
+
+
+  async function injectParseVideoJS(isContent){
     let isStayAround = '';
     let longPressStatus = '';
     let hostUrl = window.location.href;
-    let decodeSignatureCipher = ''; 
+    let playerBase = '';
     let host = window.location.host;
-    // console.log('------------injectParseVideoJS-----start------------------')
+    let decodeSignatureCipher = ''; 
+    // console.log('------------injectParseVideoJS-----start------------------',decodeSignatureCipher)
     let videoList = [];
     // 获取到的videoId 集合
     let videoIdSet = new Set();
@@ -477,9 +483,6 @@ const browser = __b;
         return true;
       }
 
-
-
-
       return true;
 
     }
@@ -695,7 +698,7 @@ const browser = __b;
 
     function startFindVideoInfo(completed){
       observerVideo();
-      // console.log('---------------startFindVideoInfo---------------')
+      console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
       // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
@@ -718,13 +721,14 @@ const browser = __b;
     }
 
     function afterCompleteQueryVideo(){
+      let flag = false;
       for(let i=1; i<10; i++){
         let timer
         (function(i){
           timer = setTimeout(()=>{
             videoDoms = document.querySelectorAll('video');  
             // console.log('startFindVideoInfo------i-----',i, new Date().getTime());
-            let flag = videoDoms && videoDoms.length;
+            flag = videoDoms && videoDoms.length;
             if(flag){
               parseVideoNodeList(videoDoms);
               // console.log('startFindVideoInfo---iiiiiii---break-----');
@@ -735,6 +739,9 @@ const browser = __b;
             }
           },i*200);
         })(i)
+        if(flag){
+          break;
+        }
         timerArr.push(timer);
       }
     }
@@ -782,8 +789,8 @@ const browser = __b;
       if(videoDoms && videoDoms.length){
         let videoCount = videoDoms.length
         let nullCount = 0;
-        let videoNodeList = Array.from(videoDoms)
-        videoNodeList.forEach(async item => {
+        let videoNodeList = Array.from(videoDoms);
+        videoNodeList.forEach((item) => {
           if(!item || !(item instanceof HTMLElement)){
             nullCount++;
             return;
@@ -812,16 +819,13 @@ const browser = __b;
             return;
           }
           // todo fetch other scenarios
-          let videoInfo = await handleVideoInfoParse(item, videoDom, videoUuid);
+          let videoInfo = handleVideoInfoParse(item, videoDom, videoUuid);
           // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
           if(!videoInfo.downloadUrl){
             nullCount++;
             return;
           }
           // console.log('parseVideoNodeList------videoList---------',videoList)
-          // 已存在
-          // videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid
-          // console.log('parseVideoNodeList------videoList--2222-------',videoList)
         })
         if(nullCount == videoCount){
           setTimeoutParseVideoInfoByWindow();
@@ -832,12 +836,6 @@ const browser = __b;
       }
       // console.log('parseVideoNodeList-----------result---------',videoList);
       // window.webkit.messageHandlers.stayapp.postMessage(videoList);
-      window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
-      if(isContent){
-        // console.log('isContent----------------------');
-        let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
-        browser.runtime.sendMessage(message, (response) => {});
-      }
     }
 
     /**
@@ -883,6 +881,14 @@ const browser = __b;
         // console.log('checkVideoExist----------',videoInfo, videoIdSet);
         videoList.push(videoInfo);
       }
+      
+      if(isContent){
+        // console.log('isContent----------------------');
+        let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
+        browser.runtime.sendMessage(message, (response) => {});
+      }else{
+        window.postMessage({name: 'VIDEO_INFO_CAPTURE', videoList: videoList});
+      }
     }
 
     
@@ -894,9 +900,9 @@ const browser = __b;
      * @returns 
      */
     async function addLongPress(videoDom, posDom, videoInfo){
-      console.log('----addLongPress-----start------');
+      // console.log('----addLongPress-----start------');
       if(!posDom){
-        console.log('----posDomposDomposDomposDomposDom-----null',posDom);
+        // console.log('----posDomposDomposDomposDomposDom-----null',posDom);
         return;
       }
       if(!Utils.isMobile()){
@@ -922,7 +928,7 @@ const browser = __b;
       }
 
       
-      console.log('addLongPress-------------',videoDom, posDom, videoInfo)
+      // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
       let stayLongPress = posDom.getAttribute('stay-long-press');
       if(stayLongPress && stayLongPress == 'yes'){
         // console.log('addLongPress already bind stay long press------1------');
@@ -1137,7 +1143,7 @@ const browser = __b;
           let qualityItem = '';
           countH = 0
           qualityList.forEach(item=>{
-            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: ''}];
+            list = [{title:videoInfo.title, downloadUrl: item.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: '', protect:item.protect?item.protect:false, audioUrl: item.audioUrl?item.audioUrl:''}];
             downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
             qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}</div>`
             countH = countH + 1;
@@ -1485,6 +1491,27 @@ const browser = __b;
       return canvas;
     }
     
+    /**
+     * decodeURIComponent(sourceUrl)+"&sig="+Gta(decodeURIComponent(signature))
+     * @param {string} decodeSignatureCipherFunStr 
+     * @param {String} signatureCipher 
+     * @returns 
+     */
+    function decodeYoutubeSourceUrl(decodeSignatureCipherFunStr, signatureCipher){
+      if(!decodeSignatureCipherFunStr || !signatureCipher){
+        console.log('decodeSignatureCipherFunStr------decodeSignatureCipherFunStr or signatureCipher is null',decodeSignatureCipherFunStr, signatureCipher)
+        return '';
+      }
+      // console.log('decodeYoutubeSourceUrl---------',decodeSignatureCipherFunStr);
+      const decodeSignatureCipherFun = new Function('return '+decodeSignatureCipherFunStr); 
+      // eval(`(${decodeSignatureCipherFunStr})`);
+      let sourceUrl = Utils.queryParams(signatureCipher, 'url');
+      let signature = Utils.queryParams(signatureCipher, 's');
+      console.log('decodeYoutubeSourceUrl------------sourceUrl=',sourceUrl, signature);
+      signature = decodeSignatureCipherFun()(decodeURIComponent(signature));
+      sourceUrl = `${decodeURIComponent(sourceUrl)}&sig=${signature}`;
+      return sourceUrl;
+    }
     
     /**
      * 获取页面上video标签获取视频信息
@@ -1493,7 +1520,7 @@ const browser = __b;
      * qualityList[{downloadUrl,qualityLabel, quality, audioUrl（音频url）, protect(视频是否受保护, true/false) }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb
      */
-    async function handleVideoInfoParse(videoSnifferDom, videoDom, videoUuid){
+    function handleVideoInfoParse(videoSnifferDom, videoDom, videoUuid){
       let videoInfo = {};
       let poster = videoSnifferDom.getAttribute('poster');
       let title = videoSnifferDom.getAttribute('title');
@@ -1524,7 +1551,7 @@ const browser = __b;
         if(playerDom){
           longPressDom = playerDom;
         }
-        videoInfo = await handleYoutubeVideoInfo(videoSnifferDom);
+        videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
       }
       else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoSnifferDom);
@@ -1624,7 +1651,6 @@ const browser = __b;
       if(downloadUrl){
         checkVideoExist(videoDom, longPressDom, videoInfo) 
       }
-
       return videoInfo;
     }
 
@@ -1661,8 +1687,6 @@ const browser = __b;
         return;
       }
       checkVideoExist(null, posDom, videoInfo);
-      // console.log('parseVideoInfoByWindow------', videoInfo)
-      return videoInfo;
     }
 
     function handleBilibiliVideoInfo(videoDom){
@@ -2173,45 +2197,11 @@ const browser = __b;
     }
 
     /**
-     * 
-     * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
-     * @param {String} pathUrl    base.js的路径/s/player/7862ca1f/player_ias.vflset/zh_CN/base.js
-     * @returns 
-     */
-    function fetchYoutubeDecodeFun(pathUuid, pathUrl){
-      console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
-      return new Promise((resolve, reject) => {
-        if(isContent){
-          console.log('fetchYoutubeDecodeFun-----true');
-          browser.runtime.sendMessage({from: 'sniffer', operate: 'fetchYoutubeDecodeFun', pathUuid: pathUuid, pathUrl}, (response) => {
-            console.log('fetchYoutubeDecodeFun---------',response)
-            let decodeFun = response&&response.decodeFun?response.decodeFun:'';
-            resolve(decodeFun);
-          });
-        }else{
-          console.log('fetchYoutubeDecodeFun-----false');
-          const pid = Math.random().toString(36).substring(2, 9);
-          const callback = e => {
-            if (e.data.pid !== pid || e.data.name !== 'GET_YOUTUBE_DECODE_FUN_RESP') return;
-            console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
-            resolve(e.data.decodeFun);
-            window.removeEventListener('message', callback);
-          };
-          window.postMessage({ id: pid, pid: pid, name: 'GET_YOUTUBE_DECODE_FUN', pathUuid, pathUrl });
-          window.addEventListener('message', callback);
-        }
-      })
-    }
-
-    
-
-
-    /**
      * 解析Youtube视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
      */
-    async function handleYoutubeVideoInfo(videoSnifferDom){
-
+    function handleYoutubeVideoInfo(videoSnifferDom){
+      const ytplayer = window.ytplayer;
       const videoId = Utils.queryURLParams(hostUrl, 'v');
       // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
       let videoInfo = {};
@@ -2219,31 +2209,13 @@ const browser = __b;
       videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
       let title = videoSnifferDom.getAttribute('title');
       videoInfo.title = title;
-      const ytplayer = window.ytplayer;
+      
       const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
       // console.log('playerResp-------', playerResp);
       if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
         // console.log('hello- - - - - - -   playerResp   ----');
-        let jsPath = ytplayer.bootstrapWebPlayerContextConfig ? ytplayer.bootstrapWebPlayerContextConfig.jsUrl : '';
-        if(!decodeSignatureCipher){
-          let pathUuid = jsPath;
-          try {
-            let pathArr = jsPath.split('/');
-            if(jsPath.startsWith('/')){
-              pathUuid = pathArr[3]
-            }else{
-              pathUuid = pathArr[2]
-            }
-          } catch (error) {
-            
-          }
-          
+        // console.log('decodeSignatureCipher========',decodeSignatureCipher);
 
-          let decodeSignatureCipherFunStr = await fetchYoutubeDecodeFun(pathUuid, jsPath);
-          if(decodeSignatureCipherFunStr){
-            decodeSignatureCipher = eval(`(${decodeSignatureCipherFunStr})`);
-          }
-        }
         const videoDetails = playerResp.videoDetails;
         let detailTitle = videoDetails.title?videoDetails.title:'';
         videoInfo['title'] = detailTitle;
@@ -2266,7 +2238,6 @@ const browser = __b;
         const streamingData = playerResp.streamingData;
         const adaptiveFormats = streamingData.adaptiveFormats;
         const formats = streamingData.formats;
-        const qualityFormatsList = formats;
         title = title ? title : '';
         // 取画质的时候防止原视频有广告
         if(adaptiveFormats && adaptiveFormats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
@@ -2275,37 +2246,38 @@ const browser = __b;
           let qualityList = []
           let qualitySet = new Set();
           // 获取mp4音频
-          let mp4AudioArr = adaptiveFormats.filter(item=>{
-            if(item.mimeType.indexOf('audio/mp4')>-1){
-              return item;
-            }
-          })
-          let mp4AudioUrl = '';
-          if(mp4AudioArr && mp4AudioArr.length){
-            let audioSignatureCipher = mp4AudioArr.sort(Utils.compare('bitrate')).pop();
-            mp4AudioUrl = decodeSignatureCipher?decodeSignatureCipher(audioSignatureCipher):'';
-          }
-          // 获取mp4格式
-          adaptiveFormats.forEach(item=>{
-            let mimeType = item.mimeType;
-            if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
-              qualitySet.add(item.quality)
-              qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality})
-            }
-            // 解密
-            if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-              let videoUrl = decodeSignatureCipher?decodeSignatureCipher(item.signatureCipher):'';
-              let audioUrl;
-              let protect=true;
-              // 没有匹配到带音频的视频，需要加上audioUrl
-              if(!mimeType.match(/.*codecs=.*mp4.*/g)){
-                audioUrl = mp4AudioUrl;
-
-              }
-              qualitySet.add(item.quality);
-              qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
-            }
-          });
+          // let mp4AudioArr = adaptiveFormats.filter(item=>{
+          //   if(item.mimeType.indexOf('audio/mp4')>-1){
+          //     return item;
+          //   }
+          // })
+          // let mp4AudioUrl = '';
+          // if(mp4AudioArr && mp4AudioArr.length){
+          //   let audioItem= mp4AudioArr.sort(Utils.compare('bitrate')).pop();
+          //   // console.log('audioItem--------',audioItem)
+          //   mp4AudioUrl = decodeYoutubeSourceUrl(decodeSignatureCipher, audioItem.signatureCipher);
+          // }
+          // // 获取mp4格式
+          // adaptiveFormats.forEach(item=>{
+          //   let mimeType = item.mimeType;
+          //   if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
+          //     qualitySet.add(item.quality)
+          //     qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality})
+          //   }
+          //   // 解密
+          //   if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
+          //     let videoUrl = decodeYoutubeSourceUrl(decodeSignatureCipher, item.signatureCipher);
+          //     let audioUrl;
+          //     let protect=true;
+          //     // 没有匹配到带音频的视频，需要加上audioUrl
+          //     if(!mimeType.match(/.*codecs=.*mp4.*/g)){
+          //       audioUrl = mp4AudioUrl;
+          //     }
+          //     console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+          //     qualitySet.add(item.quality);
+          //     qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
+          //   }
+          // });
           // 获取webm格式
           let webmAudioArr = adaptiveFormats.filter(item=>{
             if(item.mimeType.indexOf('audio/webm')>-1){
@@ -2314,8 +2286,8 @@ const browser = __b;
           })
           let webmAudioUrl = '';
           if(webmAudioArr && webmAudioArr.length){
-            let audioSignatureCipher = webmAudioArr.sort(Utils.compare('bitrate')).pop();
-            webmAudioUrl = decodeSignatureCipher?decodeSignatureCipher(audioSignatureCipher):'';
+            let audioItem = webmAudioArr.sort(Utils.compare('bitrate')).pop();
+            webmAudioUrl = decodeYoutubeSourceUrl(decodeSignatureCipher, audioItem.signatureCipher);
           }
           adaptiveFormats.forEach(item=>{
             let mimeType = item.mimeType;
@@ -2325,7 +2297,7 @@ const browser = __b;
             }
             // 解密
             if(mimeType.indexOf('video/webm')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-              let videoUrl = decodeSignatureCipher?decodeSignatureCipher(item.signatureCipher):'';
+              let videoUrl = decodeYoutubeSourceUrl(decodeSignatureCipher, item.signatureCipher);
               let audioUrl;
               let protect=true;
               // 没有匹配到带音频的视频，需要加上audioUrl
@@ -2333,10 +2305,12 @@ const browser = __b;
                 audioUrl = webmAudioUrl;
 
               }
+              console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
               qualitySet.add(item.quality);
               qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
             }
           });
+          console.log('qualityList===================',qualityList);
           if(qualityList && qualityList.length){
             videoInfo['qualityList'] = qualityList;
           }
@@ -2436,15 +2410,99 @@ const browser = __b;
       return '';
     }
     
-    startFindVideoInfo(false);
+    
     document.onreadystatechange = () => {
       // console.log('document.readyState==',document.readyState)
       if (document.readyState === 'complete') {
         // console.log('readyState-------------------', document.readyState)
-        startFindVideoInfo(true);
+        startSnifferVideoInfoOnPage(true);
       }
     };
+
+    /**
+     * 
+     * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
+     * @param {String} pathUrl    base.js的路径/s/player/7862ca1f/player_ias.vflset/zh_CN/base.js
+     * @returns 
+     */
+    function fetchYoutubeDecodeFun(pathUuid, pathUrl){
+      // console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          // console.log('fetchYoutubeDecodeFun-----true');
+          browser.runtime.sendMessage({from: 'sniffer', operate: 'fetchYoutubeDecodeFun', pathUuid: pathUuid, pathUrl}, (response) => {
+            console.log('fetchYoutubeDecodeFun---------',response)
+            let decodeFun = response&&response.decodeFun?response.decodeFun:'';
+            resolve(decodeFun);
+          });
+        }else{
+          // console.log('fetchYoutubeDecodeFun-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'GET_YOUTUBE_DECODE_FUN_RESP') return;
+            // console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
+            resolve(e.data.decodeFun);
+            window.removeEventListener('message', callback);
+          };
+          window.postMessage({ id: pid, pid: pid, name: 'GET_YOUTUBE_DECODE_FUN', pathUuid, pathUrl });
+          window.addEventListener('message', callback);
+        }
+      })
+    }
+
+    function queryYoutubePlayer(complate){
+      for(let i=1; i<10; i++){
+        let timer
+        (function(i){
+          timer = setTimeout(()=>{
+            playerBase = document.querySelector('#player-base');
+            // console.log('queryYoutubePlayer------i-----',i, new Date().getTime());
+            if(playerBase && playerBase.getAttribute('src')){
+              // console.log('queryYoutubePlayer---iiiiiii---break-----');
+              let jsPath = playerBase.getAttribute('src');
+              let pathUuid = jsPath;
+              let pathArr = jsPath.split('/');
+              if(jsPath.startsWith('/')){
+                pathUuid = pathArr[3]
+              }else{
+                pathUuid = pathArr[2]
+              }
+              handleFetchYoutubePlayer(complate, pathUuid, jsPath)
+              timerArr.forEach(timerItem=>{
+                // console.log('clearTimer---------timerItem-----',timerItem);
+                clearTimeout(timerItem);
+              })
+            }
+          },i*200);
+        })(i)
+        if(playerBase && playerBase.getAttribute('src')){
+          break;
+        }
+        timerArr.push(timer);
+      }
+    }
+
+    async function handleFetchYoutubePlayer(complate, pathUuid, jsPath){
+      decodeSignatureCipher = await fetchYoutubeDecodeFun(pathUuid, jsPath);
+      // console.log('handleFetchYoutubePlayer-----11111-----111111-----',decodeSignatureCipher)
+      startFindVideoInfo(complate);
+      // console.log('handleFetchYoutubePlayer---22222--',decodeSignatureCipher);
+    }
+
     
+    
+    function startSnifferVideoInfoOnPage(complate){
+      if(host.indexOf('youtube.com')>-1 && !decodeSignatureCipher){
+        queryYoutubePlayer(complate);
+        console.log('playerBase-------',playerBase)
+      }else{
+        startFindVideoInfo(complate);
+      }
+      // startFindVideoInfo(complate);
+    }
+
+    startSnifferVideoInfoOnPage(false)
+
     /**
      * @discarded 废弃请求拦截
      */

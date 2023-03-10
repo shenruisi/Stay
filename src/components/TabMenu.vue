@@ -63,10 +63,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.mobile{
+  height: 72px;
+}
+.mac{
+  height: 60px;
+}
 .popup-fotter-wrapper{
   width: 100%;
   position: fixed;
-  
   bottom: 0;
   left: 0;
   right: 0;
@@ -75,12 +80,6 @@ export default {
   z-index: 999;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
-  &.mobile{
-    height: 72px;
-  }
-  &.mac{
-    height: 60px;
-  }
   .fotter-box{
     position: relative;
     width: 100%;

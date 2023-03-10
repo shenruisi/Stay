@@ -31,7 +31,7 @@
               <div class="selected-text" >{{item.selectedQualityText}}</div>
               <select class="select-container" :ref="`quality_${index}`" v-model="item.selectedQuality" @change="changeSelectQuality(index, $event)">
                 <!-- {downloadUrl, qualityLabel, quality } -->
-                <option v-for="(o, i) in item.qualityList" :key="i" :name="o.qualityLabel" :value="o.downloadUrl">{{o.qualityLabel}}</option>
+                <option v-for="(o, i) in item.qualityList" :key="i" :name="o.qualityLabel" :qualityIndex="i" :value="o.downloadUrl">{{o.qualityLabel}}</option>
               </select>
             </div>
           </template>
@@ -169,14 +169,14 @@ export default {
       if(item.selectedQuality){
         item.downloadUrl = item.selectedQuality;
       }
-      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: item.selectedFolder}];
+      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: item.selectedFolder, audioUrl: item.audioUrl?item.audioUrl:'', protect: item.protect?item.protect:false }];
+      console.log(list);
       let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-      // window.open(downloadUrl);
       global.openUrlInSafariPopup(downloadUrl);
     }
     const changeSelectFolder = (index, event) => {
       const selectOpt = event.target;
-      console.log(selectOpt);
+      // console.log(selectOpt);
       state.videoList.forEach((item, i)=>{
         if(index == i){
           item.selectedFolder = selectOpt.value;
@@ -190,8 +190,14 @@ export default {
       console.log(selectOpt, selectOpt.value, selectOpt.selectedIndex, selectOpt.options);
       state.videoList.forEach((item, i)=>{
         if(index == i){
+          let qualityList = item.qualityList;
+          console.log('item.qualityList-------',qualityList)
           item.selectedQuality = selectOpt.value;
-          item.selectedQualityText = selectOpt.options[selectOpt.selectedIndex].text;
+          let qualityIndex = selectOpt.selectedIndex;
+          item.selectedQualityIndex = qualityIndex;
+          item.audioUrl = qualityList[qualityIndex].audioUrl;
+          item.protect = qualityList[qualityIndex].protect;
+          item.selectedQualityText = selectOpt.options[qualityIndex].text;
         }
       })
     }

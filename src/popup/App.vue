@@ -1,5 +1,5 @@
 <template>
-  <div class="stay-popup-warpper" :class="isMobile?'mobile':'mac'">
+  <div class="stay-popup-warpper" :class="isMobile?'mobile-bottom':'mac-bottom'">
     <!-- <div class="hide-temp"></div> -->
     <Header>{{t(selectedTab.name)}}</Header>
     <div class="tab-content">
@@ -114,6 +114,12 @@ export default {
 </script>
 <style lang="less">
 @import "../assets/css/common.less";
+.mac-bottom{
+  padding-bottom: 60px;
+}
+.mobile-bottom{
+  padding-bottom: 52px;
+}
 .stay-popup-warpper{
   width: 100%;
   // height: 100%;
@@ -122,12 +128,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  &.mac{
-    padding-bottom: 60px;
-  }
-  &.iphone{
-    padding-bottom: 52px;
-  }
+  
   .hide-temp{
     height: 38px;
     width: 100%;
@@ -149,15 +150,16 @@ export default {
 }
 @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
   .stay-popup-warpper{
-    &.mac{
-      padding-bottom: 60px;
-    }
-    &.iphone{
-      padding-bottom: 80px;
-    }
+   
     // padding-bottom: calc(52px + env(safe-area-inset-bottom));
     // margin-bottom: constant(safe-area-inset-bottom);
     // margin-bottom: env(safe-area-inset-bottom);  
 	}
+  .mac-bottom{
+    padding-bottom: 60px;
+  }
+  .mobile-bottom{
+    padding-bottom: 80px;
+  }
 }
 </style>
