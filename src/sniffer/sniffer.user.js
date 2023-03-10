@@ -24,7 +24,7 @@ const browser = __b;
     let scriptTag = document.createElement('script');
     scriptTag.type = 'text/javascript';
     scriptTag.id = 'stay_inject_parse_video_js_'+contentHost;
-    let injectJSContent = `\n\n ${injectParseVideoJS}\n\ninjectParseVideoJS(false);`;
+    let injectJSContent = `\n\nconst handleInjectParseVideoJS = ${injectParseVideoJS}\n\nhandleInjectParseVideoJS(false);`;
     scriptTag.appendChild(document.createTextNode(injectJSContent));
     // console.log('document.body--------------------------',document.body)
     if (document.body) {
@@ -51,7 +51,7 @@ const browser = __b;
   }
 
 
-  async function injectParseVideoJS(isContent){
+  function injectParseVideoJS(isContent){
     let isStayAround = '';
     let longPressStatus = '';
     let hostUrl = window.location.href;
