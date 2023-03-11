@@ -2366,81 +2366,81 @@ const browser = __b;
           
 
           // 获取mp4音频
-          let mp4AudioArr = adaptiveFormats.filter(item=>{
-            if(item.mimeType.indexOf('audio/mp4')>-1){
-              return item;
-            }
-          })
-          let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
-          // 获取mp4格式
-          adaptiveFormats.forEach(item=>{
-            let mimeType = item.mimeType;
-            if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
-              qualitySet.add(item.quality)
-              let audioUrl = '';
-              if(!mimeType.match(/.*codecs=.*webm.*/g)){
-                audioUrl = mp4AudioUrl;
-              }
-              if(!Utils.isURL(audioUrl)){
-                videoInfo.shouldDecode = true;
-              }
-              qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
-            }
-            // 解密
-            if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-              let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
-              let audioUrl = '';
-              let protect=true;
-              // 没有匹配到带音频的视频，需要加上audioUrl
-              if(!mimeType.match(/.*codecs=.*mp4.*/g)){
-                audioUrl = mp4AudioUrl;
-              }
-              if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
-                videoInfo.shouldDecode = true;
-              }
-              console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
-              qualitySet.add(item.quality);
-              qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
-            }
-          });
-          // 获取webm格式
-          // let webmAudioArr = adaptiveFormats.filter(item=>{
-          //   if(item.mimeType.indexOf('audio/webm')>-1){
+          // let mp4AudioArr = adaptiveFormats.filter(item=>{
+          //   if(item.mimeType.indexOf('audio/mp4')>-1){
           //     return item;
           //   }
           // })
-          // let webmAudioUrl = getYoutubeAudioUrlOrSignture(webmAudioArr);
+          // let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
+          // // 获取mp4格式
           // adaptiveFormats.forEach(item=>{
           //   let mimeType = item.mimeType;
-          //   if(mimeType.indexOf('video/webm')>-1 && item.url && !qualitySet.has(item.quality)){
+          //   if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
           //     qualitySet.add(item.quality)
           //     let audioUrl = '';
           //     if(!mimeType.match(/.*codecs=.*webm.*/g)){
-          //       audioUrl = webmAudioUrl;
+          //       audioUrl = mp4AudioUrl;
           //     }
-          //     if(audioUrl && !Utils.isURL(audioUrl)){
+          //     if(!Utils.isURL(audioUrl)){
           //       videoInfo.shouldDecode = true;
           //     }
           //     qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
-
           //   }
           //   // 解密
-          //   if(mimeType.indexOf('video/webm')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
+          //   if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
           //     let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
           //     let audioUrl = '';
           //     let protect=true;
           //     // 没有匹配到带音频的视频，需要加上audioUrl
-          //     if(!mimeType.match(/.*codecs=.*webm.*/g)){
-          //       audioUrl = webmAudioUrl;
+          //     if(!mimeType.match(/.*codecs=.*mp4.*/g)){
+          //       audioUrl = mp4AudioUrl;
           //     }
           //     if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
           //       videoInfo.shouldDecode = true;
           //     }
-          //     console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+          //     console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
           //     qualitySet.add(item.quality);
           //     qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
           //   }
           // });
+          // 获取webm格式
+          let webmAudioArr = adaptiveFormats.filter(item=>{
+            if(item.mimeType.indexOf('audio/webm')>-1){
+              return item;
+            }
+          })
+          let webmAudioUrl = getYoutubeAudioUrlOrSignture(webmAudioArr);
+          adaptiveFormats.forEach(item=>{
+            let mimeType = item.mimeType;
+            if(mimeType.indexOf('video/webm')>-1 && item.url && !qualitySet.has(item.quality)){
+              qualitySet.add(item.quality)
+              let audioUrl = '';
+              if(!mimeType.match(/.*codecs=.*webm.*/g)){
+                audioUrl = webmAudioUrl;
+              }
+              if(audioUrl && !Utils.isURL(audioUrl)){
+                videoInfo.shouldDecode = true;
+              }
+              qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
+
+            }
+            // 解密
+            if(mimeType.indexOf('video/webm')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
+              let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
+              let audioUrl = '';
+              let protect=true;
+              // 没有匹配到带音频的视频，需要加上audioUrl
+              if(!mimeType.match(/.*codecs=.*webm.*/g)){
+                audioUrl = webmAudioUrl;
+              }
+              if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
+                videoInfo.shouldDecode = true;
+              }
+              console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+              qualitySet.add(item.quality);
+              qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
+            }
+          });
           console.log('qualityList===================',qualityList);
           if(qualityList && qualityList.length){
             videoInfo['qualityList'] = qualityList;
