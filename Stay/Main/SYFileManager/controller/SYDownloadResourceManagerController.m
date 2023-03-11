@@ -96,6 +96,7 @@
         request.fileName = [cell.downloadResource.allPath lastPathComponent];
         request.fileType = @"video";
         request.key =  cell.downloadResource.firstPath;
+        request.audioUrl = cell.downloadResource.audioUrl;
         Task *task =  [[DownloadManager shared]  enqueue:request];
         
         resource.downloadProcess = task.progress * 100;

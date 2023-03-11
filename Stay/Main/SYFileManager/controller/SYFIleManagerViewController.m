@@ -459,6 +459,7 @@ UIDocumentPickerDelegate
             request.fileDir = tab.path;
             request.fileName = [cell.downloadResource.allPath lastPathComponent];
             request.fileType = @"video";
+            request.audioUrl = cell.downloadResource.audioUrl;
             request.key =  cell.downloadResource.firstPath;
             Task *task =  [[DownloadManager shared]  enqueue:request];
             
@@ -539,6 +540,7 @@ UIDocumentPickerDelegate
                 request.fileDir = tab.path;
                 request.fileName = [cell.downloadResource.allPath lastPathComponent];
                 request.fileType = @"video";
+                request.audioUrl = cell.downloadResource.audioUrl;
                 request.key =  cell.downloadResource.firstPath;
                 Task *task =  [[DownloadManager shared]  enqueue:request];
                 
