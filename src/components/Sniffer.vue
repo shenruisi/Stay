@@ -134,11 +134,13 @@ export default {
                   if(item.downloadUrl == quality.downloadUrl){
                     item.selectedQuality = quality.downloadUrl;
                     item.selectedQualityText = quality.qualityLabel;
+                    item.audioUrl = quality.audioUrl;
                   }
                 })
                 if(!item.selectedQuality){
                   item.selectedQuality = item.qualityList[0].downloadUrl;
                   item.selectedQualityText = item.qualityList[0].qualityLabel;
+                  item.audioUrl = item.qualityList[0].audioUrl;
                 }
               }
             });
@@ -169,7 +171,7 @@ export default {
       if(item.selectedQuality){
         item.downloadUrl = item.selectedQuality;
       }
-      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: item.selectedFolder, audioUrl: item.audioUrl?item.audioUrl:'', protect: item.protect?item.protect:false }];
+      let list = [{title:item.title, downloadUrl: item.downloadUrl, poster: item.poster, hostUrl: getHostname(item.hostUrl), uuid: item.selectedFolder, audioUrl: item.audioUrl?item.audioUrl:'', protect: item.protect?item.protect:false, qualityLabel: item.selectedQualityText }];
       console.log(list);
       let downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
       global.openUrlInSafariPopup(downloadUrl);
