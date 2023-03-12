@@ -142,6 +142,10 @@
                 resource.status = 1;
             } else if(status == DMStatusTranscoding) {
                 [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
+                cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:",NSLocalizedString(@"LeftTime","")];
+                [cell.downloadRateLabel sizeToFit];
+                cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                cell.downloadSpeedLabel.text = speed;
                 resource.status = 4;
             } else if(status == DMStatusFailedTranscode) {
                 [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
