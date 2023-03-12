@@ -268,7 +268,14 @@
 
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 4) {
+            _downloadSpeedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
+            _downloadSpeedLabel.font = FCStyle.footnote;
+            _downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
+            _downloadSpeedLabel.left = _downloadRateLabel.right + 10;
+            _downloadSpeedLabel.textColor = FCStyle.titleGrayColor;
             _downloadRateLabel.text = NSLocalizedString(@"Transcoding","");
+            [self.contentView addSubview:_downloadSpeedLabel];
+            
         } else if (_downloadResource.status == 5) {
             UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             retryLabel.tintColor = FCStyle.accent;
