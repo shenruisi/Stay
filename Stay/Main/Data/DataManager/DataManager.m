@@ -1889,6 +1889,9 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
+        int protect = sqlite3_column_int(stmt, 17);
+        resource.protect = protect == 1? true:false;
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         [scriptList addObject:resource];
     }
     sqlite3_finalize(stmt);
@@ -1958,6 +1961,9 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
+        int protect = sqlite3_column_int(stmt, 17);
+        resource.protect = protect == 1? true:false;
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
     }
     sqlite3_finalize(stmt);
     sqlite3_close(sqliteHandle);
@@ -2239,9 +2245,9 @@
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
         
-        int protect = sqlite3_column_int(stmt, 16);
+        int protect = sqlite3_column_int(stmt, 17);
         resource.protect = protect == 1? true:false;
-        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
 
         [scriptList addObject:resource];
     }
@@ -2312,9 +2318,9 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
-        int protect = sqlite3_column_int(stmt, 16);
+        int protect = sqlite3_column_int(stmt, 17);
         resource.protect = protect == 1? true:false;
-        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
 
         [scriptList addObject:resource];
     }
@@ -2434,9 +2440,9 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
-        int protect = sqlite3_column_int(stmt, 16);
+        int protect = sqlite3_column_int(stmt, 17);
         resource.protect = protect == 1? true:false;
-        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         [scriptList addObject:resource];
     }
     sqlite3_finalize(stmt);
@@ -2671,9 +2677,9 @@
         resource.updateTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 13)];
         resource.createTime = [NSString stringWithFormat:@"%f", sqlite3_column_double(stmt, 14)];
         resource.sort = sqlite3_column_int(stmt, 15);
-        int protect = sqlite3_column_int(stmt, 16);
+        int protect = sqlite3_column_int(stmt, 17);
         resource.protect = protect == 1? true:false;
-        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 17)];
+        resource.audioUrl =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 17)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         [scriptList addObject:resource];
     }
     sqlite3_finalize(stmt);
