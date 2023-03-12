@@ -520,6 +520,8 @@
                 resource.downloadUrl = downLoadUrl;
                 resource.icon = item[@"poster"];
                 resource.host = item[@"hostUrl"];
+                resource.audioUrl = item[@"audioUrl"];
+                resource.protect = item[@"protect"];
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
                 }
@@ -536,7 +538,7 @@
                     request.url = downLoadUrl;
                     request.fileDir = tab.path;
                     request.fileType = @"video";
-                    request.audioUrl = oldResource.audioUrl;
+                    request.audioUrl = resource.audioUrl;
                     request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
                     if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
                         request.fileName = [request.fileName stringByAppendingString:@".mp4"];
