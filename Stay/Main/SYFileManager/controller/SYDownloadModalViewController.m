@@ -303,6 +303,7 @@
         request.url = downLoadUrl;
         request.fileDir = tab.path;
         request.fileType = @"video";
+        request.audioUrl = self.dic[@"audioUrl"];
         request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
         if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
             request.fileName = [request.fileName stringByAppendingString:@".mp4"];
