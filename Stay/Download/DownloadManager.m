@@ -801,6 +801,9 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil) {
         task.bytesWritten += bytesWritten;
+        if (task.isNormal && task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
+            return;
+        }
         if (task.block != nil) {
             task.progress = task.isM3U8 ? task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount : totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
             NSString *speed = @"";
