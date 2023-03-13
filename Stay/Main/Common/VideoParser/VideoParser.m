@@ -7,6 +7,7 @@
 
 #import "VideoParser.h"
 #import "FCApp.h"
+#import "API.h"
 
 @interface VideoParser()<
  WKNavigationDelegate,
@@ -49,6 +50,7 @@ static VideoParser *_kVideoParser;
         
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
+        [wkUController addScriptMessageHandler:self name:@"youtube"];
         
         WKUserScript *viewportScript = [[WKUserScript alloc] initWithSource:@"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'); document.head.appendChild(meta);" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
             WKUserContentController *userContentController = [[WKUserContentController alloc] init];
@@ -100,14 +102,25 @@ static VideoParser *_kVideoParser;
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
     NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
     NSLog(@"headers %@ %ld",[response allHeaderFields],response.statusCode);
-//    [webView evaluateJavaScript:<#(nonnull NSString *)#> completionHandler:<#^(id _Nullable, NSError * _Nullable error)completionHandler#>]
     decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-    if (self.completionBlock){
-        NSLog(@"userContentController %@",message.body);
-        self.completionBlock(message.body);
+    if ([message.name isEqualToString:@"stayapp"]){
+        if (self.completionBlock){
+            NSLog(@"userContentController %@",message.body);
+            self.completionBlock(message.body);
+        }
+    }
+    else if ([message.name isEqualToString:@"youtube"]){
+        NSDictionary *response = [[API shared] downloadYoutube:message.body];
+        if (response.count > 0){
+            NSString *jsonString = [[NSString alloc] initWithData:
+                                    [NSJSONSerialization dataWithJSONObject:response options:0 error:nil]
+                                                         encoding:NSUTF8StringEncoding];
+            
+            [self.webView evaluateJavaScript:[NSString stringWithFormat:@"callback(%@)",jsonString] completionHandler:nil];
+        }
     }
 }
 

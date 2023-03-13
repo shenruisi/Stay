@@ -12,6 +12,10 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#import "RC4.h"
+
+uint8_t randomc[] = {0x6d, 0x54, 0x33, 0x1f, 0x35, 0x1a, 0x58, 0x31, 0x3e, 0x6b, 0x71, 0x4a, 0x11, 0x30, 0x79, 0x6f};
+#define SWAP_UINT8(a, b) do { uint8_t t = a; a = b; b = t; } while (0)
 
 @interface API(){
     NSString *_deviceType;
@@ -19,15 +23,19 @@
     NSString *_osVersion;
     NSString *_appVersion;
 }
+
+@property (nonatomic, strong) NSMutableDictionary<NSString *, id> *youtubeCodeCache;
+@property (nonatomic, strong) NSData *randomcData;
 @end
 
 @implementation API
 
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 //static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
-static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
-//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
 static API *instance = nil;
+
 + (instancetype)shared{
  static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -56,6 +64,8 @@ static API *instance = nil;
                       [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion,
                       [[NSProcessInfo processInfo] operatingSystemVersion].minorVersion];
         _appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    
+        self.randomcData = [NSData dataWithBytes:randomc length:16];
     }
     return self;
 }
@@ -118,6 +128,10 @@ static API *instance = nil;
 }
 
 - (NSDictionary *)downloadYoutube:(NSString *)path{
+    if ([self.youtubeCodeCache objectForKey:path]){
+//        return [self.youtubeCodeCache objectForKey:path];
+    }
+    
     NSString *reqUrl = [NSString stringWithFormat:@"%@download/youtube",STAY_FORK_END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
@@ -131,8 +145,9 @@ static API *instance = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:param
                                                    options:NSJSONWritingPrettyPrinted
                                                      error:nil];
-    
-    [request setHTTPBody:data];
+    RC4 *rc4Encrypt = [[RC4 alloc] initWithKey:self.randomcData];
+    RC4 *rc4Decrypt = [[RC4 alloc] initWithKey:self.randomcData];;
+    [request setHTTPBody:[rc4Encrypt encrypt:data]];
     __block NSDictionary *ret;
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     [[[NSURLSession sharedSession] dataTaskWithRequest:request
@@ -141,13 +156,24 @@ static API *instance = nil;
                                         NSError *error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         if (nil == error && [httpResponse statusCode] == 200){
-            ret = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+            data = [rc4Decrypt decrypt:data];
+            NSError *error = nil;
+            ret = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            [self.youtubeCodeCache setObject:ret forKey:path];
         }
         dispatch_semaphore_signal(sem);
     
     }] resume];
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     return ret;
+}
+
+- (NSMutableDictionary<NSString *,id> *)youtubeCodeCache{
+    if (nil == _youtubeCodeCache){
+        _youtubeCodeCache = [[NSMutableDictionary alloc] init];
+    }
+    
+    return _youtubeCodeCache;
 }
 
 - (NSString *)queryDeviceType {
