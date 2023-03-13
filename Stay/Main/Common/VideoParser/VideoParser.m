@@ -115,11 +115,17 @@ static VideoParser *_kVideoParser;
     else if ([message.name isEqualToString:@"youtube"]){
         NSDictionary *response = [[API shared] downloadYoutube:message.body];
         if (response.count > 0){
-            NSString *jsonString = [[NSString alloc] initWithData:
-                                    [NSJSONSerialization dataWithJSONObject:response options:0 error:nil]
-                                                         encoding:NSUTF8StringEncoding];
+            NSString *code;
+            if ((code = response[@"biz"][@"code"]) != nil){
+                NSString *jsonString = [[NSString alloc] initWithData:
+                                        [NSJSONSerialization dataWithJSONObject:@{
+                                            @"code" : code
+                                        } options:0 error:nil]
+                                                             encoding:NSUTF8StringEncoding];
+                [self.webView evaluateJavaScript:[NSString stringWithFormat:@"callback(%@)",jsonString] completionHandler:nil];
+            }
             
-            [self.webView evaluateJavaScript:[NSString stringWithFormat:@"callback(%@)",jsonString] completionHandler:nil];
+            
         }
     }
 }
