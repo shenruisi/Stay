@@ -1304,7 +1304,7 @@
    */
   function fetchYoutubeDecodeFun(pathUuid, pathUrl){
     console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
-    window.webkit.messageHandlers.stayapp.postMessage(pathUuid);
+    window.webkit.messageHandlers.youtube.postMessage(pathUuid);
   }
 
   async function startFetchYoutubeFunStr(){
