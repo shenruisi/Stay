@@ -359,6 +359,7 @@
    * 对videoList中qualityList的signature进行解密
    */
   function handleDecodeYoutubeSignatureAndPush(decodeYoutubeFunStr){
+    window.webkit.messageHandlers.stayapp.postMessage('handleDecodeYoutubeSignatureAndPush---------------start');
     if(decodeYoutubeFunStr){
       decodeFunStr = decodeYoutubeFunStr;
     }
@@ -1303,6 +1304,7 @@
    * @returns 
    */
   function fetchYoutubeDecodeFun(pathUuid, pathUrl){
+    ytBaseJSCode = pathUuid;
     console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
     window.webkit.messageHandlers.youtube.postMessage(pathUuid);
   }
