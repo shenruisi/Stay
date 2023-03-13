@@ -587,9 +587,15 @@ UIDocumentPickerDelegate
                         resource.status = 1;
                     } else if(status == DMStatusTranscoding) {
                         [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
-                        cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
-                        cell.downloadSpeedLabel.text = speed;
+                        dispatch_async(dispatch_get_main_queue(),^{
+        //                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                            cell.downloadSpeedLabel.text = speed;
+                            cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                        });
                         resource.status = 4;
+                        if(speed != nil && speed.length > 0) {
+                            return;
+                        }
                     } else if(status == DMStatusFailedTranscode) {
                         [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
                         resource.status = 5;
