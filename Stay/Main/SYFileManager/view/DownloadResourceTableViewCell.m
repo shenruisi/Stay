@@ -195,13 +195,8 @@
     
         if(_downloadResource.status == 0) {
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
-            
-            
-            _downloadSpeedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
-            _downloadSpeedLabel.font = FCStyle.footnote;
-            _downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
-            _downloadSpeedLabel.left = _downloadRateLabel.right + 10;
-            _downloadSpeedLabel.textColor = FCStyle.titleGrayColor;
+            self.downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
+            self.downloadSpeedLabel.left = _downloadRateLabel.right + 10;
             [self.contentView addSubview:_downloadSpeedLabel];
             
             
@@ -268,14 +263,11 @@
 
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 4) {
-            _downloadSpeedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
-            _downloadSpeedLabel.font = FCStyle.footnote;
-            _downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
-            _downloadSpeedLabel.left = _downloadRateLabel.right + 10;
-            _downloadSpeedLabel.textColor = FCStyle.titleGrayColor;
+
             _downloadRateLabel.text = NSLocalizedString(@"Transcoding","");
-            [self.contentView addSubview:_downloadSpeedLabel];
-            
+            [_downloadRateLabel sizeToFit];
+            self.downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
+            self.downloadSpeedLabel.left = _downloadRateLabel.right + 10;
         } else if (_downloadResource.status == 5) {
             UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             retryLabel.tintColor = FCStyle.accent;
@@ -355,7 +347,15 @@
     
 }
 
-
+- (UILabel *)downloadSpeedLabel {
+    if(_downloadSpeedLabel == nil) {
+        _downloadSpeedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 16)];
+        _downloadSpeedLabel.font = FCStyle.footnote;
+        _downloadSpeedLabel.textColor = FCStyle.titleGrayColor;
+        [self.contentView addSubview:_downloadSpeedLabel];
+    }
+    return _downloadSpeedLabel;
+}
 
 
 @end

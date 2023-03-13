@@ -142,9 +142,15 @@
                 resource.status = 1;
             } else if(status == DMStatusTranscoding) {
                 [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
-                cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
-                cell.downloadSpeedLabel.text = speed;
+                dispatch_async(dispatch_get_main_queue(),^{
+//                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                    cell.downloadSpeedLabel.text = speed;
+                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                });
                 resource.status = 4;
+                if(speed != nil && speed.length > 0) {
+                    return;
+                }
             } else if(status == DMStatusFailedTranscode) {
                 [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
                 resource.status = 5;
@@ -374,7 +380,6 @@
 - (void)reloadData {
     dispatch_async(dispatch_get_main_queue(),^{
         [self.array removeAllObjects];
-        [self.array addObjectsFromArray:[[DataManager shareManager] selectUnDownloadComplete:self.pathUuid]];
         [self.array addObjectsFromArray:[[DataManager shareManager] selectDownloadComplete:self.pathUuid]];
         [self.tableView reloadData];
     });
