@@ -1159,6 +1159,8 @@ function fetchRandomStr(randomStr){
         // 获取mp4格式
         adaptiveFormats.forEach(item=>{
           let mimeType = item.mimeType;
+          let qualityLabel = item.qualityLabel;
+          qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
           if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
             qualitySet.add(item.quality)
             let audioUrl = '';
@@ -1168,7 +1170,7 @@ function fetchRandomStr(randomStr){
             if(!Utils.isURL(audioUrl)){
               videoInfo.shouldDecode = true;
             }
-            qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
+            qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl})
           }
           // 解密
           if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
@@ -1184,7 +1186,7 @@ function fetchRandomStr(randomStr){
             }
             // console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
             qualitySet.add(item.quality);
-            qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
+            qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
           }
         });
         // 获取webm格式
@@ -1196,6 +1198,8 @@ function fetchRandomStr(randomStr){
         let webmAudioUrl = getYoutubeAudioUrlOrSignture(webmAudioArr);
         adaptiveFormats.forEach(item=>{
           let mimeType = item.mimeType;
+          let qualityLabel = item.qualityLabel;
+          qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
           if(mimeType.indexOf('video/webm')>-1 && item.url && !qualitySet.has(item.quality)){
             qualitySet.add(item.quality)
             let audioUrl = '';
@@ -1205,7 +1209,7 @@ function fetchRandomStr(randomStr){
             if(audioUrl && !Utils.isURL(audioUrl)){
               videoInfo.shouldDecode = true;
             }
-            qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
+            qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl})
 
           }
           // 解密
@@ -1222,7 +1226,7 @@ function fetchRandomStr(randomStr){
             }
             // console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
             qualitySet.add(item.quality);
-            qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
+            qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
           }
         });
         // console.log('qualityList===================',qualityList);

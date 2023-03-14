@@ -31,7 +31,7 @@
               <div class="selected-text" >{{item.selectedQualityText}}</div>
               <select class="select-container" :ref="`quality_${index}`" v-model="item.selectedQuality" @change="changeSelectQuality(index, $event)">
                 <!-- {downloadUrl, qualityLabel, quality } -->
-                <option v-for="(o, i) in item.qualityList" :key="i" :name="o.qualityLabel" :qualityIndex="i" :value="o.downloadUrl">{{o.qualityLabel}}</option>
+                <option v-for="(o, i) in item.qualityList" :key="i" :name="o.qualityLabel" :value="o.downloadUrl">{{o.qualityLabel}}</option>
               </select>
             </div>
           </template>
@@ -532,7 +532,7 @@ export default {
             }
           }
           .select-options.folder{
-            width: 150px;
+            width: 142px;
             padding-right: 10px;
             position: relative;
             .selected-text{
