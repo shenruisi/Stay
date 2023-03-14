@@ -25,6 +25,9 @@ function fetchRandomStr(randomStr){
   let timerArr = [];
 
   const Utils = {
+    compare: function(key){
+      return (cur, next)=>{return cur[key]-next[key]};
+    },
     isMobile: function(){
       const userAgentInfo = navigator.userAgent;
       let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
@@ -37,6 +40,13 @@ function fetchRandomStr(randomStr){
       if (!res) return '';
       if (!res[1]) return '';
       return res[1];
+    },
+    queryParams: function(path, name) {
+      if(!path){
+        return '';
+      }
+      let url = 'https;//stap.app?'+path;
+      return this.queryURLParams(url, name);
     },
     matchUrlInString: function(imgText){
       const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
@@ -250,6 +260,7 @@ function fetchRandomStr(randomStr){
           nullCount++;
           return;
         }
+        const videoDom = item;
         let videoUuid = item.getAttribute('stay-sniffing');
         if(!videoUuid){
           videoUuid = Utils.generateUuid();
@@ -266,25 +277,18 @@ function fetchRandomStr(randomStr){
             // console.log('parseVideoNodeList--------------sourceDom.downloadUrl=',downloadUrl);
           }
         }
-        // window.webkit.messageHandlers.stayapp.postMessage("videoInfo2");
         if(!downloadUrl){
           nullCount++;
           return;
         }
-        downloadUrl = Utils.completionSourceUrl(downloadUrl);
+        // console.log('parseVideoNodeList------item---------',videoUuid)
         // todo fetch other scenarios
-        let videoInfo = handleVideoInfoParse(item);
-        // window.webkit.messageHandlers.stayapp.postMessage(videoInfo);
-        videoInfo.videoUuid = videoUuid;
+        let videoInfo = handleVideoInfoParse(item, videoUuid);
         // console.log('parseVideoNodeList------videoInfo---------',videoInfo)
         if(!videoInfo.downloadUrl){
           nullCount++;
           return;
         }
-        // console.log('parseVideoNodeList------videoList---------',videoList)
-        // 已存在
-        // videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid, m3u8Content
-        checkVideoExist(videoInfo)
         // console.log('parseVideoNodeList------videoList--2222-------',videoList)
       })
       if(nullCount == videoCount){
@@ -340,13 +344,14 @@ function fetchRandomStr(randomStr){
       if(videoInfo.videoUuid){
         videoIdSet.add(videoInfo.videoUuid);
       }
-      // console.log('checkVideoExist----------',videoInfo);
+      
       videoList.push(videoInfo);
     }
     pushVideoListToTransfer();
   }
   
   function pushVideoListToTransfer(){
+    console.log('checkVideoExist----------',videoList);
     window.webkit.messageHandlers.stayapp.postMessage(videoList);
   }
 
@@ -366,24 +371,27 @@ function fetchRandomStr(randomStr){
    * 对videoList中qualityList的signature进行解密
    */
   function handleRandomFunStr(decodeYoutubeFunStr){
-    window.webkit.messageHandlers.stayapp.postMessage('handleRandomFunStr---------------start');
+    // window.webkit.messageHandlers.stayapp.postMessage('handleRandomFunStr---------------start');
+    console.log('handleRandomFunStr-------------',decodeYoutubeFunStr);
     if(decodeYoutubeFunStr){
       decodeFunStr = decodeYoutubeFunStr;
     }
     if(!Object.keys(shouldDecodeQuality).length){
+      console.log('handleRandomFunStr--------is null-----',shouldDecodeQuality);
       return;
     }
     if(!checkDecodeFunIsValid()){
       return;
     }
+    console.log('handleRandomFunStr-------------',shouldDecodeQuality);
     Object.keys(shouldDecodeQuality).forEach((videoUuid, qualityList)=>{
       if(qualityList.length){
         qualityList.forEach((quality)=>{
           if(quality.downloadUrl && !Utils.isURL(quality.downloadUrl)){
-            quality.downloadUrl = decodeYoutubeSourceUrl(decodeFunStr, quality.downloadUrl);
+            quality.downloadUrl = decodeYoutubeSourceUrl(quality.downloadUrl);
           }
           if(quality.audioUrl && !Utils.isURL(quality.audioUrl)){
-            quality.audioUrl = decodeYoutubeSourceUrl(decodeFunStr, quality.audioUrl);
+            quality.audioUrl = decodeYoutubeSourceUrl(quality.audioUrl);
           }
           return quality;
         });
@@ -398,6 +406,7 @@ function fetchRandomStr(randomStr){
             return videoItem;
           }
         })
+        console.log('handleRandomFunStr--------videoList-----',videoList);
         delete shouldDecodeQuality[videoUuid];
       }
     })
@@ -457,11 +466,11 @@ function fetchRandomStr(randomStr){
      * qualityList[{downloadUrl,qualityLabel, quality }]
      * // https://www.pornhub.com/view_video.php?viewkey=ph63c4fdb2826eb
      */
-  function handleVideoInfoParse(videoDom){
+  function handleVideoInfoParse(videoSnifferDom, videoUuid){
     let videoInfo = {};
-    let poster = videoDom.getAttribute('poster');
-    let title = videoDom.getAttribute('title');
-    let downloadUrl = videoDom.getAttribute('src');
+    let poster = videoSnifferDom.getAttribute('poster');
+    let title = videoSnifferDom.getAttribute('title');
+    let downloadUrl = videoSnifferDom.getAttribute('src');
     let qualityList = [];
     hostUrl = window.location.href;
 
@@ -476,59 +485,58 @@ function fetchRandomStr(randomStr){
     }
     // console.log('handleVideoInfoParse---host---', host);
     if(host.indexOf('youtube.com')>-1){
-      const videoId = Utils.queryURLParams(hostUrl, 'v');
-      videoInfo = handleYoutubeVideoInfo(title, videoId);
+      videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('baidu.com')>-1){
-      videoInfo = handleBaiduVideoInfo(videoDom);
+      videoInfo = handleBaiduVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('bilibili.com')>-1){
-      videoInfo = handleBilibiliVideoInfo(videoDom);
+      videoInfo = handleBilibiliVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('mobile.twitter.com')>-1){
-      videoInfo = handleMobileTwitterVideoInfo(videoDom);
+      videoInfo = handleMobileTwitterVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('m.weibo.cn')>-1){
-      videoInfo = handleMobileWeiboVideoInfo(videoDom);
+      videoInfo = handleMobileWeiboVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('iesdouyin.com')>-1){
-      videoInfo = handleMobileDouyinVideoInfo(videoDom);
+      videoInfo = handleMobileDouyinVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('douyin.com')>-1){
       const pathName = window.location.pathname;
       if(pathName.indexOf('/video')>-1){
-        videoInfo = handlePCDetailDouyinVideoInfo(videoDom);
+        videoInfo = handlePCDetailDouyinVideoInfo(videoSnifferDom);
       }else{
-        videoInfo = handlePCHomeDouyinVideoInfo(videoDom);
+        videoInfo = handlePCHomeDouyinVideoInfo(videoSnifferDom);
       }
     }
     else if(host.indexOf('m.toutiao.com')>-1){
-      videoInfo = handleMobileToutiaoVideoInfo(videoDom);
+      videoInfo = handleMobileToutiaoVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('m.v.qq.com')>-1){
-      videoInfo = handleMobileTenxunVideoInfo(videoDom);
+      videoInfo = handleMobileTenxunVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('www.reddit.com')>-1){
-      videoInfo = handleRedditVideoInfo(videoDom);
+      videoInfo = handleRedditVideoInfo(videoSnifferDom);
     }
     // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
     else if(host.indexOf('pornhub.com')>-1){
-      videoInfo = handlePornhubVideoInfo(videoDom);
+      videoInfo = handlePornhubVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('facebook.com')>-1){
-      videoInfo = handleFacebookVideoInfo(videoDom);
+      videoInfo = handleFacebookVideoInfo(videoSnifferDom);
     }// https://www.instagram.com
     else if(host.indexOf('instagram.com')>-1){
-      videoInfo = handleInstagramVideoInfo(videoDom);
+      videoInfo = handleInstagramVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('xiaohongshu.com')>-1){
-      videoInfo = handleXiaohongshuVideoInfo(videoDom);
+      videoInfo = handleXiaohongshuVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('jable.tv')>-1){
-      videoInfo = handleJableVideoInfo(videoDom);
+      videoInfo = handleJableVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('hxaa79.com')>-1){
-      videoInfo = handleHxaa79VideoInfo(videoDom);
+      videoInfo = handleHxaa79VideoInfo(videoSnifferDom);
     }
 
 
@@ -552,11 +560,17 @@ function fetchRandomStr(randomStr){
       title = Utils.getUrlPathName(downloadUrl);
     }
     poster = Utils.completionSourceUrl(poster);
-    videoInfo['title'] = title
+    videoInfo['title'] = (videoInfo.type && videoInfo.type=='ad')?('Ad·'+title):title;
     videoInfo['poster'] = poster;
     videoInfo['downloadUrl'] = downloadUrl;
     videoInfo['hostUrl'] = hostUrl;
     videoInfo['qualityList'] = qualityList;
+    videoInfo['videoUuid'] = videoUuid;
+
+    // console.log('parse------videoInfo========',videoInfo);
+    if(downloadUrl){
+      checkVideoExist(videoInfo) 
+    }
     return videoInfo;
   }
 
@@ -1135,43 +1149,43 @@ function fetchRandomStr(randomStr){
           }
         }
         // 获取mp4音频
-        // let mp4AudioArr = adaptiveFormats.filter(item=>{
-        //   if(item.mimeType.indexOf('audio/mp4')>-1){
-        //     return item;
-        //   }
-        // })
-        // let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
-        // // 获取mp4格式
-        // adaptiveFormats.forEach(item=>{
-        //   let mimeType = item.mimeType;
-        //   if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
-        //     qualitySet.add(item.quality)
-        //     let audioUrl = '';
-        //     if(!mimeType.match(/.*codecs=.*webm.*/g)){
-        //       audioUrl = mp4AudioUrl;
-        //     }
-        //     if(!Utils.isURL(audioUrl)){
-        //       videoInfo.shouldDecode = true;
-        //     }
-        //     qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
-        //   }
-        //   // 解密
-        //   if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-        //     let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
-        //     let audioUrl = '';
-        //     let protect=true;
-        //     // 没有匹配到带音频的视频，需要加上audioUrl
-        //     if(!mimeType.match(/.*codecs=.*mp4.*/g)){
-        //       audioUrl = mp4AudioUrl;
-        //     }
-        //     if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
-        //       videoInfo.shouldDecode = true;
-        //     }
-        //     console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
-        //     qualitySet.add(item.quality);
-        //     qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
-        //   }
-        // });
+        let mp4AudioArr = adaptiveFormats.filter(item=>{
+          if(item.mimeType.indexOf('audio/mp4')>-1){
+            return item;
+          }
+        })
+        let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
+        // 获取mp4格式
+        adaptiveFormats.forEach(item=>{
+          let mimeType = item.mimeType;
+          if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
+            qualitySet.add(item.quality)
+            let audioUrl = '';
+            if(!mimeType.match(/.*codecs=.*webm.*/g)){
+              audioUrl = mp4AudioUrl;
+            }
+            if(!Utils.isURL(audioUrl)){
+              videoInfo.shouldDecode = true;
+            }
+            qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
+          }
+          // 解密
+          if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
+            let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
+            let audioUrl = '';
+            let protect=true;
+            // 没有匹配到带音频的视频，需要加上audioUrl
+            if(!mimeType.match(/.*codecs=.*mp4.*/g)){
+              audioUrl = mp4AudioUrl;
+            }
+            if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
+              videoInfo.shouldDecode = true;
+            }
+            // console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+            qualitySet.add(item.quality);
+            qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
+          }
+        });
         // 获取webm格式
         let webmAudioArr = adaptiveFormats.filter(item=>{
           if(item.mimeType.indexOf('audio/webm')>-1){
@@ -1205,12 +1219,12 @@ function fetchRandomStr(randomStr){
             if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
               videoInfo.shouldDecode = true;
             }
-            console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+            // console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
             qualitySet.add(item.quality);
             qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
           }
         });
-        console.log('qualityList===================',qualityList);
+        // console.log('qualityList===================',qualityList);
         if(qualityList && qualityList.length){
           videoInfo['qualityList'] = qualityList;
         }
@@ -1240,13 +1254,39 @@ function fetchRandomStr(randomStr){
       posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
     }
     videoInfo['poster'] = posterImg;
+
+    if(checkAdForYoutube(videoInfo['downloadUrl'])){
+      videoInfo['type'] = 'ad';
+    }
     return videoInfo;
+  }
+
+  function checkAdForYoutube(downloadUrl){
+    if((downloadUrl && downloadUrl.indexOf('pltype=adhost')>-1)){
+      return true;
+    }
+    const adPlayer = document.querySelector('#container .video-ads');
+    if(adPlayer && !isHidden(adPlayer)){
+      return true;
+    }
+    return false;
+  }
+
+  function isHidden(el) {
+    if(!el){
+      return true;
+    }
+    let style = window.getComputedStyle(el);//el即DOM元素
+    if(!style){
+      return false;
+    }
+    return (style.display === 'none' || style.visibility === 'hidden') 
   }
     
   /**
-     * youtube 移动端(PC)video标签
-     * @returns url
-     */
+   * youtube 移动端(PC)video标签
+   * @returns url
+   */
   function getYoutubeVideoSourceByDom(){
     let videoDom = document.querySelector('.html5-video-player .html5-video-container video');
     if(videoDom){
@@ -1295,15 +1335,6 @@ function fetchRandomStr(randomStr){
     return '';
   }
 
-  document.onreadystatechange = () => {
-    // console.log('document.readyState==',document.readyState)
-    if (document.readyState === 'complete') {
-      // console.log('readyState-------------------', document.readyState)
-      startFindVideoInfo(true);
-    }
-  };
-
-
   /**
    * 
    * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
@@ -1312,7 +1343,7 @@ function fetchRandomStr(randomStr){
    */
   function fetchYoutubeDecodeFun(pathUuid, pathUrl){
     ytBaseJSCode = pathUuid;
-    console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+    // console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
     window.webkit.messageHandlers.youtube.postMessage(pathUuid);
   }
 
@@ -1370,6 +1401,14 @@ function fetchRandomStr(randomStr){
   }
 
   startSnifferVideoInfoOnPage(false);
+
+  document.onreadystatechange = () => {
+    console.log('document.readyState==',document.readyState)
+    if (document.readyState === 'complete') {
+      // console.log('readyState-------------------', document.readyState)
+      startSnifferVideoInfoOnPage(true);
+    }
+  };
 
   /* eslint-disable */
   Object.defineProperty(randomYTObj,'randomStr',{

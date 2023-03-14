@@ -46,6 +46,7 @@ const browser = __b;
   }
 
   function injectParseVideoJS(isContent){
+    let definedObj = {};
     let isStayAround = '';
     let longPressStatus = '';
     let hostUrl = window.location.href;
@@ -53,6 +54,7 @@ const browser = __b;
     let decodeSignatureCipher = {}; 
     let playerBase = '';
     let ytBaseJSCode = '';
+    let ytRandomBaseJs = '';
     // console.log('------------injectParseVideoJS-----start------------------',decodeSignatureCipher)
     let videoList = [];
     // key:videoUuid,
@@ -916,10 +918,10 @@ const browser = __b;
         if(qualityList.length){
           qualityList.forEach((quality)=>{
             if(quality.downloadUrl && !Utils.isURL(quality.downloadUrl)){
-              quality.downloadUrl = decodeYoutubeSourceUrl(decodeSignatureCipher.decodeFunStr, quality.downloadUrl);
+              quality.downloadUrl = decodeYoutubeSourceUrl(quality.downloadUrl);
             }
             if(quality.audioUrl && !Utils.isURL(quality.audioUrl)){
-              quality.audioUrl = decodeYoutubeSourceUrl(decodeSignatureCipher.decodeFunStr, quality.audioUrl);
+              quality.audioUrl = decodeYoutubeSourceUrl(quality.audioUrl);
             }
             return quality;
           });
@@ -2361,19 +2363,7 @@ const browser = __b;
           let qualityList = []
           let qualitySet = new Set();
           let jsPath = ytplayer.bootstrapWebPlayerContextConfig?ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
-          if(jsPath){
-            let pathArr = jsPath.split('/');
-            if(jsPath.startsWith('/')){
-              ytBaseJSCode = pathArr[3]
-            }else{
-              ytBaseJSCode = pathArr[2]
-            }
-          }
-
-          if(ytBaseJSCode){
-            handleFetchYoutubePlayer(ytBaseJSCode, jsPath, false);
-          }
-          
+          handleYTRandomCode(jsPath);
 
           // 获取mp4音频
           // let mp4AudioArr = adaptiveFormats.filter(item=>{
@@ -2488,6 +2478,26 @@ const browser = __b;
       return videoInfo;
     }
 
+    function handleYTRandomCode(jsPath){
+      try {
+        if(jsPath){
+          let tempRandomCode = ''
+          ytRandomBaseJs = jsPath;
+          let pathArr = jsPath.split('/');
+          if(jsPath.startsWith('/')){
+            tempRandomCode = pathArr[3]
+          }else{
+            tempRandomCode = pathArr[2]
+          }
+          if(tempRandomCode){
+            definedObj.randomCode = tempRandomCode;
+          }
+        }
+      } catch (error) {
+        
+      }
+    }
+
     function checkAdForYoutube(downloadUrl){
       if((downloadUrl && downloadUrl.indexOf('pltype=adhost')>-1)){
         return true;
@@ -2552,14 +2562,6 @@ const browser = __b;
     }
     
     
-    document.onreadystatechange = () => {
-      // console.log('document.readyState==',document.readyState)
-      if (document.readyState === 'complete') {
-        // console.log('readyState-------------------', document.readyState)
-        startSnifferVideoInfoOnPage(true);
-      }
-    };
-
     /**
      * 
      * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
@@ -2567,7 +2569,7 @@ const browser = __b;
      * @returns 
      */
     function fetchYoutubeDecodeFun(pathUuid, pathUrl){
-      // console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+      console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
       return new Promise((resolve, reject) => {
         if(isContent){
           // console.log('fetchYoutubeDecodeFun-----true');
@@ -2581,7 +2583,7 @@ const browser = __b;
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_YOUTUBE_DECODE_FUN_RESP') return;
-            // console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
+            console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
             resolve(e.data.decodeFun);
             window.removeEventListener('message', callback);
           };
@@ -2650,6 +2652,7 @@ const browser = __b;
      */
     async function handleFetchYoutubePlayer(pathUuid, jsPath, shouldDecode){
       let decodeFunStr = await fetchYoutubeDecodeFun(pathUuid, jsPath);
+      console.log('handleFetchYoutubePlayer------',decodeFunStr)
       if(decodeFunStr){
         decodeSignatureCipher = {pathUuid, decodeFunStr};
         window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
@@ -2673,6 +2676,31 @@ const browser = __b;
 
     startSnifferVideoInfoOnPage(false);
 
+
+    document.onreadystatechange = () => {
+      // console.log('document.readyState==',document.readyState)
+      if (document.readyState === 'complete') {
+        // console.log('readyState-------------------', document.readyState)
+        startSnifferVideoInfoOnPage(true);
+      }
+    };
+
+    /* eslint-disable */
+    Object.defineProperty(definedObj,'randomCode',{
+      get:function(){
+        return randomCode;
+      },
+      set:function(newValue){
+        randomCode = newValue;
+        console.log('set randomStr:',newValue);
+        //需要触发的渲染函数可以写在这...
+        if(newValue != ytBaseJSCode){
+          ytBaseJSCode = newValue
+          handleFetchYoutubePlayer(ytBaseJSCode, ytRandomBaseJs, false);
+        }
+        
+      }
+    });
 
     /**
      * @discarded 废弃请求拦截
