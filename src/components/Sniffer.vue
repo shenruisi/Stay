@@ -540,7 +540,7 @@ export default {
             }
           }
           .quality{
-            width: 60px;
+            width: 80px;
           }
         }
       }
