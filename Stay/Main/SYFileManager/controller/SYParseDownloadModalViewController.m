@@ -28,10 +28,11 @@
 >
 
 @property (nonatomic, strong) UIImageView *checkImg;
+@property (nonatomic, strong) UIStackView *rightView;;
 @property (nonatomic, strong) UIImageView *coverImg;
 @property (nonatomic, strong) UILabel *hostLabel;
 @property (nonatomic, strong) UITextView *titleText;
-@property (nonatomic, strong) UIStackView *qualityView;;
+@property (nonatomic, strong) UIView *qualityView;;
 @property (nonatomic, strong) UILabel *linkLabel;
 @property (nonatomic, strong) UIControl *folderView;
 @property (nonatomic, strong) UIImageView *folderImg;
@@ -48,10 +49,7 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.contentView.backgroundColor = FCStyle.popup;
         
-        UIStackView *stackV = [[UIStackView alloc] init];
-        stackV.axis = UILayoutConstraintAxisVertical;
-        stackV.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.contentView addSubview:stackV];
+        UIStackView *stackV = self.rightView;
         
         UIView *topView = [[UIView alloc] init];
         [stackV addArrangedSubview:topView];
@@ -121,6 +119,7 @@
             [self.titleText.trailingAnchor constraintEqualToAnchor:topView.trailingAnchor],
             [self.titleText.topAnchor constraintEqualToAnchor:self.hostLabel.bottomAnchor constant:3],
             [self.titleText.bottomAnchor constraintEqualToAnchor:topView.bottomAnchor],
+            [self.qualityView.widthAnchor constraintEqualToAnchor:stackV.widthAnchor],
             [self.qualityView.heightAnchor constraintEqualToConstant:25],
             [copyBtn.trailingAnchor constraintEqualToAnchor:stackV.trailingAnchor constant:-6],
             [copyBtn.topAnchor constraintEqualToAnchor:downloadLabel.topAnchor constant:-5],
@@ -182,31 +181,53 @@
     for (UIView *subView in self.qualityView.subviews) {
         [subView removeFromSuperview];
     }
+    
+    CGFloat maxWidth = MIN(FCApp.keyWindow.frame.size.width - 30, 360) - 40 - 15 + 15;
+    CGFloat curWidth = 0, top = 0, itemWidth;
     for (int i = 0; i < qualityList.count; i++) {
         NSDictionary *dic = qualityList[i];
+        NSString *qualityLabel = dic[@"qualityLabel"];
         UIButton *btn = [[UIButton alloc] init];
         btn.layer.cornerRadius = 8;
         btn.clipsToBounds = YES;
         btn.layer.borderWidth = 0.5;
-        if ([dic[@"qualityLabel"] isEqualToString:selectedQuality]) {
+        if ([qualityLabel isEqualToString:selectedQuality]) {
             btn.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
             btn.layer.borderColor = UIColor.clearColor.CGColor;
         } else {
             btn.backgroundColor = FCStyle.secondaryPopup;
             btn.layer.borderColor = FCStyle.fcNavigationLineColor.CGColor;
         }
-        [btn setTitle:dic[@"qualityLabel"] forState:UIControlStateNormal];
+        [btn setTitle:qualityLabel forState:UIControlStateNormal];
         [btn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
         btn.titleLabel.font = FCStyle.footnote;
         btn.tag = i;
         [btn addTarget:self action:@selector(qualityAction:) forControlEvents:UIControlEventTouchUpInside];
         btn.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.qualityView addArrangedSubview:btn];
-        [[btn.widthAnchor constraintEqualToConstant:55] setActive:YES];
-        [[btn.heightAnchor constraintEqualToConstant:25] setActive:YES];
+        [self.qualityView addSubview:btn];
+        itemWidth = qualityLabel.length > 4 ? 80 : 70;
+        curWidth += itemWidth;
+        if (curWidth > maxWidth) {
+            top += 30;
+            curWidth = itemWidth;
+        }
+        [NSLayoutConstraint activateConstraints:@[
+            [btn.leadingAnchor constraintEqualToAnchor:self.qualityView.leadingAnchor constant:curWidth - itemWidth],
+            [btn.widthAnchor constraintEqualToConstant:itemWidth - 15],
+            [btn.topAnchor constraintEqualToAnchor:self.qualityView.topAnchor constant:top],
+            [btn.heightAnchor constraintEqualToConstant:25],
+        ]];
     }
-    UIView *space = [[UIView alloc] init];
-    [self.qualityView addArrangedSubview:space];
+    
+    [self.qualityView removeFromSuperview];
+    for (NSLayoutConstraint *constraint in self.qualityView.constraints) {
+        if ([constraint.firstAnchor isEqual:self.qualityView.heightAnchor]) {
+            [self.qualityView removeConstraint:constraint];
+        }
+    }
+    [self.rightView insertArrangedSubview:self.qualityView atIndex:1];
+    [self.rightView setCustomSpacing:12 afterView:self.qualityView];
+    [[self.qualityView.heightAnchor constraintEqualToConstant:25 + top] setActive:YES];
 }
 
 - (void)copyAction:(UIView *)sender {
@@ -221,6 +242,7 @@
     if (![dic[@"qualityLabel"] isEqualToString:selectedQuality]) {
         _entity[@"selectedQuality"] = dic[@"qualityLabel"];
         _entity[@"selectedDownloadUrl"] = dic[@"downloadUrl"];
+        _entity[@"selectedAudioUrl"] = dic[@"audioUrl"];
         [self buildQualityView:qualityList selectedQuality:dic[@"qualityLabel"]];
         self.linkLabel.text =  dic[@"downloadUrl"];
     }
@@ -238,6 +260,17 @@
     }
     
     return _checkImg;
+}
+
+- (UIStackView *)rightView {
+    if (nil == _rightView) {
+        _rightView = [[UIStackView alloc] init];
+        _rightView.axis = UILayoutConstraintAxisVertical;
+        _rightView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:_rightView];
+    }
+    
+    return _rightView;
 }
 
 - (UIImageView *)coverImg {
@@ -281,12 +314,9 @@
     return _titleText;
 }
 
-- (UIStackView *)qualityView {
+- (UIView *)qualityView {
     if (nil == _qualityView) {
-        _qualityView = [[UIStackView alloc] init];
-        _qualityView.axis = UILayoutConstraintAxisHorizontal;
-        _qualityView.spacing = 14;
-        _qualityView.alignment = UIStackViewAlignmentCenter;
+        _qualityView = [[UIView alloc] init];
         _qualityView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     
@@ -385,7 +415,21 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     NSArray *qualityList = self.dataSource[indexPath.row][@"qualityList"];
-    return qualityList.count > 0 ? 320 : 290;
+    CGFloat height = 290;
+    if (qualityList.count > 0) {
+        CGFloat maxWidth = self.view.width - 40 - 15 + 15;
+        CGFloat curWidth = 0, curHeight = 30;
+        for (NSDictionary *qulity in qualityList) {
+            NSString *qualityLabel = qulity[@"qualityLabel"];
+            curWidth += qualityLabel.length > 4 ? 80 : 70;
+            if (curWidth > maxWidth) {
+                curHeight += 30;
+                curWidth = qualityLabel.length > 4 ? 80 : 70;
+            }
+        }
+        height += curHeight;
+    }
+    return height;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -440,19 +484,23 @@
                     NSString *downloadUrl = item[@"downloadUrl"];
                     NSString *selectedQuality;
                     NSString *selectedDownloadUrl;
+                    NSString *selectedAudioUrl;
                     for (NSDictionary *qulity in qualityList) {
                         if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
                             selectedQuality = qulity[@"qualityLabel"];
                             selectedDownloadUrl = qulity[@"downloadUrl"];
+                            selectedAudioUrl = qulity[@"audioUrl"];
                             break;
                         }
                     }
                     if (selectedQuality.length == 0) {
                         selectedQuality = qualityList[0][@"qualityLabel"];
                         selectedDownloadUrl = qualityList[0][@"downloadUrl"];
+                        selectedAudioUrl = qualityList[0][@"audioUrl"];
                     }
                     item[@"selectedQuality"] = selectedQuality;
                     item[@"selectedDownloadUrl"] = selectedDownloadUrl;
+                    item[@"selectedAudioUrl"] = selectedAudioUrl;
                 }
                 if (item[@"uuid"] == nil) {
                     NSString *selectedUUID = SharedStorageManager.shared.userDefaults.lastFolderUUID;
@@ -520,7 +568,7 @@
                 resource.downloadUrl = downLoadUrl;
                 resource.icon = item[@"poster"];
                 resource.host = item[@"hostUrl"];
-                resource.audioUrl = item[@"audioUrl"];
+                resource.audioUrl = item[@"selectedAudioUrl"] ? item[@"selectedAudioUrl"] : item[@"audioUrl"];
                 resource.protect = item[@"protect"];
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
