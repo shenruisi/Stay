@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FCStyle : NSObject
 
 @property(class, nonatomic, readonly) UIColor *accent;
+@property(class, nonatomic, readonly) NSArray<UIColor *> *accentGradient;
 @property(class, nonatomic, readonly) UIColor *accentHighlight;
 @property(class, nonatomic, readonly) UIColor *accentHover;
 @property(class, nonatomic, readonly) UIColor *accentSelected;
@@ -60,6 +61,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfSecondaryIcon;
 @property(class, nonatomic, readonly) UIFont *cellIcon;
 @property(class, nonatomic, readonly) UIFont *sfIcon;
+
+@property(class, nonatomic, readonly) UIFont *sfSymbolL1;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL1Bold;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL1d5;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL1d5Bold;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL2;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL2Bold;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL3;
+@property(class, nonatomic, readonly) UIFont *sfSymbolL3Bold;
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
 + (NSString *)appearance;

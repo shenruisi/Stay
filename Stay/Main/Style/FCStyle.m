@@ -21,6 +21,17 @@
     
 }
 
++ (NSArray<UIColor *> *)accentGradient{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *themeColor = [userDefaults objectForKey:@"themeColor"];
+
+    if(themeColor == nil ) {
+        return  @[[UIColor colorNamed:@"AccentGradient1"],[UIColor colorNamed:@"AccentGradient2"]];
+    } else {
+        return nil;
+    }
+}
+
 + (NSString *)appearance{
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *type = [userDefaults objectForKey:@"themeType"];
@@ -285,6 +296,69 @@
 #endif
 }
 
++ (UIFont *)sfSymbolL1{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:22];
+#else
+    return [UIFont systemFontOfSize:20];
+#endif
+}
+
++ (UIFont *)sfSymbolL1Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:22];
+#else
+    return [UIFont boldSystemFontOfSize:20];
+#endif
+}
+
++ (UIFont *)sfSymbolL1d5{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:21];
+#else
+    return [UIFont systemFontOfSize:19];
+#endif
+}
+
++ (UIFont *)sfSymbolL1d5Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:21];
+#else
+    return [UIFont boldSystemFontOfSize:19];
+#endif
+}
+
++ (UIFont *)sfSymbolL2{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:20];
+#else
+    return [UIFont systemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)sfSymbolL2Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:20];
+#else
+    return [UIFont boldSystemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)sfSymbolL3{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:18];
+#else
+    return [UIFont systemFontOfSize:16];
+#endif
+}
+
++ (UIFont *)sfSymbolL3Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:18];
+#else
+    return [UIFont boldSystemFontOfSize:16];
+#endif
+}
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha
 {

@@ -8,10 +8,11 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 #import "SYHomeViewController.h"
+#import "FCTabBarController.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @class SYDetailViewController;
-@interface MainTabBarController : UITabBarController
+@interface MainTabBarController : FCTabBarController
 @property (nonatomic, strong) SYHomeViewController *homeController;
 @end
 

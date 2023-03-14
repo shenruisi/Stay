@@ -362,6 +362,22 @@
 		58A3616F29BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
 		58A3617029BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
 		58A3617129BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
+		58A3617529C0218800080465 /* FCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3617429C0218800080465 /* FCViewController.m */; };
+		58A3617629C0218800080465 /* FCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3617429C0218800080465 /* FCViewController.m */; };
+		58A3617929C023BC00080465 /* FCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3617829C023BC00080465 /* FCRootViewController.m */; };
+		58A3617A29C023BC00080465 /* FCRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3617829C023BC00080465 /* FCRootViewController.m */; };
+		58A3617D29C048CE00080465 /* FCTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3617C29C048CE00080465 /* FCTabBar.m */; };
+		58A3617E29C048CE00080465 /* FCTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3617C29C048CE00080465 /* FCTabBar.m */; };
+		58A3618229C049C500080465 /* FCTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618129C049C500080465 /* FCTabBarItem.m */; };
+		58A3618329C049C500080465 /* FCTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618129C049C500080465 /* FCTabBarItem.m */; };
+		58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618529C04BBC00080465 /* FCTabBarController.m */; };
+		58A3618729C04BBC00080465 /* FCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618529C04BBC00080465 /* FCTabBarController.m */; };
+		58A3618A29C04C3500080465 /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618929C04C3500080465 /* FCNavigationController.m */; };
+		58A3618B29C04C3500080465 /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618929C04C3500080465 /* FCNavigationController.m */; };
+		58A3618F29C0502400080465 /* AdBlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618E29C0502400080465 /* AdBlockViewController.m */; };
+		58A3619029C0502500080465 /* AdBlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618E29C0502400080465 /* AdBlockViewController.m */; };
+		58A3619329C06A4E00080465 /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3619229C06A4E00080465 /* FCNavigationBar.m */; };
+		58A3619429C06A4E00080465 /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3619229C06A4E00080465 /* FCNavigationBar.m */; };
 		58AC12E42860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
@@ -880,6 +896,22 @@
 		58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stay-mac1024-1.png"; sourceTree = "<group>"; };
 		58A3616C29BF11F100080465 /* RC4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RC4.h; sourceTree = "<group>"; };
 		58A3616D29BF11F100080465 /* RC4.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RC4.m; sourceTree = "<group>"; };
+		58A3617329C0218800080465 /* FCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCViewController.h; sourceTree = "<group>"; };
+		58A3617429C0218800080465 /* FCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCViewController.m; sourceTree = "<group>"; };
+		58A3617729C023BC00080465 /* FCRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCRootViewController.h; sourceTree = "<group>"; };
+		58A3617829C023BC00080465 /* FCRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCRootViewController.m; sourceTree = "<group>"; };
+		58A3617B29C048CE00080465 /* FCTabBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FCTabBar.h; path = "../New Group/FCTabBar.h"; sourceTree = "<group>"; };
+		58A3617C29C048CE00080465 /* FCTabBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTabBar.m; sourceTree = "<group>"; };
+		58A3618029C049C500080465 /* FCTabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTabBarItem.h; sourceTree = "<group>"; };
+		58A3618129C049C500080465 /* FCTabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTabBarItem.m; sourceTree = "<group>"; };
+		58A3618429C04BBC00080465 /* FCTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTabBarController.h; sourceTree = "<group>"; };
+		58A3618529C04BBC00080465 /* FCTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTabBarController.m; sourceTree = "<group>"; };
+		58A3618829C04C3500080465 /* FCNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCNavigationController.h; sourceTree = "<group>"; };
+		58A3618929C04C3500080465 /* FCNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCNavigationController.m; sourceTree = "<group>"; };
+		58A3618D29C0502400080465 /* AdBlockViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdBlockViewController.h; sourceTree = "<group>"; };
+		58A3618E29C0502400080465 /* AdBlockViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdBlockViewController.m; sourceTree = "<group>"; };
+		58A3619129C06A4E00080465 /* FCNavigationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCNavigationBar.h; sourceTree = "<group>"; };
+		58A3619229C06A4E00080465 /* FCNavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCNavigationBar.m; sourceTree = "<group>"; };
 		58AC12E22860750800875D6D /* FCShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCShared.h; sourceTree = "<group>"; };
 		58AC12E32860750800875D6D /* FCShared.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCShared.m; sourceTree = "<group>"; };
 		58AC12E62860752800875D6D /* Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
@@ -1344,6 +1376,8 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
+				58A3618D29C0502400080465 /* AdBlockViewController.h */,
+				58A3618E29C0502400080465 /* AdBlockViewController.m */,
 			);
 			path = AdBlock;
 			sourceTree = "<group>";
@@ -1458,6 +1492,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				58A3617229C020F700080465 /* UXFramework */,
 				583A10B229B831CC00BA4A11 /* AdBlock */,
 				5839C315293051CC00CCBAE5 /* Debugger */,
 				3C8388B8292E469A007563E6 /* Download */,
@@ -1646,6 +1681,44 @@
 				58A06D1428DAA49200983455 /* gm-apis-gen.js */,
 			);
 			path = vendor;
+			sourceTree = "<group>";
+		};
+		58A3617229C020F700080465 /* UXFramework */ = {
+			isa = PBXGroup;
+			children = (
+				58A3618C29C04C6400080465 /* Navigation */,
+				58A3617F29C0498400080465 /* Tab */,
+				58A3617329C0218800080465 /* FCViewController.h */,
+				58A3617429C0218800080465 /* FCViewController.m */,
+				58A3617729C023BC00080465 /* FCRootViewController.h */,
+				58A3617829C023BC00080465 /* FCRootViewController.m */,
+			);
+			path = UXFramework;
+			sourceTree = "<group>";
+		};
+		58A3617F29C0498400080465 /* Tab */ = {
+			isa = PBXGroup;
+			children = (
+				58A3617B29C048CE00080465 /* FCTabBar.h */,
+				58A3617C29C048CE00080465 /* FCTabBar.m */,
+				58A3618029C049C500080465 /* FCTabBarItem.h */,
+				58A3618129C049C500080465 /* FCTabBarItem.m */,
+				58A3618429C04BBC00080465 /* FCTabBarController.h */,
+				58A3618529C04BBC00080465 /* FCTabBarController.m */,
+			);
+			path = Tab;
+			sourceTree = "<group>";
+		};
+		58A3618C29C04C6400080465 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				58A3618829C04C3500080465 /* FCNavigationController.h */,
+				58A3618929C04C3500080465 /* FCNavigationController.m */,
+				58A3619129C06A4E00080465 /* FCNavigationBar.h */,
+				58A3619229C06A4E00080465 /* FCNavigationBar.m */,
+			);
+			name = Navigation;
+			path = "New Group1";
 			sourceTree = "<group>";
 		};
 		58AC12E1286074C700875D6D /* Access */ = {
@@ -2922,6 +2995,7 @@
 				84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				849E77D3293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
+				58A3619329C06A4E00080465 /* FCNavigationBar.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
@@ -2929,6 +3003,7 @@
 				588402C9295D3272002CA227 /* ToastCenter.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				3C91971C299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
+				58A3618F29C0502400080465 /* AdBlockViewController.m in Sources */,
 				3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 				3C949BB32971813E0068231A /* M3U8PlaylistModel.m in Sources */,
 				84CC9B5428D17C2E002EB493 /* SYBrowseExpandViewController.m in Sources */,
@@ -2949,6 +3024,7 @@
 				84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				8460E47429925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				582061F2294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
+				58A3617D29C048CE00080465 /* FCTabBar.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
 				5867D158288F91F900EC822B /* TimeHelper.m in Sources */,
@@ -2961,8 +3037,10 @@
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
+				58A3617929C023BC00080465 /* FCRootViewController.m in Sources */,
 				3C8388EC2934F56C007563E6 /* DMStore.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
+				58A3618229C049C500080465 /* FCTabBarItem.m in Sources */,
 				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
@@ -2971,6 +3049,7 @@
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
+				58A3618A29C04C3500080465 /* FCNavigationController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
@@ -2983,6 +3062,7 @@
 				582061E6294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
+				58A3617529C0218800080465 /* FCViewController.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
@@ -3003,6 +3083,7 @@
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
+				58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */,
 				588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */,
 				3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
@@ -3071,8 +3152,10 @@
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				588402CA295D3272002CA227 /* ToastCenter.m in Sources */,
 				3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
+				58A3618729C04BBC00080465 /* FCTabBarController.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
+				58A3618B29C04C3500080465 /* FCNavigationController.m in Sources */,
 				582061E7294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
 				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
@@ -3095,8 +3178,10 @@
 				8460E47529925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
+				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
+				58A3617A29C023BC00080465 /* FCRootViewController.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
 				3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
@@ -3143,6 +3228,7 @@
 				3C358D582973E58B00118063 /* NSString+m3u8.m in Sources */,
 				3C91971D299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
+				58A3619429C06A4E00080465 /* FCNavigationBar.m in Sources */,
 				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,
 				582061D1294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
 				58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */,
@@ -3152,6 +3238,7 @@
 				5882025D2859E73900B2721A /* AppDelegate.m in Sources */,
 				5882025E2859E73900B2721A /* UIViewExt.m in Sources */,
 				5882025F2859E73900B2721A /* BrowseView.m in Sources */,
+				58A3617629C0218800080465 /* FCViewController.m in Sources */,
 				588202602859E73900B2721A /* ModalViewController.m in Sources */,
 				588202612859E73900B2721A /* FCDisk.m in Sources */,
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
@@ -3197,6 +3284,7 @@
 				5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
+				58A3619029C0502500080465 /* AdBlockViewController.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
@@ -3235,6 +3323,7 @@
 				582061F3294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
 				582061C9294C4C0E00A32D0C /* ModalItemView.m in Sources */,
 				3C8388C92931ADC5007563E6 /* FCTabConfig.m in Sources */,
+				58A3618329C049C500080465 /* FCTabBarItem.m in Sources */,
 				582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
