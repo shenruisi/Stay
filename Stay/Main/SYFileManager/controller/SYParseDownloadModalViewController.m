@@ -473,6 +473,31 @@
             BOOL founded = NO;
             for (NSMutableDictionary *mutDic in self.dataSource) {
                 if ([dic[@"videoUuid"] isEqualToString:mutDic[@"videoUuid"]]) {
+                    NSString *selectedQuality = mutDic[@"selectedQuality"];
+                    NSArray *qualityList = dic[@"qualityList"];
+                    if (selectedQuality.length == 0 && qualityList.count > 0) {
+                        mutDic[@"qualityList"] = qualityList;
+                        NSString *downloadUrl = dic[@"downloadUrl"];
+                        NSString *selectedDownloadUrl;
+                        NSString *selectedAudioUrl;
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                break;
+                            }
+                        }
+                        if (selectedQuality.length == 0) {
+                            selectedQuality = qualityList[0][@"qualityLabel"];
+                            selectedDownloadUrl = qualityList[0][@"downloadUrl"];
+                            selectedAudioUrl = qualityList[0][@"audioUrl"];
+                        }
+                        mutDic[@"selectedQuality"] = selectedQuality;
+                        mutDic[@"selectedDownloadUrl"] = selectedDownloadUrl;
+                        mutDic[@"selectedAudioUrl"] = selectedAudioUrl;
+                    }
+                    
                     founded = YES;
                     break;
                 }
