@@ -2,6 +2,7 @@
 let randomYTObj = {}; 
 
 function fetchRandomStr(randomStr){
+   window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
   randomYTObj.randomStr = randomStr;
 }
 
