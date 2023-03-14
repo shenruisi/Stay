@@ -2,6 +2,7 @@
 let randomYTObj = {}; 
 
 function fetchRandomStr(randomStr){
+   window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
   randomYTObj.randomStr = randomStr;
 }
 
@@ -383,7 +384,7 @@ function fetchRandomStr(randomStr){
     if(!checkDecodeFunIsValid()){
       return;
     }
-    console.log('handleRandomFunStr-------------',shouldDecodeQuality);
+    // console.log('handleRandomFunStr-------------',shouldDecodeQuality);
     Object.keys(shouldDecodeQuality).forEach((videoUuid, qualityList)=>{
       if(qualityList.length){
         qualityList.forEach((quality)=>{

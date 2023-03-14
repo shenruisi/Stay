@@ -32,8 +32,8 @@ uint8_t randomc[] = {0x6d, 0x54, 0x33, 0x1f, 0x35, 0x1a, 0x58, 0x31, 0x3e, 0x6b,
 
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 //static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
-//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
-static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
 static API *instance = nil;
 
 + (instancetype)shared{
