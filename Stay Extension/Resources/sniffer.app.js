@@ -366,7 +366,6 @@ function fetchRandomStr(randomStr){
    * 对videoList中qualityList的signature进行解密
    */
   function handleRandomFunStr(decodeYoutubeFunStr){
-    window.webkit.messageHandlers.stayapp.postMessage('handleRandomFunStr---------------start');
     if(decodeYoutubeFunStr){
       decodeFunStr = decodeYoutubeFunStr;
     }

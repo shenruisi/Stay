@@ -8,6 +8,7 @@
 #import "VideoParser.h"
 #import "FCApp.h"
 #import "API.h"
+#import "NSData+Base64.h"
 
 @interface VideoParser()<
  WKNavigationDelegate,
@@ -51,6 +52,7 @@ static VideoParser *_kVideoParser;
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
         [wkUController addScriptMessageHandler:self name:@"youtube"];
+        [wkUController addScriptMessageHandler:self name:@"log"];
         
         WKUserScript *viewportScript = [[WKUserScript alloc] initWithSource:@"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'); document.head.appendChild(meta);" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
             WKUserContentController *userContentController = [[WKUserContentController alloc] init];
@@ -108,7 +110,7 @@ static VideoParser *_kVideoParser;
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
     if ([message.name isEqualToString:@"stayapp"]){
         if (self.completionBlock){
-            NSLog(@"userContentController %@",message.body);
+//            NSLog(@"userContentController %@",message.body);
             self.completionBlock(message.body);
         }
     }
@@ -117,16 +119,15 @@ static VideoParser *_kVideoParser;
         if (response.count > 0){
             NSString *code;
             if ((code = response[@"biz"][@"code"]) != nil){
-                NSString *jsonString = [[NSString alloc] initWithData:
-                                        [NSJSONSerialization dataWithJSONObject:@{
-                                            @"code" : code
-                                        } options:0 error:nil]
-                                                             encoding:NSUTF8StringEncoding];
-                [self.webView evaluateJavaScript:[NSString stringWithFormat:@"callback(%@)",jsonString] completionHandler:nil];
+                NSString *method = [NSString stringWithFormat:@"fetchRandomStr('%@');",[[code stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]];
+                [self.webView evaluateJavaScript:method completionHandler:^(id ret, NSError * _Nullable error) {
+                    NSLog(@"%@",error);
+                }];
             }
-            
-            
         }
+    }
+    if ([message.name isEqualToString:@"log"]){
+        NSLog(@"userContentController log: %@",message.body);
     }
 }
 
