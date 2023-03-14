@@ -1,3 +1,10 @@
+
+let randomYTObj = {}; 
+
+function fetchRandomStr(randomStr){
+  randomYTObj.randomStr = randomStr;
+}
+
 /**
  * 自动解析video资源
  * 解析页面video标签
@@ -5,7 +12,7 @@
 (function () {
   let hostUrl = window.location.href;
   let host = window.location.host;
-  let decodeFunStr = ''; 
+  let decodeFunStr = '';
   let playerBase = '';
   let ytBaseJSCode = '';
   // console.log('------------injectParseVideoJS-----start------------------')
@@ -308,7 +315,7 @@
       videoInfo.videoUuid = videoInfo.videoKey;
     }
 
-    // videoInfo.qualityList是否需要解密，如需解密记录下来, 等handleDecodeYoutubeSignatureAndPush来解密
+    // videoInfo.qualityList是否需要解密，如需解密记录下来, 等handleRandomFunStr来解密
     const qualityList = videoInfo.qualityList;
     if(videoInfo.shouldDecode){
       videoInfo.qualityList = [];
@@ -358,8 +365,8 @@
    * @param {String} decodeYoutubeFunStr 
    * 对videoList中qualityList的signature进行解密
    */
-  function handleDecodeYoutubeSignatureAndPush(decodeYoutubeFunStr){
-    window.webkit.messageHandlers.stayapp.postMessage('handleDecodeYoutubeSignatureAndPush---------------start');
+  function handleRandomFunStr(decodeYoutubeFunStr){
+    window.webkit.messageHandlers.stayapp.postMessage('handleRandomFunStr---------------start');
     if(decodeYoutubeFunStr){
       decodeFunStr = decodeYoutubeFunStr;
     }
@@ -1316,7 +1323,7 @@
       return;
     }
     if(decodeFunStr){
-      handleDecodeYoutubeSignatureAndPush(decodeFunStr);
+      handleRandomFunStr(decodeFunStr);
     }else{
       queryYoutubePlayer();
     }
@@ -1363,6 +1370,19 @@
   }
 
   startSnifferVideoInfoOnPage(false);
+
+  /* eslint-disable */
+  Object.defineProperty(randomYTObj,'randomStr',{
+    get:function(){
+      return randomStr;
+    },
+    set:function(newValue){
+      randomStr = newValue;
+      console.log('set randomStr:',newValue);
+      //需要触发的渲染函数可以写在这...
+      handleRandomFunStr(randomStr);
+    }
+  });
 
 })()
 

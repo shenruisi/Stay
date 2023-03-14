@@ -1175,6 +1175,16 @@ const browser = __b;
         visibleTimer = 0;
       }, 400)
 
+      async function openPiP(video) {
+        try {
+          const pipWindow = await video.requestPictureInPicture();
+          // 进入画中画模式...
+        } catch (e) {   
+          console.error(e) // 处理异常
+        }
+      }
+
+      // F7B500
 
       // window.open(downloadUrl);
       function createModal(){
