@@ -9,6 +9,7 @@
 #import "ImageHelper.h"
 #import "FCStyle.h"
 #import "ColorHelper.h"
+#import "DataManager.h"
 @implementation DownloadFileTableViewCell
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -42,7 +43,7 @@
     name.font = FCStyle.body;
     [name sizeToFit];
     name.top = 13;
-    name.left = imageView.right + 7;
+    name.left = imageView.right + 10;
     [self.contentView addSubview:name];
     
     
@@ -59,6 +60,20 @@
     line.bottom =  imageView.bottom + 22;
     line.left = 10;
     [self.contentView addSubview:line];
+    
+    NSArray *list =  [[DataManager shareManager] selectDownloadComplete:fCTab.uuid];
+    UILabel *itemsLab =  [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
+    itemsLab.font = FCStyle.footnote;
+    itemsLab.textColor = FCStyle.subtitleColor;
+    
+    if(list != NULL && list.count > 0) {
+        itemsLab.text = [NSString stringWithFormat:@"%ld items",list.count];
+    } else {
+        itemsLab.text = @"0 items";
+    }
+    itemsLab.top = name.bottom;
+    itemsLab.left = imageView.right + 10;
+    [self.contentView addSubview:itemsLab];
     
 }
 

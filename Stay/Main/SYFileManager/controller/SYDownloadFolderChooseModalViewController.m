@@ -18,7 +18,8 @@
 
 @interface SYDownloadFolderChooseModalViewController()<
  UITableViewDelegate,
- UITableViewDataSource
+ UITableViewDataSource,
+UIDocumentPickerDelegate
 >
 
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
@@ -99,7 +100,32 @@
     if (nil == _folderElements){
         ModalItemDataEntityGeneral *generalEntity;
         NSMutableArray *ret = [[NSMutableArray alloc] init];
-        
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        if(dic != nil) {
+            NSString *text = dic[@"fileName"];
+            ModalItemElement *element = [[ModalItemElement alloc] init];
+            generalEntity = [[ModalItemDataEntityGeneral alloc] init];
+            generalEntity.title = text;
+            generalEntity.uuid = FILEUUID;
+            element.generalEntity = generalEntity;
+            element.type = ModalItemElementTypeClick;
+            element.action = ^(ModalItemElement * _Nonnull element) {
+                if([element.generalEntity.uuid isEqualToString:FILEUUID]) {
+                    NSArray *documentTypes = @[@"public.folder"];
+                    UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
+
+                    if(dic != NULL && dic[@"url"] != NULL) {
+                        documentPicker.directoryURL = [NSURL fileURLWithPath:dic[@"url"]];
+                    }
+                    documentPicker.delegate = self;
+                    documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+                    UIViewController *mainController = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                            [mainController presentViewController:documentPicker animated:YES completion:nil];
+                }
+            };
+            [ret addObject:element];
+        }
+
         for (NSInteger i = 0; i < FCShared.tabManager.tabs.count; i++){
             FCTab *tab = FCShared.tabManager.tabs[i];
             if ([tab.uuid isEqualToString:self.excludeUUID]){
@@ -161,8 +187,82 @@
 - (void)clear{
 }
 
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
+    NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        BOOL fileUrlAuthozied = [urls.firstObject startAccessingSecurityScopedResource];
+        if (fileUrlAuthozied) {
+            //通过文件协调工具来得到新的文件地址，以此得到文件保护功能
+            NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
+            NSError *error;
+
+            [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
+                //读取文件
+                
+                if(dic != NULL && dic[@"url"] != NULL) {
+                    if([[newURL path] containsString:dic[@"url"]]) {
+                        NSString *fileName = [newURL lastPathComponent];
+
+                        self.dic[@"pathName"] = fileName;
+                        self.dic[@"allPath"] = [newURL path];
+                        self.dic[@"uuid"] = FILEUUID;
+                        [self.navigationController popModalViewController];
+                    } else {
+                        
+                        return;
+                    }
+                } else {
+                    NSString *fileName = [newURL lastPathComponent];
+
+                    self.dic[@"pathName"] = fileName;
+                    self.dic[@"allPath"] = [newURL path];
+                    self.dic[@"uuid"] = FILEUUID;
+                    [self.navigationController popModalViewController];
+                }
+                
+
+            }];
+            [urls.firstObject stopAccessingSecurityScopedResource];
+        } else {
+            //授权失败
+        }
+        
+    
+    
+    
+    
+}
+
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 420);
 }
+- (UIViewController *)findCurrentShowingViewControllerFrom:(UIViewController *)vc
+{
+    // 递归方法 Recursive method
+    UIViewController *currentShowingVC;
+    if ([vc presentedViewController]) {
+        // 当前视图是被presented出来的
+        UIViewController *nextRootVC = [vc presentedViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        // 根视图为UITabBarController
+        UIViewController *nextRootVC = [(UITabBarController *)vc selectedViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else if ([vc isKindOfClass:[UINavigationController class]]){
+        // 根视图为UINavigationController
+        UIViewController *nextRootVC = [(UINavigationController *)vc visibleViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else {
+        // 根视图为非导航类
+        currentShowingVC = vc;
+    }
+
+    return currentShowingVC;
+}
+
+
 
 @end

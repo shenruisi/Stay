@@ -50,16 +50,32 @@
 
 - (void)viewWillAppear{
     [super viewWillAppear];
-    
+    ModalItemElement *element = self.saveToElements.firstObject;
     NSString *uuid = self.dic[@"uuid"];
     if(uuid.length == 0) {
         uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
         if(uuid.length == 0) {
-            uuid = FCShared.tabManager.tabs[0].uuid;
+            uuid = FILEUUID;
         }
     }
-    ModalItemElement *element = self.saveToElements.firstObject;
-    element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+    
+    if([uuid isEqualToString:FILEUUID]) {
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        NSString *text = @"Undefined";
+        if (dic != NULL) {
+            text = dic[@"fileName"];
+        }
+        
+        if(self.dic[@"pathName"] != NULL) {
+            text = self.dic[@"pathName"];
+        }
+        
+        element.generalEntity.title = text;
+    } else {
+        ModalItemElement *element = self.saveToElements.firstObject;
+        element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+    }
+    
     element.generalEntity.uuid = uuid;
     [element clear];
     
@@ -199,9 +215,20 @@
             uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
             if(uuid.length == 0) {
                 uuid = FCShared.tabManager.tabs[0].uuid;
+//                uuid = FILEUUID;
             }
         }
-        generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+        if([uuid isEqualToString:FILEUUID]) {
+            NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+            NSString *text = @"Undefined";
+            if (dic != NULL) {
+                text = dic[@"fileName"];
+            }
+            generalEntity.title = text;
+        } else {
+            generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+        }
+        
         generalEntity.uuid = uuid;
         saveToElement.generalEntity = generalEntity;
         saveToElement.type = ModalItemElementTypeAccessory;
@@ -299,17 +326,30 @@
     DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
     if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
         FCTab *tab = [[FCShared tabManager] tabOfUUID:self.saveToElements[0].generalEntity.uuid];
+        
+      
         Request *request = [[Request alloc] init];
         request.url = downLoadUrl;
-        request.fileDir = tab.path;
+
         request.fileType = @"video";
         request.audioUrl = self.dic[@"audioUrl"];
         request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
         if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
             request.fileName = [request.fileName stringByAppendingString:@".mp4"];
         }
-        request.key = tab.uuid;
-        SharedStorageManager.shared.userDefaults.lastFolderUUID = tab.uuid;
+        
+        if(tab == nil) {
+            NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+            request.fileDir = self.dic[@"allPath"] == NULL?dic[@"url"]:self.dic[@"allPath"] ;
+            request.key = self.dic[@"uuid"] == NULL?FILEUUID:self.dic[@"uuid"] ;
+            SharedStorageManager.shared.userDefaults.lastFolderUUID = self.dic[@"uuid"] == NULL? FILEUUID:self.dic[@"uuid"];
+        } else {
+            request.fileDir = tab.path;
+            request.key = tab.uuid;
+            SharedStorageManager.shared.userDefaults.lastFolderUUID = tab.uuid;
+        }
+        
+        
         Task *task = [[DownloadManager shared] enqueue:request];
 
         resource.status = 0;
@@ -323,27 +363,8 @@
         resource.audioUrl = self.dic[@"audioUrl"];
         
         [[DataManager shareManager] addDownloadResource:resource];
-        
-        
-        UIViewController *mainController = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
-        
-        if ([mainController isKindOfClass: [SYDownloadResourceManagerController class]]){
-            SYDownloadResourceManagerController *downloadCer = mainController;
-            if(downloadCer.pathUuid == tab.uuid) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
-                                                                    object:nil];
-                [self.navigationController.slideController dismiss];
-                return;
-            }
-        }
-        
-        SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-        controller.pathUuid = tab.uuid;
-        controller.title = tab.config.name;
-        controller.array = [NSMutableArray array];
-        [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
 
-        [self.nav pushViewController:controller animated:true];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeDownloading" object:nil];
         [self.navigationController.slideController dismiss];
     } else {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlIsDownloaded", @"")

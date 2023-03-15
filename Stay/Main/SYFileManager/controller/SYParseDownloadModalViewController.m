@@ -174,8 +174,15 @@
         self.linkLabel.text = entity[@"downloadUrl"];
     }
     FCTab *tab = [[FCShared tabManager] tabOfUUID:entity[@"uuid"]];
-    self.folderImg.image = [ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:20] color:[ColorHelper colorFromHex:tab.config.hexColor]];
-    self.folderLabel.text = tab.config.name;
+    if(tab == nil) {
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        self.folderImg.image = [ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:20] color: RGB(146, 209, 243)];
+        self.folderLabel.text = entity[@"pathName"] == nil?dic[@"fileName"]:entity[@"pathName"];
+
+    } else {
+        self.folderImg.image = [ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:20] color:[ColorHelper colorFromHex:tab.config.hexColor]];
+        self.folderLabel.text = tab.config.name;
+    }
 }
 
 - (void)buildQualityView:(NSArray *)qualityList selectedQuality:(NSString *)selectedQuality {
@@ -536,15 +543,24 @@
                     FCTab *tab = [[FCShared tabManager] tabOfUUID:resource.firstPath];
                     Request *request = [[Request alloc] init];
                     request.url = downLoadUrl;
-                    request.fileDir = tab.path;
+                    if(tab == nil) {
+                        NSMutableDictionary *entity = self.dataSource[0];
+
+                        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+                        request.fileDir = entity[@"allPath"] == NULL?dic[@"url"]:entity[@"allPath"] ;
+                        request.key = FILEUUID;
+                        SharedStorageManager.shared.userDefaults.lastFolderUUID = FILEUUID;
+                    } else {
+                        request.fileDir = tab.path;
+                        request.key = tab.uuid;
+                        SharedStorageManager.shared.userDefaults.lastFolderUUID = tab.uuid;
+                    }
                     request.fileType = @"video";
                     request.audioUrl = resource.audioUrl;
                     request.fileName = resource.title.length > 0 ? resource.title : downLoadUrl.lastPathComponent;
                     if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
                         request.fileName = [request.fileName stringByAppendingString:@".mp4"];
                     }
-                    request.key = tab.uuid;
-                    SharedStorageManager.shared.userDefaults.lastFolderUUID = tab.uuid;
                     Task *task = [[DownloadManager shared] enqueue:request];
 
                     resource.status = 0;
@@ -577,25 +593,21 @@
 
             return;
         } else {
-            UIViewController *mainController = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
-            
-            if ([mainController isKindOfClass: [SYDownloadResourceManagerController class]]){
-                SYDownloadResourceManagerController *downloadCer = mainController;
-                if(downloadCer.pathUuid == tab.uuid) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
-                                                                        object:nil];
-                    [self.navigationController.slideController dismiss];
-                    return;
-                }
-            }
-            
-            SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-            controller.pathUuid = tab.uuid;
-            controller.title = tab.config.name;
-            controller.array = [NSMutableArray array];
-            [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
 
-            [self.nav pushViewController:controller animated:true];
+            UIViewController *vc = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];; // 当前控制器
+            while (vc.parentViewController != nil) {
+                vc = vc.parentViewController; // 父视图控制器循环
+            }
+
+            if ([vc isKindOfClass:[UINavigationController class]]) {
+                // 如果是导航栏，通过popToRootViewControllerAnimated:返回最顶层VC。
+                [(UINavigationController *)vc popToRootViewControllerAnimated:YES];
+            } else if(vc.presentingViewController){
+                // 如果是模态弹出界面，则用dismissViewControllerAnimated:animated:回到上一个VC。
+               [vc dismissViewControllerAnimated:YES completion:nil];
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"changeDownloading" object:nil];
+
             [self.navigationController.slideController dismiss];
         }
     }

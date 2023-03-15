@@ -158,6 +158,12 @@ UIDocumentPickerDelegate
                                              selector:@selector(showUpgrade)
                                                  name:@"showUpgrade"
                                                object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(changeDownloading)
+                                                 name:@"changeDownloading"
+                                               object:nil];
 
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
@@ -201,6 +207,19 @@ UIDocumentPickerDelegate
             [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
 #endif
     
+}
+
+- (void)changeDownloading {
+    self.downloadBtn.selected = false;
+    self.downloadingBtn.selected = true;
+    self.selectedIdx = 1;
+    [UIView animateWithDuration:0.25F animations:^{
+        self.slideLine.centerX = self.downloadingBtn.centerX;
+    }];
+    [self.videoArray removeAllObjects];
+    [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+
+    [self.tableView reloadData];
 }
 
 - (UIBarButtonItem *)addItem{
@@ -537,7 +556,11 @@ UIDocumentPickerDelegate
                 FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
                 Request *request = [[Request alloc] init];
                 request.url =  cell.downloadResource.downloadUrl;
-                request.fileDir = tab.path;
+                if(tab == nil) {
+                    request.fileDir = cell.downloadResource.allPath;
+                } else {
+                    request.fileDir = tab.path;
+                }
                 request.fileName = [cell.downloadResource.allPath lastPathComponent];
                 request.fileType = @"video";
                 request.audioUrl = cell.downloadResource.audioUrl;
@@ -635,8 +658,6 @@ UIDocumentPickerDelegate
             }
             return cell;
         } else {
-        
-        
             if(indexPath.row == 0) {
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
                 UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
@@ -656,16 +677,16 @@ UIDocumentPickerDelegate
                 name.font = FCStyle.body;
                 [name sizeToFit];
     //            name.centerY = imageView.centerY;
-                name.left = imageView.right + 7;
+                name.left = imageView.right + 10;
                 [cell.contentView addSubview:name];
                 
                 UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
                 subTitle.text = @"On My iPhone";
                 subTitle.font = FCStyle.footnoteBold;
-                subTitle.textColor = FCStyle.titleGrayColor;
+                subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
-                subTitle.bottom = name.bottom;
-                subTitle.left = name.right + 2;
+                subTitle.top = name.bottom;
+                subTitle.left = imageView.right + 10;
                 [cell.contentView addSubview:subTitle];
                 
                 
@@ -831,7 +852,7 @@ UIDocumentPickerDelegate
             NSString *fileName = [newURL lastPathComponent];
             dispatch_async(dispatch_get_main_queue(), ^{
             [[NSUserDefaults standardUserDefaults] setObject:@{@"fileName":fileName ,
-                                                               @"url": [newURL absoluteString],
+                                                               @"url": [newURL path],
                                     
                                                              }
                                                       forKey:@"MY_PHONE_STORAGE"];
@@ -916,7 +937,6 @@ UIDocumentPickerDelegate
             self.downloadingBtn.selected = false;
             self.selectedIdx = 0;
             [UIView animateWithDuration:0.25F animations:^{
-                self.slideLine.width  = 53;
                 self.slideLine.centerX = self.downloadBtn.centerX;
             }];
             [self.tableView reloadData];
@@ -927,7 +947,6 @@ UIDocumentPickerDelegate
             self.downloadingBtn.selected = true;
             self.selectedIdx = 1;
             [UIView animateWithDuration:0.25F animations:^{
-                self.slideLine.width  = 70;
                 self.slideLine.centerX = self.downloadingBtn.centerX;
             }];
             [self.videoArray removeAllObjects];
@@ -1033,7 +1052,7 @@ UIDocumentPickerDelegate
 
 - (UIButton *)downloadingBtn {
     if(_downloadingBtn == nil) {
-        _downloadingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 78, 18)];
+        _downloadingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
         [_downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
         [_downloadingBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
         [_downloadingBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
