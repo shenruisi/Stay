@@ -358,6 +358,10 @@
 		58A06D1928DAA49200983455 /* gm-apis-gen.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1428DAA49200983455 /* gm-apis-gen.js */; };
 		58A06D1B28DDACBA00983455 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */; };
 		58A06D1C28DDACBA00983455 /* stay-mac1024-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */; };
+		58A3616E29BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
+		58A3616F29BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
+		58A3617029BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
+		58A3617129BF11F100080465 /* RC4.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3616D29BF11F100080465 /* RC4.m */; };
 		58AC12E42860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
@@ -874,6 +878,8 @@
 		58A06D1328DAA49200983455 /* jquery.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		58A06D1428DAA49200983455 /* gm-apis-gen.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "gm-apis-gen.js"; sourceTree = "<group>"; };
 		58A06D1A28DDACBA00983455 /* stay-mac1024-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stay-mac1024-1.png"; sourceTree = "<group>"; };
+		58A3616C29BF11F100080465 /* RC4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RC4.h; sourceTree = "<group>"; };
+		58A3616D29BF11F100080465 /* RC4.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RC4.m; sourceTree = "<group>"; };
 		58AC12E22860750800875D6D /* FCShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCShared.h; sourceTree = "<group>"; };
 		58AC12E32860750800875D6D /* FCShared.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCShared.m; sourceTree = "<group>"; };
 		58AC12E62860752800875D6D /* Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
@@ -1363,6 +1369,8 @@
 				3C8388CC2931B785007563E6 /* ColorHelper.m */,
 				5884031A29667078002CA227 /* UIColor+Convert.h */,
 				5884031B29667078002CA227 /* UIColor+Convert.m */,
+				58A3616C29BF11F100080465 /* RC4.h */,
+				58A3616D29BF11F100080465 /* RC4.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -2819,6 +2827,7 @@
 				58639D1728644BEB00AA80D5 /* MatchPattern.m in Sources */,
 				58639D1828644BEB00AA80D5 /* Stroge.m in Sources */,
 				5867D16528920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
+				58A3617129BF11F100080465 /* RC4.m in Sources */,
 				582062052950696F00A32D0C /* DisabledWebsites.m in Sources */,
 				3C8388D92933563B007563E6 /* FCTabConfig.m in Sources */,
 				58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */,
@@ -2946,6 +2955,7 @@
 				582061CC294C4C0E00A32D0C /* ModalSectionView.m in Sources */,
 				582061CE294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
+				58A3616E29BF11F100080465 /* RC4.m in Sources */,
 				582061E2294C4CA400A32D0C /* FCLayoutLabel.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
@@ -3037,6 +3047,7 @@
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				3C81E717293EF56400AB4B3F /* FCShared.m in Sources */,
 				588B83212845FC0C00AB2D73 /* FCDisk.m in Sources */,
+				58A3616F29BF11F100080465 /* RC4.m in Sources */,
 				588B83292846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				3C8388DB29335701007563E6 /* ColorHelper.m in Sources */,
 				5867D16328920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
@@ -3110,6 +3121,7 @@
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
+				58A3617029BF11F100080465 /* RC4.m in Sources */,
 				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				849E77CF293C7F5A00AD83D7 /* SYFIleManagerViewController.m in Sources */,

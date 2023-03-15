@@ -7,6 +7,8 @@
 
 #import "VideoParser.h"
 #import "FCApp.h"
+#import "API.h"
+#import "NSData+Base64.h"
 
 @interface VideoParser()<
  WKNavigationDelegate,
@@ -49,6 +51,8 @@ static VideoParser *_kVideoParser;
         
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
         [wkUController addScriptMessageHandler:self name:@"stayapp"];
+        [wkUController addScriptMessageHandler:self name:@"youtube"];
+        [wkUController addScriptMessageHandler:self name:@"log"];
         
         WKUserScript *viewportScript = [[WKUserScript alloc] initWithSource:@"var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'); document.head.appendChild(meta);" injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
             WKUserContentController *userContentController = [[WKUserContentController alloc] init];
@@ -100,14 +104,30 @@ static VideoParser *_kVideoParser;
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
     NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
     NSLog(@"headers %@ %ld",[response allHeaderFields],response.statusCode);
-//    [webView evaluateJavaScript:<#(nonnull NSString *)#> completionHandler:<#^(id _Nullable, NSError * _Nullable error)completionHandler#>]
     decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-    if (self.completionBlock){
-        NSLog(@"userContentController %@",message.body);
-        self.completionBlock(message.body);
+    if ([message.name isEqualToString:@"stayapp"]){
+        if (self.completionBlock){
+//            NSLog(@"userContentController %@",message.body);
+            self.completionBlock(message.body);
+        }
+    }
+    else if ([message.name isEqualToString:@"youtube"]){
+        NSDictionary *response = [[API shared] downloadYoutube:message.body];
+        if (response.count > 0){
+            NSString *code;
+            if ((code = response[@"biz"][@"code"]) != nil){
+                NSString *method = [NSString stringWithFormat:@"fetchRandomStr('%@');",[[code stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]];
+                [self.webView evaluateJavaScript:method completionHandler:^(id ret, NSError * _Nullable error) {
+                    NSLog(@"%@",error);
+                }];
+            }
+        }
+    }
+    if ([message.name isEqualToString:@"log"]){
+        NSLog(@"userContentController log: %@",message.body);
     }
 }
 
