@@ -1357,17 +1357,6 @@ const browser = __b;
         visibleTimer = 0;
       }, 400)
 
-      async function openPiP(video) {
-        try {
-          const pipWindow = await video.requestPictureInPicture();
-          // 进入画中画模式...
-        } catch (e) {   
-          console.error(e) // 处理异常
-        }
-      }
-
-      // F7B500
-
       // window.open(downloadUrl);
       function createModal(){
         let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: ''}];
@@ -1379,6 +1368,11 @@ const browser = __b;
         let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
         let downloadIcon = isContent?browser.runtime.getURL('img/popup-download-light.png'):'https://res.stayfork.app/scripts/8DF5C8391ED58046174D714911AD015E/icon.png';
+        let hdLine = '#F7B500';
+        let hdBg = '#000';
+        let titleIcon = 'https://res.stayfork.app/scripts/22BF8566F3522614F4F3A15EBC87378E/icon.png';
+        let airplayIcon = 'https://res.stayfork.app/scripts/D660FA085601F608C3BE6F9CDB44DFCC/icon.png';
+        let pipIcon = 'https://res.stayfork.app/scripts/3F8E6C0D8F4FDD3767A7F0B151A72E94/icon.png';
         if(Utils.isDark()){
           // bg = 'background-color: rgba(0, 0, 0, 0.4);';
           posterbg = 'background-color: rgba(0, 0, 0, 1);';
@@ -1388,6 +1382,10 @@ const browser = __b;
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
           lineColor = '#37372F';
+          hdBg = 'rgb(247,247,247)';
+          titleIcon = 'https://res.stayfork.app/scripts/102BDC80B489A31FCA2F4E3A3B7CCE74/icon.png';
+          airplayIcon = 'https://res.stayfork.app/scripts/F6E653EE027B789962CEE7E6FB2CF65F/icon.png';
+          pipIcon = 'https://res.stayfork.app/scripts/DC8756A3CE2F2752ED738E5C1A71FCFF/icon.png';
         }
         
         let countH = 1;
@@ -1417,7 +1415,20 @@ const browser = __b;
 
             list = [{title:videoInfo.title, downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: '', protect:item.protect?item.protect:false, audioUrl, qualityLabel:item.qualityLabel }];
             downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}</div>`
+            let quality = item.quality;
+            let heightQualityLabel = '';
+            if(quality){
+              try {
+                quality = quality.replace(/[^0-9]/g,'');
+                if(Number(quality) > 780){
+                  heightQualityLabel = '<span class="__stay-hd">HD</span>';
+                }
+              } catch (error) {
+                
+              }
+              
+            }
+            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}${heightQualityLabel}</div>`
             countH = countH + 1;
           })
           downloadCon = qualityItem;
@@ -1438,8 +1449,9 @@ const browser = __b;
             vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
           }
         }else{
-          let paddingHeight = Utils.add(10, 36);
+          let paddingHeight = Utils.add(4, 36);
           let modalContentHeight = Utils.add(Utils.add(posterHeight, paddingHeight), Utils.add(Utils.mul(countH, 38), 36));
+          modalContentHeight = Utils.add(modalContentHeight, 38);
           // 内容+定位的top 超出屏幕高度, 则可展示内容的top
           if(top>Utils.sub(bodyClientHeight, modalContentHeight)){
             vTop = Utils.sub(bodyClientHeight, modalContentHeight);
@@ -1566,7 +1578,7 @@ const browser = __b;
             box-sizing: border-box;
           }
           ._stay-sinffer-title{
-            padding-left: 15px;
+            padding-left: 44px;
             padding-right: 15px;
             width: 100%;
             height:36px;
@@ -1584,10 +1596,52 @@ const browser = __b;
             margin-bottom: 10px;
             box-sizing: border-box;
             font-size: 16px;
+            position: relative;
+          }
+          ._stay-sinffer-title::before{
+            content: '';
+            background: url(${titleIcon}) 50% 50% no-repeat;
+            background-size: 18px;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translate(0, -50%);
+            }
           }
           ._stay-sinffer-title span{
             font-weight: 600;
             color: ${fontColor}
+          }
+          ._stay-sinffer-tool{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 15px;
+            height: 38px;
+            box-sizing: border-box;
+          }
+          ._stay-sinffer-tool .__tool{
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: ${fontColor}
+          }
+          ._stay-sinffer-tool .__tool img{
+            width: 20px;
+          }
+          ._stay-sinffer-tool .__tool span{
+            padding-left: 10px;
+          }
+          ._stay-sinffer-tool .__airplay{
+            
+            border-right: 0.5px solid ${lineColor};
+          }
+          ._stay-sinffer-tool .__pip{
+
           }
           ._stay-sinffer-download{
             width:100%;
@@ -1614,6 +1668,18 @@ const browser = __b;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+          }
+          ._stay-quality-item .__stay-hd{
+            border: 1px solid ${hdLine};
+            background: ${hdBg};
+            color: ${hdLine};
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0px 4px;
+            border-radius: 4px;
+            margin-left: 10px;
+            align-items: center;
           }
           ._stay-quality-item::after{
             content:"";
@@ -1654,6 +1720,7 @@ const browser = __b;
           '<div class="__stay-sinffer-poster">'+posterCon+'</div>',
           '<div class="_stay-sinffer-popup">',
           '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
+          `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
           '<div class="_stay-sinffer-download">',
           downloadCon,
           '</div>',
@@ -1707,6 +1774,21 @@ const browser = __b;
           })(i)
         }
       }
+      async function openPiP(video) {
+        try {
+          const pipWindow = await video.requestPictureInPicture();
+          // 进入画中画模式...
+        } catch (e) {   
+          console.error(e) // 处理异常
+        }
+      }
+
+      document.querySelector('#__stay_pip').addEventListener('touchstart', e=>{
+        // console.log('touch--pip--------',e);
+        // e.stopPropagation();
+        openPiP(videoDom);
+      })
+
     }
 
 
