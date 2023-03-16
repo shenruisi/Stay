@@ -704,7 +704,7 @@ static DownloadManager *instance = nil;
     __block double duration = 0;
     [FFmpegKitConfig enableLogCallback:^(Log *log) {
         if (duration == 0) {
-            if ([log.getMessage rangeOfString:@"\\d{2,}:\\d\\d:\\d\\d" options:NSRegularExpressionSearch].length > 0) {
+            if ([log.getMessage rangeOfString:@"^\\d{2,}:\\d\\d:\\d\\d" options:NSRegularExpressionSearch].length > 0) {
                 NSArray<NSString *> *times = [log.getMessage componentsSeparatedByString:@":"];
                 duration = times[0].doubleValue * 3600 + times[1].doubleValue * 60 + times[2].doubleValue;
             }
