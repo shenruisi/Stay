@@ -212,7 +212,7 @@
         [btn addTarget:self action:@selector(qualityAction:) forControlEvents:UIControlEventTouchUpInside];
         btn.translatesAutoresizingMaskIntoConstraints = NO;
         [self.qualityView addSubview:btn];
-        itemWidth = qualityLabel.length > 4 ? 80 : 70;
+        itemWidth = qualityLabel.length * 8 + 15 + 15;
         curWidth += itemWidth;
         if (curWidth > maxWidth) {
             top += 30;
@@ -425,13 +425,14 @@
     CGFloat height = 290;
     if (qualityList.count > 0) {
         CGFloat maxWidth = self.view.width - 40 - 15 + 15;
-        CGFloat curWidth = 0, curHeight = 30;
+        CGFloat curWidth = 0, curHeight = 30, itemWidth;
         for (NSDictionary *qulity in qualityList) {
             NSString *qualityLabel = qulity[@"qualityLabel"];
-            curWidth += qualityLabel.length > 4 ? 80 : 70;
+            itemWidth = qualityLabel.length * 8 + 15 + 15;
+            curWidth += itemWidth;
             if (curWidth > maxWidth) {
                 curHeight += 30;
-                curWidth = qualityLabel.length > 4 ? 80 : 70;
+                curWidth = itemWidth;
             }
         }
         height += curHeight;
