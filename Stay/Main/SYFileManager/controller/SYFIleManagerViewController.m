@@ -121,7 +121,6 @@ UIDocumentPickerDelegate
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, strong) NSMutableArray *videoArray;
 @property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
-
 @end
 
 @implementation SYFIleManagerViewController
@@ -415,13 +414,12 @@ UIDocumentPickerDelegate
                 [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
                 [self.navigationController pushViewController:controller animated:TRUE];
             } else {
-                NSArray *documentTypes = @[@"public.folder"];
+                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
 
-                UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
-
-                documentPicker.delegate = self;
-                documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-                [self presentViewController:documentPicker animated:YES completion:nil];
+                NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
+                    [[UIApplication sharedApplication] openURL:fileURL];
+                }
             }
         }
     }
@@ -916,6 +914,7 @@ UIDocumentPickerDelegate
         [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
             //读取文件
             NSString *fileName = [newURL lastPathComponent];
+       
             dispatch_async(dispatch_get_main_queue(), ^{
             [[NSUserDefaults standardUserDefaults] setObject:@{@"fileName":fileName ,
                                                                @"url": [newURL path],
@@ -928,6 +927,8 @@ UIDocumentPickerDelegate
                 [self.tableView reloadData];
                 });
             [self dismissViewControllerAnimated:YES completion:NULL];
+        
+        
         }];
         [urls.firstObject stopAccessingSecurityScopedResource];
     } else {
