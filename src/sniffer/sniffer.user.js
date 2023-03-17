@@ -54,7 +54,7 @@ const browser = __b;
     let host = window.location.host;
     let decodeSignatureCipher = {}; 
     let playerBase = '';
-    let ytBaseJSCode = '';
+    let ytBaseJSUuid = '';
     let ytRandomBaseJs = '';
     // console.log('------------injectParseVideoJS-----start------------------',decodeSignatureCipher)
     let videoList = [];
@@ -1066,13 +1066,13 @@ const browser = __b;
       if(!decodeSignatureCipher || !Object.keys(decodeSignatureCipher).length){
         return false;
       }
-      if(!ytBaseJSCode){
+      if(!ytBaseJSUuid){
         return false;
       }
       if(!decodeSignatureCipher.decodeFunStr){
         return false;
       }
-      if(ytBaseJSCode != decodeSignatureCipher.pathUuid){
+      if(ytBaseJSUuid != decodeSignatureCipher.pathUuid){
         return false;
       }
       return true;
@@ -1267,7 +1267,6 @@ const browser = __b;
             if(response.body && JSON.stringify(response.body)!='{}'){
               // console.log('isStayAround---------', response.body)
               resolve( response.body);
-            // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
             }
           });
         }else{
@@ -1720,7 +1719,7 @@ const browser = __b;
           '<div class="__stay-sinffer-poster">'+posterCon+'</div>',
           '<div class="_stay-sinffer-popup">',
           '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
-          `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
+          `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" title="Picture-in-Picture" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
           '<div class="_stay-sinffer-download">',
           downloadCon,
           '</div>',
@@ -1782,11 +1781,56 @@ const browser = __b;
           console.error(e) // 处理异常
         }
       }
+      
+      
+     
+      const pip_button_act = (isPip) => {
+        if(isPip){
+          document.querySelector('#__stay_pip img').style.opacity = 0.2;
+        }else{
+          document.querySelector('#__stay_pip img').style.opacity = 1;
+        }
+      }
+      
+      const enterpictureinpicture = e => pip_button_act(true);
+      const leavepictureinpicture = e => pip_button_act(false);
+      const webkitpresentationmodechanged = event => {
+        event.target.webkitPresentationMode == 'picture-in-picture'
+          ? (pip_button_act(true), event.stopImmediatePropagation())
+          : pip_button_act(false);
+      }
+      
+      const pip_init = video => {
+        if (!video || video.nodeName != 'VIDEO' || !video.hasAttribute('src')) return;
+        if (video.webkitPresentationMode === undefined) {
+          video.addEventListener('enterpictureinpicture', enterpictureinpicture);
+          video.addEventListener('leavepictureinpicture', leavepictureinpicture);
+        } else {
+          video.addEventListener('webkitpresentationmodechanged', webkitpresentationmodechanged, true);
+        }
+      }
 
-      document.querySelector('#__stay_pip').addEventListener('touchstart', e=>{
+      pip_init(videoDom);
+
+
+      document.querySelector('#__stay_pip').addEventListener('touchstart', event => {
         // console.log('touch--pip--------',e);
         // e.stopPropagation();
-        openPiP(videoDom);
+        if (videoDom.webkitPresentationMode === undefined) {
+          if (document.pictureInPictureElement) {
+            document.exitPictureInPicture();
+          } else {
+            videoDom.requestPictureInPicture();
+          }
+        } else {
+          if (videoDom.webkitPresentationMode != 'inline') {
+            videoDom.webkitSetPresentationMode('inline');
+          } else {
+            videoDom.webkitSetPresentationMode('picture-in-picture');
+          }
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
       })
 
     }
@@ -1997,6 +2041,9 @@ const browser = __b;
       // ztawxd5l.hxaa79.com
       else if(host.indexOf('hxaa79.com')>-1){
         videoInfo = handleHxaa79VideoInfo(videoSnifferDom);
+      }
+      else if(host.indexOf('555yy4.com')>-1){
+        videoInfo = handle555yy4VideoInfo(videoSnifferDom);
       }
 
       if(videoInfo.downloadUrl){
@@ -2413,6 +2460,24 @@ const browser = __b;
       return videoInfo;
     }
 
+    function handle555yy4VideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      let videoTitle = window.parent.document.title;
+      console.log('videoTitle------',videoTitle,window.parent.ep_title,window.parent.MAC.Title);
+      if(!videoTitle){
+        videoTitle = window.parent.ep_title;
+        
+      }
+      if(!videoTitle){
+        videoTitle = window.parent.MAC.Title;
+      }
+      videoInfo.title = videoTitle;
+      return videoInfo;
+    }
+
     /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList,videoKey,videoUuid}
@@ -2625,7 +2690,7 @@ const browser = __b;
           let qualityList = []
           let qualitySet = new Set();
           let jsPath = ytplayer.bootstrapWebPlayerContextConfig?ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
-          handleYTRandomCode(jsPath);
+          handleYTRandomPathUuid(jsPath);
           // 获取mp4音频
           let mp4AudioArr = adaptiveFormats.filter(item=>{
             if(item.mimeType.indexOf('audio/mp4')>-1){
@@ -2744,7 +2809,7 @@ const browser = __b;
       return videoInfo;
     }
 
-    function handleYTRandomCode(jsPath){
+    function handleYTRandomPathUuid(jsPath){
       try {
         if(jsPath){
           let tempRandomCode = ''
@@ -2756,7 +2821,7 @@ const browser = __b;
             tempRandomCode = pathArr[2]
           }
           if(tempRandomCode){
-            definedObj.randomCode = tempRandomCode;
+            definedObj.randomPathUuid = tempRandomCode;
           }
         }
       } catch (error) {
@@ -2859,6 +2924,33 @@ const browser = __b;
       })
     }
 
+    /**
+     * 
+     * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
+     * @param {String} pathUrl    base.js的路径/s/player/7862ca1f/player_ias.vflset/zh_CN/base.js
+     * @returns 
+     */
+    function saveYoutubeDecodeFun(pathUuid, randomFunStr){
+      console.log('saveYoutubeDecodeFun-----pathUuid=',pathUuid, ',randomFunStr=',randomFunStr);
+      if(isContent){
+        console.log('fetchYoutubeDecodeFun-----true');
+        browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid: pathUuid, randomFunStr}, (response) => {
+          console.log('saveYoutubeDecodeFun---------',response)
+        });
+      }else{
+        console.log('saveYoutubeDecodeFun-----false');
+        const pid = Math.random().toString(36).substring(2, 9);
+        const callback = e => {
+          if (e.data.pid !== pid || e.data.name !== 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP') return;
+          console.log('saveYoutubeDecodeFun---------',e.data.decodeFun)
+          window.removeEventListener('message', callback);
+        };
+        window.postMessage({ id: pid, pid: pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR', pathUuid, randomFunStr });
+        window.addEventListener('message', callback);
+      }
+      
+    }
+
     async function startFetchYoutubeFunStr(){
       // console.log('startFetchYoutubeFunStr-------start-------------',host);
       if(!(host.indexOf('youtube.com')>-1)){
@@ -2920,15 +3012,86 @@ const browser = __b;
       let decodeFunStr = await fetchYoutubeDecodeFun(pathUuid, jsPath);
       console.log('handleFetchYoutubePlayer------',decodeFunStr)
       if(decodeFunStr){
-        decodeSignatureCipher = {pathUuid, decodeFunStr};
-        window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
+        setLocalYTRandomFunStr(pathUuid, decodeFunStr);
         if(shouldDecode){
           handleDecodeSignatureAndPush();
         }
       }else{
-        decodeSignatureCipher = {pathUuid, decodeFunStr:''};
-        window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
+        fetchCurrentYtRandomStr(pathUuid, jsPath);
         console.log('fetchYoutubeDecodeFun-----null-----')
+      }
+    }
+    
+    function setLocalYTRandomFunStr(pathUuid, decodeFunStr){
+      decodeSignatureCipher = {pathUuid, decodeFunStr};
+      window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
+    }
+
+    async function fetchCurrentYtRandomStr(pathUuid, jsPath){
+      if(!jsPath || !pathUuid){
+        setLocalYTRandomFunStr(pathUuid, '');
+        return;
+      }
+      function testYtDecodeFun(randomFunStr){
+        try {
+          let decodeFun =  new Function('return '+randomFunStr); 
+          let signature = '%3D%3DQmbTSWlgLuztoft4F_uqQieS7_jBtboKab9zSp5WRdSAiApcTRtZLjBmFtzLXphJ0x_haWmWIhVtdAg8jD1rsKkRKAhIQRw8JQ0qOAOA';
+          // eslint-disable-next-line max-len
+          let sourceUrl = 'https://rr5---sn-o097znsk.googlevideo.com/videoplayback%3Fexpire%3D1679042695%26ei%3DJ9QTZJ6FFKeksfIPkaSL-Aw%26ip%3D2602%253Afeda%253A30%253Aae86%253A40e7%253A53ff%253Afe8b%253A9a97%26id%3Do-AI3u_uLu7PqvSwoVFwTG0fSk-puen4XBHxlLqco9MH8Q%26itag%3D135%26aitags%3D133%252C134%252C135%252C160%252C242%252C243%252C244%252C278%26source%3Dyoutube%26requiressl%3Dyes%26mh%3D_m%26mm%3D31%252C26%26mn%3Dsn-o097znsk%252Csn-a5meknzk%26ms%3Dau%252Conr%26mv%3Dm%26mvi%3D5%26pl%3D44%26initcwndbps%3D2135000%26vprv%3D1%26mime%3Dvideo%252Fmp4%26ns%3DwhOrAPi40PxLIKHeHvAaoDIL%26gir%3Dyes%26clen%3D18438908%26dur%3D584.533%26lmt%3D1635010443575003%26mt%3D1679020854%26fvip%3D5%26keepalive%3Dyes%26fexp%3D24007246%26c%3DMWEB%26txp%3D5432434%26n%3D3BrEIxrXFc7SkC%26sparams%3Dexpire%252Cei%252Cip%252Cid%252Caitags%252Csource%252Crequiressl%252Cvprv%252Cmime%252Cns%252Cgir%252Cclen%252Cdur%252Clmt%26lsparams%3Dmh%252Cmm%252Cmn%252Cms%252Cmv%252Cmvi%252Cpl%252Cinitcwndbps%26lsig%3DAG3C_xAwRgIhAKYBlOvRZiHPnnEJJ5foNn7LZU1cgGvfyO3WU9TjETfZAiEA6PvSgRq0gdcsBBTTj0VHXybmMwb-ouW2TVIYGmG_PG0%253D';
+          signature = decodeFun()(decodeURIComponent(signature));
+          sourceUrl = `${decodeURIComponent(sourceUrl)}&sig=${signature}`;
+          console.log(sourceUrl);
+          if(sourceUrl){
+            return true;
+          }
+        } catch (error) {
+          
+        }
+        return false;
+      }
+      try {
+        let jsResponse = await fetch(`https://m.youtube.com${jsPath}`);
+        let jsText = await jsResponse.text();
+        // eslint-disable-next-line no-useless-escape
+        let randomArr = jsText.match(/[a-zA-Z]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
+        console.log(randomArr)
+        let randomFunStr = '';
+        if(randomArr && randomArr.length){
+          randomFunStr = randomArr[0];
+          console.log(randomFunStr);
+        }
+        if(!randomFunStr){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        let subRandomStr = '';
+        // eslint-disable-next-line no-useless-escape
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z]{2}\=\{[\S]*a\.reverse\(\)[\s\S]*a\.splice\(0\,b\)\}\};/g);
+        if(subRandomArr && subRandomArr.length){
+          subRandomStr = subRandomArr[0];
+          console.log(subRandomStr);
+        }
+        if(!subRandomStr){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        // eslint-disable-next-line no-useless-escape
+        randomFunStr = randomFunStr.replace(/[a-zA-Z]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
+        if(!randomFunStr){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        console.log('randomFunStr-------',randomFunStr);
+        
+        if(testYtDecodeFun(randomFunStr)){
+          saveYoutubeDecodeFun(pathUuid, randomFunStr)
+        }else{
+          console.log('testYtDecodeFun-------false',randomFunStr);
+        }
+        setLocalYTRandomFunStr(pathUuid, randomFunStr);
+      } catch (error) {
+        console.error(jsPath,error);
+        setLocalYTRandomFunStr(pathUuid, '');
       }
     }
 
@@ -2963,19 +3126,18 @@ const browser = __b;
     };
 
     /* eslint-disable */
-    Object.defineProperty(definedObj,'randomCode',{
+    Object.defineProperty(definedObj,'randomPathUuid',{
       get:function(){
-        return randomCode;
+        return randomPathUuid;
       },
       set:function(newValue){
-        randomCode = newValue;
-        console.log('set randomStr:',newValue);
+        randomPathUuid = newValue;
         //需要触发的渲染函数可以写在这...
-        if(newValue != ytBaseJSCode){
-          ytBaseJSCode = newValue
-          handleFetchYoutubePlayer(ytBaseJSCode, ytRandomBaseJs, false);
+        if(newValue != ytBaseJSUuid){
+          ytBaseJSUuid = newValue
+          handleFetchYoutubePlayer(ytBaseJSUuid, ytRandomBaseJs, false);
+          fetchCurrentYtRandomStr(ytBaseJSUuid, ytRandomBaseJs);
         }
-        
       }
     });
 
@@ -3079,6 +3241,15 @@ const browser = __b;
       browser.runtime.sendMessage({from: 'sniffer', operate: 'fetchYoutubeDecodeFun', pathUrl, pathUuid}, (response) => {
         let decodeFun = response&&response.decodeFun?response.decodeFun:'';
         window.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP', decodeFun});
+      });
+    }
+    else if(name === 'SAVE_YOUTUBE_DECODE_FUN_STR'){
+      let pid = e.data.pid;
+      let pathUuid = e.data.pathUuid;
+      let randomFunStr = e.data.randomFunStr;
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid, randomFunStr}, (response) => {
+        let decodeFun = '';
+        window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
       });
     }
   })
