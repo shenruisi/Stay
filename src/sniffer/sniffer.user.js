@@ -47,6 +47,7 @@ const browser = __b;
 
   function injectParseVideoJS(isContent){
     let definedObj = {};
+    let videoListMd5 = '';
     let isStayAround = '';
     let longPressStatus = '';
     let hostUrl = window.location.href;
@@ -291,6 +292,179 @@ const browser = __b;
         }
         e = Math.pow(10, Math.max(c, d));
         return  (this.mul(a, e) + this.mul(b, e)) / e;
+      },
+      hexMD5 (str) { 
+        /*
+        * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+        * Digest Algorithm, as defined in RFC 1321.
+        * Version 1.1 Copyright (C) Paul Johnston 1999 - 2002.
+        * Code also contributed by Greg Holt
+        * See http://pajhome.org.uk/site/legal.html for details.
+        */
+
+        /*
+        * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+        * to work around bugs in some JS interpreters.
+        */
+        function safe_add(x, y)
+        {
+          let lsw = (x & 0xFFFF) + (y & 0xFFFF)
+          let msw = (x >> 16) + (y >> 16) + (lsw >> 16)
+          return (msw << 16) | (lsw & 0xFFFF)
+        }
+
+        /*
+        * Bitwise rotate a 32-bit number to the left.
+        */
+        function rol(num, cnt)
+        {
+          return (num << cnt) | (num >>> (32 - cnt))
+        }
+
+        /*
+        * These functions implement the four basic operations the algorithm uses.
+        */
+        function cmn(q, a, b, x, s, t)
+        {
+          return safe_add(rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b)
+        }
+        function ff(a, b, c, d, x, s, t)
+        {
+          return cmn((b & c) | ((~b) & d), a, b, x, s, t)
+        }
+        function gg(a, b, c, d, x, s, t)
+        {
+          return cmn((b & d) | (c & (~d)), a, b, x, s, t)
+        }
+        function hh(a, b, c, d, x, s, t)
+        {
+          return cmn(b ^ c ^ d, a, b, x, s, t)
+        }
+        function ii(a, b, c, d, x, s, t)
+        {
+          return cmn(c ^ (b | (~d)), a, b, x, s, t)
+        }
+
+        /*
+        * Calculate the MD5 of an array of little-endian words, producing an array
+        * of little-endian words.
+        */
+        function coreMD5(x)
+        {
+          let a = 1732584193
+          let b = -271733879
+          let c = -1732584194
+          let d = 271733878
+
+          for(let i = 0; i < x.length; i += 16)
+          {
+            let olda = a
+            let oldb = b
+            let oldc = c
+            let oldd = d
+
+            a = ff(a, b, c, d, x[i+ 0], 7 , -680876936)
+            d = ff(d, a, b, c, x[i+ 1], 12, -389564586)
+            c = ff(c, d, a, b, x[i+ 2], 17, 606105819)
+            b = ff(b, c, d, a, x[i+ 3], 22, -1044525330)
+            a = ff(a, b, c, d, x[i+ 4], 7 , -176418897)
+            d = ff(d, a, b, c, x[i+ 5], 12, 1200080426)
+            c = ff(c, d, a, b, x[i+ 6], 17, -1473231341)
+            b = ff(b, c, d, a, x[i+ 7], 22, -45705983)
+            a = ff(a, b, c, d, x[i+ 8], 7 , 1770035416)
+            d = ff(d, a, b, c, x[i+ 9], 12, -1958414417)
+            c = ff(c, d, a, b, x[i+10], 17, -42063)
+            b = ff(b, c, d, a, x[i+11], 22, -1990404162)
+            a = ff(a, b, c, d, x[i+12], 7 , 1804603682)
+            d = ff(d, a, b, c, x[i+13], 12, -40341101)
+            c = ff(c, d, a, b, x[i+14], 17, -1502002290)
+            b = ff(b, c, d, a, x[i+15], 22, 1236535329)
+
+            a = gg(a, b, c, d, x[i+ 1], 5 , -165796510)
+            d = gg(d, a, b, c, x[i+ 6], 9 , -1069501632)
+            c = gg(c, d, a, b, x[i+11], 14, 643717713)
+            b = gg(b, c, d, a, x[i+ 0], 20, -373897302)
+            a = gg(a, b, c, d, x[i+ 5], 5 , -701558691)
+            d = gg(d, a, b, c, x[i+10], 9 , 38016083)
+            c = gg(c, d, a, b, x[i+15], 14, -660478335)
+            b = gg(b, c, d, a, x[i+ 4], 20, -405537848)
+            a = gg(a, b, c, d, x[i+ 9], 5 , 568446438)
+            d = gg(d, a, b, c, x[i+14], 9 , -1019803690)
+            c = gg(c, d, a, b, x[i+ 3], 14, -187363961)
+            b = gg(b, c, d, a, x[i+ 8], 20, 1163531501)
+            a = gg(a, b, c, d, x[i+13], 5 , -1444681467)
+            d = gg(d, a, b, c, x[i+ 2], 9 , -51403784)
+            c = gg(c, d, a, b, x[i+ 7], 14, 1735328473)
+            b = gg(b, c, d, a, x[i+12], 20, -1926607734)
+
+            a = hh(a, b, c, d, x[i+ 5], 4 , -378558)
+            d = hh(d, a, b, c, x[i+ 8], 11, -2022574463)
+            c = hh(c, d, a, b, x[i+11], 16, 1839030562)
+            b = hh(b, c, d, a, x[i+14], 23, -35309556)
+            a = hh(a, b, c, d, x[i+ 1], 4 , -1530992060)
+            d = hh(d, a, b, c, x[i+ 4], 11, 1272893353)
+            c = hh(c, d, a, b, x[i+ 7], 16, -155497632)
+            b = hh(b, c, d, a, x[i+10], 23, -1094730640)
+            a = hh(a, b, c, d, x[i+13], 4 , 681279174)
+            d = hh(d, a, b, c, x[i+ 0], 11, -358537222)
+            c = hh(c, d, a, b, x[i+ 3], 16, -722521979)
+            b = hh(b, c, d, a, x[i+ 6], 23, 76029189)
+            a = hh(a, b, c, d, x[i+ 9], 4 , -640364487)
+            d = hh(d, a, b, c, x[i+12], 11, -421815835)
+            c = hh(c, d, a, b, x[i+15], 16, 530742520)
+            b = hh(b, c, d, a, x[i+ 2], 23, -995338651)
+
+            a = ii(a, b, c, d, x[i+ 0], 6 , -198630844)
+            d = ii(d, a, b, c, x[i+ 7], 10, 1126891415)
+            c = ii(c, d, a, b, x[i+14], 15, -1416354905)
+            b = ii(b, c, d, a, x[i+ 5], 21, -57434055)
+            a = ii(a, b, c, d, x[i+12], 6 , 1700485571)
+            d = ii(d, a, b, c, x[i+ 3], 10, -1894986606)
+            c = ii(c, d, a, b, x[i+10], 15, -1051523)
+            b = ii(b, c, d, a, x[i+ 1], 21, -2054922799)
+            a = ii(a, b, c, d, x[i+ 8], 6 , 1873313359)
+            d = ii(d, a, b, c, x[i+15], 10, -30611744)
+            c = ii(c, d, a, b, x[i+ 6], 15, -1560198380)
+            b = ii(b, c, d, a, x[i+13], 21, 1309151649)
+            a = ii(a, b, c, d, x[i+ 4], 6 , -145523070)
+            d = ii(d, a, b, c, x[i+11], 10, -1120210379)
+            c = ii(c, d, a, b, x[i+ 2], 15, 718787259)
+            b = ii(b, c, d, a, x[i+ 9], 21, -343485551)
+
+            a = safe_add(a, olda)
+            b = safe_add(b, oldb)
+            c = safe_add(c, oldc)
+            d = safe_add(d, oldd)
+          }
+          return [a, b, c, d]
+        }
+        /*
+        * Convert an 8-bit character string to a sequence of 16-word blocks, stored
+        * as an array, and append appropriate padding for MD4/5 calculation.
+        * If any of the characters are >255, the high byte is silently ignored.
+        */
+        function str2binl(str) {
+          let bin = [];
+          for (let i = 0; i < str.length * 8; i += 8) {
+            bin[i >> 5] |= (str.charCodeAt(i / 8) & 0xFF) << (i % 32);
+          }
+          return bin;
+        }
+        
+        /*
+        * Convert an array of little-endian words to a hex string.
+        */
+        function binl2hex(binarray){
+          let hex_tab = '0123456789abcdef'
+          let str = ''
+          for(let i = 0; i < binarray.length * 4; i++)
+          {
+            str += hex_tab.charAt((binarray[i>>2] >> ((i%4)*8+4)) & 0xF) +
+                    hex_tab.charAt((binarray[i>>2] >> ((i%4)*8)) & 0xF)
+          }
+          return str
+        }
+        return binl2hex(coreMD5(str2binl(str))) 
       }
     }
 
@@ -946,6 +1120,12 @@ const browser = __b;
      * push videoList to transfer
      */
     function pushVideoListToTransfer(){
+      const videoInfoListMd5 = Utils.hexMD5(JSON.stringify(videoList));
+      if(videoListMd5 && videoListMd5 == videoInfoListMd5){
+        return;
+      }
+      console.log('pushVideoListToTransfer------',videoList);
+      videoListMd5 = videoInfoListMd5;
       if(isContent){
         // console.log('isContent----------------------');
         let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
@@ -977,7 +1157,7 @@ const browser = __b;
         longPressStatus = await getLongPressStatus();
       }
 
-      if(longPressStatus && longPressStatus == 'off'){
+      if(!longPressStatus || (longPressStatus && longPressStatus == 'off')){
         return;
       }
 
@@ -1177,17 +1357,6 @@ const browser = __b;
         visibleTimer = 0;
       }, 400)
 
-      async function openPiP(video) {
-        try {
-          const pipWindow = await video.requestPictureInPicture();
-          // 进入画中画模式...
-        } catch (e) {   
-          console.error(e) // 处理异常
-        }
-      }
-
-      // F7B500
-
       // window.open(downloadUrl);
       function createModal(){
         let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: ''}];
@@ -1199,6 +1368,11 @@ const browser = __b;
         let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
         let downloadIcon = isContent?browser.runtime.getURL('img/popup-download-light.png'):'https://res.stayfork.app/scripts/8DF5C8391ED58046174D714911AD015E/icon.png';
+        let hdLine = '#F7B500';
+        let hdBg = '#000';
+        let titleIcon = 'https://res.stayfork.app/scripts/22BF8566F3522614F4F3A15EBC87378E/icon.png';
+        let airplayIcon = 'https://res.stayfork.app/scripts/D660FA085601F608C3BE6F9CDB44DFCC/icon.png';
+        let pipIcon = 'https://res.stayfork.app/scripts/3F8E6C0D8F4FDD3767A7F0B151A72E94/icon.png';
         if(Utils.isDark()){
           // bg = 'background-color: rgba(0, 0, 0, 0.4);';
           posterbg = 'background-color: rgba(0, 0, 0, 1);';
@@ -1208,6 +1382,10 @@ const browser = __b;
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
           lineColor = '#37372F';
+          hdBg = 'rgb(247,247,247)';
+          titleIcon = 'https://res.stayfork.app/scripts/102BDC80B489A31FCA2F4E3A3B7CCE74/icon.png';
+          airplayIcon = 'https://res.stayfork.app/scripts/F6E653EE027B789962CEE7E6FB2CF65F/icon.png';
+          pipIcon = 'https://res.stayfork.app/scripts/DC8756A3CE2F2752ED738E5C1A71FCFF/icon.png';
         }
         
         let countH = 1;
@@ -1237,7 +1415,20 @@ const browser = __b;
 
             list = [{title:videoInfo.title, downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: '', protect:item.protect?item.protect:false, audioUrl, qualityLabel:item.qualityLabel }];
             downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}</div>`
+            let quality = item.quality;
+            let heightQualityLabel = '';
+            if(quality){
+              try {
+                quality = quality.replace(/[^0-9]/g,'');
+                if(Number(quality) > 780){
+                  heightQualityLabel = '<span class="__stay-hd">HD</span>';
+                }
+              } catch (error) {
+                
+              }
+              
+            }
+            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}${heightQualityLabel}</div>`
             countH = countH + 1;
           })
           downloadCon = qualityItem;
@@ -1258,8 +1449,9 @@ const browser = __b;
             vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
           }
         }else{
-          let paddingHeight = Utils.add(10, 36);
+          let paddingHeight = Utils.add(4, 36);
           let modalContentHeight = Utils.add(Utils.add(posterHeight, paddingHeight), Utils.add(Utils.mul(countH, 38), 36));
+          modalContentHeight = Utils.add(modalContentHeight, 38);
           // 内容+定位的top 超出屏幕高度, 则可展示内容的top
           if(top>Utils.sub(bodyClientHeight, modalContentHeight)){
             vTop = Utils.sub(bodyClientHeight, modalContentHeight);
@@ -1386,7 +1578,7 @@ const browser = __b;
             box-sizing: border-box;
           }
           ._stay-sinffer-title{
-            padding-left: 15px;
+            padding-left: 44px;
             padding-right: 15px;
             width: 100%;
             height:36px;
@@ -1404,10 +1596,52 @@ const browser = __b;
             margin-bottom: 10px;
             box-sizing: border-box;
             font-size: 16px;
+            position: relative;
+          }
+          ._stay-sinffer-title::before{
+            content: '';
+            background: url(${titleIcon}) 50% 50% no-repeat;
+            background-size: 18px;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translate(0, -50%);
+            }
           }
           ._stay-sinffer-title span{
             font-weight: 600;
             color: ${fontColor}
+          }
+          ._stay-sinffer-tool{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 15px;
+            height: 38px;
+            box-sizing: border-box;
+          }
+          ._stay-sinffer-tool .__tool{
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: ${fontColor}
+          }
+          ._stay-sinffer-tool .__tool img{
+            width: 20px;
+          }
+          ._stay-sinffer-tool .__tool span{
+            padding-left: 10px;
+          }
+          ._stay-sinffer-tool .__airplay{
+            
+            border-right: 0.5px solid ${lineColor};
+          }
+          ._stay-sinffer-tool .__pip{
+
           }
           ._stay-sinffer-download{
             width:100%;
@@ -1434,6 +1668,18 @@ const browser = __b;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+          }
+          ._stay-quality-item .__stay-hd{
+            border: 1px solid ${hdLine};
+            background: ${hdBg};
+            color: ${hdLine};
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0px 4px;
+            border-radius: 4px;
+            margin-left: 10px;
+            align-items: center;
           }
           ._stay-quality-item::after{
             content:"";
@@ -1474,6 +1720,7 @@ const browser = __b;
           '<div class="__stay-sinffer-poster">'+posterCon+'</div>',
           '<div class="_stay-sinffer-popup">',
           '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
+          `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
           '<div class="_stay-sinffer-download">',
           downloadCon,
           '</div>',
@@ -1527,6 +1774,21 @@ const browser = __b;
           })(i)
         }
       }
+      async function openPiP(video) {
+        try {
+          const pipWindow = await video.requestPictureInPicture();
+          // 进入画中画模式...
+        } catch (e) {   
+          console.error(e) // 处理异常
+        }
+      }
+
+      document.querySelector('#__stay_pip').addEventListener('touchstart', e=>{
+        // console.log('touch--pip--------',e);
+        // e.stopPropagation();
+        openPiP(videoDom);
+      })
+
     }
 
 
@@ -2445,7 +2707,7 @@ const browser = __b;
               qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
             }
           });
-          console.log('qualityList===================',qualityList);
+          // console.log('qualityList===================',qualityList);
           if(qualityList && qualityList.length){
             videoInfo['qualityList'] = qualityList;
           }
@@ -2669,8 +2931,19 @@ const browser = __b;
         console.log('fetchYoutubeDecodeFun-----null-----')
       }
     }
+
+    async function fetchLongPressConfig(){
+      if(!isStayAround){
+        isStayAround = await getStayAround();
+      }
+      if(!longPressStatus){
+        longPressStatus = await getLongPressStatus();
+      }
+    }
     
     function startSnifferVideoInfoOnPage(complate){
+      console.log('startSnifferVideoInfoOnPage------start--321----');
+      fetchLongPressConfig();
       console.log('startSnifferVideoInfoOnPage--------1----');
       startFetchYoutubeFunStr();
       console.log('startSnifferVideoInfoOnPage--------2----');

@@ -179,7 +179,7 @@
             cer.dic = [NSMutableDictionary dictionaryWithDictionary:self.dic];
             cer.dic[@"downloadUrl"] = targetUrl;
             if(cer.dic[@"title"] == nil) {
-                cer.dic[@"title"] = linkURL.lastPathComponent;
+                cer.dic[@"title"] = [linkURL.lastPathComponent stringByDeletingPathExtension];
             }
             cer.nav = self.nav;
             [self.navigationController pushModalViewController:cer];
