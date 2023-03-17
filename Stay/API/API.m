@@ -129,7 +129,7 @@ static API *instance = nil;
 
 - (NSDictionary *)downloadYoutube:(NSString *)path{
     if ([self.youtubeCodeCache objectForKey:path]){
-//        return [self.youtubeCodeCache objectForKey:path];
+        return [self.youtubeCodeCache objectForKey:path];
     }
     
     NSString *reqUrl = [NSString stringWithFormat:@"%@download/youtube",STAY_FORK_END_POINT];
@@ -146,7 +146,7 @@ static API *instance = nil;
                                                    options:NSJSONWritingPrettyPrinted
                                                      error:nil];
     RC4 *rc4Encrypt = [[RC4 alloc] initWithKey:self.randomcData];
-    RC4 *rc4Decrypt = [[RC4 alloc] initWithKey:self.randomcData];;
+    RC4 *rc4Decrypt = [[RC4 alloc] initWithKey:self.randomcData];
     [request setHTTPBody:[rc4Encrypt encrypt:data]];
     __block NSDictionary *ret;
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
@@ -166,6 +166,33 @@ static API *instance = nil;
     }] resume];
     dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
     return ret;
+}
+
+- (void)commitYoutbe:(NSString *)path code:(NSString *)code{
+    NSString *reqUrl = [NSString stringWithFormat:@"%@commit/youtube",STAY_FORK_END_POINT];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    NSDictionary *param = @{
+        @"biz": @{
+            @"path":path,
+            @"code":code
+        }
+    };
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:param
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:nil];
+    RC4 *rc4Encrypt = [[RC4 alloc] initWithKey:self.randomcData];
+    RC4 *rc4Decrypt = [[RC4 alloc] initWithKey:self.randomcData];
+    [request setHTTPBody:[rc4Encrypt encrypt:data]];
+
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request
+                    completionHandler:^(NSData *data,
+                                        NSURLResponse *response,
+                                        NSError *error) {
+        NSLog(@"%@",response);
+    }] resume];
 }
 
 - (NSMutableDictionary<NSString *,id> *)youtubeCodeCache{

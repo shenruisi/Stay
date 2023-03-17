@@ -363,6 +363,13 @@
             };
         }
     }
+    else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
+        NSString *path = message[@"path"];
+        NSString *code = message[@"code"];
+        if (path.length > 0 && code.length > 0){
+            [[API shared] commitYoutbe:path code:code];
+        }
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
