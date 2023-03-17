@@ -64,9 +64,12 @@
         if(self.dic[@"pathName"] != NULL) {
             text = self.dic[@"pathName"];
         }
+        element.generalEntity.title = text;
+        element.generalEntity.uuid = uuid;
+    } else {
+        element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+        element.generalEntity.uuid = uuid;
     }
-    element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
-    element.generalEntity.uuid = uuid;
     [element clear];
     
     [self.tableView reloadData];
@@ -209,10 +212,36 @@
 }
 
 - (void)startDownloadAction:(id)sender{
+ 
+    
+    
+    if([FILEUUID isEqualToString:self.dic[@"uuid"]]) {
+        
+        DownloadResource *resource = [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:self.dic[@"downloadUuid"]];
+        
+        NSError *error = nil;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSURL *sourceURL = [NSURL fileURLWithPath:resource.allPath];
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        NSString *path = self.dic[@"allPath"] == NULL?dic[@"url"]:self.dic[@"allPath"] ;
+        NSString *title = self.nameElements[0].inputEntity.text;
+
+        NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",path,title,@"mp4"];
+        
+        NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
+        BOOL success = [fileManager moveItemAtURL:sourceURL toURL:destinationURL error:&error];
+        if (success) {
+            NSLog(@"移动文件成功");
+        } else {
+            NSLog(@"移动文件失败：%@", error);
+        }
+    }
     NSString *path = self.saveToElements[0].generalEntity.uuid;
     [[DataManager  shareManager] updateVideoPath:path uuid:self.dic[@"downloadUuid"]];
     NSString *title = self.nameElements[0].inputEntity.text;
     [[DataManager shareManager] updateVideoTitle:title uuid:self.dic[@"downloadUuid"]];
+    
+    
     [self.navigationController.slideController dismiss];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
                                                         object:nil];
