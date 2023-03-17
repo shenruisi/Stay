@@ -20,7 +20,7 @@
 #import "QuickAccess.h"
 #import "SYDownloadPreviewController.h"
 #import "ColorHelper.h"
-
+#import "SYChangeDocSlideController.h"
 #if FC_IOS
 #import "Stay-Swift.h"
 #else
@@ -120,6 +120,7 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) UIView *slideLine;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, strong) NSMutableArray *videoArray;
+@property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
 
 @end
 
@@ -218,7 +219,7 @@ UIDocumentPickerDelegate
     }];
     [self.videoArray removeAllObjects];
     [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
-
+    [self updateDownloadingText];
     [self.tableView reloadData];
 }
 
@@ -270,6 +271,13 @@ UIDocumentPickerDelegate
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];
+    
+    
+    Task *task = [[DownloadManager shared]  queryByTaskId:resource.downloadUuid];;
+    if(task != nil) {
+        task.block = NULL;
+        [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
+    }
     if(self.selectedIdx == 1) {
         [self.videoArray removeAllObjects];
         [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
@@ -350,7 +358,7 @@ UIDocumentPickerDelegate
         return 137;
     } else {
         if(self.selectedIdx == 1) {
-            return 128;
+            return 128 + 30;
         } else {
             return 59;
         }
@@ -398,21 +406,23 @@ UIDocumentPickerDelegate
         }
     } else {
         
-        if(indexPath.row != 0) {
-            SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-            controller.pathUuid = [FCShared tabManager].tabs[indexPath.row - 1].uuid;
-            controller.title = [FCShared tabManager].tabs[indexPath.row - 1].config.name;
-            controller.array = [NSMutableArray array];
-            [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
-            [self.navigationController pushViewController:controller animated:TRUE];
-        } else {
-            NSArray *documentTypes = @[@"public.folder"];
+        if(self.selectedIdx == 0) {
+            if(indexPath.row != 0) {
+                SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
+                controller.pathUuid = [FCShared tabManager].tabs[indexPath.row - 1].uuid;
+                controller.title = [FCShared tabManager].tabs[indexPath.row - 1].config.name;
+                controller.array = [NSMutableArray array];
+                [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
+                [self.navigationController pushViewController:controller animated:TRUE];
+            } else {
+                NSArray *documentTypes = @[@"public.folder"];
 
-            UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
+                UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
 
-            documentPicker.delegate = self;
-            documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self presentViewController:documentPicker animated:YES completion:nil];
+                documentPicker.delegate = self;
+                documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+                [self presentViewController:documentPicker animated:YES completion:nil];
+            }
         }
     }
 }
@@ -514,6 +524,12 @@ UIDocumentPickerDelegate
                     }
                     [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
                     cell.downloadResource.status = 2;
+                    [self.videoArray removeObject:cell.downloadResource];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [self updateDownloadingText];
+                        [tableView reloadData];
+                    })  ;
+                    return;
                 } else if(status == DMStatusPending) {
                     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
                     cell.downloadResource.status = 1;
@@ -604,7 +620,13 @@ UIDocumentPickerDelegate
                         }
                         [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:resource.downloadUuid];
                         resource.status = 2;
-//                        [self reloadData];
+                        [self.videoArray removeObject:cell.downloadResource];
+                        dispatch_async(dispatch_get_main_queue(),^{
+                            [self updateDownloadingText];
+                            [tableView reloadData];
+                        })  ;
+                        return;
+                        
                     } else if(status == DMStatusPending) {
                         [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
                         resource.status = 1;
@@ -662,7 +684,8 @@ UIDocumentPickerDelegate
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
                 UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
+                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 18, 27, 20)];
                 [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
@@ -745,7 +768,7 @@ UIDocumentPickerDelegate
     __weak SYFIleManagerViewController *weakSelf = self;
     
     
-    if ([tableView isEqual:self.tableView] && indexPath.row > 0) {
+    if ([tableView isEqual:self.tableView] && indexPath.row > 0 && self.selectedIdx == 0) {
         
     
     
@@ -827,6 +850,49 @@ UIDocumentPickerDelegate
         changeTitleAction.backgroundColor = FCStyle.accent;
         
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
+    } else if ([tableView isEqual:self.tableView] && self.selectedIdx == 1) {
+        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                    
+            
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDeleteVideo", @"")
+                                                                           message:@""
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                
+                DownloadResource *downloadResource = weakSelf.videoArray[indexPath.row];
+                if(downloadResource.status == 2) {
+                    NSFileManager *defaultManager;
+                    defaultManager = [NSFileManager defaultManager];
+                    [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
+                } else {
+                    [[DownloadManager shared] remove:downloadResource.downloadUuid];
+                }
+                [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
+                [weakSelf.videoArray removeObject:downloadResource];
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [self updateDownloadingText];
+                    [weakSelf.tableView reloadData];
+                });
+                
+                
+            }];
+            [alert addAction:conform];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                 style:UIAlertActionStyleCancel
+                 handler:^(UIAlertAction * _Nonnull action) {
+             }];
+             [alert addAction:cancel];
+            [self presentViewController:alert animated:YES completion:nil];
+            [tableView setEditing:NO animated:YES];
+        }];
+        deleteAction.image = [UIImage imageNamed:@"delete"];
+        deleteAction.backgroundColor = RGB(224, 32, 32);
+        
+
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
     } else {
         return NULL;
     }
@@ -927,8 +993,25 @@ UIDocumentPickerDelegate
     }
 #endif
     
+    if( self.selectedIdx == 0) {
+        [self.tableView reloadData];
+    }
+    
 }
 
+- (void)updateDownloadingText {
+    if(self.videoArray.count > 0) {
+      [self.downloadingBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count] forState:UIControlStateNormal];
+      [self.downloadingBtn sizeToFit];
+    } else {
+        [self.downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
+        [self.downloadingBtn sizeToFit];
+    }
+    
+    self.downloadingBtn.left = self.downloadBtn.right + 53;
+    self.downloadingBtn.centerY =  self.downloadBtn.centerY;
+    
+}
 
 - (void)changeDownloadTab:(UIButton *)sender {
     if ([sender isEqual:self.downloadBtn]) {

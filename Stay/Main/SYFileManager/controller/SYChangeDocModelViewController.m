@@ -45,11 +45,26 @@
 - (void)viewWillAppear{
     [super viewWillAppear];
     
-    NSString *uuid = FCShared.tabManager.tabs[0].uuid;
-    if(self.dic != NULL && self.dic[@"uuid"] != nil) {
-        uuid = self.dic[@"uuid"];
-    }
+    NSString *uuid = self.dic[@"uuid"];
     ModalItemElement *element = self.saveToElements.firstObject;
+    if(uuid.length == 0) {
+        uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
+        if(uuid.length == 0) {
+            uuid = FILEUUID;
+        }
+    }
+    
+    if([uuid isEqualToString:FILEUUID]) {
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        NSString *text = @"Undefined";
+        if (dic != NULL) {
+            text = dic[@"fileName"];
+        }
+        
+        if(self.dic[@"pathName"] != NULL) {
+            text = self.dic[@"pathName"];
+        }
+    }
     element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
     element.generalEntity.uuid = uuid;
     [element clear];
