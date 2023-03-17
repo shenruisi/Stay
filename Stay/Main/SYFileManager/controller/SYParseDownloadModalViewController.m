@@ -563,6 +563,7 @@
 - (void)folderAction:(UIView *)sender{
     SYDownloadFolderChooseModalViewController *cer = [[SYDownloadFolderChooseModalViewController alloc] init];
     cer.dic = self.dataSource[sender.tag];
+    cer.nav = self.nav;
     [self.navigationController pushModalViewController:cer];
 }
 
