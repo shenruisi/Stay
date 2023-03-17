@@ -208,7 +208,18 @@ UIDocumentPickerDelegate
                         self.dic[@"uuid"] = FILEUUID;
                         [self.navigationController popModalViewController];
                     } else {
+                        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"DOCUMENTNOTBESELECT", @"")
+                                                                                       message:@""
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
                         
+                        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                        
+                            
+                        }];
+                        [onlyOneAlert addAction:onlyOneConform];
+                        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
                         return;
                     }
                 } else {

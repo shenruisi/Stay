@@ -181,6 +181,7 @@
         saveToElement.action = ^(ModalItemElement * _Nonnull element) {
             SYDownloadFolderChooseModalViewController *cer = [[SYDownloadFolderChooseModalViewController alloc] init];
             cer.dic = self.dic;
+            cer.nav = self.nav;
             [self.navigationController pushModalViewController:cer];
         };
         [ret addObject:saveToElement];
