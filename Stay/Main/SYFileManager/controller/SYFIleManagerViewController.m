@@ -522,6 +522,8 @@ UIDocumentPickerDelegate
                     }
                     [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
                     cell.downloadResource.status = 2;
+                
+        
                     [self.videoArray removeObject:cell.downloadResource];
                     dispatch_async(dispatch_get_main_queue(),^{
                         [self updateDownloadingText];
@@ -618,8 +620,23 @@ UIDocumentPickerDelegate
                         }
                         [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:resource.downloadUuid];
                         resource.status = 2;
+                        
+                      
                         [self.videoArray removeObject:cell.downloadResource];
                         dispatch_async(dispatch_get_main_queue(),^{
+                            if([FILEUUID isEqualToString:cell.downloadResource.firstPath]) {
+                                NSFileManager *fileManager = [NSFileManager defaultManager];
+
+                                NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
+                                NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
+                                NSString *parentDirectoryPath = [parentDirectoryURL path];
+                                
+                                NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",parentDirectoryPath,cell.downloadResource.title,@"mp4"];
+
+                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
+                                NSError *error = nil;
+                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+                            }
                             [self updateDownloadingText];
                             [tableView reloadData];
                         })  ;
