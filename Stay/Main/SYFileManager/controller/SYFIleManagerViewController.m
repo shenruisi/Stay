@@ -417,6 +417,7 @@ UIDocumentPickerDelegate
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
 
                 NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
                 if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
                     [[UIApplication sharedApplication] openURL:fileURL];
                 }
