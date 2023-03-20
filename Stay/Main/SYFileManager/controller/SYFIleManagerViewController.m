@@ -636,6 +636,9 @@ UIDocumentPickerDelegate
                                 NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
                                 NSError *error = nil;
                                 BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+                                if(!success) {
+                                    NSLog(error);
+                                }
                             }
                             [self updateDownloadingText];
                             [tableView reloadData];
@@ -854,7 +857,7 @@ UIDocumentPickerDelegate
             deleteAction.backgroundColor = RGB(224, 32, 32);
             
         UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+            FCTab *tab = [FCShared tabManager].tabs[indexPath.row - 1];
             weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
             [self.folderSlideController show];
             [tableView setEditing:NO animated:YES];

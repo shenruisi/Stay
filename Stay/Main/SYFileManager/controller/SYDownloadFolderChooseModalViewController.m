@@ -109,6 +109,7 @@ UIDocumentPickerDelegate
             generalEntity.uuid = FILEUUID;
             element.generalEntity = generalEntity;
             element.type = ModalItemElementTypeClick;
+            element.renderMode = ModalItemElementRenderModeTop;
             element.action = ^(ModalItemElement * _Nonnull element) {
                 if([element.generalEntity.uuid isEqualToString:FILEUUID]) {
                     NSArray *documentTypes = @[@"public.folder"];
@@ -137,7 +138,7 @@ UIDocumentPickerDelegate
             generalEntity.uuid = tab.uuid;
             element.generalEntity = generalEntity;
             element.type = ModalItemElementTypeClick;
-            if (i == 0){
+            if (ret.count == 0){
                 element.renderMode = ModalItemElementRenderModeTop;
             }
             else if (i == FCShared.tabManager.tabs.count - 1){
@@ -199,6 +200,8 @@ UIDocumentPickerDelegate
             [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
                 //读取文件
                 
+                
+                
                 if(dic != NULL && dic[@"url"] != NULL) {
                     if([[newURL path] containsString:dic[@"url"]]) {
                         NSString *fileName = [newURL lastPathComponent];
@@ -230,6 +233,8 @@ UIDocumentPickerDelegate
                     self.dic[@"uuid"] = FILEUUID;
                     [self.navigationController popModalViewController];
                 }
+                
+                
                 
 
             }];
