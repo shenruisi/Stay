@@ -342,7 +342,7 @@
         if(tab == nil) {
             NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
             request.fileDir = self.dic[@"allPath"] == NULL?dic[@"url"]:self.dic[@"allPath"] ;
-            request.key = self.dic[@"uuid"] == NULL?FILEUUID:self.dic[@"uuid"] ;
+            request.key = ((NSString *)self.dic[@"uuid"]).length == 0?FILEUUID:self.dic[@"uuid"] ;
             SharedStorageManager.shared.userDefaults.lastFolderUUID = self.dic[@"uuid"] == NULL? FILEUUID:self.dic[@"uuid"];
         } else {
             request.fileDir = tab.path;
