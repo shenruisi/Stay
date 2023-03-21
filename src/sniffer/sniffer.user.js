@@ -2132,18 +2132,27 @@ const browser = __b;
 
       let titleDom = document.querySelector('.main-container .ep-info-pre .ep-info-title');
       if(!titleDom){
-        let bilibiliTimer = setTimeout(function(){
-          titleDom = document.querySelector('.video .share-video-info .title-wrapper .title-name span');
-          if(titleDom){
-            videoInfo.title = titleDom.textContent;
-          }
-          clearTimeout(bilibiliTimer);
-          bilibiliTimer = 0;
-          return videoInfo;
-        }, 200)
+        titleDom = document.querySelector('.video .share-video-info .title-wrapper .title .title-name span');
+        if(!titleDom){
+          let bilibiliTimer = setTimeout(function(){
+            titleDom = document.querySelector('.video .share-video-info .title-wrapper .title .title-name span');
+            if(titleDom){
+              videoInfo.title = titleDom.textContent;
+            }
+            clearTimeout(bilibiliTimer);
+            bilibiliTimer = 0;
+            return videoInfo;
+          }, 200)
+        }
       }
       if(titleDom){
         videoInfo.title = titleDom.textContent;
+      }
+
+      const episodeDom = document.querySelector('div.m-video-part-new > ul.list > li.part-item.on > span');
+      if(episodeDom){
+        let episode = episodeDom.textContent;
+        videoInfo.title = episode + videoInfo.title;
       }
 
       return videoInfo;
