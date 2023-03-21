@@ -220,7 +220,6 @@
         
         DownloadResource *resource = [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:self.dic[@"downloadUuid"]];
         
-        NSError *error = nil;
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSURL *sourceURL = [NSURL fileURLWithPath:resource.allPath];
         NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
@@ -228,14 +227,33 @@
         NSString *title = self.nameElements[0].inputEntity.text;
 
         NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",path,title,@"mp4"];
-        
+
         NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
-        BOOL success = [fileManager moveItemAtURL:sourceURL toURL:destinationURL error:&error];
-        if (success) {
-            NSLog(@"移动文件成功");
-        } else {
-            NSLog(@"移动文件失败：%@", error);
+        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+        
+        NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
+        
+        NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+        BOOL fileUrlAuthozied =[loadUrl startAccessingSecurityScopedResource];
+
+        NSError *error1 = nil;
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
+
+        if(!fileUrlAuthozied) {
+            return;
         }
+        
+        [fileCoordinator coordinateWritingItemAtURL:destinationURL options:0 error:&error1 byAccessor:^(NSURL *newURL) {
+            NSError *error = nil;
+            BOOL success = [fileManager moveItemAtURL:sourceURL toURL:newURL error:&error];
+            if (success) {
+                NSLog(@"移动文件成功");
+            } else {
+                NSLog(@"移动文件失败：%@", error);
+            }
+            
+        }];
+        
     }
     NSString *path = self.saveToElements[0].generalEntity.uuid;
     [[DataManager  shareManager] updateVideoPath:path uuid:self.dic[@"downloadUuid"]];

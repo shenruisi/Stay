@@ -21,6 +21,7 @@
 #import "SYDownloadPreviewController.h"
 #import "ColorHelper.h"
 #import "SYChangeDocSlideController.h"
+#import "UserscriptUpdateManager.h"
 #if FC_IOS
 #import "Stay-Swift.h"
 #else
@@ -414,13 +415,18 @@ UIDocumentPickerDelegate
                 [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
                 [self.navigationController pushViewController:controller animated:TRUE];
             } else {
-                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-
-                NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
-                if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
-                    [[UIApplication sharedApplication] openURL:fileURL];
-                }
+//                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+//
+//                NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+//
+//                if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
+//                    [[UIApplication sharedApplication] openURL:fileURL];
+//                }
+                NSURL *filesURL = [NSURL URLWithString:@"files://"];
+                [[UIApplication sharedApplication] openURL:filesURL options:@{} completionHandler:nil];
             }
+             
+                
         }
     }
 }
@@ -637,7 +643,7 @@ UIDocumentPickerDelegate
                                 NSError *error = nil;
                                 BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
                                 if(!success) {
-                                    NSLog(error);
+//                                    NSLog(error);
                                 }
                             }
                             [self updateDownloadingText];
@@ -942,14 +948,24 @@ UIDocumentPickerDelegate
                                                              }
                                                       forKey:@"MY_PHONE_STORAGE"];
             
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+                
+                NSData *bookmarkData = [newURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
+                                
+                NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+
+                [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
+                [groupUserDefaults  synchronize];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 
                 [self.tableView reloadData];
-                });
+            });
+            
             [self dismissViewControllerAnimated:YES completion:NULL];
         
-        
         }];
+        
+        
         [urls.firstObject stopAccessingSecurityScopedResource];
     } else {
         //授权失败
@@ -1063,12 +1079,13 @@ UIDocumentPickerDelegate
 
 - (void)changeFileDir:(UIButton *)sender {
     NSArray *documentTypes = @[@"public.folder"];
-
+//
     UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
 
     documentPicker.delegate = self;
     documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:documentPicker animated:YES completion:nil];
+    
 }
 
 

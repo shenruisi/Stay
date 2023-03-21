@@ -209,7 +209,17 @@ UIDocumentPickerDelegate
                         self.dic[@"pathName"] = fileName;
                         self.dic[@"allPath"] = [newURL path];
                         self.dic[@"uuid"] = FILEUUID;
+                        
+                        NSData *bookmarkData = [newURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
+                                        
+                        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+
+                        [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
+                        [groupUserDefaults  synchronize];
+                        [urls.firstObject stopAccessingSecurityScopedResource];
+
                         [self.navigationController popModalViewController];
+                    
                     } else {
                         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"DOCUMENTNOTBESELECT", @"")
                                                                                        message:@""
@@ -223,7 +233,6 @@ UIDocumentPickerDelegate
                         }];
                         [onlyOneAlert addAction:onlyOneConform];
                         [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
-                        return;
                     }
                 } else {
                     NSString *fileName = [newURL lastPathComponent];
