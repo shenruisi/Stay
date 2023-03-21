@@ -628,7 +628,13 @@ UIDocumentPickerDelegate
                       
                         [self.videoArray removeObject:cell.downloadResource];
                         dispatch_async(dispatch_get_main_queue(),^{
+    
                             if([FILEUUID isEqualToString:cell.downloadResource.firstPath]) {
+                                NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+                                NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
+                                
+                                NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+                                BOOL fileUrlAuthozied =[loadUrl startAccessingSecurityScopedResource];
                                 NSFileManager *fileManager = [NSFileManager defaultManager];
 
                                 NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
@@ -643,6 +649,8 @@ UIDocumentPickerDelegate
                                 if(!success) {
 //                                    NSLog(error);
                                 }
+                                
+                                [loadUrl stopAccessingSecurityScopedResource];
                             }
                             [self updateDownloadingText];
                             [tableView reloadData];
