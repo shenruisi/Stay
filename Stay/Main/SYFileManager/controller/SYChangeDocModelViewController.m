@@ -230,7 +230,6 @@
 
         NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
         NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-        
         NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
         
         NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
@@ -254,7 +253,11 @@
             
         }];
         
+        [loadUrl stopAccessingSecurityScopedResource];
+        
     }
+
+    
     NSString *path = self.saveToElements[0].generalEntity.uuid;
     [[DataManager  shareManager] updateVideoPath:path uuid:self.dic[@"downloadUuid"]];
     NSString *title = self.nameElements[0].inputEntity.text;

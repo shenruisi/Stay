@@ -18,8 +18,7 @@
 
 @interface SYDownloadFolderChooseModalViewController()<
  UITableViewDelegate,
- UITableViewDataSource,
-UIDocumentPickerDelegate
+ UITableViewDataSource
 >
 
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
@@ -112,16 +111,8 @@ UIDocumentPickerDelegate
             element.renderMode = ModalItemElementRenderModeTop;
             element.action = ^(ModalItemElement * _Nonnull element) {
                 if([element.generalEntity.uuid isEqualToString:FILEUUID]) {
-                    NSArray *documentTypes = @[@"public.folder"];
-                    UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
-
-                    if(dic != NULL && dic[@"url"] != NULL) {
-                        documentPicker.directoryURL = [NSURL fileURLWithPath:dic[@"url"]];
-                    }
-                    documentPicker.delegate = self;
-                    documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-                    UIViewController *mainController = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
-                            [mainController presentViewController:documentPicker animated:YES completion:nil];
+                    self.dic[@"uuid"] = FILEUUID;
+                    [self.navigationController popModalViewController];
                 }
             };
             [ret addObject:element];
@@ -188,75 +179,6 @@ UIDocumentPickerDelegate
 - (void)clear{
 }
 
-
-- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
-    NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-        BOOL fileUrlAuthozied = [urls.firstObject startAccessingSecurityScopedResource];
-        if (fileUrlAuthozied) {
-            //通过文件协调工具来得到新的文件地址，以此得到文件保护功能
-            NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
-            NSError *error;
-
-            [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
-                //读取文件
-                
-                
-                
-                if(dic != NULL && dic[@"url"] != NULL) {
-                    if([[newURL path] containsString:dic[@"url"]]) {
-                        NSString *fileName = [newURL lastPathComponent];
-
-                        self.dic[@"pathName"] = fileName;
-                        self.dic[@"allPath"] = [newURL path];
-                        self.dic[@"uuid"] = FILEUUID;
-                        
-                        NSData *bookmarkData = [newURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
-                                        
-                        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-
-                        [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
-                        [groupUserDefaults  synchronize];
-                        [urls.firstObject stopAccessingSecurityScopedResource];
-
-                        [self.navigationController popModalViewController];
-                    
-                    } else {
-                        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"DOCUMENTNOTBESELECT", @"")
-                                                                                       message:@""
-                                                                                preferredStyle:UIAlertControllerStyleAlert];
-                        
-                        UIAlertAction *onlyOneConform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                                          style:UIAlertActionStyleDefault
-                                                                        handler:^(UIAlertAction * _Nonnull action) {
-                        
-                            
-                        }];
-                        [onlyOneAlert addAction:onlyOneConform];
-                        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
-                    }
-                } else {
-                    NSString *fileName = [newURL lastPathComponent];
-
-                    self.dic[@"pathName"] = fileName;
-                    self.dic[@"allPath"] = [newURL path];
-                    self.dic[@"uuid"] = FILEUUID;
-                    [self.navigationController popModalViewController];
-                }
-                
-                
-                
-
-            }];
-            [urls.firstObject stopAccessingSecurityScopedResource];
-        } else {
-            //授权失败
-        }
-        
-    
-    
-    
-    
-}
 
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 420);

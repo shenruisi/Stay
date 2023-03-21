@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-sniffer-wrapper">
+  <div class="popup-sniffer-wrapper" :style="{paddingBottom:isMobile?'60px':'0'}">
     <div class="sniffer-video-box" v-if="videoList && videoList.length">
       <div class="sniffer-video" v-for="(item, index) in videoList" :key="index">
         <div class="video-info">
@@ -278,6 +278,7 @@ export default {
     .long-press-switch{
       width: 90%;
       position: fixed;
+      z-index: 999;
       bottom: 90px;
       height: 42px;
       border-radius: 8px;

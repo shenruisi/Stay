@@ -46,6 +46,8 @@ const browser = __b;
   }
 
   function injectParseVideoJS(isContent){
+    let isLoadingAround = false;
+    let isLoadingLongPressStatus = false;
     let definedObj = {};
     let videoListMd5 = '';
     let isStayAround = '';
@@ -1008,8 +1010,6 @@ const browser = __b;
         // console.log('start------parseVideoInfoByWindow--------');
         setTimeoutParseVideoInfoByWindow();
       }
-      // console.log('parseVideoNodeList-----------result---------',videoList);
-      // window.webkit.messageHandlers.stayapp.postMessage(videoList);
     }
 
     /**
@@ -1034,7 +1034,12 @@ const browser = __b;
         shouldDecodeQuality[videoInfo.videoUuid] = qualityList;
       }
       // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
-      addLongPress(videoDom, posDom, videoInfo);
+      try {
+        addLongPress(videoDom, posDom, videoInfo);
+      } catch (error) {
+        
+      }
+      
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
         // console.log('parseVideoNodeList----------has exist, and modify-------',videoInfo, videoList);
         videoList.forEach(item=>{
@@ -1058,7 +1063,6 @@ const browser = __b;
         // console.log('checkVideoExist----------',videoInfo, videoIdSet);
         videoList.push(videoInfo);
       }
-
       pushVideoListToTransfer()
     }
 
@@ -1153,8 +1157,15 @@ const browser = __b;
         return;
       }
 
+      if(isLoadingAround || isLoadingLongPressStatus){
+        return;
+      }
+
+
       if(!longPressStatus){
+        isLoadingLongPressStatus = true;
         longPressStatus = await getLongPressStatus();
+        isLoadingLongPressStatus = false;
       }
 
       if(!longPressStatus || (longPressStatus && longPressStatus == 'off')){
@@ -1163,14 +1174,14 @@ const browser = __b;
 
       // console.log('----getStayAround-----start------');
       if(!isStayAround){
-        const isStayProTemp = await getStayAround();
-        isStayAround = isStayProTemp;
+        isLoadingAround = true;
+        isStayAround = await getStayAround();
+        isLoadingAround = false;
       }
       // console.log('----isStayAround-----',isStayAround);
       if(isStayAround!='a'){
         return;
       }
-
       
       // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
       let stayLongPress = posDom.getAttribute('stay-long-press');
@@ -1450,7 +1461,7 @@ const browser = __b;
         }else{
           let paddingHeight = Utils.add(4, 36);
           let modalContentHeight = Utils.add(Utils.add(posterHeight, paddingHeight), Utils.add(Utils.mul(countH, 38), 36));
-          modalContentHeight = Utils.add(modalContentHeight, 38);
+          // modalContentHeight = Utils.add(modalContentHeight, 38);
           // 内容+定位的top 超出屏幕高度, 则可展示内容的top
           if(top>Utils.sub(bodyClientHeight, modalContentHeight)){
             vTop = Utils.sub(bodyClientHeight, modalContentHeight);
@@ -1719,7 +1730,7 @@ const browser = __b;
           '<div class="__stay-sinffer-poster">'+posterCon+'</div>',
           '<div class="_stay-sinffer-popup">',
           '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
-          `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" title="Picture-in-Picture" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
+          // `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" title="Picture-in-Picture" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
           '<div class="_stay-sinffer-download">',
           downloadCon,
           '</div>',
@@ -1784,54 +1795,54 @@ const browser = __b;
       
       
      
-      const pip_button_act = (isPip) => {
-        if(isPip){
-          document.querySelector('#__stay_pip img').style.opacity = 0.2;
-        }else{
-          document.querySelector('#__stay_pip img').style.opacity = 1;
-        }
-      }
+      // const pip_button_act = (isPip) => {
+      //   if(isPip){
+      //     document.querySelector('#__stay_pip img').style.opacity = 0.2;
+      //   }else{
+      //     document.querySelector('#__stay_pip img').style.opacity = 1;
+      //   }
+      // }
       
-      const enterpictureinpicture = e => pip_button_act(true);
-      const leavepictureinpicture = e => pip_button_act(false);
-      const webkitpresentationmodechanged = event => {
-        event.target.webkitPresentationMode == 'picture-in-picture'
-          ? (pip_button_act(true), event.stopImmediatePropagation())
-          : pip_button_act(false);
-      }
+      // const enterpictureinpicture = e => pip_button_act(true);
+      // const leavepictureinpicture = e => pip_button_act(false);
+      // const webkitpresentationmodechanged = event => {
+      //   event.target.webkitPresentationMode == 'picture-in-picture'
+      //     ? (pip_button_act(true), event.stopImmediatePropagation())
+      //     : pip_button_act(false);
+      // }
       
-      const pip_init = video => {
-        if (!video || video.nodeName != 'VIDEO' || !video.hasAttribute('src')) return;
-        if (video.webkitPresentationMode === undefined) {
-          video.addEventListener('enterpictureinpicture', enterpictureinpicture);
-          video.addEventListener('leavepictureinpicture', leavepictureinpicture);
-        } else {
-          video.addEventListener('webkitpresentationmodechanged', webkitpresentationmodechanged, true);
-        }
-      }
+      // const pip_init = video => {
+      //   if (!video || video.nodeName != 'VIDEO' || !video.hasAttribute('src')) return;
+      //   if (video.webkitPresentationMode === undefined) {
+      //     video.addEventListener('enterpictureinpicture', enterpictureinpicture);
+      //     video.addEventListener('leavepictureinpicture', leavepictureinpicture);
+      //   } else {
+      //     video.addEventListener('webkitpresentationmodechanged', webkitpresentationmodechanged, true);
+      //   }
+      // }
 
-      pip_init(videoDom);
+      // pip_init(videoDom);
 
 
-      document.querySelector('#__stay_pip').addEventListener('touchstart', event => {
-        // console.log('touch--pip--------',e);
-        // e.stopPropagation();
-        if (videoDom.webkitPresentationMode === undefined) {
-          if (document.pictureInPictureElement) {
-            document.exitPictureInPicture();
-          } else {
-            videoDom.requestPictureInPicture();
-          }
-        } else {
-          if (videoDom.webkitPresentationMode != 'inline') {
-            videoDom.webkitSetPresentationMode('inline');
-          } else {
-            videoDom.webkitSetPresentationMode('picture-in-picture');
-          }
-        }
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      })
+      // document.querySelector('#__stay_pip').addEventListener('touchstart', event => {
+      //   // console.log('touch--pip--------',e);
+      //   // e.stopPropagation();
+      //   if (videoDom.webkitPresentationMode === undefined) {
+      //     if (document.pictureInPictureElement) {
+      //       document.exitPictureInPicture();
+      //     } else {
+      //       videoDom.requestPictureInPicture();
+      //     }
+      //   } else {
+      //     if (videoDom.webkitPresentationMode != 'inline') {
+      //       videoDom.webkitSetPresentationMode('inline');
+      //     } else {
+      //       videoDom.webkitSetPresentationMode('picture-in-picture');
+      //     }
+      //   }
+      //   event.preventDefault();
+      //   event.stopImmediatePropagation();
+      // })
 
     }
 
@@ -1962,7 +1973,6 @@ const browser = __b;
       }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
-        
         let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
         if(!playerDom){
           playerDom = document.querySelector('#player-control-overlay');
@@ -3024,6 +3034,7 @@ const browser = __b;
     
     function setLocalYTRandomFunStr(pathUuid, decodeFunStr){
       decodeSignatureCipher = {pathUuid, decodeFunStr};
+      definedObj.decodeFunStr = decodeFunStr;
       window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
     }
 
@@ -3052,9 +3063,13 @@ const browser = __b;
       try {
         let jsResponse = await fetch(`https://m.youtube.com${jsPath}`);
         let jsText = await jsResponse.text();
+        if(!jsText){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
         // eslint-disable-next-line no-useless-escape
         let randomArr = jsText.match(/[a-zA-Z]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
-        console.log(randomArr)
+        // console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
           randomFunStr = randomArr[0];
@@ -3097,10 +3112,14 @@ const browser = __b;
 
     async function fetchLongPressConfig(){
       if(!isStayAround){
+        isLoadingAround = true;
         isStayAround = await getStayAround();
+        isLoadingAround = false;
       }
       if(!longPressStatus){
+        isLoadingLongPressStatus = true;
         longPressStatus = await getLongPressStatus();
+        isLoadingLongPressStatus = false;
       }
     }
     
@@ -3126,17 +3145,29 @@ const browser = __b;
     };
 
     /* eslint-disable */
-    Object.defineProperty(definedObj,'randomPathUuid',{
+    Object.defineProperty(definedObj, 'randomPathUuid', {
       get:function(){
         return randomPathUuid;
       },
       set:function(newValue){
         randomPathUuid = newValue;
+        console.log('randomPathUuid---newValue-----',randomPathUuid);
         //需要触发的渲染函数可以写在这...
         if(newValue != ytBaseJSUuid){
+          console.log('randomPathUuid--!==-newValue-----',randomPathUuid);
           ytBaseJSUuid = newValue
           handleFetchYoutubePlayer(ytBaseJSUuid, ytRandomBaseJs, false);
-          fetchCurrentYtRandomStr(ytBaseJSUuid, ytRandomBaseJs);
+        }
+      }
+    });
+    Object.defineProperty(definedObj, 'decodeFunStr', {
+      get:function(){
+        return decodeFunStr;
+      },
+      set:function(newValue){
+        decodeFunStr = newValue;
+        if(decodeFunStr){
+          handleDecodeSignatureAndPush();
         }
       }
     });

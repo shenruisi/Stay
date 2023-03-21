@@ -692,9 +692,11 @@ static DownloadManager *instance = nil;
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
     NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c:v mpeg4 -c:a aac '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
     if (task.normalState.audioUrl.length > 0) {
-        command = [NSString stringWithFormat:@"-i '%@.%@' -i '%@.%@' -c:v mpeg4 -c:a aac '%@'",
+        command = [NSString stringWithFormat:@"-i '%@.%@' -i '%@.%@' -c:v %@ -c:a %@ '%@'",
                    [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType,
                    [taskPath stringByAppendingPathComponent:[task.normalState.audioUrl md5]], task.normalState.audioType,
+                   [task.normalState.videoType isEqualToString:@"mp4"] ? @"copy" : @"mpeg4",
+                   [task.normalState.audioType isEqualToString:@"mp4"] ? @"copy" : @"aac",
                    task.filePath];
     }
     [self ffmpegExecute:command forTask:task];

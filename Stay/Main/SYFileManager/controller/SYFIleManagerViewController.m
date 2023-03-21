@@ -415,15 +415,13 @@ UIDocumentPickerDelegate
                 [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
                 [self.navigationController pushViewController:controller animated:TRUE];
             } else {
-//                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-//
-//                NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
-//
-//                if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
-//                    [[UIApplication sharedApplication] openURL:fileURL];
-//                }
-                NSURL *filesURL = [NSURL URLWithString:@"files://"];
-                [[UIApplication sharedApplication] openURL:filesURL options:@{} completionHandler:nil];
+                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+
+                NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
+                if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
+                    [[UIApplication sharedApplication] openURL:fileURL];
+                }
             }
              
                 
@@ -937,10 +935,19 @@ UIDocumentPickerDelegate
         NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
         NSError *error;
 
+       
+        
         [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
             //读取文件
             NSString *fileName = [newURL lastPathComponent];
        
+            NSData *bookmarkData = [newURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
+                            
+            NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+
+            [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
+            [groupUserDefaults  synchronize];
+            
             dispatch_async(dispatch_get_main_queue(), ^{
             [[NSUserDefaults standardUserDefaults] setObject:@{@"fileName":fileName ,
                                                                @"url": [newURL path],
@@ -950,12 +957,7 @@ UIDocumentPickerDelegate
             
             
                 
-                NSData *bookmarkData = [newURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
-                                
-                NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-
-                [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
-                [groupUserDefaults  synchronize];
+                
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 
                 [self.tableView reloadData];
