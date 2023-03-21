@@ -1425,7 +1425,7 @@ const browser = __b;
 
             list = [{title:videoInfo.title, downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: '', protect:item.protect?item.protect:false, audioUrl, qualityLabel:item.qualityLabel }];
             downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-            let quality = item.quality;
+            let quality = item.qualityLabel;
             let heightQualityLabel = '';
             if(quality){
               try {
