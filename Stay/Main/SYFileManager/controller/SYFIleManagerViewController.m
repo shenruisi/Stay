@@ -644,32 +644,24 @@ UIDocumentPickerDelegate
                                 NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
                                 NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
                                 NSString *parentDirectoryPath = [parentDirectoryURL path];
-                                
                                 NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",[loadUrl path],cell.downloadResource.title,@"mp4"];
+                                [self renameFile:removePath originPath:cell.downloadResource.allPath];
 
-                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
-                                NSError *error = nil;
-                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
-                                if(!success) {
-//                                    NSLog(error);
-                                } else {
-                                    [[DataManager shareManager] deleteVideoByuuid:cell.downloadResource.downloadUuid];
-                                }
+                                [[DataManager shareManager] deleteVideoByuuid:cell.downloadResource.downloadUuid];
+                                
                                 
                                 [loadUrl stopAccessingSecurityScopedResource];
                             } else {
                                 NSFileManager *fileManager = [NSFileManager defaultManager];
                                 NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
-                                
+                            
                                 NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
                                 NSString *parentDirectoryPath = [parentDirectoryURL path];
                                 NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",parentDirectoryPath,cell.downloadResource.title,@"mp4"];
-                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
                                 NSError *error = nil;
-                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
-                                if(success) {
-                                    [[DataManager shareManager] updateVideoAllPath:removePath uuid:cell.downloadResource.downloadUuid];
-                                }
+                                NSString *finalPath = [self renameFile:removePath originPath:cell.downloadResource.allPath];
+                                [[DataManager shareManager] updateVideoAllPath:finalPath uuid:cell.downloadResource.downloadUuid];
+                                
                                 
                             }
                             [self updateDownloadingText];
@@ -1038,7 +1030,10 @@ UIDocumentPickerDelegate
     [super viewWillAppear:animated];
     self.tableView.frame = self.view.bounds;
     [self emptyTipsView];
+    self.tabBarController.tabBar.hidden = NO;
 
+
+    
 #ifdef FC_MAC
         self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
 #else
@@ -1140,6 +1135,26 @@ UIDocumentPickerDelegate
         [self.tableView reloadData];
 }
 
+
+- (NSString *)renameFile:(NSString *)fileName originPath:(NSString *)originPath {
+    NSString *finalFileName = fileName;
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileName]) {
+        NSString *name = [fileName stringByDeletingPathExtension];
+        NSString *ext = [fileName pathExtension];
+        int copyCount = 1;
+        do {
+            finalFileName = [NSString stringWithFormat:@"%@%d.%@", name, copyCount++, ext];
+        } while ([[NSFileManager defaultManager] fileExistsAtPath:finalFileName]);
+    }
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    NSURL *fileURL = [NSURL fileURLWithPath:originPath];
+    NSURL *destinationURL = [NSURL fileURLWithPath:finalFileName];
+    BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+    return finalFileName;
+}
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self
