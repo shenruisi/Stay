@@ -356,6 +356,14 @@ NSString * const SFExtensionMessageKey = @"message";
         if (selectedUUID.length == 0) {
             selectedUUID = ((FCTab *)[tabs objectAtIndex:0]).uuid;
         }
+        NSString *exteralFolderName = SharedStorageManager.shared.userDefaults.exteralFolderName;
+        if (exteralFolderName.length > 0) {
+            [datas addObject:@{
+                @"uuid": @"FILEUUID0000",
+                @"name": exteralFolderName,
+                @"selected": @([selectedUUID isEqualToString:@"FILEUUID0000"]),
+            }];
+        }
         for (FCTab *tab in tabs) {
             [datas addObject:@{
                 @"uuid": tab.uuid,
