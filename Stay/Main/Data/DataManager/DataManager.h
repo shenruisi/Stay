@@ -77,6 +77,8 @@
 
 - (void)updateVideoPath:(NSString *)path uuid:(NSString *)uuid;
 
+- (void)updateVideoAllPath:(NSString *)path uuid:(NSString *)uuid;
+
 - (void)deleteVideoByuuidPath:(NSString *)uuid;
 
 - (NSArray *)selectAllUnDownloadComplete;

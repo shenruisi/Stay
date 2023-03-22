@@ -645,16 +645,32 @@ UIDocumentPickerDelegate
                                 NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
                                 NSString *parentDirectoryPath = [parentDirectoryURL path];
                                 
-                                NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",parentDirectoryPath,cell.downloadResource.title,@"mp4"];
+                                NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",[loadUrl path],cell.downloadResource.title,@"mp4"];
 
                                 NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
                                 NSError *error = nil;
                                 BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
                                 if(!success) {
 //                                    NSLog(error);
+                                } else {
+                                    [[DataManager shareManager] deleteVideoByuuid:cell.downloadResource.downloadUuid];
                                 }
                                 
                                 [loadUrl stopAccessingSecurityScopedResource];
+                            } else {
+                                NSFileManager *fileManager = [NSFileManager defaultManager];
+                                NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
+                                
+                                NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
+                                NSString *parentDirectoryPath = [parentDirectoryURL path];
+                                NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",parentDirectoryPath,cell.downloadResource.title,@"mp4"];
+                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
+                                NSError *error = nil;
+                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+                                if(success) {
+                                    [[DataManager shareManager] updateVideoAllPath:removePath uuid:cell.downloadResource.downloadUuid];
+                                }
+                                
                             }
                             [self updateDownloadingText];
                             [tableView reloadData];
