@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *excludeUUID;
 @property (nonatomic, strong) NSMutableDictionary *dic;
+@property(nonatomic,strong) UINavigationController *nav;
 @end
 
 NS_ASSUME_NONNULL_END

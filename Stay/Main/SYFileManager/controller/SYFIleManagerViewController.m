@@ -20,7 +20,8 @@
 #import "QuickAccess.h"
 #import "SYDownloadPreviewController.h"
 #import "ColorHelper.h"
-
+#import "SYChangeDocSlideController.h"
+#import "UserscriptUpdateManager.h"
 #if FC_IOS
 #import "Stay-Swift.h"
 #else
@@ -120,7 +121,7 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) UIView *slideLine;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, strong) NSMutableArray *videoArray;
-
+@property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
 @end
 
 @implementation SYFIleManagerViewController
@@ -157,6 +158,12 @@ UIDocumentPickerDelegate
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(showUpgrade)
                                                  name:@"showUpgrade"
+                                               object:nil];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(changeDownloading)
+                                                 name:@"changeDownloading"
                                                object:nil];
 
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
@@ -201,6 +208,19 @@ UIDocumentPickerDelegate
             [self.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
 #endif
     
+}
+
+- (void)changeDownloading {
+    self.downloadBtn.selected = false;
+    self.downloadingBtn.selected = true;
+    self.selectedIdx = 1;
+    [UIView animateWithDuration:0.25F animations:^{
+        self.slideLine.centerX = self.downloadingBtn.centerX;
+    }];
+    [self.videoArray removeAllObjects];
+    [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+    [self updateDownloadingText];
+    [self.tableView reloadData];
 }
 
 - (UIBarButtonItem *)addItem{
@@ -251,6 +271,13 @@ UIDocumentPickerDelegate
     DownloadResource *resource = objc_getAssociatedObject(sender,@"resource");
     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
     [[DownloadManager shared] pause:resource.downloadUuid];
+    
+    
+    Task *task = [[DownloadManager shared]  queryByTaskId:resource.downloadUuid];;
+    if(task != nil) {
+        task.block = NULL;
+        [[DataManager shareManager] updateDownloadResourcProcess:task.progress * 100 uuid:resource.downloadUuid];
+    }
     if(self.selectedIdx == 1) {
         [self.videoArray removeAllObjects];
         [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
@@ -331,7 +358,7 @@ UIDocumentPickerDelegate
         return 137;
     } else {
         if(self.selectedIdx == 1) {
-            return 128;
+            return 128 + 30;
         } else {
             return 59;
         }
@@ -379,21 +406,29 @@ UIDocumentPickerDelegate
         }
     } else {
         
-        if(indexPath.row != 0) {
-            SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
-            controller.pathUuid = [FCShared tabManager].tabs[indexPath.row - 1].uuid;
-            controller.title = [FCShared tabManager].tabs[indexPath.row - 1].config.name;
-            controller.array = [NSMutableArray array];
-            [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
-            [self.navigationController pushViewController:controller animated:TRUE];
-        } else {
-            NSArray *documentTypes = @[@"public.folder"];
+        if(self.selectedIdx == 0) {
+            if(indexPath.row != 0) {
+                SYDownloadResourceManagerController *controller = [[SYDownloadResourceManagerController alloc] init];
+                controller.pathUuid = [FCShared tabManager].tabs[indexPath.row - 1].uuid;
+                controller.title = [FCShared tabManager].tabs[indexPath.row - 1].config.name;
+                controller.array = [NSMutableArray array];
+                [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
+                [self.navigationController pushViewController:controller animated:TRUE];
+            } else {
+                NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
 
-            UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
-
-            documentPicker.delegate = self;
-            documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self presentViewController:documentPicker animated:YES completion:nil];
+                if(dic == NULL) {
+                    [self changeFileDir:nil];
+                } else {
+                    NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                    fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
+                    if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
+                        [[UIApplication sharedApplication] openURL:fileURL];
+                    }
+                }
+            }
+             
+                
         }
     }
 }
@@ -495,6 +530,14 @@ UIDocumentPickerDelegate
                     }
                     [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
                     cell.downloadResource.status = 2;
+                
+        
+                    [self.videoArray removeObject:cell.downloadResource];
+                    dispatch_async(dispatch_get_main_queue(),^{
+                        [self updateDownloadingText];
+                        [tableView reloadData];
+                    })  ;
+                    return;
                 } else if(status == DMStatusPending) {
                     [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
                     cell.downloadResource.status = 1;
@@ -537,7 +580,11 @@ UIDocumentPickerDelegate
                 FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
                 Request *request = [[Request alloc] init];
                 request.url =  cell.downloadResource.downloadUrl;
-                request.fileDir = tab.path;
+                if(tab == nil) {
+                    request.fileDir = cell.downloadResource.allPath;
+                } else {
+                    request.fileDir = tab.path;
+                }
                 request.fileName = [cell.downloadResource.allPath lastPathComponent];
                 request.fileType = @"video";
                 request.audioUrl = cell.downloadResource.audioUrl;
@@ -581,7 +628,55 @@ UIDocumentPickerDelegate
                         }
                         [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:resource.downloadUuid];
                         resource.status = 2;
-//                        [self reloadData];
+                        
+                      
+                        [self.videoArray removeObject:cell.downloadResource];
+                        dispatch_async(dispatch_get_main_queue(),^{
+    
+                            if([FILEUUID isEqualToString:cell.downloadResource.firstPath]) {
+                                NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+                                NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
+                                
+                                NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+                                BOOL fileUrlAuthozied =[loadUrl startAccessingSecurityScopedResource];
+                                NSFileManager *fileManager = [NSFileManager defaultManager];
+
+                                NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
+                                NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
+                                NSString *parentDirectoryPath = [parentDirectoryURL path];
+                                
+                                NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",[loadUrl path],cell.downloadResource.title,@"mp4"];
+
+                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
+                                NSError *error = nil;
+                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+                                if(!success) {
+//                                    NSLog(error);
+                                } else {
+                                    [[DataManager shareManager] deleteVideoByuuid:cell.downloadResource.downloadUuid];
+                                }
+                                
+                                [loadUrl stopAccessingSecurityScopedResource];
+                            } else {
+                                NSFileManager *fileManager = [NSFileManager defaultManager];
+                                NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
+                                
+                                NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
+                                NSString *parentDirectoryPath = [parentDirectoryURL path];
+                                NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",parentDirectoryPath,cell.downloadResource.title,@"mp4"];
+                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
+                                NSError *error = nil;
+                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+                                if(success) {
+                                    [[DataManager shareManager] updateVideoAllPath:removePath uuid:cell.downloadResource.downloadUuid];
+                                }
+                                
+                            }
+                            [self updateDownloadingText];
+                            [tableView reloadData];
+                        })  ;
+                        return;
+                        
                     } else if(status == DMStatusPending) {
                         [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
                         resource.status = 1;
@@ -635,13 +730,12 @@ UIDocumentPickerDelegate
             }
             return cell;
         } else {
-        
-        
             if(indexPath.row == 0) {
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
                 UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                
+                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 18, 27, 20)];
                 [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
@@ -656,16 +750,16 @@ UIDocumentPickerDelegate
                 name.font = FCStyle.body;
                 [name sizeToFit];
     //            name.centerY = imageView.centerY;
-                name.left = imageView.right + 7;
+                name.left = imageView.right + 10;
                 [cell.contentView addSubview:name];
                 
                 UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
                 subTitle.text = @"On My iPhone";
                 subTitle.font = FCStyle.footnoteBold;
-                subTitle.textColor = FCStyle.titleGrayColor;
+                subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
-                subTitle.bottom = name.bottom;
-                subTitle.left = name.right + 2;
+                subTitle.top = name.bottom;
+                subTitle.left = imageView.right + 10;
                 [cell.contentView addSubview:subTitle];
                 
                 
@@ -724,7 +818,7 @@ UIDocumentPickerDelegate
     __weak SYFIleManagerViewController *weakSelf = self;
     
     
-    if ([tableView isEqual:self.tableView] && indexPath.row > 0) {
+    if ([tableView isEqual:self.tableView] && indexPath.row > 0 && self.selectedIdx == 0) {
         
     
     
@@ -795,7 +889,7 @@ UIDocumentPickerDelegate
             deleteAction.backgroundColor = RGB(224, 32, 32);
             
         UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-            FCTab *tab = [FCShared tabManager].tabs[indexPath.row];
+            FCTab *tab = [FCShared tabManager].tabs[indexPath.row - 1];
             weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
             [self.folderSlideController show];
             [tableView setEditing:NO animated:YES];
@@ -806,6 +900,49 @@ UIDocumentPickerDelegate
         changeTitleAction.backgroundColor = FCStyle.accent;
         
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
+    } else if ([tableView isEqual:self.tableView] && self.selectedIdx == 1) {
+        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                    
+            
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDeleteVideo", @"")
+                                                                           message:@""
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                
+                DownloadResource *downloadResource = weakSelf.videoArray[indexPath.row];
+                if(downloadResource.status == 2) {
+                    NSFileManager *defaultManager;
+                    defaultManager = [NSFileManager defaultManager];
+                    [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
+                } else {
+                    [[DownloadManager shared] remove:downloadResource.downloadUuid];
+                }
+                [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
+                [weakSelf.videoArray removeObject:downloadResource];
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [self updateDownloadingText];
+                    [weakSelf.tableView reloadData];
+                });
+                
+                
+            }];
+            [alert addAction:conform];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                 style:UIAlertActionStyleCancel
+                 handler:^(UIAlertAction * _Nonnull action) {
+             }];
+             [alert addAction:cancel];
+            [self presentViewController:alert animated:YES completion:nil];
+            [tableView setEditing:NO animated:YES];
+        }];
+        deleteAction.image = [UIImage imageNamed:@"delete"];
+        deleteAction.backgroundColor = RGB(224, 32, 32);
+        
+
+    return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
     } else {
         return NULL;
     }
@@ -826,22 +963,40 @@ UIDocumentPickerDelegate
         NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
         NSError *error;
 
+       
+        
         [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
             //读取文件
             NSString *fileName = [newURL lastPathComponent];
+       
+            NSData *bookmarkData = [newURL bookmarkDataWithOptions:0 includingResourceValuesForKeys:nil relativeToURL:nil error:nil];
+                            
+            NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+
+            [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
+            [groupUserDefaults  synchronize];
+            SharedStorageManager.shared.userDefaults.exteralFolderName = fileName;
+            
             dispatch_async(dispatch_get_main_queue(), ^{
             [[NSUserDefaults standardUserDefaults] setObject:@{@"fileName":fileName ,
-                                                               @"url": [newURL absoluteString],
+                                                               @"url": [newURL path],
                                     
                                                              }
                                                       forKey:@"MY_PHONE_STORAGE"];
             
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+                
+                
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 
                 [self.tableView reloadData];
-                });
+            });
+            
             [self dismissViewControllerAnimated:YES completion:NULL];
+        
         }];
+        
+        
         [urls.firstObject stopAccessingSecurityScopedResource];
     } else {
         //授权失败
@@ -906,8 +1061,25 @@ UIDocumentPickerDelegate
     }
 #endif
     
+    if( self.selectedIdx == 0) {
+        [self.tableView reloadData];
+    }
+    
 }
 
+- (void)updateDownloadingText {
+    if(self.videoArray.count > 0) {
+      [self.downloadingBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count] forState:UIControlStateNormal];
+      [self.downloadingBtn sizeToFit];
+    } else {
+        [self.downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
+        [self.downloadingBtn sizeToFit];
+    }
+    
+    self.downloadingBtn.left = self.downloadBtn.right + 53;
+    self.downloadingBtn.centerY =  self.downloadBtn.centerY;
+    
+}
 
 - (void)changeDownloadTab:(UIButton *)sender {
     if ([sender isEqual:self.downloadBtn]) {
@@ -916,7 +1088,6 @@ UIDocumentPickerDelegate
             self.downloadingBtn.selected = false;
             self.selectedIdx = 0;
             [UIView animateWithDuration:0.25F animations:^{
-                self.slideLine.width  = 53;
                 self.slideLine.centerX = self.downloadBtn.centerX;
             }];
             [self.tableView reloadData];
@@ -927,7 +1098,6 @@ UIDocumentPickerDelegate
             self.downloadingBtn.selected = true;
             self.selectedIdx = 1;
             [UIView animateWithDuration:0.25F animations:^{
-                self.slideLine.width  = 70;
                 self.slideLine.centerX = self.downloadingBtn.centerX;
             }];
             [self.videoArray removeAllObjects];
@@ -940,12 +1110,13 @@ UIDocumentPickerDelegate
 
 - (void)changeFileDir:(UIButton *)sender {
     NSArray *documentTypes = @[@"public.folder"];
-
+//
     UIDocumentPickerViewController *documentPicker =   [[UIDocumentPickerViewController alloc]  initWithDocumentTypes:documentTypes inMode:UIDocumentPickerModeOpen];
 
     documentPicker.delegate = self;
     documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:documentPicker animated:YES completion:nil];
+    
 }
 
 
@@ -1033,7 +1204,7 @@ UIDocumentPickerDelegate
 
 - (UIButton *)downloadingBtn {
     if(_downloadingBtn == nil) {
-        _downloadingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 78, 18)];
+        _downloadingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
         [_downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
         [_downloadingBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
         [_downloadingBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];

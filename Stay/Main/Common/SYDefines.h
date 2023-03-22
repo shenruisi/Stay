@@ -21,5 +21,6 @@
 
 #define StatusBarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
 
+#define FILEUUID  @"FILEUUID0000"
 
 #endif /* SYDefines */

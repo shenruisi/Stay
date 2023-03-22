@@ -99,7 +99,25 @@
     if (nil == _folderElements){
         ModalItemDataEntityGeneral *generalEntity;
         NSMutableArray *ret = [[NSMutableArray alloc] init];
-        
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        if(dic != nil) {
+            NSString *text = dic[@"fileName"];
+            ModalItemElement *element = [[ModalItemElement alloc] init];
+            generalEntity = [[ModalItemDataEntityGeneral alloc] init];
+            generalEntity.title = text;
+            generalEntity.uuid = FILEUUID;
+            element.generalEntity = generalEntity;
+            element.type = ModalItemElementTypeClick;
+            element.renderMode = ModalItemElementRenderModeTop;
+            element.action = ^(ModalItemElement * _Nonnull element) {
+                if([element.generalEntity.uuid isEqualToString:FILEUUID]) {
+                    self.dic[@"uuid"] = FILEUUID;
+                    [self.navigationController popModalViewController];
+                }
+            };
+            [ret addObject:element];
+        }
+
         for (NSInteger i = 0; i < FCShared.tabManager.tabs.count; i++){
             FCTab *tab = FCShared.tabManager.tabs[i];
             if ([tab.uuid isEqualToString:self.excludeUUID]){
@@ -111,7 +129,7 @@
             generalEntity.uuid = tab.uuid;
             element.generalEntity = generalEntity;
             element.type = ModalItemElementTypeClick;
-            if (i == 0){
+            if (ret.count == 0){
                 element.renderMode = ModalItemElementRenderModeTop;
             }
             else if (i == FCShared.tabManager.tabs.count - 1){
@@ -161,8 +179,37 @@
 - (void)clear{
 }
 
+
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 420);
 }
+- (UIViewController *)findCurrentShowingViewControllerFrom:(UIViewController *)vc
+{
+    // 递归方法 Recursive method
+    UIViewController *currentShowingVC;
+    if ([vc presentedViewController]) {
+        // 当前视图是被presented出来的
+        UIViewController *nextRootVC = [vc presentedViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        // 根视图为UITabBarController
+        UIViewController *nextRootVC = [(UITabBarController *)vc selectedViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else if ([vc isKindOfClass:[UINavigationController class]]){
+        // 根视图为UINavigationController
+        UIViewController *nextRootVC = [(UINavigationController *)vc visibleViewController];
+        currentShowingVC = [self findCurrentShowingViewControllerFrom:nextRootVC];
+
+    } else {
+        // 根视图为非导航类
+        currentShowingVC = vc;
+    }
+
+    return currentShowingVC;
+}
+
+
 
 @end

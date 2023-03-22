@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL safariExtensionEnabled;
 @property (nonatomic, strong) NSString *lastFolderUUID;
+@property (nonatomic, strong) NSString *exteralFolderName;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -204,6 +204,7 @@ static DownloadManager *instance = nil;
         if (tasks.count == 0) {
             task = [[Task alloc] init];
             task.taskId = taskId;
+            task.key = request.key;
             task.progress = 0;
             task.status = DMStatusPending;
             task.filePath = [NSString stringWithFormat:@"%@/%@.%@", request.fileDir, taskId, @"mp4"];
@@ -649,9 +650,29 @@ static DownloadManager *instance = nil;
         } else {
             if ([task.normalState.videoType isEqualToString:@"mp4"]) {
                 NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]];
-                [NSFileManager.defaultManager moveItemAtPath:filePath toPath:task.filePath error:nil];
-                task.normalState.status = 3;
-                [self taskComplete:task];
+                if ([task.key isEqualToString:FILEUUID]) {
+                    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+                    NSData *loadPath = [groupUserDefaults objectForKey:@"bookmark"];
+                    NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+                    BOOL fileUrlAuthozied = [loadUrl startAccessingSecurityScopedResource];
+                    if (fileUrlAuthozied) {
+                        NSError *err;
+                        [NSFileManager.defaultManager moveItemAtPath:filePath toPath:task.filePath error:&err];
+                        if (err) {
+                            [self taskFailed:task];
+                        } else {
+                            task.normalState.status = 3;
+                            [self taskComplete:task];
+                        }
+                    } else {
+                        [self taskFailed:task];
+                    }
+                    [loadUrl stopAccessingSecurityScopedResource];
+                } else {
+                    [NSFileManager.defaultManager moveItemAtPath:filePath toPath:task.filePath error:nil];
+                    task.normalState.status = 3;
+                    [self taskComplete:task];
+                }
                 return;
             } else {
                 task.normalState.status = 2;
@@ -692,9 +713,11 @@ static DownloadManager *instance = nil;
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
     NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c:v mpeg4 -c:a aac '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
     if (task.normalState.audioUrl.length > 0) {
-        command = [NSString stringWithFormat:@"-i '%@.%@' -i '%@.%@' -c:v mpeg4 -c:a aac '%@'",
+        command = [NSString stringWithFormat:@"-i '%@.%@' -i '%@.%@' -c:v %@ -c:a %@ '%@'",
                    [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType,
                    [taskPath stringByAppendingPathComponent:[task.normalState.audioUrl md5]], task.normalState.audioType,
+                   [task.normalState.videoType isEqualToString:@"mp4"] ? @"copy" : @"mpeg4",
+                   [task.normalState.audioType isEqualToString:@"mp4"] ? @"copy" : @"aac",
                    task.filePath];
     }
     [self ffmpegExecute:command forTask:task];
@@ -704,7 +727,7 @@ static DownloadManager *instance = nil;
     __block double duration = 0;
     [FFmpegKitConfig enableLogCallback:^(Log *log) {
         if (duration == 0) {
-            if ([log.getMessage rangeOfString:@"\\d{2,}:\\d\\d:\\d\\d" options:NSRegularExpressionSearch].length > 0) {
+            if ([log.getMessage rangeOfString:@"^\\d{2,}:\\d\\d:\\d\\d" options:NSRegularExpressionSearch].length > 0) {
                 NSArray<NSString *> *times = [log.getMessage componentsSeparatedByString:@":"];
                 duration = times[0].doubleValue * 3600 + times[1].doubleValue * 60 + times[2].doubleValue;
             }
@@ -723,8 +746,20 @@ static DownloadManager *instance = nil;
         }
 //        NSLog(@"ffmpeg stat: %d", statistics.getTime);
     }];
+    NSURL *loadUrl;
+    if ([task.key isEqualToString:FILEUUID]) {
+        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+        NSData *loadPath = [groupUserDefaults objectForKey:@"bookmark"];
+        loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+        BOOL fileUrlAuthozied = [loadUrl startAccessingSecurityScopedResource];
+        if (!fileUrlAuthozied) {
+            
+        }
+    }
     FFmpegSession* session = [FFmpegKit execute:command];
-    
+    if ([task.key isEqualToString:FILEUUID]) {
+        [loadUrl stopAccessingSecurityScopedResource];
+    }
     ReturnCode *returnCode = [session getReturnCode];
 //    NSLog(@"FFmpeg process exited with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
     if ([ReturnCode isSuccess:returnCode]) {

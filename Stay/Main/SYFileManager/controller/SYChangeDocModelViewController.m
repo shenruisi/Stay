@@ -45,13 +45,31 @@
 - (void)viewWillAppear{
     [super viewWillAppear];
     
-    NSString *uuid = FCShared.tabManager.tabs[0].uuid;
-    if(self.dic != NULL && self.dic[@"uuid"] != nil) {
-        uuid = self.dic[@"uuid"];
-    }
+    NSString *uuid = self.dic[@"uuid"];
     ModalItemElement *element = self.saveToElements.firstObject;
-    element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
-    element.generalEntity.uuid = uuid;
+    if(uuid.length == 0) {
+        uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
+        if(uuid.length == 0) {
+            uuid = FILEUUID;
+        }
+    }
+    
+    if([uuid isEqualToString:FILEUUID]) {
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        NSString *text = @"Undefined";
+        if (dic != NULL) {
+            text = dic[@"fileName"];
+        }
+        
+        if(self.dic[@"pathName"] != NULL) {
+            text = self.dic[@"pathName"];
+        }
+        element.generalEntity.title = text;
+        element.generalEntity.uuid = uuid;
+    } else {
+        element.generalEntity.title = [FCShared.tabManager tabNameWithUUID:uuid];
+        element.generalEntity.uuid = uuid;
+    }
     [element clear];
     
     [self.tableView reloadData];
@@ -163,6 +181,7 @@
         saveToElement.action = ^(ModalItemElement * _Nonnull element) {
             SYDownloadFolderChooseModalViewController *cer = [[SYDownloadFolderChooseModalViewController alloc] init];
             cer.dic = self.dic;
+            cer.nav = self.nav;
             [self.navigationController pushModalViewController:cer];
         };
         [ret addObject:saveToElement];
@@ -194,10 +213,57 @@
 }
 
 - (void)startDownloadAction:(id)sender{
+ 
+    
+    
+    if([FILEUUID isEqualToString:self.dic[@"uuid"]]) {
+        
+        DownloadResource *resource = [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:self.dic[@"downloadUuid"]];
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSURL *sourceURL = [NSURL fileURLWithPath:resource.allPath];
+        NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
+        NSString *path = self.dic[@"allPath"] == NULL?dic[@"url"]:self.dic[@"allPath"] ;
+        NSString *title = self.nameElements[0].inputEntity.text;
+
+        NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",path,title,@"mp4"];
+
+        NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
+        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+        NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
+        
+        NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+        BOOL fileUrlAuthozied =[loadUrl startAccessingSecurityScopedResource];
+
+        NSError *error1 = nil;
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
+
+        if(!fileUrlAuthozied) {
+            return;
+        }
+        
+        [fileCoordinator coordinateWritingItemAtURL:destinationURL options:0 error:&error1 byAccessor:^(NSURL *newURL) {
+            NSError *error = nil;
+            BOOL success = [fileManager moveItemAtURL:sourceURL toURL:newURL error:&error];
+            if (success) {
+                NSLog(@"移动文件成功");
+            } else {
+                NSLog(@"移动文件失败：%@", error);
+            }
+            
+        }];
+        
+        [loadUrl stopAccessingSecurityScopedResource];
+        
+    }
+
+    
     NSString *path = self.saveToElements[0].generalEntity.uuid;
     [[DataManager  shareManager] updateVideoPath:path uuid:self.dic[@"downloadUuid"]];
     NSString *title = self.nameElements[0].inputEntity.text;
     [[DataManager shareManager] updateVideoTitle:title uuid:self.dic[@"downloadUuid"]];
+    
+    
     [self.navigationController.slideController dismiss];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"changeVideoDoc"
                                                         object:nil];

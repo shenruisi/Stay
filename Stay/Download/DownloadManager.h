@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Task : NSObject
 
 @property (nonatomic, strong) NSString *taskId;
+@property (nonatomic, strong) NSString *key;
 @property (nonatomic, assign) float progress;
 @property (nonatomic, assign) DMStatus status;
 @property (nonatomic, strong) NSString *filePath;

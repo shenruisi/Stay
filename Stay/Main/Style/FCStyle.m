@@ -151,6 +151,10 @@
     return  [UIColor colorNamed:@"progressBgColor"];
 }
 
++ (UIColor *)subtitleColor {
+    return  [UIColor colorNamed:@"SubtitleColor"];
+}
+
 + (UIFont *)title1{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:28];

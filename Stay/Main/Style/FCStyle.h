@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *fcNavigationLineColor;
 @property(class, nonatomic, readonly) UIColor *titleGrayColor;
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
+@property(class, nonatomic, readonly) UIColor *subtitleColor;
 
 
 

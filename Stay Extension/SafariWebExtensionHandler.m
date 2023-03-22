@@ -343,6 +343,14 @@
         if (selectedUUID.length == 0) {
             selectedUUID = ((FCTab *)[tabs objectAtIndex:0]).uuid;
         }
+        NSString *exteralFolderName = SharedStorageManager.shared.userDefaults.exteralFolderName;
+        if (exteralFolderName.length > 0) {
+            [datas addObject:@{
+                @"uuid": @"FILEUUID0000",
+                @"name": exteralFolderName,
+                @"selected": @([selectedUUID isEqualToString:@"FILEUUID0000"]),
+            }];
+        }
         for (FCTab *tab in tabs) {
             [datas addObject:@{
                 @"uuid": tab.uuid,
@@ -361,6 +369,13 @@
             body = @{
                 @"code" : code
             };
+        }
+    }
+    else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
+        NSString *path = message[@"path"];
+        NSString *code = message[@"code"];
+        if (path.length > 0 && code.length > 0){
+            [[API shared] commitYoutbe:path code:code];
         }
     }
 

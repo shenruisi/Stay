@@ -16,12 +16,14 @@
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.safariExtensionEnabled forKey:@"safariExtensionEnabled"];
     [coder encodeObject:self.lastFolderUUID forKey:@"lastFolderUUID"];
+    [coder encodeObject:self.exteralFolderName forKey:@"exteralFolderName"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _safariExtensionEnabled = [coder decodeBoolForKey:@"safariExtensionEnabled"];
         _lastFolderUUID = [coder decodeObjectForKey:@"lastFolderUUID"];
+        _exteralFolderName = [coder decodeObjectForKey:@"exteralFolderName"];
     }
     
     return self;
@@ -42,6 +44,7 @@
                                                                         error:nil];
     _safariExtensionEnabled = userDefaults.safariExtensionEnabled;
     _lastFolderUUID = userDefaults.lastFolderUUID;
+    _exteralFolderName = userDefaults.exteralFolderName;
 }
 
 - (void)setSafariExtensionEnabled:(BOOL)safariExtensionEnabled{
@@ -51,6 +54,11 @@
 
 - (void)setLastFolderUUID:(NSString *)lastFolderUUID{
     _lastFolderUUID = lastFolderUUID;
+    [self flush];
+}
+
+- (void)setExteralFolderName:(NSString *)exteralFolderName{
+    _exteralFolderName = exteralFolderName;
     [self flush];
 }
 

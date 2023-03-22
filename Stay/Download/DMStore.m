@@ -147,6 +147,7 @@
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         Task *task = [[Task alloc] init];
         task.taskId = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 0)];
+        task.key = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 1)];
         task.progress = sqlite3_column_double(stmt, 6);
         task.status = sqlite3_column_int(stmt, 7);
         NSString *url = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 2)];

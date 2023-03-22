@@ -46,13 +46,18 @@ const browser = __b;
   }
 
   function injectParseVideoJS(isContent){
+    let isLoadingAround = false;
+    let isLoadingLongPressStatus = false;
+    let definedObj = {};
+    let videoListMd5 = '';
     let isStayAround = '';
     let longPressStatus = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
     let decodeSignatureCipher = {}; 
     let playerBase = '';
-    let ytBaseJSCode = '';
+    let ytBaseJSUuid = '';
+    let ytRandomBaseJs = '';
     // console.log('------------injectParseVideoJS-----start------------------',decodeSignatureCipher)
     let videoList = [];
     // key:videoUuid,
@@ -289,6 +294,179 @@ const browser = __b;
         }
         e = Math.pow(10, Math.max(c, d));
         return  (this.mul(a, e) + this.mul(b, e)) / e;
+      },
+      hexMD5 (str) { 
+        /*
+        * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+        * Digest Algorithm, as defined in RFC 1321.
+        * Version 1.1 Copyright (C) Paul Johnston 1999 - 2002.
+        * Code also contributed by Greg Holt
+        * See http://pajhome.org.uk/site/legal.html for details.
+        */
+
+        /*
+        * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+        * to work around bugs in some JS interpreters.
+        */
+        function safe_add(x, y)
+        {
+          let lsw = (x & 0xFFFF) + (y & 0xFFFF)
+          let msw = (x >> 16) + (y >> 16) + (lsw >> 16)
+          return (msw << 16) | (lsw & 0xFFFF)
+        }
+
+        /*
+        * Bitwise rotate a 32-bit number to the left.
+        */
+        function rol(num, cnt)
+        {
+          return (num << cnt) | (num >>> (32 - cnt))
+        }
+
+        /*
+        * These functions implement the four basic operations the algorithm uses.
+        */
+        function cmn(q, a, b, x, s, t)
+        {
+          return safe_add(rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b)
+        }
+        function ff(a, b, c, d, x, s, t)
+        {
+          return cmn((b & c) | ((~b) & d), a, b, x, s, t)
+        }
+        function gg(a, b, c, d, x, s, t)
+        {
+          return cmn((b & d) | (c & (~d)), a, b, x, s, t)
+        }
+        function hh(a, b, c, d, x, s, t)
+        {
+          return cmn(b ^ c ^ d, a, b, x, s, t)
+        }
+        function ii(a, b, c, d, x, s, t)
+        {
+          return cmn(c ^ (b | (~d)), a, b, x, s, t)
+        }
+
+        /*
+        * Calculate the MD5 of an array of little-endian words, producing an array
+        * of little-endian words.
+        */
+        function coreMD5(x)
+        {
+          let a = 1732584193
+          let b = -271733879
+          let c = -1732584194
+          let d = 271733878
+
+          for(let i = 0; i < x.length; i += 16)
+          {
+            let olda = a
+            let oldb = b
+            let oldc = c
+            let oldd = d
+
+            a = ff(a, b, c, d, x[i+ 0], 7 , -680876936)
+            d = ff(d, a, b, c, x[i+ 1], 12, -389564586)
+            c = ff(c, d, a, b, x[i+ 2], 17, 606105819)
+            b = ff(b, c, d, a, x[i+ 3], 22, -1044525330)
+            a = ff(a, b, c, d, x[i+ 4], 7 , -176418897)
+            d = ff(d, a, b, c, x[i+ 5], 12, 1200080426)
+            c = ff(c, d, a, b, x[i+ 6], 17, -1473231341)
+            b = ff(b, c, d, a, x[i+ 7], 22, -45705983)
+            a = ff(a, b, c, d, x[i+ 8], 7 , 1770035416)
+            d = ff(d, a, b, c, x[i+ 9], 12, -1958414417)
+            c = ff(c, d, a, b, x[i+10], 17, -42063)
+            b = ff(b, c, d, a, x[i+11], 22, -1990404162)
+            a = ff(a, b, c, d, x[i+12], 7 , 1804603682)
+            d = ff(d, a, b, c, x[i+13], 12, -40341101)
+            c = ff(c, d, a, b, x[i+14], 17, -1502002290)
+            b = ff(b, c, d, a, x[i+15], 22, 1236535329)
+
+            a = gg(a, b, c, d, x[i+ 1], 5 , -165796510)
+            d = gg(d, a, b, c, x[i+ 6], 9 , -1069501632)
+            c = gg(c, d, a, b, x[i+11], 14, 643717713)
+            b = gg(b, c, d, a, x[i+ 0], 20, -373897302)
+            a = gg(a, b, c, d, x[i+ 5], 5 , -701558691)
+            d = gg(d, a, b, c, x[i+10], 9 , 38016083)
+            c = gg(c, d, a, b, x[i+15], 14, -660478335)
+            b = gg(b, c, d, a, x[i+ 4], 20, -405537848)
+            a = gg(a, b, c, d, x[i+ 9], 5 , 568446438)
+            d = gg(d, a, b, c, x[i+14], 9 , -1019803690)
+            c = gg(c, d, a, b, x[i+ 3], 14, -187363961)
+            b = gg(b, c, d, a, x[i+ 8], 20, 1163531501)
+            a = gg(a, b, c, d, x[i+13], 5 , -1444681467)
+            d = gg(d, a, b, c, x[i+ 2], 9 , -51403784)
+            c = gg(c, d, a, b, x[i+ 7], 14, 1735328473)
+            b = gg(b, c, d, a, x[i+12], 20, -1926607734)
+
+            a = hh(a, b, c, d, x[i+ 5], 4 , -378558)
+            d = hh(d, a, b, c, x[i+ 8], 11, -2022574463)
+            c = hh(c, d, a, b, x[i+11], 16, 1839030562)
+            b = hh(b, c, d, a, x[i+14], 23, -35309556)
+            a = hh(a, b, c, d, x[i+ 1], 4 , -1530992060)
+            d = hh(d, a, b, c, x[i+ 4], 11, 1272893353)
+            c = hh(c, d, a, b, x[i+ 7], 16, -155497632)
+            b = hh(b, c, d, a, x[i+10], 23, -1094730640)
+            a = hh(a, b, c, d, x[i+13], 4 , 681279174)
+            d = hh(d, a, b, c, x[i+ 0], 11, -358537222)
+            c = hh(c, d, a, b, x[i+ 3], 16, -722521979)
+            b = hh(b, c, d, a, x[i+ 6], 23, 76029189)
+            a = hh(a, b, c, d, x[i+ 9], 4 , -640364487)
+            d = hh(d, a, b, c, x[i+12], 11, -421815835)
+            c = hh(c, d, a, b, x[i+15], 16, 530742520)
+            b = hh(b, c, d, a, x[i+ 2], 23, -995338651)
+
+            a = ii(a, b, c, d, x[i+ 0], 6 , -198630844)
+            d = ii(d, a, b, c, x[i+ 7], 10, 1126891415)
+            c = ii(c, d, a, b, x[i+14], 15, -1416354905)
+            b = ii(b, c, d, a, x[i+ 5], 21, -57434055)
+            a = ii(a, b, c, d, x[i+12], 6 , 1700485571)
+            d = ii(d, a, b, c, x[i+ 3], 10, -1894986606)
+            c = ii(c, d, a, b, x[i+10], 15, -1051523)
+            b = ii(b, c, d, a, x[i+ 1], 21, -2054922799)
+            a = ii(a, b, c, d, x[i+ 8], 6 , 1873313359)
+            d = ii(d, a, b, c, x[i+15], 10, -30611744)
+            c = ii(c, d, a, b, x[i+ 6], 15, -1560198380)
+            b = ii(b, c, d, a, x[i+13], 21, 1309151649)
+            a = ii(a, b, c, d, x[i+ 4], 6 , -145523070)
+            d = ii(d, a, b, c, x[i+11], 10, -1120210379)
+            c = ii(c, d, a, b, x[i+ 2], 15, 718787259)
+            b = ii(b, c, d, a, x[i+ 9], 21, -343485551)
+
+            a = safe_add(a, olda)
+            b = safe_add(b, oldb)
+            c = safe_add(c, oldc)
+            d = safe_add(d, oldd)
+          }
+          return [a, b, c, d]
+        }
+        /*
+        * Convert an 8-bit character string to a sequence of 16-word blocks, stored
+        * as an array, and append appropriate padding for MD4/5 calculation.
+        * If any of the characters are >255, the high byte is silently ignored.
+        */
+        function str2binl(str) {
+          let bin = [];
+          for (let i = 0; i < str.length * 8; i += 8) {
+            bin[i >> 5] |= (str.charCodeAt(i / 8) & 0xFF) << (i % 32);
+          }
+          return bin;
+        }
+        
+        /*
+        * Convert an array of little-endian words to a hex string.
+        */
+        function binl2hex(binarray){
+          let hex_tab = '0123456789abcdef'
+          let str = ''
+          for(let i = 0; i < binarray.length * 4; i++)
+          {
+            str += hex_tab.charAt((binarray[i>>2] >> ((i%4)*8+4)) & 0xF) +
+                    hex_tab.charAt((binarray[i>>2] >> ((i%4)*8)) & 0xF)
+          }
+          return str
+        }
+        return binl2hex(coreMD5(str2binl(str))) 
       }
     }
 
@@ -832,8 +1010,6 @@ const browser = __b;
         // console.log('start------parseVideoInfoByWindow--------');
         setTimeoutParseVideoInfoByWindow();
       }
-      // console.log('parseVideoNodeList-----------result---------',videoList);
-      // window.webkit.messageHandlers.stayapp.postMessage(videoList);
     }
 
     /**
@@ -858,7 +1034,12 @@ const browser = __b;
         shouldDecodeQuality[videoInfo.videoUuid] = qualityList;
       }
       // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
-      addLongPress(videoDom, posDom, videoInfo);
+      try {
+        addLongPress(videoDom, posDom, videoInfo);
+      } catch (error) {
+        
+      }
+      
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
         // console.log('parseVideoNodeList----------has exist, and modify-------',videoInfo, videoList);
         videoList.forEach(item=>{
@@ -882,7 +1063,6 @@ const browser = __b;
         // console.log('checkVideoExist----------',videoInfo, videoIdSet);
         videoList.push(videoInfo);
       }
-
       pushVideoListToTransfer()
     }
 
@@ -890,13 +1070,13 @@ const browser = __b;
       if(!decodeSignatureCipher || !Object.keys(decodeSignatureCipher).length){
         return false;
       }
-      if(!ytBaseJSCode){
+      if(!ytBaseJSUuid){
         return false;
       }
       if(!decodeSignatureCipher.decodeFunStr){
         return false;
       }
-      if(ytBaseJSCode != decodeSignatureCipher.pathUuid){
+      if(ytBaseJSUuid != decodeSignatureCipher.pathUuid){
         return false;
       }
       return true;
@@ -916,10 +1096,10 @@ const browser = __b;
         if(qualityList.length){
           qualityList.forEach((quality)=>{
             if(quality.downloadUrl && !Utils.isURL(quality.downloadUrl)){
-              quality.downloadUrl = decodeYoutubeSourceUrl(decodeSignatureCipher.decodeFunStr, quality.downloadUrl);
+              quality.downloadUrl = decodeYoutubeSourceUrl(quality.downloadUrl);
             }
             if(quality.audioUrl && !Utils.isURL(quality.audioUrl)){
-              quality.audioUrl = decodeYoutubeSourceUrl(decodeSignatureCipher.decodeFunStr, quality.audioUrl);
+              quality.audioUrl = decodeYoutubeSourceUrl(quality.audioUrl);
             }
             return quality;
           });
@@ -944,6 +1124,12 @@ const browser = __b;
      * push videoList to transfer
      */
     function pushVideoListToTransfer(){
+      const videoInfoListMd5 = Utils.hexMD5(JSON.stringify(videoList));
+      if(videoListMd5 && videoListMd5 == videoInfoListMd5){
+        return;
+      }
+      console.log('pushVideoListToTransfer------',videoList);
+      videoListMd5 = videoInfoListMd5;
       if(isContent){
         // console.log('isContent----------------------');
         let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoInfoList: videoList};
@@ -971,24 +1157,31 @@ const browser = __b;
         return;
       }
 
-      if(!longPressStatus){
-        longPressStatus = await getLongPressStatus();
+      if(isLoadingAround || isLoadingLongPressStatus){
+        return;
       }
 
-      if(longPressStatus && longPressStatus == 'off'){
+
+      if(!longPressStatus){
+        isLoadingLongPressStatus = true;
+        longPressStatus = await getLongPressStatus();
+        isLoadingLongPressStatus = false;
+      }
+
+      if(!longPressStatus || (longPressStatus && longPressStatus == 'off')){
         return;
       }
 
       // console.log('----getStayAround-----start------');
       if(!isStayAround){
-        const isStayProTemp = await getStayAround();
-        isStayAround = isStayProTemp;
+        isLoadingAround = true;
+        isStayAround = await getStayAround();
+        isLoadingAround = false;
       }
       // console.log('----isStayAround-----',isStayAround);
       if(isStayAround!='a'){
         return;
       }
-
       
       // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
       let stayLongPress = posDom.getAttribute('stay-long-press');
@@ -1085,7 +1278,6 @@ const browser = __b;
             if(response.body && JSON.stringify(response.body)!='{}'){
               // console.log('isStayAround---------', response.body)
               resolve( response.body);
-            // window.localStorage.setItem('SINFFER_FETCH_STAY_SETTING', JSON.stringify(darkmodeSetting));
             }
           });
         }else{
@@ -1175,17 +1367,6 @@ const browser = __b;
         visibleTimer = 0;
       }, 400)
 
-      async function openPiP(video) {
-        try {
-          const pipWindow = await video.requestPictureInPicture();
-          // 进入画中画模式...
-        } catch (e) {   
-          console.error(e) // 处理异常
-        }
-      }
-
-      // F7B500
-
       // window.open(downloadUrl);
       function createModal(){
         let list = [{title:videoInfo.title, downloadUrl: videoInfo.downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: ''}];
@@ -1197,6 +1378,11 @@ const browser = __b;
         let posterbg = 'background-color: rgba(255, 255, 255, 1);';
         let fontColor = 'color:#000000;'
         let downloadIcon = isContent?browser.runtime.getURL('img/popup-download-light.png'):'https://res.stayfork.app/scripts/8DF5C8391ED58046174D714911AD015E/icon.png';
+        let hdLine = '#F7B500';
+        let hdBg = '#000';
+        let titleIcon = 'https://res.stayfork.app/scripts/22BF8566F3522614F4F3A15EBC87378E/icon.png';
+        let airplayIcon = 'https://res.stayfork.app/scripts/D660FA085601F608C3BE6F9CDB44DFCC/icon.png';
+        let pipIcon = 'https://res.stayfork.app/scripts/3F8E6C0D8F4FDD3767A7F0B151A72E94/icon.png';
         if(Utils.isDark()){
           // bg = 'background-color: rgba(0, 0, 0, 0.4);';
           posterbg = 'background-color: rgba(0, 0, 0, 1);';
@@ -1206,6 +1392,10 @@ const browser = __b;
           // downloadBg = 'background-color: rgba(0, 0, 0, 0.8);';
           downloadColor = 'rgb(247,247,247)';
           lineColor = '#37372F';
+          hdBg = 'rgb(247,247,247)';
+          titleIcon = 'https://res.stayfork.app/scripts/102BDC80B489A31FCA2F4E3A3B7CCE74/icon.png';
+          airplayIcon = 'https://res.stayfork.app/scripts/F6E653EE027B789962CEE7E6FB2CF65F/icon.png';
+          pipIcon = 'https://res.stayfork.app/scripts/DC8756A3CE2F2752ED738E5C1A71FCFF/icon.png';
         }
         
         let countH = 1;
@@ -1235,7 +1425,20 @@ const browser = __b;
 
             list = [{title:videoInfo.title, downloadUrl, poster: videoInfo.poster, hostUrl: Utils.getHostname(videoInfo.hostUrl), uuid: '', protect:item.protect?item.protect:false, audioUrl, qualityLabel:item.qualityLabel }];
             downloadUrl = 'stay://x-callback-url/snifferVideo?list='+encodeURIComponent(JSON.stringify(list));
-            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}</div>`
+            let quality = item.qualityLabel;
+            let heightQualityLabel = '';
+            if(quality){
+              try {
+                quality = quality.replace(/[^0-9]/g,'');
+                if(Number(quality) > 780){
+                  heightQualityLabel = '<span class="__stay-hd">HD</span>';
+                }
+              } catch (error) {
+                
+              }
+              
+            }
+            qualityItem = qualityItem + `<div stay-download="${downloadUrl}" class="_stay-quality-item">${item.qualityLabel}${heightQualityLabel}</div>`
             countH = countH + 1;
           })
           downloadCon = qualityItem;
@@ -1256,8 +1459,9 @@ const browser = __b;
             vTop = Utils.div(Utils.sub(bodyClientHeight, posterHeight), 2);
           }
         }else{
-          let paddingHeight = Utils.add(10, 36);
+          let paddingHeight = Utils.add(4, 36);
           let modalContentHeight = Utils.add(Utils.add(posterHeight, paddingHeight), Utils.add(Utils.mul(countH, 38), 36));
+          // modalContentHeight = Utils.add(modalContentHeight, 38);
           // 内容+定位的top 超出屏幕高度, 则可展示内容的top
           if(top>Utils.sub(bodyClientHeight, modalContentHeight)){
             vTop = Utils.sub(bodyClientHeight, modalContentHeight);
@@ -1384,7 +1588,7 @@ const browser = __b;
             box-sizing: border-box;
           }
           ._stay-sinffer-title{
-            padding-left: 15px;
+            padding-left: 44px;
             padding-right: 15px;
             width: 100%;
             height:36px;
@@ -1402,10 +1606,52 @@ const browser = __b;
             margin-bottom: 10px;
             box-sizing: border-box;
             font-size: 16px;
+            position: relative;
+          }
+          ._stay-sinffer-title::before{
+            content: '';
+            background: url(${titleIcon}) 50% 50% no-repeat;
+            background-size: 18px;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translate(0, -50%);
+            }
           }
           ._stay-sinffer-title span{
             font-weight: 600;
             color: ${fontColor}
+          }
+          ._stay-sinffer-tool{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 15px;
+            height: 38px;
+            box-sizing: border-box;
+          }
+          ._stay-sinffer-tool .__tool{
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: ${fontColor}
+          }
+          ._stay-sinffer-tool .__tool img{
+            width: 20px;
+          }
+          ._stay-sinffer-tool .__tool span{
+            padding-left: 10px;
+          }
+          ._stay-sinffer-tool .__airplay{
+            
+            border-right: 0.5px solid ${lineColor};
+          }
+          ._stay-sinffer-tool .__pip{
+
           }
           ._stay-sinffer-download{
             width:100%;
@@ -1432,6 +1678,18 @@ const browser = __b;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+          }
+          ._stay-quality-item .__stay-hd{
+            border: 1px solid ${hdLine};
+            background: ${hdBg};
+            color: ${hdLine};
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            padding: 0px 4px;
+            border-radius: 4px;
+            margin-left: 10px;
+            align-items: center;
           }
           ._stay-quality-item::after{
             content:"";
@@ -1472,6 +1730,7 @@ const browser = __b;
           '<div class="__stay-sinffer-poster">'+posterCon+'</div>',
           '<div class="_stay-sinffer-popup">',
           '<div class="_stay-sinffer-title">'+videoInfo.title+'</div>',
+          // `<div class="_stay-sinffer-tool"><div id="__stay_airplay" class="__tool __airplay"><img src="${airplayIcon}" /><span>Airplay</span></div><div id="__stay_pip" title="Picture-in-Picture" class="__tool __pip"><img src="${pipIcon}" /><span>PIP</span></div></div>`,
           '<div class="_stay-sinffer-download">',
           downloadCon,
           '</div>',
@@ -1525,6 +1784,66 @@ const browser = __b;
           })(i)
         }
       }
+      async function openPiP(video) {
+        try {
+          const pipWindow = await video.requestPictureInPicture();
+          // 进入画中画模式...
+        } catch (e) {   
+          console.error(e) // 处理异常
+        }
+      }
+      
+      
+     
+      // const pip_button_act = (isPip) => {
+      //   if(isPip){
+      //     document.querySelector('#__stay_pip img').style.opacity = 0.2;
+      //   }else{
+      //     document.querySelector('#__stay_pip img').style.opacity = 1;
+      //   }
+      // }
+      
+      // const enterpictureinpicture = e => pip_button_act(true);
+      // const leavepictureinpicture = e => pip_button_act(false);
+      // const webkitpresentationmodechanged = event => {
+      //   event.target.webkitPresentationMode == 'picture-in-picture'
+      //     ? (pip_button_act(true), event.stopImmediatePropagation())
+      //     : pip_button_act(false);
+      // }
+      
+      // const pip_init = video => {
+      //   if (!video || video.nodeName != 'VIDEO' || !video.hasAttribute('src')) return;
+      //   if (video.webkitPresentationMode === undefined) {
+      //     video.addEventListener('enterpictureinpicture', enterpictureinpicture);
+      //     video.addEventListener('leavepictureinpicture', leavepictureinpicture);
+      //   } else {
+      //     video.addEventListener('webkitpresentationmodechanged', webkitpresentationmodechanged, true);
+      //   }
+      // }
+
+      // pip_init(videoDom);
+
+
+      // document.querySelector('#__stay_pip').addEventListener('touchstart', event => {
+      //   // console.log('touch--pip--------',e);
+      //   // e.stopPropagation();
+      //   if (videoDom.webkitPresentationMode === undefined) {
+      //     if (document.pictureInPictureElement) {
+      //       document.exitPictureInPicture();
+      //     } else {
+      //       videoDom.requestPictureInPicture();
+      //     }
+      //   } else {
+      //     if (videoDom.webkitPresentationMode != 'inline') {
+      //       videoDom.webkitSetPresentationMode('inline');
+      //     } else {
+      //       videoDom.webkitSetPresentationMode('picture-in-picture');
+      //     }
+      //   }
+      //   event.preventDefault();
+      //   event.stopImmediatePropagation();
+      // })
+
     }
 
 
@@ -1654,7 +1973,6 @@ const browser = __b;
       }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
-        
         let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
         if(!playerDom){
           playerDom = document.querySelector('#player-control-overlay');
@@ -1734,6 +2052,9 @@ const browser = __b;
       else if(host.indexOf('hxaa79.com')>-1){
         videoInfo = handleHxaa79VideoInfo(videoSnifferDom);
       }
+      else if(host.indexOf('555yy4.com')>-1){
+        videoInfo = handle555yy4VideoInfo(videoSnifferDom);
+      }
 
       if(videoInfo.downloadUrl){
         downloadUrl = videoInfo.downloadUrl
@@ -1811,18 +2132,27 @@ const browser = __b;
 
       let titleDom = document.querySelector('.main-container .ep-info-pre .ep-info-title');
       if(!titleDom){
-        let bilibiliTimer = setTimeout(function(){
-          titleDom = document.querySelector('.video .share-video-info .title-wrapper .title-name span');
-          if(titleDom){
-            videoInfo.title = titleDom.textContent;
-          }
-          clearTimeout(bilibiliTimer);
-          bilibiliTimer = 0;
-          return videoInfo;
-        }, 200)
+        titleDom = document.querySelector('.video .share-video-info .title-wrapper .title .title-name span');
+        if(!titleDom){
+          let bilibiliTimer = setTimeout(function(){
+            titleDom = document.querySelector('.video .share-video-info .title-wrapper .title .title-name span');
+            if(titleDom){
+              videoInfo.title = titleDom.textContent;
+            }
+            clearTimeout(bilibiliTimer);
+            bilibiliTimer = 0;
+            return videoInfo;
+          }, 200)
+        }
       }
       if(titleDom){
         videoInfo.title = titleDom.textContent;
+      }
+
+      const episodeDom = document.querySelector('div.m-video-part-new > ul.list > li.part-item.on > span');
+      if(episodeDom){
+        let episode = episodeDom.textContent;
+        videoInfo.title = episode + videoInfo.title;
       }
 
       return videoInfo;
@@ -2149,6 +2479,24 @@ const browser = __b;
       return videoInfo;
     }
 
+    function handle555yy4VideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.poster = videoDom.getAttribute('poster') || '';
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      videoInfo.title = videoDom.getAttribute('title');
+      let videoTitle = window.parent.document.title;
+      console.log('videoTitle------',videoTitle,window.parent.ep_title,window.parent.MAC.Title);
+      if(!videoTitle){
+        videoTitle = window.parent.ep_title;
+        
+      }
+      if(!videoTitle){
+        videoTitle = window.parent.MAC.Title;
+      }
+      videoInfo.title = videoTitle;
+      return videoInfo;
+    }
+
     /**
      * 解析baidu视频信息
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList,videoKey,videoUuid}
@@ -2361,58 +2709,47 @@ const browser = __b;
           let qualityList = []
           let qualitySet = new Set();
           let jsPath = ytplayer.bootstrapWebPlayerContextConfig?ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
-          if(jsPath){
-            let pathArr = jsPath.split('/');
-            if(jsPath.startsWith('/')){
-              ytBaseJSCode = pathArr[3]
-            }else{
-              ytBaseJSCode = pathArr[2]
-            }
-          }
-
-          if(ytBaseJSCode){
-            handleFetchYoutubePlayer(ytBaseJSCode, jsPath, false);
-          }
-          
-
+          handleYTRandomPathUuid(jsPath);
           // 获取mp4音频
-          // let mp4AudioArr = adaptiveFormats.filter(item=>{
-          //   if(item.mimeType.indexOf('audio/mp4')>-1){
-          //     return item;
-          //   }
-          // })
-          // let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
-          // // 获取mp4格式
-          // adaptiveFormats.forEach(item=>{
-          //   let mimeType = item.mimeType;
-          //   if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
-          //     qualitySet.add(item.quality)
-          //     let audioUrl = '';
-          //     if(!mimeType.match(/.*codecs=.*webm.*/g)){
-          //       audioUrl = mp4AudioUrl;
-          //     }
-          //     if(!Utils.isURL(audioUrl)){
-          //       videoInfo.shouldDecode = true;
-          //     }
-          //     qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
-          //   }
-          //   // 解密
-          //   if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-          //     let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
-          //     let audioUrl = '';
-          //     let protect=true;
-          //     // 没有匹配到带音频的视频，需要加上audioUrl
-          //     if(!mimeType.match(/.*codecs=.*mp4.*/g)){
-          //       audioUrl = mp4AudioUrl;
-          //     }
-          //     if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
-          //       videoInfo.shouldDecode = true;
-          //     }
-          //     console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
-          //     qualitySet.add(item.quality);
-          //     qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
-          //   }
-          // });
+          let mp4AudioArr = adaptiveFormats.filter(item=>{
+            if(item.mimeType.indexOf('audio/mp4')>-1){
+              return item;
+            }
+          })
+          let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
+          // 获取mp4格式
+          adaptiveFormats.forEach(item=>{
+            let mimeType = item.mimeType;
+            let qualityLabel = item.qualityLabel;
+            qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
+            if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
+              qualitySet.add(item.quality)
+              let audioUrl = '';
+              if(!mimeType.match(/.*codecs=.*webm.*/g)){
+                audioUrl = mp4AudioUrl;
+              }
+              if(!Utils.isURL(audioUrl)){
+                videoInfo.shouldDecode = true;
+              }
+              qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl})
+            }
+            // 解密
+            if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
+              let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
+              let audioUrl = '';
+              let protect=true;
+              // 没有匹配到带音频的视频，需要加上audioUrl
+              if(!mimeType.match(/.*codecs=.*mp4.*/g)){
+                audioUrl = mp4AudioUrl;
+              }
+              if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
+                videoInfo.shouldDecode = true;
+              }
+              // console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+              qualitySet.add(item.quality);
+              qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
+            }
+          });
           // 获取webm格式
           let webmAudioArr = adaptiveFormats.filter(item=>{
             if(item.mimeType.indexOf('audio/webm')>-1){
@@ -2422,6 +2759,8 @@ const browser = __b;
           let webmAudioUrl = getYoutubeAudioUrlOrSignture(webmAudioArr);
           adaptiveFormats.forEach(item=>{
             let mimeType = item.mimeType;
+            let qualityLabel = item.qualityLabel;
+            qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
             if(mimeType.indexOf('video/webm')>-1 && item.url && !qualitySet.has(item.quality)){
               qualitySet.add(item.quality)
               let audioUrl = '';
@@ -2431,7 +2770,8 @@ const browser = __b;
               if(audioUrl && !Utils.isURL(audioUrl)){
                 videoInfo.shouldDecode = true;
               }
-              qualityList.push({downloadUrl:item.url, qualityLabel:item.qualityLabel, quality: item.quality, audioUrl})
+              
+              qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl})
 
             }
             // 解密
@@ -2446,12 +2786,12 @@ const browser = __b;
               if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
                 videoInfo.shouldDecode = true;
               }
-              console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
+              // console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
               qualitySet.add(item.quality);
-              qualityList.push({downloadUrl:videoUrl, qualityLabel:item.qualityLabel, quality: item.quality, protect, audioUrl})
+              qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
             }
           });
-          console.log('qualityList===================',qualityList);
+          // console.log('qualityList===================',qualityList);
           if(qualityList && qualityList.length){
             videoInfo['qualityList'] = qualityList;
           }
@@ -2486,6 +2826,26 @@ const browser = __b;
         videoInfo['type'] = 'ad';
       }
       return videoInfo;
+    }
+
+    function handleYTRandomPathUuid(jsPath){
+      try {
+        if(jsPath){
+          let tempRandomCode = ''
+          ytRandomBaseJs = jsPath;
+          let pathArr = jsPath.split('/');
+          if(jsPath.startsWith('/')){
+            tempRandomCode = pathArr[3]
+          }else{
+            tempRandomCode = pathArr[2]
+          }
+          if(tempRandomCode){
+            definedObj.randomPathUuid = tempRandomCode;
+          }
+        }
+      } catch (error) {
+        
+      }
     }
 
     function checkAdForYoutube(downloadUrl){
@@ -2552,14 +2912,6 @@ const browser = __b;
     }
     
     
-    document.onreadystatechange = () => {
-      // console.log('document.readyState==',document.readyState)
-      if (document.readyState === 'complete') {
-        // console.log('readyState-------------------', document.readyState)
-        startSnifferVideoInfoOnPage(true);
-      }
-    };
-
     /**
      * 
      * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
@@ -2567,7 +2919,7 @@ const browser = __b;
      * @returns 
      */
     function fetchYoutubeDecodeFun(pathUuid, pathUrl){
-      // console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+      console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
       return new Promise((resolve, reject) => {
         if(isContent){
           // console.log('fetchYoutubeDecodeFun-----true');
@@ -2581,7 +2933,7 @@ const browser = __b;
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_YOUTUBE_DECODE_FUN_RESP') return;
-            // console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
+            console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
             resolve(e.data.decodeFun);
             window.removeEventListener('message', callback);
           };
@@ -2589,6 +2941,33 @@ const browser = __b;
           window.addEventListener('message', callback);
         }
       })
+    }
+
+    /**
+     * 
+     * @param {String} pathUuid   /s/player/7862ca1f/player_ias.vflset/zh_CN/base.js中7862ca1f关键字符串
+     * @param {String} pathUrl    base.js的路径/s/player/7862ca1f/player_ias.vflset/zh_CN/base.js
+     * @returns 
+     */
+    function saveYoutubeDecodeFun(pathUuid, randomFunStr){
+      console.log('saveYoutubeDecodeFun-----pathUuid=',pathUuid, ',randomFunStr=',randomFunStr);
+      if(isContent){
+        console.log('fetchYoutubeDecodeFun-----true');
+        browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid: pathUuid, randomFunStr}, (response) => {
+          console.log('saveYoutubeDecodeFun---------',response)
+        });
+      }else{
+        console.log('saveYoutubeDecodeFun-----false');
+        const pid = Math.random().toString(36).substring(2, 9);
+        const callback = e => {
+          if (e.data.pid !== pid || e.data.name !== 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP') return;
+          console.log('saveYoutubeDecodeFun---------',e.data.decodeFun)
+          window.removeEventListener('message', callback);
+        };
+        window.postMessage({ id: pid, pid: pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR', pathUuid, randomFunStr });
+        window.addEventListener('message', callback);
+      }
+      
     }
 
     async function startFetchYoutubeFunStr(){
@@ -2650,20 +3029,112 @@ const browser = __b;
      */
     async function handleFetchYoutubePlayer(pathUuid, jsPath, shouldDecode){
       let decodeFunStr = await fetchYoutubeDecodeFun(pathUuid, jsPath);
+      console.log('handleFetchYoutubePlayer------',decodeFunStr)
       if(decodeFunStr){
-        decodeSignatureCipher = {pathUuid, decodeFunStr};
-        window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
+        setLocalYTRandomFunStr(pathUuid, decodeFunStr);
         if(shouldDecode){
           handleDecodeSignatureAndPush();
         }
       }else{
-        decodeSignatureCipher = {pathUuid, decodeFunStr:''};
-        window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
+        fetchCurrentYtRandomStr(pathUuid, jsPath);
         console.log('fetchYoutubeDecodeFun-----null-----')
       }
     }
     
+    function setLocalYTRandomFunStr(pathUuid, decodeFunStr){
+      decodeSignatureCipher = {pathUuid, decodeFunStr};
+      definedObj.decodeFunStr = decodeFunStr;
+      window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
+    }
+
+    async function fetchCurrentYtRandomStr(pathUuid, jsPath){
+      if(!jsPath || !pathUuid){
+        setLocalYTRandomFunStr(pathUuid, '');
+        return;
+      }
+      function testYtDecodeFun(randomFunStr){
+        try {
+          let decodeFun =  new Function('return '+randomFunStr); 
+          let signature = '%3D%3DQmbTSWlgLuztoft4F_uqQieS7_jBtboKab9zSp5WRdSAiApcTRtZLjBmFtzLXphJ0x_haWmWIhVtdAg8jD1rsKkRKAhIQRw8JQ0qOAOA';
+          // eslint-disable-next-line max-len
+          let sourceUrl = 'https://rr5---sn-o097znsk.googlevideo.com/videoplayback%3Fexpire%3D1679042695%26ei%3DJ9QTZJ6FFKeksfIPkaSL-Aw%26ip%3D2602%253Afeda%253A30%253Aae86%253A40e7%253A53ff%253Afe8b%253A9a97%26id%3Do-AI3u_uLu7PqvSwoVFwTG0fSk-puen4XBHxlLqco9MH8Q%26itag%3D135%26aitags%3D133%252C134%252C135%252C160%252C242%252C243%252C244%252C278%26source%3Dyoutube%26requiressl%3Dyes%26mh%3D_m%26mm%3D31%252C26%26mn%3Dsn-o097znsk%252Csn-a5meknzk%26ms%3Dau%252Conr%26mv%3Dm%26mvi%3D5%26pl%3D44%26initcwndbps%3D2135000%26vprv%3D1%26mime%3Dvideo%252Fmp4%26ns%3DwhOrAPi40PxLIKHeHvAaoDIL%26gir%3Dyes%26clen%3D18438908%26dur%3D584.533%26lmt%3D1635010443575003%26mt%3D1679020854%26fvip%3D5%26keepalive%3Dyes%26fexp%3D24007246%26c%3DMWEB%26txp%3D5432434%26n%3D3BrEIxrXFc7SkC%26sparams%3Dexpire%252Cei%252Cip%252Cid%252Caitags%252Csource%252Crequiressl%252Cvprv%252Cmime%252Cns%252Cgir%252Cclen%252Cdur%252Clmt%26lsparams%3Dmh%252Cmm%252Cmn%252Cms%252Cmv%252Cmvi%252Cpl%252Cinitcwndbps%26lsig%3DAG3C_xAwRgIhAKYBlOvRZiHPnnEJJ5foNn7LZU1cgGvfyO3WU9TjETfZAiEA6PvSgRq0gdcsBBTTj0VHXybmMwb-ouW2TVIYGmG_PG0%253D';
+          signature = decodeFun()(decodeURIComponent(signature));
+          sourceUrl = `${decodeURIComponent(sourceUrl)}&sig=${signature}`;
+          console.log(sourceUrl);
+          if(sourceUrl){
+            return true;
+          }
+        } catch (error) {
+          
+        }
+        return false;
+      }
+      try {
+        let jsResponse = await fetch(`https://m.youtube.com${jsPath}`);
+        let jsText = await jsResponse.text();
+        if(!jsText){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        // eslint-disable-next-line no-useless-escape
+        let randomArr = jsText.match(/[a-zA-Z]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
+        // console.log(randomArr)
+        let randomFunStr = '';
+        if(randomArr && randomArr.length){
+          randomFunStr = randomArr[0];
+          console.log(randomFunStr);
+        }
+        if(!randomFunStr){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        let subRandomStr = '';
+        // eslint-disable-next-line no-useless-escape
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z]{2}\=\{[\S]*a\.reverse\(\)[\s\S]*a\.splice\(0\,b\)\}\};/g);
+        if(subRandomArr && subRandomArr.length){
+          subRandomStr = subRandomArr[0];
+          console.log(subRandomStr);
+        }
+        if(!subRandomStr){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        // eslint-disable-next-line no-useless-escape
+        randomFunStr = randomFunStr.replace(/[a-zA-Z]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
+        if(!randomFunStr){
+          setLocalYTRandomFunStr(pathUuid, '');
+          return;
+        }
+        console.log('randomFunStr-------',randomFunStr);
+        
+        if(testYtDecodeFun(randomFunStr)){
+          saveYoutubeDecodeFun(pathUuid, randomFunStr)
+        }else{
+          console.log('testYtDecodeFun-------false',randomFunStr);
+        }
+        setLocalYTRandomFunStr(pathUuid, randomFunStr);
+      } catch (error) {
+        console.error(jsPath,error);
+        setLocalYTRandomFunStr(pathUuid, '');
+      }
+    }
+
+    async function fetchLongPressConfig(){
+      if(!isStayAround){
+        isLoadingAround = true;
+        isStayAround = await getStayAround();
+        isLoadingAround = false;
+      }
+      if(!longPressStatus){
+        isLoadingLongPressStatus = true;
+        longPressStatus = await getLongPressStatus();
+        isLoadingLongPressStatus = false;
+      }
+    }
+    
     function startSnifferVideoInfoOnPage(complate){
+      console.log('startSnifferVideoInfoOnPage------start--321----');
+      fetchLongPressConfig();
       console.log('startSnifferVideoInfoOnPage--------1----');
       startFetchYoutubeFunStr();
       console.log('startSnifferVideoInfoOnPage--------2----');
@@ -2673,6 +3144,42 @@ const browser = __b;
 
     startSnifferVideoInfoOnPage(false);
 
+
+    document.onreadystatechange = () => {
+      // console.log('document.readyState==',document.readyState)
+      if (document.readyState === 'complete') {
+        // console.log('readyState-------------------', document.readyState)
+        startSnifferVideoInfoOnPage(true);
+      }
+    };
+
+    /* eslint-disable */
+    Object.defineProperty(definedObj, 'randomPathUuid', {
+      get:function(){
+        return randomPathUuid;
+      },
+      set:function(newValue){
+        randomPathUuid = newValue;
+        console.log('randomPathUuid---newValue-----',randomPathUuid);
+        //需要触发的渲染函数可以写在这...
+        if(newValue != ytBaseJSUuid){
+          console.log('randomPathUuid--!==-newValue-----',randomPathUuid);
+          ytBaseJSUuid = newValue
+          handleFetchYoutubePlayer(ytBaseJSUuid, ytRandomBaseJs, false);
+        }
+      }
+    });
+    Object.defineProperty(definedObj, 'decodeFunStr', {
+      get:function(){
+        return decodeFunStr;
+      },
+      set:function(newValue){
+        decodeFunStr = newValue;
+        if(decodeFunStr){
+          handleDecodeSignatureAndPush();
+        }
+      }
+    });
 
     /**
      * @discarded 废弃请求拦截
@@ -2774,6 +3281,15 @@ const browser = __b;
       browser.runtime.sendMessage({from: 'sniffer', operate: 'fetchYoutubeDecodeFun', pathUrl, pathUuid}, (response) => {
         let decodeFun = response&&response.decodeFun?response.decodeFun:'';
         window.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP', decodeFun});
+      });
+    }
+    else if(name === 'SAVE_YOUTUBE_DECODE_FUN_STR'){
+      let pid = e.data.pid;
+      let pathUuid = e.data.pathUuid;
+      let randomFunStr = e.data.randomFunStr;
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid, randomFunStr}, (response) => {
+        let decodeFun = '';
+        window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
       });
     }
   })

@@ -13,6 +13,8 @@
 #import "DataManager.h"
 #import <objc/runtime.h>
 #import "UIColor+Convert.h"
+#import "ColorHelper.h"
+#import "FCShared.h"
 
 @implementation DownloadResourceTableViewCell
 
@@ -181,14 +183,67 @@
         line.left = 12;
         [self.contentView addSubview:line];;
     } else {
-        self.contentView.backgroundColor =  [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+//        self.contentView.backgroundColor =  [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         
         _downloadRateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 16)];
         UIButton *stop =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
         objc_setAssociatedObject(stop , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
 
+        
+        UILabel *docLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 15)];
+        docLabel.text = NSLocalizedString(@"SaveTo","");
+        docLabel.textColor = FCStyle.titleGrayColor;
+        docLabel.font = FCStyle.footnote;
+        [docLabel sizeToFit];
+        docLabel.top = top;
+        docLabel.left = 12;
+        [self.contentView addSubview:docLabel];
+        
+        
+        if ([self.downloadResource.firstPath isEqualToString:FILEUUID]) {
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 18, 22, 16)];
+            [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:16] color: RGB(146, 209, 243)]];
+            imageView.contentMode = UIViewContentModeBottom;
+            imageView.left = docLabel.right + 5;
+            imageView.centerY = docLabel.centerY;
+            [self.contentView addSubview:imageView];
+            
+
+            NSArray *componets = [self.downloadResource.allPath pathComponents];
+            
+            UILabel *docNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 15)];
+            docNameLabel.text = [componets objectAtIndex:(componets.count - 2)];
+            docNameLabel.textColor = FCStyle.fcBlack;
+            docNameLabel.font = FCStyle.footnote;
+            [docNameLabel sizeToFit];
+            docNameLabel.left = imageView.right + 5;
+            docNameLabel.centerY = docLabel.centerY;;
+            [self.contentView addSubview:docNameLabel];
+            
+            
+        } else  {
+            FCTab *fCTab = [[FCShared tabManager] tabOfUUID:self.downloadResource.firstPath];
+
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 22, 16)];
+            [imageView setImage:[ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:16] color: [ColorHelper colorFromHex:fCTab.config.hexColor]]];
+            imageView.contentMode = UIViewContentModeBottom;
+            imageView.left = docLabel.right + 5;
+            imageView.centerY = docLabel.centerY;
+            [self.contentView addSubview:imageView];
+            
+            
+            UILabel *docNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 15)];
+            docNameLabel.text = fCTab.config.name;
+            docNameLabel.textColor = FCStyle.fcBlack;
+            docNameLabel.font = FCStyle.footnote;
+            [docNameLabel sizeToFit];
+            docNameLabel.left = imageView.right + 5;
+            docNameLabel.centerY = docLabel.centerY;;
+            [self.contentView addSubview:docNameLabel];
+        }
+        
         _downloadRateLabel.font = FCStyle.footnoteBold;
-        _downloadRateLabel.top = top;
+        _downloadRateLabel.top = docLabel.bottom + 8;
         _downloadRateLabel.left = 12;
         _downloadRateLabel.textColor = FCStyle.accent;
         [self.contentView addSubview:_downloadRateLabel];

@@ -110,11 +110,11 @@ static VideoParser *_kVideoParser;
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
     if ([message.name isEqualToString:@"stayapp"]){
         if (self.completionBlock){
-//            NSLog(@"userContentController %@",message.body);
             self.completionBlock(message.body);
         }
     }
     else if ([message.name isEqualToString:@"youtube"]){
+        NSLog(@"userContentController youtube %@",message.body);
         NSDictionary *response = [[API shared] downloadYoutube:message.body];
         if (response.count > 0){
             NSString *code;
