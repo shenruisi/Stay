@@ -975,6 +975,7 @@ UIDocumentPickerDelegate
 
             [groupUserDefaults setObject:bookmarkData forKey:@"bookmark"];
             [groupUserDefaults  synchronize];
+            SharedStorageManager.shared.userDefaults.exteralFolderName = fileName;
             
             dispatch_async(dispatch_get_main_queue(), ^{
             [[NSUserDefaults standardUserDefaults] setObject:@{@"fileName":fileName ,
