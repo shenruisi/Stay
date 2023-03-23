@@ -8,12 +8,20 @@
 #import "AdBlockViewController.h"
 #import "ImageHelper.h"
 #import "FCStyle.h"
+#import "ContentFilter.h"
+#import "ContentFilterTableVewCell.h"
 
-@interface AdBlockViewController ()
+@interface AdBlockViewController ()<
+ UITableViewDelegate,
+ UITableViewDataSource
+>
 
 @property (nonatomic, strong) UIBarButtonItem *addItem;
 @property (nonatomic, strong) FCTabButtonItem *activatedTabItem;
 @property (nonatomic, strong) FCTabButtonItem *stoppedTabItem;
+
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray<ContentFilter *> *activatedSource;
 @end
 
 @implementation AdBlockViewController
@@ -23,9 +31,32 @@
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
     self.enableTabItem = YES;
     self.navigationItem.rightBarButtonItem = self.addItem;
-    
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
+    [self tableView];
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    ContentFilter *contentFilter = self.activatedSource[indexPath.row];
+    ContentFilterTableVewCell *cell = [tableView dequeueReusableCellWithIdentifier:[ContentFilterTableVewCell identifier]];
+    if (nil == cell){
+        return [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
+    cell.element = contentFilter;
+    cell.action = ^(id element) {
+        
+    };
+    
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 70.0;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.activatedSource.count;
+}
+
 
 - (UIBarButtonItem *)addItem{
     if (nil == _addItem){
@@ -58,6 +89,14 @@
     return _stoppedTabItem;
 }
 
+- (NSArray<ContentFilter *> *)activatedSource{
+    ContentFilter *test = [[ContentFilter alloc] init];
+    test.name = @"Test";
+    return @[
+        test
+    ];
+}
+
 - (void)addAction:(id)sender{
     
 }
@@ -66,14 +105,33 @@
     
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (UITableView *)tableView{
+    if (nil == _tableView){
+        _tableView = [[UITableView alloc] init];
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.showsVerticalScrollIndicator = YES;
+        _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        _tableView.contentInset = UIEdgeInsetsMake(15, 0, 0, 0);
+        //TODO:
+        if (@available(iOS 15.0, *)){
+           _tableView.sectionHeaderTopPadding = 0;
+        }
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.sectionFooterHeight = 0;
+        _tableView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:_tableView];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
+    }
+    
+    return _tableView;
 }
-*/
 
 @end

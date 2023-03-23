@@ -9,19 +9,39 @@
 #import "FCStyle.h"
 #import "FCStore.h"
 
-@interface FCRootViewController ()
+@interface FCRootViewController ()<UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIBarButtonItem *logoItem;
 @property (nonatomic, strong) UIBarButtonItem *titleItem;
 @property (nonatomic, strong) UIBarButtonItem *proItem;
 @property (nonatomic, strong) UILabel *leftTitleLabel;
+@property (nonatomic, strong) UINavigationBarAppearance *appearance;
 @end
 
 @implementation FCRootViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+
+    self.appearance = [[UINavigationBarAppearance alloc] init];
+    [self.appearance configureWithTransparentBackground];
+    self.appearance.backgroundColor = UIColor.clearColor;
+    self.appearance.backgroundEffect = nil;
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if (88 == self.navigationController.navigationBar.height){
+        self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+    }
+    else{
+        self.appearance.backgroundEffect = nil;
+    }
+    
+    self.navigationItem.standardAppearance = self.appearance;
+    self.navigationItem.scrollEdgeAppearance = self.appearance;
+}
+
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];

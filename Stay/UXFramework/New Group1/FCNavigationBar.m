@@ -12,6 +12,7 @@
 
 static NSInteger FCNavigationTabItemLeft = 1;
 static NSInteger FCNavigationTabItemRight = 100;
+static NSInteger TabItemExtendLength = 10;
 
 @implementation FCTabButtonItem
 @end
@@ -98,18 +99,18 @@ static NSInteger FCNavigationTabItemRight = 100;
         
         if (!prevButton){
             [NSLayoutConstraint activateConstraints:@[
-                [button.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:20],
+                [button.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:15],
                 [button.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-12],
                 [button.heightAnchor constraintEqualToConstant:rect.size.height],
-                [button.widthAnchor constraintEqualToConstant:rect.size.width + 20]
+                [button.widthAnchor constraintEqualToConstant:rect.size.width + TabItemExtendLength]
             ]];
         }
         else{
             [NSLayoutConstraint activateConstraints:@[
-                [button.leadingAnchor constraintEqualToAnchor:prevButton.trailingAnchor constant:20],
+                [button.leadingAnchor constraintEqualToAnchor:prevButton.trailingAnchor constant:10],
                 [button.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-12],
                 [button.heightAnchor constraintEqualToConstant:rect.size.height],
-                [button.widthAnchor constraintEqualToConstant:rect.size.width + 20]
+                [button.widthAnchor constraintEqualToConstant:rect.size.width + TabItemExtendLength]
             ]];
         }
         
@@ -155,7 +156,7 @@ static NSInteger FCNavigationTabItemRight = 100;
         [cer tabItemDidClick:button.item refresh:NO];
         
         [UIView animateWithDuration:0.3 animations:^{
-            self.activatedLineWidthConstraint.constant = MIN(40, button.frame.size.width - 20);
+            self.activatedLineWidthConstraint.constant = MIN(40, button.frame.size.width - TabItemExtendLength);
             [self layoutIfNeeded];
         } completion:^(BOOL finished) {
             
@@ -215,7 +216,7 @@ static NSInteger FCNavigationTabItemRight = 100;
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]){
-        self.backgroundColor = [UIColor clearColor];
+//        self.backgroundColor = [UIColor clearColor];
 //        UINavigationBarAppearance *navigationBarAppearance = [[UINavigationBarAppearance alloc] init];
 //        [navigationBarAppearance setShadowColor:FCStyle.fcSeparator];
 //        [self setStandardAppearance:navigationBarAppearance];
@@ -224,8 +225,10 @@ static NSInteger FCNavigationTabItemRight = 100;
     return self;
 }
 
+
 - (void)layoutSubviews{
     [super layoutSubviews];
+   
 }
 
 - (void)setEnableTabItem:(BOOL)enableTabItem{
@@ -251,6 +254,13 @@ static NSInteger FCNavigationTabItemRight = 100;
     }
     
     return _navigationTabItem;
+}
+
+
+- (void)setFrame:(CGRect)frame{
+    CGRect newFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, MAX(88,frame.size.height));
+//    NSLog(@"navigation bar %@",NSStringFromCGRect(self.frame));
+    [super setFrame:newFrame];
 }
 
 @end
