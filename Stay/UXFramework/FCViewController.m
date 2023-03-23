@@ -8,7 +8,7 @@
 #import "FCViewController.h"
 #import "FCStyle.h"
 
-@interface FCViewController ()
+@interface FCViewController ()<UINavigationBarDelegate>
 
 @end
 
@@ -21,7 +21,20 @@
     NSArray<UIColor *> *colors = FCStyle.accentGradient;
     gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
     [self.view.layer insertSublayer:gradientLayer atIndex:0];
-    
 }
+
+- (void)setEnableTabItem:(BOOL)enableTabItem{
+    [self fcNavigationBar].enableTabItem = enableTabItem;
+}
+
+- (FCNavigationBar *)fcNavigationBar{
+    return  (FCNavigationBar *)self.navigationController.navigationBar;
+}
+
+- (FCNavigationTabItem *)navigationTabItem{
+    return [self fcNavigationBar].navigationTabItem;
+}
+
+- (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{}
 
 @end

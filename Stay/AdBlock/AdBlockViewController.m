@@ -12,6 +12,8 @@
 @interface AdBlockViewController ()
 
 @property (nonatomic, strong) UIBarButtonItem *addItem;
+@property (nonatomic, strong) FCTabButtonItem *activatedTabItem;
+@property (nonatomic, strong) FCTabButtonItem *stoppedTabItem;
 @end
 
 @implementation AdBlockViewController
@@ -19,8 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
-    
+    self.enableTabItem = YES;
     self.navigationItem.rightBarButtonItem = self.addItem;
+    
+    self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
 }
 
 - (UIBarButtonItem *)addItem{
@@ -36,7 +40,29 @@
     return _addItem;
 }
 
+- (FCTabButtonItem *)activatedTabItem{
+    if (nil == _activatedTabItem){
+        _activatedTabItem = [[FCTabButtonItem alloc] init];
+        _activatedTabItem.title = NSLocalizedString(@"Activated", @"");
+    }
+    
+    return _activatedTabItem;
+}
+
+- (FCTabButtonItem *)stoppedTabItem{
+    if (nil == _stoppedTabItem){
+        _stoppedTabItem = [[FCTabButtonItem alloc] init];
+        _stoppedTabItem.title = NSLocalizedString(@"Stopped", @"");
+    }
+    
+    return _stoppedTabItem;
+}
+
 - (void)addAction:(id)sender{
+    
+}
+
+- (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
     
 }
 
