@@ -55,7 +55,8 @@
     if(uuid.length == 0) {
         uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
         if(uuid.length == 0) {
-            uuid = FILEUUID;
+//            uuid = FILEUUID;
+            uuid = FCShared.tabManager.tabs[0].uuid;
         }
     }
     
