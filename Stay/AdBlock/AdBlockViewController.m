@@ -50,7 +50,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70.0;
+    return 70 + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -90,10 +90,12 @@
 }
 
 - (NSArray<ContentFilter *> *)activatedSource{
-    ContentFilter *test = [[ContentFilter alloc] init];
-    test.name = @"Test";
+    ContentFilter *test1 = [[ContentFilter alloc] init];
+    test1.name = @"Test1";
+    ContentFilter *test2 = [[ContentFilter alloc] init];
+    test2.name = @"Test2";
     return @[
-        test
+        test1,test2
     ];
 }
 
@@ -113,7 +115,6 @@
         _tableView.dataSource = self;
         _tableView.showsVerticalScrollIndicator = YES;
         _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
-        _tableView.contentInset = UIEdgeInsetsMake(15, 0, 0, 0);
         //TODO:
         if (@available(iOS 15.0, *)){
            _tableView.sectionHeaderTopPadding = 0;

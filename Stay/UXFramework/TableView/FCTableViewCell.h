@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) id element;
 @property (nonatomic, copy) void (^action)(id);
 + (NSString *)identifier;
++ (UIEdgeInsets)contentInset;
 @end
 
 NS_ASSUME_NONNULL_END

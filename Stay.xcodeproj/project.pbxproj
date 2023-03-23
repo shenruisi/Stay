@@ -160,6 +160,9 @@
 		5831791329CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */; };
 		5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
 		5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
+		5831791F29CC4EEA00135D8D /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5831791E29CC4EEA00135D8D /* blockerList.json */; };
+		5831792229CC4EEA00135D8D /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831792129CC4EEA00135D8D /* ContentBlockerRequestHandler.m */; };
+		5831792629CC4EEA00135D8D /* Stay Content Blocker.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C3172930525D00CCBAE5 /* ToastDebugger.m */; };
 		5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C3172930525D00CCBAE5 /* ToastDebugger.m */; };
 		5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
@@ -584,6 +587,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5831792429CC4EEA00135D8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5831791B29CC4EE900135D8D;
+			remoteInfo = "Stay Content Blocker";
+		};
 		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
@@ -628,6 +638,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				5831792629CC4EEA00135D8D /* Stay Content Blocker.appex in Embed App Extensions */,
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -785,6 +796,11 @@
 		5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterTableVewCell.m; sourceTree = "<group>"; };
 		5831791429CC1F6E00135D8D /* FCRoundedShadowView2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCRoundedShadowView2.h; sourceTree = "<group>"; };
 		5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCRoundedShadowView2.m; sourceTree = "<group>"; };
+		5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Blocker.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5831791E29CC4EEA00135D8D /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5831792029CC4EEA00135D8D /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5831792129CC4EEA00135D8D /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5831792329CC4EEA00135D8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5839C3162930525D00CCBAE5 /* ToastDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastDebugger.h; sourceTree = "<group>"; };
 		5839C3172930525D00CCBAE5 /* ToastDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastDebugger.m; sourceTree = "<group>"; };
 		5839C31A29305CA100CCBAE5 /* FCTopToast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToast.h; sourceTree = "<group>"; };
@@ -1177,6 +1193,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5831791929CC4EE900135D8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58639CD72864477D00AA80D5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1395,6 +1418,17 @@
 			path = TableView;
 			sourceTree = "<group>";
 		};
+		5831791D29CC4EEA00135D8D /* Stay Content Blocker */ = {
+			isa = PBXGroup;
+			children = (
+				5831791E29CC4EEA00135D8D /* blockerList.json */,
+				5831792029CC4EEA00135D8D /* ContentBlockerRequestHandler.h */,
+				5831792129CC4EEA00135D8D /* ContentBlockerRequestHandler.m */,
+				5831792329CC4EEA00135D8D /* Info.plist */,
+			);
+			path = "Stay Content Blocker";
+			sourceTree = "<group>";
+		};
 		5839C315293051CC00CCBAE5 /* Debugger */ = {
 			isa = PBXGroup;
 			children = (
@@ -1506,6 +1540,7 @@
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
 				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
+				5831791D29CC4EEA00135D8D /* Stay Content Blocker */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -1523,6 +1558,7 @@
 				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
+				5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2458,6 +2494,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5831791B29CC4EE900135D8D /* Stay Content Blocker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5831792729CC4EEA00135D8D /* Build configuration list for PBXNativeTarget "Stay Content Blocker" */;
+			buildPhases = (
+				5831791829CC4EE900135D8D /* Sources */,
+				5831791929CC4EE900135D8D /* Frameworks */,
+				5831791A29CC4EE900135D8D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Blocker";
+			productName = "Stay Content Blocker";
+			productReference = 5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */;
@@ -2490,6 +2543,7 @@
 			);
 			dependencies = (
 				5876890F2719238000F834A4 /* PBXTargetDependency */,
+				5831792529CC4EEA00135D8D /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -2597,6 +2651,9 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
+					5831791B29CC4EE900135D8D = {
+						CreatedOnToolsVersion = 14.0.1;
+					};
 					58639CD92864477D00AA80D5 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
@@ -2643,11 +2700,20 @@
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
 				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
+				5831791B29CC4EE900135D8D /* Stay Content Blocker */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5831791A29CC4EE900135D8D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5831791F29CC4EEA00135D8D /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58639CD82864477D00AA80D5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2924,6 +2990,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5831791829CC4EE900135D8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5831792229CC4EEA00135D8D /* ContentBlockerRequestHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58639CD62864477D00AA80D5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3395,6 +3469,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5831792529CC4EEA00135D8D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5831791B29CC4EE900135D8D /* Stay Content Blocker */;
+			targetProxy = 5831792429CC4EEA00135D8D /* PBXContainerItemProxy */;
+		};
 		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = maccatalyst;
@@ -3448,6 +3527,60 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		5831792829CC4EEA00135D8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Blocker/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay Content Blocker";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Blocker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5831792929CC4EEA00135D8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Blocker/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay Content Blocker";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Blocker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		58639CF32864477D00AA80D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4071,6 +4204,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5831792729CC4EEA00135D8D /* Build configuration list for PBXNativeTarget "Stay Content Blocker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5831792829CC4EEA00135D8D /* Debug */,
+				5831792929CC4EEA00135D8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

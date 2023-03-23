@@ -46,7 +46,7 @@
     self.tapEffectView.layer.anchorPoint = CGPointMake(0.5, 0.5);
     self.tapEffectView.layer.cornerRadius = 0;
     CGFloat radius =  MAX((self.size.width - location.x),location.x);
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:0.3
                      animations:^{
         [self.tapEffectView setFrame:CGRectMake(location.x - radius, location.y - radius, radius * 2, radius * 2)];
         self.tapEffectView.layer.cornerRadius = radius;
@@ -71,10 +71,10 @@
         [self.contentView addSubview:_fcContentView];
         
         [NSLayoutConstraint activateConstraints:@[
-            [_fcContentView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:15],
-            [_fcContentView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-15],
-            [_fcContentView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
-            [_fcContentView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor]
+            [_fcContentView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:[FCTableViewCell contentInset].left],
+            [_fcContentView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-[FCTableViewCell contentInset].right],
+            [_fcContentView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:[FCTableViewCell contentInset].top],
+            [_fcContentView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-[FCTableViewCell contentInset].bottom]
         ]];
     }
     
@@ -89,6 +89,10 @@
     }
     
     return _tapEffectView;
+}
+
++ (UIEdgeInsets)contentInset{
+    return UIEdgeInsetsMake(10, 10, 0, 10);
 }
 
 + (NSString *)identifier{
