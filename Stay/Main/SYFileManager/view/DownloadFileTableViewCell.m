@@ -57,7 +57,7 @@
     
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 10, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
-    line.bottom =  imageView.bottom + 22;
+    line.bottom =  imageView.bottom + 21;
     line.left = 10;
     [self.contentView addSubview:line];
     

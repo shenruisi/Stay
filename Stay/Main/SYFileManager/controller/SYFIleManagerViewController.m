@@ -358,9 +358,9 @@ UIDocumentPickerDelegate
         return 137;
     } else {
         if(self.selectedIdx == 1) {
-            return 128 + 30;
+            return 152;
         } else {
-            return 59;
+            return 61.5;
         }
     }
 }
@@ -728,7 +728,7 @@ UIDocumentPickerDelegate
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.contentView.backgroundColor = FCStyle.secondaryBackground;
 
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 18, 27, 20)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 27, 20)];
                 [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
                 [cell.contentView addSubview:imageView];
@@ -778,7 +778,7 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:setDicBtn];
                 UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
                 line.backgroundColor = FCStyle.fcSeparator;
-                line.bottom =  imageView.bottom + 22;
+                line.bottom =  imageView.bottom + 21;
                 line.left = 10;
                 [cell.contentView addSubview:line];
                 return  cell;
