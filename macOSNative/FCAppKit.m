@@ -330,9 +330,8 @@
     launchIdentifiers: NULL];
 }
 
-- (void)openFinder:(NSString *)path{
-    NSURL *fileURL = [NSURL fileURLWithPath:path];
-    [[NSWorkspace sharedWorkspace] openURL:fileURL];
+- (void)openFinder:(NSURL *)url{
+    [[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 @end
