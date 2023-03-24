@@ -192,11 +192,7 @@ UIDocumentPickerDelegate
     [topHeaderView addSubview:self.downloadingBtn];
     [topHeaderView addSubview:self.slideLine];
     self.navigationItem.titleView = topHeaderView;
-    
     self.selectedIdx = 0;
-    
-//    [[DataManager shareManager] selectAllUnDownloadComplete];
-    
 }
 
 - (void)showUpgrade {
@@ -1074,6 +1070,10 @@ UIDocumentPickerDelegate
     self.downloadingBtn.left = self.downloadBtn.right + 53;
     self.downloadingBtn.centerY =  self.downloadBtn.centerY;
     
+    if(_selectedIdx == 1) {
+        self.slideLine.centerX = self.downloadingBtn.centerX;
+    }
+    
 }
 
 - (void)changeDownloadTab:(UIButton *)sender {
@@ -1134,6 +1134,17 @@ UIDocumentPickerDelegate
 
     
         [self.tableView reloadData];
+    
+    
+    CGFloat space = (self.view.width - self.downloadBtn.width - self.downloadingBtn.width - 53 - 50) / 2;
+    self.downloadBtn.left = space;
+    self.downloadingBtn.left = self.downloadBtn.right + 53;
+    self.slideLine.top = self.downloadBtn.bottom + 5;
+    if(_selectedIdx == 0) {
+        self.slideLine.centerX = self.downloadBtn.centerX;
+    } else {
+        self.slideLine.centerX = self.downloadingBtn.centerX;
+    }
 }
 
 
@@ -1203,13 +1214,14 @@ UIDocumentPickerDelegate
 
 - (UIButton *)downloadBtn {
     if(_downloadBtn == nil) {
-        _downloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 78, 18)];
-        [_downloadBtn setTitle:NSLocalizedString(@"Download","Download") forState:UIControlStateNormal];
+        _downloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
+        [_downloadBtn setTitle:NSLocalizedString(@"Downloaded","Downloaded") forState:UIControlStateNormal];
         [_downloadBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
         [_downloadBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
         [_downloadBtn addTarget:self action:@selector(changeDownloadTab:) forControlEvents:UIControlEventTouchUpInside];
-
         _downloadBtn.font = FCStyle.body;
+        [_downloadBtn sizeToFit];
+        _downloadBtn.height = 18;
         _downloadBtn.selected = true;
         
     }
