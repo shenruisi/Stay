@@ -419,12 +419,13 @@ UIDocumentPickerDelegate
                 } else {
 
                     if (FCDeviceTypeMac == [DeviceHelper type]) {
-                        NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
-                        [fileURL startAccessingSecurityScopedResource];
+                        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+                        NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
+                        NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+                        Boolean success =  [loadUrl startAccessingSecurityScopedResource];
                         
-                        [FCShared.plugin.appKit openFinder:dic[@"url"]];
-                        [fileURL stopAccessingSecurityScopedResource];
-
+                        [FCShared.plugin.appKit openFinder:loadUrl];
+                        [loadUrl stopAccessingSecurityScopedResource];
 
                     } else {
                         NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
