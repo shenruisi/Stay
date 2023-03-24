@@ -246,6 +246,10 @@
 		5876891C2719238000F834A4 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 5876891B2719238000F834A4 /* background.js */; };
 		587689262719238000F834A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 587688EE2719238000F834A4 /* Assets.xcassets */; };
 		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
+		587CFA1729CD4C8200578981 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1629CD4C8200578981 /* StateView.m */; };
+		587CFA1829CD4C8200578981 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1629CD4C8200578981 /* StateView.m */; };
+		587CFA1B29CD811800578981 /* UIView+Duplicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1A29CD811800578981 /* UIView+Duplicate.m */; };
+		587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1A29CD811800578981 /* UIView+Duplicate.m */; };
 		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
 		5881343127294C0E0055E1CE /* iframe.js in Resources */ = {isa = PBXBuildFile; fileRef = 5881342F27294C0E0055E1CE /* iframe.js */; };
 		5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */; };
@@ -887,6 +891,10 @@
 		587689252719238000F834A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5876893E2720064D00F834A4 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
+		587CFA1529CD4C8200578981 /* StateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StateView.h; sourceTree = "<group>"; };
+		587CFA1629CD4C8200578981 /* StateView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StateView.m; sourceTree = "<group>"; };
+		587CFA1929CD811800578981 /* UIView+Duplicate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Duplicate.h"; sourceTree = "<group>"; };
+		587CFA1A29CD811800578981 /* UIView+Duplicate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Duplicate.m"; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
 		5881342F27294C0E0055E1CE /* iframe.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = iframe.js; sourceTree = "<group>"; };
 		588202AF2859E73900B2721A /* Stay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stay.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1404,6 +1412,8 @@
 				5831790029CBF41D00135D8D /* ContentFilter.m */,
 				5831791029CC00CE00135D8D /* ContentFilterTableVewCell.h */,
 				5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */,
+				587CFA1529CD4C8200578981 /* StateView.h */,
+				587CFA1629CD4C8200578981 /* StateView.m */,
 			);
 			name = Filter;
 			path = "New Group";
@@ -1769,6 +1779,8 @@
 				58A3617829C023BC00080465 /* FCRootViewController.m */,
 				5831791429CC1F6E00135D8D /* FCRoundedShadowView2.h */,
 				5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */,
+				587CFA1929CD811800578981 /* UIView+Duplicate.h */,
+				587CFA1A29CD811800578981 /* UIView+Duplicate.m */,
 			);
 			path = UXFramework;
 			sourceTree = "<group>";
@@ -3128,6 +3140,7 @@
 				3C358D53297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				58C6637C2990E05F00B00110 /* VideoParser.m in Sources */,
+				587CFA1729CD4C8200578981 /* StateView.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
@@ -3161,6 +3174,7 @@
 				5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58A3618229C049C500080465 /* FCTabBarItem.m in Sources */,
 				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
+				587CFA1B29CD811800578981 /* UIView+Duplicate.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
@@ -3265,6 +3279,7 @@
 			files = (
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
+				587CFA1829CD4C8200578981 /* StateView.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
@@ -3387,6 +3402,7 @@
 				3C8388C72931ADC5007563E6 /* FCTab.m in Sources */,
 				3C919715299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
+				587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
 				8460E4792993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,

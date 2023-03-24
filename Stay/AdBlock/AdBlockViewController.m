@@ -37,9 +37,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ContentFilter *contentFilter = self.activatedSource[indexPath.row];
-    ContentFilterTableVewCell *cell = [tableView dequeueReusableCellWithIdentifier:[ContentFilterTableVewCell identifier]];
+    ContentFilterTableVewCell<ContentFilter *> *cell = [tableView dequeueReusableCellWithIdentifier:[ContentFilterTableVewCell identifier]];
     if (nil == cell){
-        return [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        cell = [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     cell.element = contentFilter;
     cell.action = ^(id element) {
@@ -91,9 +91,11 @@
 
 - (NSArray<ContentFilter *> *)activatedSource{
     ContentFilter *test1 = [[ContentFilter alloc] init];
-    test1.name = @"Test1";
+    test1.name = @"EasyList";
+    test1.active = YES;
     ContentFilter *test2 = [[ContentFilter alloc] init];
-    test2.name = @"Test2";
+    test2.name = @"EasyList - Privacy";
+    test2.active = YES;
     return @[
         test1,test2
     ];

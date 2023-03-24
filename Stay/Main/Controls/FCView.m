@@ -13,4 +13,8 @@
 
 @implementation FCView
 
+- (UIView *)fcDuplicate{
+    return [self duplicate];
+}
+
 @end

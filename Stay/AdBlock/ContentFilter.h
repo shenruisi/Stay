@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContentFilter : NSObject
 
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, assign) BOOL active;
 @end
 
 NS_ASSUME_NONNULL_END
