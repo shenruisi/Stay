@@ -361,7 +361,7 @@
         resource.allPath = task.filePath;
         resource.sort = 0;
         
-        resource.protect = self.dic[@"protect"];
+        resource.protect = [self.dic[@"protect"] isEqual:@(0)]?NO:YES;
         resource.audioUrl = self.dic[@"audioUrl"];
         
         [[DataManager shareManager] addDownloadResource:resource];

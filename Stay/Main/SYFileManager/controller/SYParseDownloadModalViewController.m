@@ -605,7 +605,7 @@
                 resource.icon = item[@"poster"];
                 resource.host = item[@"hostUrl"];
                 resource.audioUrl = item[@"selectedAudioUrl"] ? item[@"selectedAudioUrl"] : item[@"audioUrl"];
-                resource.protect = item[@"protect"];
+                resource.protect = [item[@"protect"] isEqual:@(0)]?NO:YES;
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
                 }

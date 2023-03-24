@@ -7,7 +7,9 @@
 
 #import "SYFIleManagerViewController.h"
 #import "FCShared.h"
+#ifdef FC_MAC
 #import "Plugin.h"
+#endif
 #import "DownloadFileTableViewCell.h"
 #import "FCStyle.h"
 #import "SYDownloadResourceManagerController.h"
@@ -419,14 +421,15 @@ UIDocumentPickerDelegate
                 } else {
 
                     if (FCDeviceTypeMac == [DeviceHelper type]) {
+#ifdef FC_MAC
+
                         NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
                         NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
                         NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
                         Boolean success =  [loadUrl startAccessingSecurityScopedResource];
-                        
                         [FCShared.plugin.appKit openFinder:loadUrl];
                         [loadUrl stopAccessingSecurityScopedResource];
-
+#endif
                     } else {
                         NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
                         fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
