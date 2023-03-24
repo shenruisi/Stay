@@ -419,8 +419,12 @@ UIDocumentPickerDelegate
                 } else {
 
                     if (FCDeviceTypeMac == [DeviceHelper type]) {
-//                        NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                        NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                        [fileURL startAccessingSecurityScopedResource];
+                        
                         [FCShared.plugin.appKit openFinder:dic[@"url"]];
+                        [fileURL stopAccessingSecurityScopedResource];
+
 
                     } else {
                         NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
