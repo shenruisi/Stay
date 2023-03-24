@@ -292,3 +292,5 @@ OnMyiPhone="我的iPhone";
 OnMyMac="我的Mac";
 SetupDirectory="设置目录";
 ChangeDirectory="修改目录";
+Undefined="未设置";
+items="项";

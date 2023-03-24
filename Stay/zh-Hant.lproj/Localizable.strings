@@ -290,3 +290,5 @@ OnMyiPhone="我的iPhone";
 OnMyMac="我的Mac";
 SetupDirectory="設置目錄";
 ChangeDirectory="修改目錄";
+Undefined="未設置";
+items="項";
