@@ -22,6 +22,8 @@
 #import "SYDownloadModalViewController.h"
 #import "SYDownloadFolderChooseModalViewController.h"
 #import "SYDownloadResourceManagerController.h"
+#import "DeviceHelper.h"
+#import "QuickAccess.h"
 
 @interface _DownloadTableViewCell : UITableViewCell<
   UITextViewDelegate
@@ -669,18 +671,19 @@
             return;
         } else {
 
-            UIViewController *vc = [self findCurrentShowingViewControllerFrom:[UIApplication sharedApplication].keyWindow.rootViewController];; // 当前控制器
-            while (vc.parentViewController != nil) {
-                vc = vc.parentViewController; // 父视图控制器循环
-            }
-
-            if ([vc isKindOfClass:[UINavigationController class]]) {
-                // 如果是导航栏，通过popToRootViewControllerAnimated:返回最顶层VC。
-                [(UINavigationController *)vc popToRootViewControllerAnimated:YES];
-            } else if(vc.presentingViewController){
-                // 如果是模态弹出界面，则用dismissViewControllerAnimated:animated:回到上一个VC。
-               [vc dismissViewControllerAnimated:YES completion:nil];
-            }
+          
+            [self.nav popToRootViewControllerAnimated:true];
+#ifdef FC_MAC
+        if ([QuickAccess primaryController] != nil){
+            [QuickAccess primaryController].selectedIndex = 2;
+        }
+#else
+    if (FCDeviceTypeIPhone == [DeviceHelper type]){
+        if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
+            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
+        }
+    }
+#endif
             [[NSNotificationCenter defaultCenter] postNotificationName:@"changeDownloading" object:nil];
 
             [self.navigationController.slideController dismiss];

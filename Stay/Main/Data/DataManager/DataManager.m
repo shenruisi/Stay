@@ -2404,7 +2404,7 @@
     
     //构造SQL语句
 
-    NSString *sql = @"SELECT * FROM download_resource where title like '%%%@%%' order by create_time desc";
+    NSString *sql = @"SELECT * FROM download_resource where title like '%%%@%%' and status = 2 order by create_time desc";
     sql = [NSString stringWithFormat:sql,title];
     sqlite3_stmt *stmt = NULL;
     result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);

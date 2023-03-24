@@ -1103,6 +1103,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if ("fetchYoutubeDecodeFun" === request.operate){
             let path = request.pathUuid;
             let location = request.pathUrl;
+            // console.log('fetchYoutubeDecodeFun----path=',path, ",location=",location)
             browser.runtime.sendNativeMessage("application.id", { type: "yt_element", path, location}, function (response) {
                 // console.log('fetchYoutubeDecodeFun----', response)
                 let decodeFunStr = '';
@@ -1110,6 +1111,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     decodeFunStr = response.body.code;
                 }
                 sendResponse({ decodeFun: decodeFunStr })
+            });
+        }
+        else if ("saveYoutubeDecodeFun" === request.operate){
+            let path = request.pathUuid;
+            let code = request.randomFunStr;
+            // console.log('saveYoutubeDecodeFun----path=',path, ",location=",location)
+            browser.runtime.sendNativeMessage("application.id", { type: "yt_element_ci", path, code}, function (response) {
+                // console.log('saveYoutubeDecodeFun----', response)
+                sendResponse({ decodeFun: '' })
             });
         }
         return true;
@@ -3208,7 +3218,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         let siteListDisabled = setting["siteListDisabled"];
                         let domain = request.domain;
                         let enabled = request.enabled;
-                        // console.log("addListener--DARKMODE_SETTING--",request, setting);
+                        
                         if(enabled){
                             if(siteListDisabled.includes(domain)){
                                 siteListDisabled.splice(siteListDisabled.indexOf(domain), 1);

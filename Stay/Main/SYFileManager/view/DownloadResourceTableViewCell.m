@@ -166,6 +166,17 @@
         
         [self.contentView addSubview:saveFileBtn];
         
+        if(self.downloadResource.protect) {
+            saveFileBtn.enabled = false;
+            savePhotoBtn.enabled = false;
+            [savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.fcSeparator] forState:UIControlStateNormal];
+            [savePhotoBtn setTitleColor:FCStyle.fcSeparator forState:UIControlStateNormal];
+
+            [saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.fcSeparator] forState:UIControlStateNormal];
+            [saveFileBtn setTitleColor:FCStyle.fcSeparator forState:UIControlStateNormal];
+
+        }
+        
         UIButton *runBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 25)];
         runBtn.titleLabel.font = FCStyle.footnoteBold;
        
