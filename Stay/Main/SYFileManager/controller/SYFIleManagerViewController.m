@@ -358,9 +358,9 @@ UIDocumentPickerDelegate
         return 137;
     } else {
         if(self.selectedIdx == 1) {
-            return 128 + 30;
+            return 152;
         } else {
-            return 59;
+            return 61.5;
         }
     }
 }
@@ -644,32 +644,24 @@ UIDocumentPickerDelegate
                                 NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
                                 NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
                                 NSString *parentDirectoryPath = [parentDirectoryURL path];
-                                
                                 NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",[loadUrl path],cell.downloadResource.title,@"mp4"];
+                                [self renameFile:removePath originPath:cell.downloadResource.allPath];
 
-                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
-                                NSError *error = nil;
-                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
-                                if(!success) {
-//                                    NSLog(error);
-                                } else {
-                                    [[DataManager shareManager] deleteVideoByuuid:cell.downloadResource.downloadUuid];
-                                }
+                                [[DataManager shareManager] deleteVideoByuuid:cell.downloadResource.downloadUuid];
+                                
                                 
                                 [loadUrl stopAccessingSecurityScopedResource];
                             } else {
                                 NSFileManager *fileManager = [NSFileManager defaultManager];
                                 NSURL *fileURL = [NSURL fileURLWithPath:cell.downloadResource.allPath];
-                                
+                            
                                 NSURL *parentDirectoryURL = [fileURL URLByDeletingLastPathComponent];
                                 NSString *parentDirectoryPath = [parentDirectoryURL path];
                                 NSString *removePath = [NSString stringWithFormat:@"%@/%@.%@",parentDirectoryPath,cell.downloadResource.title,@"mp4"];
-                                NSURL *destinationURL = [NSURL fileURLWithPath:removePath];
                                 NSError *error = nil;
-                                BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
-                                if(success) {
-                                    [[DataManager shareManager] updateVideoAllPath:removePath uuid:cell.downloadResource.downloadUuid];
-                                }
+                                NSString *finalPath = [self renameFile:removePath originPath:cell.downloadResource.allPath];
+                                [[DataManager shareManager] updateVideoAllPath:finalPath uuid:cell.downloadResource.downloadUuid];
+                                
                                 
                             }
                             [self updateDownloadingText];
@@ -736,7 +728,7 @@ UIDocumentPickerDelegate
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.contentView.backgroundColor = FCStyle.secondaryBackground;
 
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 18, 27, 20)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 27, 20)];
                 [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
                 [cell.contentView addSubview:imageView];
@@ -786,7 +778,7 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:setDicBtn];
                 UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
                 line.backgroundColor = FCStyle.fcSeparator;
-                line.bottom =  imageView.bottom + 22;
+                line.bottom =  imageView.bottom + 21;
                 line.left = 10;
                 [cell.contentView addSubview:line];
                 return  cell;
@@ -1039,7 +1031,10 @@ UIDocumentPickerDelegate
     [super viewWillAppear:animated];
     self.tableView.frame = self.view.bounds;
     [self emptyTipsView];
+    self.tabBarController.tabBar.hidden = NO;
 
+
+    
 #ifdef FC_MAC
         self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
 #else
@@ -1141,6 +1136,26 @@ UIDocumentPickerDelegate
         [self.tableView reloadData];
 }
 
+
+- (NSString *)renameFile:(NSString *)fileName originPath:(NSString *)originPath {
+    NSString *finalFileName = fileName;
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileName]) {
+        NSString *name = [fileName stringByDeletingPathExtension];
+        NSString *ext = [fileName pathExtension];
+        int copyCount = 1;
+        do {
+            finalFileName = [NSString stringWithFormat:@"%@%d.%@", name, copyCount++, ext];
+        } while ([[NSFileManager defaultManager] fileExistsAtPath:finalFileName]);
+    }
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error = nil;
+    NSURL *fileURL = [NSURL fileURLWithPath:originPath];
+    NSURL *destinationURL = [NSURL fileURLWithPath:finalFileName];
+    BOOL success = [fileManager moveItemAtURL:fileURL toURL:destinationURL error:&error];
+    return finalFileName;
+}
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self

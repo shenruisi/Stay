@@ -55,7 +55,8 @@
     if(uuid.length == 0) {
         uuid = SharedStorageManager.shared.userDefaults.lastFolderUUID;
         if(uuid.length == 0) {
-            uuid = FILEUUID;
+//            uuid = FILEUUID;
+            uuid = FCShared.tabManager.tabs[0].uuid;
         }
     }
     
@@ -365,6 +366,23 @@
         
         [[DataManager shareManager] addDownloadResource:resource];
 
+        
+        
+       
+        [self.nav popToRootViewControllerAnimated:true];
+        
+#ifdef FC_MAC
+        if ([QuickAccess primaryController] != nil){
+            [QuickAccess primaryController].selectedIndex = 2;
+        }
+#else
+    if (FCDeviceTypeIPhone == [DeviceHelper type]){
+        if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
+            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
+        }
+    }
+#endif
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"changeDownloading" object:nil];
         [self.navigationController.slideController dismiss];
     } else {

@@ -3090,7 +3090,7 @@ const browser = __b;
         }
         let subRandomStr = '';
         // eslint-disable-next-line no-useless-escape
-        let subRandomArr = jsText.match(/var\s+[a-zA-Z]{2}\=\{[\S]*a\.reverse\(\)[\s\S]*a\.splice\(0\,b\)\}\};/g);
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z]{2}\=\{[a-zA-Z]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
         if(subRandomArr && subRandomArr.length){
           subRandomStr = subRandomArr[0];
           console.log(subRandomStr);
