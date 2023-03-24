@@ -747,7 +747,7 @@ UIDocumentPickerDelegate
 
                 
                 UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
-                name.text = @"Undefined";
+                name.text = NSLocalizedString(@"Undefined","");
                 if (dic != NULL) {
                     name.text = dic[@"fileName"];
                 }
