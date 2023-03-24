@@ -111,6 +111,7 @@ static VideoParser *_kVideoParser;
     if ([message.name isEqualToString:@"stayapp"]){
         if (self.completionBlock){
             self.completionBlock(message.body);
+            
         }
     }
     else if ([message.name isEqualToString:@"youtube"]){

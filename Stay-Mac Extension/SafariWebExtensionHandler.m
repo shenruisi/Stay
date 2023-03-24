@@ -147,12 +147,6 @@ NSString * const SFExtensionMessageKey = @"message";
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
-//        [self xmlHttpRequestProxy:@{
-////            @"url":@"http://pbs.twimg.com/media/Fdy6zTWakAAWB2Z.jpg:orig",
-//            @"url":@"https://video.twimg.com/ext_tw_video/1575718530816745472/pu/vid/720x1280/bkX6OmiU8MbKP4vr.mp4?tag=12",
-//            @"method":@"GET",
-//            @"headers":@{}
-//        }];
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
         BOOL requireCompleteScript = digest.length == 0 || [digest isEqualToString:@"no"];
@@ -269,9 +263,8 @@ NSString * const SFExtensionMessageKey = @"message";
                 NSDictionary *dic = datas[i];
                 if([dic[@"uuid"] isEqualToString:uuid]) {
                     NSMutableDictionary *mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
-                    [datas removeObject:dic];
                     [mdic setValue:@(activeVal) forKey:@"active"];
-                    [datas addObject:mdic];
+                    [datas replaceObjectAtIndex:i withObject:mdic];
                     [SharedStorageManager shared].userscriptHeaders.content = datas;
                     [[SharedStorageManager shared].userscriptHeaders flush];
                     break;
@@ -372,6 +365,24 @@ NSString * const SFExtensionMessageKey = @"message";
             }];
         }
         body = datas;
+    }
+    else if ([message[@"type"] isEqualToString:@"yt_element"]){
+        NSString *path = message[@"path"];
+        NSString *location = message[@"location"];
+        NSDictionary *response = [[API shared] downloadYoutube:path];
+        NSString *code;
+        if ((code = response[@"biz"][@"code"]) != nil){
+            body = @{
+                @"code" : code
+            };
+        }
+    }
+    else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
+        NSString *path = message[@"path"];
+        NSString *code = message[@"code"];
+        if (path.length > 0 && code.length > 0){
+            [[API shared] commitYoutbe:path code:code];
+        }
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

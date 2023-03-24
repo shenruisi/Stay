@@ -1508,7 +1508,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
     
 //    [self.view addSubview:[VideoParser shared].webView];
-//    [[VideoParser shared] parse:@"https://v.douyin.com/SDy4T6J/"
+//    [[VideoParser shared] parse:@"https://www.bilibili.com/bangumi/play/ep736501?spm_id_from=333.1007.partition_recommend.content.click"
 //                completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
 //        NSLog(@"videoItems %@",videoItems);
 //    }];
