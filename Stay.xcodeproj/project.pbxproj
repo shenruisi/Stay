@@ -1117,6 +1117,7 @@
 		84F48336273B709500217BB3 /* JSDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailCell.m; sourceTree = "<group>"; };
 		84F48339273B964900217BB3 /* JSDetailEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSDetailEntity.m; sourceTree = "<group>"; };
 		84F4833B273B96F400217BB3 /* JSDetailEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSDetailEntity.h; sourceTree = "<group>"; };
+		84F785E929CD8F2B002AA7AC /* Stay-MacDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay-MacDebug.entitlements"; sourceTree = "<group>"; };
 		84FD427E2851FD5D00B25A17 /* SYSelectTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSelectTabViewController.h; sourceTree = "<group>"; };
 		84FD427F2851FD5D00B25A17 /* SYSelectTabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSelectTabViewController.m; sourceTree = "<group>"; };
 		84FD4281285315D300B25A17 /* SYSelectBarModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSelectBarModalViewController.h; sourceTree = "<group>"; };
@@ -1428,6 +1429,7 @@
 		587688CB2719237E00F834A4 = {
 			isa = PBXGroup;
 			children = (
+				84F785E929CD8F2B002AA7AC /* Stay-MacDebug.entitlements */,
 				588202B92859FFF400B2721A /* macOSNative */,
 				587688D62719237E00F834A4 /* Stay */,
 				587688F92719238000F834A4 /* StayTests */,
@@ -3778,7 +3780,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Stay-MacDebug.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
