@@ -7,6 +7,7 @@
 
 #import "SYFIleManagerViewController.h"
 #import "FCShared.h"
+#import "Plugin.h"
 #import "DownloadFileTableViewCell.h"
 #import "FCStyle.h"
 #import "SYDownloadResourceManagerController.h"
@@ -416,10 +417,17 @@ UIDocumentPickerDelegate
                 if(dic == NULL) {
                     [self changeFileDir:nil];
                 } else {
-                    NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
-                    fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
-                    if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
-                        [[UIApplication sharedApplication] openURL:fileURL];
+
+                    if (FCDeviceTypeMac == [DeviceHelper type]) {
+//                        NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                        [FCShared.plugin.appKit openFinder:dic[@"url"]];
+
+                    } else {
+                        NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                        fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
+                        if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
+                            [[UIApplication sharedApplication] openURL:fileURL];
+                        }
                     }
                 }
             }
