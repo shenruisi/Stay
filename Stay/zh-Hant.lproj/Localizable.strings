@@ -286,3 +286,7 @@ Donotknowhowtouse="不知道如何使用該腳本";
 NOSPACEFAILED="空間不足";
 UploadSuccess="感謝提交，請關注聯繫郵箱。";
 Downloaded="已下載";
+OnMyiPhone="我的iPhone";
+OnMyMac="我的Mac";
+SetupDirectory="設置目錄";
+ChangeDirectory="修改目錄";

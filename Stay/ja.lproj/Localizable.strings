@@ -287,3 +287,7 @@ Donotknowhowtouse="Do Not Know How To Use";
 NOSPACEFAILED="Not enough space";
 UploadSuccess="Thanks for your submission, please pay attention to the contact email.";
 Downloaded="Downloaded";
+OnMyiPhone="On My iPhone";
+OnMyMac="On My Mac";
+SetupDirectory="Setup Directory";
+ChangeDirectory="Change Directory";
