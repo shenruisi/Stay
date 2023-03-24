@@ -758,7 +758,11 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:name];
                 
                 UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
+#ifdef FC_MAC
+                subTitle.text =NSLocalizedString(@"OnMyMac","");
+#else
                 subTitle.text =NSLocalizedString(@"OnMyiPhone","");
+#endif
                 subTitle.font = FCStyle.footnoteBold;
                 subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
