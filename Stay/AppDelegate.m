@@ -119,7 +119,6 @@
 #ifdef FC_MAC
     [FCShared.plugin load];
 #endif
-    
      
     [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
 #ifdef FC_MAC
