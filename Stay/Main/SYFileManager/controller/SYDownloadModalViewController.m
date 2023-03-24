@@ -62,7 +62,7 @@
     
     if([uuid isEqualToString:FILEUUID]) {
         NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-        NSString *text = @"Undefined";
+        NSString *text = NSLocalizedString(@"Undefined",@"");
         if (dic != NULL) {
             text = dic[@"fileName"];
         }
@@ -221,7 +221,7 @@
         }
         if([uuid isEqualToString:FILEUUID]) {
             NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-            NSString *text = @"Undefined";
+            NSString *text = NSLocalizedString(@"Undefined",@"");
             if (dic != NULL) {
                 text = dic[@"fileName"];
             }

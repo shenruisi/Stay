@@ -69,7 +69,7 @@
     if(list != NULL && list.count > 0) {
         itemsLab.text = [NSString stringWithFormat:@"%ld %@",list.count,NSLocalizedString(@"items","")];
     } else {
-        itemsLab.text = @"0 items";
+        itemsLab.text = [NSString stringWithFormat:@"0 %@",NSLocalizedString(@"items","")];
     }
     itemsLab.top = name.bottom;
     itemsLab.left = imageView.right + 10;
