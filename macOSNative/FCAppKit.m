@@ -330,5 +330,14 @@
     launchIdentifiers: NULL];
 }
 
+- (void)openFinder:(NSString *)path{
+    NSURL *fileURL = [NSURL fileURLWithPath:path];
+    NSArray *filesToOpen = @[fileURL];
+    [[NSWorkspace sharedWorkspace] openURLs:filesToOpen
+                 withAppBundleIdentifier:@"com.apple.finder"
+                                 options:NSWorkspaceLaunchDefault
+          additionalEventParamDescriptor:nil
+                       launchIdentifiers:nil];
+}
 
 @end
