@@ -641,12 +641,6 @@
                 
                     
                     Task *task = [[DownloadManager shared] enqueue:request];
-
-//                    task.block = ^(float progress, NSString *speed, DMStatus status) {
-//
-//
-//
-//                    };
                     
                     resource.status = 0;
                     resource.watchProcess = 0;

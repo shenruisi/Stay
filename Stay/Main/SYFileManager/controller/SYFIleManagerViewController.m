@@ -758,7 +758,7 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:name];
                 
                 UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
-                subTitle.text = @"On My iPhone";
+                subTitle.text =NSLocalizedString(@"OnMyiPhone","");
                 subTitle.font = FCStyle.footnoteBold;
                 subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
@@ -775,18 +775,21 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:rightIcon];
                 
                 
-                UIButton *setDicBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 144, 25)];
-                [setDicBtn setTitle:@"Setup Directory" forState:UIControlStateNormal];
+                UIButton *setDicBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 140, 25)];
+                [setDicBtn setTitle:NSLocalizedString(@"SetupDirectory","") forState:UIControlStateNormal];
                 if (dic != NULL) {
-                    [setDicBtn setTitle:@"Change Directory" forState:UIControlStateNormal];
+                    [setDicBtn setTitle:NSLocalizedString(@"ChangeDirectory","") forState:UIControlStateNormal];
                 }
                 [setDicBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
                 [setDicBtn addTarget:self action:@selector(changeFileDir:) forControlEvents:UIControlEventTouchUpInside];
                 setDicBtn.layer.cornerRadius = 10;
                 setDicBtn.backgroundColor = FCStyle.background;
                 setDicBtn.font = FCStyle.footnoteBold;
+                [setDicBtn sizeToFit];
+                setDicBtn.width = setDicBtn.width + 20;
                 setDicBtn.centerY = imageView.centerY;
                 setDicBtn.right = rightIcon.left - 16;
+                
                 [cell.contentView addSubview:setDicBtn];
                 UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
                 line.backgroundColor = FCStyle.fcSeparator;
