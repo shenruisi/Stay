@@ -2808,6 +2808,7 @@ const browser = __b;
             if(!videoInfo['downloadUrl'] || videoInfo['downloadUrl'].startsWith('blob')){
               videoInfo['downloadUrl'] = qualityList[0].downloadUrl;
               videoInfo['audioUrl'] = qualityList[0].audioUrl;
+              videoInfo['protect'] = qualityList[0].protect;
             }
           }
           if(!videoInfo['downloadUrl']){
