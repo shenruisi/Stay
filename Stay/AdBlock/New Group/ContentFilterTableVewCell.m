@@ -69,6 +69,8 @@
         [stateView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-15]
     ]];
     
+//    self.contentView.maskView = [[UIView alloc] init];
+    
     
 }
 
