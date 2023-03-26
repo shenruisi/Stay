@@ -493,6 +493,9 @@ function fetchRandomStr(randomStr){
    * @param {Object} videoInfo  {videoKey downloadUrl,poster,title,hostUrl,qualityList, videoUuid, m3u8Content}
    */
   function checkVideoExist(videoInfo){
+    if(!videoInfo.videoKey && !videoInfo.videoUuid){
+      return;
+    }
     videoInfo.hostUrl = Utils.getHostname(videoInfo.hostUrl);
     let downloadUrl = videoInfo.downloadUrl;
     if(Utils.isBase64(downloadUrl)){
@@ -680,6 +683,9 @@ function fetchRandomStr(randomStr){
       // window.webkit.messageHandlers.log.postMessage('handleVideoInfoParse---host---'+host);
       videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
       // window.webkit.messageHandlers.log.postMessage('handleVideoInfoParse---videoInfo---'+ JSON.stringify(videoInfo));
+      if(!videoInfo.videoKey){
+        return;
+      }
     }
     else if(host.indexOf('baidu.com')>-1){
       videoInfo = handleBaiduVideoInfo(videoSnifferDom);
@@ -1305,11 +1311,26 @@ function fetchRandomStr(randomStr){
    */
   function handleYoutubeVideoInfo(videoSnifferDom){
     const ytplayer = window.ytplayer;
-    const videoId = Utils.queryURLParams(hostUrl, 'v');
     // window.webkit.messageHandlers.log.postMessage('handleYoutubeVideoInfo-----------------start----------ytplayer--------'+JSON.stringify(ytplayer));
     // window.webkit.messageHandlers.log.postMessage('handleYoutubeVideoInfo-----------------start---------videoId---------'+videoId);
     // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
     let videoInfo = {};
+
+    let videoId = Utils.queryURLParams(hostUrl, 'v');
+    if(!videoId){
+      let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
+      if(videoIdDom){
+        let hrefLink = videoIdDom.getAttribute('href');
+        videoId = Utils.queryParams(hrefLink, 'v');
+      }
+    }
+      
+    // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
+      
+    if(!videoId){
+      return videoInfo;
+    }
+
     let title = '';
     if(videoSnifferDom){
       videoInfo.poster = videoSnifferDom.getAttribute('poster') || '';

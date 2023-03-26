@@ -533,7 +533,7 @@ export default {
             }
           }
           .select-options.folder{
-            width: 142px;
+            width: 140px;
             padding-right: 10px;
             position: relative;
             .selected-text{
