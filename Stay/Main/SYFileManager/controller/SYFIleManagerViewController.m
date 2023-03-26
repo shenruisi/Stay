@@ -1079,6 +1079,12 @@ UIDocumentPickerDelegate
         [self.tableView reloadData];
     }
     
+    if(self.videoArray.count > 0) {
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+    }
+    
+    [self updateDownloadingText];
 }
 
 - (void)updateDownloadingText {
