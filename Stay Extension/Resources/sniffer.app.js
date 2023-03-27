@@ -521,6 +521,8 @@ function fetchRandomStr(randomStr){
           item.title = videoInfo.title
           item.hostUrl = videoInfo.hostUrl;
           item.qualityList = videoInfo.qualityList?videoInfo.qualityList:[];
+          item.videoUuid = videoInfo.videoUuid
+          item.videoKey = videoInfo.videoKey
           // console.log('checkVideoExist----------item===',item);
         }
         return item;
@@ -1322,6 +1324,10 @@ function fetchRandomStr(randomStr){
       if(videoIdDom){
         let hrefLink = videoIdDom.getAttribute('href');
         videoId = Utils.queryParams(hrefLink, 'v');
+      }
+    }else{
+      if(!ytplayer || !(playerResp.videoDetails)){
+        return videoInfo;
       }
     }
       

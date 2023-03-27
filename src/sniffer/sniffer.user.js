@@ -1053,6 +1053,8 @@ const browser = __b;
             item.hostUrl = videoInfo.hostUrl
             item.qualityList = videoInfo.qualityList&&videoInfo.qualityList.length?videoInfo.qualityList:[];
             item.type= videoInfo.type?videoInfo.type:'';
+            item.videoUuid = videoInfo.videoUuid
+            item.videoKey = videoInfo.videoKey
             // console.log('checkVideoExist----------item===',item);
           }
           return item;
@@ -1992,7 +1994,7 @@ const browser = __b;
         }
         videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
         if(!videoInfo.videoKey){
-          return;
+          return videoInfo;
         }
       }
       else if(host.indexOf('baidu.com')>-1){
@@ -2674,6 +2676,7 @@ const browser = __b;
 
     /**
      * 解析Youtube视频信息
+     * @param() videoSnifferDom
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
      */
     function handleYoutubeVideoInfo(videoSnifferDom){
@@ -2681,6 +2684,7 @@ const browser = __b;
       const ytplayer = window.ytplayer;
       let videoId = Utils.queryURLParams(hostUrl, 'v');
       if(!videoId){
+        // console.log('videoId-------',videoId);
         let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
         if(videoIdDom){
           let hrefLink = videoIdDom.getAttribute('href');
@@ -2699,6 +2703,10 @@ const browser = __b;
         videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
         let title = videoSnifferDom.getAttribute('title');
         videoInfo.title = title;
+      }else{
+        if(!ytplayer || !(playerResp.videoDetails)){
+          return videoInfo;
+        }
       }
       
       const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
