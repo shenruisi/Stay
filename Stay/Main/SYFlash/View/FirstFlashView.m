@@ -584,7 +584,7 @@ UITableViewDataSource
         CGFloat imageleft = 27;
         for(int i = 0; i < picArray.count; i++) {
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
-//            [imageView sd_setImageWithURL:picArray[i]];
+            //            [imageView sd_setImageWithURL:picArray[i]];
             [imageView sd_setImageWithURL:picArray[i] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                 UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
                 [imageView addGestureRecognizer:tapGestureRecognizer1];
@@ -597,9 +597,13 @@ UITableViewDataSource
             imageView.layer.masksToBounds = YES;
             imageView.left = imageleft;
             [scrollView addSubview:imageView];
-            imageleft += 27 + 250;
-            scrollView.contentSize = CGSizeMake(imageleft + 27, 540);
-            
+            if(i < picArray.count - 1) {
+                imageleft += 27 + 250;
+            } else {
+                imageleft += 250 - picArray.count * 10;
+            }
+            scrollView.contentSize = CGSizeMake(imageleft, 540);
+            scrollView.width = 250 + 17;
        
         }
         
