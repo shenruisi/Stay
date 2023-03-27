@@ -1020,6 +1020,9 @@ const browser = __b;
      */
     function checkVideoExist(videoDom, posDom, videoInfo){
       let downloadUrl = videoInfo.downloadUrl;
+      if(!videoInfo.videoKey && !videoInfo.videoUuid){
+        return;
+      }
       if(!Utils.isURL(downloadUrl)){
         videoInfo.downloadUrl = hostUrl;
       }
@@ -1988,6 +1991,9 @@ const browser = __b;
           longPressDom = playerDom;
         }
         videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
+        if(!videoInfo.videoKey){
+          return;
+        }
       }
       else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoSnifferDom);
@@ -2671,12 +2677,23 @@ const browser = __b;
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
      */
     function handleYoutubeVideoInfo(videoSnifferDom){
-      const ytplayer = window.ytplayer;
-      const videoId = Utils.queryURLParams(hostUrl, 'v');
-      // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
       let videoInfo = {};
-      let title = '';
+      const ytplayer = window.ytplayer;
+      let videoId = Utils.queryURLParams(hostUrl, 'v');
+      if(!videoId){
+        let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
+        if(videoIdDom){
+          let hrefLink = videoIdDom.getAttribute('href');
+          videoId = Utils.queryParams(hrefLink, 'v');
+        }
+      }
       
+      // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
+      
+      if(!videoId){
+        return videoInfo;
+      }
+      let title = '';
       if(videoSnifferDom){
         videoInfo.poster = videoSnifferDom.getAttribute('poster') || '';
         videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
@@ -2832,7 +2849,7 @@ const browser = __b;
       if(!posterImg){
         posterImg = getYoutubeVideoPosterByDom();
       }
-      if(videoId != playerResp.videoDetails.videoId){
+      if(playerResp.videoDetails && videoId != playerResp.videoDetails.videoId){
         posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
       }
       if(!posterImg){
@@ -2844,6 +2861,8 @@ const browser = __b;
         videoInfo['type'] = 'ad';
       }
       videoInfo.videoKey = videoId;
+
+      // console.log('handleYoutubeVideoInfo-------videoId=',videoId);
       return videoInfo;
     }
 

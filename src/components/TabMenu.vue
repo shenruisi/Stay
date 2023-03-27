@@ -123,7 +123,7 @@ export default {
             border-right: 40px solid transparent;
             position: relative;
             left: -20px;
-            transform: translateZ(0);
+            transform: translateZ(1);
             z-index: 888;
           }
         }
