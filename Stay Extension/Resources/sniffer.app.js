@@ -1325,10 +1325,6 @@ function fetchRandomStr(randomStr){
         let hrefLink = videoIdDom.getAttribute('href');
         videoId = Utils.queryParams(hrefLink, 'v');
       }
-    }else{
-      if(!ytplayer || !(playerResp.videoDetails)){
-        return videoInfo;
-      }
     }
       
     // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
@@ -1343,6 +1339,10 @@ function fetchRandomStr(randomStr){
       videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
       title = videoSnifferDom.getAttribute('title');
       videoInfo.title = title;
+    }else{
+      if(!ytplayer || !(playerResp.videoDetails)){
+        return videoInfo;
+      }
     }
     
     const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
