@@ -160,9 +160,6 @@
 		5831791329CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */; };
 		5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
 		5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
-		5831791F29CC4EEA00135D8D /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5831791E29CC4EEA00135D8D /* blockerList.json */; };
-		5831792229CC4EEA00135D8D /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831792129CC4EEA00135D8D /* ContentBlockerRequestHandler.m */; };
-		5831792629CC4EEA00135D8D /* Stay Content Blocker.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C3172930525D00CCBAE5 /* ToastDebugger.m */; };
 		5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C3172930525D00CCBAE5 /* ToastDebugger.m */; };
 		5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
@@ -401,6 +398,9 @@
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
+		58B250DE29D1708C00F5419C /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 58B250DD29D1708C00F5419C /* blockerList.json */; };
+		58B250E129D1708C00F5419C /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B250E029D1708C00F5419C /* ContentBlockerRequestHandler.m */; };
+		58B250E529D1708C00F5419C /* Stay ContentBlocker.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
@@ -410,6 +410,14 @@
 		58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
 		58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
 		58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
+		58D0E11E29D189CE00DFBCC7 /* EasyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E11D29D189CE00DFBCC7 /* EasyList.m */; };
+		58D0E11F29D189CE00DFBCC7 /* EasyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E11D29D189CE00DFBCC7 /* EasyList.m */; };
+		58D0E12229D189FF00DFBCC7 /* EasyListRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12129D189FF00DFBCC7 /* EasyListRule.m */; };
+		58D0E12329D189FF00DFBCC7 /* EasyListRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12129D189FF00DFBCC7 /* EasyListRule.m */; };
+		58D0E12729D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
+		58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
+		58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
+		58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
@@ -591,13 +599,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5831792429CC4EEA00135D8D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5831791B29CC4EE900135D8D;
-			remoteInfo = "Stay Content Blocker";
-		};
 		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
@@ -633,6 +634,13 @@
 			remoteGlobalIDString = 588202C6285A12B400B2721A;
 			remoteInfo = macOSNative;
 		};
+		58B250E329D1708C00F5419C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 58B250DA29D1708B00F5419C;
+			remoteInfo = "Stay ContentBlocker";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -642,8 +650,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				5831792629CC4EEA00135D8D /* Stay Content Blocker.appex in Embed App Extensions */,
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
+				58B250E529D1708C00F5419C /* Stay ContentBlocker.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -800,11 +808,6 @@
 		5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterTableVewCell.m; sourceTree = "<group>"; };
 		5831791429CC1F6E00135D8D /* FCRoundedShadowView2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCRoundedShadowView2.h; sourceTree = "<group>"; };
 		5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCRoundedShadowView2.m; sourceTree = "<group>"; };
-		5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Blocker.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5831791E29CC4EEA00135D8D /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
-		5831792029CC4EEA00135D8D /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
-		5831792129CC4EEA00135D8D /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
-		5831792329CC4EEA00135D8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5839C3162930525D00CCBAE5 /* ToastDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastDebugger.h; sourceTree = "<group>"; };
 		5839C3172930525D00CCBAE5 /* ToastDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastDebugger.m; sourceTree = "<group>"; };
 		5839C31A29305CA100CCBAE5 /* FCTopToast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToast.h; sourceTree = "<group>"; };
@@ -963,6 +966,11 @@
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
+		58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlocker.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58B250DD29D1708C00F5419C /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		58B250DF29D1708C00F5419C /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		58B250E029D1708C00F5419C /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		58B250E229D1708C00F5419C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
@@ -974,6 +982,14 @@
 		58CFA5CB28F30668004C5140 /* SYNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNavigationController.m; sourceTree = "<group>"; };
 		58CFA5CF28F426F9004C5140 /* SYSecondaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSecondaryViewController.h; sourceTree = "<group>"; };
 		58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSecondaryViewController.m; sourceTree = "<group>"; };
+		58D0E11C29D189CE00DFBCC7 /* EasyList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EasyList.h; sourceTree = "<group>"; };
+		58D0E11D29D189CE00DFBCC7 /* EasyList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyList.m; sourceTree = "<group>"; };
+		58D0E12029D189FF00DFBCC7 /* EasyListRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EasyListRule.h; sourceTree = "<group>"; };
+		58D0E12129D189FF00DFBCC7 /* EasyListRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyListRule.m; sourceTree = "<group>"; };
+		58D0E12529D19F9700DFBCC7 /* FilterTokenParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
+		58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
+		58D0E12929D19FAB00DFBCC7 /* FilterToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
+		58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
 		58D1B44428880474009BD608 /* UIView+Rotate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Rotate.h"; sourceTree = "<group>"; };
@@ -1201,13 +1217,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		5831791929CC4EE900135D8D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58639CD72864477D00AA80D5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1263,6 +1272,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				589741D328684D05008FB897 /* SafariServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58B250D829D1708B00F5419C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1408,6 +1424,7 @@
 		583178FA29CBF04800135D8D /* Filter */ = {
 			isa = PBXGroup;
 			children = (
+				58D0E12429D19D7900DFBCC7 /* Parser */,
 				583178FF29CBF41D00135D8D /* ContentFilter.h */,
 				5831790029CBF41D00135D8D /* ContentFilter.m */,
 				5831791029CC00CE00135D8D /* ContentFilterTableVewCell.h */,
@@ -1428,17 +1445,6 @@
 			path = TableView;
 			sourceTree = "<group>";
 		};
-		5831791D29CC4EEA00135D8D /* Stay Content Blocker */ = {
-			isa = PBXGroup;
-			children = (
-				5831791E29CC4EEA00135D8D /* blockerList.json */,
-				5831792029CC4EEA00135D8D /* ContentBlockerRequestHandler.h */,
-				5831792129CC4EEA00135D8D /* ContentBlockerRequestHandler.m */,
-				5831792329CC4EEA00135D8D /* Info.plist */,
-			);
-			path = "Stay Content Blocker";
-			sourceTree = "<group>";
-		};
 		5839C315293051CC00CCBAE5 /* Debugger */ = {
 			isa = PBXGroup;
 			children = (
@@ -1457,6 +1463,7 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
+				58D0E11B29D1893700DFBCC7 /* AdbPlus */,
 				583178FA29CBF04800135D8D /* Filter */,
 				58A3618D29C0502400080465 /* AdBlockViewController.h */,
 				58A3618E29C0502400080465 /* AdBlockViewController.m */,
@@ -1550,7 +1557,7 @@
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
 				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
-				5831791D29CC4EEA00135D8D /* Stay Content Blocker */,
+				58B250DC29D1708C00F5419C /* Stay ContentBlocker */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -1568,7 +1575,7 @@
 				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
-				5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */,
+				58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1828,6 +1835,17 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		58B250DC29D1708C00F5419C /* Stay ContentBlocker */ = {
+			isa = PBXGroup;
+			children = (
+				58B250DD29D1708C00F5419C /* blockerList.json */,
+				58B250DF29D1708C00F5419C /* ContentBlockerRequestHandler.h */,
+				58B250E029D1708C00F5419C /* ContentBlockerRequestHandler.m */,
+				58B250E229D1708C00F5419C /* Info.plist */,
+			);
+			path = "Stay ContentBlocker";
+			sourceTree = "<group>";
+		};
 		58C663792990E04300B00110 /* VideoParser */ = {
 			isa = PBXGroup;
 			children = (
@@ -1836,6 +1854,28 @@
 				58C6637B2990E05F00B00110 /* VideoParser.m */,
 			);
 			path = VideoParser;
+			sourceTree = "<group>";
+		};
+		58D0E11B29D1893700DFBCC7 /* AdbPlus */ = {
+			isa = PBXGroup;
+			children = (
+				58D0E11C29D189CE00DFBCC7 /* EasyList.h */,
+				58D0E11D29D189CE00DFBCC7 /* EasyList.m */,
+				58D0E12029D189FF00DFBCC7 /* EasyListRule.h */,
+				58D0E12129D189FF00DFBCC7 /* EasyListRule.m */,
+			);
+			path = AdbPlus;
+			sourceTree = "<group>";
+		};
+		58D0E12429D19D7900DFBCC7 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				58D0E12529D19F9700DFBCC7 /* FilterTokenParser.h */,
+				58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */,
+				58D0E12929D19FAB00DFBCC7 /* FilterToken.h */,
+				58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */,
+			);
+			path = Parser;
 			sourceTree = "<group>";
 		};
 		58D1B44D28893D27009BD608 /* IAP */ = {
@@ -2506,23 +2546,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5831791B29CC4EE900135D8D /* Stay Content Blocker */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5831792729CC4EEA00135D8D /* Build configuration list for PBXNativeTarget "Stay Content Blocker" */;
-			buildPhases = (
-				5831791829CC4EE900135D8D /* Sources */,
-				5831791929CC4EE900135D8D /* Frameworks */,
-				5831791A29CC4EE900135D8D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Stay Content Blocker";
-			productName = "Stay Content Blocker";
-			productReference = 5831791C29CC4EE900135D8D /* Stay Content Blocker.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */;
@@ -2555,7 +2578,7 @@
 			);
 			dependencies = (
 				5876890F2719238000F834A4 /* PBXTargetDependency */,
-				5831792529CC4EEA00135D8D /* PBXTargetDependency */,
+				58B250E429D1708C00F5419C /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -2654,6 +2677,23 @@
 			productReference = 588202C7285A12B400B2721A /* macOSNative.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
+		58B250DA29D1708B00F5419C /* Stay ContentBlocker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58B250E629D1708C00F5419C /* Build configuration list for PBXNativeTarget "Stay ContentBlocker" */;
+			buildPhases = (
+				58B250D729D1708B00F5419C /* Sources */,
+				58B250D829D1708B00F5419C /* Frameworks */,
+				58B250D929D1708B00F5419C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay ContentBlocker";
+			productName = "Stay ContentBlocker";
+			productReference = 58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2663,9 +2703,6 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					5831791B29CC4EE900135D8D = {
-						CreatedOnToolsVersion = 14.0.1;
-					};
 					58639CD92864477D00AA80D5 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
@@ -2686,6 +2723,9 @@
 					};
 					588202C6285A12B400B2721A = {
 						CreatedOnToolsVersion = 13.3.1;
+					};
+					58B250DA29D1708B00F5419C = {
+						CreatedOnToolsVersion = 14.0.1;
 					};
 				};
 			};
@@ -2712,20 +2752,12 @@
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
 				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
-				5831791B29CC4EE900135D8D /* Stay Content Blocker */,
+				58B250DA29D1708B00F5419C /* Stay ContentBlocker */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		5831791A29CC4EE900135D8D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5831791F29CC4EEA00135D8D /* blockerList.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58639CD82864477D00AA80D5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2918,6 +2950,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		58B250D929D1708B00F5419C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58B250DE29D1708C00F5419C /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -3002,14 +3042,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		5831791829CC4EE900135D8D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5831792229CC4EEA00135D8D /* ContentBlockerRequestHandler.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58639CD62864477D00AA80D5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3041,6 +3073,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				582061C8294C4C0E00A32D0C /* ModalItemView.m in Sources */,
+				58D0E12729D19F9700DFBCC7 /* FilterTokenParser.m in Sources */,
 				3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
@@ -3085,12 +3118,14 @@
 				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
+				58D0E11E29D189CE00DFBCC7 /* EasyList.m in Sources */,
 				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
 				84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
+				58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */,
 				583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
@@ -3214,6 +3249,7 @@
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
+				58D0E12229D189FF00DFBCC7 /* EasyListRule.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */,
@@ -3341,6 +3377,7 @@
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
+				58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */,
 				58A3617029BF11F100080465 /* RC4.m in Sources */,
 				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
@@ -3415,6 +3452,7 @@
 				5882026E2859E73900B2721A /* main.m in Sources */,
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
+				58D0E12329D189FF00DFBCC7 /* EasyListRule.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
 				5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */,
@@ -3460,6 +3498,7 @@
 				5884031D29667079002CA227 /* UIColor+Convert.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
 				582061F3294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
+				58D0E11F29D189CE00DFBCC7 /* EasyList.m in Sources */,
 				582061C9294C4C0E00A32D0C /* ModalItemView.m in Sources */,
 				3C8388C92931ADC5007563E6 /* FCTabConfig.m in Sources */,
 				58A3618329C049C500080465 /* FCTabBarItem.m in Sources */,
@@ -3467,6 +3506,7 @@
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
+				58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
 				582061EB294C4CC800A32D0C /* UIView+Layout.m in Sources */,
 				3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
@@ -3482,14 +3522,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		58B250D729D1708B00F5419C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58B250E129D1708C00F5419C /* ContentBlockerRequestHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5831792529CC4EEA00135D8D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5831791B29CC4EE900135D8D /* Stay Content Blocker */;
-			targetProxy = 5831792429CC4EEA00135D8D /* PBXContainerItemProxy */;
-		};
 		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = maccatalyst;
@@ -3515,6 +3558,11 @@
 			isa = PBXTargetDependency;
 			target = 588202C6285A12B400B2721A /* macOSNative */;
 			targetProxy = 589741CB28680854008FB897 /* PBXContainerItemProxy */;
+		};
+		58B250E429D1708C00F5419C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 58B250DA29D1708B00F5419C /* Stay ContentBlocker */;
+			targetProxy = 58B250E329D1708C00F5419C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3543,60 +3591,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		5831792829CC4EEA00135D8D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay Content Blocker/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay Content Blocker";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Blocker";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		5831792929CC4EEA00135D8D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay Content Blocker/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay Content Blocker";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Blocker";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		58639CF32864477D00AA80D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4217,18 +4211,67 @@
 			};
 			name = Release;
 		};
+		58B250E729D1708C00F5419C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 125;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay ContentBlocker/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlocker";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.3.8;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlocker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		58B250E829D1708C00F5419C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 125;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay ContentBlocker/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlocker";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.3.8;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlocker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5831792729CC4EEA00135D8D /* Build configuration list for PBXNativeTarget "Stay Content Blocker" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5831792829CC4EEA00135D8D /* Debug */,
-				5831792929CC4EEA00135D8D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -4297,6 +4340,15 @@
 			buildConfigurations = (
 				588202C9285A12B400B2721A /* Debug */,
 				588202CA285A12B400B2721A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58B250E629D1708C00F5419C /* Build configuration list for PBXNativeTarget "Stay ContentBlocker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B250E729D1708C00F5419C /* Debug */,
+				58B250E829D1708C00F5419C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
