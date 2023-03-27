@@ -28,28 +28,9 @@
 
 
 - (UIView *)fcDuplicate{
-    UIView *copied = [super fcDuplicate];
-    UIView *circleView = [self.circleView duplicate];
-    circleView.translatesAutoresizingMaskIntoConstraints = NO;
-    [copied addSubview:circleView];
-
-    [NSLayoutConstraint activateConstraints:@[
-        [circleView.leadingAnchor constraintEqualToAnchor:copied.leadingAnchor],
-        [circleView.centerYAnchor constraintEqualToAnchor:copied.centerYAnchor],
-        [circleView.widthAnchor constraintEqualToConstant:8],
-        [circleView.heightAnchor constraintEqualToConstant:8]
-    ]];
-
-    UILabel *titleLabel = (UILabel *)[self.titleLabel duplicate];
-    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [copied addSubview:titleLabel];
-
-    [NSLayoutConstraint activateConstraints:@[
-        [titleLabel.leadingAnchor constraintEqualToAnchor:circleView.leadingAnchor constant:15],
-        [titleLabel.centerYAnchor constraintEqualToAnchor:copied.centerYAnchor],
-        [titleLabel.widthAnchor constraintEqualToConstant:150],
-        [titleLabel.heightAnchor constraintEqualToConstant:FCStyle.footnoteBold.pointSize]
-    ]];
+    StateView *copied = (StateView *)[super fcDuplicate];
+    [copied circleView];
+    [copied titleLabel];
     
     return copied;
 }
@@ -59,6 +40,7 @@
     [super setActive:active];
     self.titleLabel.text = active ? NSLocalizedString(@"Activated", @"") :  NSLocalizedString(@"Stopped", @"");
     self.circleView.backgroundColor = active ? FCStyle.accent : FCStyle.fcSeparator;
+    self.titleLabel.textColor = active ? FCStyle.fcBlack : FCStyle.fcSeparator;
 }
 
 - (UIView *)circleView{

@@ -39,10 +39,17 @@
     // Configure the view for the selected state
 }
 
-- (void)tap{
-    [super tap];
+- (void)setActive:(BOOL)active{
+    [super setActive:active];
+    self.nameLabel.textColor = active ? FCStyle.fcBlack : FCStyle.fcSeparator;
+    self.stateView.active = active;
+}
+
+- (void)doubleTap:(CGPoint)location{
+    [super doubleTap:location];
     
     UIView *containerView = [self.fcContentView.containerView duplicate];
+    containerView.backgroundColor  = FCStyle.popup;
     [self.contentView addSubview:containerView];
     containerView.translatesAutoresizingMaskIntoConstraints = NO;
     [NSLayoutConstraint activateConstraints:@[
@@ -53,6 +60,7 @@
     ]];
     
     UILabel *nameLabel = (UILabel *)[self.nameLabel duplicate];
+    nameLabel.textColor = !self.active ? FCStyle.fcBlack : FCStyle.fcSeparator;
     nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
     [containerView addSubview:nameLabel];
     [NSLayoutConstraint activateConstraints:@[
@@ -61,6 +69,7 @@
     ]];
     
     StateView *stateView = (StateView *)[self.stateView fcDuplicate];
+    stateView.active = !self.active;
     stateView.translatesAutoresizingMaskIntoConstraints = NO;
     [containerView addSubview:stateView];
     
@@ -69,9 +78,21 @@
         [stateView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-15]
     ]];
     
-//    self.contentView.maskView = [[UIView alloc] init];
-    
-    
+    UIView *maskView = [[UIView alloc] init];
+    maskView.backgroundColor = UIColor.blackColor;
+    maskView.layer.cornerRadius = 0;
+    containerView.maskView = maskView;
+    CGFloat radius =  MAX((self.size.width - location.x),location.x);
+    [maskView setFrame:CGRectMake(location.x, location.y, 0, 0)];
+    [UIView animateWithDuration:0.5
+                     animations:^{
+        [maskView setFrame:CGRectMake(location.x - radius, location.y - radius, radius * 2, radius * 2)];
+        maskView.layer.cornerRadius = radius;
+    } completion:^(BOOL finished) {
+        self.active = !self.active;
+        containerView.maskView = nil;
+        [containerView removeFromSuperview];
+    }];
 }
 
 - (void)buildWithElement:(ContentFilter *)element{
