@@ -485,6 +485,7 @@ export default {
             height: 24px;
             line-height: 24px;
             user-select: none;
+            word-break:keep-all;
           }
           .select-options{
             height: 24px;
@@ -534,7 +535,7 @@ export default {
           }
           .select-options.folder{
             width: 140px;
-            padding-right: 10px;
+            padding-right: 8px;
             position: relative;
             .selected-text{
               min-width: 80px;
