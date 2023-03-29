@@ -17,10 +17,18 @@
     return eof;
 }
 
-+ (instancetype)undefined{
++ (instancetype)newLine{
+    FilterToken *newLine = [[FilterToken alloc] init];
+    newLine.type = FilterTokenTypeNewLine;
+    return newLine;
+}
+
++ (instancetype)undefined:(NSString *)text{
     FilterToken *undefined = [[FilterToken alloc] init];
     undefined.type = FilterTokenTypeUndefined;
+    undefined.value = text;
     return undefined;
 }
+
 
 @end

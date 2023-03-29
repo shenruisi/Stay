@@ -10,6 +10,7 @@
 #import "FCStyle.h"
 #import "ContentFilter.h"
 #import "ContentFilterTableVewCell.h"
+#import <Speech/Speech.h>
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -33,6 +34,15 @@
     self.navigationItem.rightBarButtonItem = self.addItem;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
+    
+    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+//                [self startRecognition];
+                NSLog(@"authorized");
+            }
+        });
+    }];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

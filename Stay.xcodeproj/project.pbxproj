@@ -418,6 +418,7 @@
 		58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
 		58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
 		58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
+		58D0E12E29D331F700DFBCC7 /* myvoice.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 58D0E12D29D331F700DFBCC7 /* myvoice.m4a */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
@@ -990,6 +991,7 @@
 		58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
 		58D0E12929D19FAB00DFBCC7 /* FilterToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
 		58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
+		58D0E12D29D331F700DFBCC7 /* myvoice.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = myvoice.m4a; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
 		58D1B44428880474009BD608 /* UIView+Rotate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Rotate.h"; sourceTree = "<group>"; };
@@ -1652,6 +1654,7 @@
 		587689102719238000F834A4 /* Stay Extension */ = {
 			isa = PBXGroup;
 			children = (
+				58D0E12D29D331F700DFBCC7 /* myvoice.m4a */,
 				58F7F4DB2746342400270873 /* Stay Extension.entitlements */,
 				58F7F4E7274776AB00270873 /* Stroge.h */,
 				58F7F4E8274776AB00270873 /* Stroge.m */,
@@ -2866,6 +2869,7 @@
 				58F7F4E22746589D00270873 /* stay-taskloop.js in Resources */,
 				5881343027294C0E0055E1CE /* iframe.html in Resources */,
 				5876891C2719238000F834A4 /* background.js in Resources */,
+				58D0E12E29D331F700DFBCC7 /* myvoice.m4a in Resources */,
 				58639CF9286447F900AA80D5 /* convert2RegExp.js in Resources */,
 				15C79AB327912BC600559EA5 /* message.js in Resources */,
 				15F20BD1281BD09300330A56 /* checkUserscript.js in Resources */,

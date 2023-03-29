@@ -9,8 +9,8 @@
 
 @implementation EasyList
 
-- (NSArray<EasyListRule *> *)parse:(NSString *)rules{
-    
-}
+//- (NSArray<EasyListRule *> *)parse:(NSString *)rules{
+//    
+//}
 
 @end

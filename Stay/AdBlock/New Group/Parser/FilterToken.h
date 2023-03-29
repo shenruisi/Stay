@@ -14,14 +14,21 @@ typedef enum{
     FilterTokenTypeUndefined = 0,
     FilterTokenTypeUrl = 1,
     FilterTokenTypeComment,
-    FilterTokenTypeSpecialComment,
+    FilterTokenTypeSpecialCommentHomepage,
+    FilterTokenTypeSpecialCommentTitle,
+    FilterTokenTypeSpecialCommentExpires,
+    FilterTokenTypeSpecialCommentRedirect,
+    FilterTokenTypeSpecialCommentVersion,
+    FilterTokenTypeNewLine
 } FilterTokenType;
 
 @interface FilterToken : NSObject
 
 @property (nonatomic, assign) FilterTokenType type;
+@property (nonatomic, strong) id value;
 + (instancetype)eof;
-+ (instancetype)undefined;
++ (instancetype)newLine;
++ (instancetype)undefined:(NSString *)text;
 @end
 
 NS_ASSUME_NONNULL_END

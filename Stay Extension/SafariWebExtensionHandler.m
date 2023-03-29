@@ -12,8 +12,54 @@
 #import "SharedStorageManager.h"
 #import "API.h"
 #import "FCShared.h"
+#import <Speech/Speech.h>
+
+@interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate>
+
+@property (nonatomic, strong) SFSpeechRecognizer *speechRecognizer;
+@property (nonatomic, strong) SFSpeechURLRecognitionRequest *recognitionRequest;
+@property (nonatomic, strong) SFSpeechRecognitionTask *recognitionTask;
+@end
 
 @implementation SafariWebExtensionHandler
+
+- (instancetype)init{
+    if (self = [super init]){
+        self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
+        self.speechRecognizer.delegate = self;
+        [self requestSpeechAuthorization];
+//        [self startRecognition];
+    }
+    
+    return self;
+}
+
+- (void)requestSpeechAuthorization {
+    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+                [self startRecognition];
+            }
+        });
+    }];
+}
+
+- (void)startRecognition {
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"myvoice" ofType:@"m4a"];
+    NSURL *audioFileURL = [NSURL fileURLWithPath:path];
+    self.recognitionRequest = [[SFSpeechURLRecognitionRequest alloc] initWithURL:audioFileURL];
+    self.recognitionTask = [self.speechRecognizer recognitionTaskWithRequest:self.recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
+        if (result) {
+            NSLog(@"Recognition result: %@", result.bestTranscription.formattedString);
+        }
+
+        if (error || result.isFinal) {
+            self.recognitionTask = nil;
+            self.recognitionRequest = nil;
+        }
+    }];
+}
+
 
 //https://wiki.greasespot.net/Include_and_exclude_rules
 - (NSRegularExpression *)convert2GlobsRegExp:(NSString *)str{
@@ -98,6 +144,19 @@
 {
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
+    
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"myvoice" ofType:@"m4a"];
+//    NSURL *url = [NSURL fileURLWithPath:path];
+//    NSData *data = [NSData dataWithContentsOfURL:url];
+//    SFSpeechURLRecognitionRequest *request = [[SFSpeechURLRecognitionRequest alloc] initWithURL:url];
+//    SFSpeechRecognizer *recognizer = [[SFSpeechRecognizer alloc] init];
+//    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+//        NSLog(@"status");
+//    }];
+//    [recognizer recognitionTaskWithRequest:request delegate:self];
+    
+    
+    
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
@@ -544,6 +603,19 @@
     return dic;
 }
 
+- (void)speechRecognitionDidDetectSpeech:(SFSpeechRecognitionTask *)task{
+    
+}
+
+// Called for all recognitions, including non-final hypothesis
+- (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didHypothesizeTranscription:(SFTranscription *)transcription{
+    
+}
+
+// Called only for final recognitions of utterances. No more about the utterance will be reported
+- (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didFinishRecognition:(SFSpeechRecognitionResult *)recognitionResult{
+    
+}
 
 
 @end
