@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL noFrames;
 @property (nonatomic, assign) BOOL pass;
 @property (nonatomic, copy) NSString *errorMessage;
+@property (nonatomic, assign) NSInteger errorCode;
 @property (nonatomic, copy) NSString *content;
 @property (nonatomic, copy) NSString *parsedContent;
 @property (nonatomic, copy) NSString *otherContent;

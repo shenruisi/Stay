@@ -6,6 +6,7 @@
 //
 
 #import "Tampermonkey.h"
+#import "SYVersionUtils.h"
 
 
 @interface Tampermonkey()
@@ -73,9 +74,21 @@ static Tampermonkey *kInstance = nil;
             userScript.errorMessage = errorMessage;
         }
         
+        if (userScript.stayEngine.length > 0 && [SYVersionUtils compareVersion:userScript.stayEngine toVersion:[self appVersion]]){
+            userScript.pass = NO;
+            userScript.errorCode = 1000;
+            userScript.errorMessage = [NSString stringWithFormat:NSLocalizedString(@"StayEngineError", @""),userScript.stayEngine];
+        }
+    }
+    else{
+        userScript.errorCode = 500;
     }
     
     return userScript;
+}
+
+- (NSString *)appVersion{
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 }
 
 
