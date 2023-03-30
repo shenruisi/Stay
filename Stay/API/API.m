@@ -75,6 +75,7 @@ static API *instance = nil;
 }
 
 - (void)active:(NSString *)uuid isPro:(BOOL)isPro isExtension:(BOOL)isExtension{
+    if (uuid.length == 0) return;
     NSString *reqUrl = [NSString stringWithFormat:@"%@active",END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
@@ -82,10 +83,10 @@ static API *instance = nil;
     NSLocale *locale = [NSLocale currentLocale];
     NSDictionary *event = @{
         @"uuid":uuid,
-        @"device_type":_deviceType,
-        @"device_name":_deviceName,
-        @"os_version":_osVersion,
-        @"app_version":_appVersion,
+        @"device_type":_deviceType ? _deviceType : @"",
+        @"device_name":_deviceName ? _deviceName : @"",
+        @"os_version":_osVersion ? _osVersion : @"",
+        @"app_version":_appVersion ? _appVersion : @"",
         @"pro":isPro ? @"lifetime":@"",
         @"is_extension":@(isExtension),
         @"country":locale.countryCode.length > 0 ? locale.countryCode : @"CN"

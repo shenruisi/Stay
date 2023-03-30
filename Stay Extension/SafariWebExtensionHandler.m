@@ -424,19 +424,21 @@
                 completionHandler:^(NSData *data,
                                     NSURLResponse *response,
                                     NSError *error) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        status = httpResponse.statusCode;
-        statusText = [NSHTTPURLResponse localizedStringForStatusCode:status];
-        if (nil == error){
-            type = [httpResponse allHeaderFields][@"Content-Type"];
-            if ([type hasPrefix:@"image/"]
-                ||[type hasPrefix:@"video/"]){
-                NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
-                responseData = [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded];
-                responseType = @"blob";
-            }
-            else{
-                responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            status = httpResponse.statusCode;
+            statusText = [NSHTTPURLResponse localizedStringForStatusCode:status];
+            if (nil == error){
+                type = [httpResponse allHeaderFields][@"Content-Type"];
+                if ([type hasPrefix:@"image/"]
+                    ||[type hasPrefix:@"video/"]){
+                    NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
+                    responseData = [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded];
+                    responseType = @"blob";
+                }
+                else{
+                    responseText = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                }
             }
         }
         
