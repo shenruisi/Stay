@@ -145,19 +145,6 @@
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
     
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"myvoice" ofType:@"m4a"];
-//    NSURL *url = [NSURL fileURLWithPath:path];
-//    NSData *data = [NSData dataWithContentsOfURL:url];
-//    SFSpeechURLRecognitionRequest *request = [[SFSpeechURLRecognitionRequest alloc] initWithURL:url];
-//    SFSpeechRecognizer *recognizer = [[SFSpeechRecognizer alloc] init];
-//    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-//        NSLog(@"status");
-//    }];
-//    [recognizer recognitionTaskWithRequest:request delegate:self];
-    
-    
-    
-    
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         [SharedStorageManager shared].userDefaults.safariExtensionEnabled = YES;
@@ -436,6 +423,9 @@
         if (path.length > 0 && code.length > 0){
             [[API shared] commitYoutbe:path code:code];
         }
+    }
+    else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){
+        NSData *data = message[@"data"];
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

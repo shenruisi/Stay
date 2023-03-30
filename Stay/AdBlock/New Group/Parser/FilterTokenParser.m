@@ -18,6 +18,7 @@ static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Versio
 @property (nonatomic, assign) NSInteger moveIndex;
 @property (nonatomic, copy) NSString *lastChars;
 @property (nonatomic, strong) FilterToken *opaqueCurToken;
+@property (nonatomic, strong) FilterToken *prevToken;
 @end
 
 @implementation FilterTokenParser
@@ -42,11 +43,12 @@ static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Versio
 
 - (void)backward{
     self.moveIndex--;
-    self.opaqueCurToken = [FilterToken undefined:@""];
+    
 }
 
 - (void)nextToken{
     self.opaqueCurToken = [self getTok];
+    self.prevToken = self.opaqueCurToken;
 }
 
 - (FilterToken *)getTok{
@@ -60,16 +62,72 @@ static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Versio
         return [FilterToken newLine];
     }
     
+    if (self.prevToken.type == FilterTokenTypeNewLine && [self isExceptionStart:self.lastChars]){
+        if ([self isExceptionStart:(self.lastChars = [self getChars])]){
+            return [FilterToken exception];
+        }
+        else{
+            [self backward];
+            return [FilterToken undefined:self.lastChars];
+        }
+    }
+    
+    if ([self isSeparator:self.lastChars]){
+        return [FilterToken separator];
+    }
+    
+    if ([self isOptionsStart:self.lastChars]){
+        NSMutableString *options = [[NSMutableString alloc] init];
+        while(![self isEnd:(self.lastChars = [self getChars])]){
+            [options appendString:self.lastChars];
+        }
+        
+        [self backward];
+        return [FilterToken options:[options componentsSeparatedByString:@","]];
+    }
+    
     if ([self isCommentStart:self.lastChars]){
         NSMutableString *comment = [[NSMutableString alloc] init];
-        while(![self isNewLine:(self.lastChars = [self getChars])]){
+        while(![self isEnd:(self.lastChars = [self getChars])]){
             [comment appendString:self.lastChars];
         }
         
+        [self backward];
         
+        NSArray<NSString *> *captured = [self specialCommentCapture:comment];
+        if (captured.count == 2){
+            if ([captured[0] isEqualToString:@"Homepage"]){
+                return [FilterToken specialCommentHomePage:captured[1]];
+            }
+            else if ([captured[0] isEqualToString:@"Title"]){
+                return [FilterToken specialCommentTitle:captured[1]];
+            }
+            else if ([captured[0] isEqualToString:@"Expires"]){
+                return [FilterToken specialCommentExpires:captured[1]];
+            }
+            else if ([captured[0] isEqualToString:@"Redirect"]){
+                return [FilterToken specialCommentRedirect:captured[1]];
+            }
+            else if ([captured[0] isEqualToString:@"Version"]){
+                return [FilterToken specialCommentVersion:captured[1]];
+            }
+        }
+        else{
+            return [FilterToken comment:comment];
+        }
     }
     
-    return [FilterToken undefined:self.lastChars];
+    NSMutableString *tigger = [[NSMutableString alloc] init];
+    do{
+        [tigger appendString:self.lastChars];
+        self.lastChars = [self getChars];
+    }while(![self isNewLine:self.lastChars]
+           && ![self isSeparator:self.lastChars]
+           && ![self isOptionsStart:self.lastChars]);
+    
+    [self backward];
+    return [FilterToken tigger:tigger];
+    
 }
 
 - (NSArray<NSString *> *)specialCommentCapture:(NSString *)comment{
@@ -90,8 +148,24 @@ static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Versio
     return ret;
 }
 
+- (BOOL)isOptionsStart:(NSString *)chars{
+    return [chars isEqualToString:@"$"];
+}
+
+- (BOOL)isSeparator:(NSString *)chars{
+    return [chars isEqualToString:@"^"];
+}
+
+- (BOOL)isExceptionStart:(NSString *)chars{
+    return [chars isEqualToString:@"@"];
+}
+
 - (BOOL)isNewLine:(NSString *)chars{
     return [chars isEqualToString:@"\n"];
+}
+
+- (BOOL)isEnd:(NSString *)chars{
+    return [self isNewLine:chars] || [self isEOF:chars];
 }
 
 - (BOOL)isCommentStart:(NSString *)chars{

@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FilterTokenParser : NSObject
 
+@property (nonatomic, readonly) FilterToken *curToken;
+
+
 @property (nonatomic, readonly) BOOL isEOF;
 - (void)nextToken;
 - (void)backward;
