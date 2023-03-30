@@ -25,9 +25,9 @@
 
 - (instancetype)init{
     if (self = [super init]){
-        self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
-        self.speechRecognizer.delegate = self;
-        [self requestSpeechAuthorization];
+//        self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
+//        self.speechRecognizer.delegate = self;
+//        [self requestSpeechAuthorization];
 //        [self startRecognition];
     }
     
