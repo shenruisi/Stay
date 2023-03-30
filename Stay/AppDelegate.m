@@ -119,7 +119,6 @@
 #ifdef FC_MAC
     [FCShared.plugin load];
 #endif
-    
      
     [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
 #ifdef FC_MAC
@@ -137,8 +136,6 @@
 #endif
         
     }];
-     
-    
     
     [[IACManager sharedManager] handleAction:@"album" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
         
@@ -209,7 +206,6 @@
         }
             
     }];
-    
     
 //    [[VideoParser shared] parse:@"https://m.toutiao.com/video/7182409246737334787/?from_page_type=feed&upstream_biz=toutiao_m&W2atIF=1" completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
 //        NSLog(@"videoItems %@",videoItems);

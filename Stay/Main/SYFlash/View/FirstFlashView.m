@@ -584,20 +584,27 @@ UITableViewDataSource
         CGFloat imageleft = 27;
         for(int i = 0; i < picArray.count; i++) {
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
-            [imageView sd_setImageWithURL:picArray[i]];
+            //            [imageView sd_setImageWithURL:picArray[i]];
+            [imageView sd_setImageWithURL:picArray[i] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
+                [imageView addGestureRecognizer:tapGestureRecognizer1];
+                //让UIImageView和它的父类开启用户交互属性
+                [imageView setUserInteractionEnabled:YES];
+            }];
             imageView.layer.cornerRadius = 25;
             imageView.layer.borderWidth = 1;
             imageView.layer.borderColor = FCStyle.borderColor.CGColor;
             imageView.layer.masksToBounds = YES;
             imageView.left = imageleft;
             [scrollView addSubview:imageView];
-            imageleft += 27 + 250;
-            scrollView.contentSize = CGSizeMake(imageleft + 27, 540);
-            
-            UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scanBigImageClick1:)];
-            [imageView addGestureRecognizer:tapGestureRecognizer1];
-            //让UIImageView和它的父类开启用户交互属性
-            [imageView setUserInteractionEnabled:YES];
+            if(i < picArray.count - 1) {
+                imageleft += 27 + 250;
+            } else {
+                imageleft += 250 - picArray.count * 10;
+            }
+            scrollView.contentSize = CGSizeMake(imageleft, 540);
+            scrollView.width = 250 + 17;
+       
         }
         
         scrollView.clipsToBounds = NO;
@@ -747,7 +754,17 @@ UITableViewDataSource
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
         NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:str];
-
+        if( userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length > 0 ) {
+            [self.loadingSlideController updateSubText:userScript.errorMessage];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+            dispatch_get_main_queue(), ^{
+                if (self.loadingSlideController.isShown){
+                    [self.loadingSlideController dismiss];
+                    self.loadingSlideController = nil;
+                }
+            });
+            return;
+        }
         NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
         NSString *uuid = [self md5HexDigest:uuidName];
         userScript.uuid = uuid;

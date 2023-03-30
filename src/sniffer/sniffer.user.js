@@ -1020,6 +1020,9 @@ const browser = __b;
      */
     function checkVideoExist(videoDom, posDom, videoInfo){
       let downloadUrl = videoInfo.downloadUrl;
+      if(!videoInfo.videoKey && !videoInfo.videoUuid){
+        return;
+      }
       if(!Utils.isURL(downloadUrl)){
         videoInfo.downloadUrl = hostUrl;
       }
@@ -1050,6 +1053,8 @@ const browser = __b;
             item.hostUrl = videoInfo.hostUrl
             item.qualityList = videoInfo.qualityList&&videoInfo.qualityList.length?videoInfo.qualityList:[];
             item.type= videoInfo.type?videoInfo.type:'';
+            item.videoUuid = videoInfo.videoUuid
+            item.videoKey = videoInfo.videoKey
             // console.log('checkVideoExist----------item===',item);
           }
           return item;
@@ -1059,6 +1064,9 @@ const browser = __b;
         // console.log('parseVideoNodeList----------has not, and push-------',videoInfo);
         if(videoInfo.videoUuid){
           videoIdSet.add(videoInfo.videoUuid);
+        }
+        if(videoInfo.videoKey){
+          videoIdSet.add(videoInfo.videoKey);
         }
         // console.log('checkVideoExist----------',videoInfo, videoIdSet);
         videoList.push(videoInfo);
@@ -1985,6 +1993,9 @@ const browser = __b;
           longPressDom = playerDom;
         }
         videoInfo = handleYoutubeVideoInfo(videoSnifferDom);
+        if(!videoInfo.videoKey){
+          return videoInfo;
+        }
       }
       else if(host.indexOf('baidu.com')>-1){
         videoInfo = handleBaiduVideoInfo(videoSnifferDom);
@@ -2118,6 +2129,10 @@ const browser = __b;
         }
         videoInfo = parsePornhubVideoInfoByWindow(videoInfo);
       }
+      else if(host.indexOf('youtube.com')>-1){
+        videoInfo = handleYoutubeVideoInfo();
+      }
+  
       // console.log('pornhub------------------',dom);
       if(!videoInfo.downloadUrl){
         return;
@@ -2661,17 +2676,38 @@ const browser = __b;
 
     /**
      * 解析Youtube视频信息
+     * @param() videoSnifferDom
      * @return videoInfo{downloadUrl,poster,title,hostUrl,qualityList}
      */
     function handleYoutubeVideoInfo(videoSnifferDom){
-      const ytplayer = window.ytplayer;
-      const videoId = Utils.queryURLParams(hostUrl, 'v');
-      // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
       let videoInfo = {};
-      videoInfo.poster = videoSnifferDom.getAttribute('poster') || '';
-      videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
-      let title = videoSnifferDom.getAttribute('title');
-      videoInfo.title = title;
+      const ytplayer = window.ytplayer;
+      let videoId = Utils.queryURLParams(hostUrl, 'v');
+      if(!videoId){
+        // console.log('videoId-------',videoId);
+        let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
+        if(videoIdDom){
+          let hrefLink = videoIdDom.getAttribute('href');
+          videoId = Utils.queryParams(hrefLink, 'v');
+        }
+      }
+      
+      // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
+      
+      if(!videoId){
+        return videoInfo;
+      }
+      let title = '';
+      if(videoSnifferDom){
+        videoInfo.poster = videoSnifferDom.getAttribute('poster') || '';
+        videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
+        let title = videoSnifferDom.getAttribute('title');
+        videoInfo.title = title;
+      }else{
+        if(!ytplayer || !(playerResp.videoDetails)){
+          return videoInfo;
+        }
+      }
       
       const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
       // console.log('playerResp-------', playerResp);
@@ -2703,7 +2739,7 @@ const browser = __b;
         const formats = streamingData.formats;
         title = title ? title : '';
         // 取画质的时候防止原视频有广告
-        if(adaptiveFormats && adaptiveFormats.length && title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,'')){
+        if(adaptiveFormats && adaptiveFormats.length && (!title || title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,''))){
           // console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
           // * qualityList[{downloadUrl, qualityLabel, quality}]
           let qualityList = []
@@ -2794,8 +2830,15 @@ const browser = __b;
           // console.log('qualityList===================',qualityList);
           if(qualityList && qualityList.length){
             videoInfo['qualityList'] = qualityList;
+            if(!videoInfo['downloadUrl'] || videoInfo['downloadUrl'].startsWith('blob')){
+              videoInfo['downloadUrl'] = qualityList[0].downloadUrl;
+              videoInfo['audioUrl'] = qualityList[0].audioUrl;
+              videoInfo['protect'] = qualityList[0].protect;
+            }
           }
-          videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+          if(!videoInfo['downloadUrl']){
+            videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
+          }
         }else{
           videoInfo['title'] = title?title:getYoutubeVideoTitleByDom();
           videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
@@ -2814,7 +2857,7 @@ const browser = __b;
       if(!posterImg){
         posterImg = getYoutubeVideoPosterByDom();
       }
-      if(videoId != playerResp.videoDetails.videoId){
+      if(playerResp.videoDetails && videoId != playerResp.videoDetails.videoId){
         posterImg = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
       }
       if(!posterImg){
@@ -2825,6 +2868,9 @@ const browser = __b;
       if(checkAdForYoutube(videoInfo['downloadUrl'])){
         videoInfo['type'] = 'ad';
       }
+      videoInfo.videoKey = videoId;
+
+      // console.log('handleYoutubeVideoInfo-------videoId=',videoId);
       return videoInfo;
     }
 
@@ -3078,7 +3124,7 @@ const browser = __b;
         }
         // eslint-disable-next-line no-useless-escape
         let randomArr = jsText.match(/[a-zA-Z]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
-        // console.log(randomArr)
+        console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
           randomFunStr = randomArr[0];

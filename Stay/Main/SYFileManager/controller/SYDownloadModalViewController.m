@@ -62,7 +62,7 @@
     
     if([uuid isEqualToString:FILEUUID]) {
         NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-        NSString *text = @"Undefined";
+        NSString *text = NSLocalizedString(@"Undefined",@"");
         if (dic != NULL) {
             text = dic[@"fileName"];
         }
@@ -221,7 +221,7 @@
         }
         if([uuid isEqualToString:FILEUUID]) {
             NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-            NSString *text = @"Undefined";
+            NSString *text = NSLocalizedString(@"Undefined",@"");
             if (dic != NULL) {
                 text = dic[@"fileName"];
             }
@@ -361,7 +361,7 @@
         resource.allPath = task.filePath;
         resource.sort = 0;
         
-        resource.protect = self.dic[@"protect"];
+        resource.protect = [self.dic[@"protect"] isEqual:@(1)]?YES:NO;
         resource.audioUrl = self.dic[@"audioUrl"];
         
         [[DataManager shareManager] addDownloadResource:resource];

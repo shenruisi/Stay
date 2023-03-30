@@ -605,7 +605,7 @@
                 resource.icon = item[@"poster"];
                 resource.host = item[@"hostUrl"];
                 resource.audioUrl = item[@"selectedAudioUrl"] ? item[@"selectedAudioUrl"] : item[@"audioUrl"];
-                resource.protect = item[@"protect"];
+                resource.protect = [item[@"protect"] isEqual:@(1)]?YES:NO;
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
                 }
@@ -638,8 +638,10 @@
                     if (![request.fileName hasSuffix:@".mp4"] && ![request.fileName hasSuffix:@".m3u8"]) {
                         request.fileName = [request.fileName stringByAppendingString:@".mp4"];
                     }
+                
+                    
                     Task *task = [[DownloadManager shared] enqueue:request];
-
+                    
                     resource.status = 0;
                     resource.watchProcess = 0;
                     resource.downloadProcess = 0;

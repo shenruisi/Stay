@@ -287,5 +287,11 @@ Violationofuserpricacy="侵犯用户隐私";
 Donotknowhowtouse="不知道如何使用该脚本";
 NOSPACEFAILED="空间不足";
 UploadSuccess="感谢提交，请关注联系邮箱。";
-
 AdBlock="广告拦截";
+Downloaded="已下载";
+OnMyiPhone="我的iPhone";
+OnMyMac="我的Mac";
+SetupDirectory="设置目录";
+ChangeDirectory="修改目录";
+Undefined="未设置";
+items="项";

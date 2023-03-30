@@ -21,6 +21,7 @@
 }
 
 + (void)setValue:(id)value forKey:(NSString *)key uuid:(NSString *)uuid{
+    if (value == nil || key.length == 0 || uuid.length == 0) return;
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[userDefaults objectForKey:uuid]];
     [dict setObject:value forKey:key];

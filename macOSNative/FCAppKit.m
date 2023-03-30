@@ -330,5 +330,8 @@
     launchIdentifiers: NULL];
 }
 
+- (void)openFinder:(NSURL *)url{
+    [[NSWorkspace sharedWorkspace] openURL:url];
+}
 
 @end

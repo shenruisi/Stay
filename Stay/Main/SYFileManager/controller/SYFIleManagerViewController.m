@@ -7,6 +7,9 @@
 
 #import "SYFIleManagerViewController.h"
 #import "FCShared.h"
+#ifdef FC_MAC
+#import "Plugin.h"
+#endif
 #import "DownloadFileTableViewCell.h"
 #import "FCStyle.h"
 #import "SYDownloadResourceManagerController.h"
@@ -192,11 +195,7 @@ UIDocumentPickerDelegate
     [topHeaderView addSubview:self.downloadingBtn];
     [topHeaderView addSubview:self.slideLine];
     self.navigationItem.titleView = topHeaderView;
-    
     self.selectedIdx = 0;
-    
-//    [[DataManager shareManager] selectAllUnDownloadComplete];
-    
 }
 
 - (void)showUpgrade {
@@ -420,10 +419,23 @@ UIDocumentPickerDelegate
                 if(dic == NULL) {
                     [self changeFileDir:nil];
                 } else {
-                    NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
-                    fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
-                    if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
-                        [[UIApplication sharedApplication] openURL:fileURL];
+
+                    if (FCDeviceTypeMac == [DeviceHelper type]) {
+#ifdef FC_MAC
+
+                        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+                        NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
+                        NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
+                        Boolean success =  [loadUrl startAccessingSecurityScopedResource];
+                        [FCShared.plugin.appKit openFinder:loadUrl];
+                        [loadUrl stopAccessingSecurityScopedResource];
+#endif
+                    } else {
+                        NSURL *fileURL = [NSURL fileURLWithPath:dic[@"url"]];
+                        fileURL = [NSURL URLWithString:[fileURL.absoluteString stringByReplacingOccurrencesOfString:@"file://" withString:@"shareddocuments://"]];
+                        if([[UIApplication sharedApplication] canOpenURL:fileURL]) {
+                            [[UIApplication sharedApplication] openURL:fileURL];
+                        }
                     }
                 }
             }
@@ -735,7 +747,7 @@ UIDocumentPickerDelegate
 
                 
                 UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
-                name.text = @"Undefined";
+                name.text = NSLocalizedString(@"Undefined","");
                 if (dic != NULL) {
                     name.text = dic[@"fileName"];
                 }
@@ -746,7 +758,11 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:name];
                 
                 UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
-                subTitle.text = @"On My iPhone";
+#ifdef FC_MAC
+                subTitle.text =NSLocalizedString(@"OnMyMac","");
+#else
+                subTitle.text =NSLocalizedString(@"OnMyiPhone","");
+#endif
                 subTitle.font = FCStyle.footnoteBold;
                 subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
@@ -763,18 +779,21 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:rightIcon];
                 
                 
-                UIButton *setDicBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 144, 25)];
-                [setDicBtn setTitle:@"Setup Directory" forState:UIControlStateNormal];
+                UIButton *setDicBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 140, 25)];
+                [setDicBtn setTitle:NSLocalizedString(@"SetupDirectory","") forState:UIControlStateNormal];
                 if (dic != NULL) {
-                    [setDicBtn setTitle:@"Change Directory" forState:UIControlStateNormal];
+                    [setDicBtn setTitle:NSLocalizedString(@"ChangeDirectory","") forState:UIControlStateNormal];
                 }
                 [setDicBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
                 [setDicBtn addTarget:self action:@selector(changeFileDir:) forControlEvents:UIControlEventTouchUpInside];
                 setDicBtn.layer.cornerRadius = 10;
                 setDicBtn.backgroundColor = FCStyle.background;
                 setDicBtn.font = FCStyle.footnoteBold;
+                [setDicBtn sizeToFit];
+                setDicBtn.width = setDicBtn.width + 20;
                 setDicBtn.centerY = imageView.centerY;
                 setDicBtn.right = rightIcon.left - 16;
+                
                 [cell.contentView addSubview:setDicBtn];
                 UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
                 line.backgroundColor = FCStyle.fcSeparator;
@@ -1060,6 +1079,12 @@ UIDocumentPickerDelegate
         [self.tableView reloadData];
     }
     
+    if(self.videoArray.count > 0) {
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+    }
+    
+    [self updateDownloadingText];
 }
 
 - (void)updateDownloadingText {
@@ -1073,6 +1098,10 @@ UIDocumentPickerDelegate
     
     self.downloadingBtn.left = self.downloadBtn.right + 53;
     self.downloadingBtn.centerY =  self.downloadBtn.centerY;
+    
+    if(_selectedIdx == 1) {
+        self.slideLine.centerX = self.downloadingBtn.centerX;
+    }
     
 }
 
@@ -1134,6 +1163,17 @@ UIDocumentPickerDelegate
 
     
         [self.tableView reloadData];
+    
+    
+    CGFloat space = (self.view.width - self.downloadBtn.width - self.downloadingBtn.width - 53 - 50) / 2;
+    self.downloadBtn.left = space;
+    self.downloadingBtn.left = self.downloadBtn.right + 53;
+    self.slideLine.top = self.downloadBtn.bottom + 5;
+    if(_selectedIdx == 0) {
+        self.slideLine.centerX = self.downloadBtn.centerX;
+    } else {
+        self.slideLine.centerX = self.downloadingBtn.centerX;
+    }
 }
 
 
@@ -1203,13 +1243,14 @@ UIDocumentPickerDelegate
 
 - (UIButton *)downloadBtn {
     if(_downloadBtn == nil) {
-        _downloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 78, 18)];
-        [_downloadBtn setTitle:NSLocalizedString(@"Download","Download") forState:UIControlStateNormal];
+        _downloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
+        [_downloadBtn setTitle:NSLocalizedString(@"Downloaded","Downloaded") forState:UIControlStateNormal];
         [_downloadBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
         [_downloadBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
         [_downloadBtn addTarget:self action:@selector(changeDownloadTab:) forControlEvents:UIControlEventTouchUpInside];
-
         _downloadBtn.font = FCStyle.body;
+        [_downloadBtn sizeToFit];
+        _downloadBtn.height = 18;
         _downloadBtn.selected = true;
         
     }

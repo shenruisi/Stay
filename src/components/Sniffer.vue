@@ -258,6 +258,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      cursor: default;
       .null-title{
         color: var(--dm-font);
       }
@@ -266,12 +267,14 @@ export default {
         color: var(--dm-font-2);
         font-size: 15px;
         line-height: 25px;
+        cursor: default;
         .mail-to{
           display: inline;
           text-decoration: underline;
           color: var(--dm-font);
           font-weight: 700;
           padding-left: 2px;
+          cursor: default;
         }
       }
     }
@@ -465,6 +468,7 @@ export default {
               // padding: 2px 0;
               border-radius: 8px;
               user-select: none;
+              cursor: default;
             }
           }
         }
@@ -485,6 +489,7 @@ export default {
             height: 24px;
             line-height: 24px;
             user-select: none;
+            word-break:keep-all;
           }
           .select-options{
             height: 24px;
@@ -533,8 +538,8 @@ export default {
             }
           }
           .select-options.folder{
-            width: 142px;
-            padding-right: 10px;
+            width: 140px;
+            padding-right: 8px;
             position: relative;
             .selected-text{
               min-width: 80px;

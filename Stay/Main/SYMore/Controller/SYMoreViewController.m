@@ -832,13 +832,14 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 }
 
 - (BOOL)joinGroup:(NSString *)groupUin key:(NSString *)key{
-    NSString *urlStr = [NSString stringWithFormat:@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=%@&key=%@&card_type=group&source=external&jump_from=webapi", @"714147685",@"c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217"];
+    NSString *urlStr = [NSString stringWithFormat:@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=%@&key=%@&card_type=group&source=external&jump_from=webapi", @"431224121",@"a45950c90b2dc1e42bb4be8bb1ebd60c1385455c99276cef6257f8f8c237431a"];
     NSURL *url = [NSURL URLWithString:urlStr];
     if([[UIApplication sharedApplication] canOpenURL:url]){
-        [[UIApplication sharedApplication] openURL:url];
-    return YES;
+    [[UIApplication sharedApplication] openURL:url];
+        return YES;
+    }else {
+        return NO;
     }
-    else return NO;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
