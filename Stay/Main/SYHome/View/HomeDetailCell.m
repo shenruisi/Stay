@@ -85,7 +85,10 @@
         [subView removeFromSuperview];
     }
     _scrpit = scrpit;
-    [self createCellView:scrpit];
+    
+    if(scrpit != nil) {
+        [self createCellView:scrpit];
+    }
     
 }
 
