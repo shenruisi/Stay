@@ -521,6 +521,8 @@ function fetchRandomStr(randomStr){
           item.title = videoInfo.title
           item.hostUrl = videoInfo.hostUrl;
           item.qualityList = videoInfo.qualityList?videoInfo.qualityList:[];
+          item.videoUuid = videoInfo.videoUuid
+          item.videoKey = videoInfo.videoKey
           // console.log('checkVideoExist----------item===',item);
         }
         return item;
@@ -1337,6 +1339,10 @@ function fetchRandomStr(randomStr){
       videoInfo.downloadUrl = videoSnifferDom.getAttribute('src');
       title = videoSnifferDom.getAttribute('title');
       videoInfo.title = title;
+    }else{
+      if(!ytplayer || !(playerResp.videoDetails)){
+        return videoInfo;
+      }
     }
     
     const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
