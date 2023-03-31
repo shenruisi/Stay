@@ -7,6 +7,10 @@
 
 #import "FilterToken.h"
 
+@implementation FilterOption
+
+@end
+
 @implementation FilterToken
 
 + (instancetype)eof{
