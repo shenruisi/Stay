@@ -498,7 +498,17 @@ let injectedContentVendor = new Set();
         const name = e.data.name;
         const pid = e.data.pid;
         let message = { from: "gm-apis", uuid: __uuid };
-        if(name === "GET_STAY_AROUND"){
+        if(name === "AUDIO_RECORD"){
+            console.log("AUDIO_RECORD-----start---");
+            const recording = e.data.recording;
+            console.log("recording------",recording);
+            message = {from: "sniffer", operate: "POST_AUDIO_RECORD", recording}
+            browser.runtime.sendMessage(message, (response) => {
+                console.log('bootstrap---POST_AUDIO_RECORD-----',response)
+                // window.postMessage({ pid: pid, name: "GET_STAY_AROUND_RESP", response: response });
+            });
+        }
+        else if(name === "GET_STAY_AROUND"){
             // console.log('bootstrap---GET_STAY_AROUND----pid-',pid,',name=',name)
             message = {from: "sniffer", operate: "GET_STAY_AROUND"}
             browser.runtime.sendMessage(message, (response) => {
