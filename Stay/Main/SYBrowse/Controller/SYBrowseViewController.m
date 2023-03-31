@@ -1258,9 +1258,9 @@ UIPopoverPresentationControllerDelegate
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
+                [self reloadAllTableview];
             });
             
-            [self reloadAllTableview];
             return;
         }
         if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){

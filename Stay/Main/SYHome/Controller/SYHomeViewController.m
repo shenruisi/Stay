@@ -1188,14 +1188,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         model = _results[indexPath.row];
     } else {
         if(_selectedIdx == 1) {
-            model = self.stopDatas[indexPath.row];
+            if(indexPath.row < self.stopDatas.count) {
+                model = self.stopDatas[indexPath.row];
+            }
         } else {
-            model =   self.activeDatas[indexPath.row];
+            if(indexPath.row < self.activeDatas.count) {
+                model = self.activeDatas[indexPath.row];
+            }
         }
     }
-//#ifndef FC_MAC
-////    cell.backgroundColor = FCStyle.secondaryBackground;
-//#endif
     cell.contentView.backgroundColor = FCStyle.secondaryBackground;
     cell.contentView.width = self.view.width;
     cell.controller = self;
