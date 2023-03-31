@@ -425,7 +425,8 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){
-        NSData *data = message[@"data"];
+        id data = message[@"data"];
+        NSLog(@"%@",data);
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
