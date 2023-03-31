@@ -177,6 +177,11 @@ NSNotificationName const _Nonnull iCloudServiceSyncEndNotification = @"app.stay.
 - (void)fetchUserscriptWithCompletionHandler:
 (void (^)(NSDictionary<NSString *, UserScript *> *changedUserscripts,NSArray<NSString *> *deletedUUIDs))completionHandler{
     [self _getZoneOnAsync:^(CKRecordZone *zone, NSError *error) {
+        if (nil == zone.zoneID){
+            completionHandler(@{},@[]);
+            return;
+        }
+        
         CKFetchRecordZoneChangesConfiguration *config = [CKFetchRecordZoneChangesConfiguration new];
         config.previousServerChangeToken = self.changeToken;
         CKFetchRecordZoneChangesOperation *operation = [[CKFetchRecordZoneChangesOperation alloc]

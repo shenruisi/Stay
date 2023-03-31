@@ -294,3 +294,4 @@ SetupDirectory="设置目录";
 ChangeDirectory="修改目录";
 Undefined="未设置";
 items="项";
+StayEngineError="该用户脚本需要Stay %@才能安装。";

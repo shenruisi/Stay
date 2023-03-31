@@ -1240,7 +1240,42 @@ UIPopoverPresentationControllerDelegate
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
         NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UserScript *userScript =  [[Tampermonkey shared] parseWithScriptContent:str];
-
+        if( userScript != nil && userScript.errorMessage != nil && userScript.errorMessage.length > 0 ) {
+            if(userScript.errorCode >= 1000) {
+                dispatch_async(dispatch_get_main_queue(),^{
+                    if (self.loadingSlideController.isShown){
+                        [self.loadingSlideController dismiss];
+                        self.loadingSlideController = nil;
+                    }
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:userScript.errorMessage
+                                                                                   message:nil
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }];
+                    [alert addAction:conform];
+                    [self presentViewController:alert animated:YES completion:nil];
+                    _selectedUrl = nil;
+                    [self reloadAllTableview];
+                });
+            } else {
+                [self.loadingSlideController updateSubText:userScript.errorMessage];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                               dispatch_get_main_queue(), ^{
+                    if (self.loadingSlideController.isShown){
+                        [self.loadingSlideController dismiss];
+                        self.loadingSlideController = nil;
+                    }
+                    
+                    _selectedUrl = nil;
+                    [self reloadAllTableview];
+                });
+            }
+            
+            return;
+        }
         NSString *uuidName = [NSString stringWithFormat:@"%@%@",userScript.name,userScript.namespace];
         NSString *uuid = [self md5HexDigest:uuidName];
         userScript.uuid = uuid;
@@ -1258,9 +1293,9 @@ UIPopoverPresentationControllerDelegate
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
+                [self reloadAllTableview];
             });
             
-            [self reloadAllTableview];
             return;
         }
         if ([[DataManager shareManager] selectScriptByUuid:userScript.uuid].name.length == 0){
