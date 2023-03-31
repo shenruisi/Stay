@@ -367,6 +367,7 @@ function isFullyQualifiedDomain(candidate) {
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const requestFrom = request.from;
+    const requestOperate = request.operate;
     if ("darkmode" == requestFrom) {
         if ("GET_STAY_AROUND" === request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
@@ -1120,6 +1121,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: "yt_element_ci", path, code}, function (response) {
                 // console.log('saveYoutubeDecodeFun----', response)
                 sendResponse({ decodeFun: '' })
+            });
+        }
+        else if("POST_AUDIO_RECORD" === requestOperate){
+            let recording = request.recording;
+            // console.log('saveYoutubeDecodeFun----path=',path, ",location=",location)
+            browser.runtime.sendNativeMessage("application.id", { type: "ST_speechToText", data: recording}, function (response) {
+                // console.log('saveYoutubeDecodeFun----', response)
+                sendResponse({ text: response.body })
             });
         }
         return true;

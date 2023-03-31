@@ -29,6 +29,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeFlash) name:@"closeFlash" object:nil];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(downloadError:) name:@"downloadError" object:nil];
+
 }
 
 - (void)onBecomeActive{
@@ -64,6 +67,24 @@
 #endif
 }
 
+- (void)downloadError:(NSNotification *)notification {
+    NSString *str = notification.object;
+    if(str.length > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:str
+                                                                           message:nil
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }];
+            [alert addAction:conform];
+            [self presentViewController:alert animated:YES completion:nil];
+        });
+    }
+}
+
 - (FirstFlashView *)firstView {
     if (_firstView == nil) {
         CGFloat top = 40;
@@ -96,6 +117,9 @@
                                                     name:@"closeFlash"
                                                   object:nil];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"downloadError"
+                                                  object:nil];
 }
 
 @end
