@@ -34,22 +34,31 @@
     return self;
 }
 
-- (void)requestSpeechAuthorization {
-    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-                [self startRecognition];
-            }
-        });
-    }];
+- (void)requestSpeechAuthorization:(NSData *)data{
+//    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+//                [self startRecognition:data];
+//            }
+//        });
+//    }];
+    
+    [self startRecognition:data];
 }
 
-- (void)startRecognition {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"myvoice" ofType:@"m4a"];
-    NSURL *audioFileURL = [NSURL fileURLWithPath:path];
+- (void)startRecognition:(NSData *)data{
+    NSString * audioFilePath =[FCSharedDirectory() stringByAppendingPathComponent:@"gpt.m4a"];
+    NSError *error;
+    BOOL success = [data writeToFile:audioFilePath options:0 error:&error];
+    if (!success) {
+        NSLog(@"Failed to write audio data to disk");
+        return;
+    }
+    NSURL *audioFileURL = [NSURL fileURLWithPath:audioFilePath];
     self.recognitionRequest = [[SFSpeechURLRecognitionRequest alloc] initWithURL:audioFileURL];
     self.recognitionTask = [self.speechRecognizer recognitionTaskWithRequest:self.recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
         if (result) {
+            NSString *result1 = result.bestTranscription.formattedString;
             NSLog(@"Recognition result: %@", result.bestTranscription.formattedString);
         }
 
@@ -425,7 +434,10 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){
-        id data = message[@"data"];
+        NSString *audioStr = message[@"data"];
+        audioStr = [audioStr stringByReplacingOccurrencesOfString:@"data:audio/ogg; codecs=opus;base64," withString:@""];
+        NSData *data = [[NSData alloc] initWithBase64EncodedString:audioStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        [self requestSpeechAuthorization:data];
         NSLog(@"%@",data);
     }
 
