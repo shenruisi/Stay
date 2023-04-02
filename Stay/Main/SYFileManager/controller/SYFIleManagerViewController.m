@@ -213,13 +213,15 @@ UIDocumentPickerDelegate
     self.downloadBtn.selected = false;
     self.downloadingBtn.selected = true;
     self.selectedIdx = 1;
-    [UIView animateWithDuration:0.25F animations:^{
-        self.slideLine.centerX = self.downloadingBtn.centerX;
-    }];
-    [self.videoArray removeAllObjects];
-    [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
-    [self updateDownloadingText];
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(),^{
+        [UIView animateWithDuration:0.25F animations:^{
+            self.slideLine.centerX = self.downloadingBtn.centerX;
+        }];
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+        [self updateDownloadingText];
+        [self.tableView reloadData];
+    });
 }
 
 - (UIBarButtonItem *)addItem{
@@ -1200,6 +1202,12 @@ UIDocumentPickerDelegate
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:@"app.stay.notification.SYFolderChangeNotification"
+                                                      object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:@"showUpgrade"
+                                                      object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:@"changeDownloading"
                                                       object:nil];
 }
 
