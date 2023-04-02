@@ -1382,6 +1382,19 @@ function fetchRandomStr(randomStr){
         let qualitySet = new Set();
         let jsPath = ytplayer.bootstrapWebPlayerContextConfig?ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
         handleYTRandomPathUuid(jsPath);
+
+        if(formats && formats.length){
+          formats.forEach(item=>{
+            let mimeType = item.mimeType;
+            let qualityLabel = item.qualityLabel;
+            qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
+            if(item.url && !qualitySet.has(item.quality)){
+              qualitySet.add(item.quality)
+              qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl:''})
+            }
+          })
+        }
+
         // 获取mp4音频
         let mp4AudioArr = adaptiveFormats.filter(item=>{
           if(item.mimeType.indexOf('audio/mp4')>-1){
