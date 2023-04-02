@@ -14,11 +14,12 @@
 #import "FCShared.h"
 #import <Speech/Speech.h>
 
-@interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate>
+@interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
 
 @property (nonatomic, strong) SFSpeechRecognizer *speechRecognizer;
 @property (nonatomic, strong) SFSpeechURLRecognitionRequest *recognitionRequest;
 @property (nonatomic, strong) SFSpeechRecognitionTask *recognitionTask;
+@property (nonatomic, strong) AVSpeechSynthesizer *speechSynthesizer;
 @end
 
 @implementation SafariWebExtensionHandler
@@ -156,6 +157,23 @@
     
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+        
+//        AVSpeechUtterance *speechUtterance = [[AVSpeechUtterance alloc] initWithString:@"Hello, World!"];
+//        speechUtterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"];
+//        speechUtterance.rate = 0.5;
+//
+//        self.speechSynthesizer = [[AVSpeechSynthesizer alloc] init];
+//        self.speechSynthesizer.delegate = self;
+//
+//        [self.speechSynthesizer writeUtterance:speechUtterance toBufferCallback:^(AVAudioBuffer * _Nonnull buffer) {
+//
+//            AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
+//            int16_t * audioData = (int16_t *)[pcmBuffer int16ChannelData][0];  // 从第一个音频通道获取数据
+//            UInt32 audioDataLength = pcmBuffer.frameLength * sizeof(int16_t); // 计算音频数据的长度
+//            NSData *audioDataAsNSData = [NSData dataWithBytes:audioData length:audioDataLength];
+//            NSLog(@"%@",audioDataAsNSData);
+//        }];
+    
         [SharedStorageManager shared].userDefaults.safariExtensionEnabled = YES;
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
@@ -434,11 +452,13 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){
-        NSString *audioStr = message[@"data"];
-        audioStr = [audioStr stringByReplacingOccurrencesOfString:@"data:audio/ogg; codecs=opus;base64," withString:@""];
-        NSData *data = [[NSData alloc] initWithBase64EncodedString:audioStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        [self requestSpeechAuthorization:data];
-        NSLog(@"%@",data);
+//        NSString *audioStr = message[@"data"];
+//        audioStr = [audioStr stringByReplacingOccurrencesOfString:@"data:audio/ogg; codecs=opus;base64," withString:@""];
+//        NSData *data = [[NSData alloc] initWithBase64EncodedString:audioStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+//        [self requestSpeechAuthorization:data];
+//        NSLog(@"%@",data);
+        
+        
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
@@ -606,6 +626,14 @@
         dic[str] = responData;
     }
     return dic;
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
+    
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance{
+    
 }
 
 - (void)speechRecognitionDidDetectSpeech:(SFSpeechRecognitionTask *)task{
