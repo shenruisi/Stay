@@ -166,6 +166,8 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
+		583B53C329DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
+		583B53C429DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -815,6 +817,7 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -1466,12 +1469,21 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
+				583B53C129DABFE400CB292A /* Resources */,
 				58D0E11B29D1893700DFBCC7 /* AdbPlus */,
 				583178FA29CBF04800135D8D /* Filter */,
 				58A3618D29C0502400080465 /* AdBlockViewController.h */,
 				58A3618E29C0502400080465 /* AdBlockViewController.m */,
 			);
 			path = AdBlock;
+			sourceTree = "<group>";
+		};
+		583B53C129DABFE400CB292A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				583B53C229DAC01A00CB292A /* EasyList.txt */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		584C05AA286179BB00E07DDF /* Helper */ = {
@@ -2828,6 +2840,7 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
+				583B53C329DAC01A00CB292A /* EasyList.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
@@ -2931,6 +2944,7 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
+				583B53C429DAC01A00CB292A /* EasyList.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,

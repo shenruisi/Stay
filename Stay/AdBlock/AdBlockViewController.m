@@ -10,7 +10,7 @@
 #import "FCStyle.h"
 #import "ContentFilter.h"
 #import "ContentFilterTableVewCell.h"
-#import <Speech/Speech.h>
+#import "FilterTokenParser.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -35,14 +35,16 @@
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
     
-    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-//                [self startRecognition];
-                NSLog(@"authorized");
-            }
-        });
-    }];
+    NSString *filters = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"EasyList" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
+    NSArray<NSString *> *lines = [filters componentsSeparatedByString:@"\n"];
+    for (NSString *line in lines){
+        FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:line];
+        [parser nextToken];
+        while(![parser isEOF]){
+            NSLog(@"token: %@",parser.curToken);
+            [parser nextToken];
+        }
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
