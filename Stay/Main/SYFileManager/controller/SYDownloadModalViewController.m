@@ -382,9 +382,16 @@
         }
     }
 #endif
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeDownloading" object:nil];
+      
+        double delayInSeconds = 0.5; // 延迟时间
+        dispatch_time_t startTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(startTime, dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"changeDownloading" object:nil];
+        });
         [self.navigationController.slideController dismiss];
+        
+        
+        
     } else {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlIsDownloaded", @"")
                                                                        message:@""

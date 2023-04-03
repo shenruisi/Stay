@@ -1382,6 +1382,7 @@ function fetchRandomStr(randomStr){
         let qualitySet = new Set();
         let jsPath = ytplayer.bootstrapWebPlayerContextConfig?ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
         handleYTRandomPathUuid(jsPath);
+
         // 获取mp4音频
         let mp4AudioArr = adaptiveFormats.filter(item=>{
           if(item.mimeType.indexOf('audio/mp4')>-1){
@@ -1462,14 +1463,16 @@ function fetchRandomStr(randomStr){
             qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
           }
         });
-        // console.log('qualityList===================',qualityList);
+        // console.log('qualityList===================',qualityList, videoInfo);
         if(qualityList && qualityList.length){
-          videoInfo['qualityList'] = qualityList;
           if(!videoInfo['downloadUrl'] || videoInfo['downloadUrl'].startsWith('blob')){
             videoInfo['downloadUrl'] = qualityList[0].downloadUrl;
             videoInfo['audioUrl'] = qualityList[0].audioUrl;
             videoInfo['protect'] = qualityList[0].protect;
+          }else{
+            qualityList = matchDefaultUrlInQualityList(qualityList, videoInfo['downloadUrl']);
           }
+          videoInfo['qualityList'] = qualityList;
         }
         if(!videoInfo['downloadUrl']){
           videoInfo['downloadUrl'] = getYoutubeVideoSourceByDom();
@@ -1507,6 +1510,94 @@ function fetchRandomStr(randomStr){
     return videoInfo;
   }
 
+  function matchDefaultUrlInQualityList(qualityList, downloadUrl){
+    
+    let itag = Utils.queryURLParams(downloadUrl, 'itag');
+    // console.log('itag------',itag);
+    if(!itag){
+      return qualityList;
+    }
+    
+    let qualityLabel = getResolutionFromItag(itag);
+
+    // console.log('qualityLabel------',qualityLabel);
+    if(!qualityLabel){
+      return qualityList;
+    }
+    
+    qualityList.forEach(item=>{
+      if(item.qualityLabel && item.qualityLabel.toLowerCase() == qualityLabel.toLowerCase()){
+        // console.log('match----qualityLabel------',qualityLabel);
+        item.downloadUrl = downloadUrl;
+        item.audioUrl = '';
+        item.protect = false;
+      }
+      return item;
+    })
+
+    return qualityList;
+  }
+
+  function getResolutionFromItag(itag) {
+    const resolutions = {
+      5: '240p',
+      6: '270p',
+      13: '144p',
+      17: '144p',
+      18: '360p',
+      22: '720p',
+      34: '360p',
+      35: '480p',
+      36: '240p',
+      37: '1080p',
+      38: '3072p',
+      43: '360p',
+      44: '480p',
+      45: '720p',
+      46: '1080p',
+      59: '480p',
+      78: '480p',
+      82: '360p',
+      83: '480p',
+      84: '720p',
+      85: '1080p',
+      91: '144p',
+      92: '240p',
+      93: '360p',
+      94: '480p',
+      95: '720p',
+      96: '1080p',
+      100: '360p',
+      101: '480p',
+      102: '720p',
+      132: '240p',
+      151: '720p',
+      133: '240p',
+      134: '360p',
+      135: '480p',
+      136: '720p',
+      137: '1080p',
+      138: '2160p',
+      160: '144p',
+      212: '480p',
+      213: '480p',
+      214: '720p',
+      215: '720p',
+      216: '1080p',
+      217: '1080p',
+      264: '1440p',
+      266: '2160p',
+      298: '720p',
+      299: '1080p',
+      399: '1080p',
+      398: '720p',
+      397: '480p',
+      396: '360p',
+      395: '240p'
+    };
+  
+    return resolutions[itag];
+  }
 
   function handleYTRandomPathUuid(jsPath){
     try {

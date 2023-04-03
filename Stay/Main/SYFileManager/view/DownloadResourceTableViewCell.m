@@ -15,6 +15,7 @@
 #import "UIColor+Convert.h"
 #import "ColorHelper.h"
 #import "FCShared.h"
+#import "DeviceHelper.h"
 
 @implementation DownloadResourceTableViewCell
 
@@ -184,6 +185,13 @@
             saveFileBtn.width = savePhotoBtn.width = 110;
             saveFileBtn.left = savePhotoBtn.right + 9;
         }
+        
+        
+        if(FCDeviceTypeMac == DeviceHelper.type) {
+            savePhotoBtn.hidden = true;
+            saveFileBtn.left = 12;
+        }
+        
         
         [self.contentView addSubview:runBtn];
         objc_setAssociatedObject(runBtn , @"resource", self.downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);

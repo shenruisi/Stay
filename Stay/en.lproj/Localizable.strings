@@ -294,7 +294,7 @@ SetupDirectory="Setup Directory";
 ChangeDirectory="Change Directory";
 Undefined="Undefined";
 items="item(s)";
-StayEngineError="This userscript requires Stay %@ to install.";
+StayEngineError="This userscript requires >= Stay %@ to install.";
 
 
 
