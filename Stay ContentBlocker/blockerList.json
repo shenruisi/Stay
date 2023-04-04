@@ -1,10 +1,8 @@
 [{
     "trigger": {
-        "url-filter": "webkit.org",
-        "resource-type": ["script"]
+        "url-filter": "abc.xyz"
     },
     "action": {
-        "selector": "#logo",
         "type": "block"
     }
 }]

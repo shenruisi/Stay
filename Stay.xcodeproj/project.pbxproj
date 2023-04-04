@@ -152,12 +152,8 @@
 		582441CE28781E0D003DF4F7 /* SYTextInputModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */; };
 		582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */; };
 		582F9DE4276F32B900C88135 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE3276F32B900C88135 /* base64.min.js */; };
-		5831790129CBF41D00135D8D /* ContentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790029CBF41D00135D8D /* ContentFilter.m */; };
-		5831790229CBF41D00135D8D /* ContentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790029CBF41D00135D8D /* ContentFilter.m */; };
 		5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790529CBFC5700135D8D /* FCTableViewCell.m */; };
 		5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790529CBFC5700135D8D /* FCTableViewCell.m */; };
-		5831791229CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */; };
-		5831791329CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */; };
 		5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
 		5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
 		5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C3172930525D00CCBAE5 /* ToastDebugger.m */; };
@@ -168,6 +164,16 @@
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		583B53C329DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
 		583B53C429DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
+		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
+		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
+		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
+		583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
+		583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DB29DBF9A000CB292A /* FilterTokenParser.m */; };
+		583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DB29DBF9A000CB292A /* FilterTokenParser.m */; };
+		583B53E529DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
+		583B53E629DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
+		583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
+		583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -245,8 +251,6 @@
 		5876891C2719238000F834A4 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 5876891B2719238000F834A4 /* background.js */; };
 		587689262719238000F834A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 587688EE2719238000F834A4 /* Assets.xcassets */; };
 		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
-		587CFA1729CD4C8200578981 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1629CD4C8200578981 /* StateView.m */; };
-		587CFA1829CD4C8200578981 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1629CD4C8200578981 /* StateView.m */; };
 		587CFA1B29CD811800578981 /* UIView+Duplicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1A29CD811800578981 /* UIView+Duplicate.m */; };
 		587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1A29CD811800578981 /* UIView+Duplicate.m */; };
 		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
@@ -416,10 +420,6 @@
 		58D0E11F29D189CE00DFBCC7 /* EasyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E11D29D189CE00DFBCC7 /* EasyList.m */; };
 		58D0E12229D189FF00DFBCC7 /* EasyListRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12129D189FF00DFBCC7 /* EasyListRule.m */; };
 		58D0E12329D189FF00DFBCC7 /* EasyListRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12129D189FF00DFBCC7 /* EasyListRule.m */; };
-		58D0E12729D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
-		58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
-		58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
-		58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
 		58D0E12E29D331F700DFBCC7 /* myvoice.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 58D0E12D29D331F700DFBCC7 /* myvoice.m4a */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
@@ -803,12 +803,8 @@
 		582062012950675900A32D0C /* DisabledWebsites.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisabledWebsites.m; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
 		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
-		583178FF29CBF41D00135D8D /* ContentFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilter.h; sourceTree = "<group>"; };
-		5831790029CBF41D00135D8D /* ContentFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilter.m; sourceTree = "<group>"; };
 		5831790429CBFC5700135D8D /* FCTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTableViewCell.h; sourceTree = "<group>"; };
 		5831790529CBFC5700135D8D /* FCTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTableViewCell.m; sourceTree = "<group>"; };
-		5831791029CC00CE00135D8D /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterTableVewCell.h; sourceTree = "<group>"; };
-		5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterTableVewCell.m; sourceTree = "<group>"; };
 		5831791429CC1F6E00135D8D /* FCRoundedShadowView2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCRoundedShadowView2.h; sourceTree = "<group>"; };
 		5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCRoundedShadowView2.m; sourceTree = "<group>"; };
 		5839C3162930525D00CCBAE5 /* ToastDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastDebugger.h; sourceTree = "<group>"; };
@@ -818,6 +814,16 @@
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
 		583B53C229DAC01A00CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
+		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
+		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
+		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
+		583B53D729DBF9A000CB292A /* ContentFilter2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilter2.h; path = Stay/AdBlock/Filter/ContentFilter2.h; sourceTree = SOURCE_ROOT; };
+		583B53D929DBF9A000CB292A /* FilterTokenParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
+		583B53DA29DBF9A000CB292A /* FilterToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
+		583B53DB29DBF9A000CB292A /* FilterTokenParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
+		583B53DC29DBF9A000CB292A /* FilterToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
+		583B53DD29DBF9A000CB292A /* StateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateView.h; path = Stay/AdBlock/Filter/StateView.h; sourceTree = SOURCE_ROOT; };
+		583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilterTableVewCell.m; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.m; sourceTree = SOURCE_ROOT; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -898,8 +904,6 @@
 		587689252719238000F834A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5876893E2720064D00F834A4 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
-		587CFA1529CD4C8200578981 /* StateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StateView.h; sourceTree = "<group>"; };
-		587CFA1629CD4C8200578981 /* StateView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StateView.m; sourceTree = "<group>"; };
 		587CFA1929CD811800578981 /* UIView+Duplicate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Duplicate.h"; sourceTree = "<group>"; };
 		587CFA1A29CD811800578981 /* UIView+Duplicate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Duplicate.m"; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
@@ -990,10 +994,6 @@
 		58D0E11D29D189CE00DFBCC7 /* EasyList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyList.m; sourceTree = "<group>"; };
 		58D0E12029D189FF00DFBCC7 /* EasyListRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EasyListRule.h; sourceTree = "<group>"; };
 		58D0E12129D189FF00DFBCC7 /* EasyListRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyListRule.m; sourceTree = "<group>"; };
-		58D0E12529D19F9700DFBCC7 /* FilterTokenParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
-		58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
-		58D0E12929D19FAB00DFBCC7 /* FilterToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
-		58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
 		58D0E12D29D331F700DFBCC7 /* myvoice.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = myvoice.m4a; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
@@ -1430,13 +1430,13 @@
 		583178FA29CBF04800135D8D /* Filter */ = {
 			isa = PBXGroup;
 			children = (
-				58D0E12429D19D7900DFBCC7 /* Parser */,
-				583178FF29CBF41D00135D8D /* ContentFilter.h */,
-				5831790029CBF41D00135D8D /* ContentFilter.m */,
-				5831791029CC00CE00135D8D /* ContentFilterTableVewCell.h */,
-				5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */,
-				587CFA1529CD4C8200578981 /* StateView.h */,
-				587CFA1629CD4C8200578981 /* StateView.m */,
+				583B53D729DBF9A000CB292A /* ContentFilter2.h */,
+				583B53D529DBF9A000CB292A /* ContentFilter2.m */,
+				583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */,
+				583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */,
+				583B53D829DBF9A000CB292A /* Parser */,
+				583B53DD29DBF9A000CB292A /* StateView.h */,
+				583B53D429DBF9A000CB292A /* StateView.m */,
 			);
 			name = Filter;
 			path = "New Group";
@@ -1485,6 +1485,18 @@
 			);
 			path = Resources;
 			sourceTree = "<group>";
+		};
+		583B53D829DBF9A000CB292A /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				583B53D929DBF9A000CB292A /* FilterTokenParser.h */,
+				583B53DA29DBF9A000CB292A /* FilterToken.h */,
+				583B53DB29DBF9A000CB292A /* FilterTokenParser.m */,
+				583B53DC29DBF9A000CB292A /* FilterToken.m */,
+			);
+			name = Parser;
+			path = Stay/AdBlock/Filter/Parser;
+			sourceTree = SOURCE_ROOT;
 		};
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
@@ -1882,17 +1894,6 @@
 				58D0E12129D189FF00DFBCC7 /* EasyListRule.m */,
 			);
 			path = AdbPlus;
-			sourceTree = "<group>";
-		};
-		58D0E12429D19D7900DFBCC7 /* Parser */ = {
-			isa = PBXGroup;
-			children = (
-				58D0E12529D19F9700DFBCC7 /* FilterTokenParser.h */,
-				58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */,
-				58D0E12929D19FAB00DFBCC7 /* FilterToken.h */,
-				58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */,
-			);
-			path = Parser;
 			sourceTree = "<group>";
 		};
 		58D1B44D28893D27009BD608 /* IAP */ = {
@@ -3093,7 +3094,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				582061C8294C4C0E00A32D0C /* ModalItemView.m in Sources */,
-				58D0E12729D19F9700DFBCC7 /* FilterTokenParser.m in Sources */,
 				3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
@@ -3133,7 +3133,6 @@
 				84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */,
 				3C949B9A297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D4F297394F500118063 /* FWEncryptorAES.m in Sources */,
-				5831790129CBF41D00135D8D /* ContentFilter.m in Sources */,
 				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
 				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
@@ -3145,7 +3144,6 @@
 				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
-				58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */,
 				583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
@@ -3161,6 +3159,8 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */,
+				583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				582061D2294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
 				5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
@@ -3195,7 +3195,6 @@
 				3C358D53297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				58C6637C2990E05F00B00110 /* VideoParser.m in Sources */,
-				587CFA1729CD4C8200578981 /* StateView.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
@@ -3217,7 +3216,6 @@
 				582061CE294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				58A3616E29BF11F100080465 /* RC4.m in Sources */,
-				5831791229CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */,
 				582061E2294C4CA400A32D0C /* FCLayoutLabel.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
@@ -3239,6 +3237,7 @@
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				58A3618A29C04C3500080465 /* FCNavigationController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
+				583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
@@ -3255,7 +3254,9 @@
 				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
+				583B53DF29DBF9A100CB292A /* StateView.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
+				583B53E529DBF9A100CB292A /* FilterToken.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
 				3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
@@ -3335,7 +3336,6 @@
 			files = (
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
-				587CFA1829CD4C8200578981 /* StateView.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
 				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
@@ -3377,7 +3377,9 @@
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
 				3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */,
+				583B53E629DBF9A100CB292A /* FilterToken.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
+				583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
@@ -3397,7 +3399,6 @@
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
-				58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */,
 				58A3617029BF11F100080465 /* RC4.m in Sources */,
 				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
@@ -3447,7 +3448,6 @@
 				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */,
-				5831790229CBF41D00135D8D /* ContentFilter.m in Sources */,
 				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
@@ -3469,6 +3469,7 @@
 				58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */,
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
 				5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */,
+				583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				5882026E2859E73900B2721A /* main.m in Sources */,
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
@@ -3483,7 +3484,6 @@
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
-				5831791329CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */,
 				58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */,
 				3C949B97297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
@@ -3500,6 +3500,7 @@
 				5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
 				582061D7294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
+				583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
 				3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
@@ -3510,6 +3511,7 @@
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				849E77D8293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
+				583B53E029DBF9A100CB292A /* StateView.m in Sources */,
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				582061C7294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
@@ -3526,7 +3528,6 @@
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
-				58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
 				582061EB294C4CC800A32D0C /* UIView+Layout.m in Sources */,
 				3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,

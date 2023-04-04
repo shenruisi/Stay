@@ -8,9 +8,10 @@
 #import "AdBlockViewController.h"
 #import "ImageHelper.h"
 #import "FCStyle.h"
-#import "ContentFilter.h"
 #import "ContentFilterTableVewCell.h"
 #import "FilterTokenParser.h"
+#import "ContentFilter2.h"
+#import "DataManager.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -22,7 +23,9 @@
 @property (nonatomic, strong) FCTabButtonItem *stoppedTabItem;
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray<ContentFilter *> *activatedSource;
+@property (nonatomic, strong) NSMutableArray<ContentFilter *> *activatedSource;
+@property (nonatomic, strong) NSMutableArray<ContentFilter *> *stoppedSource;
+@property (nonatomic, strong) NSArray<ContentFilter *> *selectedDataSource;
 @end
 
 @implementation AdBlockViewController
@@ -34,21 +37,34 @@
     self.navigationItem.rightBarButtonItem = self.addItem;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
-    
-    NSString *filters = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"EasyList" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
-    NSArray<NSString *> *lines = [filters componentsSeparatedByString:@"\n"];
-    for (NSString *line in lines){
-        FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:line];
-        [parser nextToken];
-        while(![parser isEOF]){
-            NSLog(@"token: %@",parser.curToken);
-            [parser nextToken];
+    [self setupDataSource];
+    [self.navigationTabItem activeItem:self.activatedTabItem];
+//    NSString *filters = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"EasyList" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
+//    NSArray<NSString *> *lines = [filters componentsSeparatedByString:@"\n"];
+//    for (NSString *line in lines){
+//        FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:line];
+//        [parser nextToken];
+//        while(![parser isEOF]){
+//            NSLog(@"token: %@",parser.curToken);
+//            [parser nextToken];
+//        }
+//    }
+}
+
+- (void)setupDataSource{
+    NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
+    for (ContentFilter *contentFilter in contentFilters){
+        if (contentFilter.active){
+            [self.activatedSource addObject:contentFilter];
+        }
+        else{
+            [self.stoppedSource addObject:contentFilter];
         }
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ContentFilter *contentFilter = self.activatedSource[indexPath.row];
+    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
     ContentFilterTableVewCell<ContentFilter *> *cell = [tableView dequeueReusableCellWithIdentifier:[ContentFilterTableVewCell identifier]];
     if (nil == cell){
         cell = [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
@@ -66,7 +82,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.activatedSource.count;
+    return self.selectedDataSource.count;
 }
 
 
@@ -101,24 +117,39 @@
     return _stoppedTabItem;
 }
 
-- (NSArray<ContentFilter *> *)activatedSource{
-    ContentFilter *test1 = [[ContentFilter alloc] init];
-    test1.name = @"EasyList";
-    test1.active = YES;
-    ContentFilter *test2 = [[ContentFilter alloc] init];
-    test2.name = @"EasyList - Privacy";
-    test2.active = YES;
-    return @[
-        test1,test2
-    ];
-}
-
 - (void)addAction:(id)sender{
     
 }
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
+    if (item == self.activatedTabItem){
+        self.selectedDataSource = self.activatedSource;
+    }
+    else{
+        self.selectedDataSource = self.stoppedSource;
+    }
     
+    if (!refresh){
+        [self.tableView reloadData];
+    }
+    
+    
+}
+
+- (NSMutableArray<ContentFilter *> *)activatedSource{
+    if (nil == _activatedSource){
+        _activatedSource = [[NSMutableArray alloc] init];
+    }
+    
+    return _activatedSource;
+}
+
+- (NSMutableArray<ContentFilter *> *)stoppedSource{
+    if (nil == _stoppedSource){
+        _stoppedSource = [[NSMutableArray alloc] init];
+    }
+    
+    return _stoppedSource;
 }
 
 - (UITableView *)tableView{
