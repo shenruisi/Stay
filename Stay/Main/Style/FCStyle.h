@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FCStyle : NSObject
 
 @property(class, nonatomic, readonly) UIColor *accent;
+@property(class, nonatomic, readonly) UIColor *lightAccent;
 @property(class, nonatomic, readonly) NSArray<UIColor *> *accentGradient;
 @property(class, nonatomic, readonly) UIColor *accentHighlight;
 @property(class, nonatomic, readonly) UIColor *accentHover;

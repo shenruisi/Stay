@@ -296,3 +296,4 @@ ChangeDirectory="修改目录";
 Undefined="未设置";
 items="项";
 StayEngineError="该用户脚本需要Stay %@及以上才能安装。";
+Builtin="内置";

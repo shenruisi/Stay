@@ -1,8 +1,8 @@
 //
 //  ContentBlockerRequestHandler.h
-//  Stay ContentBlocker
+//  Stay ContentBlockBasic
 //
-//  Created by ris on 2023/3/27.
+//  Created by ris on 2023/4/4.
 //
 
 #import <UIKit/UIKit.h>

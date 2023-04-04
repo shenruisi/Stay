@@ -294,3 +294,4 @@ ChangeDirectory="修改目錄";
 Undefined="未設置";
 items="項";
 StayEngineError="該用戶腳本需要Stay %@及以上才能安裝。";
+Builtin="内置";

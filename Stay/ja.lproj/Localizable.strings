@@ -295,3 +295,4 @@ ChangeDirectory="Change Directory";
 Undefined="Undefined";
 items="item(s)";
 StayEngineError="This userscript requires >= Stay %@ to install.";
+Builtin="Bulit-in";

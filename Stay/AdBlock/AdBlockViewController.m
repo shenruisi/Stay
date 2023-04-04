@@ -71,6 +71,8 @@
     }
     cell.element = contentFilter;
     cell.action = ^(id element) {
+        ContentFilter *contentFilter = (ContentFilter *)element;
+        [contentFilter convertToJOSNRules];
         
     };
     

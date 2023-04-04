@@ -21,6 +21,10 @@
     
 }
 
++ (UIColor *)lightAccent{
+    return [UIColor colorNamed: @"LightAccentColor"];
+}
+
 + (NSArray<UIColor *> *)accentGradient{
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *themeColor = [userDefaults objectForKey:@"themeColor"];
