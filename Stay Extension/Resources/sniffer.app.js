@@ -1328,7 +1328,7 @@ function fetchRandomStr(randomStr){
     }
       
     // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
-      
+    const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
     if(!videoId){
       return videoInfo;
     }
@@ -1345,7 +1345,7 @@ function fetchRandomStr(randomStr){
       }
     }
     
-    const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
+    
     // console.log('playerResp-------', playerResp);
     if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
       // console.log('hello- - - - - - -   playerResp   ----');
