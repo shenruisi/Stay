@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) FCNavigationTabItem *navigationTabItem;
 @property (nonatomic, assign) BOOL enableTabItem;
+@property (nonatomic, strong) UINavigationBarAppearance *appearance;
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh;
 @end

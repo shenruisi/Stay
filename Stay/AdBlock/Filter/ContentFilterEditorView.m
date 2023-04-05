@@ -9,6 +9,7 @@
 #import "FCStyle.h"
 #import "UIFont+Convert.h"
 #import "ContentFilterHighlighter.h"
+#import "NSAttributedString+Style.h"
 
 @implementation ContentFilterTextView
 
@@ -58,29 +59,44 @@
 }
 
 - (void)setStrings:(NSString *)strings{
-    NSMutableAttributedString *newAttributedString = [[NSMutableAttributedString alloc] init];
-    NSArray<NSString *> *lines = [strings componentsSeparatedByString:@"\n"];
-    for (NSString *line in lines){
-        NSMutableAttributedString *lineAttributedString;
-        if (line.length == 0){
-            lineAttributedString = [[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
-                NSFontAttributeName : [FCStyle.caption toHelvetica:0],
-                NSForegroundColorAttributeName : FCStyle.fcBlack
-             }];
-        }
-        else{
-            lineAttributedString = [ContentFilterHighlighter rule:line];
-            [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
-                NSFontAttributeName : [FCStyle.caption toHelvetica:0],
-                NSForegroundColorAttributeName : FCStyle.fcBlack
-             }]];
-        }
-        [newAttributedString appendAttributedString:lineAttributedString];
-    }
-    
     [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
-                withAttributedText:newAttributedString
+                withAttributedText:[NSAttributedString captionText:strings]
                      selectedRange:NSMakeRange(0, 0)];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSMutableAttributedString *newAttributedString = [[NSMutableAttributedString alloc] init];
+        NSArray<NSString *> *lines = [strings componentsSeparatedByString:@"\n"];
+        NSInteger lineCount = 0;
+        for (NSString *line in lines){
+            lineCount++;
+            NSMutableAttributedString *lineAttributedString;
+            if (line.length == 0){
+                lineAttributedString = [[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
+                    NSFontAttributeName : [FCStyle.caption toHelvetica:0],
+                    NSForegroundColorAttributeName : FCStyle.fcBlack
+                 }];
+            }
+            else{
+                lineAttributedString = [ContentFilterHighlighter rule:line];
+                [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
+                    NSFontAttributeName : [FCStyle.caption toHelvetica:0],
+                    NSForegroundColorAttributeName : FCStyle.fcBlack
+                 }]];
+            }
+            [newAttributedString appendAttributedString:lineAttributedString];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
+                        withAttributedText:newAttributedString
+                             selectedRange:NSMakeRange(0, 0)];
+        });
+        
+    });
+    
+    
+    
+    
 }
 
 - (ContentFilterTextView *)textView{
@@ -93,7 +109,7 @@
         _textView.showsVerticalScrollIndicator = NO;
         
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.lineSpacing = 5;
+        paragraphStyle.lineSpacing = 2;
         _textView.typingAttributes = @{
             NSForegroundColorAttributeName : FCStyle.fcBlack,
             NSFontAttributeName : [FCStyle.caption toHelvetica:0],

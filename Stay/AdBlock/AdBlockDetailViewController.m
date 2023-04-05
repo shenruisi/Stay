@@ -54,14 +54,14 @@
         _editorView = [[ContentFilterEditorView alloc] init];
         _editorView.translatesAutoresizingMaskIntoConstraints = NO;
         _editorView.backgroundColor = FCStyle.secondaryBackground;
-        _editorView.layer.cornerRadius = 10;
-        _editorView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-        _editorView.clipsToBounds = YES;
+//        _editorView.layer.cornerRadius = 10;
+//        _editorView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+//        _editorView.clipsToBounds = YES;
         [self.view addSubview:_editorView];
         [NSLayoutConstraint activateConstraints:@[
             [_editorView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_editorView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-            [_editorView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:self.navigationController.navigationBar.frame.size.height],
+            [_editorView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
             [_editorView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
         ]];
         

@@ -41,7 +41,7 @@
     }while(!parser.isEOF);
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 5;
+    paragraphStyle.lineSpacing = 2;
     [ret addAttributes:@{
         NSKernAttributeName : @(0.5),
         NSParagraphStyleAttributeName : paragraphStyle

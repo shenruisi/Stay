@@ -8,7 +8,7 @@
 #import "FilterTokenParser.h"
 
 static NSString *__EOF__ = @"__EOF__";
-static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Version):(\\s*.*)";
+static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Version):(\\s*.*)";
 
 // https://help.adblockplus.org/hc/en-us/articles/360062733293
 // https://adguard.com/kb/general/ad-filtering/create-own-filters/
