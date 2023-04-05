@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
 @property(class, nonatomic, readonly) UIColor *subtitleColor;
 
-
+@property(class, nonatomic, readonly) UIColor *filterCommentColor;
 
 @property(class, nonatomic, readonly) UIFont *headline;
 @property(class, nonatomic, readonly) UIFont *headlineBold;
@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *subHeadlineBold;
 @property(class, nonatomic, readonly) UIFont *body;
 @property(class, nonatomic, readonly) UIFont *bodyBold;
+@property(class, nonatomic, readonly) UIFont *caption;
 @property(class, nonatomic, readonly) UIFont *footnote;
 @property(class, nonatomic, readonly) UIFont *footnoteBold;
 @property(class, nonatomic, readonly) UIFont *title1;
@@ -72,6 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfSymbolL2Bold;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL3;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL3Bold;
+
+
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
 + (NSString *)appearance;

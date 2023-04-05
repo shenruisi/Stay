@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ContentFilterHighlighter : NSObject
 
-- (NSMutableAttributedString *)rule:(NSString *)rule;
++ (NSMutableAttributedString *)rule:(NSString *)rule;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -83,6 +83,7 @@ typedef enum{
 + (instancetype)address;
 
 - (NSString *)stringOfType:(FilterTokenType)type;
+- (NSString *)toString;
 @end
 
 NS_ASSUME_NONNULL_END

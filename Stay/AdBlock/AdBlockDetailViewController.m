@@ -22,7 +22,18 @@
     [super viewDidLoad];
     self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.leftBarButtonItems = @[self.backItem];
+    self.title = self.contentFilter.title;
     [self editorView];
+}
+
+//- (void)viewWillAppear:(BOOL)animated{
+//    [super viewWillAppear:animated];
+//    [self.editorView setStrings:[self.contentFilter fetchRules]];
+//}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self.editorView setStrings:[self.contentFilter fetchRules]];
 }
 
 - (UIBarButtonItem *)backItem{

@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "FilterTokenParser.h"
+#import "FCStyle.h"
+#import "NSAttributedString+Style.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HighlighterAST : NSObject

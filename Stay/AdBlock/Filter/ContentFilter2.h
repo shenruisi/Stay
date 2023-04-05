@@ -37,6 +37,7 @@ typedef enum {
 
 @property (nonatomic, readonly) BOOL active;
 
+- (NSString *)fetchRules;
 - (void)convertToJOSNRules;
 + (NSString *)stringOfTag:(ContentFilterTag)tag;
 

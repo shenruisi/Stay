@@ -1,5 +1,5 @@
 //
-//  SpecialCommentHighlighterAST.h
+//  CommentHighlighterAST.h
 //  Stay
 //
 //  Created by ris on 2023/4/5.
@@ -9,7 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SpecialCommentHighlighterAST : HighlighterAST
+@interface CommentHighlighterAST : HighlighterAST
+
 
 @end
 

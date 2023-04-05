@@ -8,21 +8,36 @@
 #import "ContentFilterHighlighter.h"
 #import "FilterTokenParser.h"
 #import "HighlighterAST.h"
-#import "SpecialCommentHighlighterAST.h"
+#import "CommentHighlighterAST.h"
+#import "InfoHighlighterAST.h"
+#import "TiggerHighlighterAST.h"
 
 @implementation ContentFilterHighlighter
 
-- (NSMutableAttributedString *)rule:(NSString *)rule{
++ (NSMutableAttributedString *)rule:(NSString *)rule{
     FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:rule];
     
-    HighlighterAST *ast;
     NSMutableAttributedString *ret = [[NSMutableAttributedString alloc] init];
     do{
+        HighlighterAST *ast;
         [parser nextToken];
         
-        if ([parser isSepcialComment]){
-            ast = [[SpecialCommentHighlighterAST alloc] init];
+        if ([parser isComment]){
+            ast = [[CommentHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
         }
+        
+        if ([parser isInfo]){
+            ast = [[InfoHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        if ([parser isTigger]){
+            ast = [[TiggerHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        
     }while(!parser.isEOF);
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

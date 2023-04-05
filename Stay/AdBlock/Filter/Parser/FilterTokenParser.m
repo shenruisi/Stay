@@ -335,4 +335,16 @@ static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Versio
     || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentRedirect;
 }
 
+- (BOOL)isComment{
+    return self.opaqueCurToken.type == FilterTokenTypeComment || self.isSepcialComment;
+}
+
+- (BOOL)isInfo{
+    return self.opaqueCurToken.type == FilterTokenTypeInfo;
+}
+
+- (BOOL)isTigger{
+    return self.opaqueCurToken.type == FilterTokenTypeTigger;
+}
+
 @end

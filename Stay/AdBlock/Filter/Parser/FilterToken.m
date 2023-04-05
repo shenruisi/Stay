@@ -227,6 +227,30 @@
     return address;
 }
 
+- (NSString *)toString{
+    if (self.type == FilterTokenTypeComment){
+        return [NSString stringWithFormat:@"!%@",self.value];
+    }
+    else if (self.type == FilterTokenTypeSpecialCommentTitle){
+        return [NSString stringWithFormat:@"! Title: %@",self.value];
+    }
+    else if (self.type == FilterTokenTypeSpecialCommentVersion){
+        return [NSString stringWithFormat:@"! Version: %@",self.value];
+    }
+    else if (self.type == FilterTokenTypeSpecialCommentExpires){
+        return [NSString stringWithFormat:@"! Expires: %@",self.value];
+    }
+    else if (self.type == FilterTokenTypeSpecialCommentRedirect){
+        return [NSString stringWithFormat:@"! Redirect: %@",self.value];
+    }
+    else if (self.type == FilterTokenTypeSpecialCommentHomepage){
+        return [NSString stringWithFormat:@"! Homepage: %@",self.value];
+    }
+    else{
+        return self.value;
+    }
+}
+
 - (NSString *)description{
     return [NSString stringWithFormat:@"%@ %@",[self stringOfType:self.type],self.value];
 }
