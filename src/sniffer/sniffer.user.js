@@ -1102,6 +1102,18 @@ const browser = __b;
       return true;
     }
 
+    function checkDecodeWithSpeedFunIsValid(){
+      let isValid = checkDecodeFunIsValid();
+      if(isValid){
+        if(!decodeSignatureCipher.decodeSpeedFunStr){
+          isValid = false;
+        }else{
+          isValid = true;
+        }
+      }
+      return isValid;
+    }
+
     /**
      * 对videoList中qualityList的signature进行解密
      */
@@ -1109,7 +1121,7 @@ const browser = __b;
       if(!Object.keys(shouldDecodeQuality).length){
         return;
       }
-      if(!checkDecodeFunIsValid()){
+      if(!checkDecodeWithSpeedFunIsValid()){
         return;
       }
       Object.keys(shouldDecodeQuality).forEach((videoUuid, qualityList)=>{
@@ -1940,6 +1952,15 @@ const browser = __b;
       signature = decodeSignatureCipherFun()(decodeURIComponent(signature));
       sourceUrl = `${decodeURIComponent(sourceUrl)}&sig=${signature}`;
       return sourceUrl;
+    }
+
+    function decodeYoutubeSpeedFun(sourceUrl){
+      if(!checkDecodeWithSpeedFunIsValid()){
+        console.log('decodeYoutubeSpeedFun------checkDecodeWithSpeedFunIsValid is false', sourceUrl)
+        return sourceUrl;
+      }
+      
+
     }
 
     function getYoutubeVideoUrlOrSignture(signatureCipher){
