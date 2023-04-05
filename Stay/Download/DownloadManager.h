@@ -42,22 +42,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic ,strong) void (^block)(float progress, NSString *speed, DMStatus status);
 @end
 
-@interface Query : NSObject
-
-@property (nonatomic, strong) NSString *taskId;
-@property (nonatomic, strong) NSString *key;
-@property (nonatomic, assign) DMStatus status;
-@end
-
 @interface DownloadManager : NSObject
 
 + (instancetype)shared;
 - (Task *)enqueue:(Request *)request;
-- (NSArray *)query:(Query *)condition;
 - (void)remove:(NSString *)taskId;
-- (void)removeAll:(NSString *)key;
 - (void)pause:(NSString *)taskId;
-- (void)pauseAll;
 - (Task *)queryByTaskId:(NSString *)taskId;
 
 - (void)setM3U8Concurrency:(int)concurrency;
