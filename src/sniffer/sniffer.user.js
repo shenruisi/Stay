@@ -2693,7 +2693,7 @@ const browser = __b;
       }
       
       // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
-      
+      const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
       if(!videoId){
         return videoInfo;
       }
@@ -2709,7 +2709,7 @@ const browser = __b;
         }
       }
       
-      const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
+      
       // console.log('playerResp-------', playerResp);
       if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
         // console.log('hello- - - - - - -   playerResp   ----');
@@ -3215,7 +3215,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        let randomArr = jsText.match(/[a-zA-Z]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
+        let randomArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
         console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
@@ -3228,7 +3228,7 @@ const browser = __b;
         }
         let subRandomStr = '';
         // eslint-disable-next-line no-useless-escape
-        let subRandomArr = jsText.match(/var\s+[a-zA-Z]{2}\=\{[a-zA-Z]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]{2}\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
         if(subRandomArr && subRandomArr.length){
           subRandomStr = subRandomArr[0];
           console.log(subRandomStr);
@@ -3238,7 +3238,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        randomFunStr = randomFunStr.replace(/[a-zA-Z]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
+        randomFunStr = randomFunStr.replace(/[a-zA-Z0-9]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
         if(!randomFunStr){
           setLocalYTRandomFunStr(pathUuid, '');
           return;
