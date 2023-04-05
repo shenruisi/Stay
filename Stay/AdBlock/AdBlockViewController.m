@@ -12,6 +12,7 @@
 #import "FilterTokenParser.h"
 #import "ContentFilter2.h"
 #import "DataManager.h"
+#import "AdBlockDetailViewController.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -72,7 +73,10 @@
     cell.element = contentFilter;
     cell.action = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
-        [contentFilter convertToJOSNRules];
+        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
+        cer.contentFilter = contentFilter;
+        [self.navigationController pushViewController:cer animated:YES];
+//        [contentFilter convertToJOSNRules];
         
     };
     

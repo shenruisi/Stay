@@ -327,4 +327,12 @@ static NSString *SPECIAL_COMMENT = @"(\\s*Homepage|Title|Expires|Redirect|Versio
     return [chars isEqualToString:__EOF__];
 }
 
+- (BOOL)isSepcialComment{
+    return self.opaqueCurToken.type == FilterTokenTypeSpecialCommentTitle
+    || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentExpires
+    || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentVersion
+    || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentHomepage
+    || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentRedirect;
+}
+
 @end

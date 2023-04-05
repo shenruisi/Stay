@@ -16,6 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.enableTabItem = NO;
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.frame = self.view.bounds;
     NSArray<UIColor *> *colors = FCStyle.accentGradient;
@@ -24,6 +25,7 @@
 }
 
 - (void)setEnableTabItem:(BOOL)enableTabItem{
+    _enableTabItem = enableTabItem;
     [self fcNavigationBar].enableTabItem = enableTabItem;
 }
 
@@ -33,6 +35,11 @@
 
 - (FCNavigationTabItem *)navigationTabItem{
     return [self fcNavigationBar].navigationTabItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.enableTabItem = _enableTabItem;
 }
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{}

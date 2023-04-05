@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) FilterToken *curToken;
 @property (nonatomic, readonly) BOOL isEOF;
+@property (nonatomic, readonly) BOOL isSepcialComment;
 
 - (instancetype)initWithChars:(NSString *)chars;
 
