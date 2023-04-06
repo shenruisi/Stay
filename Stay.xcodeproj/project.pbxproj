@@ -202,6 +202,12 @@
 		583B544129DD71A500CB292A /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543929DD71A400CB292A /* TiggerHighlighterAST.m */; };
 		583B544229DD71A500CB292A /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543A29DD71A400CB292A /* CommentHighlighterAST.m */; };
 		583B544329DD71A500CB292A /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543A29DD71A400CB292A /* CommentHighlighterAST.m */; };
+		583B544629DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */; };
+		583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */; };
+		583B544A29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */; };
+		583B544B29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */; };
+		583B544E29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
+		583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -870,6 +876,12 @@
 		583B543929DD71A400CB292A /* TiggerHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiggerHighlighterAST.m; sourceTree = "<group>"; };
 		583B543A29DD71A400CB292A /* CommentHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentHighlighterAST.m; sourceTree = "<group>"; };
 		583B543B29DD71A400CB292A /* InfoHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoHighlighterAST.h; sourceTree = "<group>"; };
+		583B544429DEA4DC00CB292A /* ExceptionHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionHighlighterAST.h; sourceTree = "<group>"; };
+		583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionHighlighterAST.m; sourceTree = "<group>"; };
+		583B544829DEAB6F00CB292A /* AddressHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddressHighlighterAST.h; sourceTree = "<group>"; };
+		583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddressHighlighterAST.m; sourceTree = "<group>"; };
+		583B544C29DEAD5D00CB292A /* OptionsHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptionsHighlighterAST.h; sourceTree = "<group>"; };
+		583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptionsHighlighterAST.m; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -1572,6 +1584,12 @@
 				583B543729DD71A400CB292A /* InfoHighlighterAST.m */,
 				583B543829DD71A400CB292A /* HighlighterAST.h */,
 				583B543429DD71A400CB292A /* HighlighterAST.m */,
+				583B544429DEA4DC00CB292A /* ExceptionHighlighterAST.h */,
+				583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */,
+				583B544829DEAB6F00CB292A /* AddressHighlighterAST.h */,
+				583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */,
+				583B544C29DEAD5D00CB292A /* OptionsHighlighterAST.h */,
+				583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */,
 			);
 			name = HighlighterAST;
 			path = Stay/AdBlock/HighlighterAST;
@@ -3215,6 +3233,7 @@
 				3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */,
 				5867D154288F88FC00EC822B /* AlertHelper.m in Sources */,
 				3C949BB02971813E0068231A /* M3U8SegmentInfoList.m in Sources */,
+				583B544629DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
@@ -3229,6 +3248,7 @@
 				58724A2D28FE4CCD00A894D8 /* SYNavigationController.m in Sources */,
 				582061E0294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
+				583B544A29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */,
 				582061D0294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
 				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				849E77D7293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
@@ -3239,6 +3259,7 @@
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				849E77D3293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
+				583B544E29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */,
 				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				583B540A29DD4DFA00CB292A /* UIFont+Convert.m in Sources */,
@@ -3501,6 +3522,7 @@
 				588202B42859F99000B2721A /* FCSplitViewController.m in Sources */,
 				5882025D2859E73900B2721A /* AppDelegate.m in Sources */,
 				5882025E2859E73900B2721A /* UIViewExt.m in Sources */,
+				583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */,
 				5882025F2859E73900B2721A /* BrowseView.m in Sources */,
 				58A3617629C0218800080465 /* FCViewController.m in Sources */,
 				588202602859E73900B2721A /* ModalViewController.m in Sources */,
@@ -3524,6 +3546,7 @@
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
 				588202672859E73900B2721A /* SYVersionUtils.m in Sources */,
 				588202682859E73900B2721A /* SYNotesViewController.m in Sources */,
+				583B544B29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */,
 				58DF3FF62898D4820029E1AA /* API.m in Sources */,
 				588202692859E73900B2721A /* SharedStorageManager.m in Sources */,
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
@@ -3532,6 +3555,7 @@
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
+				583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
 				8460E4792993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
 				58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */,

@@ -114,7 +114,7 @@
             NSForegroundColorAttributeName : FCStyle.fcBlack,
             NSFontAttributeName : [FCStyle.caption toHelvetica:0],
             NSParagraphStyleAttributeName : paragraphStyle,
-            NSKernAttributeName : @(0.5)
+//            NSKernAttributeName : @(0.5)
         };
         
         [self addSubview:_textView];
