@@ -1,9 +1,10 @@
 
 let randomYTObj = {}; 
 
-function fetchRandomStr(randomStr){
+function fetchRandomStr(randomStr, speedRandomStr){
   window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
   randomYTObj.randomStr = randomStr;
+  randomYTObj.speedRandomStr = speedRandomStr;
 }
 
 /**
@@ -1779,6 +1780,19 @@ function fetchRandomStr(randomStr){
       handleDecodeSignatureAndPush(randomStr);
     }
   });
+
+  // /* eslint-disable */
+  // Object.defineProperty(randomYTObj,'speedRandomStr',{
+  //   get:function(){
+  //     return speedRandomStr;
+  //   },
+  //   set:function(newValue){
+  //     speedRandomStr = newValue;
+  //     console.log('set speedRandomStr:',newValue);
+  //     //需要触发的渲染函数可以写在这...
+  //     handleDecodeSignatureAndPush(randomStr);
+  //   }
+  // });
 
 })()
 

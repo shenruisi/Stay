@@ -1107,27 +1107,30 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // console.log('fetchYoutubeDecodeFun----path=',path, ",location=",location)
             browser.runtime.sendNativeMessage("application.id", { type: "yt_element", path, location}, function (response) {
                 // console.log('fetchYoutubeDecodeFun----', response)
-                let decodeFunStr = '';
-                if(response && response.body && response.body.code){
-                    decodeFunStr = response.body.code;
+                let decodeFunObj = {};
+                if(response && response.body){
+                    decodeFunObj.decodeFunStr = response.body.code;
+                    decodeFunObj.decodeSpeedFunStr = response.body.n_code;
+                    decodeFunObj.status = response.body.status_code;
                 }
-                sendResponse({ decodeFun: decodeFunStr })
+                sendResponse(decodeFunObj)
             });
         }
         else if ("saveYoutubeDecodeFun" === request.operate){
             let path = request.pathUuid;
-            let code = request.randomFunStr;
+            let code = request.randomFunStr || '';
+            let n_code = request.randomSpeedFunStr || '';
             // console.log('saveYoutubeDecodeFun----path=',path, ",location=",location)
-            browser.runtime.sendNativeMessage("application.id", { type: "yt_element_ci", path, code}, function (response) {
+            browser.runtime.sendNativeMessage("application.id", { type: "yt_element_ci", path, code, n_code}, function (response) {
                 // console.log('saveYoutubeDecodeFun----', response)
                 sendResponse({ decodeFun: '' })
             });
         }
         else if("POST_AUDIO_RECORD" === requestOperate){
             let recording = request.recording;
-            // console.log('saveYoutubeDecodeFun----path=',path, ",location=",location)
+            // console.log('POST_AUDIO_RECORD----path=',path, ",location=",location)
             browser.runtime.sendNativeMessage("application.id", { type: "ST_speechToText", data: recording}, function (response) {
-                // console.log('saveYoutubeDecodeFun----', response)
+                // console.log('POST_AUDIO_RECORD----', response)
                 sendResponse({ text: response.body })
             });
         }
