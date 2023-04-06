@@ -6,13 +6,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCRootViewController.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification;
 
 @class UserScript;
-@interface SYHomeViewController : UIViewController
+@interface SYHomeViewController : FCRootViewController
 
 - (void)import;
 - (NSArray<UserScript *> *)userscripts;

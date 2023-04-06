@@ -32,20 +32,20 @@
 - (void)setSelected:(BOOL)selected{
     [super setSelected:selected];
 #ifdef FC_MAC
-    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+    self.fcContentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
 #else
     UIViewController *rootController = [QuickAccess rootController];
     if ([rootController isKindOfClass:[UISplitViewController class]]){
         UISplitViewController *splitViewController = (UISplitViewController *)rootController;
         if (nil == splitViewController || splitViewController.viewControllers.count < 2){
-            self.contentView.backgroundColor = FCStyle.secondaryBackground;
+            self.fcContentView.backgroundColor = FCStyle.secondaryBackground;
         }
         else{
-            self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+            self.fcContentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
         }
     }
     else{
-        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+        self.fcContentView.backgroundColor = FCStyle.secondaryBackground;
     }
 #endif
 }
@@ -53,20 +53,20 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated{
     [super setSelected:selected animated:animated];
 #ifdef FC_MAC
-    self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+    self.fcContentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
 #else
     UIViewController *rootController = [QuickAccess rootController];
     if ([rootController isKindOfClass:[UISplitViewController class]]){
         UISplitViewController *splitViewController = (UISplitViewController *)rootController;
         if (nil == splitViewController || splitViewController.viewControllers.count < 2){
-            self.contentView.backgroundColor = FCStyle.secondaryBackground;
+            self.fcContentView.backgroundColor = FCStyle.secondaryBackground;
         }
         else{
-            self.contentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
+            self.fcContentView.backgroundColor = selected ? FCStyle.accentHighlight :  FCStyle.secondaryBackground;
         }
     }
     else{
-        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+        self.fcContentView.backgroundColor = FCStyle.secondaryBackground;
     }
 #endif
 }
@@ -81,9 +81,9 @@
 
 
 - (void)setScrpit:(UserScript *)scrpit {
-    for (UIView *subView in self.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
+//    for (UIView *subView in self.fcContentView.subviews) {
+//        [subView removeFromSuperview];
+//    }
     _scrpit = scrpit;
     
     if(scrpit != nil) {
@@ -93,6 +93,7 @@
 }
 
 - (void )createCellView:(UserScript *)dic{
+    
     UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(20, 12, 48, 48)];
     imageBox.layer.cornerRadius = 10;
     imageBox.layer.borderWidth = 1;
@@ -111,7 +112,7 @@
     imageView.centerX = 24;
     imageView.centerY = 24;
     [imageBox addSubview:imageView];
-    [self.contentView addSubview:imageBox];
+    [self.fcContentView addSubview:imageBox];
     CGFloat left = 20;
     if (dic.icon != NULL && dic.icon.length > 0) {
         left = imageBox.right + 10;
@@ -124,22 +125,22 @@
     headerLabel.font = FCStyle.bodyBold;
     headerLabel.textColor = dic.active == 0 ? [FCStyle.fcBlack colorWithAlphaComponent:0.5] : FCStyle.fcBlack;
     headerLabel.text = dic.name;
-    [self.contentView addSubview:headerLabel];
+    [self.fcContentView addSubview:headerLabel];
     
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 234, 17)];
     subLabel.font = FCStyle.footnote;
     subLabel.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.5] : FCStyle.fcSecondaryBlack;
     subLabel.text = dic.desc;
     subLabel.top = headerLabel.bottom + 5;
-    [self.contentView addSubview:subLabel];
+    [self.fcContentView addSubview:subLabel];
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 20, 0.5)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.fcContentView.width - 20, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  99.5;
     line.left = 20;
-    [self.contentView addSubview:line];
+    [self.fcContentView addSubview:line];
     NSString *uuid = dic.uuid;
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
     
@@ -167,16 +168,16 @@
         if(btn.width < 60) {
             btn.width = 60;
         }
-        btn.right = self.contentView.width - 19;
+        btn.right = self.fcContentView.width - 19;
         btn.top = 20;
-        [self.contentView addSubview:btn];
+        [self.fcContentView addSubview:btn];
         
         rightWidth = btn.width;
     }
     
     
-    headerLabel.width = self.contentView.width - headerLabel.left - 30 - rightWidth;
-    subLabel.width =  self.contentView.width - subLabel.left - 30 - rightWidth;
+    headerLabel.width = self.fcContentView.width - headerLabel.left - 30 - rightWidth;
+    subLabel.width =  self.fcContentView.width - subLabel.left - 30 - rightWidth;
     
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
@@ -187,7 +188,7 @@
     sImageView.frame = CGRectMake(0, 0, 15, 15);
     sImageView.top = imageBox.bottom + 10;
     sImageView.left = 20;
-    [self.contentView addSubview:sImageView];
+    [self.fcContentView addSubview:sImageView];
     
     UILabel *actLabel = [[UILabel alloc]init];
     actLabel.font = FCStyle.footnoteBold;
@@ -196,7 +197,7 @@
     [actLabel sizeToFit];
     actLabel.centerY = sImageView.centerY;
     actLabel.left = sImageView.right + 5;
-    [self.contentView addSubview:actLabel];
+    [self.fcContentView addSubview:actLabel];
     
     UIImage *image =  [UIImage systemImageNamed:@"v.circle.fill"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
@@ -206,7 +207,7 @@
     versionImageView.frame = CGRectMake(0, 0, 15, 15);
     versionImageView.centerY = sImageView.centerY;
     versionImageView.left = actLabel.right + 12;
-    [self.contentView addSubview:versionImageView];
+    [self.fcContentView addSubview:versionImageView];
 
     UILabel *version = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 15)];
     version.font = FCStyle.footnoteBold;
@@ -215,7 +216,7 @@
     [version sizeToFit];
     version.centerY = sImageView.centerY;
     version.left = versionImageView.right + 5;
-    [self.contentView addSubview:version];
+    [self.fcContentView addSubview:version];
     
     
     if(dic.updateScriptTime != nil && dic.updateScriptTime.length > 0) {
@@ -225,10 +226,10 @@
         updateTime.textColor = dic.active == 0 ? [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.5] : FCStyle.fcSecondaryBlack;
         [updateTime sizeToFit];
         updateTime.centerY = version.centerY;
-        updateTime.right = self.contentView.width - 20;
+        updateTime.right = self.fcContentView.width - 20;
 
 //        updateTime.left = version.right + 5;
-        [self.contentView addSubview:updateTime];
+        [self.fcContentView addSubview:updateTime];
     }
 
 }
