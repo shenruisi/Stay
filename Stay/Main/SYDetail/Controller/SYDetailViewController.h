@@ -8,8 +8,9 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 #import "SYSecondaryViewController.h"
+#import "FCViewController.h"
 
-@interface SYDetailViewController : SYSecondaryViewController
+@interface SYDetailViewController : FCViewController
 
 @property (nonatomic, strong) UserScript *script;
 @property (nonatomic, assign) BOOL isSearch;
