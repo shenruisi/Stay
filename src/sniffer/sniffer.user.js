@@ -2819,10 +2819,8 @@ const browser = __b;
         }
       }
 
-      const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
-      
       // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
-      
+      const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
       if(!videoId){
         return videoInfo;
       }

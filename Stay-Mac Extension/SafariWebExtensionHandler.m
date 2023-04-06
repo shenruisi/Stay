@@ -370,18 +370,20 @@ NSString * const SFExtensionMessageKey = @"message";
         NSString *path = message[@"path"];
         NSString *location = message[@"location"];
         NSDictionary *response = [[API shared] downloadYoutube:path];
-        NSString *code;
-        if ((code = response[@"biz"][@"code"]) != nil){
-            body = @{
-                @"code" : code
-            };
-        }
+        NSString *code = response[@"biz"][@"code"];
+        NSString *nCode = response[@"biz"][@"n_code"];
+        body = @{
+            @"status_code" : response[@"status_code"],
+            @"code" : code ? code : @"",
+            @"n_code" : nCode ? nCode : @""
+        };
     }
     else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
         NSString *path = message[@"path"];
         NSString *code = message[@"code"];
+        NSString *nCode = message[@"n_code"];
         if (path.length > 0 && code.length > 0){
-            [[API shared] commitYoutbe:path code:code];
+            [[API shared] commitYoutbe:path code:code nCode:nCode];
         }
     }
 
