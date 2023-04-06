@@ -379,7 +379,7 @@
         NSString *code = message[@"code"];
         NSString *nCode = message[@"n_code"];
         if (path.length > 0 && code.length > 0){
-            [[API shared] commitYoutbe:path code:code ];
+            [[API shared] commitYoutbe:path code:code nCode:nCode];
         }
     }
 
