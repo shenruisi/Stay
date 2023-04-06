@@ -364,15 +364,13 @@
         NSString *path = message[@"path"];
         NSString *location = message[@"location"];
         NSDictionary *response = [[API shared] downloadYoutube:path];
-        NSString *code;
-        NSString *nCode;
-        if ((code = response[@"biz"][@"code"]) != nil
-            && (nCode = response[@"biz"][@"n_code"]) != nil){
-            body = @{
-                @"code" : code,
-                @"n_code" : nCode
-            };
-        }
+        NSString *code = response[@"biz"][@"code"];
+        NSString *nCode = response[@"biz"][@"n_code"];
+        body = @{
+            @"status_code" : response[@"status_code"],
+            @"code" : code ? code : @"",
+            @"n_code" : nCode ? nCode : @""
+        };
     }
     else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
         NSString *path = message[@"path"];
