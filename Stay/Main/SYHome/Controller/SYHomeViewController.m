@@ -260,6 +260,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, strong) NSMutableArray *handActiveDatas;
 
+@property (nonatomic, strong) FCTabButtonItem *activatedTabItem;
+@property (nonatomic, strong) FCTabButtonItem *stoppedTabItem;
 
 @property (nonatomic, strong) NSMutableArray *results;
 
@@ -288,52 +290,54 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @implementation SYHomeViewController
 
-- (void)loadView{
-#ifdef FC_MAC
-    ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
-//    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
-    self.view = view;
-#else
-    self.view = [[UIView alloc] init];
-#endif
-    
-    
-}
+//- (void)loadView{
+//#ifdef FC_MAC
+//    ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
+////    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
+//    self.view = view;
+//#else
+////    self.view = [[UIView alloc] init];
+//#endif
+//
+//
+//}
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
+    self.enableTabItem = YES;
+    self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
+    self.leftTitle  = NSLocalizedString(@"Userscripts","Userscripts");
 
-    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
-    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
-    if([@"System" isEqual:type]) {
-        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
-    } else if([@"Dark" isEqual:type]){
-        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
-    }else if([@"Light" isEqual:type]){
-        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
-    }
+    
+//    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
+//    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
+//    if([@"System" isEqual:type]) {
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+//    } else if([@"Dark" isEqual:type]){
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+//    }else if([@"Light" isEqual:type]){
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+//    }
     
     self.selectedRow = -1;
     self.selectedIdx = 0;
-    self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
 //    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+//    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
-    search.searchBar.placeholder = NSLocalizedString(@"SearchAddedUserscripts", @"");
-    self.navigationItem.searchController = search;
-    self.navigationItem.searchController.delegate = self;
-    self.navigationItem.searchController.searchBar.delegate = self;
-    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
-    self.searchController = search;
-    self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar setTintColor:FCStyle.accent];
+//    search.searchBar.placeholder = NSLocalizedString(@"SearchAddedUserscripts", @"");
+//    self.navigationItem.searchController = search;
+//    self.navigationItem.searchController.delegate = self;
+//    self.navigationItem.searchController.searchBar.delegate = self;
+//    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
+//    self.searchController = search;
+//    self.searchController.delegate = self;
+//    self.searchController.searchBar.delegate = self;
+//    [self.searchController.searchBar setTintColor:FCStyle.accent];
     
-    self.navigationItem.hidesSearchBarWhenScrolling = false;
+//    self.navigationItem.hidesSearchBarWhenScrolling = false;
    
     [self checkData];
     
@@ -404,9 +408,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                              selector:@selector(userscriptDidUpdateHandler:)
                                                  name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                object:nil];
-    
-    self.view.backgroundColor = FCStyle.background;
-    
+        
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -430,11 +432,25 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     }
 #endif
     
-    self.tableView.sectionHeaderTopPadding = 0;
-    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+//    self.tableView.sectionHeaderTopPadding = 0;
+//    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
 }
 
+- (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
+//    NSInteger index = segment.selectedSegmentIndex;
+    [self.handStopDatas removeAllObjects];
+    [self.handActiveDatas removeAllObjects];
+    if([item isEqual:self.stoppedTabItem]) {
+        _selectedIdx = 1;
+        [self reloadTableView];
+        [self.tableView reloadData];
+    } else {
+        _selectedIdx = 0;
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
+}
 
 - (void)checkData {
     [_datas removeAllObjects];
@@ -1166,22 +1182,22 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchController.view]) {
-        return nil;
-    } else {
-        return [self createTableHeaderView];
-    }
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    if([tableView isEqual:self.searchController.view]) {
+//        return nil;
+//    } else {
+//        return [self createTableHeaderView];
+//    }
 
-}
+//}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HomeDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
         cell = [[HomeDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
     }
-    for (UIView *subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
+//    for (UIView *subView in cell.fcContentView.subviews) {
+//        [subView removeFromSuperview];
+//    }
     // 这里通过searchController的active属性来区分展示数据源是哪个
     UserScript *model = nil;
     if (self.searchController.active ) {
@@ -1197,8 +1213,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }
     }
-    cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-    cell.contentView.width = self.view.width;
+    cell.fcContentView.backgroundColor = FCStyle.secondaryBackground;
+//    cell.contentView.width = self.view.width;
     cell.controller = self;
     cell.scrpit = model;
 
@@ -1462,27 +1478,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return YES;
 }
 
-- (UIView *)createTableHeaderView {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
-    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Activated", @""),NSLocalizedString(@"Stopped", @""),nil];
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
-    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
-    segmentedControl.backgroundColor = FCStyle.secondaryPopup;
-    segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
-    segmentedControl.selectedSegmentIndex = _selectedIdx;
-    CGFloat left = (self.view.width - 200) / 2;
-    segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
-    [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
-    [view addSubview:segmentedControl];
-    view.backgroundColor = FCStyle.background;
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 0.5)];
-    line.backgroundColor = FCStyle.fcSeparator;
-    line.top = 49.5;
-    [view addSubview:line];
-    return  view;
-}
-
 - (void)segmentControllerAction:(UISegmentedControl *)segment
 {
     NSInteger index = segment.selectedSegmentIndex;
@@ -1517,12 +1512,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+//
+//    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
+//    [appearance configureWithOpaqueBackground];
+//    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+//    self.navigationController.navigationBar.standardAppearance = appearance;
+//    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     
     [self reloadTableView];
     [self initScrpitContent];
@@ -1535,8 +1530,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [self.tableView reloadData];
     });
     [self emptyTipsView];
-    
-    NSLog(@"SYHomeViewController view %@",self.view);
     
 }
 
@@ -1672,13 +1665,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     self.tableView.hidden = _datas.count == 0;
     self.emptyTipsView.hidden = _datas.count > 0;
-
-    NSString *scriptCount = @"";
-    if (count > 0){
-        scriptCount = [NSString stringWithFormat:@"(%ld)",count];
-    }
-    self.navigationItem.title = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"settings.library","Library"),scriptCount];
-    
 }
 
 - (void)remoteSyncStart{
@@ -1700,7 +1686,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 //        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-        _tableView.backgroundColor = FCStyle.background;
+//        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
+
         [self.view addSubview:_tableView];
     }
     
@@ -2008,6 +1996,25 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     return _loadingSlideController;
 }
+
+- (FCTabButtonItem *)activatedTabItem{
+    if (nil == _activatedTabItem){
+        _activatedTabItem = [[FCTabButtonItem alloc] init];
+        _activatedTabItem.title = NSLocalizedString(@"Activated", @"");
+    }
+    
+    return _activatedTabItem;
+}
+
+- (FCTabButtonItem *)stoppedTabItem{
+    if (nil == _stoppedTabItem){
+        _stoppedTabItem = [[FCTabButtonItem alloc] init];
+        _stoppedTabItem.title = NSLocalizedString(@"Stopped", @"");
+    }
+    
+    return _stoppedTabItem;
+}
+
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self

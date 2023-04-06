@@ -88,8 +88,13 @@
                                                                initWithNavigationBarClass:[FCNavigationBar class] toolbarClass:nil];
         adBlockNavigationController.viewControllers = @[adBlockController];
         
+        
+        FCNavigationController *homeNavigationController = [[FCNavigationController alloc]
+                                                               initWithNavigationBarClass:[FCNavigationBar class] toolbarClass:nil];
+        homeNavigationController.viewControllers = @[homeController];
+        
         self.viewControllers = @[
-            [[UINavigationController alloc] initWithRootViewController:homeController],
+            homeNavigationController,
             [[UINavigationController alloc] initWithRootViewController:storeController],
             adBlockNavigationController,
             [[UINavigationController alloc] initWithRootViewController:syFIleManagerController],
