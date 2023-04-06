@@ -347,4 +347,16 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     return self.opaqueCurToken.type == FilterTokenTypeTigger;
 }
 
+- (BOOL)isException{
+    return self.opaqueCurToken.type == FilterTokenTypeException;
+}
+
+- (BOOL)isAddress{
+    return self.opaqueCurToken.type == FilterTokenTypeAddress;
+}
+
+- (BOOL)isOptions{
+    return self.opaqueCurToken.type == FilterTokenTypeOptions;
+}
+
 @end

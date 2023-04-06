@@ -163,6 +163,26 @@
     return  [UIColor colorNamed:@"FilterCommentColor"];
 }
 
++ (UIColor *)filterExceptionColor{
+    return [UIColor colorNamed:@"FilterExceptionColor"];
+}
+
++ (UIColor *)filterAddressColor{
+    return [UIColor colorNamed:@"FilterAddressColor"];
+}
+
++ (UIColor *)filterSeparatorColor{
+    return [UIColor colorNamed:@"FilterSeparatorColor"];
+}
+
++ (UIColor *)filterModifierColor{
+    return [UIColor colorNamed:@"FilterModifierColor"];
+}
+
++ (UIColor *)filterOptionColor{
+    return [UIColor colorNamed:@"FilterOptionColor"];
+}
+
 + (UIFont *)title1{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:28];
