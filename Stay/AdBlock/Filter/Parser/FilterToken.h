@@ -71,7 +71,7 @@ typedef enum{
 + (instancetype)exception;
 + (instancetype)separator;
 + (instancetype)tigger:(NSString *)text;
-+ (instancetype)options:(NSArray<NSString *> *)array;
++ (instancetype)options:(NSString *)text;
 + (instancetype)selectorElementHiding:(NSString *)selector;
 + (instancetype)selectorElementHidingEmulation:(NSString *)selector;
 + (instancetype)selectorElementHidingException:(NSString *)selector;

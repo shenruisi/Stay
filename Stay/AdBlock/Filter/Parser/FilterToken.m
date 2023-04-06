@@ -111,9 +111,10 @@
     return tigger;
 }
 
-+ (instancetype)options:(NSArray<NSString *> *)array{
++ (instancetype)options:(NSString *)text{
     FilterToken *options = [[FilterToken alloc] init];
     options.type = FilterTokenTypeOptions;
+    NSArray *array = [text componentsSeparatedByString:@","];
     NSMutableArray<FilterOption *> *filterOptions = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < array.count; i++){
         NSString *optionType = array[i];
@@ -161,7 +162,10 @@
         
         [filterOptions addObject:filterOption];
     }
-    options.value = array;
+    options.value = @{
+        @"text" : text,
+        @"options" : array
+    };
     return options;
 }
 
@@ -245,6 +249,9 @@
     }
     else if (self.type == FilterTokenTypeSpecialCommentHomepage){
         return [NSString stringWithFormat:@"! Homepage: %@",self.value];
+    }
+    else if (self.type == FilterTokenTypeOptions){
+        return self.value[@"text"];
     }
     else{
         return self.value;

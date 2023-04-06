@@ -208,6 +208,8 @@
 		583B544B29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */; };
 		583B544E29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
 		583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
+		583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
+		583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -882,6 +884,8 @@
 		583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddressHighlighterAST.m; sourceTree = "<group>"; };
 		583B544C29DEAD5D00CB292A /* OptionsHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptionsHighlighterAST.h; sourceTree = "<group>"; };
 		583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptionsHighlighterAST.m; sourceTree = "<group>"; };
+		583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorHighlighterAST.h; sourceTree = "<group>"; };
+		583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectorHighlighterAST.m; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -1590,6 +1594,8 @@
 				583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */,
 				583B544C29DEAD5D00CB292A /* OptionsHighlighterAST.h */,
 				583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */,
+				583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */,
+				583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */,
 			);
 			name = HighlighterAST;
 			path = Stay/AdBlock/HighlighterAST;
@@ -3318,6 +3324,7 @@
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
+				583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
 				583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
@@ -3610,6 +3617,7 @@
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				849E77D8293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
+				583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
 				583B53E029DBF9A100CB292A /* StateView.m in Sources */,
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,

@@ -14,6 +14,7 @@
 #import "ExceptionHighlighterAST.h"
 #import "AddressHighlighterAST.h"
 #import "OptionsHighlighterAST.h"
+#import "SelectorHighlighterAST.h"
 
 @implementation ContentFilterHighlighter
 
@@ -52,6 +53,11 @@
         
         if ([parser isOptions]){
             ast = [[OptionsHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        if ([parser isSelector]){
+            ast = [[SelectorHighlighterAST alloc] initWithParser:parser args:nil];
             [ret appendAttributedString:ast.attributedString];
         }
         

@@ -17,6 +17,11 @@
         NSForegroundColorAttributeName : FCStyle.filterModifierColor
     }]];
     
+    [self.attributedString appendAttributedString:[NSAttributedString captionText:[self.parser.curToken toString]]];
+    [self.attributedString addAttributes:@{
+        NSForegroundColorAttributeName : FCStyle.filterOptionColor
+    } range:NSMakeRange(1, self.attributedString.length - 1)];
+    
 }
 
 @end

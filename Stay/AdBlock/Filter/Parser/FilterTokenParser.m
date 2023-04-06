@@ -129,14 +129,14 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
         }
         
         [self backward];
-        return [FilterToken options:[options componentsSeparatedByString:@","]];
+        return [FilterToken options:options];
     }
     
     if ([self isSelectorStart:self.lastChars]){
         self.lastChars = [self getChars];
         if ([self.lastChars isEqualToString:@"#"]){
             NSMutableString *selector = [[NSMutableString alloc] init];
-            while([self isEnd:(self.lastChars = [self getChars])]){
+            while(![self isEnd:(self.lastChars = [self getChars])]){
                 [selector appendString:self.lastChars];
             }
             [self backward];
@@ -146,7 +146,7 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
             self.lastChars = [self getChars];
             if ([self.lastChars isEqualToString:@"#"]){
                 NSMutableString *selector = [[NSMutableString alloc] init];
-                while([self isEnd:(self.lastChars = [self getChars])]){
+                while(![self isEnd:(self.lastChars = [self getChars])]){
                     [selector appendString:self.lastChars];
                 }
                 [self backward];
@@ -161,7 +161,7 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
             self.lastChars = [self getChars];
             if ([self.lastChars isEqualToString:@"#"]){
                 NSMutableString *selector = [[NSMutableString alloc] init];
-                while([self isEnd:(self.lastChars = [self getChars])]){
+                while(![self isEnd:(self.lastChars = [self getChars])]){
                     [selector appendString:self.lastChars];
                 }
                 [self backward];
@@ -176,7 +176,7 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
             self.lastChars = [self getChars];
             if ([self.lastChars isEqualToString:@"#"]){
                 NSMutableString *selector = [[NSMutableString alloc] init];
-                while([self isEnd:(self.lastChars = [self getChars])]){
+                while(![self isEnd:(self.lastChars = [self getChars])]){
                     [selector appendString:self.lastChars];
                 }
                 [self backward];
@@ -357,6 +357,13 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
 
 - (BOOL)isOptions{
     return self.opaqueCurToken.type == FilterTokenTypeOptions;
+}
+
+- (BOOL)isSelector{
+    return self.opaqueCurToken.type == FilterTokenTypeSelectorElementHiding
+    || self.opaqueCurToken.type == FilterTokenTypeSelectorElementSnippetFilter
+    || self.opaqueCurToken.type == FilterTokenTypeSelectorElementHidingEmulation
+    || self.opaqueCurToken.type == FilterTokenTypeSelectorElementHidingException;
 }
 
 @end

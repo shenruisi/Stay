@@ -11,6 +11,72 @@
 #import "ContentFilterHighlighter.h"
 #import "NSAttributedString+Style.h"
 
+static NSUInteger LineNumberWidth = 50;
+
+@interface ContentFilterTextContainer : NSTextContainer
+
+@end
+
+@implementation ContentFilterTextContainer
+
+- (instancetype)init{
+    if (self = [super init]){
+        self.heightTracksTextView = YES;
+        self.widthTracksTextView = YES;
+    }
+    
+    return self;
+}
+
+- (CGRect)lineFragmentRectForProposedRect:(CGRect)proposedRect atIndex:(NSUInteger)characterIndex writingDirection:(NSWritingDirection)baseWritingDirection remainingRect:(CGRect *)remainingRect{
+    CGRect originRect = [super lineFragmentRectForProposedRect:proposedRect atIndex:characterIndex writingDirection:baseWritingDirection remainingRect:remainingRect];
+    
+    return CGRectMake(originRect.origin.x + LineNumberWidth, originRect.origin.y, originRect.size.width - LineNumberWidth, originRect.size.height);
+}
+
+@end
+
+@interface ContentFilterLayoutManager : NSLayoutManager
+@property (nonatomic, assign) CGPoint textContainerOriginOffset;
+@property (nonatomic, strong) NSMutableSet<NSNumber *> *lineNoSet;
+@end
+
+@implementation ContentFilterLayoutManager
+
+- (void)drawGlyphsForGlyphRange:(NSRange)glyphsToShow atPoint:(CGPoint)origin{
+    NSUInteger characterIndex = glyphsToShow.location;
+    NSUInteger glyphIndex = [self glyphIndexForCharacterAtIndex:characterIndex];
+//    if (![self.lineNoSet containsObject:@(glyphIndex)]){
+//        [self drawNumber:glyphIndex ange:glyphsToShow];
+//        [self.lineNoSet addObject:@(glyphIndex)];
+//    }
+    [self drawNumber:glyphIndex ange:glyphsToShow];
+    [super drawGlyphsForGlyphRange:glyphsToShow atPoint:origin];
+}
+
+- (NSMutableSet<NSNumber *> *)lineNoSet{
+    if (nil == _lineNoSet){
+        _lineNoSet = [[NSMutableSet alloc] init];
+    }
+    
+    return _lineNoSet;
+}
+
+- (void)drawNumber:(NSUInteger)number ange:(NSRange)range{
+    NSRange effectiveRange;
+    CGRect lineRect = [self lineFragmentRectForGlyphAtIndex:range.location effectiveRange:&effectiveRange];
+    CGRect correctRect = CGRectOffset(lineRect, self.textContainerOriginOffset.x, self.textContainerOriginOffset.y);
+    
+    [FCStyle.secondaryPopup setFill];
+    [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, correctRect.origin.y, LineNumberWidth, correctRect.size.height) cornerRadius:0] fill];
+    
+//    [[NSString stringWithFormat:@"%ld",number] drawInRect:correctRect withAttributes:@{
+//        NSForegroundColorAttributeName : FCStyle.fcSecondaryBlack
+//    }];
+}
+
+@end
+
 @implementation ContentFilterTextView
 
 - (void)replaceSelectionWithAttributedText:(NSAttributedString *)text
@@ -45,7 +111,9 @@
 @interface ContentFilterEditorView()<
  UITextViewDelegate
 >
-
+@property (nonatomic, strong) ContentFilterTextContainer *textContainer;
+@property (nonatomic, strong) ContentFilterLayoutManager *layoutManager;
+@property (nonatomic, strong) NSTextStorage *textStorage;
 @end
 
 @implementation ContentFilterEditorView
@@ -101,12 +169,18 @@
 
 - (ContentFilterTextView *)textView{
     if (nil == _textView){
-        _textView = [[ContentFilterTextView alloc] init];
+        self.textStorage = [[NSTextStorage alloc] init];
+        self.layoutManager = [[ContentFilterLayoutManager alloc] init];
+        self.textContainer = [[ContentFilterTextContainer alloc] init];
+        [self.layoutManager addTextContainer:self.textContainer];
+        [self.textStorage addLayoutManager:self.layoutManager];
+        _textView = [[ContentFilterTextView alloc] initWithFrame:CGRectZero textContainer:self.textContainer];
+        self.layoutManager.textContainerOriginOffset = CGPointMake(_textView.textContainerInset.left, _textView.textContainerInset.top);
         _textView.delegate = self;
         _textView.translatesAutoresizingMaskIntoConstraints = NO;
         _textView.backgroundColor = [UIColor clearColor];
         _textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        _textView.showsVerticalScrollIndicator = NO;
+        _textView.showsVerticalScrollIndicator = YES;
         
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.lineSpacing = 2;

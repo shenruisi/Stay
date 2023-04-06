@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *filterSeparatorColor;
 @property(class, nonatomic, readonly) UIColor *filterModifierColor;
 @property(class, nonatomic, readonly) UIColor *filterOptionColor;
+@property(class, nonatomic, readonly) UIColor *filterCosmeticColor;
+@property(class, nonatomic, readonly) UIColor *filterSelectorColor;
 
 @property(class, nonatomic, readonly) UIFont *headline;
 @property(class, nonatomic, readonly) UIFont *headlineBold;

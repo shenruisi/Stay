@@ -183,6 +183,14 @@
     return [UIColor colorNamed:@"FilterOptionColor"];
 }
 
++ (UIColor *)filterCosmeticColor{
+    return [UIColor colorNamed:@"FilterCosmeticColor"];
+}
+
++ (UIColor *)filterSelectorColor{
+    return [UIColor colorNamed:@"FilterSelectorColor"];
+}
+
 + (UIFont *)title1{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:28];

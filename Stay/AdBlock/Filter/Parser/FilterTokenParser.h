@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isException;
 @property (nonatomic, readonly) BOOL isAddress;
 @property (nonatomic, readonly) BOOL isOptions;
+@property (nonatomic, readonly) BOOL isSelector;
 
 - (instancetype)initWithChars:(NSString *)chars;
 
