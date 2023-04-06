@@ -7,7 +7,7 @@
 
 #import "ContentFilterTableVewCell.h"
 #import "FCStyle.h"
-#import "ContentFilter.h"
+#import "ContentFilter2.h"
 #import "StateView.h"
 #import "UIView+Duplicate.h"
 
@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) StateView *stateView;
+@property (nonatomic, strong) UILabel *builtinLabel;
 @end
 
 @implementation ContentFilterTableVewCell
@@ -22,6 +23,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
         [self nameLabel];
+        [self builtinLabel];
         [self stateView];
     }
     
@@ -43,6 +45,7 @@
     [super setActive:active];
     self.nameLabel.textColor = active ? FCStyle.fcBlack : FCStyle.fcSeparator;
     self.stateView.active = active;
+    self.builtinLabel.textColor = active ? FCStyle.accent : FCStyle.fcSeparator;
 }
 
 - (void)doubleTap:(CGPoint)location{
@@ -67,6 +70,20 @@
         [nameLabel.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
         [nameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10]
     ]];
+    
+    if (!self.builtinLabel.hidden){
+        UILabel *builtinLabel = (UILabel *)[self.builtinLabel duplicate];
+        builtinLabel.textColor = !self.active ? FCStyle.accent : FCStyle.fcSeparator;
+        builtinLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [containerView addSubview:builtinLabel];
+        [NSLayoutConstraint activateConstraints:@[
+            [builtinLabel.leadingAnchor constraintEqualToAnchor:nameLabel.trailingAnchor constant:10],
+            [builtinLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:12],
+            [builtinLabel.widthAnchor constraintEqualToConstant:54],
+            [builtinLabel.heightAnchor constraintEqualToConstant:16],
+        ]];
+    }
+    
     
     StateView *stateView = (StateView *)[self.stateView fcDuplicate];
     stateView.active = !self.active;
@@ -96,8 +113,9 @@
 }
 
 - (void)buildWithElement:(ContentFilter *)element{
-    self.nameLabel.text = element.name;
-    self.stateView.active = element.active;
+    self.nameLabel.text = element.title;
+    self.active = element.active;
+    self.builtinLabel.hidden = !(element.type == ContentFilterTypeBuiltin);
 }
 
 - (UILabel *)nameLabel{
@@ -115,6 +133,30 @@
     }
     
     return _nameLabel;
+}
+
+- (UILabel *)builtinLabel{
+    if (nil == _builtinLabel){
+        _builtinLabel = [[UILabel alloc] init];
+        _builtinLabel.text = NSLocalizedString(@"Builtin", @"");
+        _builtinLabel.font = FCStyle.footnoteBold;
+        _builtinLabel.textColor = FCStyle.accent;
+        _builtinLabel.backgroundColor = FCStyle.lightAccent;
+        _builtinLabel.textAlignment = NSTextAlignmentCenter;
+        _builtinLabel.layer.cornerRadius = 6;
+        _builtinLabel.clipsToBounds = YES;
+        _builtinLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_builtinLabel];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_builtinLabel.leadingAnchor constraintEqualToAnchor:self.nameLabel.trailingAnchor constant:10],
+            [_builtinLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:12],
+            [_builtinLabel.widthAnchor constraintEqualToConstant:54],
+            [_builtinLabel.heightAnchor constraintEqualToConstant:16],
+        ]];
+    }
+    
+    return _builtinLabel;
 }
 
 - (StateView *)stateView{

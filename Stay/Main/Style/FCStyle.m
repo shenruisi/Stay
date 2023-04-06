@@ -21,6 +21,10 @@
     
 }
 
++ (UIColor *)lightAccent{
+    return [UIColor colorNamed: @"LightAccentColor"];
+}
+
 + (NSArray<UIColor *> *)accentGradient{
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *themeColor = [userDefaults objectForKey:@"themeColor"];
@@ -155,6 +159,10 @@
     return  [UIColor colorNamed:@"SubtitleColor"];
 }
 
++ (UIColor *)filterCommentColor{
+    return  [UIColor colorNamed:@"FilterCommentColor"];
+}
+
 + (UIFont *)title1{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:28];
@@ -224,6 +232,14 @@
     return [UIFont systemFontOfSize:16];
 #else
     return [UIFont systemFontOfSize:14];
+#endif
+}
+
++ (UIFont *)caption{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:14];
+#else
+    return [UIFont systemFontOfSize:12];
 #endif
 }
 

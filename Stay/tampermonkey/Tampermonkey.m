@@ -80,8 +80,18 @@ static Tampermonkey *kInstance = nil;
             userScript.errorMessage = [NSString stringWithFormat:NSLocalizedString(@"StayEngineError", @""),userScript.stayEngine];
         }
     }
-    else{
-        userScript.errorCode = 500;
+    else {
+        if (userScript.pass){
+            if (userScript.stayEngine.length > 0 && [SYVersionUtils compareVersion:userScript.stayEngine toVersion:[self appVersion]] > 0){
+                userScript.pass = NO;
+                userScript.errorCode = 1000;
+                userScript.errorMessage = [NSString stringWithFormat:NSLocalizedString(@"StayEngineError", @""),userScript.stayEngine];
+            }
+        }
+        else{
+            userScript.errorCode = 500;
+        }
+        
     }
     
     return userScript;

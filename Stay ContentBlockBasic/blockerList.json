@@ -1,0 +1,8 @@
+[{
+    "trigger": {
+        "url-filter": "abc.xyz"
+    },
+    "action": {
+        "type": "block"
+    }
+}]

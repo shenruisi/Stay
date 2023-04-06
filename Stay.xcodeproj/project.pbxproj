@@ -58,8 +58,6 @@
 		3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E129335C68007563E6 /* RoundedBorderView.swift */; };
 		3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
 		3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
-		3C8388EC2934F56C007563E6 /* DMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388EB2934F56C007563E6 /* DMStore.m */; };
-		3C8388ED2934F56C007563E6 /* DMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388EB2934F56C007563E6 /* DMStore.m */; };
 		3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
 		3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */; };
 		3C8B05932949AC87003CE0A7 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */; };
@@ -152,12 +150,8 @@
 		582441CE28781E0D003DF4F7 /* SYTextInputModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F528757B7D002A0C1B /* SYTextInputModelViewController.m */; };
 		582F9DE2276F329800C88135 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */; };
 		582F9DE4276F32B900C88135 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 582F9DE3276F32B900C88135 /* base64.min.js */; };
-		5831790129CBF41D00135D8D /* ContentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790029CBF41D00135D8D /* ContentFilter.m */; };
-		5831790229CBF41D00135D8D /* ContentFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790029CBF41D00135D8D /* ContentFilter.m */; };
 		5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790529CBFC5700135D8D /* FCTableViewCell.m */; };
 		5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831790529CBFC5700135D8D /* FCTableViewCell.m */; };
-		5831791229CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */; };
-		5831791329CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */; };
 		5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
 		5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */; };
 		5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C3172930525D00CCBAE5 /* ToastDebugger.m */; };
@@ -166,6 +160,48 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
+		583B53C329DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
+		583B53C429DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
+		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
+		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
+		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
+		583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
+		583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DB29DBF9A000CB292A /* FilterTokenParser.m */; };
+		583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DB29DBF9A000CB292A /* FilterTokenParser.m */; };
+		583B53E529DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
+		583B53E629DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
+		583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
+		583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
+		583B53F029DC192D00CB292A /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 583B53EF29DC192D00CB292A /* blockerList.json */; };
+		583B53F329DC192D00CB292A /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53F229DC192D00CB292A /* ContentBlockerRequestHandler.m */; };
+		583B53F729DC192D00CB292A /* Stay ContentBlockBasic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		583B53FD29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		583B53FE29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		583B53FF29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540129DC330500CB292A /* ContentFilterMainLoop.m */; };
+		583B540329DC330500CB292A /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540129DC330500CB292A /* ContentFilterMainLoop.m */; };
+		583B540629DD4AF200CB292A /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540529DD4AF200CB292A /* ContentFilterEditorView.m */; };
+		583B540729DD4AF200CB292A /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540529DD4AF200CB292A /* ContentFilterEditorView.m */; };
+		583B540A29DD4DFA00CB292A /* UIFont+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540929DD4DFA00CB292A /* UIFont+Convert.m */; };
+		583B540B29DD4DFA00CB292A /* UIFont+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540929DD4DFA00CB292A /* UIFont+Convert.m */; };
+		583B540E29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */; };
+		583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */; };
+		583B541529DD504500CB292A /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541129DD504500CB292A /* FCNavigationBar.m */; };
+		583B541629DD504500CB292A /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541129DD504500CB292A /* FCNavigationBar.m */; };
+		583B541729DD504500CB292A /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541429DD504500CB292A /* FCNavigationController.m */; };
+		583B541829DD504500CB292A /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541429DD504500CB292A /* FCNavigationController.m */; };
+		583B542429DD558D00CB292A /* AdBlockDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542329DD558D00CB292A /* AdBlockDetailViewController.m */; };
+		583B542529DD558D00CB292A /* AdBlockDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542329DD558D00CB292A /* AdBlockDetailViewController.m */; };
+		583B542829DD671E00CB292A /* NSAttributedString+Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542729DD671E00CB292A /* NSAttributedString+Style.m */; };
+		583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542729DD671E00CB292A /* NSAttributedString+Style.m */; };
+		583B543C29DD71A500CB292A /* HighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543429DD71A400CB292A /* HighlighterAST.m */; };
+		583B543D29DD71A500CB292A /* HighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543429DD71A400CB292A /* HighlighterAST.m */; };
+		583B543E29DD71A500CB292A /* InfoHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543729DD71A400CB292A /* InfoHighlighterAST.m */; };
+		583B543F29DD71A500CB292A /* InfoHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543729DD71A400CB292A /* InfoHighlighterAST.m */; };
+		583B544029DD71A500CB292A /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543929DD71A400CB292A /* TiggerHighlighterAST.m */; };
+		583B544129DD71A500CB292A /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543929DD71A400CB292A /* TiggerHighlighterAST.m */; };
+		583B544229DD71A500CB292A /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543A29DD71A400CB292A /* CommentHighlighterAST.m */; };
+		583B544329DD71A500CB292A /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543A29DD71A400CB292A /* CommentHighlighterAST.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -243,8 +279,6 @@
 		5876891C2719238000F834A4 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 5876891B2719238000F834A4 /* background.js */; };
 		587689262719238000F834A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 587688EE2719238000F834A4 /* Assets.xcassets */; };
 		587689402720064D00F834A4 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876893F2720064D00F834A4 /* NavigationController.m */; };
-		587CFA1729CD4C8200578981 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1629CD4C8200578981 /* StateView.m */; };
-		587CFA1829CD4C8200578981 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1629CD4C8200578981 /* StateView.m */; };
 		587CFA1B29CD811800578981 /* UIView+Duplicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1A29CD811800578981 /* UIView+Duplicate.m */; };
 		587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 587CFA1A29CD811800578981 /* UIView+Duplicate.m */; };
 		5881343027294C0E0055E1CE /* iframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 5881342E27294C0E0055E1CE /* iframe.html */; };
@@ -384,12 +418,8 @@
 		58A3618329C049C500080465 /* FCTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618129C049C500080465 /* FCTabBarItem.m */; };
 		58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618529C04BBC00080465 /* FCTabBarController.m */; };
 		58A3618729C04BBC00080465 /* FCTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618529C04BBC00080465 /* FCTabBarController.m */; };
-		58A3618A29C04C3500080465 /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618929C04C3500080465 /* FCNavigationController.m */; };
-		58A3618B29C04C3500080465 /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618929C04C3500080465 /* FCNavigationController.m */; };
 		58A3618F29C0502400080465 /* AdBlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618E29C0502400080465 /* AdBlockViewController.m */; };
 		58A3619029C0502500080465 /* AdBlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3618E29C0502400080465 /* AdBlockViewController.m */; };
-		58A3619329C06A4E00080465 /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3619229C06A4E00080465 /* FCNavigationBar.m */; };
-		58A3619429C06A4E00080465 /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3619229C06A4E00080465 /* FCNavigationBar.m */; };
 		58AC12E42860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E52860750800875D6D /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58AC12E82860752800875D6D /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E72860752800875D6D /* Plugin.m */; };
@@ -398,9 +428,6 @@
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
-		58B250DE29D1708C00F5419C /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 58B250DD29D1708C00F5419C /* blockerList.json */; };
-		58B250E129D1708C00F5419C /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B250E029D1708C00F5419C /* ContentBlockerRequestHandler.m */; };
-		58B250E529D1708C00F5419C /* Stay ContentBlocker.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
@@ -410,14 +437,6 @@
 		58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
 		58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */; };
 		58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B44528880474009BD608 /* UIView+Rotate.m */; };
-		58D0E11E29D189CE00DFBCC7 /* EasyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E11D29D189CE00DFBCC7 /* EasyList.m */; };
-		58D0E11F29D189CE00DFBCC7 /* EasyList.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E11D29D189CE00DFBCC7 /* EasyList.m */; };
-		58D0E12229D189FF00DFBCC7 /* EasyListRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12129D189FF00DFBCC7 /* EasyListRule.m */; };
-		58D0E12329D189FF00DFBCC7 /* EasyListRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12129D189FF00DFBCC7 /* EasyListRule.m */; };
-		58D0E12729D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
-		58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */; };
-		58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
-		58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */; };
 		58D0E12E29D331F700DFBCC7 /* myvoice.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 58D0E12D29D331F700DFBCC7 /* myvoice.m4a */; };
 		58D1B442288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
 		58D1B443288697F3009BD608 /* BaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1B441288697F3009BD608 /* BaseRecord.m */; };
@@ -600,6 +619,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		583B53F529DC192D00CB292A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 583B53EC29DC192C00CB292A;
+			remoteInfo = "Stay ContentBlockBasic";
+		};
 		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
@@ -635,13 +661,6 @@
 			remoteGlobalIDString = 588202C6285A12B400B2721A;
 			remoteInfo = macOSNative;
 		};
-		58B250E329D1708C00F5419C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 58B250DA29D1708B00F5419C;
-			remoteInfo = "Stay ContentBlocker";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -652,7 +671,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
-				58B250E529D1708C00F5419C /* Stay ContentBlocker.appex in Embed App Extensions */,
+				583B53F729DC192D00CB292A /* Stay ContentBlockBasic.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -707,8 +726,6 @@
 		3C8388E129335C68007563E6 /* RoundedBorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBorderView.swift; sourceTree = "<group>"; };
 		3C8388E62934E7D5007563E6 /* MyAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAdditions.m; sourceTree = "<group>"; };
 		3C8388E72934E7D5007563E6 /* MyAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAdditions.h; sourceTree = "<group>"; };
-		3C8388EA2934F56C007563E6 /* DMStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMStore.h; sourceTree = "<group>"; };
-		3C8388EB2934F56C007563E6 /* DMStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMStore.m; sourceTree = "<group>"; };
 		3C8B058F2949A54A003CE0A7 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		3C8B05922949AC87003CE0A7 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		3C919712299297D500485423 /* SYConcurrencyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYConcurrencyViewController.h; sourceTree = "<group>"; };
@@ -801,12 +818,8 @@
 		582062012950675900A32D0C /* DisabledWebsites.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisabledWebsites.m; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
 		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
-		583178FF29CBF41D00135D8D /* ContentFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilter.h; sourceTree = "<group>"; };
-		5831790029CBF41D00135D8D /* ContentFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilter.m; sourceTree = "<group>"; };
 		5831790429CBFC5700135D8D /* FCTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTableViewCell.h; sourceTree = "<group>"; };
 		5831790529CBFC5700135D8D /* FCTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTableViewCell.m; sourceTree = "<group>"; };
-		5831791029CC00CE00135D8D /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterTableVewCell.h; sourceTree = "<group>"; };
-		5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterTableVewCell.m; sourceTree = "<group>"; };
 		5831791429CC1F6E00135D8D /* FCRoundedShadowView2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCRoundedShadowView2.h; sourceTree = "<group>"; };
 		5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCRoundedShadowView2.m; sourceTree = "<group>"; };
 		5839C3162930525D00CCBAE5 /* ToastDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastDebugger.h; sourceTree = "<group>"; };
@@ -815,6 +828,48 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
+		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
+		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
+		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
+		583B53D729DBF9A000CB292A /* ContentFilter2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilter2.h; path = Stay/AdBlock/Filter/ContentFilter2.h; sourceTree = SOURCE_ROOT; };
+		583B53D929DBF9A000CB292A /* FilterTokenParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
+		583B53DA29DBF9A000CB292A /* FilterToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
+		583B53DB29DBF9A000CB292A /* FilterTokenParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
+		583B53DC29DBF9A000CB292A /* FilterToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
+		583B53DD29DBF9A000CB292A /* StateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateView.h; path = Stay/AdBlock/Filter/StateView.h; sourceTree = SOURCE_ROOT; };
+		583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilterTableVewCell.m; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.m; sourceTree = SOURCE_ROOT; };
+		583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlockBasic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		583B53EF29DC192D00CB292A /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		583B53F129DC192D00CB292A /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		583B53F229DC192D00CB292A /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		583B53F429DC192D00CB292A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		583B53FB29DC19D400CB292A /* ContentFilterManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterManager.h; path = Stay/AdBlock/Filter/ContentFilterManager.h; sourceTree = SOURCE_ROOT; };
+		583B53FC29DC19D400CB292A /* ContentFilterManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterManager.m; path = Stay/AdBlock/Filter/ContentFilterManager.m; sourceTree = SOURCE_ROOT; };
+		583B540029DC330500CB292A /* ContentFilterMainLoop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterMainLoop.h; path = Stay/AdBlock/Filter/ContentFilterMainLoop.h; sourceTree = SOURCE_ROOT; };
+		583B540129DC330500CB292A /* ContentFilterMainLoop.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterMainLoop.m; path = Stay/AdBlock/Filter/ContentFilterMainLoop.m; sourceTree = SOURCE_ROOT; };
+		583B540429DD4AF200CB292A /* ContentFilterEditorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterEditorView.h; path = Stay/AdBlock/Filter/ContentFilterEditorView.h; sourceTree = SOURCE_ROOT; };
+		583B540529DD4AF200CB292A /* ContentFilterEditorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterEditorView.m; path = Stay/AdBlock/Filter/ContentFilterEditorView.m; sourceTree = SOURCE_ROOT; };
+		583B540829DD4DFA00CB292A /* UIFont+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIFont+Convert.h"; sourceTree = "<group>"; };
+		583B540929DD4DFA00CB292A /* UIFont+Convert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+Convert.m"; sourceTree = "<group>"; };
+		583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterHighlighter.h; path = Stay/UXFramework/ContentFilterHighlighter.h; sourceTree = SOURCE_ROOT; };
+		583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterHighlighter.m; path = Stay/UXFramework/ContentFilterHighlighter.m; sourceTree = SOURCE_ROOT; };
+		583B541129DD504500CB292A /* FCNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCNavigationBar.m; sourceTree = "<group>"; };
+		583B541229DD504500CB292A /* FCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCNavigationController.h; sourceTree = "<group>"; };
+		583B541329DD504500CB292A /* FCNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCNavigationBar.h; sourceTree = "<group>"; };
+		583B541429DD504500CB292A /* FCNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCNavigationController.m; sourceTree = "<group>"; };
+		583B542229DD558D00CB292A /* AdBlockDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdBlockDetailViewController.h; sourceTree = "<group>"; };
+		583B542329DD558D00CB292A /* AdBlockDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdBlockDetailViewController.m; sourceTree = "<group>"; };
+		583B542629DD671E00CB292A /* NSAttributedString+Style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Style.h"; sourceTree = "<group>"; };
+		583B542729DD671E00CB292A /* NSAttributedString+Style.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Style.m"; sourceTree = "<group>"; };
+		583B543429DD71A400CB292A /* HighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HighlighterAST.m; sourceTree = "<group>"; };
+		583B543529DD71A400CB292A /* TiggerHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiggerHighlighterAST.h; sourceTree = "<group>"; };
+		583B543629DD71A400CB292A /* CommentHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentHighlighterAST.h; sourceTree = "<group>"; };
+		583B543729DD71A400CB292A /* InfoHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoHighlighterAST.m; sourceTree = "<group>"; };
+		583B543829DD71A400CB292A /* HighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighlighterAST.h; sourceTree = "<group>"; };
+		583B543929DD71A400CB292A /* TiggerHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiggerHighlighterAST.m; sourceTree = "<group>"; };
+		583B543A29DD71A400CB292A /* CommentHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentHighlighterAST.m; sourceTree = "<group>"; };
+		583B543B29DD71A400CB292A /* InfoHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoHighlighterAST.h; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -895,8 +950,6 @@
 		587689252719238000F834A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5876893E2720064D00F834A4 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		5876893F2720064D00F834A4 /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
-		587CFA1529CD4C8200578981 /* StateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StateView.h; sourceTree = "<group>"; };
-		587CFA1629CD4C8200578981 /* StateView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StateView.m; sourceTree = "<group>"; };
 		587CFA1929CD811800578981 /* UIView+Duplicate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Duplicate.h"; sourceTree = "<group>"; };
 		587CFA1A29CD811800578981 /* UIView+Duplicate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Duplicate.m"; sourceTree = "<group>"; };
 		5881342E27294C0E0055E1CE /* iframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = iframe.html; sourceTree = "<group>"; };
@@ -950,12 +1003,8 @@
 		58A3618129C049C500080465 /* FCTabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTabBarItem.m; sourceTree = "<group>"; };
 		58A3618429C04BBC00080465 /* FCTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTabBarController.h; sourceTree = "<group>"; };
 		58A3618529C04BBC00080465 /* FCTabBarController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTabBarController.m; sourceTree = "<group>"; };
-		58A3618829C04C3500080465 /* FCNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCNavigationController.h; sourceTree = "<group>"; };
-		58A3618929C04C3500080465 /* FCNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCNavigationController.m; sourceTree = "<group>"; };
 		58A3618D29C0502400080465 /* AdBlockViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdBlockViewController.h; sourceTree = "<group>"; };
 		58A3618E29C0502400080465 /* AdBlockViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdBlockViewController.m; sourceTree = "<group>"; };
-		58A3619129C06A4E00080465 /* FCNavigationBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCNavigationBar.h; sourceTree = "<group>"; };
-		58A3619229C06A4E00080465 /* FCNavigationBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCNavigationBar.m; sourceTree = "<group>"; };
 		58AC12E22860750800875D6D /* FCShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCShared.h; sourceTree = "<group>"; };
 		58AC12E32860750800875D6D /* FCShared.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCShared.m; sourceTree = "<group>"; };
 		58AC12E62860752800875D6D /* Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plugin.h; sourceTree = "<group>"; };
@@ -967,11 +1016,6 @@
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
-		58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlocker.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		58B250DD29D1708C00F5419C /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
-		58B250DF29D1708C00F5419C /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
-		58B250E029D1708C00F5419C /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
-		58B250E229D1708C00F5419C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
@@ -983,14 +1027,6 @@
 		58CFA5CB28F30668004C5140 /* SYNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNavigationController.m; sourceTree = "<group>"; };
 		58CFA5CF28F426F9004C5140 /* SYSecondaryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYSecondaryViewController.h; sourceTree = "<group>"; };
 		58CFA5D028F426F9004C5140 /* SYSecondaryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSecondaryViewController.m; sourceTree = "<group>"; };
-		58D0E11C29D189CE00DFBCC7 /* EasyList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EasyList.h; sourceTree = "<group>"; };
-		58D0E11D29D189CE00DFBCC7 /* EasyList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyList.m; sourceTree = "<group>"; };
-		58D0E12029D189FF00DFBCC7 /* EasyListRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EasyListRule.h; sourceTree = "<group>"; };
-		58D0E12129D189FF00DFBCC7 /* EasyListRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EasyListRule.m; sourceTree = "<group>"; };
-		58D0E12529D19F9700DFBCC7 /* FilterTokenParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
-		58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
-		58D0E12929D19FAB00DFBCC7 /* FilterToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
-		58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
 		58D0E12D29D331F700DFBCC7 /* myvoice.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = myvoice.m4a; sourceTree = "<group>"; };
 		58D1B440288697F3009BD608 /* BaseRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseRecord.h; sourceTree = "<group>"; };
 		58D1B441288697F3009BD608 /* BaseRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseRecord.m; sourceTree = "<group>"; };
@@ -1220,6 +1256,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		583B53EA29DC192C00CB292A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58639CD72864477D00AA80D5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1278,13 +1321,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		58B250D829D1708B00F5419C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1310,8 +1346,6 @@
 				3C8388BD292E55B9007563E6 /* DownloadManager.m */,
 				3C8388E72934E7D5007563E6 /* MyAdditions.h */,
 				3C8388E62934E7D5007563E6 /* MyAdditions.m */,
-				3C8388EA2934F56C007563E6 /* DMStore.h */,
-				3C8388EB2934F56C007563E6 /* DMStore.m */,
 			);
 			path = Download;
 			sourceTree = "<group>";
@@ -1427,13 +1461,22 @@
 		583178FA29CBF04800135D8D /* Filter */ = {
 			isa = PBXGroup;
 			children = (
-				58D0E12429D19D7900DFBCC7 /* Parser */,
-				583178FF29CBF41D00135D8D /* ContentFilter.h */,
-				5831790029CBF41D00135D8D /* ContentFilter.m */,
-				5831791029CC00CE00135D8D /* ContentFilterTableVewCell.h */,
-				5831791129CC00CE00135D8D /* ContentFilterTableVewCell.m */,
-				587CFA1529CD4C8200578981 /* StateView.h */,
-				587CFA1629CD4C8200578981 /* StateView.m */,
+				583B543329DD71A400CB292A /* HighlighterAST */,
+				583B53FB29DC19D400CB292A /* ContentFilterManager.h */,
+				583B53FC29DC19D400CB292A /* ContentFilterManager.m */,
+				583B53D729DBF9A000CB292A /* ContentFilter2.h */,
+				583B53D529DBF9A000CB292A /* ContentFilter2.m */,
+				583B540429DD4AF200CB292A /* ContentFilterEditorView.h */,
+				583B540529DD4AF200CB292A /* ContentFilterEditorView.m */,
+				583B540029DC330500CB292A /* ContentFilterMainLoop.h */,
+				583B540129DC330500CB292A /* ContentFilterMainLoop.m */,
+				583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */,
+				583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */,
+				583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */,
+				583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */,
+				583B53D829DBF9A000CB292A /* Parser */,
+				583B53DD29DBF9A000CB292A /* StateView.h */,
+				583B53D429DBF9A000CB292A /* StateView.m */,
 			);
 			name = Filter;
 			path = "New Group";
@@ -1466,13 +1509,73 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
-				58D0E11B29D1893700DFBCC7 /* AdbPlus */,
+				583B53C129DABFE400CB292A /* Resources */,
 				583178FA29CBF04800135D8D /* Filter */,
 				58A3618D29C0502400080465 /* AdBlockViewController.h */,
 				58A3618E29C0502400080465 /* AdBlockViewController.m */,
+				583B542229DD558D00CB292A /* AdBlockDetailViewController.h */,
+				583B542329DD558D00CB292A /* AdBlockDetailViewController.m */,
 			);
 			path = AdBlock;
 			sourceTree = "<group>";
+		};
+		583B53C129DABFE400CB292A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				583B53C229DAC01A00CB292A /* EasyList.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		583B53D829DBF9A000CB292A /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				583B53D929DBF9A000CB292A /* FilterTokenParser.h */,
+				583B53DB29DBF9A000CB292A /* FilterTokenParser.m */,
+				583B53DA29DBF9A000CB292A /* FilterToken.h */,
+				583B53DC29DBF9A000CB292A /* FilterToken.m */,
+			);
+			name = Parser;
+			path = Stay/AdBlock/Filter/Parser;
+			sourceTree = SOURCE_ROOT;
+		};
+		583B53EE29DC192D00CB292A /* Stay ContentBlockBasic */ = {
+			isa = PBXGroup;
+			children = (
+				583B53EF29DC192D00CB292A /* blockerList.json */,
+				583B53F129DC192D00CB292A /* ContentBlockerRequestHandler.h */,
+				583B53F229DC192D00CB292A /* ContentBlockerRequestHandler.m */,
+				583B53F429DC192D00CB292A /* Info.plist */,
+			);
+			path = "Stay ContentBlockBasic";
+			sourceTree = "<group>";
+		};
+		583B541029DD504500CB292A /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				583B541129DD504500CB292A /* FCNavigationBar.m */,
+				583B541229DD504500CB292A /* FCNavigationController.h */,
+				583B541329DD504500CB292A /* FCNavigationBar.h */,
+				583B541429DD504500CB292A /* FCNavigationController.m */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		583B543329DD71A400CB292A /* HighlighterAST */ = {
+			isa = PBXGroup;
+			children = (
+				583B543529DD71A400CB292A /* TiggerHighlighterAST.h */,
+				583B543929DD71A400CB292A /* TiggerHighlighterAST.m */,
+				583B543629DD71A400CB292A /* CommentHighlighterAST.h */,
+				583B543A29DD71A400CB292A /* CommentHighlighterAST.m */,
+				583B543B29DD71A400CB292A /* InfoHighlighterAST.h */,
+				583B543729DD71A400CB292A /* InfoHighlighterAST.m */,
+				583B543829DD71A400CB292A /* HighlighterAST.h */,
+				583B543429DD71A400CB292A /* HighlighterAST.m */,
+			);
+			name = HighlighterAST;
+			path = Stay/AdBlock/HighlighterAST;
+			sourceTree = SOURCE_ROOT;
 		};
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
@@ -1561,7 +1664,7 @@
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
 				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
-				58B250DC29D1708C00F5419C /* Stay ContentBlocker */,
+				583B53EE29DC192D00CB292A /* Stay ContentBlockBasic */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -1579,7 +1682,7 @@
 				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
-				58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */,
+				583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1782,8 +1885,8 @@
 		58A3617229C020F700080465 /* UXFramework */ = {
 			isa = PBXGroup;
 			children = (
+				583B541029DD504500CB292A /* Navigation */,
 				5831790329CBFC2600135D8D /* TableView */,
-				58A3618C29C04C6400080465 /* Navigation */,
 				58A3617F29C0498400080465 /* Tab */,
 				58A3617329C0218800080465 /* FCViewController.h */,
 				58A3617429C0218800080465 /* FCViewController.m */,
@@ -1793,6 +1896,10 @@
 				5831791529CC1F6E00135D8D /* FCRoundedShadowView2.m */,
 				587CFA1929CD811800578981 /* UIView+Duplicate.h */,
 				587CFA1A29CD811800578981 /* UIView+Duplicate.m */,
+				583B540829DD4DFA00CB292A /* UIFont+Convert.h */,
+				583B540929DD4DFA00CB292A /* UIFont+Convert.m */,
+				583B542629DD671E00CB292A /* NSAttributedString+Style.h */,
+				583B542729DD671E00CB292A /* NSAttributedString+Style.m */,
 			);
 			path = UXFramework;
 			sourceTree = "<group>";
@@ -1808,18 +1915,6 @@
 				58A3618529C04BBC00080465 /* FCTabBarController.m */,
 			);
 			path = Tab;
-			sourceTree = "<group>";
-		};
-		58A3618C29C04C6400080465 /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				58A3618829C04C3500080465 /* FCNavigationController.h */,
-				58A3618929C04C3500080465 /* FCNavigationController.m */,
-				58A3619129C06A4E00080465 /* FCNavigationBar.h */,
-				58A3619229C06A4E00080465 /* FCNavigationBar.m */,
-			);
-			name = Navigation;
-			path = "New Group1";
 			sourceTree = "<group>";
 		};
 		58AC12E1286074C700875D6D /* Access */ = {
@@ -1840,17 +1935,6 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		58B250DC29D1708C00F5419C /* Stay ContentBlocker */ = {
-			isa = PBXGroup;
-			children = (
-				58B250DD29D1708C00F5419C /* blockerList.json */,
-				58B250DF29D1708C00F5419C /* ContentBlockerRequestHandler.h */,
-				58B250E029D1708C00F5419C /* ContentBlockerRequestHandler.m */,
-				58B250E229D1708C00F5419C /* Info.plist */,
-			);
-			path = "Stay ContentBlocker";
-			sourceTree = "<group>";
-		};
 		58C663792990E04300B00110 /* VideoParser */ = {
 			isa = PBXGroup;
 			children = (
@@ -1859,28 +1943,6 @@
 				58C6637B2990E05F00B00110 /* VideoParser.m */,
 			);
 			path = VideoParser;
-			sourceTree = "<group>";
-		};
-		58D0E11B29D1893700DFBCC7 /* AdbPlus */ = {
-			isa = PBXGroup;
-			children = (
-				58D0E11C29D189CE00DFBCC7 /* EasyList.h */,
-				58D0E11D29D189CE00DFBCC7 /* EasyList.m */,
-				58D0E12029D189FF00DFBCC7 /* EasyListRule.h */,
-				58D0E12129D189FF00DFBCC7 /* EasyListRule.m */,
-			);
-			path = AdbPlus;
-			sourceTree = "<group>";
-		};
-		58D0E12429D19D7900DFBCC7 /* Parser */ = {
-			isa = PBXGroup;
-			children = (
-				58D0E12529D19F9700DFBCC7 /* FilterTokenParser.h */,
-				58D0E12629D19F9700DFBCC7 /* FilterTokenParser.m */,
-				58D0E12929D19FAB00DFBCC7 /* FilterToken.h */,
-				58D0E12A29D19FAB00DFBCC7 /* FilterToken.m */,
-			);
-			path = Parser;
 			sourceTree = "<group>";
 		};
 		58D1B44D28893D27009BD608 /* IAP */ = {
@@ -2551,6 +2613,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		583B53EC29DC192C00CB292A /* Stay ContentBlockBasic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 583B53F829DC192D00CB292A /* Build configuration list for PBXNativeTarget "Stay ContentBlockBasic" */;
+			buildPhases = (
+				583B53E929DC192C00CB292A /* Sources */,
+				583B53EA29DC192C00CB292A /* Frameworks */,
+				583B53EB29DC192C00CB292A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay ContentBlockBasic";
+			productName = "Stay ContentBlockBasic";
+			productReference = 583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */;
@@ -2583,7 +2662,7 @@
 			);
 			dependencies = (
 				5876890F2719238000F834A4 /* PBXTargetDependency */,
-				58B250E429D1708C00F5419C /* PBXTargetDependency */,
+				583B53F629DC192D00CB292A /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -2682,23 +2761,6 @@
 			productReference = 588202C7285A12B400B2721A /* macOSNative.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
-		58B250DA29D1708B00F5419C /* Stay ContentBlocker */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 58B250E629D1708C00F5419C /* Build configuration list for PBXNativeTarget "Stay ContentBlocker" */;
-			buildPhases = (
-				58B250D729D1708B00F5419C /* Sources */,
-				58B250D829D1708B00F5419C /* Frameworks */,
-				58B250D929D1708B00F5419C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Stay ContentBlocker";
-			productName = "Stay ContentBlocker";
-			productReference = 58B250DB29D1708B00F5419C /* Stay ContentBlocker.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2708,6 +2770,9 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
+					583B53EC29DC192C00CB292A = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					58639CD92864477D00AA80D5 = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
@@ -2728,9 +2793,6 @@
 					};
 					588202C6285A12B400B2721A = {
 						CreatedOnToolsVersion = 13.3.1;
-					};
-					58B250DA29D1708B00F5419C = {
-						CreatedOnToolsVersion = 14.0.1;
 					};
 				};
 			};
@@ -2757,12 +2819,20 @@
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
 				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
-				58B250DA29D1708B00F5419C /* Stay ContentBlocker */,
+				583B53EC29DC192C00CB292A /* Stay ContentBlockBasic */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		583B53EB29DC192C00CB292A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				583B53F029DC192D00CB292A /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58639CD82864477D00AA80D5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2828,6 +2898,7 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
+				583B53C329DAC01A00CB292A /* EasyList.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
@@ -2931,6 +3002,7 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
+				583B53C429DAC01A00CB292A /* EasyList.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,
@@ -2953,14 +3025,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		58B250D929D1708B00F5419C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				58B250DE29D1708C00F5419C /* blockerList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3048,6 +3112,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		583B53E929DC192C00CB292A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				583B53F329DC192D00CB292A /* ContentBlockerRequestHandler.m in Sources */,
+				583B53FF29DC19D400CB292A /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58639CD62864477D00AA80D5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3079,7 +3152,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				582061C8294C4C0E00A32D0C /* ModalItemView.m in Sources */,
-				58D0E12729D19F9700DFBCC7 /* FilterTokenParser.m in Sources */,
 				3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
@@ -3119,20 +3191,19 @@
 				84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */,
 				3C949B9A297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D4F297394F500118063 /* FWEncryptorAES.m in Sources */,
-				5831790129CBF41D00135D8D /* ContentFilter.m in Sources */,
 				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
 				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
+				583B543E29DD71A500CB292A /* InfoHighlighterAST.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
-				58D0E11E29D189CE00DFBCC7 /* EasyList.m in Sources */,
 				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
 				84AA932128A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				3C72260D288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				84CC9B5928D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
-				58D0E12B29D19FAB00DFBCC7 /* FilterToken.m in Sources */,
 				583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
+				583B542429DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
@@ -3147,6 +3218,8 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */,
+				583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				582061D2294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
 				5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
@@ -3165,10 +3238,10 @@
 				84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				849E77D3293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
-				58A3619329C06A4E00080465 /* FCNavigationBar.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
 				5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
+				583B540A29DD4DFA00CB292A /* UIFont+Convert.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
 				588402C9295D3272002CA227 /* ToastCenter.m in Sources */,
 				84C2B407288D955F002A0C1B /* FirstFlashView.m in Sources */,
@@ -3181,11 +3254,11 @@
 				3C358D53297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				5839C3182930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				58C6637C2990E05F00B00110 /* VideoParser.m in Sources */,
-				587CFA1729CD4C8200578981 /* StateView.m in Sources */,
 				588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */,
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
 				84F48318273A739800217BB3 /* MainTabBarController.m in Sources */,
+				583B543C29DD71A500CB292A /* HighlighterAST.m in Sources */,
 				3C8388BE292E55B9007563E6 /* DownloadManager.m in Sources */,
 				582061CA294C4C0E00A32D0C /* ModalItemClickWithIconView.m in Sources */,
 				84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */,
@@ -3193,6 +3266,7 @@
 				587689402720064D00F834A4 /* NavigationController.m in Sources */,
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
 				84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
+				583B544029DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
 				8460E47429925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				582061F2294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
 				58A3617D29C048CE00080465 /* FCTabBar.m in Sources */,
@@ -3203,14 +3277,13 @@
 				582061CE294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				58A3616E29BF11F100080465 /* RC4.m in Sources */,
-				5831791229CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */,
 				582061E2294C4CA400A32D0C /* FCLayoutLabel.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
+				583B542829DD671E00CB292A /* NSAttributedString+Style.m in Sources */,
 				58A3617929C023BC00080465 /* FCRootViewController.m in Sources */,
-				3C8388EC2934F56C007563E6 /* DMStore.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58A3618229C049C500080465 /* FCTabBarItem.m in Sources */,
@@ -3223,8 +3296,8 @@
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
-				58A3618A29C04C3500080465 /* FCNavigationController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
+				583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
@@ -3235,27 +3308,35 @@
 				58724A2F28FE4D0900A894D8 /* QuickAccess.m in Sources */,
 				582061E6294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
+				583B540629DD4AF200CB292A /* ContentFilterEditorView.m in Sources */,
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				58A3617529C0218800080465 /* FCViewController.m in Sources */,
+				583B544229DD71A500CB292A /* CommentHighlighterAST.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
+				583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */,
+				583B53DF29DBF9A100CB292A /* StateView.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
+				583B53E529DBF9A100CB292A /* FilterToken.m in Sources */,
+				583B540E29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
 				3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
+				583B53FD29DC19D400CB292A /* ContentFilterManager.m in Sources */,
 				8460E47C2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
 				3C949BAE2971813E0068231A /* NSString+m3u8.m in Sources */,
+				583B541529DD504500CB292A /* FCNavigationBar.m in Sources */,
 				5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
+				583B541729DD504500CB292A /* FCNavigationController.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
-				58D0E12229D189FF00DFBCC7 /* EasyListRule.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */,
@@ -3319,22 +3400,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
-				587CFA1829CD4C8200578981 /* StateView.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
-				3C8388ED2934F56C007563E6 /* DMStore.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
+				583B542529DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
+				583B541829DD504500CB292A /* FCNavigationController.m in Sources */,
 				588402CA295D3272002CA227 /* ToastCenter.m in Sources */,
 				3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				58A3618729C04BBC00080465 /* FCTabBarController.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
 				84932DDE292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
-				58A3618B29C04C3500080465 /* FCNavigationController.m in Sources */,
 				582061E7294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
 				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
+				583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */,
 				3C949B93297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
@@ -3354,6 +3436,8 @@
 				8460E47529925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
+				583B544329DD71A500CB292A /* CommentHighlighterAST.m in Sources */,
+				583B543D29DD71A500CB292A /* HighlighterAST.m in Sources */,
 				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
@@ -3363,7 +3447,10 @@
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
 				3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */,
+				583B53E629DBF9A100CB292A /* FilterToken.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
+				583B540729DD4AF200CB292A /* ContentFilterEditorView.m in Sources */,
+				583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
@@ -3377,13 +3464,13 @@
 				582061FB294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
 				582061FF294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
+				583B543F29DD71A500CB292A /* InfoHighlighterAST.m in Sources */,
 				3C949B9D297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
-				58D0E12829D19F9700DFBCC7 /* FilterTokenParser.m in Sources */,
 				58A3617029BF11F100080465 /* RC4.m in Sources */,
 				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
@@ -3406,7 +3493,6 @@
 				3C358D582973E58B00118063 /* NSString+m3u8.m in Sources */,
 				3C91971D299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
-				58A3619429C06A4E00080465 /* FCNavigationBar.m in Sources */,
 				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,
 				582061D1294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
 				58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */,
@@ -3433,7 +3519,6 @@
 				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */,
-				5831790229CBF41D00135D8D /* ContentFilter.m in Sources */,
 				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
@@ -3455,10 +3540,11 @@
 				58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */,
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
 				5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */,
+				583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				5882026E2859E73900B2721A /* main.m in Sources */,
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
+				583B544129DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
-				58D0E12329D189FF00DFBCC7 /* EasyListRule.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
 				5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */,
@@ -3469,11 +3555,11 @@
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
-				5831791329CC00CE00135D8D /* ContentFilterTableVewCell.m in Sources */,
 				58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */,
 				3C949B97297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
+				583B53FE29DC19D400CB292A /* ContentFilterManager.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
 				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
 				58D1B45928893D4C009BD608 /* RMAppReceipt.m in Sources */,
@@ -3482,20 +3568,25 @@
 				58C6637D2990E05F00B00110 /* VideoParser.m in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				3C358D592973E59500118063 /* NSURL+m3u8.m in Sources */,
+				583B540329DC330500CB292A /* ContentFilterMainLoop.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
 				582061D7294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
+				583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
 				3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
+				583B540B29DD4DFA00CB292A /* UIFont+Convert.m in Sources */,
+				583B541629DD504500CB292A /* FCNavigationBar.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				849E77D8293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
+				583B53E029DBF9A100CB292A /* StateView.m in Sources */,
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				582061C7294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
@@ -3504,7 +3595,6 @@
 				5884031D29667079002CA227 /* UIColor+Convert.m in Sources */,
 				58EA4451286B00B500BD6C4D /* iCloudService.m in Sources */,
 				582061F3294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
-				58D0E11F29D189CE00DFBCC7 /* EasyList.m in Sources */,
 				582061C9294C4C0E00A32D0C /* ModalItemView.m in Sources */,
 				3C8388C92931ADC5007563E6 /* FCTabConfig.m in Sources */,
 				58A3618329C049C500080465 /* FCTabBarItem.m in Sources */,
@@ -3512,7 +3602,6 @@
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
-				58D0E12C29D19FAB00DFBCC7 /* FilterToken.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
 				582061EB294C4CC800A32D0C /* UIView+Layout.m in Sources */,
 				3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
@@ -3528,17 +3617,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		58B250D729D1708B00F5419C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				58B250E129D1708C00F5419C /* ContentBlockerRequestHandler.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		583B53F629DC192D00CB292A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 583B53EC29DC192C00CB292A /* Stay ContentBlockBasic */;
+			targetProxy = 583B53F529DC192D00CB292A /* PBXContainerItemProxy */;
+		};
 		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = maccatalyst;
@@ -3564,11 +3650,6 @@
 			isa = PBXTargetDependency;
 			target = 588202C6285A12B400B2721A /* macOSNative */;
 			targetProxy = 589741CB28680854008FB897 /* PBXContainerItemProxy */;
-		};
-		58B250E429D1708C00F5419C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 58B250DA29D1708B00F5419C /* Stay ContentBlocker */;
-			targetProxy = 58B250E329D1708C00F5419C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3597,13 +3678,67 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		583B53F929DC192D00CB292A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay ContentBlockBasic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlockBasic";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlockBasic";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		583B53FA29DC192D00CB292A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay ContentBlockBasic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlockBasic";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlockBasic";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		58639CF32864477D00AA80D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3643,7 +3778,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stay-Mac Extension/Stay_Mac_Extension.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "MacNative=1";
@@ -3798,7 +3933,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 134;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -3832,7 +3967,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 134;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -3871,7 +4006,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 134;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -3924,7 +4059,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 130;
+				CURRENT_PROJECT_VERSION = 134;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4070,7 +4205,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 96;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4127,7 +4262,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 93;
+				CURRENT_PROJECT_VERSION = 96;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4217,67 +4352,18 @@
 			};
 			name = Release;
 		};
-		58B250E729D1708C00F5419C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
-				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlocker/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlocker";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
-				INFOPLIST_KEY_WKWatchOnly = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 2.3.8;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlocker";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		58B250E829D1708C00F5419C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 125;
-				DEVELOPMENT_TEAM = J25G7D7AL3;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlocker/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlocker";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
-				INFOPLIST_KEY_WKWatchOnly = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 2.3.8;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlocker";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		583B53F829DC192D00CB292A /* Build configuration list for PBXNativeTarget "Stay ContentBlockBasic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				583B53F929DC192D00CB292A /* Debug */,
+				583B53FA29DC192D00CB292A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		58639CF22864477D00AA80D5 /* Build configuration list for PBXNativeTarget "Stay-Mac Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -4346,15 +4432,6 @@
 			buildConfigurations = (
 				588202C9285A12B400B2721A /* Debug */,
 				588202CA285A12B400B2721A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		58B250E629D1708C00F5419C /* Build configuration list for PBXNativeTarget "Stay ContentBlocker" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				58B250E729D1708C00F5419C /* Debug */,
-				58B250E829D1708C00F5419C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
