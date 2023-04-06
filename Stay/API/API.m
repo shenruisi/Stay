@@ -169,7 +169,7 @@ static API *instance = nil;
     return ret;
 }
 
-- (void)commitYoutbe:(NSString *)path code:(NSString *)code{
+- (void)commitYoutbe:(NSString *)path code:(NSString *)code nCode:(NSString *)nCode{
     NSString *reqUrl = [NSString stringWithFormat:@"%@commit/youtube",STAY_FORK_END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
@@ -177,7 +177,8 @@ static API *instance = nil;
     NSDictionary *param = @{
         @"biz": @{
             @"path":path,
-            @"code":code
+            @"code":code,
+            @"n_code":nCode ? nCode : @""
         }
     };
     

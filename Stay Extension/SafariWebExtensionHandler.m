@@ -365,17 +365,21 @@
         NSString *location = message[@"location"];
         NSDictionary *response = [[API shared] downloadYoutube:path];
         NSString *code;
-        if ((code = response[@"biz"][@"code"]) != nil){
+        NSString *nCode;
+        if ((code = response[@"biz"][@"code"]) != nil
+            && (nCode = response[@"biz"][@"n_code"]) != nil){
             body = @{
-                @"code" : code
+                @"code" : code,
+                @"n_code" : nCode
             };
         }
     }
     else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
         NSString *path = message[@"path"];
         NSString *code = message[@"code"];
+        NSString *nCode = message[@"n_code"];
         if (path.length > 0 && code.length > 0){
-            [[API shared] commitYoutbe:path code:code];
+            [[API shared] commitYoutbe:path code:code ];
         }
     }
 
