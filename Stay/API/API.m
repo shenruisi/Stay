@@ -129,7 +129,6 @@ static API *instance = nil;
 }
 
 - (NSDictionary *)downloadYoutube:(NSString *)path{
-//    path = @"xxxx";
     if ([self.youtubeCodeCache objectForKey:path]){
         return [self.youtubeCodeCache objectForKey:path];
     }
@@ -177,6 +176,7 @@ static API *instance = nil;
                 @"status_code" : @([httpResponse statusCode])
             };
         }
+        
         dispatch_semaphore_signal(sem);
     
     }] resume];
