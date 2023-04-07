@@ -1113,14 +1113,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     decodeFunObj.decodeSpeedFunStr = response.body.n_code;
                     decodeFunObj.status = response.body.status_code;
                 }
-                sendResponse(decodeFunObj)
+                // console.log('fetchYoutubeDecodeFun---decodeFunObj-----', decodeFunObj)
+                sendResponse({decodeFunObj})
             });
         }
         else if ("saveYoutubeDecodeFun" === request.operate){
             let path = request.pathUuid;
             let code = request.randomFunStr || '';
             let n_code = request.randomSpeedFunStr || '';
-            // console.log('saveYoutubeDecodeFun----path=',path, ",location=",location)
+            console.log('saveYoutubeDecodeFun----path=',path, ",code=",code,",n_code=",n_code)
             browser.runtime.sendNativeMessage("application.id", { type: "yt_element_ci", path, code, n_code}, function (response) {
                 // console.log('saveYoutubeDecodeFun----', response)
                 sendResponse({ decodeFun: '' })
