@@ -27,6 +27,12 @@
 @property (nonatomic, strong) UIImageView *versionImageView;
 @property (nonatomic, strong) UILabel *versionLabel;
 @property (nonatomic, strong) UILabel *updateTime;
+@property (nonatomic, strong) NSMutableArray *viewConstraints;
+
+@property (nonatomic, strong) NSMutableArray *titleConstraints;
+@property (nonatomic, strong) NSMutableArray *subTitleConstraints;
+@property (nonatomic, strong) NSMutableArray *updateBtnConstraints;
+
 @end
 
 @implementation HomeDetailCell
@@ -51,30 +57,43 @@
 
 - (void )createCellView:(UserScript *)dic{
     
+    
+    [NSLayoutConstraint deactivateConstraints:self.titleConstraints];
+    [NSLayoutConstraint deactivateConstraints:self.subTitleConstraints];
+    [NSLayoutConstraint deactivateConstraints:self.updateBtnConstraints];
+//    [self.fcContentView layoutIfNeeded];
 
-//    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
+    [self.updateBtnConstraints removeAllObjects];
+    [self.titleConstraints removeAllObjects];
+    [self.subTitleConstraints removeAllObjects];
+
     [self.iconImageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
     if(dic.active == 0 && dic.icon != NULL && dic.icon.length > 0) {
         self.iconImageView.image = [self makeGrayImage:self.iconImageView.image];
     }
-
+    
     if (dic.icon != NULL && dic.icon.length > 0) {
         self.imageBox.hidden = false;
-        [NSLayoutConstraint activateConstraints:@[
-            [self.headerLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
-            [self.headerLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
-
+        [self.titleConstraints addObjectsFromArray:@[
+                    [self.headerLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
+                    [self.headerLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
+        ]];
+        
+        [self.subTitleConstraints addObjectsFromArray:@[
             [self.subLabel.topAnchor constraintEqualToAnchor:self.headerLabel.bottomAnchor constant:5],
             [self.subLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
         ]];
         
-        
+
     } else {
         self.imageBox.hidden = true;
-        [NSLayoutConstraint activateConstraints:@[
+        [self.titleConstraints addObjectsFromArray:@[
             [self.headerLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
             [self.headerLabel.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
-
+        
+        ]];
+        
+        [self.subTitleConstraints addObjectsFromArray:@[
             [self.subLabel.topAnchor constraintEqualToAnchor:self.headerLabel.bottomAnchor constant:5],
             [self.subLabel.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
         ]];
@@ -90,52 +109,66 @@
     NSString *uuid = dic.uuid;
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
     if(entity != nil && entity.needUpdate && !dic.updateSwitch && entity.updateScript != NULL && entity.updateScript.content != NULL){
+        self.updateBtn.hidden = false;
 
         objc_setAssociatedObject (self.updateBtn , @"script", entity.updateScript.description, OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (self.updateBtn , @"scriptContent", entity.updateScript.content, OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (self.updateBtn , @"downloadUrl", entity.script.downloadUrl, OBJC_ASSOCIATION_COPY_NONATOMIC);
-//
-        
         
         CGRect rect = [self.updateBtn.titleLabel.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.body.pointSize)
                                                options:NSStringDrawingUsesLineFragmentOrigin
                                             attributes:@{NSFontAttributeName : FCStyle.footnoteBold}
                                                context:nil];
-            
-        CGRect titleRect = [self.headerLabel.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.body.pointSize)
-                                               options:NSStringDrawingUsesLineFragmentOrigin
-                                            attributes:@{NSFontAttributeName : FCStyle.body}
-                                               context:nil];
-            
         
         
-        [NSLayoutConstraint activateConstraints:@[
-            [self.updateBtn.heightAnchor constraintEqualToConstant:25],
-            [self.updateBtn.widthAnchor constraintEqualToConstant:rect.size.width + 10],
-            [self.updateBtn.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
-            [self.updateBtn.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-11],
+        [self.updateBtnConstraints addObjectsFromArray:@[[self.updateBtn.heightAnchor constraintEqualToConstant:25],
+                                                           [self.updateBtn.widthAnchor constraintEqualToConstant:rect.size.width + 10],
+                                                           [self.updateBtn.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
+                                                    [self.updateBtn.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-11],]];
+
+
+                [NSLayoutConstraint activateConstraints:self.updateBtnConstraints];
+        [self.titleConstraints addObjectsFromArray:@[
             [self.headerLabel.rightAnchor constraintEqualToAnchor:self.updateBtn.leftAnchor constant:-11],
+        ]];
+        [self.subTitleConstraints addObjectsFromArray:@[
             [self.subLabel.widthAnchor constraintEqualToAnchor:self.headerLabel.widthAnchor]
-         ]];
+
+        ]];
     
         
     } else {
+        self.updateBtn.hidden = true;
+
+        
+        
         if (dic.icon != NULL && dic.icon.length > 0) {
-            [NSLayoutConstraint activateConstraints:@[
+            [self.titleConstraints addObjectsFromArray:@[
                 [self.headerLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-90],
+            ]];
+            [self.subTitleConstraints addObjectsFromArray:@[
                 [self.subLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-90],
+
             ]];
+            
         } else {
-            [NSLayoutConstraint activateConstraints:@[
+
+            
+            [self.titleConstraints addObjectsFromArray:@[
                 [self.headerLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-40],
-                [self.subLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-40],
             ]];
+            [self.subTitleConstraints addObjectsFromArray:@[
+                [self.subLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-40],
+
+            ]];
+            
         }
     }
     
 
+    [NSLayoutConstraint activateConstraints:self.titleConstraints];
+    [NSLayoutConstraint activateConstraints:self.subTitleConstraints];
 
-    
     
     UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
@@ -385,6 +418,33 @@
         [self.fcContentView addSubview:_updateTime];
     }
     return _updateTime;
+}
+
+- (NSMutableArray *)viewConstraints {
+    if(_viewConstraints == nil) {
+        _viewConstraints = [NSMutableArray array];
+    }
+    return _viewConstraints;
+}
+
+- (NSMutableArray *)titleConstraints {
+    if(_titleConstraints == nil) {
+        _titleConstraints = [NSMutableArray array];
+    }
+    return _titleConstraints;
+}
+
+- (NSMutableArray *)subTitleConstraints {
+    if(_subTitleConstraints == nil) {
+        _subTitleConstraints = [NSMutableArray array];
+    }
+    return _subTitleConstraints;
+}
+- (NSMutableArray *)updateBtnConstraints {
+    if(_updateBtnConstraints == nil) {
+        _updateBtnConstraints = [NSMutableArray array];
+    }
+    return _updateBtnConstraints;
 }
 
 @end
