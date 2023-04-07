@@ -61,6 +61,8 @@
             [ret appendAttributedString:ast.attributedString];
         }
         
+//        if ([parser isN])
+        
         
     }while(!parser.isEOF);
     

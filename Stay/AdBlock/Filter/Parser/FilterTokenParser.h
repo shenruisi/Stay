@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isAddress;
 @property (nonatomic, readonly) BOOL isOptions;
 @property (nonatomic, readonly) BOOL isSelector;
+@property (nonatomic, readonly) BOOL isNewLine;
 
 - (instancetype)initWithChars:(NSString *)chars;
 

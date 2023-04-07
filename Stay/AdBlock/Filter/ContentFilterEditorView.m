@@ -39,18 +39,13 @@ static NSUInteger LineNumberWidth = 50;
 @interface ContentFilterLayoutManager : NSLayoutManager
 @property (nonatomic, assign) CGPoint textContainerOriginOffset;
 @property (nonatomic, strong) NSMutableSet<NSNumber *> *lineNoSet;
+@property (nonatomic, assign) NSUInteger base;
 @end
 
 @implementation ContentFilterLayoutManager
 
 - (void)drawGlyphsForGlyphRange:(NSRange)glyphsToShow atPoint:(CGPoint)origin{
-    NSUInteger characterIndex = glyphsToShow.location;
-    NSUInteger glyphIndex = [self glyphIndexForCharacterAtIndex:characterIndex];
-//    if (![self.lineNoSet containsObject:@(glyphIndex)]){
-//        [self drawNumber:glyphIndex ange:glyphsToShow];
-//        [self.lineNoSet addObject:@(glyphIndex)];
-//    }
-    [self drawNumber:glyphIndex ange:glyphsToShow];
+    [self drawNumberAtRange:glyphsToShow];
     [super drawGlyphsForGlyphRange:glyphsToShow atPoint:origin];
 }
 
@@ -62,17 +57,35 @@ static NSUInteger LineNumberWidth = 50;
     return _lineNoSet;
 }
 
-- (void)drawNumber:(NSUInteger)number ange:(NSRange)range{
-    NSRange effectiveRange;
-    CGRect lineRect = [self lineFragmentRectForGlyphAtIndex:range.location effectiveRange:&effectiveRange];
-    CGRect correctRect = CGRectOffset(lineRect, self.textContainerOriginOffset.x, self.textContainerOriginOffset.y);
-    
-    [FCStyle.secondaryPopup setFill];
-    [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, correctRect.origin.y, LineNumberWidth, correctRect.size.height) cornerRadius:0] fill];
-    
-//    [[NSString stringWithFormat:@"%ld",number] drawInRect:correctRect withAttributes:@{
-//        NSForegroundColorAttributeName : FCStyle.fcSecondaryBlack
-//    }];
+- (void)drawNumberAtRange:(NSRange)range{
+    [self enumerateLineFragmentsForGlyphRange:range usingBlock:^(CGRect rect, CGRect usedRect, NSTextContainer * _Nonnull textContainer, NSRange glyphRange, BOOL * _Nonnull stop) {
+        CGRect correctRect  = CGRectOffset(rect, self.textContainerOriginOffset.x, self.textContainerOriginOffset.y);
+        
+        [FCStyle.secondaryPopup setFill];
+        [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, correctRect.origin.y, LineNumberWidth, correctRect.size.height) cornerRadius:0] fill];
+       
+//        NSDecimalNumber *decimalNumber = [[NSDecimalNumber alloc] initWithFloat:rect.origin.y / rect.size.height];
+//        NSDecimalNumberHandler *roundingBehavior = [NSDecimalNumberHandler decimalNumberHandlerWithRoundingMode:NSRoundPlain scale:0 raiseOnExactness:NO raiseOnOverflow:NO raiseOnUnderflow:NO raiseOnDivideByZero:YES];
+//
+//        [decimalNumber ]
+        NSAttributedString *line = [self.textStorage attributedSubstringFromRange:glyphRange];
+//        if (line.length == 1 && line.){
+//            NSLog(@"lineNumber");
+//        }
+        NSInteger lineNumber = (NSInteger)(rect.origin.y / rect.size.height) + 1;
+        NSLog(@"lineNumber: %@,%f,%f,%f,%ld",line,rect.origin.y,rect.size.height,usedRect.size.height, lineNumber);
+        NSString *lineNumberStr = [NSString stringWithFormat:@"%ld",lineNumber];
+        CGRect lineNumberRect = [lineNumberStr boundingRectWithSize:CGSizeMake(LineNumberWidth, CGFLOAT_MAX)
+                                                            options:NSStringDrawingUsesLineFragmentOrigin
+                                                         attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                                            context:nil];
+        
+        [lineNumberStr drawAtPoint:CGPointMake(LineNumberWidth - lineNumberRect.size.width - 5, correctRect.origin.y)
+                    withAttributes:@{
+            NSForegroundColorAttributeName : FCStyle.fcSecondaryBlack,
+            NSFontAttributeName : FCStyle.footnote
+        }];
+    }];
 }
 
 @end
