@@ -1213,7 +1213,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }
     }
-    cell.fcContentView.backgroundColor = FCStyle.secondaryBackground;
 //    cell.contentView.width = self.view.width;
     cell.controller = self;
     cell.scrpit = model;
