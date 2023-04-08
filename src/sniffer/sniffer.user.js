@@ -2944,6 +2944,7 @@ const browser = __b;
                 qualityVideoTempArr = qualityWebmVideoArr;
               }
             }
+            // console.log('qualityVideoTempArr--------',qualityVideoTempArr);
             qualityVideoTempArr.sort(Utils.compare('fps'));
             if(qualityVideoTempArr.length>1){
               let qualityVideoItem0 = qualityVideoTempArr[0];
@@ -3024,9 +3025,9 @@ const browser = __b;
      * @param {Object} qualityVideoItem  原数据中的分辨率信息
      */
     function handleParseYtQualityInfo(qualityVideoItem, webmAudioUrl, mp4AudioUrl){
+      // console.log('handleParseYtQualityInfo---------',qualityVideoItem);
       let mimeType = qualityVideoItem.mimeType;
       let qualityLabel = qualityVideoItem.qualityLabel;
-      // console.log('handleParseYtQualityInfo---------',qualityVideoItem);
       qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]{2}/, 'P') : '';
       let height = qualityVideoItem.height;
       if(height<1080){
@@ -3043,7 +3044,7 @@ const browser = __b;
         let sourceUrl = decodeYoutubeSpeedFun(qualityVideoItem.url);
         return {downloadUrl:sourceUrl, qualityLabel, quality: qualityVideoItem.quality, audioUrl}
       }else{
-        let videoUrl = getYoutubeVideoUrlOrSignture(qualityLabel.signatureCipher);
+        let videoUrl = getYoutubeVideoUrlOrSignture(qualityVideoItem.signatureCipher);
         let audioUrl = '';
         let protect=true;
         // 没有匹配到带音频的视频，需要加上audioUrl
@@ -3053,7 +3054,7 @@ const browser = __b;
         if(!mimeType.match(/.*codecs=.*mp4.*/g)){
           audioUrl = mp4AudioUrl;
         }
-        return {downloadUrl:videoUrl, qualityLabel, quality: qualityLabel.quality, protect, audioUrl}
+        return {downloadUrl:videoUrl, qualityLabel, quality: qualityVideoItem.quality, protect, audioUrl}
       }
     }
 
