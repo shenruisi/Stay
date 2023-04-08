@@ -33,6 +33,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    self.editorView.editable = NO;
     [self.editorView setStrings:[self.contentFilter fetchRules]];
 }
 

@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) ContentFilterTextView *textView;
 @property (nonatomic, strong) NSString *strings;
+@property (nonatomic, assign) BOOL editable;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -137,7 +137,22 @@
         easyList.homepage = @"https://easylist.to/";
         easyList.uuid = [@"https://easylist.to/easylist/easylist.txt" md5];
         easyList.type = ContentFilterTypeBuiltin;
+        
+        ContentFilter *easyListChina = [[ContentFilter alloc] init];
+        easyListChina.title = @"EasyList-China";
+        easyListChina.tags = @[@(ContentFilterTagAds)];
+        easyListChina.path = @"EasyListChina.txt";
+        easyListChina.downloadUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
+        easyListChina.status = 1;
+        easyListChina.expires = @"4 days (update frequency)";
+        easyListChina.version = @"202304070640";
+        easyListChina.homepage = @"https://github.com/easylist/easylistchina/";
+        easyListChina.uuid = [@"https://easylist-downloads.adblockplus.org/easylistchina.txt" md5];
+        easyListChina.type = ContentFilterTypeBuiltin;
+        
+        [self insertContentFilter:easyListChina error:nil];
         [self insertContentFilter:easyList error:nil];
+        
     }
     
     return;

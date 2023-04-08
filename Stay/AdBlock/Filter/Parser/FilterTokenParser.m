@@ -366,4 +366,8 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     || self.opaqueCurToken.type == FilterTokenTypeSelectorElementHidingException;
 }
 
+- (BOOL)isNewLine{
+    return self.opaqueCurToken.type == FilterTokenTypeNewLine;
+}
+
 @end

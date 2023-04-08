@@ -19,7 +19,22 @@ typedef enum{
     FilterOptionTypeScript,
     FilterOptionTypeImage,
     FilterOptionTypeDomain,
-    FilterOptionTypeGenericHide
+    FilterOptionTypeStylesheet,
+    FilterOptionTypeObject,
+    FilterOptionTypeXmlHttpRequest,
+    FilterOptionTypeSubDocument,
+    FilterOptionTypePing,
+    FilterOptionTypeWebSocket,
+    FilterOptionTypeWebRTC,
+    FilterOptionTypeDocument,
+    FilterOptionTypeElemHide,
+    FilterOptionTypeGenericHide,
+    FilterOptionTypeGenericBlock,
+    FilterOptionTypePopup,
+    FilterOptionTypeFont,
+    FilterOptionTypeMedia,
+    FilterOptionTypeOther,
+    FilterOptionTypeMatchCase,
 }FilterOptionType;
 
 @interface FilterOption : NSObject

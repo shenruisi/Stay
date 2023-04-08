@@ -97,6 +97,14 @@
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
+		581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
+		581C2FDF29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
+		581C2FE329E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
+		581C2FE429E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
+		581C2FE729E00BF500B46C10 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE629E00BF500B46C10 /* BlockerAST.m */; };
+		581C2FE829E00BF500B46C10 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE629E00BF500B46C10 /* BlockerAST.m */; };
+		581C2FEB29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */; };
+		581C2FEC29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
 		582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */; };
 		582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */; };
@@ -392,6 +400,8 @@
 		588402CA295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		5884031C29667079002CA227 /* UIColor+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 5884031B29667078002CA227 /* UIColor+Convert.m */; };
 		5884031D29667079002CA227 /* UIColor+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 5884031B29667078002CA227 /* UIColor+Convert.m */; };
+		5888894529DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */; };
+		5888894629DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */; };
 		5889731A27213C8300BE123E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5889731C27213C8300BE123E /* Localizable.strings */; };
 		58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5889731F272156C900BE123E /* LaunchScreen.storyboard */; };
 		5889733E2723033600BE123E /* icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5889733D2723033600BE123E /* icon@3x.png */; };
@@ -779,6 +789,13 @@
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
+		581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListChina.txt; sourceTree = "<group>"; };
+		581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
+		581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
+		581C2FE529E00BF500B46C10 /* BlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
+		581C2FE629E00BF500B46C10 /* BlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlockerAST.m; sourceTree = "<group>"; };
+		581C2FE929E017AF00B46C10 /* TiggerBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiggerBlockerAST.h; sourceTree = "<group>"; };
+		581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiggerBlockerAST.m; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalItemSwitchView.m; sourceTree = "<group>"; };
 		582061A9294C4C0D00A32D0C /* ModalItemSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalItemSplitView.h; sourceTree = "<group>"; };
@@ -862,8 +879,8 @@
 		583B540529DD4AF200CB292A /* ContentFilterEditorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterEditorView.m; path = Stay/AdBlock/Filter/ContentFilterEditorView.m; sourceTree = SOURCE_ROOT; };
 		583B540829DD4DFA00CB292A /* UIFont+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIFont+Convert.h"; sourceTree = "<group>"; };
 		583B540929DD4DFA00CB292A /* UIFont+Convert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+Convert.m"; sourceTree = "<group>"; };
-		583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterHighlighter.h; path = Stay/UXFramework/ContentFilterHighlighter.h; sourceTree = SOURCE_ROOT; };
-		583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterHighlighter.m; path = Stay/UXFramework/ContentFilterHighlighter.m; sourceTree = SOURCE_ROOT; };
+		583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterHighlighter.h; path = Stay/AdBlock/HighlighterAST/ContentFilterHighlighter.h; sourceTree = SOURCE_ROOT; };
+		583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterHighlighter.m; path = Stay/AdBlock/HighlighterAST/ContentFilterHighlighter.m; sourceTree = SOURCE_ROOT; };
 		583B541129DD504500CB292A /* FCNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCNavigationBar.m; sourceTree = "<group>"; };
 		583B541229DD504500CB292A /* FCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCNavigationController.h; sourceTree = "<group>"; };
 		583B541329DD504500CB292A /* FCNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCNavigationBar.h; sourceTree = "<group>"; };
@@ -987,6 +1004,8 @@
 		588402C8295D3272002CA227 /* ToastCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastCenter.m; sourceTree = "<group>"; };
 		5884031A29667078002CA227 /* UIColor+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Convert.h"; sourceTree = "<group>"; };
 		5884031B29667078002CA227 /* UIColor+Convert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Convert.m"; sourceTree = "<group>"; };
+		5888894329DFCB950033CCF5 /* NewLineHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewLineHighlighterAST.h; sourceTree = "<group>"; };
+		5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewLineHighlighterAST.m; sourceTree = "<group>"; };
 		5889731427213BC200BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = ../en.lproj/Main.html; sourceTree = "<group>"; };
 		5889731B27213C8300BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5889731E27213CB100BE123E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1438,6 +1457,19 @@
 			path = M3U8;
 			sourceTree = "<group>";
 		};
+		581C2FE029E008C800B46C10 /* BlockerAST */ = {
+			isa = PBXGroup;
+			children = (
+				581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */,
+				581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */,
+				581C2FE529E00BF500B46C10 /* BlockerAST.h */,
+				581C2FE629E00BF500B46C10 /* BlockerAST.m */,
+				581C2FE929E017AF00B46C10 /* TiggerBlockerAST.h */,
+				581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */,
+			);
+			path = BlockerAST;
+			sourceTree = "<group>";
+		};
 		582061A5294C4BB200A32D0C /* Modal */ = {
 			isa = PBXGroup;
 			children = (
@@ -1480,6 +1512,7 @@
 		583178FA29CBF04800135D8D /* Filter */ = {
 			isa = PBXGroup;
 			children = (
+				581C2FE029E008C800B46C10 /* BlockerAST */,
 				583B543329DD71A400CB292A /* HighlighterAST */,
 				583B53FB29DC19D400CB292A /* ContentFilterManager.h */,
 				583B53FC29DC19D400CB292A /* ContentFilterManager.m */,
@@ -1491,8 +1524,6 @@
 				583B540129DC330500CB292A /* ContentFilterMainLoop.m */,
 				583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */,
 				583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */,
-				583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */,
-				583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */,
 				583B53D829DBF9A000CB292A /* Parser */,
 				583B53DD29DBF9A000CB292A /* StateView.h */,
 				583B53D429DBF9A000CB292A /* StateView.m */,
@@ -1543,6 +1574,7 @@
 			children = (
 				583B53C229DAC01A00CB292A /* EasyList2.txt */,
 				583B545529DEDDE700CB292A /* EasyList.txt */,
+				581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1584,6 +1616,8 @@
 		583B543329DD71A400CB292A /* HighlighterAST */ = {
 			isa = PBXGroup;
 			children = (
+				583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */,
+				583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */,
 				583B543529DD71A400CB292A /* TiggerHighlighterAST.h */,
 				583B543929DD71A400CB292A /* TiggerHighlighterAST.m */,
 				583B543629DD71A400CB292A /* CommentHighlighterAST.h */,
@@ -1600,6 +1634,8 @@
 				583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */,
 				583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */,
 				583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */,
+				5888894329DFCB950033CCF5 /* NewLineHighlighterAST.h */,
+				5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */,
 			);
 			name = HighlighterAST;
 			path = Stay/AdBlock/HighlighterAST;
@@ -2896,6 +2932,7 @@
 				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
 				84C1ED4C277AB93E00651DF9 /* homepage-selected@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
+				581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				58AFD76329A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
@@ -3001,6 +3038,7 @@
 				588202812859E73900B2721A /* more-selected@3x.png in Resources */,
 				588202832859E73900B2721A /* homepage-selected@3x.png in Resources */,
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
+				581C2FDF29DFFCB000B46C10 /* EasyListChina.txt in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
 				58AFD76429A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
@@ -3188,6 +3226,7 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */,
+				581C2FEB29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
@@ -3249,6 +3288,7 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				581C2FE329E00BE100B46C10 /* ContentFilterBlocker.m in Sources */,
 				583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
@@ -3302,6 +3342,7 @@
 				583B544029DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
 				8460E47429925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				582061F2294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
+				5888894529DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */,
 				58A3617D29C048CE00080465 /* FCTabBar.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
@@ -3379,6 +3420,7 @@
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				84E8EA112962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				582061C4294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
+				581C2FE729E00BF500B46C10 /* BlockerAST.m in Sources */,
 				582061EE294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 				84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
@@ -3451,6 +3493,7 @@
 				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */,
+				581C2FE829E00BF500B46C10 /* BlockerAST.m in Sources */,
 				3C949B93297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
@@ -3463,6 +3506,7 @@
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				582061E5294C4CA400A32D0C /* FCLayoutImageView.m in Sources */,
 				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
+				581C2FEC29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */,
 				849E77DC293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				3C358D562973E57C00118063 /* M3U8SegmentInfoList.m in Sources */,
 				582061E1294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
@@ -3540,6 +3584,7 @@
 				58A3617629C0218800080465 /* FCViewController.m in Sources */,
 				588202602859E73900B2721A /* ModalViewController.m in Sources */,
 				588202612859E73900B2721A /* FCDisk.m in Sources */,
+				581C2FE429E00BE100B46C10 /* ContentFilterBlocker.m in Sources */,
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
 				84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
@@ -3639,6 +3684,7 @@
 				582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
+				5888894629DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */,
 				8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
 				582061EB294C4CC800A32D0C /* UIView+Layout.m in Sources */,

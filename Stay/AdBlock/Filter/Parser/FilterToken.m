@@ -153,6 +153,51 @@
         else if ([optionType isEqualToString:@"image"]){
             filterOption.type = FilterOptionTypeImage;
         }
+        else if ([optionType isEqualToString:@"stylesheet"]){
+            filterOption.type = FilterOptionTypeStylesheet;
+        }
+        else if ([optionType isEqualToString:@"object"]){
+            filterOption.type = FilterOptionTypeObject;
+        }
+        else if ([optionType isEqualToString:@"xmlhttprequest"]){
+            filterOption.type = FilterOptionTypeXmlHttpRequest;
+        }
+        else if ([optionType isEqualToString:@"subdocument"]){
+            filterOption.type = FilterOptionTypeSubDocument;
+        }
+        else if ([optionType isEqualToString:@"ping"]){
+            filterOption.type = FilterOptionTypePing;
+        }
+        else if ([optionType isEqualToString:@"webrtc"]){
+            filterOption.type = FilterOptionTypeWebRTC;
+        }
+        else if ([optionType isEqualToString:@"document"]){
+            filterOption.type = FilterOptionTypeDocument;
+        }
+        else if ([optionType isEqualToString:@"elemhide"]){
+            filterOption.type = FilterOptionTypeElemHide;
+        }
+        else if ([optionType isEqualToString:@"genericblock"]){
+            filterOption.type = FilterOptionTypeGenericBlock;
+        }
+        else if ([optionType isEqualToString:@"popup"]){
+            filterOption.type = FilterOptionTypePopup;
+        }
+        else if ([optionType isEqualToString:@"font"]){
+            filterOption.type = FilterOptionTypeFont;
+        }
+        else if ([optionType isEqualToString:@"media"]){
+            filterOption.type = FilterOptionTypeMedia;
+        }
+        else if ([optionType isEqualToString:@"other"]){
+            filterOption.type = FilterOptionTypeOther;
+        }
+        else if ([optionType isEqualToString:@"match-case"]){
+            filterOption.type = FilterOptionTypeMatchCase;
+        }
+        else if ([optionType isEqualToString:@"websocket"]){
+            filterOption.type = FilterOptionTypeWebSocket;
+        }
         else if ([optionType isEqualToString:@"generichide"]){
             filterOption.type = FilterOptionTypeGenericHide;
         }

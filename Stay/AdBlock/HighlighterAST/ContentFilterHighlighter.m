@@ -15,6 +15,7 @@
 #import "AddressHighlighterAST.h"
 #import "OptionsHighlighterAST.h"
 #import "SelectorHighlighterAST.h"
+#import "NewLineHighlighterAST.h"
 
 @implementation ContentFilterHighlighter
 
@@ -61,7 +62,10 @@
             [ret appendAttributedString:ast.attributedString];
         }
         
-//        if ([parser isN])
+        if ([parser isNewLine]){
+            ast = [[NewLineHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
         
         
     }while(!parser.isEOF);

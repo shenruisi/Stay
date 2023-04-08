@@ -78,9 +78,9 @@
         [containerView addSubview:builtinLabel];
         [NSLayoutConstraint activateConstraints:@[
             [builtinLabel.leadingAnchor constraintEqualToAnchor:nameLabel.trailingAnchor constant:10],
-            [builtinLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:12],
+            [builtinLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10],
             [builtinLabel.widthAnchor constraintEqualToConstant:54],
-            [builtinLabel.heightAnchor constraintEqualToConstant:16],
+            [builtinLabel.heightAnchor constraintEqualToConstant:20],
         ]];
     }
     
@@ -150,9 +150,9 @@
         
         [NSLayoutConstraint activateConstraints:@[
             [_builtinLabel.leadingAnchor constraintEqualToAnchor:self.nameLabel.trailingAnchor constant:10],
-            [_builtinLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:12],
+            [_builtinLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:10],
             [_builtinLabel.widthAnchor constraintEqualToConstant:54],
-            [_builtinLabel.heightAnchor constraintEqualToConstant:16],
+            [_builtinLabel.heightAnchor constraintEqualToConstant:20],
         ]];
     }
     
