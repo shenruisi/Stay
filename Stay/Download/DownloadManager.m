@@ -71,12 +71,12 @@
 }
 
 - (void)saveToPath:(NSString *)taskPath {
-    NSString *content = [NSString stringWithFormat:@"%lu\n%lu\n%d\n%d\n%@\n%@\n%@",
+    NSMutableString *content = [NSMutableString stringWithFormat:@"%lu\n%lu\n%d\n%d\n%@\n%@\n%@",
                          (unsigned long)_totalCount, (unsigned long)_currCount, _status, _mediaType,
                          _keyURL == nil ? @"" : _keyURL, _keyIV == nil ? @"" : _keyIV, _mapURL == nil ? @"" : _mapURL];
     @synchronized (_tsURLs) {
         for (NSString *tsURL in _tsURLs) {
-            content = [content stringByAppendingFormat:@"\n%@", tsURL];
+            [content appendFormat:@"\n%@", tsURL];
         }
     }
     NSString *filePath = [taskPath stringByAppendingPathComponent:@"M3U8State"];
