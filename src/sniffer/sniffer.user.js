@@ -3038,7 +3038,7 @@ const browser = __b;
         if(!mimeType.match(/.*codecs=.*webm.*/g)){
           audioUrl = webmAudioUrl;
         }
-        if(!mimeType.match(/.*codecs=.*webm.*/g)){
+        if(!mimeType.match(/.*codecs=.*mp4.*/g)){
           audioUrl = mp4AudioUrl;
         }
         let sourceUrl = decodeYoutubeSpeedFun(qualityVideoItem.url);
