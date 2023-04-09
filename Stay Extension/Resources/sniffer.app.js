@@ -2,7 +2,8 @@
 let randomYTObj = {}; 
 
 function fetchRandomStr(randomStr, speedRandomStr){
-  window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
+  // window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
+  window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
   randomYTObj.randomStr = randomStr;
   randomYTObj.speedRandomStr = speedRandomStr;
 }
@@ -1669,7 +1670,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
       let sourceUrl = decodeYoutubeSpeedFun(qualityVideoItem.url);
       return {downloadUrl:sourceUrl, qualityLabel, quality: qualityVideoItem.quality, audioUrl}
     }else{
-      let videoUrl = getYoutubeVideoUrlOrSignture(qualityLabel.signatureCipher);
+      let videoUrl = getYoutubeVideoUrlOrSignture(qualityVideoItem.signatureCipher);
       let audioUrl = '';
       let protect=true;
       // 没有匹配到带音频的视频，需要加上audioUrl
@@ -1679,7 +1680,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
       if(!mimeType.match(/.*codecs=.*mp4.*/g)){
         audioUrl = mp4AudioUrl;
       }
-      return {downloadUrl:videoUrl, qualityLabel, quality: qualityLabel.quality, protect, audioUrl}
+      return {downloadUrl:videoUrl, qualityLabel, quality: qualityVideoItem.quality, protect, audioUrl}
     }
   }
 
