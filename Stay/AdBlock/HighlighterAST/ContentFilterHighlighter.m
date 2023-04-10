@@ -16,6 +16,8 @@
 #import "OptionsHighlighterAST.h"
 #import "SelectorHighlighterAST.h"
 #import "NewLineHighlighterAST.h"
+#import "SeparatorHighlighterAST.h"
+#import "PipeHighlighterAST.h"
 
 @implementation ContentFilterHighlighter
 
@@ -64,6 +66,16 @@
         
         if ([parser isNewLine]){
             ast = [[NewLineHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        if ([parser isSeparator]){
+            ast = [[SeparatorHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        if ([parser isPipe]){
+            ast = [[PipeHighlighterAST alloc] initWithParser:parser args:nil];
             [ret appendAttributedString:ast.attributedString];
         }
         

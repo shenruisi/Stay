@@ -73,10 +73,11 @@
     cell.element = contentFilter;
     cell.action = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
-        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
-        cer.contentFilter = contentFilter;
-        [self.navigationController pushViewController:cer animated:YES];
-//        [contentFilter convertToJOSNRules];
+//        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
+//        cer.contentFilter = contentFilter;
+//        [self.navigationController pushViewController:cer animated:YES];
+        
+        [contentFilter convertToJOSNRules];
         
     };
     

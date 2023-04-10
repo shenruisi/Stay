@@ -209,7 +209,7 @@
     }
     options.value = @{
         @"text" : text,
-        @"options" : array
+        @"options" : filterOptions
     };
     return options;
 }

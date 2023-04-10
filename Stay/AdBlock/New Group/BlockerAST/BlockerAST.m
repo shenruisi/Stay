@@ -19,7 +19,9 @@
 }
 
 
-- (void)construct:(nullable NSArray *)args{}
+- (void)construct:(nullable NSArray *)args{
+    self.dictionary = args[0];
+}
 
 - (NSMutableDictionary<NSString *, NSMutableDictionary *> *)dictionary{
     if (nil == _dictionary){
@@ -32,7 +34,8 @@
 }
 
 - (void)setUrlFilter:(NSString *)urlFilter{
-    self.dictionary[@"trigger"][@"url-filter"] = urlFilter;
+    NSString *existUrlFilter = self.dictionary[@"trigger"][@"url-filter"];
+    self.dictionary[@"trigger"][@"url-filter"] = [NSString stringWithFormat:@"%@%@",existUrlFilter ? existUrlFilter : @"",urlFilter];
 }
 
 - (NSString *)urlFilter{
@@ -47,60 +50,104 @@
     return self.dictionary[@"trigger"][@"url-filter-is-case-sensitive"];
 }
 
-- (void)setIfDomain:(NSMutableArray *)ifDomain{
-    self.dictionary[@"trigger"][@"if-domain"] = ifDomain;
+- (void)addIfDomain:(NSString *)ifDomain{
+    if (nil ==  self.dictionary[@"trigger"][@"if-domain"]){
+        self.dictionary[@"trigger"][@"if-domain"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"if-domain"] addObject:ifDomain];
 }
 
 - (NSMutableArray *)ifDomain{
     return self.dictionary[@"trigger"][@"if-domain"];
 }
 
-- (void)setUnlessDomain:(NSMutableArray *)unlessDomain{
-    self.dictionary[@"trigger"][@"unless-domain"] = unlessDomain;
+- (void)addUnlessDomain:(NSString *)unlessDomain{
+    if (nil ==  self.dictionary[@"trigger"][@"unless-domain"]){
+        self.dictionary[@"trigger"][@"unless-domain"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"unless-domain"] addObject:unlessDomain];
 }
 
 - (NSMutableArray *)unlessDomain{
     return self.dictionary[@"trigger"][@"unless-domain"];
 }
 
-- (void)setResourceType:(NSMutableArray *)resourceType{
-    self.dictionary[@"trigger"][@"resource-type"] = resourceType;
+- (void)addResourceType:(NSString *)resourceType{
+    if (nil ==  self.dictionary[@"trigger"][@"resource-type"]){
+        self.dictionary[@"trigger"][@"resource-type"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"resource-type"] addObject:resourceType];
 }
 
 - (NSMutableArray *)resourceType{
     return self.dictionary[@"trigger"][@"resource-type"];
 }
 
-- (void)setLoadType:(NSMutableArray *)loadType{
-    self.dictionary[@"trigger"][@"load-type"] = loadType;
+- (void)addLoadType:(NSString *)loadType{
+    if (nil ==  self.dictionary[@"trigger"][@"load-type"]){
+        self.dictionary[@"trigger"][@"load-type"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"load-type"] addObject:loadType];
 }
 
 - (NSMutableArray *)loadType{
     return self.dictionary[@"trigger"][@"load-type"];
 }
 
-- (void)setIfTopUrl:(NSMutableArray *)ifTopUrl{
-    self.dictionary[@"trigger"][@"if-top-url"] = ifTopUrl;
+- (void)addIfTopUrl:(NSString *)ifTopUrl{
+    if (nil ==  self.dictionary[@"trigger"][@"if-top-url"]){
+        self.dictionary[@"trigger"][@"if-top-url"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"if-top-url"] addObject:ifTopUrl];
 }
 
 - (NSMutableArray *)ifTopUrl{
     return self.dictionary[@"trigger"][@"if-top-url"];
 }
 
-- (void)setUnlessTopUrl:(NSMutableArray *)unlessTopUrl{
-    self.dictionary[@"trigger"][@"unless-top-url"] = unlessTopUrl;
+- (void)addUnlessTopUrl:(NSString *)unlessTopUrl{
+    if (nil ==  self.dictionary[@"trigger"][@"unless-top-url"]){
+        self.dictionary[@"trigger"][@"unless-top-url"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"unless-top-url"] addObject:unlessTopUrl];
 }
 
 - (NSMutableArray *)unlessTopUrl{
     return self.dictionary[@"trigger"][@"unless-top-url"];
 }
 
-- (void)setLoadContext:(NSMutableArray *)loadContext{
-    self.dictionary[@"trigger"][@"load-context"] = loadContext;
+- (void)addLoadContext:(NSString *)loadContext{
+    if (nil ==  self.dictionary[@"trigger"][@"load-context"]){
+        self.dictionary[@"trigger"][@"load-context"] = [[NSMutableArray alloc] init];
+    }
+    
+    [self.dictionary[@"trigger"][@"load-context"] addObject:loadContext];
 }
 
 - (NSMutableArray *)loadContext{
     return self.dictionary[@"trigger"][@"load-context"];
+}
+
+- (void)setType:(NSString *)type{
+    self.dictionary[@"action"][@"type"] = type;
+}
+
+- (NSString *)type{
+    return self.dictionary[@"action"][@"type"];
+}
+
+- (void)setSelector:(NSString *)selector{
+    self.dictionary[@"action"][@"selector"] = selector;
+}
+
+- (NSString *)selector{
+    return self.dictionary[@"action"][@"selector"];
 }
 
 @end

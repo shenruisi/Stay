@@ -17,15 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 //trigger
 @property (nonatomic, strong) NSString *urlFilter;
 @property (nonatomic, assign) BOOL urlFilterIsCaseSensitive;
-@property (nonatomic, strong) NSMutableArray *ifDomain;
-@property (nonatomic, strong) NSMutableArray *unlessDomain;
-@property (nonatomic, strong) NSMutableArray *resourceType;
-@property (nonatomic, strong) NSMutableArray *loadType;
-@property (nonatomic, strong) NSMutableArray *ifTopUrl;
-@property (nonatomic, strong) NSMutableArray *unlessTopUrl;
-@property (nonatomic, strong) NSMutableArray *loadContext;
+- (void)addIfDomain:(NSString *)ifDomain;
+- (void)addUnlessDomain:(NSString *)unlessDomain;
+- (void)addResourceType:(NSString *)resourceType;
+- (void)addLoadType:(NSString *)loadType;
+- (void)addIfTopUrl:(NSString *)ifTopUrl;
+- (void)addUnlessTopUrl:(NSString *)unlessTopUrl;
+- (void)addLoadContext:(NSString *)loadContext;
 
 //action
+@property (nonatomic, strong) NSString *type;
+@property (nonatomic, strong) NSString *selector;
 
 
 - (instancetype)initWithParser:(FilterTokenParser *)parser

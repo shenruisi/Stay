@@ -7,6 +7,7 @@
 
 #import "ContentFilter2.h"
 #import "FilterTokenParser.h"
+#import "ContentFilterBlocker.h"
 
 @interface ContentFilter()
 
@@ -24,17 +25,19 @@
     return [[NSString alloc] initWithContentsOfFile:self.resourcePath encoding:NSUTF8StringEncoding error:nil];
 }
 
-- (void)convertToJOSNRules{
+- (NSString *)convertToJOSNRules{
+    NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
     NSString *rules = [self fetchRules];
     NSArray<NSString *> *lines = [rules componentsSeparatedByString:@"\n"];
     for (NSString *line in lines){
-        FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:line];
-        [parser nextToken];
-        while(![parser isEOF]){
-            NSLog(@"token: %@",parser.curToken);
-            [parser nextToken];
+        if (line.length > 0){
+            NSDictionary *jsonRule = [ContentFilterBlocker rule:line];
+            [jsonRules addObject:jsonRule];
         }
     }
+    
+    NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
+    return ret;
 }
 
 - (BOOL)active{

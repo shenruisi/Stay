@@ -242,6 +242,18 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
         }
     }
     
+    if ([self isRegexStart:self.lastChars]){
+        NSMutableString *tigger = [[NSMutableString alloc] init];
+        do{
+            [tigger appendString:self.lastChars];
+            self.lastChars = [self getChars];
+        }while(![self isEnd:self.lastChars]
+               && ![self isOptionsStart:self.lastChars]
+               && ![self isSelectorStart:self.lastChars]);
+        [self backward];
+        return [FilterToken tigger:tigger];
+    }
+    
     NSMutableString *tigger = [[NSMutableString alloc] init];
     do{
         [tigger appendString:self.lastChars];
@@ -273,6 +285,10 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     }
     
     return ret;
+}
+
+- (BOOL)isRegexStart:(NSString *)chars{
+    return [chars isEqualToString:@"/"];
 }
 
 - (BOOL)isPipe:(NSString *)chars{
@@ -368,6 +384,14 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
 
 - (BOOL)isNewLine{
     return self.opaqueCurToken.type == FilterTokenTypeNewLine;
+}
+
+- (BOOL)isSeparator{
+    return self.opaqueCurToken.type == FilterTokenTypeSeparator;
+}
+
+- (BOOL)isPipe{
+    return self.opaqueCurToken.type == FilterTokenTypePipe;
 }
 
 @end

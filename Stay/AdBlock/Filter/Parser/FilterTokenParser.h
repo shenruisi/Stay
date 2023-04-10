@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isOptions;
 @property (nonatomic, readonly) BOOL isSelector;
 @property (nonatomic, readonly) BOOL isNewLine;
+@property (nonatomic, readonly) BOOL isSeparator;
+@property (nonatomic, readonly) BOOL isPipe;
 
 - (instancetype)initWithChars:(NSString *)chars;
 

@@ -19,9 +19,12 @@
         self.urlFilter = [urlFilter substringWithRange:NSMakeRange(1, urlFilter.length - 2)];
     }
     else{
-        //convert wildcard to regex
-        regexString = [regexString stringByReplacingOccurrencesOfString:@"\\*" withString:@".*"];
-        regexString = [regexString stringByReplacingOccurrencesOfString:@"\\?" withString:@"."];
+        //Add wildcard
+        urlFilter = [NSString stringWithFormat:@"*%@*",urlFilter];
+        //Convert wildcard
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\*" withString:@".*"];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\?" withString:@"."];
+        self.urlFilter = urlFilter;
     }
 }
 
