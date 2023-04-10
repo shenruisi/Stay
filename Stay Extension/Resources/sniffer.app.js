@@ -543,6 +543,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
     if(videoInfo.videoKey && !videoInfo.videoUuid){
       videoInfo.videoUuid = videoInfo.videoKey;
     }
+    videoInfo.title = videoInfo.title?videoInfo.title.replace(/\//g, '|'):'';
 
     // videoInfo.qualityList是否需要解密，如需解密记录下来, 等handleDecodeSignatureAndPush来解密
     const qualityList = videoInfo.qualityList;

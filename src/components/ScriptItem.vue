@@ -478,7 +478,7 @@ export default {
                 filter: drop-shadow(var(--dm-font) -40px 0);
                 border-left: 40px solid transparent;
                 right: -19px;
-                transform: translateZ(1);
+                transform: translateZ(100px);
                 z-index: 888;
                 position: relative;
               }

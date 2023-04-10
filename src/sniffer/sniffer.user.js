@@ -1063,7 +1063,7 @@ const browser = __b;
       if(videoInfo.videoKey && !videoInfo.videoUuid){
         videoInfo.videoUuid = videoInfo.videoKey;
       }
-
+      videoInfo.title = videoInfo.title?videoInfo.title.replace(/\//g, '|'):'';
       const qualityList = videoInfo.qualityList;
       // videoInfo.qualityList是否需要解密，如需解密记录下来, 等handleDecodeSignatureAndPush来解密
       if(videoInfo.shouldDecode){
