@@ -294,14 +294,16 @@
 
 - (UIImageView *)iconImageView {
     if(_iconImageView == nil) {
-        _iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+        _iconImageView = [[UIImageView alloc] init];
         _iconImageView.contentMode =  UIViewContentModeScaleAspectFit;
         _iconImageView.clipsToBounds = YES;
         _iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.imageBox addSubview:self.iconImageView];
         [NSLayoutConstraint activateConstraints:@[
             [_iconImageView.centerXAnchor constraintEqualToAnchor:self.imageBox.centerXAnchor],
-            [_iconImageView.centerYAnchor constraintEqualToAnchor:self.imageBox.centerYAnchor]
+            [_iconImageView.centerYAnchor constraintEqualToAnchor:self.imageBox.centerYAnchor],
+            [_iconImageView.heightAnchor constraintEqualToConstant:26],
+            [_iconImageView.widthAnchor constraintEqualToConstant:26]
         ]];
     }
     
