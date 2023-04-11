@@ -128,7 +128,7 @@ static API *instance = nil;
 //        }] resume];
 }
 
-- (NSDictionary *)downloadYoutube:(NSString *)path{
+- (NSDictionary *)downloadYoutube:(NSString *)path location:(nonnull NSString *)location{
     if ([self.youtubeCodeCache objectForKey:path]){
         return [self.youtubeCodeCache objectForKey:path];
     }
@@ -139,7 +139,8 @@ static API *instance = nil;
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     NSDictionary *param = @{
         @"biz": @{
-            @"path":path
+            @"path":path,
+            @"location":location ? location : @""
         }
     };
     

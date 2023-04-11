@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)event:(NSString *)content;
 - (NSString *)deviceInfo;
 - (NSString *)queryDeviceType;
-- (NSDictionary *)downloadYoutube:(NSString *)path;
+- (NSDictionary *)downloadYoutube:(NSString *)path location:(NSString *)location;
 - (void)commitYoutbe:(NSString *)path code:(NSString *)code nCode:(NSString *)nCode;
 @end
 

@@ -116,7 +116,7 @@ static VideoParser *_kVideoParser;
     }
     else if ([message.name isEqualToString:@"youtube"]){
         NSLog(@"userContentController youtube %@",message.body);
-        NSDictionary *response = [[API shared] downloadYoutube:message.body];
+        NSDictionary *response = [[API shared] downloadYoutube:message.body location:@""];
         if (response.count > 0){
             NSInteger statusCode = [response[@"status_code"] integerValue];
             if (200 == statusCode){
