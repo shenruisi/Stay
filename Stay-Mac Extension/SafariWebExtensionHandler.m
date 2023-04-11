@@ -369,7 +369,7 @@ NSString * const SFExtensionMessageKey = @"message";
     else if ([message[@"type"] isEqualToString:@"yt_element"]){
         NSString *path = message[@"path"];
         NSString *location = message[@"location"];
-        NSDictionary *response = [[API shared] downloadYoutube:path];
+        NSDictionary *response = [[API shared] downloadYoutube:path location:location];
         NSString *code = response[@"biz"][@"code"];
         NSString *nCode = response[@"biz"][@"n_code"];
         body = @{
