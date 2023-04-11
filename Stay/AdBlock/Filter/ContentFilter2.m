@@ -49,7 +49,7 @@
     NSString *content = [self convertToJOSNRules];
     [[ContentFilterManager shared] writeToFileName:self.rulePath content:content];
     [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-        
+        NSLog(@"error %@",error);
     }];
 }
 
