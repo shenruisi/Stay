@@ -24,6 +24,7 @@
 #import "UIImageView+WebCache.h"
 #import "MatchPattern.h"
 #import "SYSelectTabViewController.h"
+#import "MainTabBarController.h"
 
 #import <UniformTypeIdentifiers/UTCoreTypes.h>
 
@@ -787,9 +788,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
 #ifdef FC_MAC
-        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+//        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
-        self.tableView.frame = self.view.bounds;
+//        self.tableView.frame = self.view.bounds;
 #endif
         [self.tableView reloadData];
     });
@@ -1158,7 +1159,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef FC_MAC
-    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #endif
     
     if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
@@ -1477,21 +1478,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return YES;
 }
 
-- (void)segmentControllerAction:(UISegmentedControl *)segment
-{
-    NSInteger index = segment.selectedSegmentIndex;
-    [self.handStopDatas removeAllObjects];
-    [self.handActiveDatas removeAllObjects];
-    if(index == 1) {
-        _selectedIdx = 1;
-        [self reloadTableView];
-        [self.tableView reloadData];
-    } else {
-        _selectedIdx = 0;
-        [self reloadTableView];
-        [self.tableView reloadData];
-    }
-}
 
 - (void)import{
     [self addBtnClick:nil];
@@ -1522,9 +1508,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self initScrpitContent];
     dispatch_async(dispatch_get_main_queue(), ^{
 #ifdef FC_MAC
-        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+//        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
-        self.tableView.frame = self.view.bounds;
+//        self.tableView.frame = self.view.bounds;
 #endif
         [self.tableView reloadData];
     });
@@ -1680,15 +1666,26 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 //        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
 //        _tableView.backgroundColor = FCStyle.background;
         _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+
 
         [self.view addSubview:_tableView];
+                
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
+        
+    
     }
     
     return _tableView;
