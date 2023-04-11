@@ -1,0 +1,3 @@
+/^https?:\/\/(.+?\.)?ipatriot\.com[\/]{1,}.*[a-zA-Z0-9]{9,}\/[a-zA-Z0-9]{6,}\/.*/$image,domain=ipatriot.com
+##.slider-right-advertisement-banner
+-ad-300x600-

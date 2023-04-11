@@ -184,8 +184,8 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
-		583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
-		583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
+		583B53C329DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
+		583B53C429DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
 		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
@@ -234,8 +234,8 @@
 		583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
 		583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
 		583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
-		583B545629DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
-		583B545729DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
+		583B545629DEDDE700CB292A /* EasyList3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList3.txt */; };
+		583B545729DEDDE700CB292A /* EasyList3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList3.txt */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -887,7 +887,7 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
-		583B53C229DAC01A00CB292A /* EasyList2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList2.txt; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
 		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
 		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
 		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
@@ -937,7 +937,7 @@
 		583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptionsHighlighterAST.m; sourceTree = "<group>"; };
 		583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorHighlighterAST.h; sourceTree = "<group>"; };
 		583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectorHighlighterAST.m; sourceTree = "<group>"; };
-		583B545529DEDDE700CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
+		583B545529DEDDE700CB292A /* EasyList3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList3.txt; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -1616,8 +1616,8 @@
 		583B53C129DABFE400CB292A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				583B53C229DAC01A00CB292A /* EasyList2.txt */,
-				583B545529DEDDE700CB292A /* EasyList.txt */,
+				583B53C229DAC01A00CB292A /* EasyList.txt */,
+				583B545529DEDDE700CB292A /* EasyList3.txt */,
 				581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */,
 			);
 			path = Resources;
@@ -2988,7 +2988,7 @@
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
-				583B545629DEDDE700CB292A /* EasyList.txt in Resources */,
+				583B545629DEDDE700CB292A /* EasyList3.txt in Resources */,
 				587688DD2719237E00F834A4 /* Main.html in Resources */,
 				8410C848275E028D005531EC /* editor.html in Resources */,
 				8410C846275E028A005531EC /* codemirror.css in Resources */,
@@ -3012,7 +3012,7 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
-				583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */,
+				583B53C329DAC01A00CB292A /* EasyList.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
@@ -3094,7 +3094,7 @@
 				588202872859E73900B2721A /* typescript.html in Resources */,
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
 				588202892859E73900B2721A /* parse-meta-line.js in Resources */,
-				583B545729DEDDE700CB292A /* EasyList.txt in Resources */,
+				583B545729DEDDE700CB292A /* EasyList3.txt in Resources */,
 				5882028A2859E73900B2721A /* Main.html in Resources */,
 				5882028B2859E73900B2721A /* editor.html in Resources */,
 				5882028C2859E73900B2721A /* codemirror.css in Resources */,
@@ -3118,7 +3118,7 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
-				583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */,
+				583B53C429DAC01A00CB292A /* EasyList.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,

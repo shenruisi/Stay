@@ -22,8 +22,8 @@
         //Add wildcard
         urlFilter = [NSString stringWithFormat:@"*%@*",urlFilter];
         //Convert wildcard
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\*" withString:@".*"];
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\?" withString:@"."];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"?" withString:@"."];
         self.urlFilter = urlFilter;
     }
 }

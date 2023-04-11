@@ -8,11 +8,14 @@
 #import "ContentFilter2.h"
 #import "FilterTokenParser.h"
 #import "ContentFilterBlocker.h"
+#import <SafariServices/SafariServices.h>
+#import "ContentFilterManager.h"
 
 @interface ContentFilter()
 
 @property (nonatomic, strong) NSString *resourcePath;
 @property (nonatomic, strong) NSString *documentPath;
+@property (nonatomic, strong) NSString *sharedPath;
 @end
 
 @implementation ContentFilter
@@ -37,7 +40,17 @@
     }
     
     NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
+//    NSError *error;
+//    [ret writeToFile:@"/Users/ris/Desktop/jsonRules.txt" atomically:YES encoding:NSUTF8StringEncoding error:&error];
     return ret;
+}
+
+- (void)reloadContentBlocker{
+    NSString *content = [self convertToJOSNRules];
+    [[ContentFilterManager shared] writeToFileName:self.rulePath content:content];
+    [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+        
+    }];
 }
 
 - (BOOL)active{
@@ -53,6 +66,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     return [documentsDirectory stringByAppendingPathComponent:self.path];
 }
+
 
 + (NSString *)stringOfTag:(ContentFilterTag)tag{
     if (ContentFilterTagAds == tag) return @"Ads";

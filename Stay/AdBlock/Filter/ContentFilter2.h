@@ -26,6 +26,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *homepage;
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, strong) NSString *path;
+@property (nonatomic, strong) NSString *rulePath;
 @property (nonatomic, strong) NSString *version;
 @property (nonatomic, assign) NSInteger sort;
 @property (nonatomic, strong) NSDictionary *userInfo;
@@ -34,11 +35,13 @@ typedef enum {
 @property (nonatomic, strong) NSString *iCloudIdentifier;
 @property (nonatomic, strong) NSArray<NSNumber *> *tags;
 @property (nonatomic, assign) ContentFilterType type;
+@property (nonatomic, strong) NSString *contentBlockerIdentifier;
 
 @property (nonatomic, readonly) BOOL active;
 
 - (NSString *)fetchRules;
 - (NSString *)convertToJOSNRules;
+- (void)reloadContentBlocker;
 + (NSString *)stringOfTag:(ContentFilterTag)tag;
 
 @end
