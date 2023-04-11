@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shared;
 - (void)writeToFileName:(NSString *)fileName content:(NSString *)content;
 - (NSString *)contentOfFileName:(NSString *)fileName;
+- (NSURL *)contentURLOfFileName:(NSString *)fileName;
 @end
 
 NS_ASSUME_NONNULL_END

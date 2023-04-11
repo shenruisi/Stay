@@ -45,6 +45,12 @@ static ContentFilterManager *instance = nil;
     NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
     NSError *error;
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    NSLog(@"writeToFileName %@, %@",fileName,error);
+}
+
+- (NSURL *)contentURLOfFileName:(NSString *)fileName{
+    NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
+    return [NSURL fileURLWithPath:filePath];
 }
 
 @end

@@ -95,6 +95,10 @@
 		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
+		581105F229E53AED0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 581105F129E53AED0073E9CF /* blockerList.json */; };
+		581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */; };
+		581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
@@ -184,8 +188,8 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
-		583B53C329DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
-		583B53C429DAC01A00CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList.txt */; };
+		583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
+		583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
 		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
@@ -196,12 +200,8 @@
 		583B53E629DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
 		583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
 		583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
-		583B53F029DC192D00CB292A /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 583B53EF29DC192D00CB292A /* blockerList.json */; };
-		583B53F329DC192D00CB292A /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53F229DC192D00CB292A /* ContentBlockerRequestHandler.m */; };
-		583B53F729DC192D00CB292A /* Stay ContentBlockBasic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		583B53FD29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		583B53FE29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		583B53FF29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540129DC330500CB292A /* ContentFilterMainLoop.m */; };
 		583B540329DC330500CB292A /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540129DC330500CB292A /* ContentFilterMainLoop.m */; };
 		583B540629DD4AF200CB292A /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540529DD4AF200CB292A /* ContentFilterEditorView.m */; };
@@ -234,8 +234,8 @@
 		583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
 		583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
 		583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
-		583B545629DEDDE700CB292A /* EasyList3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList3.txt */; };
-		583B545729DEDDE700CB292A /* EasyList3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList3.txt */; };
+		583B545629DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
+		583B545729DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -655,12 +655,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		583B53F529DC192D00CB292A /* PBXContainerItemProxy */ = {
+		581105F729E53AED0073E9CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 583B53EC29DC192C00CB292A;
-			remoteInfo = "Stay ContentBlockBasic";
+			remoteGlobalIDString = 581105EE29E53AED0073E9CF;
+			remoteInfo = "Stay ContentBlock Basic";
 		};
 		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -706,8 +706,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */,
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
-				583B53F729DC192D00CB292A /* Stay ContentBlockBasic.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -804,6 +804,12 @@
 		3CA742AB29A2180100AB9F12 /* MySlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySlider.swift; sourceTree = "<group>"; };
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
+		581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlock Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		581105F129E53AED0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		581105F329E53AED0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		581105F629E53AED0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		581105FE29E53EA10073E9CF /* Stay ContentBlock Basic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay ContentBlock Basic.entitlements"; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListChina.txt; sourceTree = "<group>"; };
 		581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
@@ -887,7 +893,7 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
-		583B53C229DAC01A00CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* EasyList2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList2.txt; sourceTree = "<group>"; };
 		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
 		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
 		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
@@ -898,11 +904,6 @@
 		583B53DC29DBF9A000CB292A /* FilterToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
 		583B53DD29DBF9A000CB292A /* StateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateView.h; path = Stay/AdBlock/Filter/StateView.h; sourceTree = SOURCE_ROOT; };
 		583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilterTableVewCell.m; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.m; sourceTree = SOURCE_ROOT; };
-		583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlockBasic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		583B53EF29DC192D00CB292A /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
-		583B53F129DC192D00CB292A /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
-		583B53F229DC192D00CB292A /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
-		583B53F429DC192D00CB292A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		583B53FB29DC19D400CB292A /* ContentFilterManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterManager.h; path = Stay/AdBlock/Filter/ContentFilterManager.h; sourceTree = SOURCE_ROOT; };
 		583B53FC29DC19D400CB292A /* ContentFilterManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterManager.m; path = Stay/AdBlock/Filter/ContentFilterManager.m; sourceTree = SOURCE_ROOT; };
 		583B540029DC330500CB292A /* ContentFilterMainLoop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterMainLoop.h; path = Stay/AdBlock/Filter/ContentFilterMainLoop.h; sourceTree = SOURCE_ROOT; };
@@ -937,7 +938,7 @@
 		583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptionsHighlighterAST.m; sourceTree = "<group>"; };
 		583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorHighlighterAST.h; sourceTree = "<group>"; };
 		583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectorHighlighterAST.m; sourceTree = "<group>"; };
-		583B545529DEDDE700CB292A /* EasyList3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList3.txt; sourceTree = "<group>"; };
+		583B545529DEDDE700CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
@@ -1326,7 +1327,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		583B53EA29DC192C00CB292A /* Frameworks */ = {
+		581105EC29E53AED0073E9CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1489,6 +1490,18 @@
 			path = M3U8;
 			sourceTree = "<group>";
 		};
+		581105F029E53AED0073E9CF /* Stay ContentBlock Basic */ = {
+			isa = PBXGroup;
+			children = (
+				581105FE29E53EA10073E9CF /* Stay ContentBlock Basic.entitlements */,
+				581105F129E53AED0073E9CF /* blockerList.json */,
+				581105F329E53AED0073E9CF /* ContentBlockerRequestHandler.h */,
+				581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */,
+				581105F629E53AED0073E9CF /* Info.plist */,
+			);
+			path = "Stay ContentBlock Basic";
+			sourceTree = "<group>";
+		};
 		581C2FE029E008C800B46C10 /* BlockerAST */ = {
 			isa = PBXGroup;
 			children = (
@@ -1616,8 +1629,8 @@
 		583B53C129DABFE400CB292A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				583B53C229DAC01A00CB292A /* EasyList.txt */,
-				583B545529DEDDE700CB292A /* EasyList3.txt */,
+				583B53C229DAC01A00CB292A /* EasyList2.txt */,
+				583B545529DEDDE700CB292A /* EasyList.txt */,
 				581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */,
 			);
 			path = Resources;
@@ -1634,17 +1647,6 @@
 			name = Parser;
 			path = Stay/AdBlock/Filter/Parser;
 			sourceTree = SOURCE_ROOT;
-		};
-		583B53EE29DC192D00CB292A /* Stay ContentBlockBasic */ = {
-			isa = PBXGroup;
-			children = (
-				583B53EF29DC192D00CB292A /* blockerList.json */,
-				583B53F129DC192D00CB292A /* ContentBlockerRequestHandler.h */,
-				583B53F229DC192D00CB292A /* ContentBlockerRequestHandler.m */,
-				583B53F429DC192D00CB292A /* Info.plist */,
-			);
-			path = "Stay ContentBlockBasic";
-			sourceTree = "<group>";
 		};
 		583B541029DD504500CB292A /* Navigation */ = {
 			isa = PBXGroup;
@@ -1776,7 +1778,7 @@
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
 				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
-				583B53EE29DC192D00CB292A /* Stay ContentBlockBasic */,
+				581105F029E53AED0073E9CF /* Stay ContentBlock Basic */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -1794,7 +1796,7 @@
 				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
-				583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */,
+				581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2725,21 +2727,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		583B53EC29DC192C00CB292A /* Stay ContentBlockBasic */ = {
+		581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 583B53F829DC192D00CB292A /* Build configuration list for PBXNativeTarget "Stay ContentBlockBasic" */;
+			buildConfigurationList = 581105FA29E53AED0073E9CF /* Build configuration list for PBXNativeTarget "Stay ContentBlock Basic" */;
 			buildPhases = (
-				583B53E929DC192C00CB292A /* Sources */,
-				583B53EA29DC192C00CB292A /* Frameworks */,
-				583B53EB29DC192C00CB292A /* Resources */,
+				581105EB29E53AED0073E9CF /* Sources */,
+				581105EC29E53AED0073E9CF /* Frameworks */,
+				581105ED29E53AED0073E9CF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "Stay ContentBlockBasic";
-			productName = "Stay ContentBlockBasic";
-			productReference = 583B53ED29DC192C00CB292A /* Stay ContentBlockBasic.appex */;
+			name = "Stay ContentBlock Basic";
+			productName = "Stay ContentBlock Basic";
+			productReference = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
@@ -2774,7 +2776,7 @@
 			);
 			dependencies = (
 				5876890F2719238000F834A4 /* PBXTargetDependency */,
-				583B53F629DC192D00CB292A /* PBXTargetDependency */,
+				581105F829E53AED0073E9CF /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -2882,7 +2884,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					583B53EC29DC192C00CB292A = {
+					581105EE29E53AED0073E9CF = {
 						CreatedOnToolsVersion = 14.2;
 					};
 					58639CD92864477D00AA80D5 = {
@@ -2931,17 +2933,17 @@
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
 				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
-				583B53EC29DC192C00CB292A /* Stay ContentBlockBasic */,
+				581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		583B53EB29DC192C00CB292A /* Resources */ = {
+		581105ED29E53AED0073E9CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				583B53F029DC192D00CB292A /* blockerList.json in Resources */,
+				581105F229E53AED0073E9CF /* blockerList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2988,7 +2990,7 @@
 				8410C841275E028A005531EC /* typescript.html in Resources */,
 				5889733E2723033600BE123E /* icon@3x.png in Resources */,
 				58F7F4C72745462500270873 /* parse-meta-line.js in Resources */,
-				583B545629DEDDE700CB292A /* EasyList3.txt in Resources */,
+				583B545629DEDDE700CB292A /* EasyList.txt in Resources */,
 				587688DD2719237E00F834A4 /* Main.html in Resources */,
 				8410C848275E028D005531EC /* editor.html in Resources */,
 				8410C846275E028A005531EC /* codemirror.css in Resources */,
@@ -3012,7 +3014,7 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
-				583B53C329DAC01A00CB292A /* EasyList.txt in Resources */,
+				583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
@@ -3094,7 +3096,7 @@
 				588202872859E73900B2721A /* typescript.html in Resources */,
 				588202882859E73900B2721A /* icon@3x.png in Resources */,
 				588202892859E73900B2721A /* parse-meta-line.js in Resources */,
-				583B545729DEDDE700CB292A /* EasyList3.txt in Resources */,
+				583B545729DEDDE700CB292A /* EasyList.txt in Resources */,
 				5882028A2859E73900B2721A /* Main.html in Resources */,
 				5882028B2859E73900B2721A /* editor.html in Resources */,
 				5882028C2859E73900B2721A /* codemirror.css in Resources */,
@@ -3118,7 +3120,7 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
-				583B53C429DAC01A00CB292A /* EasyList.txt in Resources */,
+				583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,
@@ -3228,12 +3230,12 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		583B53E929DC192C00CB292A /* Sources */ = {
+		581105EB29E53AED0073E9CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				583B53F329DC192D00CB292A /* ContentBlockerRequestHandler.m in Sources */,
-				583B53FF29DC19D400CB292A /* ContentFilterManager.m in Sources */,
+				581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3768,10 +3770,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		583B53F629DC192D00CB292A /* PBXTargetDependency */ = {
+		581105F829E53AED0073E9CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 583B53EC29DC192C00CB292A /* Stay ContentBlockBasic */;
-			targetProxy = 583B53F529DC192D00CB292A /* PBXContainerItemProxy */;
+			target = 581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */;
+			targetProxy = 581105F729E53AED0073E9CF /* PBXContainerItemProxy */;
 		};
 		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3826,26 +3828,27 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		583B53F929DC192D00CB292A /* Debug */ = {
+		581105FB29E53AED0073E9CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay ContentBlock Basic/Stay ContentBlock Basic.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlockBasic/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlockBasic";
+				INFOPLIST_FILE = "Stay ContentBlock Basic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlock Basic";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlockBasic";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlock-Basic";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3853,26 +3856,27 @@
 			};
 			name = Debug;
 		};
-		583B53FA29DC192D00CB292A /* Release */ = {
+		581105FC29E53AED0073E9CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay ContentBlock Basic/Stay ContentBlock Basic.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlockBasic/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlockBasic";
+				INFOPLIST_FILE = "Stay ContentBlock Basic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlock Basic";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlockBasic";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlock-Basic";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4503,11 +4507,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		583B53F829DC192D00CB292A /* Build configuration list for PBXNativeTarget "Stay ContentBlockBasic" */ = {
+		581105FA29E53AED0073E9CF /* Build configuration list for PBXNativeTarget "Stay ContentBlock Basic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				583B53F929DC192D00CB292A /* Debug */,
-				583B53FA29DC192D00CB292A /* Release */,
+				581105FB29E53AED0073E9CF /* Debug */,
+				581105FC29E53AED0073E9CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

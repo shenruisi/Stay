@@ -77,7 +77,7 @@
 //        cer.contentFilter = contentFilter;
 //        [self.navigationController pushViewController:cer animated:YES];
         
-        [contentFilter convertToJOSNRules];
+        [contentFilter reloadContentBlocker];
         
     };
     

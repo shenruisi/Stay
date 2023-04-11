@@ -1,0 +1,28 @@
+[
+    {
+        "trigger": {
+            "url-filter": ".*pagead2\\.googlesyndication\\.com.*",
+            "url-filter-is-case-sensitive": true,
+            "resource-type": [
+                "image",
+                "style-sheet",
+                "script",
+                "font",
+                "media",
+                "raw",
+                "document"
+            ],
+        },
+        "action": {
+            "type": "block",
+        }
+    },
+   {
+       "trigger": {
+           "url-filter": "webkit.svg"
+       },
+       "action": {
+           "type": "block"
+       }
+   }
+]

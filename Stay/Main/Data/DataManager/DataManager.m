@@ -137,7 +137,7 @@
         easyList.version = @"202304030644";
         easyList.homepage = @"https://easylist.to/";
         easyList.uuid = [@"https://easylist.to/easylist/easylist.txt" md5];
-        easyList.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-ContentBlockBasic";
+        easyList.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-ContentBlock-Basic";
         easyList.type = ContentFilterTypeBuiltin;
         
         ContentFilter *easyListChina = [[ContentFilter alloc] init];
@@ -225,7 +225,7 @@
         return;
     }
     
-    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT)";
+    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT, 'rule_path' TEXT)";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -270,7 +270,7 @@
         return nil;
     }
     
-    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier FROM content_filter order by create_time desc";
+    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path FROM content_filter order by create_time desc";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -312,6 +312,7 @@
         contentFilter.iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 13)== NULL?"":(const char *)sqlite3_column_text(stmt, 13)];
         contentFilter.type = sqlite3_column_int(stmt, 14);
         contentFilter.contentBlockerIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 15)== NULL?"":(const char *)sqlite3_column_text(stmt, 15)];
+        contentFilter.rulePath = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 16)== NULL?"":(const char *)sqlite3_column_text(stmt, 16)];
         
         [ret addObject:contentFilter];
     }
@@ -329,7 +330,7 @@
         return NO;
     }
     
-    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier,rule_path) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -376,6 +377,7 @@
         sqlite3_bind_text(statement, 14, [tags UTF8String], -1,NULL);
         sqlite3_bind_int64(statement, 15, contentFilter.type);
         sqlite3_bind_text(statement, 16, contentFilter.contentBlockerIdentifier ? [contentFilter.contentBlockerIdentifier UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_text(statement, 17, contentFilter.rulePath ? [contentFilter.rulePath UTF8String] : NULL, -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
