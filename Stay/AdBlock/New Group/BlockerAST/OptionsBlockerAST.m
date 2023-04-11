@@ -55,6 +55,115 @@
                 [resourceTypes addObject:@"image"];
             }
         }
+        else if (option.type == FilterOptionTypeScript){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"script"];
+            }
+            else{
+                [resourceTypes addObject:@"script"];
+            }
+        }
+        else if (option.type == FilterOptionTypeStylesheet){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"style-sheet"];
+            }
+            else{
+                [resourceTypes addObject:@"style-sheet"];
+            }
+        }
+        else if (option.type == FilterOptionTypeObject){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"raw"];
+            }
+            else{
+                [resourceTypes addObject:@"raw"];
+            }
+        }
+        else if (option.type == FilterOptionTypeXmlHttpRequest){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"fetch"];
+            }
+            else{
+                [resourceTypes addObject:@"fetch"];
+            }
+        }
+        else if (option.type == FilterOptionTypeSubDocument){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"document"];
+            }
+            else{
+                [resourceTypes addObject:@"document"];
+            }
+        }
+        else if (option.type == FilterOptionTypePing){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"ping"];
+            }
+            else{
+                [resourceTypes addObject:@"ping"];
+            }
+        }
+        else if (option.type == FilterOptionTypeWebSocket){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"websocket"];
+            }
+            else{
+                [resourceTypes addObject:@"websocket"];
+            }
+        }
+        else if (option.type == FilterOptionTypeDocument){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"document"];
+            }
+            else{
+                [resourceTypes addObject:@"document"];
+            }
+        }
+        else if (option.type == FilterOptionTypeElemHide){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"document"];
+            }
+            else{
+                [resourceTypes addObject:@"document"];
+            }
+        }
+        else if (option.type == FilterOptionTypePopup){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"popup"];
+            }
+            else{
+                [resourceTypes addObject:@"popup"];
+            }
+        }
+        else if (option.type == FilterOptionTypeFont){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"font"];
+            }
+            else{
+                [resourceTypes addObject:@"font"];
+            }
+        }
+        else if (option.type == FilterOptionTypeMedia){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"media"];
+            }
+            else{
+                [resourceTypes addObject:@"media"];
+            }
+        }
+        else if (option.type == FilterOptionTypeOther){
+            if (option.inverse){
+                [inverseResourceTypes addObject:@"other"];
+            }
+            else{
+                [resourceTypes addObject:@"other"];
+            }
+        }
+        else if (option.type == FilterOptionTypeMatchCase){
+            if (!option.inverse){
+                self.urlFilterIsCaseSensitive = YES;
+            }
+        }
     }
     
     for (NSString *inverseResourceType in inverseResourceTypes){

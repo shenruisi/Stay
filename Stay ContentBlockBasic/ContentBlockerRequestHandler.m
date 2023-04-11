@@ -6,6 +6,7 @@
 //
 
 #import "ContentBlockerRequestHandler.h"
+#import "ContentFilterManager.h"
 
 @interface ContentBlockerRequestHandler ()
 
@@ -14,6 +15,7 @@
 @implementation ContentBlockerRequestHandler
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context {
+    [[ContentFilterManager shared] contentOfFileName:@"EasyList.txt"];
     NSItemProvider *attachment = [[NSItemProvider alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"]];
     
     NSExtensionItem *item = [[NSExtensionItem alloc] init];
