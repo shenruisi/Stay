@@ -3428,7 +3428,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        let randomArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
+        let randomArr = jsText.match(/[a-zA-Z0-9]{3}\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
         console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
