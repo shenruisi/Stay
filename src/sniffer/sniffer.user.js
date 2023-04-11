@@ -3246,6 +3246,7 @@ const browser = __b;
      */
     function fetchYoutubeDecodeFun(pathUuid, pathUrl){
       // console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+      pathUrl = window.location.href;
       return new Promise((resolve, reject) => {
         if(isContent){
           // console.log('fetchYoutubeDecodeFun-----true');
