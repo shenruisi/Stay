@@ -13,6 +13,7 @@
 #import "API.h"
 #import "FCShared.h"
 #import <Speech/Speech.h>
+#import "ContentFilterManager.h"
 
 @interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
 
@@ -154,7 +155,7 @@
 {
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
-    
+
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         

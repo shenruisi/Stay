@@ -15,11 +15,11 @@
 @implementation ContentBlockerRequestHandler
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context {
-//    NSURL *url = [[ContentFilterManager shared] contentURLOfFileName:@"Basic.json"];
-//    if (![[NSFileManager defaultManager] fileExistsAtPath:[url absoluteString]]){
-//        url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
-//    }
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
+    NSURL *url = [[ContentFilterManager shared] contentURLOfFileName:@"Basic.json"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]){
+        url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
+    }
+//    NSURL *url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
     NSItemProvider *attachment = [[NSItemProvider alloc] initWithContentsOfURL:url];
     
     NSExtensionItem *item = [[NSExtensionItem alloc] init];

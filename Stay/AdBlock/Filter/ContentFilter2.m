@@ -35,13 +35,14 @@
     for (NSString *line in lines){
         if (line.length > 0){
             NSDictionary *jsonRule = [ContentFilterBlocker rule:line];
-            [jsonRules addObject:jsonRule];
+            if (jsonRule){
+                [jsonRules addObject:jsonRule];
+            }
+            
         }
     }
     
     NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
-//    NSError *error;
-//    [ret writeToFile:@"/Users/ris/Desktop/jsonRules.txt" atomically:YES encoding:NSUTF8StringEncoding error:&error];
     return ret;
 }
 

@@ -99,6 +99,7 @@
 		581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */; };
 		581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
@@ -3527,6 +3528,7 @@
 				582062042950696E00A32D0C /* DisabledWebsites.m in Sources */,
 				58F7F4E9274776AB00270873 /* Stroge.m in Sources */,
 				588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */,
+				581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

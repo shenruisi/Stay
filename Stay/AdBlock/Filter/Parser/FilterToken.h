@@ -35,6 +35,7 @@ typedef enum{
     FilterOptionTypeMedia,
     FilterOptionTypeOther,
     FilterOptionTypeMatchCase,
+    FilterOptionTypeThirdParty,
 }FilterOptionType;
 
 @interface FilterOption : NSObject

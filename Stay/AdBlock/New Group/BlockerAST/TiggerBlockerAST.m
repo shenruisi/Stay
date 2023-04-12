@@ -20,7 +20,15 @@
     }
     else{
         //Add wildcard
-        urlFilter = [NSString stringWithFormat:@"*%@*",urlFilter];
+        if (self.urlFilter.length == 0){
+            urlFilter = [NSString stringWithFormat:@"*%@*",urlFilter];
+        }
+        else if ([self.urlFilter hasSuffix:@"^https?://"]){
+            urlFilter = [NSString stringWithFormat:@"*.%@*",urlFilter];
+        }
+        else if ([self.urlFilter hasSuffix:@".*[^a-zA-Z0-9_\\-.%]"]){
+            urlFilter = [NSString stringWithFormat:@"%@*",urlFilter];
+        }
         //Convert wildcard
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"?" withString:@"."];

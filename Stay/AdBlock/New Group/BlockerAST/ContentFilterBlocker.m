@@ -30,6 +30,10 @@
         BlockerAST *ast;
         [parser nextToken];
         
+        if ([parser isInfo] || [parser isComment] ){
+            return nil;
+        }
+        
         if ([parser isException]){
             ast = [[ExceptionBlockerAST alloc] initWithParser:parser args:@[dictionary]];
         }
@@ -60,10 +64,11 @@
         
     }while(!parser.isEOF);
     
-    if (((NSString *)dictionary[@"trigger"][@"url-filter"]).length == 0){
+    NSString *urlFilter = dictionary[@"trigger"][@"url-filter"];
+    if (urlFilter.length == 0){
         dictionary[@"trigger"][@"url-filter"] = @".*";
+//        NSLog(@"rule: %@",rule);
     }
-    
     return dictionary;
 }
 
