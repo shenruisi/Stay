@@ -93,9 +93,15 @@
                                                                initWithNavigationBarClass:[FCNavigationBar class] toolbarClass:nil];
         homeNavigationController.viewControllers = @[homeController];
         
+        
+        FCNavigationController *browseNavigationController = [[FCNavigationController alloc]
+                                                               initWithNavigationBarClass:[FCNavigationBar class] toolbarClass:nil];
+        browseNavigationController.viewControllers = @[storeController];
+        
+        
         self.viewControllers = @[
             homeNavigationController,
-            [[UINavigationController alloc] initWithRootViewController:storeController],
+            browseNavigationController,
             adBlockNavigationController,
             [[UINavigationController alloc] initWithRootViewController:syFIleManagerController],
             [[UINavigationController alloc] initWithRootViewController:syMoreController]
