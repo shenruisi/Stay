@@ -69,8 +69,12 @@
 }
 
 
-+ (NSString *)stringOfTag:(ContentFilterTag)tag{
-    if (ContentFilterTagAds == tag) return @"Ads";
++ (NSString *)stringOfType:(ContentFilterType)type{
+    if (ContentFilterTypeBasic == type) return @"Basic";
+    if (ContentFilterTypePrivacy == type) return @"Privacy";
+    if (ContentFilterTypeRegion == type) return @"Region";
+    if (ContentFilterTypeCustom == type) return @"Custom";
+    if (ContentFilterTypeTag == type) return @"Tag";
     return @"";
 }
 

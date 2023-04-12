@@ -10,11 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef enum {
-    ContentFilterTagAds = 1
-}ContentFilterTag;
-
-typedef enum {
-    ContentFilterTypeBuiltin = 1
+    ContentFilterTypeBasic = 1,
+    ContentFilterTypePrivacy = 2,
+    ContentFilterTypeRegion = 3,
+    ContentFilterTypeCustom = 4,
+    ContentFilterTypeTag = 5
 }ContentFilterType;
 
 @interface ContentFilter : NSObject
@@ -42,7 +42,7 @@ typedef enum {
 - (NSString *)fetchRules;
 - (NSString *)convertToJOSNRules;
 - (void)reloadContentBlocker;
-+ (NSString *)stringOfTag:(ContentFilterTag)tag;
++ (NSString *)stringOfType:(ContentFilterType)type;
 
 @end
 

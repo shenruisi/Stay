@@ -95,15 +95,33 @@
 		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
-		581105F229E53AED0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 581105F129E53AED0073E9CF /* blockerList.json */; };
-		581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */; };
-		581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811063429E695FF0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811063329E695FF0073E9CF /* blockerList.json */; };
+		5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811063B29E695FF0073E9CF /* Stay Content Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811063129E695FF0073E9CF /* Stay Content Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811064629E6961A0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811064529E6961A0073E9CF /* blockerList.json */; };
+		5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811064D29E6961A0073E9CF /* Stay Content Privacy.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811064329E6961A0073E9CF /* Stay Content Privacy.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811065329E696A50073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811065429E696A50073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811065C29E697D30073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811065B29E697D30073E9CF /* blockerList.json */; };
+		5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811066329E697D30073E9CF /* Stay Content Region.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811065929E697D20073E9CF /* Stay Content Region.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811066E29E697F70073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811066D29E697F70073E9CF /* blockerList.json */; };
+		5811067129E697F70073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811067029E697F70073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811067529E697F70073E9CF /* Stay Content Custom.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811066B29E697F70073E9CF /* Stay Content Custom.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811068029E698790073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811067F29E698790073E9CF /* blockerList.json */; };
+		5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811068729E698790073E9CF /* Stay Content Tag.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811067D29E698790073E9CF /* Stay Content Tag.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811069229E6A1260073E9CF /* EasyListPrivacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* EasyListPrivacy.txt */; };
+		5811069329E6A1260073E9CF /* EasyListPrivacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* EasyListPrivacy.txt */; };
+		5811069529E6A15D0073E9CF /* EasyListRegion.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* EasyListRegion.txt */; };
+		5811069629E6A15D0073E9CF /* EasyListRegion.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* EasyListRegion.txt */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
-		581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
-		581C2FDF29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
 		581C2FE329E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
 		581C2FE429E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
 		581C2FE729E00BF500B46C10 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE629E00BF500B46C10 /* BlockerAST.m */; };
@@ -189,8 +207,8 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
-		583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
-		583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
+		583B53C329DAC01A00CB292A /* EasyListBasic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyListBasic.txt */; };
+		583B53C429DAC01A00CB292A /* EasyListBasic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyListBasic.txt */; };
 		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
@@ -656,12 +674,40 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		581105F729E53AED0073E9CF /* PBXContainerItemProxy */ = {
+		5811063929E695FF0073E9CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 581105EE29E53AED0073E9CF;
-			remoteInfo = "Stay ContentBlock Basic";
+			remoteGlobalIDString = 5811063029E695FF0073E9CF;
+			remoteInfo = "Stay Content Basic";
+		};
+		5811064B29E6961A0073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811064229E6961A0073E9CF;
+			remoteInfo = "Stay Content Privacy";
+		};
+		5811066129E697D30073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811065829E697D20073E9CF;
+			remoteInfo = "Stay Content Region";
+		};
+		5811067329E697F70073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811066A29E697F70073E9CF;
+			remoteInfo = "Stay Content Custom";
+		};
+		5811068529E698790073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811067C29E698790073E9CF;
+			remoteInfo = "Stay Content Tag";
 		};
 		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -707,8 +753,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */,
+				5811063B29E695FF0073E9CF /* Stay Content Basic.appex in Embed App Extensions */,
+				5811066329E697D30073E9CF /* Stay Content Region.appex in Embed App Extensions */,
+				5811068729E698790073E9CF /* Stay Content Tag.appex in Embed App Extensions */,
+				5811067529E697F70073E9CF /* Stay Content Custom.appex in Embed App Extensions */,
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
+				5811064D29E6961A0073E9CF /* Stay Content Privacy.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -805,14 +855,39 @@
 		3CA742AB29A2180100AB9F12 /* MySlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySlider.swift; sourceTree = "<group>"; };
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
-		581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlock Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		581105F129E53AED0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
-		581105F329E53AED0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
-		581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
-		581105F629E53AED0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		581105FE29E53EA10073E9CF /* Stay ContentBlock Basic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay ContentBlock Basic.entitlements"; sourceTree = "<group>"; };
+		5811063129E695FF0073E9CF /* Stay Content Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811063329E695FF0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811063529E695FF0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811063829E695FF0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811064329E6961A0073E9CF /* Stay Content Privacy.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Privacy.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811064529E6961A0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811064729E6961A0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811064A29E6961A0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811065129E696350073E9CF /* Stay Content Privacy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Privacy.entitlements"; sourceTree = "<group>"; };
+		5811065229E696400073E9CF /* Stay Content Basic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Basic.entitlements"; sourceTree = "<group>"; };
+		5811065929E697D20073E9CF /* Stay Content Region.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Region.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811065B29E697D30073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811065D29E697D30073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811066029E697D30073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811066B29E697F70073E9CF /* Stay Content Custom.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Custom.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811066D29E697F70073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811066F29E697F70073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811067029E697F70073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811067229E697F70073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811067D29E698790073E9CF /* Stay Content Tag.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Tag.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811067F29E698790073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811068129E698790073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811068429E698790073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811068E29E698E80073E9CF /* Stay Content Tag.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Tag.entitlements"; sourceTree = "<group>"; };
+		5811068F29E698F20073E9CF /* Stay Content Custom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Custom.entitlements"; sourceTree = "<group>"; };
+		5811069029E698FC0073E9CF /* Stay Content Region.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Region.entitlements"; sourceTree = "<group>"; };
+		5811069129E6A1260073E9CF /* EasyListPrivacy.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListPrivacy.txt; sourceTree = "<group>"; };
+		5811069429E6A15D0073E9CF /* EasyListRegion.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = EasyListRegion.txt; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
-		581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListChina.txt; sourceTree = "<group>"; };
 		581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
 		581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
 		581C2FE529E00BF500B46C10 /* BlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
@@ -894,7 +969,7 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
-		583B53C229DAC01A00CB292A /* EasyList2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList2.txt; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* EasyListBasic.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListBasic.txt; sourceTree = "<group>"; };
 		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
 		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
 		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
@@ -1328,7 +1403,35 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		581105EC29E53AED0073E9CF /* Frameworks */ = {
+		5811062E29E695FF0073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811064029E6961A0073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811065629E697D20073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811066829E697F70073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811067A29E698790073E9CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1491,16 +1594,64 @@
 			path = M3U8;
 			sourceTree = "<group>";
 		};
-		581105F029E53AED0073E9CF /* Stay ContentBlock Basic */ = {
+		5811063229E695FF0073E9CF /* Stay Content Basic */ = {
 			isa = PBXGroup;
 			children = (
-				581105FE29E53EA10073E9CF /* Stay ContentBlock Basic.entitlements */,
-				581105F129E53AED0073E9CF /* blockerList.json */,
-				581105F329E53AED0073E9CF /* ContentBlockerRequestHandler.h */,
-				581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */,
-				581105F629E53AED0073E9CF /* Info.plist */,
+				5811065229E696400073E9CF /* Stay Content Basic.entitlements */,
+				5811063329E695FF0073E9CF /* blockerList.json */,
+				5811063529E695FF0073E9CF /* ContentBlockerRequestHandler.h */,
+				5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */,
+				5811063829E695FF0073E9CF /* Info.plist */,
 			);
-			path = "Stay ContentBlock Basic";
+			path = "Stay Content Basic";
+			sourceTree = "<group>";
+		};
+		5811064429E6961A0073E9CF /* Stay Content Privacy */ = {
+			isa = PBXGroup;
+			children = (
+				5811065129E696350073E9CF /* Stay Content Privacy.entitlements */,
+				5811064529E6961A0073E9CF /* blockerList.json */,
+				5811064729E6961A0073E9CF /* ContentBlockerRequestHandler.h */,
+				5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */,
+				5811064A29E6961A0073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Privacy";
+			sourceTree = "<group>";
+		};
+		5811065A29E697D30073E9CF /* Stay Content Region */ = {
+			isa = PBXGroup;
+			children = (
+				5811069029E698FC0073E9CF /* Stay Content Region.entitlements */,
+				5811065B29E697D30073E9CF /* blockerList.json */,
+				5811065D29E697D30073E9CF /* ContentBlockerRequestHandler.h */,
+				5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */,
+				5811066029E697D30073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Region";
+			sourceTree = "<group>";
+		};
+		5811066C29E697F70073E9CF /* Stay Content Custom */ = {
+			isa = PBXGroup;
+			children = (
+				5811068F29E698F20073E9CF /* Stay Content Custom.entitlements */,
+				5811066D29E697F70073E9CF /* blockerList.json */,
+				5811066F29E697F70073E9CF /* ContentBlockerRequestHandler.h */,
+				5811067029E697F70073E9CF /* ContentBlockerRequestHandler.m */,
+				5811067229E697F70073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Custom";
+			sourceTree = "<group>";
+		};
+		5811067E29E698790073E9CF /* Stay Content Tag */ = {
+			isa = PBXGroup;
+			children = (
+				5811068E29E698E80073E9CF /* Stay Content Tag.entitlements */,
+				5811067F29E698790073E9CF /* blockerList.json */,
+				5811068129E698790073E9CF /* ContentBlockerRequestHandler.h */,
+				5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */,
+				5811068429E698790073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Tag";
 			sourceTree = "<group>";
 		};
 		581C2FE029E008C800B46C10 /* BlockerAST */ = {
@@ -1630,9 +1781,10 @@
 		583B53C129DABFE400CB292A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				583B53C229DAC01A00CB292A /* EasyList2.txt */,
+				583B53C229DAC01A00CB292A /* EasyListBasic.txt */,
 				583B545529DEDDE700CB292A /* EasyList.txt */,
-				581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */,
+				5811069429E6A15D0073E9CF /* EasyListRegion.txt */,
+				5811069129E6A1260073E9CF /* EasyListPrivacy.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1779,7 +1931,11 @@
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
 				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
-				581105F029E53AED0073E9CF /* Stay ContentBlock Basic */,
+				5811063229E695FF0073E9CF /* Stay Content Basic */,
+				5811064429E6961A0073E9CF /* Stay Content Privacy */,
+				5811065A29E697D30073E9CF /* Stay Content Region */,
+				5811066C29E697F70073E9CF /* Stay Content Custom */,
+				5811067E29E698790073E9CF /* Stay Content Tag */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -1797,7 +1953,11 @@
 				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
-				581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */,
+				5811063129E695FF0073E9CF /* Stay Content Basic.appex */,
+				5811064329E6961A0073E9CF /* Stay Content Privacy.appex */,
+				5811065929E697D20073E9CF /* Stay Content Region.appex */,
+				5811066B29E697F70073E9CF /* Stay Content Custom.appex */,
+				5811067D29E698790073E9CF /* Stay Content Tag.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2728,21 +2888,89 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */ = {
+		5811063029E695FF0073E9CF /* Stay Content Basic */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 581105FA29E53AED0073E9CF /* Build configuration list for PBXNativeTarget "Stay ContentBlock Basic" */;
+			buildConfigurationList = 5811063C29E696000073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Basic" */;
 			buildPhases = (
-				581105EB29E53AED0073E9CF /* Sources */,
-				581105EC29E53AED0073E9CF /* Frameworks */,
-				581105ED29E53AED0073E9CF /* Resources */,
+				5811062D29E695FF0073E9CF /* Sources */,
+				5811062E29E695FF0073E9CF /* Frameworks */,
+				5811062F29E695FF0073E9CF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "Stay ContentBlock Basic";
-			productName = "Stay ContentBlock Basic";
-			productReference = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */;
+			name = "Stay Content Basic";
+			productName = "Stay Content Basic";
+			productReference = 5811063129E695FF0073E9CF /* Stay Content Basic.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811064229E6961A0073E9CF /* Stay Content Privacy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811064E29E6961B0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Privacy" */;
+			buildPhases = (
+				5811063F29E6961A0073E9CF /* Sources */,
+				5811064029E6961A0073E9CF /* Frameworks */,
+				5811064129E6961A0073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Privacy";
+			productName = "Stay Content Privacy";
+			productReference = 5811064329E6961A0073E9CF /* Stay Content Privacy.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811065829E697D20073E9CF /* Stay Content Region */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811066429E697D30073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Region" */;
+			buildPhases = (
+				5811065529E697D20073E9CF /* Sources */,
+				5811065629E697D20073E9CF /* Frameworks */,
+				5811065729E697D20073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Region";
+			productName = "Stay Content Region";
+			productReference = 5811065929E697D20073E9CF /* Stay Content Region.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811066A29E697F70073E9CF /* Stay Content Custom */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811067629E697F70073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Custom" */;
+			buildPhases = (
+				5811066729E697F70073E9CF /* Sources */,
+				5811066829E697F70073E9CF /* Frameworks */,
+				5811066929E697F70073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Custom";
+			productName = "Stay Content Custom";
+			productReference = 5811066B29E697F70073E9CF /* Stay Content Custom.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811067C29E698790073E9CF /* Stay Content Tag */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811068829E6987A0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Tag" */;
+			buildPhases = (
+				5811067929E698790073E9CF /* Sources */,
+				5811067A29E698790073E9CF /* Frameworks */,
+				5811067B29E698790073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Tag";
+			productName = "Stay Content Tag";
+			productReference = 5811067D29E698790073E9CF /* Stay Content Tag.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
@@ -2777,7 +3005,11 @@
 			);
 			dependencies = (
 				5876890F2719238000F834A4 /* PBXTargetDependency */,
-				581105F829E53AED0073E9CF /* PBXTargetDependency */,
+				5811063A29E695FF0073E9CF /* PBXTargetDependency */,
+				5811064C29E6961A0073E9CF /* PBXTargetDependency */,
+				5811066229E697D30073E9CF /* PBXTargetDependency */,
+				5811067429E697F70073E9CF /* PBXTargetDependency */,
+				5811068629E698790073E9CF /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -2885,7 +3117,19 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					581105EE29E53AED0073E9CF = {
+					5811063029E695FF0073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811064229E6961A0073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811065829E697D20073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811066A29E697F70073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811067C29E698790073E9CF = {
 						CreatedOnToolsVersion = 14.2;
 					};
 					58639CD92864477D00AA80D5 = {
@@ -2934,17 +3178,53 @@
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
 				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
-				581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */,
+				5811063029E695FF0073E9CF /* Stay Content Basic */,
+				5811064229E6961A0073E9CF /* Stay Content Privacy */,
+				5811065829E697D20073E9CF /* Stay Content Region */,
+				5811066A29E697F70073E9CF /* Stay Content Custom */,
+				5811067C29E698790073E9CF /* Stay Content Tag */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		581105ED29E53AED0073E9CF /* Resources */ = {
+		5811062F29E695FF0073E9CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				581105F229E53AED0073E9CF /* blockerList.json in Resources */,
+				5811063429E695FF0073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811064129E6961A0073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811064629E6961A0073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811065729E697D20073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811065C29E697D30073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811066929E697F70073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811066E29E697F70073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811067B29E698790073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811068029E698790073E9CF /* blockerList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2983,7 +3263,6 @@
 				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
 				84C1ED4C277AB93E00651DF9 /* homepage-selected@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
-				581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				58AFD76329A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
@@ -3015,11 +3294,12 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
-				583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */,
+				583B53C329DAC01A00CB292A /* EasyListBasic.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
+				5811069229E6A1260073E9CF /* EasyListPrivacy.txt in Resources */,
 				84C1ED50277AD93300651DF9 /* arrow-dark@3x.png in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,
@@ -3028,6 +3308,7 @@
 				84C1ED52277AE1B500651DF9 /* search-selected@3x.png in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
 				58A06D1B28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
+				5811069529E6A15D0073E9CF /* EasyListRegion.txt in Resources */,
 				84C1ED48276C637200651DF9 /* scriptManager.sqlite in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
 				84BDC853274CA4A5005367C6 /* stop@3x.png in Resources */,
@@ -3089,7 +3370,6 @@
 				588202812859E73900B2721A /* more-selected@3x.png in Resources */,
 				588202832859E73900B2721A /* homepage-selected@3x.png in Resources */,
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
-				581C2FDF29DFFCB000B46C10 /* EasyListChina.txt in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
 				58AFD76429A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
@@ -3121,11 +3401,12 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
-				583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */,
+				583B53C429DAC01A00CB292A /* EasyListBasic.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,
 				5882029F2859E73900B2721A /* codemirror.js in Resources */,
+				5811069329E6A1260073E9CF /* EasyListPrivacy.txt in Resources */,
 				588202A02859E73900B2721A /* arrow-dark@3x.png in Resources */,
 				588202A12859E73900B2721A /* search@3x.png in Resources */,
 				588202A22859E73900B2721A /* js-lib@3x.png in Resources */,
@@ -3134,6 +3415,7 @@
 				588202A52859E73900B2721A /* search-selected@3x.png in Resources */,
 				588202A62859E73900B2721A /* Style.css in Resources */,
 				58A06D1C28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
+				5811069629E6A15D0073E9CF /* EasyListRegion.txt in Resources */,
 				588202A72859E73900B2721A /* scriptManager.sqlite in Resources */,
 				588202A82859E73900B2721A /* convert2RegExp.js in Resources */,
 				588202A92859E73900B2721A /* stop@3x.png in Resources */,
@@ -3231,12 +3513,48 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		581105EB29E53AED0073E9CF /* Sources */ = {
+		5811062D29E695FF0073E9CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */,
+				5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811065329E696A50073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811063F29E6961A0073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811065429E696A50073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811065529E697D20073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811066729E697F70073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811067129E697F70073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811067929E698790073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3772,10 +4090,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		581105F829E53AED0073E9CF /* PBXTargetDependency */ = {
+		5811063A29E695FF0073E9CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */;
-			targetProxy = 581105F729E53AED0073E9CF /* PBXContainerItemProxy */;
+			target = 5811063029E695FF0073E9CF /* Stay Content Basic */;
+			targetProxy = 5811063929E695FF0073E9CF /* PBXContainerItemProxy */;
+		};
+		5811064C29E6961A0073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811064229E6961A0073E9CF /* Stay Content Privacy */;
+			targetProxy = 5811064B29E6961A0073E9CF /* PBXContainerItemProxy */;
+		};
+		5811066229E697D30073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811065829E697D20073E9CF /* Stay Content Region */;
+			targetProxy = 5811066129E697D30073E9CF /* PBXContainerItemProxy */;
+		};
+		5811067429E697F70073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811066A29E697F70073E9CF /* Stay Content Custom */;
+			targetProxy = 5811067329E697F70073E9CF /* PBXContainerItemProxy */;
+		};
+		5811068629E698790073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811067C29E698790073E9CF /* Stay Content Tag */;
+			targetProxy = 5811068529E698790073E9CF /* PBXContainerItemProxy */;
 		};
 		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3830,19 +4168,21 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		581105FB29E53AED0073E9CF /* Debug */ = {
+		5811063D29E696000073E9CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_ENTITLEMENTS = "Stay ContentBlock Basic/Stay ContentBlock Basic.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Basic/Stay Content Basic.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlock Basic/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlock Basic";
+				INFOPLIST_FILE = "Stay Content Basic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "1. Basic";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3850,7 +4190,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlock-Basic";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Basic";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3858,19 +4198,21 @@
 			};
 			name = Debug;
 		};
-		581105FC29E53AED0073E9CF /* Release */ = {
+		5811063E29E696000073E9CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_ENTITLEMENTS = "Stay ContentBlock Basic/Stay ContentBlock Basic.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Basic/Stay Content Basic.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlock Basic/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlock Basic";
+				INFOPLIST_FILE = "Stay Content Basic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "1. Basic";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3878,7 +4220,247 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlock-Basic";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Basic";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811064F29E6961B0073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Privacy/Stay Content Privacy.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Privacy/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "2. Privacy";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Privacy";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811065029E6961B0073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Privacy/Stay Content Privacy.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Privacy/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "2. Privacy";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Privacy";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811066529E697D30073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Region/Stay Content Region.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Region/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "3. Region";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Region";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811066629E697D30073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Region/Stay Content Region.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Region/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "3. Region";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Region";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811067729E697F70073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Custom/Stay Content Custom.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Custom/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "4. Custom";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Custom";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811067829E697F70073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Custom/Stay Content Custom.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Custom/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "4. Custom";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Custom";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811068929E6987A0073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Tag/Stay Content Tag.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Tag/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "5. Tag";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Tag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811068A29E6987A0073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Tag/Stay Content Tag.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Tag/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "5. Tag";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Tag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4509,11 +5091,47 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		581105FA29E53AED0073E9CF /* Build configuration list for PBXNativeTarget "Stay ContentBlock Basic" */ = {
+		5811063C29E696000073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Basic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				581105FB29E53AED0073E9CF /* Debug */,
-				581105FC29E53AED0073E9CF /* Release */,
+				5811063D29E696000073E9CF /* Debug */,
+				5811063E29E696000073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811064E29E6961B0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Privacy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811064F29E6961B0073E9CF /* Debug */,
+				5811065029E6961B0073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811066429E697D30073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Region" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811066529E697D30073E9CF /* Debug */,
+				5811066629E697D30073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811067629E697F70073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Custom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811067729E697F70073E9CF /* Debug */,
+				5811067829E697F70073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811068829E6987A0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Tag" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811068929E6987A0073E9CF /* Debug */,
+				5811068A29E6987A0073E9CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

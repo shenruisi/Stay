@@ -1,8 +1,8 @@
 //
 //  ContentBlockerRequestHandler.m
-//  Stay ContentBlock Basic
+//  Stay Content Tag
 //
-//  Created by ris on 2023/4/11.
+//  Created by ris on 2023/4/12.
 //
 
 #import "ContentBlockerRequestHandler.h"
@@ -15,7 +15,7 @@
 @implementation ContentBlockerRequestHandler
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context {
-    NSURL *url = [[ContentFilterManager shared] contentURLOfFileName:@"Basic.json"];
+    NSURL *url = [[ContentFilterManager shared] contentURLOfFileName:@"Tag.json"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]){
         url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
     }

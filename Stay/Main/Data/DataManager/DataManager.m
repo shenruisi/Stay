@@ -126,34 +126,73 @@
     [self deleteTable:@"content_filter"];
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
-        ContentFilter *easyList = [[ContentFilter alloc] init];
-        easyList.title = @"EasyList";
-        easyList.tags = @[@(ContentFilterTagAds)];
-        easyList.path = @"EasyList.txt";
-        easyList.rulePath = @"Basic.json";
-        easyList.downloadUrl = @"https://easylist.to/easylist/easylist.txt";
-        easyList.status = 1;
-        easyList.expires = @"4 days (update frequency)";
-        easyList.version = @"202304030644";
-        easyList.homepage = @"https://easylist.to/";
-        easyList.uuid = [@"https://easylist.to/easylist/easylist.txt" md5];
-        easyList.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-ContentBlock-Basic";
-        easyList.type = ContentFilterTypeBuiltin;
+        ContentFilter *basic = [[ContentFilter alloc] init];
+        basic.title = @"EasyList";
+        basic.path = @"EasyListBasic.txt";
+        basic.rulePath = @"Basic.json";
+        basic.downloadUrl = @"https://easylist.to/easylist/easylist.txt";
+        basic.status = 1;
+        basic.sort = 1;
+        basic.expires = @"4 days (update frequency)";
+        basic.version = @"202304030644";
+        basic.homepage = @"https://easylist.to/";
+        basic.uuid = [@"https://easylist.to/easylist/easylist.txt" md5];
+        basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic";
+        basic.type = ContentFilterTypeBasic;
         
-        ContentFilter *easyListChina = [[ContentFilter alloc] init];
-        easyListChina.title = @"EasyList-China";
-        easyListChina.tags = @[@(ContentFilterTagAds)];
-        easyListChina.path = @"EasyListChina.txt";
-        easyListChina.downloadUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
-        easyListChina.status = 1;
-        easyListChina.expires = @"4 days (update frequency)";
-        easyListChina.version = @"202304070640";
-        easyListChina.homepage = @"https://github.com/easylist/easylistchina/";
-        easyListChina.uuid = [@"https://easylist-downloads.adblockplus.org/easylistchina.txt" md5];
-        easyListChina.type = ContentFilterTypeBuiltin;
+        ContentFilter *privacy = [[ContentFilter alloc] init];
+        privacy.title = @"EasyList Privacy";
+        privacy.path = @"EasyListPrivacy.txt";
+        privacy.rulePath = @"Privacy.json";
+        privacy.downloadUrl = @"https://easylist.to/easylist/easyprivacy.txt";
+        privacy.status = 1;
+        privacy.sort = 2;
+        privacy.expires = @"4 days (update frequency)";
+        privacy.version = @"202304120535";
+        privacy.homepage = @"https://easylist.to/";
+        privacy.uuid = [@"https://easylist.to/easylist/easyprivacy.txt" md5];
+        privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy";
+        privacy.type = ContentFilterTypeBasic;
         
-        [self insertContentFilter:easyListChina error:nil];
-        [self insertContentFilter:easyList error:nil];
+        ContentFilter *region = [[ContentFilter alloc] init];
+        region.title = @"EasyList China";
+        region.path = @"EasyListRegion.txt";
+        region.rulePath = @"Region.json";
+        region.downloadUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
+        region.status = 1;
+        region.sort = 3;
+        region.expires = @"4 days (update frequency)";
+        region.version = @"202304070640";
+        region.homepage = @"https://github.com/easylist/easylistchina/";
+        region.uuid = [@"https://easylist-downloads.adblockplus.org/easylistchina.txt" md5];
+        region.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Region";
+        region.type = ContentFilterTypeRegion;
+        
+        ContentFilter *custom = [[ContentFilter alloc] init];
+        custom.title = @"My Rules";
+        custom.rulePath = @"Custom.json";
+        custom.downloadUrl = @"";
+        custom.status = 1;
+        custom.sort = 4;
+        custom.uuid = [@"My Filters" md5];
+        custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom";
+        custom.type = ContentFilterTypeCustom;
+        
+        ContentFilter *tag = [[ContentFilter alloc] init];
+        tag.title = @"Webpage Tagging Rules";
+        tag.rulePath = @"Tag.json";
+        tag.downloadUrl = @"";
+        tag.status = 1;
+        tag.sort = 5;
+        tag.uuid = [@"Webpage Tagging Rules" md5];
+        tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+        tag.type = ContentFilterTypeTag;
+        
+        [self insertContentFilter:basic error:nil];
+        [self insertContentFilter:privacy error:nil];
+        [self insertContentFilter:region error:nil];
+        [self insertContentFilter:custom error:nil];
+        [self insertContentFilter:tag error:nil];
         
     }
     
@@ -270,7 +309,7 @@
         return nil;
     }
     
-    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path FROM content_filter order by create_time desc";
+    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path FROM content_filter order by sort asc";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
