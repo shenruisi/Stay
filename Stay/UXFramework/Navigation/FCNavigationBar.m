@@ -143,7 +143,7 @@ static NSInteger TabItemExtendLength = 10;
     }
     
     self.selectedButton.selected = NO;
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.1 animations:^{
         self.activatedLineWidthConstraint.constant = 0;
         [self layoutIfNeeded];
     
@@ -155,7 +155,7 @@ static NSInteger TabItemExtendLength = 10;
         [self layoutIfNeeded];
         [cer tabItemDidClick:button.item refresh:NO];
         
-        [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:0.1 animations:^{
             self.activatedLineWidthConstraint.constant = MIN(40, button.frame.size.width - TabItemExtendLength);
             [self layoutIfNeeded];
         } completion:^(BOOL finished) {

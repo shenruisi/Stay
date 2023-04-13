@@ -20,11 +20,14 @@ typedef enum {
 @interface ContentFilter : NSObject
 
 @property (nonatomic, strong) NSString *uuid;
+@property (nonatomic, strong) NSString *defaultTitle;
 @property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *defaultUrl;
 @property (nonatomic, strong) NSString *downloadUrl;
 @property (nonatomic, strong) NSString *expires;
 @property (nonatomic, strong) NSString *homepage;
 @property (nonatomic, assign) NSInteger status;
+@property (nonatomic, assign) NSInteger enable;
 @property (nonatomic, strong) NSString *path;
 @property (nonatomic, strong) NSString *rulePath;
 @property (nonatomic, strong) NSString *version;

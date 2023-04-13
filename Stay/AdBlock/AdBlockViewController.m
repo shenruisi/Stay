@@ -13,6 +13,7 @@
 #import "ContentFilter2.h"
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
+#import <SafariServices/SafariServices.h>
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -50,6 +51,56 @@
 //            [parser nextToken];
 //        }
 //    }
+    
+#ifdef FC_MAC
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onBecomeActive:)
+                                                 name:SVCDidBecomeActiveNotification
+                                               object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+#endif
+}
+
+- (void)onBecomeActive:(NSNotification *)note{
+    return;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
+        NSMutableArray *activatedSource = [[NSMutableArray alloc] init];
+        NSMutableArray *stoppedSource = [[NSMutableArray alloc] init];
+        for (ContentFilter *contentFilter in contentFilters){
+            dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            
+            [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                if (state.enabled){
+                    contentFilter.status = 1;
+                    [activatedSource addObject:contentFilter];
+                    [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+                }
+                else{
+                    contentFilter.status = 0;
+                    [stoppedSource addObject:contentFilter];
+                    [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+                }
+            }];
+            
+            dispatch_semaphore_wait(semaphore, deadline);
+        }
+        
+        [self.activatedSource removeAllObjects];
+        [self.activatedSource addObjectsFromArray:activatedSource];
+        [self.stoppedSource removeAllObjects];
+        [self.stoppedSource addObjectsFromArray:stoppedSource];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            NSLog(@"SFContentBlockerState reload");
+        });
+    });
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 }
 
 - (void)setupDataSource{
@@ -85,7 +136,8 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70 + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
+    return (contentFilter.enable ? 70 : 90) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

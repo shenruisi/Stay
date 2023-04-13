@@ -127,11 +127,14 @@
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];
-        basic.title = @"EasyList";
-        basic.path = @"EasyListBasic.txt";
+        basic.defaultTitle = NSLocalizedString(@"ContentFilterBasic", @"");
+        basic.title = NSLocalizedString(@"ContentFilterBasic", @"");
+        basic.path = @"Basic.txt";
         basic.rulePath = @"Basic.json";
+        basic.defaultUrl = @"https://easylist.to/easylist/easylist.txt";
         basic.downloadUrl = @"https://easylist.to/easylist/easylist.txt";
-        basic.status = 1;
+        basic.enable = 0;
+        basic.status = 0;
         basic.sort = 1;
         basic.expires = @"4 days (update frequency)";
         basic.version = @"202304030644";
@@ -141,25 +144,31 @@
         basic.type = ContentFilterTypeBasic;
         
         ContentFilter *privacy = [[ContentFilter alloc] init];
-        privacy.title = @"EasyList Privacy";
-        privacy.path = @"EasyListPrivacy.txt";
+        privacy.defaultTitle = NSLocalizedString(@"ContentFilterPrivacy", @"");
+        privacy.title = NSLocalizedString(@"ContentFilterPrivacy", @"");
+        privacy.path = @"Privacy.txt";
         privacy.rulePath = @"Privacy.json";
+        privacy.defaultUrl = @"https://easylist.to/easylist/easyprivacy.txt";
         privacy.downloadUrl = @"https://easylist.to/easylist/easyprivacy.txt";
-        privacy.status = 1;
+        privacy.enable = 0;
+        privacy.status = 0;
         privacy.sort = 2;
         privacy.expires = @"4 days (update frequency)";
         privacy.version = @"202304120535";
         privacy.homepage = @"https://easylist.to/";
         privacy.uuid = [@"https://easylist.to/easylist/easyprivacy.txt" md5];
         privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy";
-        privacy.type = ContentFilterTypeBasic;
+        privacy.type = ContentFilterTypePrivacy;
         
         ContentFilter *region = [[ContentFilter alloc] init];
-        region.title = @"EasyList China";
-        region.path = @"EasyListRegion.txt";
+        region.defaultTitle = NSLocalizedString(@"ContentFilterRegion", @"");
+        region.title = NSLocalizedString(@"ContentFilterRegion", @"");
+        region.path = @"Region.txt";
         region.rulePath = @"Region.json";
+        region.defaultUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
         region.downloadUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
-        region.status = 1;
+        region.enable = 0;
+        region.status = 0;
         region.sort = 3;
         region.expires = @"4 days (update frequency)";
         region.version = @"202304070640";
@@ -169,20 +178,26 @@
         region.type = ContentFilterTypeRegion;
         
         ContentFilter *custom = [[ContentFilter alloc] init];
-        custom.title = @"My Rules";
+        custom.defaultTitle = NSLocalizedString(@"ContentFilterCustom", @"");
+        custom.title = NSLocalizedString(@"ContentFilterCustom", @"");
         custom.rulePath = @"Custom.json";
+        custom.defaultUrl = @"";
         custom.downloadUrl = @"";
-        custom.status = 1;
+        custom.enable = 0;
+        custom.status = 0;
         custom.sort = 4;
         custom.uuid = [@"My Filters" md5];
         custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom";
         custom.type = ContentFilterTypeCustom;
         
         ContentFilter *tag = [[ContentFilter alloc] init];
-        tag.title = @"Webpage Tagging Rules";
+        tag.defaultTitle = NSLocalizedString(@"ContentFilterTag", @"");
+        tag.title = NSLocalizedString(@"ContentFilterTag", @"");
         tag.rulePath = @"Tag.json";
+        tag.defaultUrl = @"";
         tag.downloadUrl = @"";
-        tag.status = 1;
+        tag.enable = 0;
+        tag.status = 0;
         tag.sort = 5;
         tag.uuid = [@"Webpage Tagging Rules" md5];
         tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
@@ -264,7 +279,7 @@
         return;
     }
     
-    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT, 'rule_path' TEXT)";
+    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT, 'rule_path' TEXT,'default_title' TEXT, 'default_url' TEXT, 'enable' INTEGER)";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -309,7 +324,7 @@
         return nil;
     }
     
-    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path FROM content_filter order by sort asc";
+    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path,enable,default_url,default_title FROM content_filter order by sort asc";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -352,6 +367,9 @@
         contentFilter.type = sqlite3_column_int(stmt, 14);
         contentFilter.contentBlockerIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 15)== NULL?"":(const char *)sqlite3_column_text(stmt, 15)];
         contentFilter.rulePath = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 16)== NULL?"":(const char *)sqlite3_column_text(stmt, 16)];
+        contentFilter.enable = sqlite3_column_int(stmt, 17);
+        contentFilter.defaultUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
+        contentFilter.defaultTitle = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         
         [ret addObject:contentFilter];
     }
@@ -369,7 +387,7 @@
         return NO;
     }
     
-    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier,rule_path) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier,rule_path,enable,default_url,default_title) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -417,6 +435,9 @@
         sqlite3_bind_int64(statement, 15, contentFilter.type);
         sqlite3_bind_text(statement, 16, contentFilter.contentBlockerIdentifier ? [contentFilter.contentBlockerIdentifier UTF8String] : NULL, -1,NULL);
         sqlite3_bind_text(statement, 17, contentFilter.rulePath ? [contentFilter.rulePath UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_int64(statement, 18, contentFilter.enable);
+        sqlite3_bind_text(statement, 19, contentFilter.defaultUrl ? [contentFilter.defaultUrl UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_text(statement, 20, contentFilter.defaultTitle ? [contentFilter.defaultTitle UTF8String] : NULL, -1,NULL);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -429,7 +450,32 @@
 }
 
 
-
+- (void)updateContentFilterStatus:(NSUInteger)status uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET status = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_int(stmt, 1, (int)status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
 
 - (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid{
     //打开数据库

@@ -87,4 +87,5 @@
 - (void)createContentFilterTable;
 - (BOOL)insertContentFilter:(ContentFilter *)contentFilter error:(NSError **)error;
 - (NSArray<ContentFilter *> *)selectContentFilters;
+- (void)updateContentFilterStatus:(NSUInteger)status uuid:(NSString *)uuid;
 @end
