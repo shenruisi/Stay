@@ -308,3 +308,5 @@ ContentFilterRegionAlert="Region内容拦截未开启";
 ContentFilterCustomAlert="Custom内容拦截未开启";
 ContentFilterTagAlert="Tag内容拦截未开启";
 Enable="开启";
+Save="保存";
+ContentFilterRestore="恢复默认";

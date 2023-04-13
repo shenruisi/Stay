@@ -9,11 +9,14 @@
 #import "FCStyle.h"
 #import "ImageHelper.h"
 #import "ContentFilterEditorView.h"
+#import "ContentFilterEditSlideController.h"
 
 @interface AdBlockDetailViewController ()
 
 @property (nonatomic, strong) UIBarButtonItem *backItem;
+@property (nonatomic, strong) UIBarButtonItem *moreItem;
 @property (nonatomic, strong) ContentFilterEditorView *editorView;
+@property (nonatomic, strong) ContentFilterEditSlideController *editSlideController;
 @end
 
 @implementation AdBlockDetailViewController
@@ -22,6 +25,7 @@
     [super viewDidLoad];
     self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.leftBarButtonItems = @[self.backItem];
+    self.navigationItem.rightBarButtonItems = @[self.moreItem];
     self.title = self.contentFilter.title;
     [self editorView];
 }
@@ -44,6 +48,26 @@
     }
     
     return _backItem;
+}
+
+- (UIBarButtonItem *)moreItem{
+    if (nil == _moreItem){
+        _moreItem = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"ellipsis"
+                                                                           font:FCStyle.headline
+                                                                          color:FCStyle.accent]
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(moreAction:)];
+    }
+    
+    return _moreItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if ([self.editSlideController isShown]){
+        [self.editSlideController dismiss];
+    }
 }
 
 - (ContentFilterEditorView *)editorView{
@@ -69,6 +93,11 @@
 
 - (void)backAction:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)moreAction:(id)sender{
+    self.editSlideController = [[ContentFilterEditSlideController alloc] initWithContentFilter:self.contentFilter];
+    [self.editSlideController show];
 }
 
 @end

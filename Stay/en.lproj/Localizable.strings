@@ -307,7 +307,8 @@ ContentFilterRegionAlert="Region content blocker is not enabled";
 ContentFilterCustomAlert="Custom content blocker is not enabled";
 ContentFilterTagAlert="Tag content blocker is not enabled";
 Enable="Enable";
-
+Save="Save";
+ContentFilterRestore="Restore Defaults";
 
 
 
