@@ -44,6 +44,7 @@ typedef enum {
 
 - (NSString *)fetchRules;
 - (NSString *)convertToJOSNRules;
+- (void)writeContentBlockerAsync;
 - (void)reloadContentBlocker;
 + (NSString *)stringOfType:(ContentFilterType)type;
 

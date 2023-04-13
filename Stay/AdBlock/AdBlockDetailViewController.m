@@ -26,10 +26,6 @@
     [self editorView];
 }
 
-//- (void)viewWillAppear:(BOOL)animated{
-//    [super viewWillAppear:animated];
-//    [self.editorView setStrings:[self.contentFilter fetchRules]];
-//}
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];

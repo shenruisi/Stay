@@ -41,16 +41,6 @@
     [self tableView];
     [self setupDataSource];
     [self.navigationTabItem activeItem:self.activatedTabItem];
-//    NSString *filters = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"EasyList" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
-//    NSArray<NSString *> *lines = [filters componentsSeparatedByString:@"\n"];
-//    for (NSString *line in lines){
-//        FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:line];
-//        [parser nextToken];
-//        while(![parser isEOF]){
-//            NSLog(@"token: %@",parser.curToken);
-//            [parser nextToken];
-//        }
-//    }
     
 #ifdef FC_MAC
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -63,35 +53,45 @@
 }
 
 - (void)onBecomeActive:(NSNotification *)note{
-    return;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
-        NSMutableArray *activatedSource = [[NSMutableArray alloc] init];
-        NSMutableArray *stoppedSource = [[NSMutableArray alloc] init];
-        for (ContentFilter *contentFilter in contentFilters){
+        for (ContentFilter *contentFilter in self.activatedSource){
             dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
             dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
             
             [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
                 if (state.enabled){
-                    contentFilter.status = 1;
-                    [activatedSource addObject:contentFilter];
-                    [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+                    contentFilter.enable = 1;
+                    [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
                 }
                 else{
-                    contentFilter.status = 0;
-                    [stoppedSource addObject:contentFilter];
-                    [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+                    contentFilter.enable = 0;
+                    [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
                 }
+                dispatch_semaphore_signal(semaphore);
             }];
             
             dispatch_semaphore_wait(semaphore, deadline);
         }
         
-        [self.activatedSource removeAllObjects];
-        [self.activatedSource addObjectsFromArray:activatedSource];
-        [self.stoppedSource removeAllObjects];
-        [self.stoppedSource addObjectsFromArray:stoppedSource];
+        for (ContentFilter *contentFilter in self.stoppedSource){
+            dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            
+            [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                if (state.enabled){
+                    contentFilter.enable = 1;
+                    [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                }
+                else{
+                    contentFilter.enable = 0;
+                    [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            
+            dispatch_semaphore_wait(semaphore, deadline);
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             NSLog(@"SFContentBlockerState reload");
@@ -124,11 +124,11 @@
     cell.element = contentFilter;
     cell.action = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
-//        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
-//        cer.contentFilter = contentFilter;
-//        [self.navigationController pushViewController:cer animated:YES];
+        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
+        cer.contentFilter = contentFilter;
+        [self.navigationController pushViewController:cer animated:YES];
         
-        [contentFilter reloadContentBlocker];
+//        [contentFilter reloadContentBlocker];
         
     };
     

@@ -18,6 +18,9 @@
 @property (nonatomic, strong) UILabel *typeLabel;
 @property (nonatomic, strong) NSLayoutConstraint *typeLabelWidth;
 @property (nonatomic, strong) UILabel *alertLabel;
+@property (nonatomic, strong) NSLayoutConstraint *alertLabelWidth;
+@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *statusViewConstraints;
+@property (nonatomic, strong) UIButton *enableButton;
 @end
 
 @implementation ContentFilterTableVewCell
@@ -27,6 +30,8 @@
         [self nameLabel];
         [self typeLabel];
         [self stateView];
+        [self alertLabel];
+        [self enableButton];
     }
     
     return self;
@@ -73,30 +78,61 @@
         [nameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10]
     ]];
     
-    if (!self.typeLabel.hidden){
-        UILabel *typeLabel = (UILabel *)[self.typeLabel duplicate];
-        typeLabel.textColor = FCStyle.fcWhite;
-        typeLabel.backgroundColor = !self.active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
-        typeLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [containerView addSubview:typeLabel];
+    UILabel *typeLabel = (UILabel *)[self.typeLabel duplicate];
+    typeLabel.textColor = FCStyle.fcWhite;
+    typeLabel.backgroundColor = !self.active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
+    typeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:typeLabel];
+    [NSLayoutConstraint activateConstraints:@[
+        [typeLabel.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
+        [typeLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10],
+        [typeLabel.widthAnchor constraintEqualToConstant:self.typeLabelWidth.constant],
+        [typeLabel.heightAnchor constraintEqualToConstant:20]
+    ]];
+    
+    UILabel *alertLabel;
+    if (!self.alertLabel.hidden){
+        alertLabel = (UILabel *)[self.alertLabel duplicate];
+        alertLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [containerView addSubview:alertLabel];
         [NSLayoutConstraint activateConstraints:@[
-            [typeLabel.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
-            [typeLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10],
-            [typeLabel.widthAnchor constraintEqualToConstant:self.typeLabelWidth.constant],
-            [typeLabel.heightAnchor constraintEqualToConstant:20]
+            [alertLabel.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
+            [alertLabel.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-10],
+            [alertLabel.widthAnchor constraintEqualToConstant:self.alertLabelWidth.constant],
+            [alertLabel.heightAnchor constraintEqualToConstant:25]
         ]];
     }
     
+    if (!self.enableButton.hidden){
+        UIButton *enableButton = (UIButton *)[self.enableButton duplicate];
+        enableButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [containerView addSubview:enableButton];
+        [NSLayoutConstraint activateConstraints:@[
+            [enableButton.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
+            [enableButton.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-10],
+            [enableButton.widthAnchor constraintEqualToConstant:60],
+            [enableButton.heightAnchor constraintEqualToConstant:25],
+        ]];
+    }
     
     StateView *stateView = (StateView *)[self.stateView fcDuplicate];
     stateView.active = !self.active;
     stateView.translatesAutoresizingMaskIntoConstraints = NO;
     [containerView addSubview:stateView];
     
-    [NSLayoutConstraint activateConstraints:@[
-        [stateView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
-        [stateView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-15]
-    ]];
+    if (!self.enableButton.hidden){
+        [NSLayoutConstraint activateConstraints:@[
+            [stateView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
+            [stateView.bottomAnchor constraintEqualToAnchor:alertLabel.topAnchor constant:-12]
+        ]];
+    }
+    else{
+        [NSLayoutConstraint activateConstraints:@[
+            [stateView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
+            [stateView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-15]
+        ]];
+    }
+    
     
     UIView *maskView = [[UIView alloc] init];
     maskView.backgroundColor = UIColor.blackColor;
@@ -124,6 +160,49 @@
                                         attributes:@{NSFontAttributeName : FCStyle.footnote}
                                            context:nil];
     self.typeLabelWidth.constant = rect.size.width + 20;
+    self.alertLabel.hidden = element.enable;
+    self.enableButton.hidden = element.enable;
+    if (!element.enable){
+        NSString *enableAlert;
+        if (ContentFilterTypeBasic == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterBasicAlert", @"");
+        }
+        else if (ContentFilterTypePrivacy == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterPrivacyAlert", @"");
+        }
+        else if (ContentFilterTypeRegion == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterRegionAlert", @"");
+        }
+        else if (ContentFilterTypeCustom == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterCustomAlert", @"");
+        }
+        else if (ContentFilterTypeTag == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterTagAlert", @"");
+        }
+        
+        CGRect rect = [enableAlert boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 25)
+                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                             attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                                context:nil];
+        self.alertLabel.text = enableAlert;
+        self.alertLabelWidth.constant = rect.size.width + 20;
+    }
+    
+    [NSLayoutConstraint deactivateConstraints:self.statusViewConstraints];
+    if (!element.enable){
+        self.statusViewConstraints = @[
+            [self.stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+            [self.stateView.bottomAnchor constraintEqualToAnchor:self.alertLabel.topAnchor constant:-12]
+        ];
+    }
+    else{
+        self.statusViewConstraints = @[
+            [self.stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+            [self.stateView.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-15]
+        ];
+    }
+    [NSLayoutConstraint activateConstraints:self.statusViewConstraints];
+    
 }
 
 - (UILabel *)nameLabel{
@@ -166,19 +245,69 @@
     return _typeLabel;
 }
 
+- (UILabel *)alertLabel{
+    if (nil == _alertLabel){
+        _alertLabel = [[UILabel alloc] init];
+        _alertLabel.font = FCStyle.footnote;
+        _alertLabel.textColor = FCStyle.accent;
+        _alertLabel.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
+        _alertLabel.textAlignment = NSTextAlignmentCenter;
+        _alertLabel.layer.cornerRadius = 5;
+        _alertLabel.clipsToBounds = YES;
+        _alertLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_alertLabel];
+        self.alertLabelWidth = [_alertLabel.widthAnchor constraintEqualToConstant:54];
+        [NSLayoutConstraint activateConstraints:@[
+            [_alertLabel.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+            [_alertLabel.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-10],
+            [_alertLabel.heightAnchor constraintEqualToConstant:25],
+            self.alertLabelWidth
+        ]];
+    }
+    
+    return _alertLabel;
+}
+
 - (StateView *)stateView{
     if (nil == _stateView){
         _stateView = [[StateView alloc] init];
         _stateView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.fcContentView addSubview:_stateView];
         
-        [NSLayoutConstraint activateConstraints:@[
+        self.statusViewConstraints = @[
             [_stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
             [_stateView.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-15]
-        ]];
+        ];
+        
+        [NSLayoutConstraint activateConstraints:self.statusViewConstraints];
     }
     
     return _stateView;
+}
+
+- (UIButton *)enableButton{
+    if (nil == _enableButton){
+        _enableButton = [[UIButton alloc] init];
+        _enableButton.backgroundColor = UIColor.clearColor;
+        _enableButton.layer.cornerRadius = 10;
+        _enableButton.layer.borderWidth = 1;
+        _enableButton.layer.borderColor = FCStyle.accent.CGColor;
+        [_enableButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Enable", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.accent,
+            NSFontAttributeName : FCStyle.footnoteBold
+        }] forState:UIControlStateNormal];
+        _enableButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_enableButton];
+        [NSLayoutConstraint activateConstraints:@[
+            [_enableButton.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
+            [_enableButton.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-10],
+            [_enableButton.widthAnchor constraintEqualToConstant:60],
+            [_enableButton.heightAnchor constraintEqualToConstant:25],
+        ]];
+    }
+    
+    return _enableButton;
 }
 
 + (NSString *)identifier{

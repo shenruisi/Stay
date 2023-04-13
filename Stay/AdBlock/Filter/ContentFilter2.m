@@ -46,6 +46,13 @@
     return ret;
 }
 
+- (void)writeContentBlockerAsync{
+    NSString *content = [self convertToJOSNRules];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[ContentFilterManager shared] writeToFileName:self.rulePath content:content];
+    });
+}
+
 - (void)reloadContentBlocker{
     NSString *content = [self convertToJOSNRules];
     [[ContentFilterManager shared] writeToFileName:self.rulePath content:content];

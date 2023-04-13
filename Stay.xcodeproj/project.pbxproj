@@ -116,10 +116,10 @@
 		5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		5811069229E6A1260073E9CF /* EasyListPrivacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* EasyListPrivacy.txt */; };
-		5811069329E6A1260073E9CF /* EasyListPrivacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* EasyListPrivacy.txt */; };
-		5811069529E6A15D0073E9CF /* EasyListRegion.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* EasyListRegion.txt */; };
-		5811069629E6A15D0073E9CF /* EasyListRegion.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* EasyListRegion.txt */; };
+		5811069229E6A1260073E9CF /* Privacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* Privacy.txt */; };
+		5811069329E6A1260073E9CF /* Privacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* Privacy.txt */; };
+		5811069529E6A15D0073E9CF /* Region.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* Region.txt */; };
+		5811069629E6A15D0073E9CF /* Region.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* Region.txt */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		581C2FE329E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
@@ -207,8 +207,8 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
-		583B53C329DAC01A00CB292A /* EasyListBasic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyListBasic.txt */; };
-		583B53C429DAC01A00CB292A /* EasyListBasic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyListBasic.txt */; };
+		583B53C329DAC01A00CB292A /* Basic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* Basic.txt */; };
+		583B53C429DAC01A00CB292A /* Basic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* Basic.txt */; };
 		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
@@ -885,8 +885,8 @@
 		5811068E29E698E80073E9CF /* Stay Content Tag.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Tag.entitlements"; sourceTree = "<group>"; };
 		5811068F29E698F20073E9CF /* Stay Content Custom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Custom.entitlements"; sourceTree = "<group>"; };
 		5811069029E698FC0073E9CF /* Stay Content Region.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Region.entitlements"; sourceTree = "<group>"; };
-		5811069129E6A1260073E9CF /* EasyListPrivacy.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListPrivacy.txt; sourceTree = "<group>"; };
-		5811069429E6A15D0073E9CF /* EasyListRegion.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = EasyListRegion.txt; sourceTree = "<group>"; };
+		5811069129E6A1260073E9CF /* Privacy.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Privacy.txt; sourceTree = "<group>"; };
+		5811069429E6A15D0073E9CF /* Region.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Region.txt; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
 		581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
 		581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
@@ -969,7 +969,7 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
-		583B53C229DAC01A00CB292A /* EasyListBasic.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListBasic.txt; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* Basic.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Basic.txt; sourceTree = "<group>"; };
 		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
 		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
 		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
@@ -1781,10 +1781,10 @@
 		583B53C129DABFE400CB292A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				583B53C229DAC01A00CB292A /* EasyListBasic.txt */,
+				583B53C229DAC01A00CB292A /* Basic.txt */,
 				583B545529DEDDE700CB292A /* EasyList.txt */,
-				5811069429E6A15D0073E9CF /* EasyListRegion.txt */,
-				5811069129E6A1260073E9CF /* EasyListPrivacy.txt */,
+				5811069429E6A15D0073E9CF /* Region.txt */,
+				5811069129E6A1260073E9CF /* Privacy.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3294,12 +3294,12 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
-				583B53C329DAC01A00CB292A /* EasyListBasic.txt in Resources */,
+				583B53C329DAC01A00CB292A /* Basic.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
-				5811069229E6A1260073E9CF /* EasyListPrivacy.txt in Resources */,
+				5811069229E6A1260073E9CF /* Privacy.txt in Resources */,
 				84C1ED50277AD93300651DF9 /* arrow-dark@3x.png in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,
@@ -3308,7 +3308,7 @@
 				84C1ED52277AE1B500651DF9 /* search-selected@3x.png in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
 				58A06D1B28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
-				5811069529E6A15D0073E9CF /* EasyListRegion.txt in Resources */,
+				5811069529E6A15D0073E9CF /* Region.txt in Resources */,
 				84C1ED48276C637200651DF9 /* scriptManager.sqlite in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
 				84BDC853274CA4A5005367C6 /* stop@3x.png in Resources */,
@@ -3401,12 +3401,12 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
-				583B53C429DAC01A00CB292A /* EasyListBasic.txt in Resources */,
+				583B53C429DAC01A00CB292A /* Basic.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,
 				5882029F2859E73900B2721A /* codemirror.js in Resources */,
-				5811069329E6A1260073E9CF /* EasyListPrivacy.txt in Resources */,
+				5811069329E6A1260073E9CF /* Privacy.txt in Resources */,
 				588202A02859E73900B2721A /* arrow-dark@3x.png in Resources */,
 				588202A12859E73900B2721A /* search@3x.png in Resources */,
 				588202A22859E73900B2721A /* js-lib@3x.png in Resources */,
@@ -3415,7 +3415,7 @@
 				588202A52859E73900B2721A /* search-selected@3x.png in Resources */,
 				588202A62859E73900B2721A /* Style.css in Resources */,
 				58A06D1C28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
-				5811069629E6A15D0073E9CF /* EasyListRegion.txt in Resources */,
+				5811069629E6A15D0073E9CF /* Region.txt in Resources */,
 				588202A72859E73900B2721A /* scriptManager.sqlite in Resources */,
 				588202A82859E73900B2721A /* convert2RegExp.js in Resources */,
 				588202A92859E73900B2721A /* stop@3x.png in Resources */,

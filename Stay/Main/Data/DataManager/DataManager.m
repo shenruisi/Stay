@@ -123,7 +123,7 @@
         [self addColumn:@"download_resource" column:@"audioUrl"];
     }
     
-    [self deleteTable:@"content_filter"];
+//    [self deleteTable:@"content_filter"];
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];
@@ -134,7 +134,7 @@
         basic.defaultUrl = @"https://easylist.to/easylist/easylist.txt";
         basic.downloadUrl = @"https://easylist.to/easylist/easylist.txt";
         basic.enable = 0;
-        basic.status = 0;
+        basic.status = 1;
         basic.sort = 1;
         basic.expires = @"4 days (update frequency)";
         basic.version = @"202304030644";
@@ -142,6 +142,7 @@
         basic.uuid = [@"https://easylist.to/easylist/easylist.txt" md5];
         basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic";
         basic.type = ContentFilterTypeBasic;
+        [basic writeContentBlockerAsync];
         
         ContentFilter *privacy = [[ContentFilter alloc] init];
         privacy.defaultTitle = NSLocalizedString(@"ContentFilterPrivacy", @"");
@@ -151,7 +152,7 @@
         privacy.defaultUrl = @"https://easylist.to/easylist/easyprivacy.txt";
         privacy.downloadUrl = @"https://easylist.to/easylist/easyprivacy.txt";
         privacy.enable = 0;
-        privacy.status = 0;
+        privacy.status = 1;
         privacy.sort = 2;
         privacy.expires = @"4 days (update frequency)";
         privacy.version = @"202304120535";
@@ -159,6 +160,7 @@
         privacy.uuid = [@"https://easylist.to/easylist/easyprivacy.txt" md5];
         privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy";
         privacy.type = ContentFilterTypePrivacy;
+        [privacy writeContentBlockerAsync];
         
         ContentFilter *region = [[ContentFilter alloc] init];
         region.defaultTitle = NSLocalizedString(@"ContentFilterRegion", @"");
@@ -168,7 +170,7 @@
         region.defaultUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
         region.downloadUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
         region.enable = 0;
-        region.status = 0;
+        region.status = 1;
         region.sort = 3;
         region.expires = @"4 days (update frequency)";
         region.version = @"202304070640";
@@ -176,6 +178,7 @@
         region.uuid = [@"https://easylist-downloads.adblockplus.org/easylistchina.txt" md5];
         region.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Region";
         region.type = ContentFilterTypeRegion;
+        [region writeContentBlockerAsync];
         
         ContentFilter *custom = [[ContentFilter alloc] init];
         custom.defaultTitle = NSLocalizedString(@"ContentFilterCustom", @"");
@@ -184,7 +187,7 @@
         custom.defaultUrl = @"";
         custom.downloadUrl = @"";
         custom.enable = 0;
-        custom.status = 0;
+        custom.status = 1;
         custom.sort = 4;
         custom.uuid = [@"My Filters" md5];
         custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom";
@@ -197,7 +200,7 @@
         tag.defaultUrl = @"";
         tag.downloadUrl = @"";
         tag.enable = 0;
-        tag.status = 0;
+        tag.status = 1;
         tag.sort = 5;
         tag.uuid = [@"Webpage Tagging Rules" md5];
         tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
@@ -468,6 +471,33 @@
     }
 //    绑定占位符
     sqlite3_bind_int(stmt, 1, (int)status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterEnable:(NSUInteger)enable uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET enable = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_int(stmt, 1, (int)enable);
     sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
     sqlite3_step(stmt);
 //    if (sqlite3_step(stmt) != SQLITE_DONE) {

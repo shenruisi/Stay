@@ -40,7 +40,7 @@
     [super setActive:active];
     self.titleLabel.text = active ? NSLocalizedString(@"Activated", @"") :  NSLocalizedString(@"Stopped", @"");
     self.circleView.backgroundColor = active ? FCStyle.accent : FCStyle.fcSeparator;
-    self.titleLabel.textColor = active ? FCStyle.fcBlack : FCStyle.fcSeparator;
+    self.titleLabel.textColor = active ? FCStyle.accent : FCStyle.fcSeparator;
 }
 
 - (UIView *)circleView{
