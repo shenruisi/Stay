@@ -27,6 +27,7 @@
                                             @"fetch",
                                             @"websocket",
                                             nil];
+    NSUInteger resourceTypesDefaultCount = resourceTypesDefault.count;
     NSArray<FilterOption *> *array = ((NSDictionary *)self.parser.curToken.value)[@"options"];
     NSMutableArray *inverseResourceTypes = [[NSMutableArray alloc] init];
     NSMutableArray *resourceTypes = [[NSMutableArray alloc] init];
@@ -159,6 +160,9 @@
                 [resourceTypes addObject:@"other"];
             }
         }
+        else if (option.type == FilterOptionTypeThirdParty){
+            [self addLoadType:option.inverse ? @"first-party" : @"third-party"];
+        }
         else if (option.type == FilterOptionTypeMatchCase){
             if (!option.inverse){
                 self.urlFilterIsCaseSensitive = YES;
@@ -171,8 +175,10 @@
     }
     
     if (resourceTypes.count == 0){
-        for (NSString *resourceType in resourceTypesDefault){
-            [self addResourceType:resourceType];
+        if (resourceTypesDefault.count < resourceTypesDefaultCount){
+            for (NSString *resourceType in resourceTypesDefault){
+                [self addResourceType:resourceType];
+            }
         }
     }
     else{

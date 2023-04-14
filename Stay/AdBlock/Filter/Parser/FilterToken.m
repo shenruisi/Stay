@@ -201,6 +201,9 @@
         else if ([optionType isEqualToString:@"generichide"]){
             filterOption.type = FilterOptionTypeGenericHide;
         }
+        else if ([optionType isEqualToString:@"third-party"]){
+            filterOption.type = FilterOptionTypeThirdParty;
+        }
         else {
             filterOption.type = FilterOptionTypeUndefined;
         }

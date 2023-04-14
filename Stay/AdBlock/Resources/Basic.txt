@@ -17,8 +17,6 @@
 ! -----------------------General advert blocking filters-----------------------!
 ! *** easylist:easylist/easylist_general_block.txt ***
 ! Test Rules
-@@||yadayadayada.nl/banner/banner.php$image,domain=murf.nl|workhardclimbharder.nl
-mail.google.com##.aeF > .nH > .nH[role="main"] > .aKB
 -ad-300x600-
 -ad-336x280-
 -ad-458x80.

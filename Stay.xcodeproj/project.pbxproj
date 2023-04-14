@@ -95,36 +95,37 @@
 		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
-		581105F229E53AED0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 581105F129E53AED0073E9CF /* blockerList.json */; };
-		581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */; };
-		581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811063429E695FF0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811063329E695FF0073E9CF /* blockerList.json */; };
+		5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811063B29E695FF0073E9CF /* Stay Content Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811063129E695FF0073E9CF /* Stay Content Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811064629E6961A0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811064529E6961A0073E9CF /* blockerList.json */; };
+		5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811064D29E6961A0073E9CF /* Stay Content Privacy.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811064329E6961A0073E9CF /* Stay Content Privacy.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811065329E696A50073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811065429E696A50073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811065C29E697D30073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811065B29E697D30073E9CF /* blockerList.json */; };
+		5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811066329E697D30073E9CF /* Stay Content Region.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811065929E697D20073E9CF /* Stay Content Region.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811066E29E697F70073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811066D29E697F70073E9CF /* blockerList.json */; };
+		5811067129E697F70073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811067029E697F70073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811067529E697F70073E9CF /* Stay Content Custom.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811066B29E697F70073E9CF /* Stay Content Custom.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811068029E698790073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811067F29E698790073E9CF /* blockerList.json */; };
+		5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */; };
+		5811068729E698790073E9CF /* Stay Content Tag.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811067D29E698790073E9CF /* Stay Content Tag.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
+		5811069229E6A1260073E9CF /* Privacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* Privacy.txt */; };
+		5811069329E6A1260073E9CF /* Privacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* Privacy.txt */; };
+		5811069529E6A15D0073E9CF /* Region.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* Region.txt */; };
+		5811069629E6A15D0073E9CF /* Region.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* Region.txt */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
-		581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
-		581C2FDF29DFFCB000B46C10 /* EasyListChina.txt in Resources */ = {isa = PBXBuildFile; fileRef = 581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */; };
-		581C2FE329E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
-		581C2FE429E00BE100B46C10 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */; };
-		581C2FE729E00BF500B46C10 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE629E00BF500B46C10 /* BlockerAST.m */; };
-		581C2FE829E00BF500B46C10 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FE629E00BF500B46C10 /* BlockerAST.m */; };
-		581C2FEB29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */; };
-		581C2FEC29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */; };
-		581C2FEF29E3DC9600B46C10 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FEE29E3DC9600B46C10 /* ExceptionBlockerAST.m */; };
-		581C2FF029E3DC9600B46C10 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FEE29E3DC9600B46C10 /* ExceptionBlockerAST.m */; };
-		581C2FF329E3DEA400B46C10 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FF229E3DEA400B46C10 /* AddressBlockerAST.m */; };
-		581C2FF429E3DEA400B46C10 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FF229E3DEA400B46C10 /* AddressBlockerAST.m */; };
 		581C2FF729E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */; };
 		581C2FF829E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */; };
-		581C2FFB29E3E0EB00B46C10 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FFA29E3E0EB00B46C10 /* SeparatorBlockerAST.m */; };
-		581C2FFC29E3E0EB00B46C10 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FFA29E3E0EB00B46C10 /* SeparatorBlockerAST.m */; };
 		581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */; };
 		581C300029E3E59400B46C10 /* PipeHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */; };
-		581C300329E3EEC000B46C10 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C300229E3EEC000B46C10 /* PipeBlockerAST.m */; };
-		581C300429E3EEC000B46C10 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C300229E3EEC000B46C10 /* PipeBlockerAST.m */; };
-		581C300729E3F08900B46C10 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C300629E3F08900B46C10 /* OptionsBlockerAST.m */; };
-		581C300829E3F08900B46C10 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C300629E3F08900B46C10 /* OptionsBlockerAST.m */; };
-		581C300B29E4173100B46C10 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C300A29E4173100B46C10 /* SelectorBlockerAST.m */; };
-		581C300C29E4173100B46C10 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C300A29E4173100B46C10 /* SelectorBlockerAST.m */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
 		582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */; };
 		582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */; };
@@ -188,8 +189,8 @@
 		5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31B29305CA100CCBAE5 /* FCTopToast.m */; };
 		5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
-		583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
-		583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* EasyList2.txt */; };
+		583B53C329DAC01A00CB292A /* Basic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* Basic.txt */; };
+		583B53C429DAC01A00CB292A /* Basic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* Basic.txt */; };
 		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
 		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
@@ -462,6 +463,36 @@
 		58AC12ED2860781F00875D6D /* FCCarbon.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12EC2860781F00875D6D /* FCCarbon.m */; };
 		58AC12F428607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
 		58AC12F528607B3400875D6D /* FCConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12F328607B3400875D6D /* FCConfig.m */; };
+		58ADADD829E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADD729E7F5B700C00332 /* ContentFilterEditSlideController.m */; };
+		58ADADD929E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADD729E7F5B700C00332 /* ContentFilterEditSlideController.m */; };
+		58ADADDC29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADDB29E7F6E000C00332 /* ContentFilterEditModalViewController.m */; };
+		58ADADDD29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADDB29E7F6E000C00332 /* ContentFilterEditModalViewController.m */; };
+		58ADADE129E7FA0700C00332 /* FCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE029E7FA0700C00332 /* FCTextField.m */; };
+		58ADADE229E7FA0700C00332 /* FCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE029E7FA0700C00332 /* FCTextField.m */; };
+		58ADADE529E800D000C00332 /* FCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE429E800CF00C00332 /* FCButton.m */; };
+		58ADADE629E800D000C00332 /* FCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE429E800CF00C00332 /* FCButton.m */; };
+		58ADADFA29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */; };
+		58ADADFB29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */; };
+		58ADADFC29E801CF00C00332 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEA29E801CF00C00332 /* BlockerAST.m */; };
+		58ADADFD29E801CF00C00332 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEA29E801CF00C00332 /* BlockerAST.m */; };
+		58ADADFE29E801CF00C00332 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */; };
+		58ADADFF29E801CF00C00332 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */; };
+		58ADAE0029E801CF00C00332 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */; };
+		58ADAE0129E801CF00C00332 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */; };
+		58ADAE0229E801CF00C00332 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */; };
+		58ADAE0329E801CF00C00332 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */; };
+		58ADAE0429E801CF00C00332 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF029E801CF00C00332 /* AddressBlockerAST.m */; };
+		58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF029E801CF00C00332 /* AddressBlockerAST.m */; };
+		58ADAE0629E801CF00C00332 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */; };
+		58ADAE0729E801CF00C00332 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */; };
+		58ADAE0829E801CF00C00332 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */; };
+		58ADAE0929E801CF00C00332 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */; };
+		58ADAE0A29E801CF00C00332 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF629E801CF00C00332 /* PipeBlockerAST.m */; };
+		58ADAE0B29E801CF00C00332 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF629E801CF00C00332 /* PipeBlockerAST.m */; };
+		58ADAE0F29E8F82400C00332 /* UpgradeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */; };
+		58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */; };
+		58ADAE1329E8F8A100C00332 /* UpgradeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */; };
+		58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */; };
 		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
@@ -655,12 +686,40 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		581105F729E53AED0073E9CF /* PBXContainerItemProxy */ = {
+		5811063929E695FF0073E9CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 581105EE29E53AED0073E9CF;
-			remoteInfo = "Stay ContentBlock Basic";
+			remoteGlobalIDString = 5811063029E695FF0073E9CF;
+			remoteInfo = "Stay Content Basic";
+		};
+		5811064B29E6961A0073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811064229E6961A0073E9CF;
+			remoteInfo = "Stay Content Privacy";
+		};
+		5811066129E697D30073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811065829E697D20073E9CF;
+			remoteInfo = "Stay Content Region";
+		};
+		5811067329E697F70073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811066A29E697F70073E9CF;
+			remoteInfo = "Stay Content Custom";
+		};
+		5811068529E698790073E9CF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5811067C29E698790073E9CF;
+			remoteInfo = "Stay Content Tag";
 		};
 		58639CF5286447A600AA80D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -706,8 +765,12 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				581105F929E53AED0073E9CF /* Stay ContentBlock Basic.appex in Embed App Extensions */,
+				5811063B29E695FF0073E9CF /* Stay Content Basic.appex in Embed App Extensions */,
+				5811066329E697D30073E9CF /* Stay Content Region.appex in Embed App Extensions */,
+				5811068729E698790073E9CF /* Stay Content Tag.appex in Embed App Extensions */,
+				5811067529E697F70073E9CF /* Stay Content Custom.appex in Embed App Extensions */,
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
+				5811064D29E6961A0073E9CF /* Stay Content Privacy.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -804,36 +867,43 @@
 		3CA742AB29A2180100AB9F12 /* MySlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySlider.swift; sourceTree = "<group>"; };
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
-		581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay ContentBlock Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		581105F129E53AED0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
-		581105F329E53AED0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
-		581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
-		581105F629E53AED0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		581105FE29E53EA10073E9CF /* Stay ContentBlock Basic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay ContentBlock Basic.entitlements"; sourceTree = "<group>"; };
+		5811063129E695FF0073E9CF /* Stay Content Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811063329E695FF0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811063529E695FF0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811063829E695FF0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811064329E6961A0073E9CF /* Stay Content Privacy.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Privacy.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811064529E6961A0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811064729E6961A0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811064A29E6961A0073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811065129E696350073E9CF /* Stay Content Privacy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Privacy.entitlements"; sourceTree = "<group>"; };
+		5811065229E696400073E9CF /* Stay Content Basic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Basic.entitlements"; sourceTree = "<group>"; };
+		5811065929E697D20073E9CF /* Stay Content Region.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Region.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811065B29E697D30073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811065D29E697D30073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811066029E697D30073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811066B29E697F70073E9CF /* Stay Content Custom.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Custom.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811066D29E697F70073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811066F29E697F70073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811067029E697F70073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811067229E697F70073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811067D29E698790073E9CF /* Stay Content Tag.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Tag.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5811067F29E698790073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		5811068129E698790073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		5811068429E698790073E9CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5811068E29E698E80073E9CF /* Stay Content Tag.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Tag.entitlements"; sourceTree = "<group>"; };
+		5811068F29E698F20073E9CF /* Stay Content Custom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Custom.entitlements"; sourceTree = "<group>"; };
+		5811069029E698FC0073E9CF /* Stay Content Region.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Region.entitlements"; sourceTree = "<group>"; };
+		5811069129E6A1260073E9CF /* Privacy.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Privacy.txt; sourceTree = "<group>"; };
+		5811069429E6A15D0073E9CF /* Region.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Region.txt; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
-		581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyListChina.txt; sourceTree = "<group>"; };
-		581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
-		581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
-		581C2FE529E00BF500B46C10 /* BlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
-		581C2FE629E00BF500B46C10 /* BlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlockerAST.m; sourceTree = "<group>"; };
-		581C2FE929E017AF00B46C10 /* TiggerBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiggerBlockerAST.h; sourceTree = "<group>"; };
-		581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TiggerBlockerAST.m; sourceTree = "<group>"; };
-		581C2FED29E3DC9600B46C10 /* ExceptionBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionBlockerAST.h; sourceTree = "<group>"; };
-		581C2FEE29E3DC9600B46C10 /* ExceptionBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionBlockerAST.m; sourceTree = "<group>"; };
-		581C2FF129E3DEA400B46C10 /* AddressBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddressBlockerAST.h; sourceTree = "<group>"; };
-		581C2FF229E3DEA400B46C10 /* AddressBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddressBlockerAST.m; sourceTree = "<group>"; };
 		581C2FF529E3DFC600B46C10 /* SeparatorHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SeparatorHighlighterAST.h; sourceTree = "<group>"; };
 		581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeparatorHighlighterAST.m; sourceTree = "<group>"; };
-		581C2FF929E3E0EB00B46C10 /* SeparatorBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SeparatorBlockerAST.h; sourceTree = "<group>"; };
-		581C2FFA29E3E0EB00B46C10 /* SeparatorBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeparatorBlockerAST.m; sourceTree = "<group>"; };
 		581C2FFD29E3E59400B46C10 /* PipeHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PipeHighlighterAST.h; sourceTree = "<group>"; };
 		581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PipeHighlighterAST.m; sourceTree = "<group>"; };
-		581C300129E3EEC000B46C10 /* PipeBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PipeBlockerAST.h; sourceTree = "<group>"; };
-		581C300229E3EEC000B46C10 /* PipeBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PipeBlockerAST.m; sourceTree = "<group>"; };
-		581C300529E3F08900B46C10 /* OptionsBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptionsBlockerAST.h; sourceTree = "<group>"; };
-		581C300629E3F08900B46C10 /* OptionsBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptionsBlockerAST.m; sourceTree = "<group>"; };
-		581C300929E4173100B46C10 /* SelectorBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorBlockerAST.h; sourceTree = "<group>"; };
-		581C300A29E4173100B46C10 /* SelectorBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectorBlockerAST.m; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalItemSwitchView.m; sourceTree = "<group>"; };
 		582061A9294C4C0D00A32D0C /* ModalItemSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalItemSplitView.h; sourceTree = "<group>"; };
@@ -893,7 +963,7 @@
 		5839C31B29305CA100CCBAE5 /* FCTopToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToast.m; sourceTree = "<group>"; };
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
-		583B53C229DAC01A00CB292A /* EasyList2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList2.txt; sourceTree = "<group>"; };
+		583B53C229DAC01A00CB292A /* Basic.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Basic.txt; sourceTree = "<group>"; };
 		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
 		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
 		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
@@ -1086,6 +1156,36 @@
 		58AC12EC2860781F00875D6D /* FCCarbon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCCarbon.m; sourceTree = "<group>"; };
 		58AC12F228607B3400875D6D /* FCConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCConfig.h; sourceTree = "<group>"; };
 		58AC12F328607B3400875D6D /* FCConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCConfig.m; sourceTree = "<group>"; };
+		58ADADD629E7F5B700C00332 /* ContentFilterEditSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterEditSlideController.h; sourceTree = "<group>"; };
+		58ADADD729E7F5B700C00332 /* ContentFilterEditSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterEditSlideController.m; sourceTree = "<group>"; };
+		58ADADDA29E7F6E000C00332 /* ContentFilterEditModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentFilterEditModalViewController.h; sourceTree = "<group>"; };
+		58ADADDB29E7F6E000C00332 /* ContentFilterEditModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentFilterEditModalViewController.m; sourceTree = "<group>"; };
+		58ADADDF29E7FA0700C00332 /* FCTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTextField.h; sourceTree = "<group>"; };
+		58ADADE029E7FA0700C00332 /* FCTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTextField.m; sourceTree = "<group>"; };
+		58ADADE329E800CF00C00332 /* FCButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCButton.h; sourceTree = "<group>"; };
+		58ADADE429E800CF00C00332 /* FCButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCButton.m; sourceTree = "<group>"; };
+		58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExceptionBlockerAST.m; sourceTree = "<group>"; };
+		58ADADE929E801CF00C00332 /* SeparatorBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeparatorBlockerAST.h; sourceTree = "<group>"; };
+		58ADADEA29E801CF00C00332 /* BlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockerAST.m; sourceTree = "<group>"; };
+		58ADADEB29E801CF00C00332 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
+		58ADADEC29E801CF00C00332 /* PipeBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeBlockerAST.h; sourceTree = "<group>"; };
+		58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorBlockerAST.m; sourceTree = "<group>"; };
+		58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsBlockerAST.m; sourceTree = "<group>"; };
+		58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiggerBlockerAST.m; sourceTree = "<group>"; };
+		58ADADF029E801CF00C00332 /* AddressBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBlockerAST.m; sourceTree = "<group>"; };
+		58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
+		58ADADF229E801CF00C00332 /* BlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
+		58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeparatorBlockerAST.m; sourceTree = "<group>"; };
+		58ADADF429E801CF00C00332 /* ExceptionBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExceptionBlockerAST.h; sourceTree = "<group>"; };
+		58ADADF529E801CF00C00332 /* SelectorBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectorBlockerAST.h; sourceTree = "<group>"; };
+		58ADADF629E801CF00C00332 /* PipeBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeBlockerAST.m; sourceTree = "<group>"; };
+		58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsBlockerAST.h; sourceTree = "<group>"; };
+		58ADADF829E801CF00C00332 /* AddressBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBlockerAST.h; sourceTree = "<group>"; };
+		58ADADF929E801CF00C00332 /* TiggerBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiggerBlockerAST.h; sourceTree = "<group>"; };
+		58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeSlideController.h; sourceTree = "<group>"; };
+		58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeSlideController.m; sourceTree = "<group>"; };
+		58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeModalViewController.h; sourceTree = "<group>"; };
+		58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeModalViewController.m; sourceTree = "<group>"; };
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
@@ -1327,7 +1427,35 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		581105EC29E53AED0073E9CF /* Frameworks */ = {
+		5811062E29E695FF0073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811064029E6961A0073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811065629E697D20073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811066829E697F70073E9CF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811067A29E698790073E9CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1490,41 +1618,64 @@
 			path = M3U8;
 			sourceTree = "<group>";
 		};
-		581105F029E53AED0073E9CF /* Stay ContentBlock Basic */ = {
+		5811063229E695FF0073E9CF /* Stay Content Basic */ = {
 			isa = PBXGroup;
 			children = (
-				581105FE29E53EA10073E9CF /* Stay ContentBlock Basic.entitlements */,
-				581105F129E53AED0073E9CF /* blockerList.json */,
-				581105F329E53AED0073E9CF /* ContentBlockerRequestHandler.h */,
-				581105F429E53AED0073E9CF /* ContentBlockerRequestHandler.m */,
-				581105F629E53AED0073E9CF /* Info.plist */,
+				5811065229E696400073E9CF /* Stay Content Basic.entitlements */,
+				5811063329E695FF0073E9CF /* blockerList.json */,
+				5811063529E695FF0073E9CF /* ContentBlockerRequestHandler.h */,
+				5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */,
+				5811063829E695FF0073E9CF /* Info.plist */,
 			);
-			path = "Stay ContentBlock Basic";
+			path = "Stay Content Basic";
 			sourceTree = "<group>";
 		};
-		581C2FE029E008C800B46C10 /* BlockerAST */ = {
+		5811064429E6961A0073E9CF /* Stay Content Privacy */ = {
 			isa = PBXGroup;
 			children = (
-				581C2FE129E00BE100B46C10 /* ContentFilterBlocker.h */,
-				581C2FE229E00BE100B46C10 /* ContentFilterBlocker.m */,
-				581C2FE529E00BF500B46C10 /* BlockerAST.h */,
-				581C2FE629E00BF500B46C10 /* BlockerAST.m */,
-				581C2FE929E017AF00B46C10 /* TiggerBlockerAST.h */,
-				581C2FEA29E017AF00B46C10 /* TiggerBlockerAST.m */,
-				581C2FED29E3DC9600B46C10 /* ExceptionBlockerAST.h */,
-				581C2FEE29E3DC9600B46C10 /* ExceptionBlockerAST.m */,
-				581C2FF129E3DEA400B46C10 /* AddressBlockerAST.h */,
-				581C2FF229E3DEA400B46C10 /* AddressBlockerAST.m */,
-				581C2FF929E3E0EB00B46C10 /* SeparatorBlockerAST.h */,
-				581C2FFA29E3E0EB00B46C10 /* SeparatorBlockerAST.m */,
-				581C300129E3EEC000B46C10 /* PipeBlockerAST.h */,
-				581C300229E3EEC000B46C10 /* PipeBlockerAST.m */,
-				581C300529E3F08900B46C10 /* OptionsBlockerAST.h */,
-				581C300629E3F08900B46C10 /* OptionsBlockerAST.m */,
-				581C300929E4173100B46C10 /* SelectorBlockerAST.h */,
-				581C300A29E4173100B46C10 /* SelectorBlockerAST.m */,
+				5811065129E696350073E9CF /* Stay Content Privacy.entitlements */,
+				5811064529E6961A0073E9CF /* blockerList.json */,
+				5811064729E6961A0073E9CF /* ContentBlockerRequestHandler.h */,
+				5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */,
+				5811064A29E6961A0073E9CF /* Info.plist */,
 			);
-			path = BlockerAST;
+			path = "Stay Content Privacy";
+			sourceTree = "<group>";
+		};
+		5811065A29E697D30073E9CF /* Stay Content Region */ = {
+			isa = PBXGroup;
+			children = (
+				5811069029E698FC0073E9CF /* Stay Content Region.entitlements */,
+				5811065B29E697D30073E9CF /* blockerList.json */,
+				5811065D29E697D30073E9CF /* ContentBlockerRequestHandler.h */,
+				5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */,
+				5811066029E697D30073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Region";
+			sourceTree = "<group>";
+		};
+		5811066C29E697F70073E9CF /* Stay Content Custom */ = {
+			isa = PBXGroup;
+			children = (
+				5811068F29E698F20073E9CF /* Stay Content Custom.entitlements */,
+				5811066D29E697F70073E9CF /* blockerList.json */,
+				5811066F29E697F70073E9CF /* ContentBlockerRequestHandler.h */,
+				5811067029E697F70073E9CF /* ContentBlockerRequestHandler.m */,
+				5811067229E697F70073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Custom";
+			sourceTree = "<group>";
+		};
+		5811067E29E698790073E9CF /* Stay Content Tag */ = {
+			isa = PBXGroup;
+			children = (
+				5811068E29E698E80073E9CF /* Stay Content Tag.entitlements */,
+				5811067F29E698790073E9CF /* blockerList.json */,
+				5811068129E698790073E9CF /* ContentBlockerRequestHandler.h */,
+				5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */,
+				5811068429E698790073E9CF /* Info.plist */,
+			);
+			path = "Stay Content Tag";
 			sourceTree = "<group>";
 		};
 		582061A5294C4BB200A32D0C /* Modal */ = {
@@ -1569,7 +1720,7 @@
 		583178FA29CBF04800135D8D /* Filter */ = {
 			isa = PBXGroup;
 			children = (
-				581C2FE029E008C800B46C10 /* BlockerAST */,
+				58ADADE729E801CF00C00332 /* BlockerAST */,
 				583B543329DD71A400CB292A /* HighlighterAST */,
 				583B53FB29DC19D400CB292A /* ContentFilterManager.h */,
 				583B53FC29DC19D400CB292A /* ContentFilterManager.m */,
@@ -1620,6 +1771,10 @@
 				583178FA29CBF04800135D8D /* Filter */,
 				58A3618D29C0502400080465 /* AdBlockViewController.h */,
 				58A3618E29C0502400080465 /* AdBlockViewController.m */,
+				58ADADDA29E7F6E000C00332 /* ContentFilterEditModalViewController.h */,
+				58ADADDB29E7F6E000C00332 /* ContentFilterEditModalViewController.m */,
+				58ADADD629E7F5B700C00332 /* ContentFilterEditSlideController.h */,
+				58ADADD729E7F5B700C00332 /* ContentFilterEditSlideController.m */,
 				583B542229DD558D00CB292A /* AdBlockDetailViewController.h */,
 				583B542329DD558D00CB292A /* AdBlockDetailViewController.m */,
 			);
@@ -1629,9 +1784,10 @@
 		583B53C129DABFE400CB292A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				583B53C229DAC01A00CB292A /* EasyList2.txt */,
+				583B53C229DAC01A00CB292A /* Basic.txt */,
 				583B545529DEDDE700CB292A /* EasyList.txt */,
-				581C2FDD29DFFCB000B46C10 /* EasyListChina.txt */,
+				5811069429E6A15D0073E9CF /* Region.txt */,
+				5811069129E6A1260073E9CF /* Privacy.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1778,7 +1934,11 @@
 				587689032719238000F834A4 /* StayUITests */,
 				587689102719238000F834A4 /* Stay Extension */,
 				58639CDB2864477D00AA80D5 /* Stay-Mac Extension */,
-				581105F029E53AED0073E9CF /* Stay ContentBlock Basic */,
+				5811063229E695FF0073E9CF /* Stay Content Basic */,
+				5811064429E6961A0073E9CF /* Stay Content Privacy */,
+				5811065A29E697D30073E9CF /* Stay Content Region */,
+				5811066C29E697F70073E9CF /* Stay Content Custom */,
+				5811067E29E698790073E9CF /* Stay Content Tag */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -1796,7 +1956,11 @@
 				588202AF2859E73900B2721A /* Stay.app */,
 				588202C7285A12B400B2721A /* macOSNative.bundle */,
 				58639CDA2864477D00AA80D5 /* Stay-Mac Extension.appex */,
-				581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */,
+				5811063129E695FF0073E9CF /* Stay Content Basic.appex */,
+				5811064329E6961A0073E9CF /* Stay Content Privacy.appex */,
+				5811065929E697D20073E9CF /* Stay Content Region.appex */,
+				5811066B29E697F70073E9CF /* Stay Content Custom.appex */,
+				5811067D29E698790073E9CF /* Stay Content Tag.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1804,6 +1968,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				58ADAE0C29E8F50E00C00332 /* Controls */,
 				58A3617229C020F700080465 /* UXFramework */,
 				583A10B229B831CC00BA4A11 /* AdBlock */,
 				5839C315293051CC00CCBAE5 /* Debugger */,
@@ -1999,6 +2164,7 @@
 		58A3617229C020F700080465 /* UXFramework */ = {
 			isa = PBXGroup;
 			children = (
+				58ADADDE29E7F9ED00C00332 /* UXControl */,
 				583B541029DD504500CB292A /* Navigation */,
 				5831790329CBFC2600135D8D /* TableView */,
 				58A3617F29C0498400080465 /* Tab */,
@@ -2047,6 +2213,54 @@
 				58AC12F328607B3400875D6D /* FCConfig.m */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		58ADADDE29E7F9ED00C00332 /* UXControl */ = {
+			isa = PBXGroup;
+			children = (
+				58ADADDF29E7FA0700C00332 /* FCTextField.h */,
+				58ADADE029E7FA0700C00332 /* FCTextField.m */,
+				58ADADE329E800CF00C00332 /* FCButton.h */,
+				58ADADE429E800CF00C00332 /* FCButton.m */,
+			);
+			path = UXControl;
+			sourceTree = "<group>";
+		};
+		58ADADE729E801CF00C00332 /* BlockerAST */ = {
+			isa = PBXGroup;
+			children = (
+				58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */,
+				58ADADE929E801CF00C00332 /* SeparatorBlockerAST.h */,
+				58ADADEA29E801CF00C00332 /* BlockerAST.m */,
+				58ADADEB29E801CF00C00332 /* ContentFilterBlocker.h */,
+				58ADADEC29E801CF00C00332 /* PipeBlockerAST.h */,
+				58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */,
+				58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */,
+				58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */,
+				58ADADF029E801CF00C00332 /* AddressBlockerAST.m */,
+				58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */,
+				58ADADF229E801CF00C00332 /* BlockerAST.h */,
+				58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */,
+				58ADADF429E801CF00C00332 /* ExceptionBlockerAST.h */,
+				58ADADF529E801CF00C00332 /* SelectorBlockerAST.h */,
+				58ADADF629E801CF00C00332 /* PipeBlockerAST.m */,
+				58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */,
+				58ADADF829E801CF00C00332 /* AddressBlockerAST.h */,
+				58ADADF929E801CF00C00332 /* TiggerBlockerAST.h */,
+			);
+			name = BlockerAST;
+			path = Stay/AdBlock/Filter/BlockerAST;
+			sourceTree = SOURCE_ROOT;
+		};
+		58ADAE0C29E8F50E00C00332 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */,
+				58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */,
+				58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */,
+				58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */,
+			);
+			path = Controls;
 			sourceTree = "<group>";
 		};
 		58C663792990E04300B00110 /* VideoParser */ = {
@@ -2727,21 +2941,89 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */ = {
+		5811063029E695FF0073E9CF /* Stay Content Basic */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 581105FA29E53AED0073E9CF /* Build configuration list for PBXNativeTarget "Stay ContentBlock Basic" */;
+			buildConfigurationList = 5811063C29E696000073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Basic" */;
 			buildPhases = (
-				581105EB29E53AED0073E9CF /* Sources */,
-				581105EC29E53AED0073E9CF /* Frameworks */,
-				581105ED29E53AED0073E9CF /* Resources */,
+				5811062D29E695FF0073E9CF /* Sources */,
+				5811062E29E695FF0073E9CF /* Frameworks */,
+				5811062F29E695FF0073E9CF /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "Stay ContentBlock Basic";
-			productName = "Stay ContentBlock Basic";
-			productReference = 581105EF29E53AED0073E9CF /* Stay ContentBlock Basic.appex */;
+			name = "Stay Content Basic";
+			productName = "Stay Content Basic";
+			productReference = 5811063129E695FF0073E9CF /* Stay Content Basic.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811064229E6961A0073E9CF /* Stay Content Privacy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811064E29E6961B0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Privacy" */;
+			buildPhases = (
+				5811063F29E6961A0073E9CF /* Sources */,
+				5811064029E6961A0073E9CF /* Frameworks */,
+				5811064129E6961A0073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Privacy";
+			productName = "Stay Content Privacy";
+			productReference = 5811064329E6961A0073E9CF /* Stay Content Privacy.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811065829E697D20073E9CF /* Stay Content Region */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811066429E697D30073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Region" */;
+			buildPhases = (
+				5811065529E697D20073E9CF /* Sources */,
+				5811065629E697D20073E9CF /* Frameworks */,
+				5811065729E697D20073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Region";
+			productName = "Stay Content Region";
+			productReference = 5811065929E697D20073E9CF /* Stay Content Region.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811066A29E697F70073E9CF /* Stay Content Custom */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811067629E697F70073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Custom" */;
+			buildPhases = (
+				5811066729E697F70073E9CF /* Sources */,
+				5811066829E697F70073E9CF /* Frameworks */,
+				5811066929E697F70073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Custom";
+			productName = "Stay Content Custom";
+			productReference = 5811066B29E697F70073E9CF /* Stay Content Custom.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5811067C29E698790073E9CF /* Stay Content Tag */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5811068829E6987A0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Tag" */;
+			buildPhases = (
+				5811067929E698790073E9CF /* Sources */,
+				5811067A29E698790073E9CF /* Frameworks */,
+				5811067B29E698790073E9CF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Tag";
+			productName = "Stay Content Tag";
+			productReference = 5811067D29E698790073E9CF /* Stay Content Tag.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		58639CD92864477D00AA80D5 /* Stay-Mac Extension */ = {
@@ -2776,7 +3058,11 @@
 			);
 			dependencies = (
 				5876890F2719238000F834A4 /* PBXTargetDependency */,
-				581105F829E53AED0073E9CF /* PBXTargetDependency */,
+				5811063A29E695FF0073E9CF /* PBXTargetDependency */,
+				5811064C29E6961A0073E9CF /* PBXTargetDependency */,
+				5811066229E697D30073E9CF /* PBXTargetDependency */,
+				5811067429E697F70073E9CF /* PBXTargetDependency */,
+				5811068629E698790073E9CF /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -2884,7 +3170,19 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					581105EE29E53AED0073E9CF = {
+					5811063029E695FF0073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811064229E6961A0073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811065829E697D20073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811066A29E697F70073E9CF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					5811067C29E698790073E9CF = {
 						CreatedOnToolsVersion = 14.2;
 					};
 					58639CD92864477D00AA80D5 = {
@@ -2933,17 +3231,53 @@
 				588202452859E73900B2721A /* Stay-Mac */,
 				588202C6285A12B400B2721A /* macOSNative */,
 				58639CD92864477D00AA80D5 /* Stay-Mac Extension */,
-				581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */,
+				5811063029E695FF0073E9CF /* Stay Content Basic */,
+				5811064229E6961A0073E9CF /* Stay Content Privacy */,
+				5811065829E697D20073E9CF /* Stay Content Region */,
+				5811066A29E697F70073E9CF /* Stay Content Custom */,
+				5811067C29E698790073E9CF /* Stay Content Tag */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		581105ED29E53AED0073E9CF /* Resources */ = {
+		5811062F29E695FF0073E9CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				581105F229E53AED0073E9CF /* blockerList.json in Resources */,
+				5811063429E695FF0073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811064129E6961A0073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811064629E6961A0073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811065729E697D20073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811065C29E697D30073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811066929E697F70073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811066E29E697F70073E9CF /* blockerList.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811067B29E698790073E9CF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811068029E698790073E9CF /* blockerList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2982,7 +3316,6 @@
 				8496DFB627592B850075ABD5 /* more-selected@3x.png in Resources */,
 				84C1ED4C277AB93E00651DF9 /* homepage-selected@3x.png in Resources */,
 				58F7F4C927454C2400270873 /* MatchPattern.js in Resources */,
-				581C2FDE29DFFCB000B46C10 /* EasyListChina.txt in Resources */,
 				587688DF2719237E00F834A4 /* Icon.png in Resources */,
 				58AFD76329A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40D288E30CC002A0C1B /* flash@3x.png in Resources */,
@@ -3014,11 +3347,12 @@
 				84A15E04282CE1FC002E121D /* addedScript@3x.png in Resources */,
 				84C1ED2327659F7600651DF9 /* arrow@3x.png in Resources */,
 				58F7F4ED2747A9FE00270873 /* gm-api-create.js in Resources */,
-				583B53C329DAC01A00CB292A /* EasyList2.txt in Resources */,
+				583B53C329DAC01A00CB292A /* Basic.txt in Resources */,
 				84C1ED44276C31AE00651DF9 /* back@3x.png in Resources */,
 				84C1ED43276C31AE00651DF9 /* on@3x.png in Resources */,
 				84EC790E28E4345A001FFB92 /* bz@3x.png in Resources */,
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
+				5811069229E6A1260073E9CF /* Privacy.txt in Resources */,
 				84C1ED50277AD93300651DF9 /* arrow-dark@3x.png in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
 				84F4831E273AC51800217BB3 /* js-lib@3x.png in Resources */,
@@ -3027,6 +3361,7 @@
 				84C1ED52277AE1B500651DF9 /* search-selected@3x.png in Resources */,
 				587688E12719237E00F834A4 /* Style.css in Resources */,
 				58A06D1B28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
+				5811069529E6A15D0073E9CF /* Region.txt in Resources */,
 				84C1ED48276C637200651DF9 /* scriptManager.sqlite in Resources */,
 				58F7F4CB27454E0600270873 /* convert2RegExp.js in Resources */,
 				84BDC853274CA4A5005367C6 /* stop@3x.png in Resources */,
@@ -3088,7 +3423,6 @@
 				588202812859E73900B2721A /* more-selected@3x.png in Resources */,
 				588202832859E73900B2721A /* homepage-selected@3x.png in Resources */,
 				588202842859E73900B2721A /* MatchPattern.js in Resources */,
-				581C2FDF29DFFCB000B46C10 /* EasyListChina.txt in Resources */,
 				588202852859E73900B2721A /* Icon.png in Resources */,
 				58AFD76429A1BA43001D412F /* ua.user.js in Resources */,
 				84C2B40E288E30CC002A0C1B /* flash@3x.png in Resources */,
@@ -3120,11 +3454,12 @@
 				5882029A2859E73900B2721A /* addedScript@3x.png in Resources */,
 				5882029B2859E73900B2721A /* arrow@3x.png in Resources */,
 				5882029C2859E73900B2721A /* gm-api-create.js in Resources */,
-				583B53C429DAC01A00CB292A /* EasyList2.txt in Resources */,
+				583B53C429DAC01A00CB292A /* Basic.txt in Resources */,
 				5882029D2859E73900B2721A /* back@3x.png in Resources */,
 				5882029E2859E73900B2721A /* on@3x.png in Resources */,
 				84EC790F28E4345A001FFB92 /* bz@3x.png in Resources */,
 				5882029F2859E73900B2721A /* codemirror.js in Resources */,
+				5811069329E6A1260073E9CF /* Privacy.txt in Resources */,
 				588202A02859E73900B2721A /* arrow-dark@3x.png in Resources */,
 				588202A12859E73900B2721A /* search@3x.png in Resources */,
 				588202A22859E73900B2721A /* js-lib@3x.png in Resources */,
@@ -3133,6 +3468,7 @@
 				588202A52859E73900B2721A /* search-selected@3x.png in Resources */,
 				588202A62859E73900B2721A /* Style.css in Resources */,
 				58A06D1C28DDACBA00983455 /* stay-mac1024-1.png in Resources */,
+				5811069629E6A15D0073E9CF /* Region.txt in Resources */,
 				588202A72859E73900B2721A /* scriptManager.sqlite in Resources */,
 				588202A82859E73900B2721A /* convert2RegExp.js in Resources */,
 				588202A92859E73900B2721A /* stop@3x.png in Resources */,
@@ -3230,12 +3566,48 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		581105EB29E53AED0073E9CF /* Sources */ = {
+		5811062D29E695FF0073E9CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				581105F529E53AED0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				581105FD29E53CBF0073E9CF /* ContentFilterManager.m in Sources */,
+				5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811065329E696A50073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811063F29E6961A0073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811065429E696A50073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811065529E697D20073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811066729E697F70073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811067129E697F70073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5811067929E698790073E9CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */,
+				5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3276,24 +3648,23 @@
 				84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */,
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */,
-				581C2FEB29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				8460E4782993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
 				58724A2B28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
+				58ADADD829E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */,
 				582061C6294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
 				582061FA294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
+				58ADADE129E7FA0700C00332 /* FCTextField.m in Sources */,
 				3C949B96297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
 				5867D14C288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
-				581C300B29E4173100B46C10 /* SelectorBlockerAST.m in Sources */,
 				84BA56F62944BC5D00FD4446 /* SYProgress.m in Sources */,
-				581C2FEF29E3DC9600B46C10 /* ExceptionBlockerAST.m in Sources */,
 				58AC12F428607B3400875D6D /* FCConfig.m in Sources */,
 				8460E47029925A66008BC7D0 /* SYSubmitScriptViewController.m in Sources */,
 				3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */,
@@ -3303,6 +3674,7 @@
 				582061EA294C4CC800A32D0C /* UIView+Layout.m in Sources */,
 				582061C0294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
 				5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
+				58ADAE0A29E801CF00C00332 /* PipeBlockerAST.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				581C2FF729E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */,
 				3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
@@ -3329,6 +3701,7 @@
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
+				58ADAE0229E801CF00C00332 /* TiggerBlockerAST.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
@@ -3342,7 +3715,6 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
-				581C2FE329E00BE100B46C10 /* ContentFilterBlocker.m in Sources */,
 				583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
@@ -3358,8 +3730,8 @@
 				582061D0294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
 				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				849E77D7293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
-				581C300729E3F08900B46C10 /* OptionsBlockerAST.m in Sources */,
 				5884031C29667079002CA227 /* UIColor+Convert.m in Sources */,
+				58ADAE0029E801CF00C00332 /* OptionsBlockerAST.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
@@ -3397,6 +3769,7 @@
 				583B544029DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
 				8460E47429925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				582061F2294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
+				58ADAE0829E801CF00C00332 /* SeparatorBlockerAST.m in Sources */,
 				5888894529DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */,
 				58A3617D29C048CE00080465 /* FCTabBar.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
@@ -3405,9 +3778,12 @@
 				582061CC294C4C0E00A32D0C /* ModalSectionView.m in Sources */,
 				582061CE294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
+				58ADADE529E800D000C00332 /* FCButton.m in Sources */,
+				58ADADFE29E801CF00C00332 /* SelectorBlockerAST.m in Sources */,
 				58A3616E29BF11F100080465 /* RC4.m in Sources */,
 				582061E2294C4CA400A32D0C /* FCLayoutLabel.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
+				58ADAE0629E801CF00C00332 /* ContentFilterBlocker.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
@@ -3416,12 +3792,15 @@
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58A3618229C049C500080465 /* FCTabBarItem.m in Sources */,
+				58ADADDC29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */,
 				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				587CFA1B29CD811800578981 /* UIView+Duplicate.m in Sources */,
+				58ADAE0429E801CF00C00332 /* AddressBlockerAST.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
+				58ADADFC29E801CF00C00332 /* BlockerAST.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
@@ -3431,7 +3810,6 @@
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
-				581C2FF329E3DEA400B46C10 /* AddressBlockerAST.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
 				84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */,
@@ -3450,6 +3828,8 @@
 				583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */,
 				583B53DF29DBF9A100CB292A /* StateView.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
+				58ADAE1329E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
+				58ADADFA29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */,
 				583B53E529DBF9A100CB292A /* FilterToken.m in Sources */,
 				583B540E29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
@@ -3469,16 +3849,14 @@
 				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
-				581C2FFB29E3E0EB00B46C10 /* SeparatorBlockerAST.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */,
 				588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */,
+				58ADAE0F29E8F82400C00332 /* UpgradeSlideController.m in Sources */,
 				3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				84E8EA112962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				582061C4294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
-				581C2FE729E00BF500B46C10 /* BlockerAST.m in Sources */,
-				581C300329E3EEC000B46C10 /* PipeBlockerAST.m in Sources */,
 				582061EE294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 				84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
@@ -3527,6 +3905,7 @@
 				582062042950696E00A32D0C /* DisabledWebsites.m in Sources */,
 				58F7F4E9274776AB00270873 /* Stroge.m in Sources */,
 				588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */,
+				581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3534,6 +3913,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */,
+				58ADADE629E800D000C00332 /* FCButton.m in Sources */,
+				58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */,
 				583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
@@ -3551,7 +3933,6 @@
 				58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */,
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */,
-				581C2FE829E00BF500B46C10 /* BlockerAST.m in Sources */,
 				3C949B93297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
@@ -3564,7 +3945,6 @@
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				582061E5294C4CA400A32D0C /* FCLayoutImageView.m in Sources */,
 				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
-				581C2FEC29E017AF00B46C10 /* TiggerBlockerAST.m in Sources */,
 				849E77DC293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				3C358D562973E57C00118063 /* M3U8SegmentInfoList.m in Sources */,
 				582061E1294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
@@ -3575,10 +3955,11 @@
 				583B544329DD71A500CB292A /* CommentHighlighterAST.m in Sources */,
 				583B543D29DD71A500CB292A /* HighlighterAST.m in Sources */,
 				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
+				58ADAE0B29E801CF00C00332 /* PipeBlockerAST.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
+				58ADAE0929E801CF00C00332 /* SeparatorBlockerAST.m in Sources */,
 				58A3617A29C023BC00080465 /* FCRootViewController.m in Sources */,
-				581C300429E3EEC000B46C10 /* PipeBlockerAST.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
 				3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
@@ -3613,10 +3994,12 @@
 				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				849E77CF293C7F5A00AD83D7 /* SYFIleManagerViewController.m in Sources */,
+				58ADAE0729E801CF00C00332 /* ContentFilterBlocker.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				84E8EA122962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
+				58ADADFF29E801CF00C00332 /* SelectorBlockerAST.m in Sources */,
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				84B635172978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */,
 				3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */,
@@ -3644,9 +4027,9 @@
 				58A3617629C0218800080465 /* FCViewController.m in Sources */,
 				588202602859E73900B2721A /* ModalViewController.m in Sources */,
 				588202612859E73900B2721A /* FCDisk.m in Sources */,
-				581C2FE429E00BE100B46C10 /* ContentFilterBlocker.m in Sources */,
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
 				84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
+				58ADADDD29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
 				582061CF294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				582061D3294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
@@ -3655,6 +4038,7 @@
 				588202642859E73900B2721A /* JSDetailEntity.m in Sources */,
 				84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
+				58ADADE229E7FA0700C00332 /* FCTextField.m in Sources */,
 				582061F7294C516700A32D0C /* SYDownloadModalViewController.m in Sources */,
 				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
@@ -3662,7 +4046,6 @@
 				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
-				581C2FFC29E3E0EB00B46C10 /* SeparatorBlockerAST.m in Sources */,
 				588202672859E73900B2721A /* SYVersionUtils.m in Sources */,
 				588202682859E73900B2721A /* SYNotesViewController.m in Sources */,
 				583B544B29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */,
@@ -3676,6 +4059,7 @@
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
+				58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
 				8460E4792993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
 				58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */,
 				588202B82859F9FD00B2721A /* SceneCenter.m in Sources */,
@@ -3684,16 +4068,14 @@
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
 				5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */,
 				583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */,
-				581C2FF029E3DC9600B46C10 /* ExceptionBlockerAST.m in Sources */,
 				5882026E2859E73900B2721A /* main.m in Sources */,
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
 				583B544129DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
-				581C2FF429E3DEA400B46C10 /* AddressBlockerAST.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
-				581C300829E3F08900B46C10 /* OptionsBlockerAST.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
 				5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */,
+				58ADAE0129E801CF00C00332 /* OptionsBlockerAST.m in Sources */,
 				5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
@@ -3705,6 +4087,7 @@
 				3C949B97297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
+				58ADADD929E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */,
 				583B53FE29DC19D400CB292A /* ContentFilterManager.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
 				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
@@ -3732,13 +4115,13 @@
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
-				581C300C29E4173100B46C10 /* SelectorBlockerAST.m in Sources */,
 				849E77D8293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
 				583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
 				583B53E029DBF9A100CB292A /* StateView.m in Sources */,
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				582061C7294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
+				58ADAE0329E801CF00C00332 /* TiggerBlockerAST.m in Sources */,
 				84BA9D18292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				5884031D29667079002CA227 /* UIColor+Convert.m in Sources */,
@@ -3752,7 +4135,9 @@
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				5888894629DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */,
 				8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
+				58ADADFD29E801CF00C00332 /* BlockerAST.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
+				58ADADFB29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */,
 				582061EB294C4CC800A32D0C /* UIView+Layout.m in Sources */,
 				3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 			);
@@ -3770,10 +4155,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		581105F829E53AED0073E9CF /* PBXTargetDependency */ = {
+		5811063A29E695FF0073E9CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 581105EE29E53AED0073E9CF /* Stay ContentBlock Basic */;
-			targetProxy = 581105F729E53AED0073E9CF /* PBXContainerItemProxy */;
+			target = 5811063029E695FF0073E9CF /* Stay Content Basic */;
+			targetProxy = 5811063929E695FF0073E9CF /* PBXContainerItemProxy */;
+		};
+		5811064C29E6961A0073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811064229E6961A0073E9CF /* Stay Content Privacy */;
+			targetProxy = 5811064B29E6961A0073E9CF /* PBXContainerItemProxy */;
+		};
+		5811066229E697D30073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811065829E697D20073E9CF /* Stay Content Region */;
+			targetProxy = 5811066129E697D30073E9CF /* PBXContainerItemProxy */;
+		};
+		5811067429E697F70073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811066A29E697F70073E9CF /* Stay Content Custom */;
+			targetProxy = 5811067329E697F70073E9CF /* PBXContainerItemProxy */;
+		};
+		5811068629E698790073E9CF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5811067C29E698790073E9CF /* Stay Content Tag */;
+			targetProxy = 5811068529E698790073E9CF /* PBXContainerItemProxy */;
 		};
 		58639CF6286447A600AA80D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3828,19 +4233,21 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		581105FB29E53AED0073E9CF /* Debug */ = {
+		5811063D29E696000073E9CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_ENTITLEMENTS = "Stay ContentBlock Basic/Stay ContentBlock Basic.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Basic/Stay Content Basic.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlock Basic/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlock Basic";
+				INFOPLIST_FILE = "Stay Content Basic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "1. Basic";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3848,7 +4255,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlock-Basic";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Basic";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3856,19 +4263,21 @@
 			};
 			name = Debug;
 		};
-		581105FC29E53AED0073E9CF /* Release */ = {
+		5811063E29E696000073E9CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_ENTITLEMENTS = "Stay ContentBlock Basic/Stay ContentBlock Basic.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Basic/Stay Content Basic.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Stay ContentBlock Basic/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Stay ContentBlock Basic";
+				INFOPLIST_FILE = "Stay Content Basic/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "1. Basic";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3876,7 +4285,247 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-ContentBlock-Basic";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Basic";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811064F29E6961B0073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Privacy/Stay Content Privacy.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Privacy/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "2. Privacy";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Privacy";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811065029E6961B0073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Privacy/Stay Content Privacy.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Privacy/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "2. Privacy";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Privacy";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811066529E697D30073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Region/Stay Content Region.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Region/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "3. Region";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Region";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811066629E697D30073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Region/Stay Content Region.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Region/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "3. Region";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Region";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811067729E697F70073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Custom/Stay Content Custom.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Custom/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "4. Custom";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Custom";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811067829E697F70073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Custom/Stay Content Custom.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Custom/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "4. Custom";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Custom";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5811068929E6987A0073E9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Tag/Stay Content Tag.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Tag/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "5. Tag";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Tag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5811068A29E6987A0073E9CF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Tag/Stay Content Tag.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Tag/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "5. Tag";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Tag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4085,7 +4734,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 134;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -4100,7 +4749,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -4119,7 +4768,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 134;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -4134,7 +4783,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -4158,7 +4807,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 134;
+				CURRENT_PROJECT_VERSION = 139;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4186,7 +4835,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_IOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -4211,7 +4860,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 134;
+				CURRENT_PROJECT_VERSION = 139;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4239,7 +4888,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.8;
+				MARKETING_VERSION = 2.3.9;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_IOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -4507,11 +5156,47 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		581105FA29E53AED0073E9CF /* Build configuration list for PBXNativeTarget "Stay ContentBlock Basic" */ = {
+		5811063C29E696000073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Basic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				581105FB29E53AED0073E9CF /* Debug */,
-				581105FC29E53AED0073E9CF /* Release */,
+				5811063D29E696000073E9CF /* Debug */,
+				5811063E29E696000073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811064E29E6961B0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Privacy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811064F29E6961B0073E9CF /* Debug */,
+				5811065029E6961B0073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811066429E697D30073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Region" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811066529E697D30073E9CF /* Debug */,
+				5811066629E697D30073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811067629E697F70073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Custom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811067729E697F70073E9CF /* Debug */,
+				5811067829E697F70073E9CF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5811068829E6987A0073E9CF /* Build configuration list for PBXNativeTarget "Stay Content Tag" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5811068929E6987A0073E9CF /* Debug */,
+				5811068A29E6987A0073E9CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

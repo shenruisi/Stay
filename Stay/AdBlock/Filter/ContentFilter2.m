@@ -35,14 +35,22 @@
     for (NSString *line in lines){
         if (line.length > 0){
             NSDictionary *jsonRule = [ContentFilterBlocker rule:line];
-            [jsonRules addObject:jsonRule];
+            if (jsonRule){
+                [jsonRules addObject:jsonRule];
+            }
+            
         }
     }
     
     NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
-//    NSError *error;
-//    [ret writeToFile:@"/Users/ris/Desktop/jsonRules.txt" atomically:YES encoding:NSUTF8StringEncoding error:&error];
     return ret;
+}
+
+- (void)writeContentBlockerAsync{
+    NSString *content = [self convertToJOSNRules];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[ContentFilterManager shared] writeToFileName:self.rulePath content:content];
+    });
 }
 
 - (void)reloadContentBlocker{
@@ -68,8 +76,12 @@
 }
 
 
-+ (NSString *)stringOfTag:(ContentFilterTag)tag{
-    if (ContentFilterTagAds == tag) return @"Ads";
++ (NSString *)stringOfType:(ContentFilterType)type{
+    if (ContentFilterTypeBasic == type) return @"Basic";
+    if (ContentFilterTypePrivacy == type) return @"Privacy";
+    if (ContentFilterTypeRegion == type) return @"Region";
+    if (ContentFilterTypeCustom == type) return @"Custom";
+    if (ContentFilterTypeTag == type) return @"Tag";
     return @"";
 }
 

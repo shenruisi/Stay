@@ -38,6 +38,10 @@
     self.dictionary[@"trigger"][@"url-filter"] = [NSString stringWithFormat:@"%@%@",existUrlFilter ? existUrlFilter : @"",urlFilter];
 }
 
+- (void)resetUrlFilter:(NSString *)urlFilter{
+    self.dictionary[@"trigger"][@"url-filter"] = urlFilter;
+}
+
 - (NSString *)urlFilter{
     return self.dictionary[@"trigger"][@"url-filter"];
 }

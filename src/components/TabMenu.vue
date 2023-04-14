@@ -78,8 +78,8 @@ export default {
   background-color: var(--dm-bg-f6);
   border-top: 1px solid var(--dm-bd);
   z-index: 999;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  transform: translateZ(0px);
+  -webkit-transform: translateZ(0px);
   .fotter-box{
     position: relative;
     width: 100%;
@@ -123,7 +123,7 @@ export default {
             border-right: 40px solid transparent;
             position: relative;
             left: -20px;
-            transform: translateZ(1);
+            transform: translateZ(100px);
             z-index: 888;
           }
         }

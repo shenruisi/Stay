@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *selector;
 
-
+- (void)resetUrlFilter:(NSString *)urlFilter;
 - (instancetype)initWithParser:(FilterTokenParser *)parser
                           args:(nullable NSArray *)args;
 - (void)construct:(nullable NSArray *)args;

@@ -20,6 +20,8 @@ extern NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification
 @property (nonatomic, strong) FCBlockView *blockView;
 @property (nonatomic, weak) FCRoundedShadowView *navView;
 - (void)layoutSubviews;
+- (void)startLoading;
+- (void)stopLoading;
 @end
 
 NS_ASSUME_NONNULL_END

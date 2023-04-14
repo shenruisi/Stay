@@ -13,6 +13,7 @@
 #import "ContentFilter2.h"
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
+#import <SafariServices/SafariServices.h>
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -40,16 +41,66 @@
     [self tableView];
     [self setupDataSource];
     [self.navigationTabItem activeItem:self.activatedTabItem];
-//    NSString *filters = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"EasyList" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
-//    NSArray<NSString *> *lines = [filters componentsSeparatedByString:@"\n"];
-//    for (NSString *line in lines){
-//        FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:line];
-//        [parser nextToken];
-//        while(![parser isEOF]){
-//            NSLog(@"token: %@",parser.curToken);
-//            [parser nextToken];
-//        }
-//    }
+    
+#ifdef FC_MAC
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onBecomeActive:)
+                                                 name:SVCDidBecomeActiveNotification
+                                               object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+#endif
+}
+
+- (void)onBecomeActive:(NSNotification *)note{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (ContentFilter *contentFilter in self.activatedSource){
+            dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            
+            [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                if (state.enabled){
+                    contentFilter.enable = 1;
+                    [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                }
+                else{
+                    contentFilter.enable = 0;
+                    [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            
+            dispatch_semaphore_wait(semaphore, deadline);
+        }
+        
+        for (ContentFilter *contentFilter in self.stoppedSource){
+            dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            
+            [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                if (state.enabled){
+                    contentFilter.enable = 1;
+                    [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                }
+                else{
+                    contentFilter.enable = 0;
+                    [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            
+            dispatch_semaphore_wait(semaphore, deadline);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            NSLog(@"SFContentBlockerState reload");
+        });
+    });
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 }
 
 - (void)setupDataSource{
@@ -73,11 +124,11 @@
     cell.element = contentFilter;
     cell.action = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
-//        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
-//        cer.contentFilter = contentFilter;
-//        [self.navigationController pushViewController:cer animated:YES];
+        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
+        cer.contentFilter = contentFilter;
+        [self.navigationController pushViewController:cer animated:YES];
         
-        [contentFilter reloadContentBlocker];
+//        [contentFilter reloadContentBlocker];
         
     };
     
@@ -85,7 +136,8 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70 + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
+    return (contentFilter.enable ? 70 : 90) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

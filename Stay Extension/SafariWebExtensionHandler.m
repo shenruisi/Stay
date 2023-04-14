@@ -13,6 +13,7 @@
 #import "API.h"
 #import "FCShared.h"
 #import <Speech/Speech.h>
+#import "ContentFilterManager.h"
 
 @interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
 
@@ -154,7 +155,7 @@
 {
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
-    
+
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         
@@ -436,19 +437,21 @@
     else if ([message[@"type"] isEqualToString:@"yt_element"]){
         NSString *path = message[@"path"];
         NSString *location = message[@"location"];
-        NSDictionary *response = [[API shared] downloadYoutube:path];
-        NSString *code;
-        if ((code = response[@"biz"][@"code"]) != nil){
-            body = @{
-                @"code" : code
-            };
-        }
+        NSDictionary *response = [[API shared] downloadYoutube:path location:location];
+        NSString *code = response[@"biz"][@"code"];
+        NSString *nCode = response[@"biz"][@"n_code"];
+        body = @{
+            @"status_code" : response[@"status_code"],
+            @"code" : code ? code : @"",
+            @"n_code" : nCode ? nCode : @""
+        };
     }
     else if ([message[@"type"] isEqualToString:@"yt_element_ci"]){
         NSString *path = message[@"path"];
         NSString *code = message[@"code"];
+        NSString *nCode = message[@"n_code"];
         if (path.length > 0 && code.length > 0){
-            [[API shared] commitYoutbe:path code:code];
+            [[API shared] commitYoutbe:path code:code nCode:nCode];
         }
     }
     else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){

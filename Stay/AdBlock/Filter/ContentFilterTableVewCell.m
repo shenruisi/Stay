@@ -10,12 +10,19 @@
 #import "ContentFilter2.h"
 #import "StateView.h"
 #import "UIView+Duplicate.h"
+#import "FCStore.h"
 
 @interface ContentFilterTableVewCell()
 
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) StateView *stateView;
-@property (nonatomic, strong) UILabel *builtinLabel;
+@property (nonatomic, strong) UILabel *typeLabel;
+@property (nonatomic, strong) NSLayoutConstraint *typeLabelWidth;
+@property (nonatomic, strong) UILabel *alertLabel;
+@property (nonatomic, strong) NSLayoutConstraint *alertLabelWidth;
+@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *statusViewConstraints;
+@property (nonatomic, strong) UIButton *enableButton;
+@property (nonatomic, strong) UILabel *proLabel;
 @end
 
 @implementation ContentFilterTableVewCell
@@ -23,8 +30,11 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
         [self nameLabel];
-        [self builtinLabel];
+        [self typeLabel];
         [self stateView];
+        [self alertLabel];
+        [self enableButton];
+        [self proLabel];
     }
     
     return self;
@@ -45,7 +55,7 @@
     [super setActive:active];
     self.nameLabel.textColor = active ? FCStyle.fcBlack : FCStyle.fcSeparator;
     self.stateView.active = active;
-    self.builtinLabel.textColor = active ? FCStyle.accent : FCStyle.fcSeparator;
+    self.typeLabel.backgroundColor = active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
 }
 
 - (void)doubleTap:(CGPoint)location{
@@ -71,29 +81,61 @@
         [nameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10]
     ]];
     
-    if (!self.builtinLabel.hidden){
-        UILabel *builtinLabel = (UILabel *)[self.builtinLabel duplicate];
-        builtinLabel.textColor = !self.active ? FCStyle.accent : FCStyle.fcSeparator;
-        builtinLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [containerView addSubview:builtinLabel];
+    UILabel *typeLabel = (UILabel *)[self.typeLabel duplicate];
+    typeLabel.textColor = FCStyle.fcWhite;
+    typeLabel.backgroundColor = !self.active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
+    typeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:typeLabel];
+    [NSLayoutConstraint activateConstraints:@[
+        [typeLabel.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
+        [typeLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10],
+        [typeLabel.widthAnchor constraintEqualToConstant:self.typeLabelWidth.constant],
+        [typeLabel.heightAnchor constraintEqualToConstant:20]
+    ]];
+    
+    UILabel *alertLabel;
+    if (!self.alertLabel.hidden){
+        alertLabel = (UILabel *)[self.alertLabel duplicate];
+        alertLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [containerView addSubview:alertLabel];
         [NSLayoutConstraint activateConstraints:@[
-            [builtinLabel.leadingAnchor constraintEqualToAnchor:nameLabel.trailingAnchor constant:10],
-            [builtinLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:10],
-            [builtinLabel.widthAnchor constraintEqualToConstant:54],
-            [builtinLabel.heightAnchor constraintEqualToConstant:20],
+            [alertLabel.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
+            [alertLabel.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-10],
+            [alertLabel.widthAnchor constraintEqualToConstant:self.alertLabelWidth.constant],
+            [alertLabel.heightAnchor constraintEqualToConstant:25]
         ]];
     }
     
+    if (!self.enableButton.hidden){
+        UIButton *enableButton = (UIButton *)[self.enableButton duplicate];
+        enableButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [containerView addSubview:enableButton];
+        [NSLayoutConstraint activateConstraints:@[
+            [enableButton.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
+            [enableButton.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-10],
+            [enableButton.widthAnchor constraintEqualToConstant:60],
+            [enableButton.heightAnchor constraintEqualToConstant:25],
+        ]];
+    }
     
     StateView *stateView = (StateView *)[self.stateView fcDuplicate];
     stateView.active = !self.active;
     stateView.translatesAutoresizingMaskIntoConstraints = NO;
     [containerView addSubview:stateView];
     
-    [NSLayoutConstraint activateConstraints:@[
-        [stateView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
-        [stateView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-15]
-    ]];
+    if (!self.enableButton.hidden){
+        [NSLayoutConstraint activateConstraints:@[
+            [stateView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
+            [stateView.bottomAnchor constraintEqualToAnchor:alertLabel.topAnchor constant:-12]
+        ]];
+    }
+    else{
+        [NSLayoutConstraint activateConstraints:@[
+            [stateView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:10],
+            [stateView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-15]
+        ]];
+    }
+    
     
     UIView *maskView = [[UIView alloc] init];
     maskView.backgroundColor = UIColor.blackColor;
@@ -115,7 +157,63 @@
 - (void)buildWithElement:(ContentFilter *)element{
     self.nameLabel.text = element.title;
     self.active = element.active;
-    self.builtinLabel.hidden = !(element.type == ContentFilterTypeBuiltin);
+    self.typeLabel.text = [ContentFilter stringOfType:element.type];
+    CGRect rect = [self.typeLabel.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20)
+                                           options:NSStringDrawingUsesLineFragmentOrigin
+                                        attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                           context:nil];
+    self.typeLabelWidth.constant = rect.size.width + 20;
+    self.alertLabel.hidden = element.enable;
+    self.enableButton.hidden = element.enable;
+    if (!element.enable){
+        NSString *enableAlert;
+        if (ContentFilterTypeBasic == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterBasicAlert", @"");
+        }
+        else if (ContentFilterTypePrivacy == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterPrivacyAlert", @"");
+        }
+        else if (ContentFilterTypeRegion == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterRegionAlert", @"");
+        }
+        else if (ContentFilterTypeCustom == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterCustomAlert", @"");
+        }
+        else if (ContentFilterTypeTag == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterTagAlert", @"");
+        }
+        
+        CGRect rect = [enableAlert boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 25)
+                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                             attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                                context:nil];
+        self.alertLabel.text = enableAlert;
+        self.alertLabelWidth.constant = rect.size.width + 20;
+    }
+    
+    [NSLayoutConstraint deactivateConstraints:self.statusViewConstraints];
+    if (!element.enable){
+        self.statusViewConstraints = @[
+            [self.stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+            [self.stateView.bottomAnchor constraintEqualToAnchor:self.alertLabel.topAnchor constant:-12]
+        ];
+    }
+    else{
+        self.statusViewConstraints = @[
+            [self.stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+            [self.stateView.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-15]
+        ];
+    }
+    [NSLayoutConstraint activateConstraints:self.statusViewConstraints];
+    
+    if (ContentFilterTypeTag == element.type
+        || ContentFilterTypeCustom == element.type){
+        self.proLabel.hidden = (FCPlan.None != [[FCStore shared] getPlan:NO]);
+    }
+    else{
+        self.proLabel.hidden = YES;
+    }
+    
 }
 
 - (UILabel *)nameLabel{
@@ -135,28 +233,50 @@
     return _nameLabel;
 }
 
-- (UILabel *)builtinLabel{
-    if (nil == _builtinLabel){
-        _builtinLabel = [[UILabel alloc] init];
-        _builtinLabel.text = NSLocalizedString(@"Builtin", @"");
-        _builtinLabel.font = FCStyle.footnoteBold;
-        _builtinLabel.textColor = FCStyle.accent;
-        _builtinLabel.backgroundColor = FCStyle.lightAccent;
-        _builtinLabel.textAlignment = NSTextAlignmentCenter;
-        _builtinLabel.layer.cornerRadius = 6;
-        _builtinLabel.clipsToBounds = YES;
-        _builtinLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.fcContentView addSubview:_builtinLabel];
-        
+- (UILabel *)typeLabel{
+    if (nil == _typeLabel){
+        _typeLabel = [[UILabel alloc] init];
+        _typeLabel.font = FCStyle.footnote;
+        _typeLabel.textColor = FCStyle.fcWhite;
+        _typeLabel.backgroundColor = FCStyle.fcSecondaryBlack;
+        _typeLabel.textAlignment = NSTextAlignmentCenter;
+        _typeLabel.layer.cornerRadius = 10;
+        _typeLabel.clipsToBounds = YES;
+        _typeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_typeLabel];
+        self.typeLabelWidth = [_typeLabel.widthAnchor constraintEqualToConstant:54];
         [NSLayoutConstraint activateConstraints:@[
-            [_builtinLabel.leadingAnchor constraintEqualToAnchor:self.nameLabel.trailingAnchor constant:10],
-            [_builtinLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:10],
-            [_builtinLabel.widthAnchor constraintEqualToConstant:54],
-            [_builtinLabel.heightAnchor constraintEqualToConstant:20],
+            [_typeLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
+            [_typeLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:10],
+            self.typeLabelWidth,
+            [_typeLabel.heightAnchor constraintEqualToConstant:20],
+        ]];
+    }
+
+    return _typeLabel;
+}
+
+- (UILabel *)alertLabel{
+    if (nil == _alertLabel){
+        _alertLabel = [[UILabel alloc] init];
+        _alertLabel.font = FCStyle.footnote;
+        _alertLabel.textColor = FCStyle.accent;
+        _alertLabel.backgroundColor = [FCStyle.accent colorWithAlphaComponent:0.1];
+        _alertLabel.textAlignment = NSTextAlignmentCenter;
+        _alertLabel.layer.cornerRadius = 5;
+        _alertLabel.clipsToBounds = YES;
+        _alertLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_alertLabel];
+        self.alertLabelWidth = [_alertLabel.widthAnchor constraintEqualToConstant:54];
+        [NSLayoutConstraint activateConstraints:@[
+            [_alertLabel.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+            [_alertLabel.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-10],
+            [_alertLabel.heightAnchor constraintEqualToConstant:25],
+            self.alertLabelWidth
         ]];
     }
     
-    return _builtinLabel;
+    return _alertLabel;
 }
 
 - (StateView *)stateView{
@@ -165,13 +285,65 @@
         _stateView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.fcContentView addSubview:_stateView];
         
-        [NSLayoutConstraint activateConstraints:@[
+        self.statusViewConstraints = @[
             [_stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
             [_stateView.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-15]
-        ]];
+        ];
+        
+        [NSLayoutConstraint activateConstraints:self.statusViewConstraints];
     }
     
     return _stateView;
+}
+
+- (UIButton *)enableButton{
+    if (nil == _enableButton){
+        _enableButton = [[UIButton alloc] init];
+        _enableButton.backgroundColor = UIColor.clearColor;
+        _enableButton.layer.cornerRadius = 10;
+        _enableButton.layer.borderWidth = 1;
+        _enableButton.layer.borderColor = FCStyle.accent.CGColor;
+        [_enableButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Enable", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.accent,
+            NSFontAttributeName : FCStyle.footnoteBold
+        }] forState:UIControlStateNormal];
+        _enableButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_enableButton];
+        [NSLayoutConstraint activateConstraints:@[
+            [_enableButton.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
+            [_enableButton.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-10],
+            [_enableButton.widthAnchor constraintEqualToConstant:60],
+            [_enableButton.heightAnchor constraintEqualToConstant:25],
+        ]];
+    }
+    
+    return _enableButton;
+}
+
+- (UILabel *)proLabel{
+    if (nil == _proLabel){
+        _proLabel = [[UILabel alloc] init];
+        _proLabel.backgroundColor = FCStyle.backgroundGolden;
+        _proLabel.font = [UIFont boldSystemFontOfSize:10];
+        _proLabel.text = @"PRO";
+        _proLabel.layer.borderWidth = 1;
+        _proLabel.layer.borderColor = FCStyle.borderGolden.CGColor;
+        _proLabel.layer.cornerRadius = 5;
+        _proLabel.textAlignment = NSTextAlignmentCenter;
+        _proLabel.textColor = FCStyle.fcGolden;
+        _proLabel.clipsToBounds = YES;
+        _proLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_proLabel];
+        [NSLayoutConstraint activateConstraints:@[
+            [_proLabel.topAnchor constraintEqualToAnchor:self.nameLabel.topAnchor constant:2],
+            [_proLabel.leadingAnchor constraintEqualToAnchor:self.nameLabel.trailingAnchor constant:5],
+            [_proLabel.widthAnchor constraintEqualToConstant:30],
+            [_proLabel.heightAnchor constraintEqualToConstant:15],
+        ]];
+    }
+    
+    return _proLabel;
 }
 
 + (NSString *)identifier{
