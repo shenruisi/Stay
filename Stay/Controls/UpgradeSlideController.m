@@ -27,10 +27,10 @@
 //    
 //    return _navController;
 //}
-
-- (ModalNavigationController *)modalNavigationController{
-    return self.navController;
-}
+//
+//- (ModalNavigationController *)modalNavigationController{
+//    return self.navController;
+//}
 
 - (FCPresentingFrom)from{
     return FCPresentingFromBottom;
