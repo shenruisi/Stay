@@ -15,7 +15,6 @@
 @property (nonatomic, strong) UIBarButtonItem *titleItem;
 @property (nonatomic, strong) UIBarButtonItem *proItem;
 @property (nonatomic, strong) UILabel *leftTitleLabel;
-@property (nonatomic, strong) UINavigationBarAppearance *appearance;
 @end
 
 @implementation FCRootViewController
@@ -24,10 +23,7 @@
     [super viewDidLoad];
     
 
-    self.appearance = [[UINavigationBarAppearance alloc] init];
-    [self.appearance configureWithTransparentBackground];
-    self.appearance.backgroundColor = UIColor.clearColor;
-    self.appearance.backgroundEffect = nil;
+    
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{

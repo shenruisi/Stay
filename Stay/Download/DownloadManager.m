@@ -8,7 +8,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "DownloadManager.h"
 #import "MyAdditions.h"
-#import "DMStore.h"
 #import "M3U8Parser.h"
 #import <ffmpegkit/FFmpegKit.h>
 #import "FWEncryptorAES.h"
@@ -155,9 +154,6 @@
 
 @end
 
-@implementation Query
-
-@end
 
 @interface DownloadManager()<AVAssetDownloadDelegate, NSURLSessionDownloadDelegate> {
     dispatch_queue_t _dataQueue;
@@ -169,7 +165,6 @@
 @property (nonatomic, strong) NSString *dataPath;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, Task *> *taskDict;
 @property (nonatomic, strong) NSMutableDictionary<NSURLSessionTask *, Task *> *sessionDict;
-@property (nonatomic, strong) DMStore *store;
 @property (nonatomic, strong) NSURLSession *downloadSession;
 @end
 
@@ -200,27 +195,14 @@ static DownloadManager *instance = nil;
     NSString *taskId = [request.url md5];
     Task *task = self.taskDict[taskId];
     if (task == nil) {
-        NSArray<Task *> *tasks = [self.store query:taskId withKey:nil andStatus:-1];
-        if (tasks.count == 0) {
-            task = [[Task alloc] init];
-            task.taskId = taskId;
-            task.key = request.key;
-            task.progress = 0;
-            task.status = DMStatusPending;
-            task.filePath = [NSString stringWithFormat:@"%@/%@.%@", request.fileDir, taskId, @"mp4"];
-            
-            [self.store insert:@{
-                @"taskId": taskId,
-                @"key": request.key,
-                @"url": request.url,
-                @"fileDir": request.fileDir,
-                @"fileName": request.fileName,
-                @"fileType": request.fileType,
-            }];
-        } else {
-            task = tasks[0];
-        }
+        task = [[Task alloc] init];
+        task.taskId = taskId;
+        task.key = request.key;
+        task.progress = 0;
+        task.status = DMStatusPending;
+        task.filePath = [NSString stringWithFormat:@"%@/%@.%@", request.fileDir, taskId, @"mp4"];
         task.isM3U8 = [request.url containsString:@"m3u8"] || request.m3u8Content.length > 0;
+        
         NSURLSessionTask *sessionTask;
         if (task.isM3U8) {
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:taskId];
@@ -294,10 +276,10 @@ static DownloadManager *instance = nil;
                 if (sessionState.data != nil) {
                     sessionTask = [self.downloadSession downloadTaskWithResumeData:sessionState.data];
                     sessionState.data = nil;
-                    [NSFileManager.defaultManager removeItemAtPath:[dirPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+                    [NSFileManager.defaultManager removeItemAtPath:[dirPath stringByAppendingPathComponent:[[[self getSessionTaskURL: sessionState.sessionTask].absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 }
                 if (sessionTask == nil) {
-                    sessionTask = [self.downloadSession downloadTaskWithRequest:[sessionState.sessionTask.originalRequest.URL getRequest]];
+                    sessionTask = [self.downloadSession downloadTaskWithRequest:[[self getSessionTaskURL:sessionState.sessionTask] getRequest]];
                 }
                 sessionState.sessionTask = sessionTask;
                 if (sessionState.sessionTask != nil) {
@@ -322,10 +304,6 @@ static DownloadManager *instance = nil;
     return task;
 }
 
-- (NSArray *)query:(Query *)condition {
-    return [self.store query:condition.taskId withKey:condition.key andStatus:condition.status];
-}
-
 - (Task *)queryByTaskId:(NSString *)taskId {
     return self.taskDict[taskId];
 }
@@ -344,43 +322,21 @@ static DownloadManager *instance = nil;
         [self.taskDict removeObjectForKey:taskId];
     }
     [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:taskId] error:nil];
-    [self.store remove:taskId];
-}
-
-- (void)removeAll:(NSString *)key {
-    @synchronized (self.taskDict) {
-        Query *condition = [[Query alloc] init];
-        condition.key = key;
-        NSArray *tasks = [self.store query:condition.taskId withKey:condition.key andStatus:condition.status];
-        for (Task *t in tasks) {
-            Task *task = self.taskDict[t.taskId];
-            if (task != nil) {
-                for (TaskSessionState *sessionState in task.sessionStates) {
-                    @synchronized (self.sessionDict) {
-                        [self.sessionDict removeObjectForKey:sessionState.sessionTask];
-                    }
-                    [sessionState.sessionTask cancel];
-                }
-            }
-            [self.taskDict removeObjectForKey:t.taskId];
-            [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:t.taskId] error:nil];
-        }
-    }
-    [self.store removeAll:key];
 }
 
 - (void)pause:(NSString *)taskId {
     Task *task = self.taskDict[taskId];
     if (task != nil) {
         @synchronized (task.sessionStates) {
+            NSString *dirPath = (task.isM3U8 || task.isNormal) ? [self.dataPath stringByAppendingPathComponent:task.taskId] : self.dataPath;
             for (TaskSessionState *sessionState in task.sessionStates) {
                 sessionState.data = nil;
-                [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+                [NSFileManager.defaultManager removeItemAtPath:[dirPath stringByAppendingPathComponent:[[[self getSessionTaskURL: sessionState.sessionTask].absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 [((NSURLSessionDownloadTask *)sessionState.sessionTask) cancelByProducingResumeData:^(NSData *data) {
                     sessionState.data = data;
                     if (data != nil) {
                         dispatch_async(self->_dataQueue, ^{
-                            NSString *dataFilePath = [self.dataPath stringByAppendingPathComponent:[[sessionState.sessionTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]];
+                            NSString *dataFilePath = [dirPath stringByAppendingPathComponent:[[[self getSessionTaskURL:sessionState.sessionTask].absoluteString md5] stringByAppendingString:@"_data"]];
                             [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
                             [data writeToFile:dataFilePath options:NSDataWritingAtomic error:nil];
                         });
@@ -394,20 +350,17 @@ static DownloadManager *instance = nil;
         if (task.block != nil) {
             task.block(task.progress, @"", DMStatusPaused);
         }
-        
-        [self.store update:taskId withDict:@{@"progress": @(task.progress), @"status": @(task.status)}];
-    }
-}
-
-- (void)pauseAll {
-    for (NSString *taskId in self.taskDict.allKeys) {
-        [self pause:taskId];
     }
 }
 
 - (NSString *)dataPath{
     if (nil == _dataPath){
         _dataPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/.dm/"];
+        BOOL isDirectory;
+        BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:_dataPath isDirectory:&isDirectory];
+        if (isExist && !isDirectory) {
+            [NSFileManager.defaultManager removeItemAtPath:_dataPath error:nil];
+        }
         if (![[NSFileManager defaultManager] fileExistsAtPath:_dataPath]) {
             [NSFileManager.defaultManager createDirectoryAtPath:_dataPath withIntermediateDirectories:YES attributes:nil error:nil];
         }
@@ -430,14 +383,6 @@ static DownloadManager *instance = nil;
     }
     
     return _sessionDict;
-}
-
-- (DMStore *)store {
-    if (nil == _store){
-        _store = [[DMStore alloc] init];
-    }
-    
-    return _store;
 }
 
 - (NSURLSession *)downloadSession {
@@ -506,7 +451,7 @@ static DownloadManager *instance = nil;
             NSUInteger count = task.sessionStates.count;
             NSMutableSet<NSString *> *currURLs = [NSMutableSet set];
             for (TaskSessionState *sessionState in task.sessionStates) {
-                NSString *url = sessionState.sessionTask.originalRequest.URL.absoluteString;
+                NSString *url = [self getSessionTaskURL:sessionState.sessionTask].absoluteString;
                 if (url.length > 0) {
                     [currURLs addObject:url];
                 }
@@ -588,7 +533,6 @@ static DownloadManager *instance = nil;
             if (task.block != nil) {
                 task.block(0, @"", DMStatusFailedNoSpace);
             }
-            [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
             [fileHandle closeAndReturnError:&err];
             return;
         }
@@ -778,7 +722,6 @@ static DownloadManager *instance = nil;
         if (task.block != nil) {
             task.block(0, @"", DMStatusFailedTranscode);
         }
-        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
     }
 }
 
@@ -807,7 +750,7 @@ static DownloadManager *instance = nil;
         if (task.isM3U8) {
             [self resumeM3U8Task:task];
         } else if (task.isNormal) {
-            if ([task.normalState.videoUrl isEqualToString:sessionTask.originalRequest.URL.absoluteString]) {
+            if ([task.normalState.videoUrl isEqualToString:[self getSessionTaskURL:sessionTask].absoluteString]) {
                 for (TaskSessionState *sessionState in task.sessionStates) {
                     @synchronized (self.sessionDict) {
                         [self.sessionDict removeObjectForKey:sessionState.sessionTask];
@@ -820,7 +763,6 @@ static DownloadManager *instance = nil;
                     if (task.block != nil) {
                         task.block(0, @"", DMStatusFailedTranscode);
                     }
-                    [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
                 }
             }
         } else {
@@ -836,7 +778,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil) {
         task.bytesWritten += bytesWritten;
-        if (task.isNormal && task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
+        if (task.isNormal && task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) {
             return;
         }
         if (task.block != nil) {
@@ -861,7 +803,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     if (task != nil && downloadTask.error == nil) {
         if (task.isM3U8) {
             [self removeSessionTask:downloadTask fromTask:task];
-            NSString *requestURL = downloadTask.originalRequest.URL.absoluteString;
+            NSString *requestURL = [self getSessionTaskURL:downloadTask].absoluteString;
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
             NSString *filePath = [taskPath stringByAppendingPathComponent:[[requestURL md5] stringByAppendingString:@".ts"]];
             BOOL isKeyURL = NO;
@@ -914,7 +856,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             [self resumeM3U8Task:task];
         } else if (task.isNormal) {
             [self removeSessionTask:downloadTask fromTask:task];
-            if ([task.normalState.videoUrl isEqualToString:downloadTask.originalRequest.URL.absoluteString]) {
+            if ([task.normalState.videoUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) {
                 NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
                 NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]];
                 [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
@@ -933,7 +875,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 [self resumNormalTask:task];
             } else {
                 NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [downloadTask.originalRequest.URL.absoluteString md5], task.normalState.audioType]];
+                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[self getSessionTaskURL:downloadTask].absoluteString md5], task.normalState.audioType]];
                 [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
                 unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
                 if (fileSize < 2000) {
@@ -941,7 +883,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                         if (task.block != nil) {
                             task.block(0, @"", DMStatusFailedTranscode);
                         }
-                        [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
                     }
                     return;
                 }
@@ -952,7 +893,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             }
         } else {
             [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:task.filePath] error:nil];
-            [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[downloadTask.originalRequest.URL.absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
+            [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:[[[self getSessionTaskURL:downloadTask].absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
             unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:task.filePath error:nil] fileSize];
             if (fileSize < 2000) {
                 [self taskFailed:task];
@@ -978,11 +919,16 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     }
 }
 
+- (NSURL *)getSessionTaskURL:(NSURLSessionTask *)sessionTask {
+    NSURL *url = sessionTask.originalRequest.URL;
+    
+    return url != nil ? url : sessionTask.currentRequest.URL;
+}
+
 - (void)taskFailed:(Task *)task {
     if (task.block != nil) {
         task.block(0, @"", DMStatusFailed);
     }
-    [self.store update:task.taskId withDict:@{@"progress": @(0), @"status": @(DMStatusFailed)}];
     @synchronized (self.taskDict) {
         [self.taskDict removeObjectForKey:task.taskId];
     }
@@ -992,7 +938,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     if (task.block != nil) {
         task.block(1, @"", DMStatusComplete);
     }
-    [self.store update:task.taskId withDict:@{@"progress": @(1), @"status": @(DMStatusComplete)}];
     @synchronized (self.taskDict) {
         [self.taskDict removeObjectForKey:task.taskId];
     }

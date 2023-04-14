@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FCStyle : NSObject
 
 @property(class, nonatomic, readonly) UIColor *accent;
+@property(class, nonatomic, readonly) UIColor *lightAccent;
 @property(class, nonatomic, readonly) NSArray<UIColor *> *accentGradient;
 @property(class, nonatomic, readonly) UIColor *accentHighlight;
 @property(class, nonatomic, readonly) UIColor *accentHover;
@@ -40,7 +41,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
 @property(class, nonatomic, readonly) UIColor *subtitleColor;
 
-
+@property(class, nonatomic, readonly) UIColor *filterCommentColor;
+@property(class, nonatomic, readonly) UIColor *filterExceptionColor;
+@property(class, nonatomic, readonly) UIColor *filterAddressColor;
+@property(class, nonatomic, readonly) UIColor *filterSeparatorColor;
+@property(class, nonatomic, readonly) UIColor *filterModifierColor;
+@property(class, nonatomic, readonly) UIColor *filterOptionColor;
+@property(class, nonatomic, readonly) UIColor *filterCosmeticColor;
+@property(class, nonatomic, readonly) UIColor *filterSelectorColor;
 
 @property(class, nonatomic, readonly) UIFont *headline;
 @property(class, nonatomic, readonly) UIFont *headlineBold;
@@ -48,6 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *subHeadlineBold;
 @property(class, nonatomic, readonly) UIFont *body;
 @property(class, nonatomic, readonly) UIFont *bodyBold;
+@property(class, nonatomic, readonly) UIFont *caption;
 @property(class, nonatomic, readonly) UIFont *footnote;
 @property(class, nonatomic, readonly) UIFont *footnoteBold;
 @property(class, nonatomic, readonly) UIFont *title1;
@@ -71,6 +80,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfSymbolL2Bold;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL3;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL3Bold;
+
+
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha;
 + (NSString *)appearance;

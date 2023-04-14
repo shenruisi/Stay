@@ -1125,7 +1125,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("POST_AUDIO_RECORD" === requestOperate){
             let recording = request.recording;
-            console.log('POST_AUDIO_RECORD----recording=',recording)
+            console.log('POST_AUDIO_RECORD--', recording);
             browser.runtime.sendNativeMessage("application.id", { type: "ST_speechToText", data: recording}, function (response) {
                 // console.log('saveYoutubeDecodeFun----', response)
                 sendResponse({ text: response.body })

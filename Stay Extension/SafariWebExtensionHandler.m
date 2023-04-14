@@ -13,20 +13,22 @@
 #import "API.h"
 #import "FCShared.h"
 #import <Speech/Speech.h>
+#import "ContentFilterManager.h"
 
-@interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate>
+@interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
 
 @property (nonatomic, strong) SFSpeechRecognizer *speechRecognizer;
 @property (nonatomic, strong) SFSpeechURLRecognitionRequest *recognitionRequest;
 @property (nonatomic, strong) SFSpeechRecognitionTask *recognitionTask;
+@property (nonatomic, strong) AVSpeechSynthesizer *speechSynthesizer;
 @end
 
 @implementation SafariWebExtensionHandler
 
 - (instancetype)init{
     if (self = [super init]){
-//        self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
-//        self.speechRecognizer.delegate = self;
+        self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
+        self.speechRecognizer.delegate = self;
 //        [self requestSpeechAuthorization];
 //        [self startRecognition];
     }
@@ -34,22 +36,31 @@
     return self;
 }
 
-- (void)requestSpeechAuthorization {
-    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
-                [self startRecognition];
-            }
-        });
-    }];
+- (void)requestSpeechAuthorization:(NSData *)data{
+//    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+//                [self startRecognition:data];
+//            }
+//        });
+//    }];
+    
+    [self startRecognition:data];
 }
 
-- (void)startRecognition {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"myvoice" ofType:@"m4a"];
-    NSURL *audioFileURL = [NSURL fileURLWithPath:path];
+- (void)startRecognition:(NSData *)data{
+    NSString * audioFilePath =[FCSharedDirectory() stringByAppendingPathComponent:@"gpt.m4a"];
+    NSError *error;
+    BOOL success = [data writeToFile:audioFilePath options:0 error:&error];
+    if (!success) {
+        NSLog(@"Failed to write audio data to disk");
+        return;
+    }
+    NSURL *audioFileURL = [NSURL fileURLWithPath:audioFilePath];
     self.recognitionRequest = [[SFSpeechURLRecognitionRequest alloc] initWithURL:audioFileURL];
     self.recognitionTask = [self.speechRecognizer recognitionTaskWithRequest:self.recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
         if (result) {
+            NSString *result1 = result.bestTranscription.formattedString;
             NSLog(@"Recognition result: %@", result.bestTranscription.formattedString);
         }
 
@@ -144,9 +155,26 @@
 {
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
-    
+
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+        
+//        AVSpeechUtterance *speechUtterance = [[AVSpeechUtterance alloc] initWithString:@"Hello, World!"];
+//        speechUtterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"];
+//        speechUtterance.rate = 0.5;
+//
+//        self.speechSynthesizer = [[AVSpeechSynthesizer alloc] init];
+//        self.speechSynthesizer.delegate = self;
+//
+//        [self.speechSynthesizer writeUtterance:speechUtterance toBufferCallback:^(AVAudioBuffer * _Nonnull buffer) {
+//
+//            AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
+//            int16_t * audioData = (int16_t *)[pcmBuffer int16ChannelData][0];  // 从第一个音频通道获取数据
+//            UInt32 audioDataLength = pcmBuffer.frameLength * sizeof(int16_t); // 计算音频数据的长度
+//            NSData *audioDataAsNSData = [NSData dataWithBytes:audioData length:audioDataLength];
+//            NSLog(@"%@",audioDataAsNSData);
+//        }];
+    
         [SharedStorageManager shared].userDefaults.safariExtensionEnabled = YES;
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
@@ -425,7 +453,13 @@
         }
     }
     else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){
-        NSData *data = message[@"data"];
+//        NSString *audioStr = message[@"data"];
+//        audioStr = [audioStr stringByReplacingOccurrencesOfString:@"data:audio/ogg; codecs=opus;base64," withString:@""];
+//        NSData *data = [[NSData alloc] initWithBase64EncodedString:audioStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+//        [self requestSpeechAuthorization:data];
+//        NSLog(@"%@",data);
+        
+        
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
@@ -593,6 +627,14 @@
         dic[str] = responData;
     }
     return dic;
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
+    
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance{
+    
 }
 
 - (void)speechRecognitionDidDetectSpeech:(SFSpeechRecognitionTask *)task{

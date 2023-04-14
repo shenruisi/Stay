@@ -286,7 +286,7 @@ Violationofuserpricacy="Violation Of User Pricacy";
 Donotknowhowtouse="Do Not Know How To Use";
 NOSPACEFAILED="Not enough space";
 UploadSuccess="Thanks for your submission, please pay attention to the contact email.";
-AdBlock="Ad Block";
+AdBlock="Content Blocker";
 Downloaded="Downloaded";
 OnMyiPhone="On My iPhone";
 OnMyMac="On My Mac";
@@ -294,10 +294,21 @@ SetupDirectory="Setup Directory";
 ChangeDirectory="Change Directory";
 Undefined="Undefined";
 items="item(s)";
-StayEngineError="This userscript requires Stay %@ to install.";
-
-
-
+StayEngineError="This userscript requires >= Stay %@ to install.";
+Builtin="Bulit-in";
+ContentFilterBasic="EasyList";
+ContentFilterPrivacy="EasyList Privacy";
+ContentFilterRegion="EasyList China";
+ContentFilterCustom="My Rules";
+ContentFilterTag="Webpage Tagging Rules";
+ContentFilterBasicAlert="Basic content blocker is not enabled";
+ContentFilterPrivacyAlert="Privacy content blocker is not enabled";
+ContentFilterRegionAlert="Region content blocker is not enabled";
+ContentFilterCustomAlert="Custom content blocker is not enabled";
+ContentFilterTagAlert="Tag content blocker is not enabled";
+Enable="Enable";
+Save="Save";
+ContentFilterRestore="Restore Defaults";
 
 
 

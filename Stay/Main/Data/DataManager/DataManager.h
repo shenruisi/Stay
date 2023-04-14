@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "UserScript.h"
 #import "DownloadResource.h"
-
+#import "ContentFilter2.h"
 
 @interface DataManager : NSObject
 
@@ -82,4 +82,11 @@
 - (void)deleteVideoByuuidPath:(NSString *)uuid;
 
 - (NSArray *)selectAllUnDownloadComplete;
+
+//Content Filter
+- (void)createContentFilterTable;
+- (BOOL)insertContentFilter:(ContentFilter *)contentFilter error:(NSError **)error;
+- (NSArray<ContentFilter *> *)selectContentFilters;
+- (void)updateContentFilterStatus:(NSUInteger)status uuid:(NSString *)uuid;
+- (void)updateContentFilterEnable:(NSUInteger)enable uuid:(NSString *)uuid;
 @end
