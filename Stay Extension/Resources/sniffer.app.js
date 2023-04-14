@@ -725,6 +725,9 @@ function fetchRandomStr(randomStr){
     else if(host.indexOf('pornhub.com')>-1){
       videoInfo = handlePornhubVideoInfo(videoSnifferDom);
     }
+    else if(host.indexOf('91porn.com')>-1){
+      videoInfo = handle91PormVideoInfo(videoSnifferDom);
+    }
     else if(host.indexOf('facebook.com')>-1){
       videoInfo = handleFacebookVideoInfo(videoSnifferDom);
     }// https://www.instagram.com
@@ -964,6 +967,21 @@ function fetchRandomStr(randomStr){
     const titleDom = document.querySelector('shreddit-app shreddit-title');
     if(titleDom){
       videoInfo.title = titleDom.getAttribute('title');
+    }
+    return videoInfo;
+  }
+
+  function handle91PormVideoInfo(videoDom){
+    let videoInfo = {};
+    videoInfo.title = videoDom.getAttribute('title');
+    videoInfo.poster = videoDom.getAttribute('poster');
+    videoInfo.downloadUrl = videoDom.getAttribute('src');
+    if(!videoInfo.poster){
+      const posterDom = document.querySelector('#player_one');
+      if(posterDom){
+        videoInfo.poster = posterDom.getAttribute('poster');
+      }
+
     }
     return videoInfo;
   }
