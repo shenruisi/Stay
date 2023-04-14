@@ -116,11 +116,16 @@ static VideoParser *_kVideoParser;
     }
     else if ([message.name isEqualToString:@"youtube"]){
         NSLog(@"userContentController youtube %@",message.body);
-        NSDictionary *response = [[API shared] downloadYoutube:message.body];
+        NSDictionary *response = [[API shared] downloadYoutube:message.body location:@""];
         if (response.count > 0){
-            NSString *code;
-            if ((code = response[@"biz"][@"code"]) != nil){
-                NSString *method = [NSString stringWithFormat:@"fetchRandomStr('%@');",[[code stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]];
+            NSInteger statusCode = [response[@"status_code"] integerValue];
+            if (200 == statusCode){
+                NSString *code = response[@"biz"][@"code"] ? response[@"biz"][@"code"] : @"";
+                NSString *nCode = response[@"biz"][@"n_code"] ? response[@"biz"][@"n_code"] : @"";
+                
+                NSString *method = [NSString stringWithFormat:@"fetchRandomStr('%@','%@');",[[[code stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]
+                    stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"],[[[nCode stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]
+                         stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"]];
                 [self.webView evaluateJavaScript:method completionHandler:^(id ret, NSError * _Nullable error) {
                     NSLog(@"%@",error);
                 }];

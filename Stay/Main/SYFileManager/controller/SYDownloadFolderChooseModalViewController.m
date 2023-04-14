@@ -100,7 +100,7 @@
         ModalItemDataEntityGeneral *generalEntity;
         NSMutableArray *ret = [[NSMutableArray alloc] init];
         NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-        if(dic != nil) {
+        if(dic != nil && !_noExternalFolder) {
             NSString *text = dic[@"fileName"];
             ModalItemElement *element = [[ModalItemElement alloc] init];
             generalEntity = [[ModalItemDataEntityGeneral alloc] init];

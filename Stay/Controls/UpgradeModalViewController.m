@@ -6,6 +6,7 @@
 //
 
 #import "UpgradeModalViewController.h"
+#import "FCApp.h"
 
 @interface UpgradeModalViewController()
 
@@ -13,6 +14,13 @@
 
 @implementation UpgradeModalViewController
 
+- (void)viewDidLoad{
+    [super viewDidLoad];
+}
 
+
+- (CGSize)mainViewSize{
+    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 350);
+}
 
 @end

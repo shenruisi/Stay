@@ -128,7 +128,7 @@ static API *instance = nil;
 //        }] resume];
 }
 
-- (NSDictionary *)downloadYoutube:(NSString *)path{
+- (NSDictionary *)downloadYoutube:(NSString *)path location:(nonnull NSString *)location{
     if ([self.youtubeCodeCache objectForKey:path]){
         return [self.youtubeCodeCache objectForKey:path];
     }
@@ -139,7 +139,8 @@ static API *instance = nil;
     [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     NSDictionary *param = @{
         @"biz": @{
-            @"path":path
+            @"path":path,
+            @"location":location ? location : @""
         }
     };
     
@@ -156,12 +157,27 @@ static API *instance = nil;
                                         NSURLResponse *response,
                                         NSError *error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (nil == error && [httpResponse statusCode] == 200){
-            data = [rc4Decrypt decrypt:data];
-            NSError *error = nil;
-            ret = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            [self.youtubeCodeCache setObject:ret forKey:path];
+        if (nil == error){
+            if ([httpResponse statusCode] == 200){
+                data = [rc4Decrypt decrypt:data];
+                NSError *error = nil;
+                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:0 error:&error]];
+                [dict setObject:@(200) forKey:@"status_code"];
+                ret = dict;
+                [self.youtubeCodeCache setObject:ret forKey:path];
+            }
+            else{
+                ret = @{
+                    @"status_code" : @([httpResponse statusCode])
+                };
+            }
         }
+        else{
+            ret = @{
+                @"status_code" : @([httpResponse statusCode])
+            };
+        }
+        
         dispatch_semaphore_signal(sem);
     
     }] resume];
@@ -169,7 +185,7 @@ static API *instance = nil;
     return ret;
 }
 
-- (void)commitYoutbe:(NSString *)path code:(NSString *)code{
+- (void)commitYoutbe:(NSString *)path code:(NSString *)code nCode:(NSString *)nCode{
     NSString *reqUrl = [NSString stringWithFormat:@"%@commit/youtube",STAY_FORK_END_POINT];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
     [request setHTTPMethod:@"POST"];
@@ -177,7 +193,8 @@ static API *instance = nil;
     NSDictionary *param = @{
         @"biz": @{
             @"path":path,
-            @"code":code
+            @"code":code,
+            @"n_code":nCode ? nCode : @""
         }
     };
     

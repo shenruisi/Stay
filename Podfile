@@ -9,7 +9,7 @@ target 'Stay' do
  pod 'UMDevice'
  pod 'SDWebImageSVGKitPlugin'
  pod 'Bugsnag'
- pod 'ffmpeg-kit-ios-full', '~> 4.5.1'
+ pod 'ffmpeg-kit-ios-full', '~> 5.1'
 
 end
 
@@ -18,5 +18,5 @@ target 'Stay-Mac' do
  pod 'InterAppCommunication'
  pod 'SDWebImage'
  pod 'SDWebImageSVGKitPlugin'
- pod 'ffmpeg-kit-ios-full', '~> 4.5.1'
+ pod 'ffmpeg-kit-ios-full', '~> 5.1'
 end
