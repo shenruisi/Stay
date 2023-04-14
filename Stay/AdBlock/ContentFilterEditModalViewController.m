@@ -12,6 +12,7 @@
 #import "ModalItemElement.h"
 #import "ModalItemViewFactory.h"
 #import "ModalSectionView.h"
+#import "FCButton.h"
 
 @interface ContentFilterEditModalViewController()<
  UITableViewDelegate,
@@ -22,6 +23,8 @@
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
 @property (nonatomic, strong) ModalItemElement *titleElement;
 @property (nonatomic, strong) ModalItemElement *linkElement;
+@property (nonatomic, strong) FCButton *saveButton;
+@property (nonatomic, strong) FCButton *restoreButton;
 @end
 
 @implementation ContentFilterEditModalViewController
@@ -32,6 +35,8 @@
     self.navigationBar.showCancel = YES;
     self.title = self.contentFilter.title;
     [self tableView];
+    [self restoreButton];
+    [self saveButton];
 }
 
 - (void)viewWillAppear{
@@ -112,7 +117,7 @@
         [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
         [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
         [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];
-        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor] setActive:YES];
+        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-120] setActive:YES];
     }
     
     return _tableView;
@@ -148,8 +153,62 @@
     return _linkElement;
 }
 
+- (FCButton *)saveButton{
+    if (nil == _saveButton){
+        _saveButton = [[FCButton alloc] init];
+        [_saveButton addTarget:self action:@selector(saveAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_saveButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Save", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.fcWhite,
+            NSFontAttributeName : FCStyle.bodyBold
+        }] forState:UIControlStateNormal];
+        _saveButton.backgroundColor = FCStyle.accent;
+        _saveButton.layer.cornerRadius = 10;
+        _saveButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:_saveButton];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_saveButton.bottomAnchor constraintEqualToAnchor:self.restoreButton.topAnchor constant:-15],
+            [_saveButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:15],
+            [_saveButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-15],
+            [_saveButton.heightAnchor constraintEqualToConstant:45]
+        ]];
+    }
+    
+    return _saveButton;
+}
+
+- (void)saveAction:(id)sender{
+    [self.navigationController.slideController startLoading];
+}
+
+- (FCButton *)restoreButton{
+    if (nil == _restoreButton){
+        _restoreButton = [[FCButton alloc] init];
+        [_restoreButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"ContentFilterRestore", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.fcWhite,
+            NSFontAttributeName : FCStyle.bodyBold
+        }] forState:UIControlStateNormal];
+        _restoreButton.backgroundColor = UIColor.redColor;
+        _restoreButton.layer.cornerRadius = 10;
+        _restoreButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:_restoreButton];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_restoreButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-15],
+            [_restoreButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:15],
+            [_restoreButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-15],
+            [_restoreButton.heightAnchor constraintEqualToConstant:45]
+        ]];
+    }
+    
+    return _restoreButton;
+}
+
+
 - (CGSize)mainViewSize{
-    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 450);
+    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 390);
 }
 
 @end

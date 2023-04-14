@@ -10,6 +10,8 @@
 #import "FCApp.h"
 #import "ModalViewController.h"
 #import "ModalNavigationController.h"
+#import "FCStyle.h"
+#import "UIColor+Convert.h"
 
 NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"app.notification.FCSlideControllerDidDismissNotification";
 
@@ -20,7 +22,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
     
 }
 
-
+@property (nonatomic, strong) CAShapeLayer *loadingShapeLayer;
 @property (nonatomic, assign) BOOL selfDismiss;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureRecognizer;
 @end
@@ -245,6 +247,61 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
         }];
     }
     
+}
+
+- (void)startLoading{
+    if (self.loadingShapeLayer){
+        [self.loadingShapeLayer removeFromSuperlayer];
+    }
+    
+    self.loadingShapeLayer = [self createLoadingShapeLayer];
+    [self.navView.containerView.layer addSublayer:self.loadingShapeLayer];
+    
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"path"];
+    animation.duration = 2.0;
+    animation.toValue = (__bridge id _Nullable)([self createLoadingPath:10].CGPath);
+    animation.autoreverses = YES;
+    animation.repeatCount = HUGE_VALF;
+    
+    CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.duration = 2.0;
+    opacityAnimation.fromValue = @(0); // 初始透明度
+    opacityAnimation.toValue = @(1); // 目标透明度
+    opacityAnimation.autoreverses = YES;
+    opacityAnimation.repeatCount = HUGE_VALF;
+    
+    [self.loadingShapeLayer addAnimation:animation forKey:@"pathAnimation"];
+//    [self.loadingShapeLayer addAnimation:opacityAnimation forKey:@"opacityAnimation"];
+}
+
+- (void)stopLoading{
+    [self.loadingShapeLayer removeAllAnimations];
+    [self.loadingShapeLayer removeFromSuperlayer];
+}
+
+- (UIBezierPath *)createLoadingPath:(CGFloat)height{
+    CGRect bounds = CGRectMake(0, 0, self.navView.size.width, height);
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(0, bounds.size.height / 2)];
+    [path addQuadCurveToPoint:CGPointMake(bounds.size.width, bounds.size.height / 2) controlPoint:CGPointMake(bounds.size.width / 2,  bounds.size.height)];
+    [path addLineToPoint:CGPointMake(bounds.size.width, 0)];
+    [path addLineToPoint:CGPointMake(0, 0)];
+    [path closePath];
+    return path;
+}
+
+- (CAShapeLayer *)createLoadingShapeLayer{
+    CAShapeLayer *shapeLayer = [[CAShapeLayer alloc] init];
+    NSArray<UIColor *> *colors = FCStyle.accentGradient;
+    shapeLayer.fillColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.popup].CGColor;
+    //colors[1].CGColor;
+//    shapeLayer.strokeColor = [UIColor blueColor].CGColor;
+//    shapeLayer.lineWidth = 2.0;
+//    shapeLayer.mask = gradientLayer;
+    
+    shapeLayer.path = [self createLoadingPath:0].CGPath;
+    
+    return shapeLayer;
 }
 
 - (BOOL)disableRoundShadow{

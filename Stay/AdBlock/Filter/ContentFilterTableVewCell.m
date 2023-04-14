@@ -10,6 +10,7 @@
 #import "ContentFilter2.h"
 #import "StateView.h"
 #import "UIView+Duplicate.h"
+#import "FCStore.h"
 
 @interface ContentFilterTableVewCell()
 
@@ -21,6 +22,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *alertLabelWidth;
 @property (nonatomic, strong) NSArray<NSLayoutConstraint *> *statusViewConstraints;
 @property (nonatomic, strong) UIButton *enableButton;
+@property (nonatomic, strong) UILabel *proLabel;
 @end
 
 @implementation ContentFilterTableVewCell
@@ -32,6 +34,7 @@
         [self stateView];
         [self alertLabel];
         [self enableButton];
+        [self proLabel];
     }
     
     return self;
@@ -203,6 +206,14 @@
     }
     [NSLayoutConstraint activateConstraints:self.statusViewConstraints];
     
+    if (ContentFilterTypeTag == element.type
+        || ContentFilterTypeCustom == element.type){
+        self.proLabel.hidden = (FCPlan.None != [[FCStore shared] getPlan:NO]);
+    }
+    else{
+        self.proLabel.hidden = YES;
+    }
+    
 }
 
 - (UILabel *)nameLabel{
@@ -308,6 +319,31 @@
     }
     
     return _enableButton;
+}
+
+- (UILabel *)proLabel{
+    if (nil == _proLabel){
+        _proLabel = [[UILabel alloc] init];
+        _proLabel.backgroundColor = FCStyle.backgroundGolden;
+        _proLabel.font = [UIFont boldSystemFontOfSize:10];
+        _proLabel.text = @"PRO";
+        _proLabel.layer.borderWidth = 1;
+        _proLabel.layer.borderColor = FCStyle.borderGolden.CGColor;
+        _proLabel.layer.cornerRadius = 5;
+        _proLabel.textAlignment = NSTextAlignmentCenter;
+        _proLabel.textColor = FCStyle.fcGolden;
+        _proLabel.clipsToBounds = YES;
+        _proLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.fcContentView addSubview:_proLabel];
+        [NSLayoutConstraint activateConstraints:@[
+            [_proLabel.topAnchor constraintEqualToAnchor:self.nameLabel.topAnchor constant:2],
+            [_proLabel.leadingAnchor constraintEqualToAnchor:self.nameLabel.trailingAnchor constant:5],
+            [_proLabel.widthAnchor constraintEqualToConstant:30],
+            [_proLabel.heightAnchor constraintEqualToConstant:15],
+        ]];
+    }
+    
+    return _proLabel;
 }
 
 + (NSString *)identifier{

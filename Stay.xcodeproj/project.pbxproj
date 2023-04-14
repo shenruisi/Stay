@@ -489,6 +489,10 @@
 		58ADAE0929E801CF00C00332 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */; };
 		58ADAE0A29E801CF00C00332 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF629E801CF00C00332 /* PipeBlockerAST.m */; };
 		58ADAE0B29E801CF00C00332 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF629E801CF00C00332 /* PipeBlockerAST.m */; };
+		58ADAE0F29E8F82400C00332 /* UpgradeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */; };
+		58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */; };
+		58ADAE1329E8F8A100C00332 /* UpgradeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */; };
+		58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */; };
 		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
@@ -1178,6 +1182,10 @@
 		58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsBlockerAST.h; sourceTree = "<group>"; };
 		58ADADF829E801CF00C00332 /* AddressBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBlockerAST.h; sourceTree = "<group>"; };
 		58ADADF929E801CF00C00332 /* TiggerBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiggerBlockerAST.h; sourceTree = "<group>"; };
+		58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeSlideController.h; sourceTree = "<group>"; };
+		58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeSlideController.m; sourceTree = "<group>"; };
+		58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeModalViewController.h; sourceTree = "<group>"; };
+		58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeModalViewController.m; sourceTree = "<group>"; };
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
@@ -1960,6 +1968,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				58ADAE0C29E8F50E00C00332 /* Controls */,
 				58A3617229C020F700080465 /* UXFramework */,
 				583A10B229B831CC00BA4A11 /* AdBlock */,
 				5839C315293051CC00CCBAE5 /* Debugger */,
@@ -2242,6 +2251,17 @@
 			name = BlockerAST;
 			path = Stay/AdBlock/Filter/BlockerAST;
 			sourceTree = SOURCE_ROOT;
+		};
+		58ADAE0C29E8F50E00C00332 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */,
+				58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */,
+				58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */,
+				58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
 		};
 		58C663792990E04300B00110 /* VideoParser */ = {
 			isa = PBXGroup;
@@ -3808,6 +3828,7 @@
 				583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */,
 				583B53DF29DBF9A100CB292A /* StateView.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
+				58ADAE1329E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
 				58ADADFA29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */,
 				583B53E529DBF9A100CB292A /* FilterToken.m in Sources */,
 				583B540E29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
@@ -3831,6 +3852,7 @@
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				58A3618629C04BBC00080465 /* FCTabBarController.m in Sources */,
 				588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */,
+				58ADAE0F29E8F82400C00332 /* UpgradeSlideController.m in Sources */,
 				3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				84E8EA112962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
@@ -3893,6 +3915,7 @@
 			files = (
 				58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */,
 				58ADADE629E800D000C00332 /* FCButton.m in Sources */,
+				58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */,
 				583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
@@ -4036,6 +4059,7 @@
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
+				58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
 				8460E4792993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
 				58639C402863FB1A00AA80D5 /* NavigateViewController.m in Sources */,
 				588202B82859F9FD00B2721A /* SceneCenter.m in Sources */,
