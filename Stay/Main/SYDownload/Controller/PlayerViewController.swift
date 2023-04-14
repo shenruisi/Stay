@@ -63,6 +63,10 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         return true
     }
     
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+    
     let videoTitleLabel = UILabel()
     let container = UIView()
     let tableView = UITableView()

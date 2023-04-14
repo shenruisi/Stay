@@ -141,7 +141,9 @@
                 [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
                 resource.status = 1;
             } else if(status == DMStatusTranscoding) {
-                [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
+                if(resource.status  != 4) {
+                    [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
+                }
                 dispatch_async(dispatch_get_main_queue(),^{
 //                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
                     cell.downloadSpeedLabel.text = speed;

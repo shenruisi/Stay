@@ -55,7 +55,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
-
+        self.contentView.backgroundColor = [UIColor clearColor];
     }
     
     return self;
@@ -80,7 +80,7 @@
     _bannerView.clipsToBounds = NO;
     _bannerView.showsVerticalScrollIndicator = false;
     _bannerView.showsHorizontalScrollIndicator = false;
-    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+//    _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 0;
     for (int i = 0; i < blocks.count; i++) {
         UIView *banner = [self createBlockView:blocks[i]];
@@ -142,7 +142,7 @@
     }
     
     [view addSubview:bannerImageView];
-    view.backgroundColor = FCStyle.secondaryBackground;
+//    view.backgroundColor = FCStyle.secondaryBackground;
     return view;
 }
 
@@ -230,7 +230,7 @@
 @end
 
 
-@interface _FeaturedPromotedTableViewCell : UITableViewCell
+@interface _FeaturedPromotedTableViewCell <ElementType> : FCTableViewCell<ElementType>
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) UIScrollView *bannerView;
 @property (nonatomic, strong) UIViewController *controller;
@@ -275,7 +275,7 @@
     _bannerView.clipsToBounds = NO;
     _bannerView.showsVerticalScrollIndicator = false;
     _bannerView.showsHorizontalScrollIndicator = false;
-    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+//    _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 20;
     for (int i = 0; i < blocks.count; i++) {
         
@@ -406,7 +406,7 @@
 
 
 
-@interface _FeaturedAlubmTableViewCell : UITableViewCell
+@interface _FeaturedAlubmTableViewCell <ElementType> : FCTableViewCell<ElementType>
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) NSString *headTitle;
 @property (nonatomic, strong) UIScrollView *bannerView;
@@ -482,7 +482,7 @@
     _bannerView.clipsToBounds = NO;
     _bannerView.showsVerticalScrollIndicator = false;
     _bannerView.showsHorizontalScrollIndicator = false;
-    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+//    _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 0;
   
     for (int i = 0; i < blocks.count; i+=3) {
@@ -496,6 +496,7 @@
             cellView.top = j * 78;
             [blockView addSubview:cellView];
         }
+        blockView.backgroundColor = [UIColor clearColor];
         blockView.left = (blockView.width + 10) * (i / 3) + 20 ;
         [_bannerView addSubview:blockView];
         left = blockView.right;
@@ -521,7 +522,7 @@
     imageView.centerY = 24;
     [imageBox addSubview:imageView];
     [view addSubview:imageBox];
-    view.backgroundColor = FCStyle.secondaryBackground;
+//    view.backgroundColor = FCStyle.secondaryBackground;
     
     CGFloat left = 0;
     NSString *icon = dic[@"icon_url"];
@@ -576,7 +577,10 @@
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 67, 25);
-    btn.backgroundColor = FCStyle.background;
+//    btn.backgroundColor = FCStyle.background;
+    btn.layer.cornerRadius = 10;
+    btn.layer.borderWidth = 1;
+    btn.layer.borderColor = FCStyle.accent.CGColor;
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{
@@ -786,6 +790,10 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+
+    self.navigationItem.standardAppearance = self.appearance;
+    self.navigationItem.scrollEdgeAppearance = self.appearance;
     _selectedIdx = 0;
     self.enableTabItem = YES;
     self.navigationTabItem.leftTabButtonItems = @[self.featuredTabItem, self.allTabItem];
@@ -808,8 +816,6 @@ UIPopoverPresentationControllerDelegate
 //    [self.view addSubview:self.segmentedControl];
     [self tableView];
     [self queryData];
-//    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:@"changeTab" object:nil];
     
@@ -817,9 +823,6 @@ UIPopoverPresentationControllerDelegate
                                              selector:@selector(userscriptDidAddHandler)
                                                  name:@"app.stay.notification.userscriptDidAddNotification"
                                                object:nil];
-    
-//
-//      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 }
 
@@ -845,27 +848,9 @@ UIPopoverPresentationControllerDelegate
             [self reloadAllTableview];
     });
 }
-                   
-
-//- (void)keyboardWillShow:(NSNotification *)notification{
-//
-// //会有人问为什么是tableview而不是view，因为tableview是最外层，你的textField也是加在tableview上
-//
-//   CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//获取键盘高度
-//   CGFloat keyboardTop = keyboardRect.size.height;//用于跟textField的y比较
-//
-//    self.searchTableView.height = self.searchTableView.height - keyboardTop;
-//}
-//
-//- (void)keyboardWillHide:(NSNotification *)notification{
-//    self.searchTableView.height = self.searchController.view.height;
-//}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-//    self.tableView.frame = self.view.bounds;
-//    self.searchTableView.frame = self.view.bounds;
-//    self.allTableView.frame = self.view.bounds;
     [self reloadAllTableview];
 }
 
@@ -939,7 +924,7 @@ UIPopoverPresentationControllerDelegate
             cell.controller = self;
             cell.navigationController = self.navigationController;
             cell.entity = dic[@"blocks"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
             return cell;
         } else if([dic[@"type"] isEqualToString:@"album"]){
             _FeaturedAlubmTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellALBUM"];
@@ -959,7 +944,9 @@ UIPopoverPresentationControllerDelegate
             cell.headTitle = dic[title];
             cell.selectedUrl = _selectedUrl;
             cell.entity = dic[@"userscripts"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
+
+//            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         } else if([dic[@"type"] isEqualToString:@"promoted"]){
             _FeaturedPromotedTableViewCell *cell = [[_FeaturedPromotedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -968,7 +955,9 @@ UIPopoverPresentationControllerDelegate
             cell.controller = self;
             cell.navigationController = self.navigationController;
             cell.entity = dic[@"blocks"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
+
+//            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }else {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
@@ -976,7 +965,9 @@ UIPopoverPresentationControllerDelegate
                 cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
+
+//            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }
     } else if ([tableView isEqual:self.searchTableView]) {
@@ -990,6 +981,7 @@ UIPopoverPresentationControllerDelegate
         cell.selectedUrl = _selectedUrl;
         cell.navigationController = self.navigationController;
         cell.entity = self.searchDatas[indexPath.row];
+        
         return cell;
     } else  if([tableView isEqual:self.allTableView]){
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
@@ -1000,9 +992,9 @@ UIPopoverPresentationControllerDelegate
 
         cell.contentView.width = self.view.width;
         cell.controller = self;
-        cell.selectedUrl = _selectedUrl;
         cell.navigationController = self.navigationController;
         cell.entity = self.allDatas[indexPath.row];
+        cell.contentView.backgroundColor = [UIColor clearColor];
         return cell;
     } else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
@@ -1049,11 +1041,6 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     [[ScriptMananger shareManager] refreshData];
     [self reloadAllTableview];
 }
@@ -1300,44 +1287,6 @@ UIPopoverPresentationControllerDelegate
             [self reloadAllTableview];
         });
     });
-    
-//    self.loadingSlideController.originSubText = name;
-//    [self.loadingSlideController show];
-//    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-//     [set addCharactersInString:@"#"];
-//    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-//        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-//        dispatch_async(dispatch_get_main_queue(),^{
-//            if(data != nil ) {
-//
-//                if (self.loadingSlideController.isShown){
-//                    [self.loadingSlideController dismiss];
-//                    self.loadingSlideController = nil;
-//                }
-//                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//                SYEditViewController *cer = [[SYEditViewController alloc] init];
-//                cer.content = str;
-//                cer.downloadUrl = downloadUrl;
-//                cer.platforms = platforms;
-//#ifdef FC_MAC
-//                [[QuickAccess secondaryController] pushViewController:cer];
-//#else
-//                [self.navigationController pushViewController:cer animated:true];
-//#endif
-//
-//            }
-//            else{
-//                [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
-//                dispatch_get_main_queue(), ^{
-//                    if (self.loadingSlideController.isShown){
-//                        [self.loadingSlideController dismiss];
-//                        self.loadingSlideController = nil;
-//                    }
-//                });
-//            }
-//        });
-//    });
 }
 
 - (void)queryDetail:(id)sender {
@@ -1370,7 +1319,9 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGPoint offset = scrollView.contentOffset;
+
+
+     CGPoint offset = scrollView.contentOffset;
      CGRect bounds = scrollView.bounds;
      CGSize size = scrollView.contentSize;
      UIEdgeInsets inset = scrollView.contentInset;
@@ -1474,7 +1425,7 @@ UIPopoverPresentationControllerDelegate
 
 - (UITableView *)allTableView {
     if (_allTableView == nil) {
-        _allTableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _allTableView = [[UITableView alloc] init];
         _allTableView.delegate = self;
         _allTableView.dataSource = self;
         _allTableView.separatorStyle = UITableViewCellSeparatorStyleNone;

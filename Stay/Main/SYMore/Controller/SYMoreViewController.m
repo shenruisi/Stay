@@ -23,6 +23,7 @@
 #import "SYConcurrencyViewController.h"
 #import "SYFlashViewController.h"
 #import "SharedStorageManager.h"
+#import "FCTableViewCell.h"
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
@@ -552,7 +553,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.tableView.frame = self.view.bounds;
+//        self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
     });
 }
@@ -560,6 +561,8 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.leftTitle = NSLocalizedString(@"settings.more","more");
+    
     self.view.backgroundColor = FCStyle.background;
     [self tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -575,8 +578,6 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                object:nil];
     
     self.tableView.sectionHeaderTopPadding = 0;
-    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-
 }
 
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
@@ -598,7 +599,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
+//    self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
 }
 
@@ -942,8 +943,17 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
+        
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
     }
     
     return _tableView;

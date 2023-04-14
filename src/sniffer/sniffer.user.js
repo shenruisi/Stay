@@ -58,6 +58,8 @@ const browser = __b;
     let playerBase = '';
     let ytBaseJSUuid = '';
     let ytRandomBaseJs = '';
+    let ytPublicParam = {};//cpn,cver,ptk,oid,ptchn,pltype
+    let ytParam_N_Obj = {};
     // console.log('------------injectParseVideoJS-----start------------------',decodeSignatureCipher)
     let videoList = [];
     // key:videoUuid,
@@ -72,7 +74,27 @@ const browser = __b;
 
     const Utils = {
       compare: function(key){
-        return (cur, next)=>{return cur[key]-next[key]};
+        return (cur, next)=>{
+          let curValue = cur[key];
+          let nextValue = next[key];
+          if(typeof curValue != 'number'){
+            curValue = curValue.replace(/[^0-9]/g,'');
+            if(!curValue){
+              curValue = 0;
+            }else{
+              curValue = Number(curValue);
+            }
+          }
+          if(typeof nextValue != 'number'){
+            nextValue = nextValue.replace(/[^0-9]/g,'');
+            if(!nextValue){
+              nextValue = 0;
+            }else{
+              nextValue = Number(nextValue);
+            }
+          }
+          return nextValue - curValue;
+        };
       },
       isMobileOrIpad: function(){
         const userAgentInfo = navigator.userAgent;
@@ -85,6 +107,18 @@ const browser = __b;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
         return getArr.length ? true : false;
+      },
+      /*
+      * 替换URL的参数值
+      * url 目标url
+      * arg 需要替换的参数名称(区分大小写)
+      * arg_val 替换后的参数的值
+      * return url 参数替换后的url
+      */
+      replaceUrlArg: function (url, arg, argVal){
+        const urlObj = new URL(url);
+        urlObj.searchParams.set(arg, argVal)
+        return urlObj.href
       },
       queryURLParams: function(url, name) {
         const pattern = new RegExp('[?&#]+' + name + '=([^?&#]+)');
@@ -1029,7 +1063,7 @@ const browser = __b;
       if(videoInfo.videoKey && !videoInfo.videoUuid){
         videoInfo.videoUuid = videoInfo.videoKey;
       }
-
+      videoInfo.title = videoInfo.title?videoInfo.title.replace(/\//g, '|'):'';
       const qualityList = videoInfo.qualityList;
       // videoInfo.qualityList是否需要解密，如需解密记录下来, 等handleDecodeSignatureAndPush来解密
       if(videoInfo.shouldDecode){
@@ -1088,6 +1122,18 @@ const browser = __b;
         return false;
       }
       return true;
+    }
+
+    function checkDecodeWithSpeedFunIsValid(){
+      let isValid = checkDecodeFunIsValid();
+      if(isValid){
+        if(!decodeSignatureCipher.decodeSpeedFunStr){
+          isValid = false;
+        }else{
+          isValid = true;
+        }
+      }
+      return isValid;
     }
 
     /**
@@ -1927,7 +1973,107 @@ const browser = __b;
       // console.log('decodeYoutubeSourceUrl------------sourceUrl=',sourceUrl, signature);
       signature = decodeSignatureCipherFun()(decodeURIComponent(signature));
       sourceUrl = `${decodeURIComponent(sourceUrl)}&sig=${signature}`;
+      sourceUrl = decodeYoutubeSpeedFun(sourceUrl);
       return sourceUrl;
+    }
+
+    function decodeYoutubeSpeedFun(sourceUrl){
+      if(!checkDecodeWithSpeedFunIsValid()){
+        console.log('decodeYoutubeSpeedFun------checkDecodeWithSpeedFunIsValid is false', sourceUrl)
+        return sourceUrl;
+      }
+
+      if(Utils.queryURLParams(sourceUrl, 'oid')){
+        return sourceUrl;
+      }
+
+      // if(Object.keys(ytPublicParam).length<6){
+      //   return sourceUrl
+      // }
+      let paramStr = '';
+      let paramCount = 0;
+      for (let name in ytPublicParam) {
+        if (ytPublicParam[name] && typeof ytPublicParam[name] != 'undefined') {
+          paramCount = paramCount + 1;
+          paramStr += '&' + name + '=' + ytPublicParam[name];
+        }
+      }
+      // console.log('decodeYoutubeSpeedFun----paramStr------',paramStr)
+      // if(paramCount<6){
+      //   console.log('decodeYoutubeSpeedFun---paramCount<6---', ytPublicParam);
+      //   return sourceUrl;
+      // }
+
+      let n = Utils.queryURLParams(sourceUrl, 'n');
+      if(!n){
+        console.log('decodeYoutubeSpeedFun---n-is-null---',n);
+        return sourceUrl;
+      }
+      if(!ytParam_N_Obj[n]){
+        ytParam_N_Obj[n] = getYoutubeNParam(n);
+      }
+
+      if(!ytParam_N_Obj[n]){
+        console.log('decodeYoutubeSpeedFun---ytParam_N_Obj[n]-is-null---',n);
+        return sourceUrl
+      }
+      
+      sourceUrl = Utils.replaceUrlArg(sourceUrl, 'n', ytParam_N_Obj[n]);
+
+      sourceUrl = sourceUrl + paramStr;
+      // console.log('decodeYoutubeSpeedFun---sourceUrl----',sourceUrl);
+      return sourceUrl;
+    }
+
+    function getYoutubeNParam(n){
+      try {
+        let decodeSpeedFunStr = decodeSignatureCipher.decodeSpeedFunStr;
+        const decodeSpeedFun = new Function('return '+decodeSpeedFunStr); 
+        return decodeSpeedFun()(decodeURIComponent(n));
+      } catch (error) {
+        return '';
+      }
+    }
+
+    /**
+     * 获取 sourceUrl 公共参数
+     * cpn,cver,ptk,oid,ptchn,pltype
+     * @param {*} sourceUrl video标签下src的url
+     * return cpn=b_JppE6c7Cd9y2Z9&cver=2.20230331.01.00&ptk=youtube_single&oid=grYThWmtgGXLlb99XVUPQQ&ptchn=aO6TYtlC8U5ttz62hTrZgg&pltype=content
+     */
+    function setYoutubePublicParam(sourceUrl, playerRes){
+      if(sourceUrl){
+        ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : Utils.queryURLParams(sourceUrl, 'cver');
+        setYtParmeObj(sourceUrl)
+      }
+      if(playerRes && Object.keys(playerRes).length){
+        // https://m.youtube.com/ptracking?ei=EJotZK4dw-CwApmmldgO&oid=noTyR-gah-30KqQfy7jXjw&plid=AAX4mNQPIivbGnid&pltype=content&ptchn=hB3UnDddahXU7FKZXmpzMA&ptk=youtube_single&video_id=EQOarcurXfY
+        // window.ytplayer.bootstrapPlayerResponse.playbackTracking.ptrackingUrl.baseUrl
+        // window.ytplayer.bootstrapPlayerResponse.responseContext.serviceTrackingParams[1].params[2].cver
+        if(playerRes.playbackTracking && playerRes.playbackTracking.ptrackingUrl && playerRes.playbackTracking.ptrackingUrl.baseUrl){
+          setYtParmeObj(playerRes.playbackTracking.ptrackingUrl.baseUrl);
+        }
+        if(playerRes.responseContext && playerRes.responseContext.serviceTrackingParams && playerRes.responseContext.serviceTrackingParams.length){
+          playerRes.responseContext.serviceTrackingParams.forEach(item=>{
+            if('CSI' == item.service && item.params.length){
+              item.params.forEach(param => {
+                if('cver' == param.key){
+                  ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : param.value;
+                }
+              })
+            }
+          })
+        }
+      }
+      // console.log('ytPublicParam-------',ytPublicParam)
+    }
+
+    function setYtParmeObj(sourceUrl){
+      ytPublicParam.cpn = ytPublicParam.cpn?ytPublicParam.cpn:Utils.queryURLParams(sourceUrl, 'cpn');
+      ytPublicParam.ptk = ytPublicParam.ptk?ytPublicParam.ptk:Utils.queryURLParams(sourceUrl, 'ptk');
+      ytPublicParam.oid = ytPublicParam.oid?ytPublicParam.oid:Utils.queryURLParams(sourceUrl, 'oid');
+      ytPublicParam.ptchn = ytPublicParam.ptchn?ytPublicParam.ptchn:Utils.queryURLParams(sourceUrl, 'ptchn');
+      ytPublicParam.pltype = ytPublicParam.pltype?ytPublicParam.pltype:Utils.queryURLParams(sourceUrl, 'pltype');
     }
 
     function getYoutubeVideoUrlOrSignture(signatureCipher){
@@ -1940,7 +2086,8 @@ const browser = __b;
     
     function getYoutubeAudioUrlOrSignture(audioArr){
       if(audioArr && audioArr.length){
-        let audioItem= audioArr.sort(Utils.compare('bitrate')).pop();
+        audioArr.sort(Utils.compare('bitrate'));
+        let audioItem= audioArr[0];
         if(audioItem.url){
           return audioItem.url;
         }else{
@@ -1981,6 +2128,7 @@ const browser = __b;
       }
       // console.log('handleVideoInfoParse---host---', host);
       if(host.indexOf('youtube.com')>-1){
+        setYoutubePublicParam(downloadUrl, '');
         let playerDom = document.querySelector('#player-control-overlay .player-controls-background-container .player-controls-background');
         if(!playerDom){
           playerDom = document.querySelector('#player-control-overlay');
@@ -2713,9 +2861,9 @@ const browser = __b;
           videoId = Utils.queryParams(hrefLink, 'v');
         }
       }
-      
+
       // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
-      
+      const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
       if(!videoId){
         return videoInfo;
       }
@@ -2731,12 +2879,8 @@ const browser = __b;
         }
       }
       
-      const playerResp = ytplayer?ytplayer.bootstrapPlayerResponse : {};
-      // console.log('playerResp-------', playerResp);
       if(playerResp && playerResp.videoDetails && playerResp.streamingData && (!videoId || videoId === playerResp.videoDetails.videoId)){
-        // console.log('hello- - - - - - -   playerResp   ----');
-        // console.log('decodeSignatureCipher========',decodeSignatureCipher);
-
+        setYoutubePublicParam('', playerResp);
         const videoDetails = playerResp.videoDetails;
         let detailTitle = videoDetails.title?videoDetails.title:'';
         videoInfo['title'] = detailTitle;
@@ -2754,103 +2898,100 @@ const browser = __b;
           // console.log('playerResp.microformat.playerMicroformatRenderer-----',playerResp.microformat.playerMicroformatRenderer);
           videoInfo['poster'] = playerResp.microformat.playerMicroformatRenderer.thumbnail.thumbnails[0].url;
         }
-       
-        // console.log('playerResp-------videoDetails-------------', videoDetails);
         const streamingData = playerResp.streamingData;
         const adaptiveFormats = streamingData.adaptiveFormats;
         const formats = streamingData.formats;
         title = title ? title : '';
         // 取画质的时候防止原视频有广告
         if(adaptiveFormats && adaptiveFormats.length && (!title || title.replace(/\s+/g,'') === detailTitle.replace(/\s+/g,''))){
-          // console.log('playerResp-------adaptiveFormats------------------', title,  videoDetails.title, formats);
-          // * qualityList[{downloadUrl, qualityLabel, quality}]
-
           let qualityList = []
           let qualitySet = new Set();
           let jsPath = ytplayer.bootstrapWebPlayerContextConfig?ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
-          handleYTRandomPathUuid(jsPath);
-
-          // 获取mp4音频
-          let mp4AudioArr = adaptiveFormats.filter(item=>{
-            if(item.mimeType.indexOf('audio/mp4')>-1){
-              return item;
+          handleYTRandomPathUuidToDefinedObj(jsPath);
+          // key为分辨率quality,value为分辨率数组
+          let qualityVideoListMap = {};
+          let mp4AudioArr = [];
+          let webmAudioArr = [];
+          adaptiveFormats.forEach(item => {
+            let mimeType = item.mimeType;
+            if(mimeType.indexOf('video')>-1){
+              let quality = item.height;
+              if(Object.prototype.hasOwnProperty.call(qualityVideoListMap, quality)){
+                qualityVideoListMap[quality].push(item);
+              }else{
+                qualityVideoListMap[quality] = [item];
+              }
+            }else if(mimeType.indexOf('audio/mp4')>-1){
+              mp4AudioArr.push(item);
+            }else if(mimeType.indexOf('audio/webm')>-1){
+              webmAudioArr.push(item);
             }
           })
-          let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
-          // 获取mp4格式
-          adaptiveFormats.forEach(item=>{
-            let mimeType = item.mimeType;
-            let qualityLabel = item.qualityLabel;
-            qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
-            if(mimeType.indexOf('video/mp4')>-1 && item.url && !qualitySet.has(item.quality)){
-              qualitySet.add(item.quality)
-              let audioUrl = '';
-              if(!mimeType.match(/.*codecs=.*webm.*/g)){
-                audioUrl = mp4AudioUrl;
-              }
-              if(!Utils.isURL(audioUrl)){
-                videoInfo.shouldDecode = true;
-              }
-              qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl})
-            }
-            // 解密
-            if(mimeType.indexOf('video/mp4')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-              let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
-              let audioUrl = '';
-              let protect=true;
-              // 没有匹配到带音频的视频，需要加上audioUrl
-              if(!mimeType.match(/.*codecs=.*mp4.*/g)){
-                audioUrl = mp4AudioUrl;
-              }
-              if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
-                videoInfo.shouldDecode = true;
-              }
-              // console.log('video/mp4---------------videoUrl=',videoUrl,',audioUrl=',audioUrl);
-              qualitySet.add(item.quality);
-              qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
-            }
-          });
+
           // 获取webm格式
-          let webmAudioArr = adaptiveFormats.filter(item=>{
-            if(item.mimeType.indexOf('audio/webm')>-1){
-              return item;
+          let webmAudioUrl = getYoutubeAudioUrlOrSignture(webmAudioArr);
+          
+          // 获取mp4音频
+          let mp4AudioUrl = getYoutubeAudioUrlOrSignture(mp4AudioArr);
+
+          Object.keys(qualityVideoListMap).map(key => {
+            let qualityVideoArr = qualityVideoListMap[key];
+            let qualityMp4VideoArr = qualityVideoArr.filter(item => {
+              let mimeType = item.mimeType;
+              if(mimeType.indexOf('video/mp4')>-1){
+                return item;
+              }
+            });
+            let qualityWebmVideoArr = qualityVideoArr.filter(item => {
+              let mimeType = item.mimeType;
+              if(mimeType.indexOf('video/webm')>-1){
+                return item;
+              }
+            });
+            let qualityVideoTempArr = [];
+            let qualityVideoItem = {};
+            // 大于1080的视频以webm优先
+            if(Number(key)>=1080){
+              if(qualityWebmVideoArr.length){
+                qualityVideoTempArr = qualityWebmVideoArr;
+              }else{
+                qualityVideoTempArr = qualityMp4VideoArr;
+              }
+            }
+            // 小于1080的视频以mp4优先
+            else{
+              if(qualityMp4VideoArr.length){
+                qualityVideoTempArr = qualityMp4VideoArr;
+              }else{
+                qualityVideoTempArr = qualityWebmVideoArr;
+              }
+            }
+            // console.log('qualityVideoTempArr--------',qualityVideoTempArr);
+            qualityVideoTempArr.sort(Utils.compare('fps'));
+            if(qualityVideoTempArr.length>1){
+              let qualityVideoItem0 = qualityVideoTempArr[0];
+              let qualityVideoItem1 = qualityVideoTempArr[1];
+              if(qualityVideoItem0.fps == qualityVideoItem1.fps){
+                if(qualityVideoItem1.qualityLabel.toLowerCase().indexOf('hdr')>-1){
+                  qualityVideoItem = qualityVideoItem1;
+                }else{
+                  qualityVideoItem = qualityVideoItem0;
+                }
+              }else{
+                qualityVideoItem = qualityVideoItem0;
+              }
+            }else{
+              qualityVideoItem = qualityVideoTempArr[0];
+            }
+            
+            let qualityItem = handleParseYtQualityInfo(qualityVideoItem, webmAudioUrl, mp4AudioUrl);
+            if(qualityItem && Object.keys(qualityItem).length){
+              if((qualityItem.audioUrl && !Utils.isURL(qualityItem.audioUrl)) || (qualityItem.videoUrl && !Utils.isURL(qualityItem.videoUrl))){
+                videoInfo.shouldDecode = true;
+              }
+              qualityList.push(qualityItem);
             }
           })
-          let webmAudioUrl = getYoutubeAudioUrlOrSignture(webmAudioArr);
-          adaptiveFormats.forEach(item=>{
-            let mimeType = item.mimeType;
-            let qualityLabel = item.qualityLabel;
-            qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]*$/, 'P') : '';
-            if(mimeType.indexOf('video/webm')>-1 && item.url && !qualitySet.has(item.quality)){
-              qualitySet.add(item.quality)
-              let audioUrl = '';
-              if(!mimeType.match(/.*codecs=.*webm.*/g)){
-                audioUrl = webmAudioUrl;
-              }
-              if(audioUrl && !Utils.isURL(audioUrl)){
-                videoInfo.shouldDecode = true;
-              }
-              
-              qualityList.push({downloadUrl:item.url, qualityLabel:qualityLabel, quality: item.quality, audioUrl})
-
-            }
-            // 解密
-            if(mimeType.indexOf('video/webm')>-1 && item.signatureCipher && !qualitySet.has(item.quality)){
-              let videoUrl = getYoutubeVideoUrlOrSignture(item.signatureCipher);
-              let audioUrl = '';
-              let protect=true;
-              // 没有匹配到带音频的视频，需要加上audioUrl
-              if(!mimeType.match(/.*codecs=.*webm.*/g)){
-                audioUrl = webmAudioUrl;
-              }
-              if((audioUrl && !Utils.isURL(audioUrl)) || (videoUrl && !Utils.isURL(videoUrl))){
-                videoInfo.shouldDecode = true;
-              }
-              // console.log('video/webm----------videoUrl=',videoUrl,',audioUrl=',audioUrl);
-              qualitySet.add(item.quality);
-              qualityList.push({downloadUrl:videoUrl, qualityLabel:qualityLabel, quality: item.quality, protect, audioUrl})
-            }
-          });
           // console.log('qualityList===================',qualityList, videoInfo);
           if(qualityList && qualityList.length){
             if(!videoInfo['downloadUrl'] || videoInfo['downloadUrl'].startsWith('blob')){
@@ -2860,6 +3001,7 @@ const browser = __b;
             }else{
               qualityList = matchDefaultUrlInQualityList(qualityList, videoInfo['downloadUrl']);
             }
+            qualityList.sort(Utils.compare('qualityLabel'));
             videoInfo['qualityList'] = qualityList;
           }
           if(!videoInfo['downloadUrl']){
@@ -2900,6 +3042,44 @@ const browser = __b;
       return videoInfo;
     }
 
+    /**
+     * 解析分辨率中视频信息
+     * @param {Object} qualityVideoItem  原数据中的分辨率信息
+     */
+    function handleParseYtQualityInfo(qualityVideoItem, webmAudioUrl, mp4AudioUrl){
+      // console.log('handleParseYtQualityInfo---------',qualityVideoItem);
+      let mimeType = qualityVideoItem.mimeType;
+      let qualityLabel = qualityVideoItem.qualityLabel;
+      qualityLabel = qualityLabel ? qualityLabel.replace(/p[\d]{2}/, 'P') : '';
+      let height = qualityVideoItem.height;
+      if(height<1080){
+        qualityLabel = qualityLabel ? qualityLabel.replace(/[\s]?HDR|hdr/, '') : '';
+      }
+      if(qualityVideoItem.url){
+        let audioUrl = '';
+        if(!mimeType.match(/.*codecs=.*webm.*/g)){
+          audioUrl = webmAudioUrl;
+        }
+        if(!mimeType.match(/.*codecs=.*mp4.*/g)){
+          audioUrl = mp4AudioUrl;
+        }
+        let sourceUrl = decodeYoutubeSpeedFun(qualityVideoItem.url);
+        return {downloadUrl:sourceUrl, qualityLabel, quality: qualityVideoItem.quality, audioUrl}
+      }else{
+        let videoUrl = getYoutubeVideoUrlOrSignture(qualityVideoItem.signatureCipher);
+        let audioUrl = '';
+        let protect=true;
+        // 没有匹配到带音频的视频，需要加上audioUrl
+        if(!mimeType.match(/.*codecs=.*webm.*/g)){
+          audioUrl = webmAudioUrl;
+        }
+        if(!mimeType.match(/.*codecs=.*mp4.*/g)){
+          audioUrl = mp4AudioUrl;
+        }
+        return {downloadUrl:videoUrl, qualityLabel, quality: qualityVideoItem.quality, protect, audioUrl}
+      }
+    }
+
     function matchDefaultUrlInQualityList(qualityList, downloadUrl){
       let itag = Utils.queryURLParams(downloadUrl, 'itag');
       // console.log('itag------',itag);
@@ -2915,7 +3095,7 @@ const browser = __b;
       }
       
       qualityList.forEach(item=>{
-        if(item.qualityLabel && item.qualityLabel.toLowerCase() == qualityLabel.toLowerCase()){
+        if(item.qualityLabel && item.qualityLabel.toLowerCase().indexOf(qualityLabel.toLowerCase())>-1){
           // console.log('match----qualityLabel------',qualityLabel);
           item.downloadUrl = downloadUrl;
           item.audioUrl = '';
@@ -2988,17 +3168,11 @@ const browser = __b;
       return resolutions[itag];
     }
 
-    function handleYTRandomPathUuid(jsPath){
+    function handleYTRandomPathUuidToDefinedObj(jsPath){
       try {
         if(jsPath){
-          let tempRandomCode = ''
           ytRandomBaseJs = jsPath;
-          let pathArr = jsPath.split('/');
-          if(jsPath.startsWith('/')){
-            tempRandomCode = pathArr[3]
-          }else{
-            tempRandomCode = pathArr[2]
-          }
+          let tempRandomCode = parseBaseJsPath(jsPath);
           if(tempRandomCode){
             definedObj.randomPathUuid = tempRandomCode;
           }
@@ -3006,6 +3180,20 @@ const browser = __b;
       } catch (error) {
         
       }
+    }
+
+    function parseBaseJsPath(jsPath){
+      if(!jsPath){
+        return '';
+      }
+      let tempRandomCode = '';
+      let pathArr = jsPath.split('/');
+      if(jsPath.startsWith('/')){
+        tempRandomCode = pathArr[3]
+      }else{
+        tempRandomCode = pathArr[2]
+      }
+      return tempRandomCode;
     }
 
     function checkAdForYoutube(downloadUrl){
@@ -3079,22 +3267,23 @@ const browser = __b;
      * @returns 
      */
     function fetchYoutubeDecodeFun(pathUuid, pathUrl){
-      console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+      // console.log('fetchYoutubeDecodeFun-----pathUuid=',pathUuid, ',pathUrl=',pathUrl);
+      pathUrl = window.location.href;
       return new Promise((resolve, reject) => {
         if(isContent){
           // console.log('fetchYoutubeDecodeFun-----true');
           browser.runtime.sendMessage({from: 'sniffer', operate: 'fetchYoutubeDecodeFun', pathUuid: pathUuid, pathUrl}, (response) => {
-            console.log('fetchYoutubeDecodeFun---------',response)
-            let decodeFun = response&&response.decodeFun?response.decodeFun:'';
-            resolve(decodeFun);
+            // console.log('fetchYoutubeDecodeFun-----true----',response)
+            let decodeFunObj = response&&response.decodeFunObj?response.decodeFunObj:{};
+            resolve(decodeFunObj);
           });
         }else{
           // console.log('fetchYoutubeDecodeFun-----false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_YOUTUBE_DECODE_FUN_RESP') return;
-            console.log('fetchYoutubeDecodeFun---------',e.data.decodeFun)
-            resolve(e.data.decodeFun);
+            // console.log('fetchYoutubeDecodeFun-----false----',e.data)
+            resolve(e.data.decodeFunObj);
             window.removeEventListener('message', callback);
           };
           window.postMessage({ id: pid, pid: pid, name: 'GET_YOUTUBE_DECODE_FUN', pathUuid, pathUrl });
@@ -3109,11 +3298,11 @@ const browser = __b;
      * @param {String} pathUrl    base.js的路径/s/player/7862ca1f/player_ias.vflset/zh_CN/base.js
      * @returns 
      */
-    function saveYoutubeDecodeFun(pathUuid, randomFunStr){
+    function saveYoutubeDecodeFun(pathUuid, randomFunStr, randomSpeedFunStr){
       console.log('saveYoutubeDecodeFun-----pathUuid=',pathUuid, ',randomFunStr=',randomFunStr);
       if(isContent){
-        console.log('fetchYoutubeDecodeFun-----true');
-        browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid: pathUuid, randomFunStr}, (response) => {
+        console.log('saveYoutubeDecodeFun-----true');
+        browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid: pathUuid, randomFunStr, randomSpeedFunStr}, (response) => {
           console.log('saveYoutubeDecodeFun---------',response)
         });
       }else{
@@ -3124,7 +3313,7 @@ const browser = __b;
           console.log('saveYoutubeDecodeFun---------',e.data.decodeFun)
           window.removeEventListener('message', callback);
         };
-        window.postMessage({ id: pid, pid: pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR', pathUuid, randomFunStr });
+        window.postMessage({ id: pid, pid: pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR', pathUuid, randomFunStr, randomSpeedFunStr});
         window.addEventListener('message', callback);
       }
       
@@ -3136,48 +3325,62 @@ const browser = __b;
         // console.log('startFetchYoutubeFunStr-------is not youtube-------------');
         return;
       }
-      let decodeStr = window.localStorage.getItem('__stay_decode_str');
-      if(decodeStr){
-        decodeSignatureCipher = JSON.parse(decodeStr);
-        if(decodeSignatureCipher.decodeFunStr){
-          handleDecodeSignatureAndPush();
+      queryYoutubePlayerPath((pathUuid, jsPath)=>{
+        let decodeObjStr = window.localStorage.getItem('__stay_decode_str');
+        if(decodeObjStr){
+          console.log('startFetchYoutubeFunStr------',pathUuid, jsPath, decodeObjStr);
+          decodeSignatureCipher = JSON.parse(decodeObjStr);
+          // pathUuid与本地匹配
+          if(decodeSignatureCipher.pathUuid && decodeSignatureCipher.pathUuid == pathUuid){
+            if(decodeSignatureCipher.decodeFunStr){
+              handleDecodeSignatureAndPush();
+              // 异步请求一次服务端的code, 获取服务端最新配置
+              handleFetchYoutubePlayer(pathUuid, jsPath, false);
+            }else{
+              handleFetchYoutubePlayer(pathUuid, jsPath, true)
+            }
+          }else{
+            // 本地不匹配器
+            handleFetchYoutubePlayer(pathUuid, jsPath, true)
+          }
         }else{
-          queryYoutubePlayer();
+          handleFetchYoutubePlayer(pathUuid, jsPath, true)
         }
-      }else{
-        queryYoutubePlayer();
-      }
+      })
     }
 
-    function queryYoutubePlayer(){
-      for(let i=1; i<10; i++){
-        let timer
-        (function(i){
-          timer = setTimeout(()=>{
-            playerBase = document.querySelector('#player-base');
-            // console.log('queryYoutubePlayer------i-----',i, new Date().getTime());
-            if(playerBase && playerBase.getAttribute('src')){
-              // console.log('queryYoutubePlayer---iiiiiii---break-----');
-              let jsPath = playerBase.getAttribute('src');
-              let pathUuid = jsPath;
-              let pathArr = jsPath.split('/');
-              if(jsPath.startsWith('/')){
-                pathUuid = pathArr[3]
-              }else{
-                pathUuid = pathArr[2]
+    function queryYoutubePlayerPath(callback){
+      if(window.ytplayer){
+        ytRandomBaseJs = window.ytplayer.bootstrapWebPlayerContextConfig?window.ytplayer.bootstrapWebPlayerContextConfig.jsUrl:'';
+      }
+      if(ytRandomBaseJs){
+        ytBaseJSUuid = parseBaseJsPath(ytRandomBaseJs);
+        callback(ytBaseJSUuid, ytRandomBaseJs);
+      }else{
+        for(let i=1; i<10; i++){
+          let timer
+          (function(i){
+            timer = setTimeout(()=>{
+              playerBase = document.querySelector('#player-base');
+              // console.log('queryYoutubePlayer------i-----',i, new Date().getTime());
+              if(playerBase && playerBase.getAttribute('src')){
+                // console.log('queryYoutubePlayer---iiiiiii---break-----');
+                ytRandomBaseJs = playerBase.getAttribute('src');
+                ytBaseJSUuid = parseBaseJsPath(ytRandomBaseJs);
+                callback(ytBaseJSUuid, ytRandomBaseJs);
+                // handleFetchYoutubePlayer(pathUuid, jsPath, true)
+                timerArr.forEach(timerItem=>{
+                  // console.log('clearTimer---------timerItem-----',timerItem);
+                  clearTimeout(timerItem);
+                })
               }
-              handleFetchYoutubePlayer(pathUuid, jsPath, true)
-              timerArr.forEach(timerItem=>{
-                // console.log('clearTimer---------timerItem-----',timerItem);
-                clearTimeout(timerItem);
-              })
-            }
-          },i*200);
-        })(i)
-        if(playerBase && playerBase.getAttribute('src')){
-          break;
+            },i*200);
+          })(i)
+          if(playerBase && playerBase.getAttribute('src')){
+            break;
+          }
+          timerArr.push(timer);
         }
-        timerArr.push(timer);
       }
     }
 
@@ -3188,28 +3391,37 @@ const browser = __b;
      * @param {boolean} shouldDecode   是否需要执行解密方法
      */
     async function handleFetchYoutubePlayer(pathUuid, jsPath, shouldDecode){
-      let decodeFunStr = await fetchYoutubeDecodeFun(pathUuid, jsPath);
-      console.log('handleFetchYoutubePlayer------',decodeFunStr)
-      if(decodeFunStr){
-        setLocalYTRandomFunStr(pathUuid, decodeFunStr);
-        if(shouldDecode){
-          handleDecodeSignatureAndPush();
+      let decodeFunObj = await fetchYoutubeDecodeFun(pathUuid, jsPath);
+      console.log('handleFetchYoutubePlayer------',decodeFunObj);
+      if(decodeFunObj && Object.keys(decodeFunObj).length){
+        // 200匹配到方法，可解析，
+        if( decodeFunObj.status && 200 == decodeFunObj.status){
+          setLocalYTRandomFunStr(pathUuid, decodeFunObj.decodeFunStr, decodeFunObj.decodeSpeedFunStr);
+          if(shouldDecode){
+            handleDecodeSignatureAndPush();
+          }
+        }else{
+          // 404未匹配到，需要重新从base中匹配方法
+          fetchCurrentYtRandomStr(pathUuid, jsPath);
         }
       }else{
+        console.log('handleFetchYoutubePlayer---decodeFunObj--null-----')
         fetchCurrentYtRandomStr(pathUuid, jsPath);
-        console.log('fetchYoutubeDecodeFun-----null-----')
+        
       }
     }
     
-    function setLocalYTRandomFunStr(pathUuid, decodeFunStr){
-      decodeSignatureCipher = {pathUuid, decodeFunStr};
+    function setLocalYTRandomFunStr(pathUuid, decodeFunStr, decodeSpeedFunStr){
+      decodeSignatureCipher = {pathUuid, decodeFunStr, decodeSpeedFunStr};
       definedObj.decodeFunStr = decodeFunStr;
+      definedObj.decodeSpeedFunStr = decodeSpeedFunStr;
       window.localStorage.setItem('__stay_decode_str', JSON.stringify(decodeSignatureCipher));
     }
 
     async function fetchCurrentYtRandomStr(pathUuid, jsPath){
       if(!jsPath || !pathUuid){
-        setLocalYTRandomFunStr(pathUuid, '');
+        setLocalYTRandomFunStr(pathUuid, '', '');
+        console.log('fetchCurrentYtRandomStr--------pathUuid=',pathUuid,',jsPath=',jsPath)
         return;
       }
       function testYtDecodeFun(randomFunStr){
@@ -3220,7 +3432,7 @@ const browser = __b;
           let sourceUrl = 'https://rr5---sn-o097znsk.googlevideo.com/videoplayback%3Fexpire%3D1679042695%26ei%3DJ9QTZJ6FFKeksfIPkaSL-Aw%26ip%3D2602%253Afeda%253A30%253Aae86%253A40e7%253A53ff%253Afe8b%253A9a97%26id%3Do-AI3u_uLu7PqvSwoVFwTG0fSk-puen4XBHxlLqco9MH8Q%26itag%3D135%26aitags%3D133%252C134%252C135%252C160%252C242%252C243%252C244%252C278%26source%3Dyoutube%26requiressl%3Dyes%26mh%3D_m%26mm%3D31%252C26%26mn%3Dsn-o097znsk%252Csn-a5meknzk%26ms%3Dau%252Conr%26mv%3Dm%26mvi%3D5%26pl%3D44%26initcwndbps%3D2135000%26vprv%3D1%26mime%3Dvideo%252Fmp4%26ns%3DwhOrAPi40PxLIKHeHvAaoDIL%26gir%3Dyes%26clen%3D18438908%26dur%3D584.533%26lmt%3D1635010443575003%26mt%3D1679020854%26fvip%3D5%26keepalive%3Dyes%26fexp%3D24007246%26c%3DMWEB%26txp%3D5432434%26n%3D3BrEIxrXFc7SkC%26sparams%3Dexpire%252Cei%252Cip%252Cid%252Caitags%252Csource%252Crequiressl%252Cvprv%252Cmime%252Cns%252Cgir%252Cclen%252Cdur%252Clmt%26lsparams%3Dmh%252Cmm%252Cmn%252Cms%252Cmv%252Cmvi%252Cpl%252Cinitcwndbps%26lsig%3DAG3C_xAwRgIhAKYBlOvRZiHPnnEJJ5foNn7LZU1cgGvfyO3WU9TjETfZAiEA6PvSgRq0gdcsBBTTj0VHXybmMwb-ouW2TVIYGmG_PG0%253D';
           signature = decodeFun()(decodeURIComponent(signature));
           sourceUrl = `${decodeURIComponent(sourceUrl)}&sig=${signature}`;
-          console.log(sourceUrl);
+          // console.log(sourceUrl);
           if(sourceUrl){
             return true;
           }
@@ -3233,49 +3445,64 @@ const browser = __b;
         let jsResponse = await fetch(`https://m.youtube.com${jsPath}`);
         let jsText = await jsResponse.text();
         if(!jsText){
-          setLocalYTRandomFunStr(pathUuid, '');
+          setLocalYTRandomFunStr(pathUuid, '', '');
+          console.log('handleFetchYoutubePlayer------jsText is null')
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        let randomArr = jsText.match(/[a-zA-Z]+\=function\(a\)\{.*return\s+a\.join\(\"\"\)\};/g);
+        let randomArr = jsText.match(/[a-zA-Z0-9]{3}\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
         console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
           randomFunStr = randomArr[0];
-          console.log(randomFunStr);
+          // console.log(randomFunStr);
         }
         if(!randomFunStr){
-          setLocalYTRandomFunStr(pathUuid, '');
+          setLocalYTRandomFunStr(pathUuid, '', '');
+          console.log('handleFetchYoutubePlayer---1---randomFunStr is null')
           return;
         }
         let subRandomStr = '';
         // eslint-disable-next-line no-useless-escape
-        let subRandomArr = jsText.match(/var\s+[a-zA-Z]{2}\=\{[a-zA-Z]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]{2}\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
         if(subRandomArr && subRandomArr.length){
           subRandomStr = subRandomArr[0];
-          console.log(subRandomStr);
+          // console.log(subRandomStr);
         }
         if(!subRandomStr){
-          setLocalYTRandomFunStr(pathUuid, '');
+          setLocalYTRandomFunStr(pathUuid, '', '');
+          console.log('handleFetchYoutubePlayer------subRandomStr is null')
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        randomFunStr = randomFunStr.replace(/[a-zA-Z]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
+        randomFunStr = randomFunStr.replace(/[a-zA-Z0-9]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
         if(!randomFunStr){
-          setLocalYTRandomFunStr(pathUuid, '');
+          setLocalYTRandomFunStr(pathUuid, '', '');
+          console.log('handleFetchYoutubePlayer---2---randomFunStr is null')
           return;
         }
-        console.log('randomFunStr-------',randomFunStr);
-        
-        if(testYtDecodeFun(randomFunStr)){
-          saveYoutubeDecodeFun(pathUuid, randomFunStr)
-        }else{
-          console.log('testYtDecodeFun-------false',randomFunStr);
+        // console.log('randomFunStr-------',randomFunStr);
+        let randomSpeedFunStr = '';
+        // eslint-disable-next-line no-useless-escape
+        let randomSpeedArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{var\sb=a\.split\(\"\"\)[\s\S]*\}return\sb\.join\(\"\"\)\};/g);
+        if(randomSpeedArr && randomSpeedArr.length){
+          randomSpeedFunStr = randomSpeedArr[0];
+          // console.log(randomSpeedFunStr);
         }
-        setLocalYTRandomFunStr(pathUuid, randomFunStr);
+        if(randomSpeedFunStr){
+          // eslint-disable-next-line no-useless-escape
+          randomSpeedFunStr = randomSpeedFunStr.replace(/^[a-zA-Z0-9]+\=function\(a\)\{/g, 'function decodeSpeedFun(a){');
+          // console.log('randomSpeedFunStr------',randomSpeedFunStr);
+        }
+        if(testYtDecodeFun(randomFunStr)){
+          saveYoutubeDecodeFun(pathUuid, randomFunStr, randomSpeedFunStr);
+        }else{
+          console.log('handleFetchYoutubePlayer------testYtDecodeFun-------false',randomFunStr);
+        }
+        setLocalYTRandomFunStr(pathUuid, randomFunStr, randomSpeedFunStr);
       } catch (error) {
         console.error(jsPath,error);
-        setLocalYTRandomFunStr(pathUuid, '');
+        setLocalYTRandomFunStr(pathUuid, '', '');
       }
     }
 
@@ -3293,13 +3520,9 @@ const browser = __b;
     }
     
     function startSnifferVideoInfoOnPage(complate){
-      console.log('startSnifferVideoInfoOnPage------start--321----');
       fetchLongPressConfig();
-      console.log('startSnifferVideoInfoOnPage--------1----');
       startFetchYoutubeFunStr();
-      console.log('startSnifferVideoInfoOnPage--------2----');
       startFindVideoInfo(complate);
-      console.log('startSnifferVideoInfoOnPage--------3----');
     }
 
     startSnifferVideoInfoOnPage(false);
@@ -3321,7 +3544,7 @@ const browser = __b;
       set:function(newValue){
         randomPathUuid = newValue;
         console.log('randomPathUuid---newValue-----',randomPathUuid);
-        //需要触发的渲染函数可以写在这...
+        //监听ytBaseJSUuid如果发生变化，则需要从basejs中重新匹配解密方法
         if(newValue != ytBaseJSUuid){
           console.log('randomPathUuid--!==-newValue-----',randomPathUuid);
           ytBaseJSUuid = newValue
@@ -3439,15 +3662,17 @@ const browser = __b;
       let pathUuid = e.data.pathUuid;
       let pathUrl = e.data.pathUrl;
       browser.runtime.sendMessage({from: 'sniffer', operate: 'fetchYoutubeDecodeFun', pathUrl, pathUuid}, (response) => {
-        let decodeFun = response&&response.decodeFun?response.decodeFun:'';
-        window.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP', decodeFun});
+        // console.log('fetchYoutubeDecodeFun------response----',response);
+        let decodeFunObj = response&&response.decodeFunObj?response.decodeFunObj:{};
+        window.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP', decodeFunObj:decodeFunObj});
       });
     }
     else if(name === 'SAVE_YOUTUBE_DECODE_FUN_STR'){
       let pid = e.data.pid;
       let pathUuid = e.data.pathUuid;
       let randomFunStr = e.data.randomFunStr;
-      browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid, randomFunStr}, (response) => {
+      let randomSpeedFunStr = e.data.randomSpeedFunStr;
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid, randomFunStr, randomSpeedFunStr}, (response) => {
         let decodeFun = '';
         window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
       });
