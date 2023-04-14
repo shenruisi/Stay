@@ -6,10 +6,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "FCTableViewCell.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface BrowseDetailTableViewCell : UITableViewCell
+@interface BrowseDetailTableViewCell<ElementType> : FCTableViewCell<ElementType>
 
 @property (nonatomic, strong) NSDictionary *entity;
 @property (nonatomic, strong) UINavigationController *navigationController;

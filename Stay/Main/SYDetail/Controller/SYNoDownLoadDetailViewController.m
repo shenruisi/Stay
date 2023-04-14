@@ -159,23 +159,11 @@
     if(_saveSuceess) {
         [self.navigationController popViewControllerAnimated:TRUE];
     }
-    
-    UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
-    appperance.backgroundColor = FCStyle.fcWhite;
-    [appperance setShadowColor:FCStyle.fcWhite];
-    self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
-    
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 
@@ -1397,7 +1385,8 @@
     
     if(y >  reload_distance) {
         if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
-             self.rightBarButtonItems = @[[self rightIcon]];
+            self.navigationItem.rightBarButtonItems = @[[self rightIcon]];
+
         }
         else{
              self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -1406,7 +1395,7 @@
         self.navigationItem.titleView.hidden = false;
     } else {
         if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
-            self.rightBarButtonItems = nil;
+            self.navigationItem.rightBarButtonItems  = nil;
         }
         else{
             self.navigationItem.rightBarButtonItem = nil;

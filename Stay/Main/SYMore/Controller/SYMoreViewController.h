@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCRootViewController.h"
 
 extern NSNotificationName const _Nonnull SYMoreViewReloadCellNotification;
 extern NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification;
 
-@interface SYMoreViewController : UIViewController
+@interface SYMoreViewController : FCRootViewController
 
 @end
