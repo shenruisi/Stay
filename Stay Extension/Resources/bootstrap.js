@@ -704,6 +704,15 @@ let injectedContentVendor = new Set();
             message.uuid = __uuid
             browser.runtime.sendMessage(message);
         } 
+        else if(name === 'SAVE_YOUTUBE_DECODE_FUN_STR'){
+            let pid = e.data.pid;
+            let pathUuid = e.data.pathUuid;
+            let randomFunStr = e.data.randomFunStr;
+            browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid, randomFunStr}, (response) => {
+              let decodeFun = '';
+              window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
+            });
+        }
     })
 
     // browser.runtime.sendMessage({from: "sniffer", operate: "GET_STAY_AROUND"}, (response) => {

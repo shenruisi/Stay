@@ -2046,6 +2046,13 @@ const browser = __b;
         }
         videoInfo = handlePornhubVideoInfo(videoSnifferDom);
       }
+      else if(host.indexOf('91porn.com/')>-1){
+        let dom = document.querySelector('#videodetails .video-container');
+        if(dom){
+          longPressDom = dom;
+        }
+        videoInfo = handle91PormVideoInfo(videoSnifferDom);
+      }
       else if(host.indexOf('facebook.com')>-1){
         videoInfo = handleFacebookVideoInfo(videoSnifferDom);
       }// https://www.instagram.com
@@ -2300,6 +2307,20 @@ const browser = __b;
         videoInfo.title = titleDom.getAttribute('title');
       }
       return videoInfo;
+    }
+
+    function handle91PormVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.title = videoDom.getAttribute('title');
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      if(!videoInfo.poster){
+        const posterDom = document.querySelector('#player_one');
+        if(posterDom){
+          videoInfo.poster = posterDom.getAttribute('poster');
+        }
+
+      }
     }
 
     function handlePornhubVideoInfo(videoDom){
