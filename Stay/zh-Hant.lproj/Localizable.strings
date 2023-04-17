@@ -308,3 +308,5 @@ ContentFilterTagAlert="Tag內容攔截未開啟";
 Enable="開啟";
 Save="保存";
 ContentFilterRestore="恢復默認";
+UpgradeMessage="升級到Stay PRO來解鎖%@";
+Dismiss="關閉";

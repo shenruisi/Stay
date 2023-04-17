@@ -14,6 +14,8 @@
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "FCStore.h"
+#import "UpgradeSlideController.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -28,6 +30,7 @@
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *activatedSource;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *stoppedSource;
 @property (nonatomic, strong) NSArray<ContentFilter *> *selectedDataSource;
+@property (nonatomic, strong) UpgradeSlideController *upgradeSlideController;
 @end
 
 @implementation AdBlockViewController
@@ -103,6 +106,14 @@
     [super viewWillAppear:animated];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if (self.upgradeSlideController){
+        [self.upgradeSlideController dismiss];
+    }
+}
+    
+
 - (void)setupDataSource{
     NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
     for (ContentFilter *contentFilter in contentFilters){
@@ -124,6 +135,20 @@
     cell.element = contentFilter;
     cell.action = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
+        if (contentFilter.type == ContentFilterTypeCustom
+            ||contentFilter.type == ContentFilterTypeTag){
+            if ([[FCStore shared] getPlan:NO] == FCPlan.None){
+                if (self.upgradeSlideController){
+                    [self.upgradeSlideController dismiss];
+                }
+                
+                self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
+                [self.upgradeSlideController show];
+                return;
+            }
+        }
+        
+        
         AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
         cer.contentFilter = contentFilter;
         [self.navigationController pushViewController:cer animated:YES];
@@ -237,6 +262,14 @@
     }
     
     return _tableView;
+}
+
+- (UpgradeSlideController *)upgradeSlideController{
+    if (nil == _upgradeSlideController){
+        _upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:@""];
+    }
+    
+    return _upgradeSlideController;
 }
 
 @end
