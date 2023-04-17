@@ -119,9 +119,8 @@ UIDocumentPickerDelegate
 @property (nonatomic, strong) _FileEmptyTipsView *emptyTipsView;
 @property (nonatomic, strong) NSMutableArray *searchData;
 @property (nonatomic, strong) SYDownloadPreviewController *sYDownloadPreviewController;
-@property (nonatomic, strong) UIButton *downloadBtn;
-@property (nonatomic, strong) UIButton *downloadingBtn;
-@property (nonatomic, strong) UIView *slideLine;
+@property (nonatomic, strong) FCTabButtonItem *downloadBtn;
+@property (nonatomic, strong) FCTabButtonItem *downloadingBtn;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, strong) NSMutableArray *videoArray;
 @property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
@@ -131,27 +130,13 @@ UIDocumentPickerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    // Do any additional setup after loading the view.
-    
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
-       // 设置结果更新代理
-//    search.searchResultsUpdater = self;
-    search.searchBar.placeholder = NSLocalizedString(@"SearchVideo", @"");
-    self.navigationItem.searchController = search;
-    self.navigationItem.searchController.delegate = self;
-    self.navigationItem.searchController.searchBar.delegate = self;
-    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
-    self.navigationItem.hidesSearchBarWhenScrolling = false;
-    
-    self.searchController = search;
-    self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar setTintColor:FCStyle.accent];
-    [self.searchController.view addSubview:self.searchTableView];
-    
-    self.tableView.sectionHeaderTopPadding = 0;
-    self.tableView.frame = self.view.bounds;
+    self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+    self.navigationItem.standardAppearance = self.appearance;
+    self.navigationItem.scrollEdgeAppearance = self.appearance;
+    self.enableTabItem = YES;
+    self.navigationTabItem.leftTabButtonItems = @[self.downloadBtn, self.downloadingBtn];
+    self.leftTitle  = NSLocalizedString(@"Downloader","Downloader");
+
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(buildFolder:)
@@ -180,21 +165,8 @@ UIDocumentPickerDelegate
     
     [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
     if(self.videoArray.count > 0) {
-      [self.downloadingBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count] forState:UIControlStateNormal];
-      [self.downloadingBtn sizeToFit];
+      self.downloadingBtn.title  = [NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count];
     }
-
-    UIView *topHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 25)];
-    
-    self.downloadBtn.left = 70;
-    self.downloadingBtn.left = self.downloadBtn.right + 53;
-    self.downloadingBtn.centerY =  self.downloadBtn.centerY;
-    self.slideLine.centerX = self.downloadBtn.centerX;
-    self.slideLine.top = self.downloadBtn.bottom + 5;
-    [topHeaderView addSubview:self.downloadBtn];
-    [topHeaderView addSubview:self.downloadingBtn];
-    [topHeaderView addSubview:self.slideLine];
-    self.navigationItem.titleView = topHeaderView;
     self.selectedIdx = 0;
 }
 
@@ -210,13 +182,8 @@ UIDocumentPickerDelegate
 }
 
 - (void)changeDownloading {
-    self.downloadBtn.selected = false;
-    self.downloadingBtn.selected = true;
     self.selectedIdx = 1;
     dispatch_async(dispatch_get_main_queue(),^{
-        [UIView animateWithDuration:0.25F animations:^{
-            self.slideLine.centerX = self.downloadingBtn.centerX;
-        }];
         [self.videoArray removeAllObjects];
         [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
         [self updateDownloadingText];
@@ -264,6 +231,21 @@ UIDocumentPickerDelegate
     [self.searchTableView reloadData];
 }
 
+#pragma fcnavigator
+
+- (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
+    if (item == self.downloadBtn){
+        self.selectedIdx = 0;
+        [self.tableView reloadData];
+        
+    } else if(item == self.downloadingBtn){
+        self.selectedIdx = 1;
+        [self.videoArray removeAllObjects];
+        [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
+
+        [self.tableView reloadData];
+    }
+}
 
 
 #pragma cellClickEvent
@@ -457,7 +439,7 @@ UIDocumentPickerDelegate
         }
         
         UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
-        headrView.backgroundColor = FCStyle.secondaryBackground;
+//        headrView.backgroundColor = FCStyle.secondaryBackground;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
         label.font = FCStyle.headlineBold;
         label.text = NSLocalizedString(@"Folders", @"");
@@ -495,8 +477,6 @@ UIDocumentPickerDelegate
         }
         
         
-        cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-
         cell.contentView.width = self.view.width;
         cell.downloadResource = self.searchData[indexPath.row];
         cell.controller = self;
@@ -589,6 +569,8 @@ UIDocumentPickerDelegate
             cell.contentView.width = self.view.width;
             cell.downloadResource = resource;
             cell.controller = self;
+            cell.backgroundColor = [UIColor clearColor];
+            
             
             if( cell.downloadResource.status == 0 || cell.downloadResource.status == 4) {
                 FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
@@ -740,10 +722,10 @@ UIDocumentPickerDelegate
         } else {
             if(indexPath.row == 0) {
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
-                UITableViewCell *cell = [[DownloadFileTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID"];
+                UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID1"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-
+                cell.contentView.backgroundColor =  [UIColor clearColor];
+                cell.backgroundColor = [UIColor clearColor];
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 27, 20)];
                 [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
@@ -757,8 +739,10 @@ UIDocumentPickerDelegate
                 }
                 name.font = FCStyle.body;
                 [name sizeToFit];
-    //            name.centerY = imageView.centerY;
                 name.left = imageView.right + 10;
+                
+                cell.contentView.backgroundColor = [UIColor clearColor];
+
                 [cell.contentView addSubview:name];
                 
                 UILabel *subTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
@@ -815,7 +799,6 @@ UIDocumentPickerDelegate
                     [subView removeFromSuperview];
                 }
                 
-                cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             
                 cell.contentView.width = self.view.width;
                 cell.cer = self;
@@ -1031,12 +1014,25 @@ UIDocumentPickerDelegate
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.backgroundColor = [UIColor clearColor];
+        if (@available(iOS 15.0, *)){
+           _tableView.sectionHeaderTopPadding = 0;
+        }
+        _tableView.sectionFooterHeight = 0;
         [self.view addSubview:_tableView];
+                
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
+        
     }
     return _tableView;
 }
@@ -1052,7 +1048,6 @@ UIDocumentPickerDelegate
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.tableView.frame = self.view.bounds;
     [self emptyTipsView];
     self.tabBarController.tabBar.hidden = NO;
 
@@ -1093,47 +1088,12 @@ UIDocumentPickerDelegate
 
 - (void)updateDownloadingText {
     if(self.videoArray.count > 0) {
-      [self.downloadingBtn setTitle:[NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count] forState:UIControlStateNormal];
-      [self.downloadingBtn sizeToFit];
+      self.downloadingBtn.title = [NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Task","Task"),self.videoArray.count];
     } else {
-        [self.downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
-        [self.downloadingBtn sizeToFit];
+        self.downloadingBtn.title =NSLocalizedString(@"Task","Task");
     }
     
-    self.downloadingBtn.left = self.downloadBtn.right + 53;
-    self.downloadingBtn.centerY =  self.downloadBtn.centerY;
     
-    if(_selectedIdx == 1) {
-        self.slideLine.centerX = self.downloadingBtn.centerX;
-    }
-    
-}
-
-- (void)changeDownloadTab:(UIButton *)sender {
-    if ([sender isEqual:self.downloadBtn]) {
-        if(self.selectedIdx == 1) {
-            self.downloadBtn.selected = true;
-            self.downloadingBtn.selected = false;
-            self.selectedIdx = 0;
-            [UIView animateWithDuration:0.25F animations:^{
-                self.slideLine.centerX = self.downloadBtn.centerX;
-            }];
-            [self.tableView reloadData];
-        }
-    } else {
-        if(self.selectedIdx == 0) {
-            self.downloadBtn.selected = false;
-            self.downloadingBtn.selected = true;
-            self.selectedIdx = 1;
-            [UIView animateWithDuration:0.25F animations:^{
-                self.slideLine.centerX = self.downloadingBtn.centerX;
-            }];
-            [self.videoArray removeAllObjects];
-            [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
-
-            [self.tableView reloadData];
-        }
-    }
 }
 
 - (void)changeFileDir:(UIButton *)sender {
@@ -1168,16 +1128,7 @@ UIDocumentPickerDelegate
     
         [self.tableView reloadData];
     
-    
-    CGFloat space = (self.view.width - self.downloadBtn.width - self.downloadingBtn.width - 53 - 50) / 2;
-    self.downloadBtn.left = space;
-    self.downloadingBtn.left = self.downloadBtn.right + 53;
-    self.slideLine.top = self.downloadBtn.bottom + 5;
-    if(_selectedIdx == 0) {
-        self.slideLine.centerX = self.downloadBtn.centerX;
-    } else {
-        self.slideLine.centerX = self.downloadingBtn.centerX;
-    }
+
 }
 
 
@@ -1251,42 +1202,22 @@ UIDocumentPickerDelegate
     return _emptyTipsView;
 }
 
-- (UIButton *)downloadBtn {
+- (FCTabButtonItem *)downloadBtn {
     if(_downloadBtn == nil) {
-        _downloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
-        [_downloadBtn setTitle:NSLocalizedString(@"Downloaded","Downloaded") forState:UIControlStateNormal];
-        [_downloadBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
-        [_downloadBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
-        [_downloadBtn addTarget:self action:@selector(changeDownloadTab:) forControlEvents:UIControlEventTouchUpInside];
-        _downloadBtn.font = FCStyle.body;
-        [_downloadBtn sizeToFit];
-        _downloadBtn.height = 18;
-        _downloadBtn.selected = true;
-        
+        _downloadBtn = [[FCTabButtonItem alloc] init];
+        _downloadBtn.title = NSLocalizedString(@"Downloaded","Downloaded");
     }
     
     return  _downloadBtn;
 }
 
-- (UIButton *)downloadingBtn {
+- (FCTabButtonItem *)downloadingBtn {
     if(_downloadingBtn == nil) {
-        _downloadingBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 18)];
-        [_downloadingBtn setTitle:NSLocalizedString(@"Downloading","Downloading") forState:UIControlStateNormal];
-        [_downloadingBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
-        [_downloadingBtn setTitleColor:FCStyle.accent forState:UIControlStateSelected];
-        [_downloadingBtn addTarget:self action:@selector(changeDownloadTab:) forControlEvents:UIControlEventTouchUpInside];
-        _downloadingBtn.font = FCStyle.body;
+        _downloadingBtn = [[FCTabButtonItem alloc] init];
+        _downloadingBtn.title = NSLocalizedString(@"Task","Task") ;
     }
     
     return  _downloadingBtn;
-}
-
-- (UIView *)slideLine {
-    if (_slideLine == nil) {
-        _slideLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 2)];
-        _slideLine.backgroundColor = FCStyle.accent;
-    }
-    return _slideLine;
 }
 
 

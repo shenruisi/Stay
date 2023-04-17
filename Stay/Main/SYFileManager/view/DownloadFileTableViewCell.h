@@ -7,9 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "FCShared.h"
+#import "FCTableViewCell.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DownloadFileTableViewCell : UITableViewCell
+@interface DownloadFileTableViewCell<ElementType> : FCTableViewCell<ElementType>
 
 @property(nonatomic, strong) FCTab *fctab;
 

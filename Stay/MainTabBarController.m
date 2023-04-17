@@ -99,12 +99,21 @@
         browseNavigationController.viewControllers = @[storeController];
         
         
+        FCNavigationController *downloadNavigationController = [[FCNavigationController alloc]
+                                                               initWithNavigationBarClass:[FCNavigationBar class] toolbarClass:nil];
+        downloadNavigationController.viewControllers = @[syFIleManagerController];
+        
+        FCNavigationController *moreNavigationController = [[FCNavigationController alloc]
+                                                               initWithNavigationBarClass:[FCNavigationBar class] toolbarClass:nil];
+        moreNavigationController.viewControllers = @[syMoreController];
+        
+        
         self.viewControllers = @[
             homeNavigationController,
             browseNavigationController,
             adBlockNavigationController,
-            [[UINavigationController alloc] initWithRootViewController:syFIleManagerController],
-            [[UINavigationController alloc] initWithRootViewController:syMoreController]
+            downloadNavigationController,
+            moreNavigationController
         ];
         
         

@@ -2194,8 +2194,8 @@ const browser = __b;
         }
         videoInfo = handlePornhubVideoInfo(videoSnifferDom);
       }
-      else if(host.indexOf('91porn.com/')>-1){
-        let dom = document.querySelector('#videodetails .video-container');
+      else if(host.indexOf('91porn.com')>-1){
+        const dom = document.querySelector('#videodetails .video-container');
         if(dom){
           longPressDom = dom;
         }
@@ -2469,6 +2469,7 @@ const browser = __b;
         }
 
       }
+      return videoInfo;
     }
 
     function handlePornhubVideoInfo(videoDom){

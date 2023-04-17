@@ -118,7 +118,10 @@
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 67, 25);
-    btn.backgroundColor = FCStyle.background;
+//    btn.backgroundColor = FCStyle.background;
+    btn.layer.cornerRadius = 10;
+    btn.layer.borderWidth = 1;
+    btn.layer.borderColor = FCStyle.accent.CGColor;
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{

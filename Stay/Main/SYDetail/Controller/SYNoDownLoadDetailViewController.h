@@ -8,8 +8,9 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 #import "SYSecondaryViewController.h"
+#import "FCViewController.h"
 
-@interface SYNoDownLoadDetailViewController : SYSecondaryViewController
+@interface SYNoDownLoadDetailViewController : FCViewController
 
 @property (nonatomic, strong) NSDictionary *scriptDic;
 @property (nonatomic, strong) NSString *uuid;
