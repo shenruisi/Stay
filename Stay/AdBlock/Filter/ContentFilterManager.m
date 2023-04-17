@@ -41,6 +41,12 @@ static ContentFilterManager *instance = nil;
     return self;
 }
 
+- (BOOL)existRuleJson:(NSString *)fileName{
+    NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
+    BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    return exist;
+}
+
 - (void)writeToFileName:(NSString *)fileName content:(NSString *)content{
     NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
     NSError *error;

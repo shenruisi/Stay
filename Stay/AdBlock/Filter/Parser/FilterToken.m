@@ -307,10 +307,10 @@
 }
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"%@ %@",[self stringOfType:self.type],self.value];
+    return [NSString stringWithFormat:@"%@ %@",[FilterToken stringOfType:self.type],self.value];
 }
 
-- (NSString *)stringOfType:(FilterTokenType)type{
++ (NSString *)stringOfType:(FilterTokenType)type{
     if (type == FilterTokenTypeEOF) return @"EOF";
     else if (type == FilterTokenTypeUndefined) return @"Undfined";
     else if (type == FilterTokenTypeComment) return @"Comment";

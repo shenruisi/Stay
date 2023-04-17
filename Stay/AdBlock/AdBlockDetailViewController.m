@@ -97,6 +97,7 @@
 
 - (void)moreAction:(id)sender{
     self.editSlideController = [[ContentFilterEditSlideController alloc] initWithContentFilter:self.contentFilter];
+    self.editSlideController.baseCer = self;
     [self.editSlideController show];
 }
 

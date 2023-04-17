@@ -15,23 +15,31 @@
 #import "TiggerBlockerAST.h"
 #import "OptionsBlockerAST.h"
 #import "SelectorBlockerAST.h"
+#import "SpecialCommentBlockerAST.h"
 
 @implementation ContentFilterBlocker
 
-+ (NSMutableDictionary *)rule:(NSString *)rule{
++ (NSMutableDictionary *)rule:(NSString *)rule isSpecialComment:(BOOL *)isSpecialComment{
     FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:rule];
     
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"trigger"];
     [dictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"action"];
     dictionary[@"action"][@"type"] = @"block";
-    
+    *isSpecialComment = NO;
     do{
         BlockerAST *ast;
         [parser nextToken];
         
         if ([parser isInfo] || [parser isComment] ){
-            return nil;
+            if ([parser isSepcialComment]){
+                *isSpecialComment = YES;
+                ast = [[SpecialCommentBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+                return dictionary;
+            }
+            else{
+                return nil;
+            }
         }
         
         if ([parser isException]){

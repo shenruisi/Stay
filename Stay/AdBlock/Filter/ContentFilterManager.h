@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)writeToFileName:(NSString *)fileName content:(NSString *)content;
 - (NSString *)contentOfFileName:(NSString *)fileName;
 - (NSURL *)contentURLOfFileName:(NSString *)fileName;
+- (BOOL)existRuleJson:(NSString *)fileName;
 @end
 
 NS_ASSUME_NONNULL_END

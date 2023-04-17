@@ -311,3 +311,4 @@ Save="Save";
 ContentFilterRestore="Restore Defaults";
 UpgradeMessage="Upgrade to Stay PRO to unlock %@";
 Dismiss="Dismiss";
+LatestVersion="Already the latest version";

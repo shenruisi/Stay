@@ -39,6 +39,7 @@ typedef enum {
 @property (nonatomic, strong) NSArray<NSNumber *> *tags;
 @property (nonatomic, assign) ContentFilterType type;
 @property (nonatomic, strong) NSString *contentBlockerIdentifier;
+@property (nonatomic, strong) NSString *redirect;
 
 @property (nonatomic, readonly) BOOL active;
 
@@ -46,6 +47,7 @@ typedef enum {
 - (NSString *)convertToJOSNRules;
 - (void)writeContentBlockerAsync;
 - (void)reloadContentBlocker;
+- (void)checkUpdatingIfNeeded:(BOOL)focus completion:(nullable void(^)(NSError *error))completion;
 + (NSString *)stringOfType:(ContentFilterType)type;
 
 @end

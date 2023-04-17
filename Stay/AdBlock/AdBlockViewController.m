@@ -16,6 +16,7 @@
 #import <SafariServices/SafariServices.h>
 #import "FCStore.h"
 #import "UpgradeSlideController.h"
+#import "ContentFilterManager.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -35,6 +36,32 @@
 
 @implementation AdBlockViewController
 
+- (instancetype)init{
+    if (self = [super init]){
+        [self setupDataSource];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+            for (ContentFilter *contentFilter in self.activatedSource){
+                if (contentFilter.type != ContentFilterTypeCustom
+                    && contentFilter.type != ContentFilterTypeTag){
+                    if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
+                        [contentFilter writeContentBlockerAsync];
+                    }
+                }
+            }
+            
+            for (ContentFilter *contentFilter in self.stoppedSource){
+                if (contentFilter.type != ContentFilterTypeCustom
+                    && contentFilter.type != ContentFilterTypeTag){
+                    if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
+                        [contentFilter writeContentBlockerAsync];
+                    }
+                }
+            }
+        });
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
@@ -42,7 +69,7 @@
     self.navigationItem.rightBarButtonItem = self.addItem;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
-    [self setupDataSource];
+    
     [self.navigationTabItem activeItem:self.activatedTabItem];
     
 #ifdef FC_MAC
@@ -70,6 +97,7 @@
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
                 }
+                [contentFilter checkUpdatingIfNeeded:NO completion:nil];
                 dispatch_semaphore_signal(semaphore);
             }];
             
