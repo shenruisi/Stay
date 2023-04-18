@@ -15,6 +15,7 @@
 #import "FCButton.h"
 #import "AlertHelper.h"
 #import "DataManager.h"
+#import "AdBlockDetailViewController.h"
 
 @interface ContentFilterEditModalViewController()<
  UITableViewDelegate,
@@ -202,11 +203,11 @@
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
                                                                                    message:[error localizedDescription]
                                                                             preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                                       style:UIAlertActionStyleDefault
                                                                     handler:^(UIAlertAction * _Nonnull action) {
                         }];
-                    [alert addAction:conform];
+                    [alert addAction:confirm];
                     [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
                 });
                 
@@ -217,7 +218,8 @@
     NSString *originTitle = self.contentFilter.title;
     if (self.titleElement.inputEntity.text.length > 0
         && ![self.titleElement.inputEntity.text isEqualToString:originTitle]){
-        [[DataManager shareManager] updateContentFilterTitle:self.titleElement.inputEntity.text uuid:self.contentFilter.uuid];
+        self.contentFilter.title = self.titleElement.inputEntity.text;
+        [[DataManager shareManager] updateContentFilterTitle:self.contentFilter.title uuid:self.contentFilter.uuid];
     }
     
 }
@@ -225,6 +227,7 @@
 - (FCButton *)restoreButton{
     if (nil == _restoreButton){
         _restoreButton = [[FCButton alloc] init];
+        [_restoreButton addTarget:self action:@selector(restoreAction:) forControlEvents:UIControlEventTouchUpInside];
         [_restoreButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"ContentFilterRestore", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.fcWhite,
@@ -246,6 +249,42 @@
     return _restoreButton;
 }
 
+
+- (void)restoreAction:(id)sender{
+    FCButton *button = (FCButton *)sender;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock", @"")
+                                                                   message:NSLocalizedString(@"ContentFilterRestoreMessage", @"")
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * _Nonnull action) {
+        self.contentFilter.downloadUrl = self.contentFilter.defaultUrl;
+        self.contentFilter.title = self.contentFilter.defaultTitle;
+        [[DataManager shareManager] updateContentFilterDownloadUrl:self.contentFilter.defaultUrl uuid:self.contentFilter.uuid];
+        [[DataManager shareManager] updateContentFilterTitle:self.contentFilter.defaultTitle uuid:self.contentFilter.uuid];
+        [button startLoading];
+        [self.navigationController.slideController startLoading];
+        [self.contentFilter restoreRulesWithCompletion:^(NSError *error){
+            [button stopLoading];
+            self.titleElement.inputEntity.text = self.contentFilter.title;
+            self.linkElement.inputEntity.text = self.contentFilter.downloadUrl;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.navigationController.slideController stopLoading];
+                AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
+                [cer refreshRules];
+                [self.tableView reloadData];
+            });
+        }];
+        
+    }];
+    [alert addAction:confirm];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+         style:UIAlertActionStyleCancel
+         handler:^(UIAlertAction * _Nonnull action) {
+     }];
+     [alert addAction:cancel];
+    [self.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
+}
 
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 390);

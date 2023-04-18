@@ -44,7 +44,7 @@
                 if (contentFilter.type != ContentFilterTypeCustom
                     && contentFilter.type != ContentFilterTypeTag){
                     if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
-                        [contentFilter writeContentBlockerAsync];
+                        [contentFilter writeContentBlocker:nil];
                     }
                 }
             }
@@ -53,7 +53,7 @@
                 if (contentFilter.type != ContentFilterTypeCustom
                     && contentFilter.type != ContentFilterTypeTag){
                     if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
-                        [contentFilter writeContentBlockerAsync];
+                        [contentFilter writeContentBlocker:nil];
                     }
                 }
             }

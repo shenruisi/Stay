@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContentFilterManager : NSObject
 
 + (instancetype)shared;
-- (void)writeToFileName:(NSString *)fileName content:(NSString *)content;
+- (void)writeToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (NSString *)contentOfFileName:(NSString *)fileName;
 - (NSURL *)contentURLOfFileName:(NSString *)fileName;
 - (BOOL)existRuleJson:(NSString *)fileName;

@@ -277,6 +277,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
 - (void)stopLoading{
     [self.loadingShapeLayer removeAllAnimations];
     [self.loadingShapeLayer removeFromSuperlayer];
+    self.loadingShapeLayer = nil;
 }
 
 - (UIBezierPath *)createLoadingPath:(CGFloat)height{

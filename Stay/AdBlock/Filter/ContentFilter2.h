@@ -43,10 +43,11 @@ typedef enum {
 
 @property (nonatomic, readonly) BOOL active;
 
-- (NSString *)fetchRules;
-- (NSString *)convertToJOSNRules;
-- (void)writeContentBlockerAsync;
-- (void)reloadContentBlocker;
+- (void)restoreRulesWithCompletion:(void(^)(NSError *error))completion;
+- (NSString *)fetchRules:(NSError **)error;
+- (NSString *)convertToJOSNRules:(NSError **)error;
+- (void)writeContentBlocker:(NSError **)error;
+- (void)reloadContentBlocker:(NSError **)error;
 - (void)checkUpdatingIfNeeded:(BOOL)focus completion:(nullable void(^)(NSError *error))completion;
 + (NSString *)stringOfType:(ContentFilterType)type;
 

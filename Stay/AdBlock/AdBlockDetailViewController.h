@@ -10,9 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+
 @interface AdBlockDetailViewController : FCViewController
 
 @property (nonatomic, strong) ContentFilter *contentFilter;
+- (void)refreshRules;
 @end
 
 NS_ASSUME_NONNULL_END
