@@ -116,7 +116,7 @@
                     NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
                     
                     if (ret.length > 0){
-                        [[ContentFilterManager shared] writeToFileName:self.rulePath content:content error:&error];
+                        [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
                         if (nil == error){
                             [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                                 NSLog(@"reloadContentBlockerWithIdentifier error %@",error);
@@ -178,7 +178,7 @@
             NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:&error] encoding:NSUTF8StringEncoding];
             
             if (ret.length > 0){
-                [[ContentFilterManager shared] writeToFileName:self.rulePath content:content error:&error];
+                [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
                 [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                     NSLog(@"reloadContentBlockerWithIdentifier error %@",error);
                 }];

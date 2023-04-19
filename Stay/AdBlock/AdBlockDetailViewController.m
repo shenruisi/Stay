@@ -100,6 +100,9 @@
 }
 
 - (void)moreAction:(id)sender{
+    if ([self.editSlideController isShown]){
+        [self.editSlideController dismiss];
+    }
     self.editSlideController = [[ContentFilterEditSlideController alloc] initWithContentFilter:self.contentFilter];
     self.editSlideController.baseCer = self;
     [self.editSlideController show];
