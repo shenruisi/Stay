@@ -14,6 +14,9 @@
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "FCStore.h"
+#import "UpgradeSlideController.h"
+#import "ContentFilterManager.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -28,9 +31,36 @@
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *activatedSource;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *stoppedSource;
 @property (nonatomic, strong) NSArray<ContentFilter *> *selectedDataSource;
+@property (nonatomic, strong) UpgradeSlideController *upgradeSlideController;
 @end
 
 @implementation AdBlockViewController
+
+- (instancetype)init{
+    if (self = [super init]){
+        [self setupDataSource];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+            for (ContentFilter *contentFilter in self.activatedSource){
+                if (contentFilter.type != ContentFilterTypeCustom
+                    && contentFilter.type != ContentFilterTypeTag){
+                    if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
+                        [contentFilter writeContentBlocker:nil];
+                    }
+                }
+            }
+            
+            for (ContentFilter *contentFilter in self.stoppedSource){
+                if (contentFilter.type != ContentFilterTypeCustom
+                    && contentFilter.type != ContentFilterTypeTag){
+                    if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
+                        [contentFilter writeContentBlocker:nil];
+                    }
+                }
+            }
+        });
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,7 +69,7 @@
     self.navigationItem.rightBarButtonItem = self.addItem;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
-    [self setupDataSource];
+    
     [self.navigationTabItem activeItem:self.activatedTabItem];
     
 #ifdef FC_MAC
@@ -67,6 +97,7 @@
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
                 }
+                [contentFilter checkUpdatingIfNeeded:NO completion:nil];
                 dispatch_semaphore_signal(semaphore);
             }];
             
@@ -103,6 +134,14 @@
     [super viewWillAppear:animated];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    if (self.upgradeSlideController){
+        [self.upgradeSlideController dismiss];
+    }
+}
+    
+
 - (void)setupDataSource{
     NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
     for (ContentFilter *contentFilter in contentFilters){
@@ -124,6 +163,20 @@
     cell.element = contentFilter;
     cell.action = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
+        if (contentFilter.type == ContentFilterTypeCustom
+            ||contentFilter.type == ContentFilterTypeTag){
+            if ([[FCStore shared] getPlan:NO] == FCPlan.None){
+                if (self.upgradeSlideController){
+                    [self.upgradeSlideController dismiss];
+                }
+                
+                self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
+                [self.upgradeSlideController show];
+                return;
+            }
+        }
+        
+        
         AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
         cer.contentFilter = contentFilter;
         [self.navigationController pushViewController:cer animated:YES];
@@ -237,6 +290,14 @@
     }
     
     return _tableView;
+}
+
+- (UpgradeSlideController *)upgradeSlideController{
+    if (nil == _upgradeSlideController){
+        _upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:@""];
+    }
+    
+    return _upgradeSlideController;
 }
 
 @end

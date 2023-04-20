@@ -310,3 +310,7 @@ ContentFilterTagAlert="Tag内容拦截未开启";
 Enable="开启";
 Save="保存";
 ContentFilterRestore="恢复默认";
+UpgradeMessage="升级到Stay PRO来解锁%@";
+Dismiss="关闭";
+LatestVersion="已经是最新版本";
+ContentFilterRestoreMessage="你确定要恢复成默认设置吗？";

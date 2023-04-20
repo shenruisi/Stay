@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 //trigger
 @property (nonatomic, strong) NSString *urlFilter;
 @property (nonatomic, assign) BOOL urlFilterIsCaseSensitive;
+@property (nonatomic, assign) BOOL originTriggerEndWithAsterisk;
+
 - (void)addIfDomain:(NSString *)ifDomain;
 - (void)addUnlessDomain:(NSString *)unlessDomain;
 - (void)addResourceType:(NSString *)resourceType;

@@ -57,7 +57,10 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
 
 - (void)backward{
     self.moveIndex--;
-    
+}
+
+- (void)reset{
+    self.moveIndex = -1;
 }
 
 - (void)nextToken{
@@ -242,16 +245,29 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
         }
     }
     
-    if ([self isRegexStart:self.lastChars]){
+    if (nil == self.prevToken && [self isRegexStart:self.lastChars]){
+        //TODO: 处理正则\/转义
         NSMutableString *tigger = [[NSMutableString alloc] init];
         do{
+            if ([self isEscape:self.lastChars]){
+                if ([self isRegexStart:[self probGetChars:1]]){
+                    self.lastChars = [self getChars];
+                }
+            }
             [tigger appendString:self.lastChars];
             self.lastChars = [self getChars];
         }while(![self isEnd:self.lastChars]
-               && ![self isOptionsStart:self.lastChars]
-               && ![self isSelectorStart:self.lastChars]);
-        [self backward];
-        return [FilterToken tigger:tigger];
+               && ![self isRegexStart:self.lastChars]);
+        
+        if ([self isRegexStart:self.lastChars]){
+            [tigger appendString:self.lastChars];
+            return [FilterToken tigger:tigger];
+        }
+        else{
+            //continue treat as tigger
+            [self reset];
+            self.lastChars = [self getChars];
+        }
     }
     
     NSMutableString *tigger = [[NSMutableString alloc] init];
@@ -285,6 +301,10 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     }
     
     return ret;
+}
+
+- (BOOL)isEscape:(NSString *)chars{
+    return [chars isEqualToString:@"\\"];
 }
 
 - (BOOL)isRegexStart:(NSString *)chars{

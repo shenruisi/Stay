@@ -89,4 +89,11 @@
 - (NSArray<ContentFilter *> *)selectContentFilters;
 - (void)updateContentFilterStatus:(NSUInteger)status uuid:(NSString *)uuid;
 - (void)updateContentFilterEnable:(NSUInteger)enable uuid:(NSString *)uuid;
+- (void)updateContentFilterHomepage:(NSString *)homepage uuid:(NSString *)uuid;
+- (void)updateContentFilterTitle:(NSString *)title uuid:(NSString *)uuid;
+- (void)updateContentFilterRedirect:(NSString *)redirect uuid:(NSString *)uuid;
+- (void)updateContentFilterExpires:(NSString *)expires uuid:(NSString *)uuid;
+- (void)updateContentFilterVersion:(NSString *)version uuid:(NSString *)uuid;
+- (void)updateContentFilterUpdateTime:(NSDate *)updateTime uuid:(NSString *)uuid;
+- (void)updateContentFilterDownloadUrl:(NSString *)downloadUrl uuid:(NSString *)uuid;
 @end

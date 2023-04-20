@@ -17,7 +17,9 @@
     }
     else{
         if ([self.urlFilter hasSuffix:@".*"]){
-            [self resetUrlFilter:[self.urlFilter substringWithRange:NSMakeRange(0, self.urlFilter.length - 2)]];
+            if (!self.originTriggerEndWithAsterisk){
+                [self resetUrlFilter:[self.urlFilter substringWithRange:NSMakeRange(0, self.urlFilter.length - 2)]];
+            }
         }
         self.urlFilter =  @"[^a-zA-Z0-9_\\-.%].*";
     }

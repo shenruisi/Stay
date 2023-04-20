@@ -34,7 +34,11 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.editorView.editable = NO;
-    [self.editorView setStrings:[self.contentFilter fetchRules]];
+    [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
+}
+
+- (void)refreshRules{
+    [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
 }
 
 - (UIBarButtonItem *)backItem{
@@ -96,7 +100,11 @@
 }
 
 - (void)moreAction:(id)sender{
+    if ([self.editSlideController isShown]){
+        [self.editSlideController dismiss];
+    }
     self.editSlideController = [[ContentFilterEditSlideController alloc] initWithContentFilter:self.contentFilter];
+    self.editSlideController.baseCer = self;
     [self.editSlideController show];
 }
 

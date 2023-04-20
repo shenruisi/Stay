@@ -309,3 +309,7 @@ ContentFilterTagAlert="Tag content blocker is not enabled";
 Enable="Enable";
 Save="Save";
 ContentFilterRestore="Restore Defaults";
+UpgradeMessage="Upgrade to Stay PRO to unlock %@";
+Dismiss="Dismiss";
+LatestVersion="Already the latest version";
+ContentFilterRestoreMessage="Are you sure you want to restore the default settings?";

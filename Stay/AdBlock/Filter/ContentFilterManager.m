@@ -41,11 +41,16 @@ static ContentFilterManager *instance = nil;
     return self;
 }
 
-- (void)writeToFileName:(NSString *)fileName content:(NSString *)content{
+- (BOOL)existRuleJson:(NSString *)fileName{
     NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
-    NSError *error;
-    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-    NSLog(@"writeToFileName %@, %@",fileName,error);
+    BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    return exist;
+}
+
+- (void)writeToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
+    NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
+    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
+    NSLog(@"writeToFileName %@, %@",fileName,*error);
 }
 
 - (NSURL *)contentURLOfFileName:(NSString *)fileName{

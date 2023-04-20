@@ -98,7 +98,7 @@ typedef enum{
 + (instancetype)pipe;
 + (instancetype)address;
 
-- (NSString *)stringOfType:(FilterTokenType)type;
++ (NSString *)stringOfType:(FilterTokenType)type;
 - (NSString *)toString;
 @end
 
