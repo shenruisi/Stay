@@ -3450,7 +3450,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        let randomArr = jsText.match(/[a-zA-Z0-9]{3}\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
+        let randomArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
         console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
@@ -3464,7 +3464,7 @@ const browser = __b;
         }
         let subRandomStr = '';
         // eslint-disable-next-line no-useless-escape
-        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]{2}\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]+\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
         if(subRandomArr && subRandomArr.length){
           subRandomStr = subRandomArr[0];
           // console.log(subRandomStr);
