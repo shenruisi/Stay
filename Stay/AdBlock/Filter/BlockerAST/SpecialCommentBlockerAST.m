@@ -21,7 +21,7 @@
         specialComment[[FilterToken stringOfType:self.parser.curToken.type]] = self.parser.curToken.value;
     }
     
-    self.dictionary[@"special_comment"] = specialComment;
+    self.contentBlockerRule.specialComment = specialComment;
 }
 
 @end

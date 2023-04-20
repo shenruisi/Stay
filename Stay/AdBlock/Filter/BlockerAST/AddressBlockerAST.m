@@ -12,7 +12,7 @@
 - (void)construct:(NSArray *)args{
     [super construct:args];
     
-    self.urlFilter = @"^https?://";
+    [self.contentBlockerRule.trigger appendUrlFilter:@"^https?://"];
 }
 
 @end

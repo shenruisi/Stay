@@ -39,10 +39,10 @@
                 for (FilterOptionDomain *domain in domains){
                     if (domain.inverse == inverse){
                         if (inverse){
-                            [self addUnlessDomain:domain.value];
+                            [self.contentBlockerRule.trigger.unlessDomain addObject:domain.value];
                         }
                         else{
-                            [self addIfDomain:domain.value];
+                            [self.contentBlockerRule.trigger.ifDomain addObject:domain.value];
                         }
                     }
                 }
@@ -161,11 +161,11 @@
             }
         }
         else if (option.type == FilterOptionTypeThirdParty){
-            [self addLoadType:option.inverse ? @"first-party" : @"third-party"];
+            [self.contentBlockerRule.trigger.loadType addObject:option.inverse ? @"first-party" : @"third-party"];
         }
         else if (option.type == FilterOptionTypeMatchCase){
             if (!option.inverse){
-                self.urlFilterIsCaseSensitive = YES;
+                self.contentBlockerRule.trigger.urlFilterIsCaseSensitive = YES;
             }
         }
     }
@@ -177,14 +177,14 @@
     if (resourceTypes.count == 0){
         if (resourceTypesDefault.count < resourceTypesDefaultCount){
             for (NSString *resourceType in resourceTypesDefault){
-                [self addResourceType:resourceType];
+                [self.contentBlockerRule.trigger.resourceType addObject:resourceType];
             }
         }
     }
     else{
         for (NSString *resourceType in resourceTypes){
             if ([resourceTypesDefault containsObject:resourceType]){
-                [self addResourceType:resourceType];
+                [self.contentBlockerRule.trigger.resourceType addObject:resourceType];
             }
         }
     }
