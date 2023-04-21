@@ -156,6 +156,11 @@
                         ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.trigger.urlFilter];
                         if (existContentBlockerRule){
                             NSLog(@"exist rule: %@",contentBlockerRule.trigger.urlFilter);
+                            
+                            if ([contentBlockerRule.trigger.urlFilter isEqualToString:@"adisplay\\.php\\?"]){
+                                NSLog(@"here");
+                            }
+                            
                             if ([contentBlockerRule isEqual:existContentBlockerRule]){
                                 NSLog(@"equal rule: %@",contentBlockerRule.trigger.urlFilter);
                             }
