@@ -116,6 +116,40 @@
     return _loadContext;
 }
 
+- (NSDictionary *)toDictionary{
+    NSMutableDictionary *ret = [[NSMutableDictionary alloc] init];
+    [ret setObject:self.urlFilter forKey:@"url-filter"];
+    if (self.ifDomain.count > 0){
+        [ret setObject:self.ifDomain forKey:@"if-domain"];
+    }
+    
+    if (self.unlessDomain.count > 0){
+        [ret setObject:self.unlessDomain forKey:@"unless-domain"];
+    }
+    
+    if (self.resourceType.count > 0){
+        [ret setObject:self.resourceType forKey:@"resource-type"];
+    }
+    
+    if (self.loadType.count > 0){
+        [ret setObject:self.loadType forKey:@"load-type"];
+    }
+    
+    if (self.ifTopUrl.count > 0){
+        [ret setObject:self.ifTopUrl forKey:@"if-top-url"];
+    }
+    
+    if (self.unlessTopUrl.count > 0){
+        [ret setObject:self.unlessTopUrl forKey:@"unless-top-url"];
+    }
+    
+    if (self.loadContext.count > 0){
+        [ret setObject:self.loadContext forKey:@"load_context"];
+    }
+    
+    return ret;
+}
+
 @end
 
 @implementation ContentBlockerAction
@@ -133,13 +167,22 @@
         _selector = @"";
     }
     
-    return _type;
+    return _selector;
 }
 
 - (BOOL)isEqual:(id)object{
     ContentBlockerAction *other = (ContentBlockerAction *)object;
     if (self == other) return YES;
     return [self.type isEqualToString:other.type] && [self.selector isEqualToString:other.selector];
+}
+
+- (NSDictionary *)toDictionary{
+    NSMutableDictionary *ret = [[NSMutableDictionary alloc] init];
+    [ret setObject:self.type forKey:@"type"];
+    if (self.selector.length > 0){
+        [ret setObject:self.selector forKey:@"selector"];
+    }
+    return ret;
 }
 
 @end
@@ -155,6 +198,13 @@
     return self;
 }
 
+- (NSDictionary *)toDictionary{
+    return @{
+        @"trigger":[self.trigger toDictionary],
+        @"action":[self.action toDictionary]
+    };
+}
+
 - (BOOL)isEqual:(id)object{
     ContentBlockerRule *other = (ContentBlockerRule *)object;
     if (self == other) return YES;
@@ -168,6 +218,18 @@
     BOOL mergeDomain = !((self.trigger.ifDomain.count > 0 &&  other.trigger.unlessDomain.count > 0) || (self.trigger.unlessDomain.count > 0 && other.trigger.ifDomain.count > 0));
     
     if (!mergeDomain) return NO;
+    
+    if (self.trigger.ifDomain.count > 0 || other.trigger.ifDomain.count > 0){
+        [self.trigger.resourceType sortUsingSelector:@selector(compare:)];
+        [other.trigger.resourceType sortUsingSelector:@selector(compare:)];
+        if (![self.trigger.resourceType isEqualToArray:other.trigger.resourceType]) return NO;
+    }
+    
+    if (self.trigger.unlessDomain.count > 0 || other.trigger.unlessDomain.count > 0){
+        [self.trigger.resourceType sortUsingSelector:@selector(compare:)];
+        [other.trigger.resourceType sortUsingSelector:@selector(compare:)];
+        if (![self.trigger.resourceType isEqualToArray:other.trigger.resourceType]) return NO;
+    }
     
     self.trigger.urlFilterIsCaseSensitive = self.trigger.urlFilterIsCaseSensitive || other.trigger.urlFilterIsCaseSensitive;
     

@@ -13,21 +13,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *urlFilter;
 @property (nonatomic, assign) BOOL urlFilterIsCaseSensitive;
-@property (nonatomic, strong) NSMutableArray *ifDomain;
-@property (nonatomic, strong) NSMutableArray *unlessDomain;
-@property (nonatomic, strong) NSMutableArray *resourceType;
-@property (nonatomic, strong) NSMutableArray *loadType;
-@property (nonatomic, strong) NSMutableArray *ifTopUrl;
-@property (nonatomic, strong) NSMutableArray *unlessTopUrl;
-@property (nonatomic, strong) NSMutableArray *loadContext;
+@property (nonatomic, strong) NSMutableSet *ifDomain;
+@property (nonatomic, strong) NSMutableSet *unlessDomain;
+@property (nonatomic, strong) NSMutableSet *resourceType;
+@property (nonatomic, strong) NSMutableSet *loadType;
+@property (nonatomic, strong) NSMutableSet *ifTopUrl;
+@property (nonatomic, strong) NSMutableSet *unlessTopUrl;
+@property (nonatomic, strong) NSMutableSet *loadContext;
 
 - (void)appendUrlFilter:(NSString *)str;
+- (NSDictionary *)toDictionary;
 @end
 
 @interface ContentBlockerAction : NSObject
 
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *selector;
+
+- (NSDictionary *)toDictionary;
 @end
 
 @interface ContentBlockerRule : NSObject
@@ -37,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableDictionary *specialComment;
 
 - (BOOL)mergeRule:(ContentBlockerRule *)other;
+- (NSDictionary *)toDictionary;
 @end
 
 NS_ASSUME_NONNULL_END
