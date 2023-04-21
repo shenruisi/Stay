@@ -44,6 +44,7 @@
 }
 
 - (void)checkUpdatingIfNeeded:(BOOL)focus completion:(nullable void(^)(NSError *))completion{
+    return;
     if (self.type == ContentFilterTypeCustom || self.type == ContentFilterTypeTag) return;
     NSInteger days = 4;
     if (self.expires.length > 0){
@@ -159,11 +160,14 @@
                                 NSLog(@"equal rule: %@",contentBlockerRule.trigger.urlFilter);
                             }
                             else{
+                                NSDictionary *exist = [existContentBlockerRule toDictionary];
                                 if (![existContentBlockerRule mergeRule:contentBlockerRule]){
+                                    NSLog(@"merge not succeed 1:%@ 2:%@",exist,[contentBlockerRule toDictionary]);
                                     [contentBlockerRules addObject:contentBlockerRule];
+                                    [existContentBlockerRule mergeRule:contentBlockerRule];
                                 }
                                 else{
-                                    NSLog(@"merge succeed");
+                                    NSLog(@"merge succeed 1:%@ 2:%@ merge:%@",exist,[contentBlockerRule toDictionary],[existContentBlockerRule toDictionary]);
                                 }
                                 
                             }
