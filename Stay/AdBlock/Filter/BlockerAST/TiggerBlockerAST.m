@@ -7,6 +7,10 @@
 
 #import "TiggerBlockerAST.h"
 
+@interface TiggerBlockerAST()
+
+@end
+
 @implementation TiggerBlockerAST
 
 - (void)construct:(NSArray *)args{
@@ -16,23 +20,30 @@
     if (urlFilter.length >= 2
         && [urlFilter characterAtIndex:0] == '/'
         && [urlFilter characterAtIndex:urlFilter.length - 1] == '/'){
-        self.urlFilter = [urlFilter substringWithRange:NSMakeRange(1, urlFilter.length - 2)];
+        NSRegularExpression *unsupport = [NSRegularExpression regularExpressionWithPattern:@"\\(.*\\|?\\)" options:0 error:nil];
+        NSArray<NSTextCheckingResult *> *results =[unsupport matchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length)];
+        if (results.count > 0){
+            self.unsupported = YES;
+            return;
+        }
+        
+        urlFilter = [urlFilter substringWithRange:NSMakeRange(1, urlFilter.length - 2)];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\w" withString:@"."];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\d" withString:@"[0-9]"];
+        NSRegularExpression *regexReplace1 = [NSRegularExpression regularExpressionWithPattern:@"\\{\\d+,\\d*\\}" options:0 error:nil];
+        urlFilter = [regexReplace1 stringByReplacingMatchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length) withTemplate:@"+"];
+        [self.contentBlockerRule.trigger appendUrlFilter:urlFilter];
     }
     else{
         //Add wildcard
-        if (self.urlFilter.length == 0){
-            urlFilter = [NSString stringWithFormat:@"*%@*",urlFilter];
+        if ([self.contentBlockerRule.trigger.urlFilter hasSuffix:@"$"]){
+            self.unsupported = YES;
+            return;
         }
-        else if ([self.urlFilter hasSuffix:@"^https?://"]){
-            urlFilter = [NSString stringWithFormat:@"*.%@*",urlFilter];
-        }
-        else if ([self.urlFilter hasSuffix:@".*[^a-zA-Z0-9_\\-.%]"]){
-            urlFilter = [NSString stringWithFormat:@"%@*",urlFilter];
-        }
-        //Convert wildcard
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"?" withString:@"."];
-        self.urlFilter = urlFilter;
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\?" withString:@"\\?"];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"." withString:@"\\."];
+
+        [self.contentBlockerRule.trigger appendUrlFilter:urlFilter];
     }
 }
 

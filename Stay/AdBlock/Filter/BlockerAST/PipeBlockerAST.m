@@ -12,11 +12,11 @@
 - (void)construct:(NSArray *)args{
     [super construct:args];
     
-    if (self.urlFilter.length == 0){
-        self.urlFilter = @"^";
+    if (0 == self.contentBlockerRule.trigger.urlFilter.length){
+        [self.contentBlockerRule.trigger appendUrlFilter:@"^"];
     }
     else{
-        self.urlFilter =  @"$";
+        [self.contentBlockerRule.trigger appendUrlFilter:@"$"];
     }
 }
 

@@ -497,6 +497,8 @@
 		58ADAE1829ED2BF800C00332 /* SpecialCommentBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */; };
 		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
+		58BC3D7829F10D2B005CEE5B /* ContentBlockerRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */; };
+		58BC3D7929F10D2B005CEE5B /* ContentBlockerRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
@@ -1193,6 +1195,8 @@
 		58ADAE1529ED2BF800C00332 /* SpecialCommentBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpecialCommentBlockerAST.h; sourceTree = "<group>"; };
 		58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpecialCommentBlockerAST.m; sourceTree = "<group>"; };
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
+		58BC3D7629F10D2B005CEE5B /* ContentBlockerRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRule.h; sourceTree = "<group>"; };
+		58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRule.m; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
@@ -2237,6 +2241,8 @@
 		58ADADE729E801CF00C00332 /* BlockerAST */ = {
 			isa = PBXGroup;
 			children = (
+				58BC3D7629F10D2B005CEE5B /* ContentBlockerRule.h */,
+				58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */,
 				58ADADF229E801CF00C00332 /* BlockerAST.h */,
 				58ADADEA29E801CF00C00332 /* BlockerAST.m */,
 				58ADADEB29E801CF00C00332 /* ContentFilterBlocker.h */,
@@ -3816,6 +3822,7 @@
 				58ADADFC29E801CF00C00332 /* BlockerAST.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
+				58BC3D7829F10D2B005CEE5B /* ContentBlockerRule.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
 				583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
@@ -4019,6 +4026,7 @@
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				84B635172978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */,
 				3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */,
+				58BC3D7929F10D2B005CEE5B /* ContentBlockerRule.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				582062032950675900A32D0C /* DisabledWebsites.m in Sources */,
 				8460E47129925A66008BC7D0 /* SYSubmitScriptViewController.m in Sources */,

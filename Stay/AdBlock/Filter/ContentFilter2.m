@@ -116,7 +116,7 @@
                     NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
                     
                     if (ret.length > 0){
-                        [[ContentFilterManager shared] writeToFileName:self.rulePath content:content error:&error];
+                        [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
                         if (nil == error){
                             [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                                 NSLog(@"reloadContentBlockerWithIdentifier error %@",error);
@@ -141,7 +141,8 @@
 
 - (void)restoreRulesWithCompletion:(void(^)(NSError *))completion{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
+        NSMutableArray<ContentBlockerRule *> *contentBlockerRules = [[NSMutableArray alloc] init];
+        NSMutableDictionary *ruleMergeDict = [[NSMutableDictionary alloc] init];
         NSError *error;
         NSString *content = [[NSString alloc] initWithContentsOfFile:self.resourcePath encoding:NSUTF8StringEncoding error:&error];
         if (content.length > 0){
@@ -149,12 +150,31 @@
             for (NSString *line in lines){
                 if (line.length > 0){
                     BOOL isSepcialComment;
-                    NSDictionary *jsonRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
-                    if (jsonRule && !isSepcialComment){
-                        [jsonRules addObject:jsonRule];
+                    ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
+                    if (contentBlockerRule && !isSepcialComment){
+                        ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.trigger.urlFilter];
+                        if (existContentBlockerRule){
+                            NSLog(@"exist rule: %@",contentBlockerRule.trigger.urlFilter);
+                            if ([contentBlockerRule isEqual:existContentBlockerRule]){
+                                NSLog(@"equal rule: %@",contentBlockerRule.trigger.urlFilter);
+                            }
+                            else{
+                                if (![existContentBlockerRule mergeRule:contentBlockerRule]){
+                                    [contentBlockerRules addObject:contentBlockerRule];
+                                }
+                                else{
+                                    NSLog(@"merge succeed");
+                                }
+                                
+                            }
+                        }
+                        else{
+                            [ruleMergeDict setObject:contentBlockerRule forKey:contentBlockerRule.trigger.urlFilter];
+                            [contentBlockerRules addObject:contentBlockerRule];
+                        }
                     }
                     else if (isSepcialComment){
-                        NSDictionary *specialComment = jsonRule[@"special_comment"];
+                        NSDictionary *specialComment = contentBlockerRule.specialComment;
                         if (specialComment[@"Homepage"]){
                             [[DataManager shareManager]
                              updateContentFilterHomepage:specialComment[@"Homepage"] uuid:self.uuid];
@@ -174,15 +194,23 @@
                     }
                 }
             }
+            NSLog(@"here");
+//            NSMutableDictionary *dict = [ContentFilterBlocker dict];
+//            NSLog(@"total key counts %ld",dict.allKeys.count);
+//            for (NSString *key in dict.allKeys){
+//                if ([dict[key] integerValue] > 1){
+//                    NSLog(@"count key: %@ %ld",key,[dict[key] integerValue]);
+//                }
+//            }
             
-            NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:&error] encoding:NSUTF8StringEncoding];
-            
-            if (ret.length > 0){
-                [[ContentFilterManager shared] writeToFileName:self.rulePath content:content error:&error];
-                [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-                    NSLog(@"reloadContentBlockerWithIdentifier error %@",error);
-                }];
-            }
+//            NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes | NSJSONWritingPrettyPrinted  error:&error] encoding:NSUTF8StringEncoding];
+//
+//            if (ret.length > 0){
+//                [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
+//                [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+//                    NSLog(@"reloadContentBlockerWithIdentifier error %@ %@",error,[error localizedDescription]);
+//                }];
+//            }
         }
         
         if (nil == error){

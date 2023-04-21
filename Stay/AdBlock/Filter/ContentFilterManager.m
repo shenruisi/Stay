@@ -48,6 +48,9 @@ static ContentFilterManager *instance = nil;
 }
 
 - (void)writeToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
+    if ([content isEqualToString:@"[]"]){
+        content = @"[{\"trigger\":{\"url-filter\":\"webkit.svg\"},\"action\":{\"type\":\"block\"}}]";
+    }
     NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
     NSLog(@"writeToFileName %@, %@",fileName,*error);

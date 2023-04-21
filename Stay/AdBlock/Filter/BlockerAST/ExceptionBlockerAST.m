@@ -12,7 +12,7 @@
 - (void)construct:(NSArray *)args{
     [super construct:args];
     
-    self.type = @"ignore-previous-rules";
+    self.contentBlockerRule.action.type = @"ignore-previous-rules";
 }
 
 @end

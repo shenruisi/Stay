@@ -12,8 +12,8 @@
 - (void)construct:(NSArray *)args{
     [super construct:args];
     
-    self.type = @"css-display-none";
-    self.selector = [self.parser.curToken toString];
+    self.contentBlockerRule.action.type = @"css-display-none";
+    self.contentBlockerRule.action.selector = [self.parser.curToken toString];
 }
 
 @end
