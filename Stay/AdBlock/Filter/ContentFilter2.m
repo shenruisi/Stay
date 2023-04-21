@@ -234,16 +234,17 @@
 }
 
 - (NSString *)convertToJOSNRules:(NSError **)error{
+    
     NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
     NSString *rules = [self fetchRules:error];
     NSArray<NSString *> *lines = [rules componentsSeparatedByString:@"\n"];
     for (NSString *line in lines){
         if (line.length > 0){
             BOOL isSepcialComment;
-            NSDictionary *jsonRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
-            if (jsonRule && !isSepcialComment){
-                [jsonRules addObject:jsonRule];
-            }
+//            NSDictionary *jsonRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
+//            if (jsonRule && !isSepcialComment){
+//                [jsonRules addObject:jsonRule];
+//            }
             
         }
     }
