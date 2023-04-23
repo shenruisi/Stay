@@ -72,7 +72,7 @@
     [super viewDidLoad];
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
     self.enableTabItem = YES;
-    self.navigationItem.rightBarButtonItem = self.addItem;
+//    self.navigationItem.rightBarButtonItem = self.addItem;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
     
@@ -103,7 +103,7 @@
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
                 }
-                [contentFilter checkUpdatingIfNeeded:NO completion:nil];
+                [contentFilter checkUpdatingIfNeeded:YES completion:nil];
                 dispatch_semaphore_signal(semaphore);
             }];
             
@@ -258,9 +258,27 @@
     ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
     FCTableViewCell *cell = (FCTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     NSMutableArray *actions = [[NSMutableArray alloc] init];
-    UIContextualAction *reloadAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        // 处理删除操作
-        completionHandler(YES);
+    UIContextualAction *reloadAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock", @"")
+                                                                       message:NSLocalizedString(@"ReloadRulesMessage", @"")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+            [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
+                NSLog(@"reloadContentBlockerWithCompletion %@",error);
+            }];
+            completionHandler(YES);
+        }];
+        [alert addAction:confirm];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+             style:UIAlertActionStyleCancel
+             handler:^(UIAlertAction * _Nonnull action) {
+            completionHandler(YES);
+         }];
+         [alert addAction:cancel];
+        [self presentViewController:alert animated:YES completion:nil];
+        
     }];
     reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
     reloadAction.backgroundColor = [UIColor clearColor];
@@ -268,7 +286,7 @@
         [actions addObject:reloadAction];
     }
     
-    UIContextualAction *activeOrStopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+    UIContextualAction *activeOrStopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
         [cell doubleTap:cell.fcContentView.center];
         completionHandler(YES);
     }];

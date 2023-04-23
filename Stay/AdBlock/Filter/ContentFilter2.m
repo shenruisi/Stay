@@ -151,7 +151,7 @@
          updateContentFilterUpdateTime:[NSDate date] uuid:self.uuid];
     }
     
-    if (universalRule){
+    if (universalRule && universalRule.action.selectors.count > 0){
         NSMutableString *selectorConnector = [[NSMutableString alloc] init];
         NSUInteger splictCount = 100;
         NSUInteger counter = 0;
@@ -181,6 +181,9 @@
             [contentBlockerRules addObject:rule];
         }
     }
+    else if (universalRule && universalRule.action.selectors.count == 0){
+        [contentBlockerRules addObject:universalRule];
+    }
     
     if (writeOnDisk){
         NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
@@ -188,22 +191,28 @@
             [jsonRules addObject:[rule toDictionary]];
         }
         
-        NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes | NSJSONWritingPrettyPrinted error:&error] encoding:NSUTF8StringEncoding];
+        NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error] encoding:NSUTF8StringEncoding];
         
         if (error){
-            completion(error);
+            if (completion){
+                completion(error);
+            }
             return;
         }
 
         [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
         
         if (error){
-            completion(error);
+            if (completion){
+                completion(error);
+            }
             return;
         }
         [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-            completion(error);
-            NSLog(@"reloadContentBlockerWithIdentifier error %@ %@",error,[error localizedDescription]);
+            if (completion){
+                completion(error);
+            }
+            NSLog(@"Update&reloadContentBlockerWithIdentifier:%@ error:%@",self.contentBlockerIdentifier, error);
         }];
     }
     
