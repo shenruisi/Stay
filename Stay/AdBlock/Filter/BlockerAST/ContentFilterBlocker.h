@@ -6,12 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ContentBlockerRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ContentFilterBlocker : NSObject
 
-+ (NSMutableDictionary *)rule:(NSString *)rule isSpecialComment:(BOOL *)isSpecialComment;
++ (ContentBlockerRule *)rule:(NSString *)rule isSpecialComment:(BOOL *)isSpecialComment;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -19,13 +19,10 @@
 
 @implementation ContentFilterBlocker
 
-+ (NSMutableDictionary *)rule:(NSString *)rule isSpecialComment:(BOOL *)isSpecialComment{
++ (ContentBlockerRule *)rule:(NSString *)rule isSpecialComment:(BOOL *)isSpecialComment {
     FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:rule];
     
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-    [dictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"trigger"];
-    [dictionary setObject:[[NSMutableDictionary alloc] init] forKey:@"action"];
-    dictionary[@"action"][@"type"] = @"block";
+    ContentBlockerRule *contentBlockerRule = [[ContentBlockerRule alloc] init];
     *isSpecialComment = NO;
     do{
         BlockerAST *ast;
@@ -34,8 +31,8 @@
         if ([parser isInfo] || [parser isComment] ){
             if ([parser isSepcialComment]){
                 *isSpecialComment = YES;
-                ast = [[SpecialCommentBlockerAST alloc] initWithParser:parser args:@[dictionary]];
-                return dictionary;
+                ast = [[SpecialCommentBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
+                return contentBlockerRule;
             }
             else{
                 return nil;
@@ -43,41 +40,44 @@
         }
         
         if ([parser isException]){
-            ast = [[ExceptionBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[ExceptionBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
         if ([parser isAddress]){
-            ast = [[AddressBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[AddressBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
         if ([parser isPipe]){
-            ast = [[PipeBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[PipeBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
         if ([parser isSeparator]){
-            ast = [[SeparatorBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[SeparatorBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
         if ([parser isTigger]){
-            ast = [[TiggerBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[TiggerBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
+            if (ast.unsupported){
+//                NSLog(@"Unsupport rule: %@",rule);
+                return nil;
+            }
         }
         
         if ([parser isOptions]){
-            ast = [[OptionsBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[OptionsBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
         if ([parser isSelector]){
-            ast = [[SelectorBlockerAST alloc] initWithParser:parser args:@[dictionary]];
+            ast = [[SelectorBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
     }while(!parser.isEOF);
     
-    NSString *urlFilter = dictionary[@"trigger"][@"url-filter"];
-    if (urlFilter.length == 0){
-        dictionary[@"trigger"][@"url-filter"] = @".*";
-//        NSLog(@"rule: %@",rule);
+    if (contentBlockerRule.trigger.urlFilter.length == 0){
+        contentBlockerRule.trigger.urlFilter = @".*";
     }
-    return dictionary;
+
+    return contentBlockerRule;
 }
 
 

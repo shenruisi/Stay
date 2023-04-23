@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) FCRoundedShadowView2 *fcContentView;
 @property (nonatomic, strong) ElementType element;
-@property (nonatomic, copy) void (^action)(id);
+@property (nonatomic, copy) void (^tapAction)(id);
+@property (nonatomic, copy) void (^doubleTapAction)(id);
 @property (nonatomic, assign) BOOL active;
 + (NSString *)identifier;
 + (UIEdgeInsets)contentInset;

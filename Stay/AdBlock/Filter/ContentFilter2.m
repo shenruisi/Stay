@@ -30,11 +30,6 @@
     return self;
 }
 
-
-- (NSString *)queueName:(NSString *)name{
-    return [NSString stringWithFormat:@"com.stay.io.%@.%@",name,[[NSUUID UUID] UUIDString]];
-}
-
 - (NSString *)fetchRules:(NSError **)error{
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.documentPath]){
         return [[NSString alloc] initWithContentsOfFile:self.documentPath encoding:NSUTF8StringEncoding error:error];
@@ -69,165 +64,193 @@
                 NSString *content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                 NSURL *url = [NSURL fileURLWithPath:self.documentPath];
                 [content writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
-                if (nil == error){
-                    NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
-                    NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
-                    for (NSString *line in lines){
-                        if (line.length > 0){
-                            BOOL isSepcialComment;
-                            NSDictionary *jsonRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
-                            if (jsonRule && !isSepcialComment){
-                                [jsonRules addObject:jsonRule];
-                            }
-                            else if (isSepcialComment){
-                                NSDictionary *specialComment = jsonRule[@"special_comment"];
-                                if (specialComment[@"Homepage"]){
-                                    [[DataManager shareManager]
-                                     updateContentFilterHomepage:specialComment[@"Homepage"] uuid:self.uuid];
-                                }
-//                                else if (specialComment[@"Title"]){
-//                                    [[DataManager shareManager]
-//                                     updateContentFilterTitle:specialComment[@"Title"] uuid:self.uuid];
-//                                }
-                                else if (specialComment[@"Version"]){
-                                    NSInteger compareResult = [SYVersionUtils compareVersion:specialComment[@"Version"] toVersion:self.version];
-                                    if (compareResult < 1){
-                                        NSError *versionError = [[NSError alloc] initWithDomain:@"" code:204 userInfo:@{
-                                            NSLocalizedDescriptionKey : NSLocalizedString(@"LatestVersion", @"")
-                                        }];
-                                        completion(versionError);
-                                        return;
-                                    }
-                                    [[DataManager shareManager]
-                                     updateContentFilterVersion:specialComment[@"Version"] uuid:self.uuid];
-                                }
-                                else if (specialComment[@"Expires"]){
-                                    [[DataManager shareManager]
-                                     updateContentFilterExpires:specialComment[@"Expires"] uuid:self.uuid];
-                                }
-                                else if (specialComment[@"Redirect"]){
-                                    [[DataManager shareManager]
-                                     updateContentFilterRedirect:specialComment[@"Redirect"] uuid:self.uuid];
-                                }
-                            }
+                if (error){
+                    completion(error);
+                    return;
+                }
+                
+                if (content.length == 0){
+                    completion(nil);
+                    return;
+                }
+                
+                [self processRules:content
+                  updateFilterInfo:YES
+                       writeOnDisk:YES
+                        completion:completion];
+            }
+        }] resume];
+    }
+}
+
+- (void)processRules:(NSString *)content
+    updateFilterInfo:(BOOL)updateFilterInfo
+         writeOnDisk:(BOOL)writeOnDisk
+          completion:(void(^)(NSError *))completion{
+    NSError *error;
+    NSMutableArray<ContentBlockerRule *> *contentBlockerRules = [[NSMutableArray alloc] init];
+    NSMutableDictionary *ruleMergeDict = [[NSMutableDictionary alloc] init];
+    ContentBlockerRule *universalRule;
+    NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
+    for (NSString *line in lines){
+        if (line.length > 0){
+            BOOL isSepcialComment;
+            ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
+            if (nil == universalRule && [contentBlockerRule.trigger.urlFilter isEqualToString:@".*"]){
+                universalRule = contentBlockerRule;
+            }
+            
+            if (contentBlockerRule && !isSepcialComment){
+                ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.trigger.urlFilter];
+                if (existContentBlockerRule){
+                    if ([contentBlockerRule isEqual:existContentBlockerRule]){
+                    }
+                    else if ([contentBlockerRule.action.type isEqualToString:@"ignore-previous-rules"]){
+                        [ruleMergeDict removeObjectForKey:contentBlockerRule.trigger.urlFilter];
+                        [contentBlockerRules removeObject:existContentBlockerRule];
+                    }
+                    else{
+                        if (![existContentBlockerRule mergeRule:contentBlockerRule]){
+                            [contentBlockerRules addObject:contentBlockerRule];
                         }
                     }
-                    
-                    NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:nil] encoding:NSUTF8StringEncoding];
-                    
-                    if (ret.length > 0){
-                        [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
-                        if (nil == error){
-                            [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-                                NSLog(@"reloadContentBlockerWithIdentifier error %@",error);
-                            }];
-                        }
+                }
+                else{
+                    [ruleMergeDict setObject:contentBlockerRule forKey:contentBlockerRule.trigger.urlFilter];
+                    if (universalRule != contentBlockerRule){
+                        [contentBlockerRules addObject:contentBlockerRule];
                     }
                 }
             }
-            
-            if (completion){
-                if (nil == error){
-                    [[DataManager shareManager]
-                     updateContentFilterUpdateTime:[NSDate date] uuid:self.uuid];
+            else if (isSepcialComment){
+                if (updateFilterInfo){
+                    NSDictionary *specialComment = contentBlockerRule.specialComment;
+                    if (specialComment[@"Homepage"]){
+                        [[DataManager shareManager]
+                         updateContentFilterHomepage:specialComment[@"Homepage"] uuid:self.uuid];
+                    }
+                    else if (specialComment[@"Version"]){
+                        [[DataManager shareManager]
+                         updateContentFilterVersion:specialComment[@"Version"] uuid:self.uuid];
+                    }
+                    else if (specialComment[@"Expires"]){
+                        [[DataManager shareManager]
+                         updateContentFilterExpires:specialComment[@"Expires"] uuid:self.uuid];
+                    }
+                    else if (specialComment[@"Redirect"]){
+                        [[DataManager shareManager]
+                         updateContentFilterRedirect:specialComment[@"Redirect"] uuid:self.uuid];
+                    }
                 }
+            }
+        }
+    }
+    
+    if (updateFilterInfo){
+        [[DataManager shareManager]
+         updateContentFilterUpdateTime:[NSDate date] uuid:self.uuid];
+    }
+    
+    if (universalRule && universalRule.action.selectors.count > 0){
+        NSMutableString *selectorConnector = [[NSMutableString alloc] init];
+        NSUInteger splictCount = 100;
+        NSUInteger counter = 0;
+        for (NSString *selector in universalRule.action.selectors){
+            if (counter < splictCount){
+                [selectorConnector appendFormat:@"%@, ",selector];
+                counter++;
+            }
+            else{
+                [selectorConnector appendString:selector];
+                ContentBlockerRule *rule = [[ContentBlockerRule alloc] init];
+                rule.trigger.urlFilter = @".*";
+                rule.action.type = @"css-display-none";
+                rule.action.selector = [selectorConnector copy];
+                [contentBlockerRules addObject:rule];
+                counter = 0;
+                [selectorConnector deleteCharactersInRange:NSMakeRange(0, selectorConnector.length)];
+            }
+        }
+        
+        if (selectorConnector.length > 0){
+            [selectorConnector deleteCharactersInRange:NSMakeRange(selectorConnector.length - 2, 2)];
+            ContentBlockerRule *rule = [[ContentBlockerRule alloc] init];
+            rule.trigger.urlFilter = @".*";
+            rule.action.type = @"css-display-none";
+            rule.action.selector = [selectorConnector copy];
+            [contentBlockerRules addObject:rule];
+        }
+    }
+    else if (universalRule && universalRule.action.selectors.count == 0){
+        [contentBlockerRules addObject:universalRule];
+    }
+    
+    if (writeOnDisk){
+        NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
+        for (ContentBlockerRule *rule in contentBlockerRules){
+            [jsonRules addObject:[rule toDictionary]];
+        }
+        
+        NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error] encoding:NSUTF8StringEncoding];
+        
+        if (error){
+            if (completion){
                 completion(error);
             }
-            
-        }] resume];
+            return;
+        }
+
+        [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
+        
+        if (error){
+            if (completion){
+                completion(error);
+            }
+            return;
+        }
+        [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+            if (completion){
+                completion(error);
+            }
+            NSLog(@"Update&reloadContentBlockerWithIdentifier:%@ error:%@",self.contentBlockerIdentifier, error);
+        }];
     }
     
 }
 
 - (void)restoreRulesWithCompletion:(void(^)(NSError *))completion{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
         NSError *error;
         NSString *content = [[NSString alloc] initWithContentsOfFile:self.resourcePath encoding:NSUTF8StringEncoding error:&error];
-        if (content.length > 0){
-            NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
-            for (NSString *line in lines){
-                if (line.length > 0){
-                    BOOL isSepcialComment;
-                    NSDictionary *jsonRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
-                    if (jsonRule && !isSepcialComment){
-                        [jsonRules addObject:jsonRule];
-                    }
-                    else if (isSepcialComment){
-                        NSDictionary *specialComment = jsonRule[@"special_comment"];
-                        if (specialComment[@"Homepage"]){
-                            [[DataManager shareManager]
-                             updateContentFilterHomepage:specialComment[@"Homepage"] uuid:self.uuid];
-                        }
-                        else if (specialComment[@"Version"]){
-                            [[DataManager shareManager]
-                             updateContentFilterVersion:specialComment[@"Version"] uuid:self.uuid];
-                        }
-                        else if (specialComment[@"Expires"]){
-                            [[DataManager shareManager]
-                             updateContentFilterExpires:specialComment[@"Expires"] uuid:self.uuid];
-                        }
-                        else if (specialComment[@"Redirect"]){
-                            [[DataManager shareManager]
-                             updateContentFilterRedirect:specialComment[@"Redirect"] uuid:self.uuid];
-                        }
-                    }
-                }
-            }
-            
-            NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:&error] encoding:NSUTF8StringEncoding];
-            
-            if (ret.length > 0){
-                [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
-                [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-                    NSLog(@"reloadContentBlockerWithIdentifier error %@",error);
-                }];
-            }
-        }
-        
-        if (nil == error){
-            [[NSFileManager defaultManager] removeItemAtPath:self.documentPath error:&error];
-        }
-        
-        if (completion){
+        if (error){
             completion(error);
+            return;
         }
+        
+        if (content.length == 0){
+            completion(nil);
+            return;
+        }
+        
+        [self processRules:content
+          updateFilterInfo:YES
+               writeOnDisk:YES
+                completion:completion];
     });
     
 }
 
-- (NSString *)convertToJOSNRules:(NSError **)error{
-    NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
-    NSString *rules = [self fetchRules:error];
-    NSArray<NSString *> *lines = [rules componentsSeparatedByString:@"\n"];
-    for (NSString *line in lines){
-        if (line.length > 0){
-            BOOL isSepcialComment;
-            NSDictionary *jsonRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
-            if (jsonRule && !isSepcialComment){
-                [jsonRules addObject:jsonRule];
-            }
-            
-        }
+- (void)reloadContentBlockerWithCompletion:(void(^)(NSError *error))completion{
+    NSError *error;
+    NSString *content = [self fetchRules:&error];
+    if (error){
+        completion(error);
+        return;
     }
-    
-    NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:0 error:error] encoding:NSUTF8StringEncoding];
-    return ret;
-}
-
-- (void)writeContentBlocker:(NSError **)error{
-    NSString *content = [self convertToJOSNRules:error];
-    if (content.length > 0){
-        [[ContentFilterManager shared] writeToFileName:self.rulePath content:content error:error];
-    }
-}
-
-- (void)reloadContentBlocker:(NSError **)error{
-    NSString *content = [self convertToJOSNRules:error];
-    [[ContentFilterManager shared] writeToFileName:self.rulePath content:content error:error];
-    [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-        NSLog(@"error %@",error);
-    }];
+    [self processRules:content
+      updateFilterInfo:NO
+           writeOnDisk:YES
+            completion:completion];
 }
 
 - (BOOL)active{

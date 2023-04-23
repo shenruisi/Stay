@@ -123,7 +123,7 @@
         [self addColumn:@"download_resource" column:@"audioUrl"];
     }
     
-    [self deleteTable:@"content_filter"];
+//    [self deleteTable:@"content_filter"];
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];
@@ -137,7 +137,7 @@
         basic.status = 1;
         basic.sort = 1;
         basic.expires = @"4 days (update frequency)";
-        basic.version = @"202304030644";
+        basic.version = @"202304190559";
         basic.homepage = @"https://easylist.to/";
         basic.uuid = [@"Basic" md5];
         basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic";
@@ -443,12 +443,9 @@
     }
     
     NSInteger resultCode = sqlite3_step(statement);
-    if (resultCode != SQLITE_DONE) {
-        sqlite3_finalize(statement);
-        return NO;
-    }
+    sqlite3_finalize(statement);
     sqlite3_close(sqliteHandle);
-    return YES;
+    return resultCode == SQLITE_DONE;
 }
 
 

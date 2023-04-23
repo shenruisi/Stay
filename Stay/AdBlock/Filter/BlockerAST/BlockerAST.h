@@ -7,31 +7,15 @@
 
 #import <Foundation/Foundation.h>
 #import "FilterTokenParser.h"
+#import "ContentBlockerRule.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BlockerAST : NSObject
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableDictionary *> *dictionary;
 @property (nonatomic, strong) FilterTokenParser *parser;
+@property (nonatomic, strong) ContentBlockerRule *contentBlockerRule;
+@property (nonatomic, assign) BOOL unsupported;
 
-//trigger
-@property (nonatomic, strong) NSString *urlFilter;
-@property (nonatomic, assign) BOOL urlFilterIsCaseSensitive;
-@property (nonatomic, assign) BOOL originTriggerEndWithAsterisk;
-
-- (void)addIfDomain:(NSString *)ifDomain;
-- (void)addUnlessDomain:(NSString *)unlessDomain;
-- (void)addResourceType:(NSString *)resourceType;
-- (void)addLoadType:(NSString *)loadType;
-- (void)addIfTopUrl:(NSString *)ifTopUrl;
-- (void)addUnlessTopUrl:(NSString *)unlessTopUrl;
-- (void)addLoadContext:(NSString *)loadContext;
-
-//action
-@property (nonatomic, strong) NSString *type;
-@property (nonatomic, strong) NSString *selector;
-
-- (void)resetUrlFilter:(NSString *)urlFilter;
 - (instancetype)initWithParser:(FilterTokenParser *)parser
                           args:(nullable NSArray *)args;
 - (void)construct:(nullable NSArray *)args;
