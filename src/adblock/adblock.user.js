@@ -327,8 +327,8 @@ const browser = __b;
           if(showMakeupTagMenu){
             showMakeupTagMenu = false;
             document.querySelector('#__stay_makeup_menu').remove();
-            startListenerMove();
           }
+          startListenerMove();
         });
         closeTagingDom.addEventListener(clickEvent, (event)=>{
           event.stopPropagation();
@@ -389,7 +389,7 @@ const browser = __b;
         return;
       }
       showMakeupTagMenu = true;
-      stopListenerMove();
+      
       // todo
       // https://res.stayfork.app/scripts/D83C97B84E098F26C669507121FE9EEC/icon.png
       const tagMenuDom = document.createElement('div');
@@ -407,23 +407,8 @@ const browser = __b;
       const tagMenuDomWidth = 187;
       const selectedDomRect = selectDom.getBoundingClientRect();
       // console.log('selectedDomRect-----',selectedDomRect, ',tagMenuDomWidth--',tagMenuDomWidth,',tagMenuDomHeight---',tagMenuDomHeight);
-      const selectedBottomY = Utils.add(selectedDomRect.y,  selectedDomRect.height);
-      const selectedBottomHeight = Utils.sub(clientHeight, selectedBottomY);
-      // 选中区域的selectedBottomHeight距离大于菜单高度，菜单放在选中区域下方；
-      if(selectedBottomHeight >= tagMenuDomHeight){
-        tagMenuDom.style.top = '100%';
-      }else{
-        // 选中区域的top距离大于菜单高度，菜单放在选中区域上方；
-        if(selectedDomRect.y >= tagMenuDomHeight){
-          tagMenuDom.style.bottom = '100%';
-        }else{
-          // 均不符合上要求，则在选中区域中居中展示
-          tagMenuDom.style.top = '50%';
-          tagMenuDom.style.transform = 'translateY(-50%)';
-        }
-      }
+      
       const clientWidth = document.documentElement.clientWidth;
-
       const selectedRightX = Utils.add(selectedDomRect.x,  selectedDomRect.width);
       // 选中区域的left+宽度大于菜单宽度，或者right小于等于0，则与选中区域右边对齐 
       if(selectedRightX >= tagMenuDomWidth){
@@ -438,8 +423,26 @@ const browser = __b;
         }else{
           tagMenuDom.style.left = Utils.sub(clientWidth, selectedDomRect.left)+'px';
         }
-        
       }
+
+      const selectedBottomY = Utils.add(selectedDomRect.y,  selectedDomRect.height);
+      const selectedBottomHeight = Utils.sub(clientHeight, selectedBottomY);
+      // 选中区域的selectedBottomHeight距离大于菜单高度，菜单放在选中区域下方；
+      if(selectedBottomHeight >= tagMenuDomHeight){
+        tagMenuDom.style.top = '100%';
+      }else{
+        // 选中区域的top距离大于菜单高度，菜单放在选中区域上方；
+        if(selectedDomRect.y >= tagMenuDomHeight){
+          tagMenuDom.style.bottom = '100%';
+        }else{
+          // 均不符合上要求，则在选中区域中居中展示
+          tagMenuDom.style.position = 'fixed';
+          tagMenuDom.style.top = '50%';
+          tagMenuDom.style.left = '50%';
+          tagMenuDom.style.transform = 'translate(-50%, -50%)';
+        }
+      }
+
       selectDom.appendChild(tagMenuDom);
 
       
@@ -511,17 +514,27 @@ const browser = __b;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
       console.log('moveDoms-----',moveDoms);
       let moveDom = moveDoms[0];
+      let moveDomRect = moveDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
         if(moveDoms.length<3){
           moveDom = moveDoms[1];
         }else if(moveDoms.length > 5){
-          moveDom = moveDoms[3];
+          let i = 3;
+          moveDom = moveDoms[i];
+          while(moveDomRect.height >= document.documentElement.clientHeight){
+            i = i - 1;
+            moveDom = moveDoms[i];
+            moveDomRect = moveDom.getBoundingClientRect();
+            if(i == 1){
+              break;
+            }
+          }
         }
       }else{
         return;
       }
       console.log('moveDom-----',moveDom);
-      const moveDomRect = moveDom.getBoundingClientRect();
+      moveDomRect = moveDom.getBoundingClientRect();
       if(!moveDomRect || !Object.keys(moveDomRect)){
         return;
       }
@@ -552,6 +565,8 @@ const browser = __b;
       selectDom.style.height = targetHeight+'px';
       selectDom.style.left = targetX+'px';
       selectDom.style.top = targetY+'px';
+
+      stopListenerMove();
     }
   
   
