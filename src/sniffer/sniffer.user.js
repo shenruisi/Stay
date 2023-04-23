@@ -768,7 +768,7 @@ const browser = __b;
           return false;
         });
         document.body.addEventListener('touchstart', function(event) {
-          console.log('touchstart-------',event);
+          // console.log('touchstart-------',event);
           self.handleTargetTouchend(event.target);
           self.handleTargetEvent(event, callback);
           return false;
@@ -796,7 +796,7 @@ const browser = __b;
         let target = event.changedTouches[0];
         const targetPageX = target.pageX;
         const targetPageY = target.pageY;
-        console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+        // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
         if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
@@ -1403,7 +1403,7 @@ const browser = __b;
       if(vHeight<Utils.div(bodyClientHeight, 2)){
         posterHeight = vHeight;
       }
-      console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
+      // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
       let modalDom = document.querySelector('#__stay_sinffer_modal');
       if(!modalDom){
@@ -3543,7 +3543,6 @@ const browser = __b;
       },
       set:function(newValue){
         randomPathUuid = newValue;
-        console.log('randomPathUuid---newValue-----',randomPathUuid);
         //监听ytBaseJSUuid如果发生变化，则需要从basejs中重新匹配解密方法
         if(newValue != ytBaseJSUuid){
           console.log('randomPathUuid--!==-newValue-----',randomPathUuid);

@@ -45,6 +45,12 @@
             "run_at": "document_start"
         },
         {
+            "js": ["popup/js/adblock.js"],
+            "matches": [ "*://*/*" ],
+            "all_frames": false,
+            "run_at": "document_end"
+        },
+        {
             "js": ["popup/js/transfer.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
