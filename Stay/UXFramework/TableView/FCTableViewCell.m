@@ -30,6 +30,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.selectedBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
         self.selectedBackgroundView.backgroundColor = [UIColor clearColor];
+        self.contentView.backgroundColor = [UIColor clearColor];
         [self configGestureRecognizer];
     }
     
@@ -119,12 +120,16 @@
 
 
 - (void)tap:(CGPoint)location{
-    if (self.action){
-        self.action(self.element);
+    if (self.tapAction){
+        self.tapAction(self.element);
     }
 }
 
-- (void)doubleTap:(CGPoint)location{}
+- (void)doubleTap:(CGPoint)location{
+    if (self.doubleTapAction){
+        self.doubleTapAction(self.element);
+    }
+}
 
 - (void)buildWithElement:(id)element{}
 

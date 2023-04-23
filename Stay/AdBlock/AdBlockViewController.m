@@ -17,6 +17,8 @@
 #import "FCStore.h"
 #import "UpgradeSlideController.h"
 #import "ContentFilterManager.h"
+#import "UIColor+Convert.h"
+#import "ImageHelper.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -165,7 +167,7 @@
         cell = [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     cell.element = contentFilter;
-    cell.action = ^(id element) {
+    cell.tapAction = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
         if (contentFilter.type == ContentFilterTypeCustom
             ||contentFilter.type == ContentFilterTypeTag){
@@ -184,12 +186,42 @@
         AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
         cer.contentFilter = contentFilter;
         [self.navigationController pushViewController:cer animated:YES];
-        
-//        [contentFilter reloadContentBlocker];
-        
+    };
+    
+    __weak AdBlockViewController *weakSelf = (AdBlockViewController *)self;
+    cell.doubleTapAction = ^(id element) {
+        ContentFilter *contentFilter = (ContentFilter *)element;
+        [weakSelf updateStatus:contentFilter];
     };
     
     return cell;
+}
+
+- (void)updateStatus:(ContentFilter *)contentFilter{
+    if (contentFilter.active){
+        contentFilter.status = 0;
+        [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+        [self.activatedSource removeObject:contentFilter];
+        [self.stoppedSource addObject:contentFilter];
+        
+        [self.stoppedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
+            if (obj1.sort < obj2.sort) return NSOrderedAscending;
+            else if (obj1.sort > obj2.sort) return NSOrderedDescending;
+            return NSOrderedSame;
+        }];
+    }
+    else{
+        contentFilter.status = 1;
+        [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+        [self.stoppedSource removeObject:contentFilter];
+        [self.activatedSource addObject:contentFilter];
+        
+        [self.activatedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
+            if (obj1.sort < obj2.sort) return NSOrderedAscending;
+            else if (obj1.sort > obj2.sort) return NSOrderedDescending;
+            return NSOrderedSame;
+        }];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -201,6 +233,63 @@
     return self.selectedDataSource.count;
 }
 
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    for (UIView *view in tableView.subviews){
+        if ([view isKindOfClass:NSClassFromString(@"_UITableViewCellSwipeContainerView")]){
+            for (UIView *pullView in view.subviews){
+                if ([pullView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+                    for (UIView *buttonView in pullView.subviews){
+                        if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
+                            for (UIView *targetView in buttonView.subviews){
+                                if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
+                                    targetView.backgroundColor = [UIColor clearColor];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    BOOL isActivatedSelected = self.selectedDataSource == self.activatedSource;
+    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
+    FCTableViewCell *cell = (FCTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    NSMutableArray *actions = [[NSMutableArray alloc] init];
+    UIContextualAction *reloadAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        // 处理删除操作
+        completionHandler(YES);
+    }];
+    reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
+    reloadAction.backgroundColor = [UIColor clearColor];
+    if (isActivatedSelected){
+        [actions addObject:reloadAction];
+    }
+    
+    UIContextualAction *activeOrStopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleDestructive title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        [cell doubleTap:cell.fcContentView.center];
+        completionHandler(YES);
+    }];
+    activeOrStopAction.image = [ImageHelper sfNamed: isActivatedSelected ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
+    activeOrStopAction.backgroundColor = [UIColor clearColor];
+    [actions addObject:activeOrStopAction];
+    
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
+    
+    return configuration;
+}
+
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        // 处理删除操作
+//    }
+//}
+//
+//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return UITableViewCellEditingStyleNone;
+//}
 
 - (UIBarButtonItem *)addItem{
     if (nil == _addItem){
