@@ -44,7 +44,9 @@
                 if (contentFilter.type != ContentFilterTypeCustom
                     && contentFilter.type != ContentFilterTypeTag){
                     if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
-                        [contentFilter writeContentBlocker:nil];
+                        [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
+                            NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                        }];
                     }
                 }
             }
@@ -53,7 +55,9 @@
                 if (contentFilter.type != ContentFilterTypeCustom
                     && contentFilter.type != ContentFilterTypeTag){
                     if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
-                        [contentFilter writeContentBlocker:nil];
+                        [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
+                            NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                        }];
                     }
                 }
             }

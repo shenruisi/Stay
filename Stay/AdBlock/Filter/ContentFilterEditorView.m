@@ -11,7 +11,7 @@
 #import "ContentFilterHighlighter.h"
 #import "NSAttributedString+Style.h"
 
-static NSUInteger LineNumberWidth = 50;
+static NSUInteger LineNumberWidth = 60;
 static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeName";
 
 @interface ContentFilterTextContainer : NSTextContainer
@@ -47,44 +47,38 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 @implementation ContentFilterLayoutManager
 
 - (void)drawGlyphsForGlyphRange:(NSRange)glyphsToShow atPoint:(CGPoint)origin{
+    self.lineNoSet = [[NSMutableSet alloc] init];
     [self drawNumberAtRange:glyphsToShow];
     [super drawGlyphsForGlyphRange:glyphsToShow atPoint:origin];
 }
 
-- (NSMutableSet<NSNumber *> *)lineNoSet{
-    if (nil == _lineNoSet){
-        _lineNoSet = [[NSMutableSet alloc] init];
-    }
-    
-    return _lineNoSet;
-}
-
 - (void)drawNumberAtRange:(NSRange)range{
-    __block CGFloat origin = -1;
     [self enumerateLineFragmentsForGlyphRange:range usingBlock:^(CGRect rect, CGRect usedRect, NSTextContainer * _Nonnull textContainer, NSRange glyphRange, BOOL * _Nonnull stop) {
         CGRect correctRect  = CGRectOffset(rect, self.textContainerOriginOffset.x, self.textContainerOriginOffset.y);
         
         [FCStyle.secondaryPopup setFill];
         [[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, correctRect.origin.y, LineNumberWidth, correctRect.size.height) cornerRadius:0] fill];
        
-        NSAttributedString *line = [self.textStorage attributedSubstringFromRange:glyphRange];
-//        NSLog(@"Range: %@",NSStringFromRange(glyphRange));
-        NSNumber *lineNo = [line attribute:CFLineNoAttributeName atIndex:0 effectiveRange:nil];
-        if (lineNo){
-//            NSInteger lineNumber = (NSInteger)(rect.origin.y / rect.size.height) + 1;
-            NSString *lineNumberStr = [lineNo stringValue];
-            CGRect lineNumberRect = [lineNumberStr boundingRectWithSize:CGSizeMake(LineNumberWidth, CGFLOAT_MAX)
-                                                                options:NSStringDrawingUsesLineFragmentOrigin
-                                                             attributes:@{NSFontAttributeName : FCStyle.footnote}
-                                                                context:nil];
+        if (NSMaxRange(glyphRange) <= self.textStorage.length){
+            NSAttributedString *line = [self.textStorage attributedSubstringFromRange:glyphRange];
+            NSNumber *lineNo = [line attribute:CFLineNoAttributeName atIndex:0 effectiveRange:nil];
             
-            [lineNumberStr drawAtPoint:CGPointMake(LineNumberWidth - lineNumberRect.size.width - 5, correctRect.origin.y)
-                        withAttributes:@{
-                NSForegroundColorAttributeName : FCStyle.fcSecondaryBlack,
-                NSFontAttributeName : FCStyle.footnote
-            }];
+            if (lineNo && ![self.lineNoSet containsObject:lineNo]){
+                //            NSInteger lineNumber = (NSInteger)(rect.origin.y / rect.size.height) + 1;
+                NSString *lineNumberStr = [lineNo stringValue];
+                CGRect lineNumberRect = [lineNumberStr boundingRectWithSize:CGSizeMake(LineNumberWidth, CGFLOAT_MAX)
+                                                                    options:NSStringDrawingUsesLineFragmentOrigin
+                                                                 attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                                                    context:nil];
+                
+                [lineNumberStr drawAtPoint:CGPointMake(LineNumberWidth - lineNumberRect.size.width - 5, correctRect.origin.y)
+                            withAttributes:@{
+                    NSForegroundColorAttributeName : FCStyle.fcSecondaryBlack,
+                    NSFontAttributeName : FCStyle.footnote
+                }];
+                [self.lineNoSet addObject:lineNo];
+            }
         }
-        
     }];
 }
 
@@ -171,7 +165,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
                 
                 [lineAttributedString addAttributes:@{
                     CFLineNoAttributeName : @(lineCount)
-                } range:NSMakeRange(0, 1)];
+                } range:NSMakeRange(0, lineAttributedString.length)];
             }
             [newAttributedString appendAttributedString:lineAttributedString];
         }
