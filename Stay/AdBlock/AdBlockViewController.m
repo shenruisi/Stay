@@ -72,6 +72,7 @@
     [super viewDidLoad];
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
     self.enableTabItem = YES;
+    self.enableSearchTabItem = YES;
 //    self.navigationItem.rightBarButtonItem = self.addItem;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
@@ -103,7 +104,7 @@
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
                 }
-                [contentFilter checkUpdatingIfNeeded:YES completion:nil];
+                [contentFilter checkUpdatingIfNeeded:NO completion:nil];
                 dispatch_semaphore_signal(semaphore);
             }];
             
@@ -343,6 +344,21 @@
 - (void)addAction:(id)sender{
     
 }
+
+//- (void)searchTabItemDidClick{
+//        UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+////        search.searchResultsUpdater = self;
+//        search.searchBar.placeholder = NSLocalizedString(@"SearchAddedUserscripts", @"");
+//        self.navigationItem.searchController = search;
+////        self.navigationItem.searchController.delegate = self;
+////        self.navigationItem.searchController.searchBar.delegate = self;
+//        self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
+////        self.searchController = search;
+////        self.searchController.delegate = self;
+////        self.searchController.searchBar.delegate = self;
+////        [self.searchController.searchBar setTintColor:FCStyle.accent];
+//    search.active = YES;
+//}
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
     if (item == self.activatedTabItem){
