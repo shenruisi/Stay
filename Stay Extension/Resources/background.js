@@ -1076,6 +1076,35 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 });
             }
         }
+        else if("getMakeupTagStatus" == request.operate){
+            let makeupTagStatus = 'on';
+            browser.storage.local.get("stay_makeup_tag_status", (res) => {
+                console.log("getMakeupTagStatus-------stay_makeup_tag_status,--------res=",res)
+                if(res && res["stay_makeup_tag_status"]){
+                    makeupTagStatus = res["stay_makeup_tag_status"]
+                }
+                sendResponse({makeupTagStatus});
+            });
+        }
+        else if("setMakeupTagStatuss" == request.operate){
+            let makeupTagStatus = request.makeupTagStatus;
+            if(makeupTagStatus){
+                let statusMap = {}
+                statusMap.stay_makeup_tag_status = makeupTagStatus;
+                browser.storage.local.set(statusMap, (res) => {
+                    sendResponse(makeupTagStatus);
+                });
+            }
+        }
+        return true;
+    }else if ("content_script" == request.from){
+        // console.log("content_script-------request=", request)
+        if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                // console.log("content_script-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }
     else if ("sniffer" == request.from){
