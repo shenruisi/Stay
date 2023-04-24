@@ -1086,14 +1086,19 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({makeupTagStatus});
             });
         }
-        else if("setMakeupTagStatuss" == request.operate){
+        else if("setMakeupTagStatus" == request.operate){
             let makeupTagStatus = request.makeupTagStatus;
             if(makeupTagStatus){
                 let statusMap = {}
                 statusMap.stay_makeup_tag_status = makeupTagStatus;
                 browser.storage.local.set(statusMap, (res) => {
+                    console.log('setMakeupTagStatus----res------', res);
+                    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                        browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "pushMakeupTagStatus"});
+                    });
                     sendResponse(makeupTagStatus);
                 });
+
             }
         }
         return true;

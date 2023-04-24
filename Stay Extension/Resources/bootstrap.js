@@ -241,6 +241,11 @@ let injectedContentVendor = new Set();
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
+        else if (request.from == "background" && "pushMakeupTagStatus" === operate) {
+            // console.log("bootstrap--pushMakeupTagStatus---", request);
+            let makeupTagStatus = request.makeupTagStatus; 
+            window.postMessage({ name: "pushMakeupTagStatus", makeupTagStatus });
+        }
         else if (request.from == "background" && "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP" === operate) {
             // console.log("bootstrap--RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP---", request);
             let xhrId = request.xhrId; 
