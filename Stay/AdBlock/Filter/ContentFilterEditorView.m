@@ -134,6 +134,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 }
 
 - (void)setStrings:(NSString *)strings{
+    if (nil == strings) strings = @"\n";
     [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
                 withAttributedText:[NSAttributedString captionText:strings]
                      selectedRange:NSMakeRange(0, 0)];
@@ -167,7 +168,11 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
                     CFLineNoAttributeName : @(lineCount)
                 } range:NSMakeRange(0, lineAttributedString.length)];
             }
-            [newAttributedString appendAttributedString:lineAttributedString];
+            
+            if (!(lineCount == lines.count && [lineAttributedString.string isEqualToString:@"\n"])){
+                [newAttributedString appendAttributedString:lineAttributedString];
+            }
+           
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
