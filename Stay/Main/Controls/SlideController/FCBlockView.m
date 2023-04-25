@@ -9,6 +9,14 @@
 
 @implementation FCBlockView
 
+- (instancetype)initWithAlpha:(CGFloat)alpha{
+    if (self = [super init]){
+        self.backgroundColor = [UIColor colorWithWhite:0 alpha:alpha];
+    }
+    
+    return self;
+}
+
 - (instancetype)init{
     if (self = [super init]){
         self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.05];

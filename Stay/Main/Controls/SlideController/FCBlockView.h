@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FCBlockView : FCView
 
 @property (nonatomic, assign) id<FCBlockViewDelegate> delegate;
+
+- (instancetype)initWithAlpha:(CGFloat)alpha;
 @end
 
 NS_ASSUME_NONNULL_END

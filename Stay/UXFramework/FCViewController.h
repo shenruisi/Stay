@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) FCNavigationTabItem *navigationTabItem;
 @property (nonatomic, assign) BOOL enableTabItem;
 @property (nonatomic, assign) BOOL enableSearchTabItem;
+@property (nonatomic, strong) NSString *searchPlaceholder;
 @property (nonatomic, strong) UINavigationBarAppearance *appearance;
 @property (nonatomic, assign) CGFloat naivgationBarBaseLine;
 

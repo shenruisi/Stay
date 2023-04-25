@@ -23,13 +23,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)activeItem:(FCTabButtonItem *)tagetItem;
 @end
 
+@interface FCSearchBar : UIView
+
+@property (nonatomic, strong) UITextField *textField;
+@end
+
 @interface FCNavigationBar : UINavigationBar
 
 @property (nonatomic, strong, nullable) FCNavigationTabItem *navigationTabItem;
 @property (nonatomic, assign) BOOL enableTabItem;
 @property (nonatomic, assign) BOOL enableTabItemSearch;
+@property (nonatomic, strong) FCSearchBar *searchBar;
 - (void)rightItemClick:(FCTabButtonItem *)item;
 - (void)showSearchWithOffset:(CGFloat)offset;
+- (void)startSearch;
 @end
 
 NS_ASSUME_NONNULL_END

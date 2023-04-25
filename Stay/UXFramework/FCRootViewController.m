@@ -39,7 +39,7 @@
     self.navigationItem.standardAppearance = self.appearance;
     self.navigationItem.scrollEdgeAppearance = self.appearance;
     
-    if (self.enableSearchTabItem){
+    if (self.enableSearchTabItem && self.naivgationBarBaseLine > 0){
         FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
         [navigationBar showSearchWithOffset:self.navigationController.navigationBar.height - self.naivgationBarBaseLine];
 //        [navigationBar ]
@@ -47,6 +47,11 @@
     }
 }
 
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
+    FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
+    [navigationBar startSearch];
+}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];

@@ -50,6 +50,8 @@
 }
 
 
+
+
 - (void)setEnableTabItem:(BOOL)enableTabItem{
     _enableTabItem = enableTabItem;
     [self fcNavigationBar].enableTabItem = enableTabItem;
