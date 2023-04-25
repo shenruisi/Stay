@@ -57,7 +57,7 @@ typedef enum{
     FilterTokenTypeNewLine,
     FilterTokenTypeException,
     FilterTokenTypeSeparator,
-    FilterTokenTypeTigger,
+    FilterTokenTypeTrigger,
     FilterTokenTypeOptions,
     FilterTokenTypeDomain,
     FilterTokenTypeSelectorElementHiding,
@@ -86,7 +86,7 @@ typedef enum{
 + (instancetype)specialCommentVersion:(NSString *)text;
 + (instancetype)exception;
 + (instancetype)separator;
-+ (instancetype)tigger:(NSString *)text;
++ (instancetype)trigger:(NSString *)text;
 + (instancetype)options:(NSString *)text;
 + (instancetype)selectorElementHiding:(NSString *)selector;
 + (instancetype)selectorElementHidingEmulation:(NSString *)selector;

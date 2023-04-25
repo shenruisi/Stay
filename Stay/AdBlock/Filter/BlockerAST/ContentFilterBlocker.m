@@ -12,7 +12,7 @@
 #import "AddressBlockerAST.h"
 #import "PipeBlockerAST.h"
 #import "SeparatorBlockerAST.h"
-#import "TiggerBlockerAST.h"
+#import "TriggerBlockerAST.h"
 #import "OptionsBlockerAST.h"
 #import "SelectorBlockerAST.h"
 #import "SpecialCommentBlockerAST.h"
@@ -56,7 +56,7 @@
         }
         
         if ([parser isTigger]){
-            ast = [[TiggerBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
+            ast = [[TriggerBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
             if (ast.unsupported){
 //                NSLog(@"Unsupport rule: %@",rule);
                 return nil;

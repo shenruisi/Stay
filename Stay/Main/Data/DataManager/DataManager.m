@@ -123,7 +123,7 @@
         [self addColumn:@"download_resource" column:@"audioUrl"];
     }
     
-//    [self deleteTable:@"content_filter"];
+    [self deleteTable:@"content_filter"];
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];
@@ -181,6 +181,7 @@
         custom.defaultTitle = NSLocalizedString(@"ContentFilterCustom", @"");
         custom.title = NSLocalizedString(@"ContentFilterCustom", @"");
         custom.rulePath = @"Custom.json";
+        custom.path = @"Custom.txt";
         custom.defaultUrl = @"";
         custom.downloadUrl = @"";
         custom.enable = 0;
@@ -194,6 +195,7 @@
         tag.defaultTitle = NSLocalizedString(@"ContentFilterTag", @"");
         tag.title = NSLocalizedString(@"ContentFilterTag", @"");
         tag.rulePath = @"Tag.json";
+        tag.path = @"Tag.txt";
         tag.defaultUrl = @"";
         tag.downloadUrl = @"";
         tag.enable = 0;

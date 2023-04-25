@@ -1,17 +1,17 @@
 //
-//  TiggerBlockerAST.m
+//  TriggerBlockerAST.m
 //  Stay
 //
 //  Created by ris on 2023/4/7.
 //
 
-#import "TiggerBlockerAST.h"
+#import "TriggerBlockerAST.h"
 
-@interface TiggerBlockerAST()
+@interface TriggerBlockerAST()
 
 @end
 
-@implementation TiggerBlockerAST
+@implementation TriggerBlockerAST
 
 - (void)construct:(NSArray *)args{
     [super construct:args];

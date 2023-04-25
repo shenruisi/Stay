@@ -17,7 +17,6 @@
 }
 
 @property (nonatomic, strong) NSString *resourcePath;
-@property (nonatomic, strong) NSString *documentPath;
 @property (nonatomic, strong) NSString *sharedPath;
 @end
 
@@ -31,8 +30,8 @@
 }
 
 - (NSString *)fetchRules:(NSError **)error{
-    if ([[NSFileManager defaultManager] fileExistsAtPath:self.documentPath]){
-        return [[NSString alloc] initWithContentsOfFile:self.documentPath encoding:NSUTF8StringEncoding error:error];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.sharedPath]){
+        return [[NSString alloc] initWithContentsOfFile:self.sharedPath encoding:NSUTF8StringEncoding error:error];
     }
     
     return [[NSString alloc] initWithContentsOfFile:self.resourcePath encoding:NSUTF8StringEncoding error:error];
@@ -62,7 +61,7 @@
                                             NSError *error) {
             if (nil == error && data.length > 0){
                 NSString *content = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                NSURL *url = [NSURL fileURLWithPath:self.documentPath];
+                NSURL *url = [NSURL fileURLWithPath:self.sharedPath];
                 [content writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:&error];
                 if (error){
                     completion(error);
@@ -200,7 +199,7 @@
             return;
         }
 
-        [[ContentFilterManager shared] writeToFileName:self.rulePath content:ret error:&error];
+        [[ContentFilterManager shared] writeJSONToFileName:self.rulePath content:ret error:&error];
         
         if (error){
             if (completion){
@@ -261,10 +260,11 @@
     return [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:self.path];
 }
 
-- (NSString *)documentPath{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    return [documentsDirectory stringByAppendingPathComponent:self.path];
+- (NSString *)sharedPath{
+    NSString *textPath = [[[[NSFileManager defaultManager]
+                   containerURLForSecurityApplicationGroupIdentifier:
+                       @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterText"];
+    return [textPath stringByAppendingPathComponent:self.path];
 }
 
 

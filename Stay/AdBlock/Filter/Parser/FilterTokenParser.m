@@ -261,7 +261,7 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
         
         if ([self isRegexStart:self.lastChars]){
             [tigger appendString:self.lastChars];
-            return [FilterToken tigger:tigger];
+            return [FilterToken trigger:tigger];
         }
         else{
             //continue treat as tigger
@@ -281,7 +281,7 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
            && ![self isPipe:self.lastChars]);
     
     [self backward];
-    return [FilterToken tigger:tigger];
+    return [FilterToken trigger:tigger];
     
 }
 
@@ -379,8 +379,8 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     return self.opaqueCurToken.type == FilterTokenTypeInfo;
 }
 
-- (BOOL)isTigger{
-    return self.opaqueCurToken.type == FilterTokenTypeTigger;
+- (BOOL)isTrigger{
+    return self.opaqueCurToken.type == FilterTokenTypeTrigger;
 }
 
 - (BOOL)isException{

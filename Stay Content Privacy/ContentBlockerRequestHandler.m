@@ -15,7 +15,7 @@
 @implementation ContentBlockerRequestHandler
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context {
-    NSURL *url = [[ContentFilterManager shared] contentURLOfFileName:@"Privacy.json"];
+    NSURL *url = [[ContentFilterManager shared] ruleJSONURLOfFileName:@"Privacy.json"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]){
         url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
     }

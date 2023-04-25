@@ -463,6 +463,33 @@
         
         
     }
+    else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
+        NSString *url = message[@"url"];
+        NSString *selector = message[@"selector"];
+        
+        if (url.length > 0 && selector.length > 0){
+            NSURL *uri = [NSURL URLWithString:url];
+            NSString *rule = [NSString stringWithFormat:@"||%@%@%@##%@\n",uri.host,uri.path,uri.fragment,selector];
+            
+            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:rule error:nil];
+            NSDictionary *dictionary = @{
+                @"trigger" : @{
+                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@%@",uri.host,uri.path,uri.fragment]
+                },
+                @"action" : @{
+                    @"type" : @"css-display-none",
+                    @"selector" : selector
+                }
+            };
+            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" dictionary:dictionary error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+            }];
+        }
+        
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,

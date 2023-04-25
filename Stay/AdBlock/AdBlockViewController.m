@@ -45,7 +45,7 @@
             for (ContentFilter *contentFilter in self.activatedSource){
                 if (contentFilter.type != ContentFilterTypeCustom
                     && contentFilter.type != ContentFilterTypeTag){
-                    if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
+                    if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
                             NSLog(@"reloadContentBlockerWithCompletion %@",error);
                         }];
@@ -56,7 +56,7 @@
             for (ContentFilter *contentFilter in self.stoppedSource){
                 if (contentFilter.type != ContentFilterTypeCustom
                     && contentFilter.type != ContentFilterTypeTag){
-                    if (![[ContentFilterManager shared] existRuleJson:contentFilter.rulePath]){
+                    if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
                             NSLog(@"reloadContentBlockerWithCompletion %@",error);
                         }];
