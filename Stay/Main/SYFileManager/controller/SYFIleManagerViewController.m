@@ -31,6 +31,7 @@
 #import "Stay-Swift.h"
 #endif
 #import "SYDownloadSlideController.h"
+#import "SYTaskTableViewCell.h"
 
 static CGFloat kMacToolbar = 50.0;
 
@@ -341,7 +342,7 @@ UIDocumentPickerDelegate
         return 137;
     } else {
         if(self.selectedIdx == 1) {
-            return 152;
+            return 150;
         } else {
             return 61.5;
         }
@@ -395,7 +396,7 @@ UIDocumentPickerDelegate
                 controller.pathUuid = [FCShared tabManager].tabs[indexPath.row - 1].uuid;
                 controller.title = [FCShared tabManager].tabs[indexPath.row - 1].config.name;
                 controller.array = [NSMutableArray array];
-                [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadResourceByPath:controller.pathUuid]];
+                [controller.array addObjectsFromArray: [[DataManager shareManager] selectDownloadComplete:controller.pathUuid]];
                 [self.navigationController pushViewController:controller animated:TRUE];
             } else {
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
@@ -547,30 +548,15 @@ UIDocumentPickerDelegate
     } else {
         
         if(self.selectedIdx == 1) {
-            DownloadResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadResourcecellID"];
-            
+            SYTaskTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SYTASKCELL"];
             DownloadResource *resource= self.videoArray[indexPath.row];
-            
-            if(resource.status == 2) {
-                if (cell == nil) {
-                    cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
-                }
-            } else {
-                cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellIDR"];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
-            
-            for (UIView *subView in cell.contentView.subviews) {
-                [subView removeFromSuperview];
-            }
-            
-            
-            
+            cell = [[SYTaskTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SYTASKCELL"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        
             cell.contentView.width = self.view.width;
             cell.downloadResource = resource;
             cell.controller = self;
-            cell.backgroundColor = [UIColor clearColor];
-            
             
             if( cell.downloadResource.status == 0 || cell.downloadResource.status == 4) {
                 FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
@@ -601,7 +587,7 @@ UIDocumentPickerDelegate
                         resource.status = 0;
                         resource.downloadProcess = progress * 100;
                         dispatch_async(dispatch_get_main_queue(),^{
-                            cell.progress.progress = progress;
+                            cell.progress = progress;
                             cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
                             [cell.downloadRateLabel sizeToFit];
                             cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
