@@ -317,6 +317,7 @@ static CGFloat OneStageMovingLength = 50;
         [self textFieldContainer];
         [self cancelButton];
         [self leftAccessory];
+        [self textField];
     }
     
     return self;
@@ -346,10 +347,12 @@ static CGFloat OneStageMovingLength = 50;
         _leftAccessory = [[UIImageView alloc] init];
         _leftAccessory.hidden = YES;
         _leftAccessory.image = [ImageHelper sfNamed:@"magnifyingglass" font:FCStyle.headline color:FCStyle.accent];
+        CGSize size = _leftAccessory.image.size;
         _leftAccessory.translatesAutoresizingMaskIntoConstraints = NO;
         [self.textFieldContainer addSubview:_leftAccessory];
         [NSLayoutConstraint activateConstraints:@[
             [_leftAccessory.leadingAnchor constraintEqualToAnchor:self.textFieldContainer.leadingAnchor constant:7.9],
+            [_leftAccessory.widthAnchor constraintEqualToConstant:size.width],
             [_leftAccessory.topAnchor constraintEqualToAnchor:self.textFieldContainer.topAnchor constant:10]
         ]];
     }
@@ -361,6 +364,13 @@ static CGFloat OneStageMovingLength = 50;
     if (nil == _textField){
         _textField = [[UITextField alloc] init];
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.textFieldContainer addSubview:_textField];
+        [NSLayoutConstraint activateConstraints:@[
+            [_textField.leadingAnchor constraintEqualToAnchor:self.leftAccessory.trailingAnchor constant:5],
+            [_textField.trailingAnchor constraintEqualToAnchor:self.textFieldContainer.trailingAnchor constant:-5],
+            [_textField.topAnchor constraintEqualToAnchor:self.textFieldContainer.topAnchor],
+            [_textField.bottomAnchor constraintEqualToAnchor:self.textFieldContainer.bottomAnchor]
+        ]];
         
     }
     
@@ -399,7 +409,8 @@ static CGFloat OneStageMovingLength = 50;
 
 @interface FCNavigationBar()<
  FCBlockViewDelegate,
- FCSearchBarDelegate
+ FCSearchBarDelegate,
+ UITextFieldDelegate
 >
 
 @property (nonatomic, strong) FCTabButtonItem *searchTabItem;
@@ -443,17 +454,16 @@ static CGFloat OneStageMovingLength = 50;
 }
 
 - (void)searchBarAppearSecondStage{
+    FCViewController *cer = [self topController];
+    if ([cer.searchUpdating respondsToSelector:@selector(willBeginSearch)]){
+        [cer.searchUpdating willBeginSearch];
+    }
     self.searchBarShouldAppear = YES;
     self.searchBar.leftAccessory.hidden = NO;
     [self.searchBar.textFieldContainerLeading setActive:NO];
     self.searchBar.textFieldContainerLeading = [self.searchBar.textFieldContainer.leadingAnchor constraintEqualToAnchor:self.searchBar.leadingAnchor constant:15];
     [self.searchBar.textFieldContainerLeading setActive:YES];
     [self.navigationTabItem bringSubviewToFront:self.searchBar];
-    
-    FCViewController *cer;
-    if ([self.delegate isKindOfClass:[FCNavigationController class]]){
-        cer = (FCViewController *)((FCNavigationController *)self.delegate).topViewController;
-    }
     
     if (cer){
         UIEdgeInsets safeEdgeInsets = cer.view.safeAreaInsets;
@@ -472,10 +482,29 @@ static CGFloat OneStageMovingLength = 50;
         self.searchBlockView.alpha = 0.3;
         [self.navigationTabItem alphaSubItems:0];
         [self.searchBar setFrame:CGRectMake(0, 0, self.searchBar.size.width, self.searchBar.size.height)];
+    } completion:^(BOOL finished) {
+        if ([cer.searchUpdating respondsToSelector:@selector(willBeginSearch)]){
+            [cer.searchUpdating didBeganSearch];
+        }
+        [self.searchBar.textField becomeFirstResponder];
     }];
 }
 
-- (void)searchBarDidClickCancel{
+- (FCViewController *)topController{
+    FCViewController *cer = nil;
+    if ([self.delegate isKindOfClass:[FCNavigationController class]]){
+        cer = (FCViewController *)((FCNavigationController *)self.delegate).topViewController;
+    }
+    
+    return cer;
+}
+
+- (void)cancelSearch{
+    FCViewController *cer = [self topController];
+    if ([cer.searchUpdating respondsToSelector:@selector(willEndSearch)]){
+        [cer.searchUpdating willEndSearch];
+    }
+    [self.searchBar.textField resignFirstResponder];
     [self.searchBar.textFieldContainerLeading setActive:NO];
     self.searchBar.textFieldContainerLeading = [self.searchBar.textFieldContainer.leadingAnchor constraintEqualToAnchor:self.searchBar.leadingAnchor];
     [self.searchBar.textFieldContainerLeading setActive:YES];
@@ -497,8 +526,15 @@ static CGFloat OneStageMovingLength = 50;
             [self.searchTabItem.button setImage:[ImageHelper sfNamed:@"magnifyingglass" font:FCStyle.headline color:FCStyle.fcBlack] forState:UIControlStateNormal];
         } completion:^(BOOL finished) {
             self.searchBarShouldAppear = NO;
+            if ([cer.searchUpdating respondsToSelector:@selector(didEndSearch)]){
+                [cer.searchUpdating didEndSearch];
+            }
         }];
     }];
+}
+
+- (void)searchBarDidClickCancel{
+    [self cancelSearch];
 }
 
 - (FCTabButtonItem *)searchTabItem{
@@ -565,13 +601,24 @@ static CGFloat OneStageMovingLength = 50;
 }
 
 - (void)touched{
-    
+    [self searchBarDidClickCancel];
+}
+
+- (void)controlTextDidChange:(NSNotification *)obj{
+    UITextField *searchField = (UITextField *)obj.object;
+    if (searchField == self.searchBar.textField){
+        FCViewController *cer = [self topController];
+        if ([cer.searchUpdating respondsToSelector:@selector(searchTextDidChange:)]){
+            [cer.searchUpdating searchTextDidChange:searchField.text];
+        }
+    }
 }
 
 - (FCSearchBar *)searchBar{
     if (nil == _searchBar){
         _searchBar = [[FCSearchBar alloc] init];
         _searchBar.delegate = self;
+        _searchBar.textField.delegate = self;
         [self.navigationTabItem addSubview:self.searchBar];
         [self.navigationTabItem sendSubviewToBack:self.searchBar];
     }

@@ -10,7 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FCViewController : UIViewController
+
+@interface FCViewController : UIViewController<
+ FCSearchUpdatingDelegate
+>
 
 @property (nonatomic, readonly) FCNavigationTabItem *navigationTabItem;
 @property (nonatomic, assign) BOOL enableTabItem;
@@ -18,9 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *searchPlaceholder;
 @property (nonatomic, strong) UINavigationBarAppearance *appearance;
 @property (nonatomic, assign) CGFloat naivgationBarBaseLine;
+@property (nonatomic, weak) id<FCSearchUpdatingDelegate> searchUpdating;
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh;
 - (void)searchTabItemDidClick;
+- (void)endSearch;
 @end
 
 NS_ASSUME_NONNULL_END

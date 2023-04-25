@@ -49,9 +49,6 @@
     
 }
 
-
-
-
 - (void)setEnableTabItem:(BOOL)enableTabItem{
     _enableTabItem = enableTabItem;
     [self fcNavigationBar].enableTabItem = enableTabItem;
@@ -78,5 +75,15 @@
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{}
 
 - (void)searchTabItemDidClick{}
+
+- (void)willBeginSearch{}
+- (void)didBeganSearch{}
+- (void)willEndSearch{}
+- (void)didEndSearch{}
+- (void)searchTextDidChange:(NSString *)text{}
+
+- (void)endSearch{
+    [[self fcNavigationBar] cancelSearch];
+}
 
 @end

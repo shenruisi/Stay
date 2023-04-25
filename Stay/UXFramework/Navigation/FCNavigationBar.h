@@ -10,6 +10,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+@protocol FCSearchUpdatingDelegate <NSObject>
+
+- (void)willBeginSearch;
+- (void)didBeganSearch;
+- (void)willEndSearch;
+- (void)didEndSearch;
+- (void)searchTextDidChange:(NSString *)text;
+@end
+
 @interface FCTabButtonItem : NSObject
 
 @property (nonatomic, strong) NSString *title;
@@ -37,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)rightItemClick:(FCTabButtonItem *)item;
 - (void)showSearchWithOffset:(CGFloat)offset;
 - (void)startSearch;
+- (void)cancelSearch;
 @end
 
 NS_ASSUME_NONNULL_END
