@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FCTabButtonItem : NSObject
 
 @property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) UIImage *image;
 @end
 
 @interface FCNavigationTabItem : FCView
@@ -26,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) FCNavigationTabItem *navigationTabItem;
 @property (nonatomic, assign) BOOL enableTabItem;
+@property (nonatomic, assign) BOOL enableTabItemSearch;
+- (void)rightItemClick:(FCTabButtonItem *)item;
+- (void)showSearchWithOffset:(CGFloat)offset;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -53,7 +53,7 @@ static ContentFilterManager *instance = nil;
     }
     NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
-    NSLog(@"writeToFileName %@, %@",fileName,*error);
+    NSLog(@"writeToFileName %@",fileName);
 }
 
 - (NSURL *)contentURLOfFileName:(NSString *)fileName{

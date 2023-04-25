@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *selector;
+@property (nonatomic, strong) NSMutableSet *selectors;
 
 - (NSDictionary *)toDictionary;
 @end

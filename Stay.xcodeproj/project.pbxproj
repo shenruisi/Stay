@@ -1823,9 +1823,9 @@
 		583B541029DD504500CB292A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				583B541329DD504500CB292A /* FCNavigationBar.h */,
 				583B541129DD504500CB292A /* FCNavigationBar.m */,
 				583B541229DD504500CB292A /* FCNavigationController.h */,
-				583B541329DD504500CB292A /* FCNavigationBar.h */,
 				583B541429DD504500CB292A /* FCNavigationController.m */,
 			);
 			path = Navigation;

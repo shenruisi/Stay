@@ -19,19 +19,6 @@
 
 @implementation ContentFilterBlocker
 
-static NSMutableDictionary *myDict = nil;
-+ (NSMutableDictionary *)dict{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (nil == myDict){
-            myDict = [[NSMutableDictionary alloc] init];
-        }
-        
-    });
-    
-    return myDict;
-}
-
 + (ContentBlockerRule *)rule:(NSString *)rule isSpecialComment:(BOOL *)isSpecialComment {
     FilterTokenParser *parser = [[FilterTokenParser alloc] initWithChars:rule];
     
@@ -71,7 +58,7 @@ static NSMutableDictionary *myDict = nil;
         if ([parser isTigger]){
             ast = [[TiggerBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
             if (ast.unsupported){
-                NSLog(@"Unsupport rule: %@",rule);
+//                NSLog(@"Unsupport rule: %@",rule);
                 return nil;
             }
         }
@@ -89,20 +76,7 @@ static NSMutableDictionary *myDict = nil;
     if (contentBlockerRule.trigger.urlFilter.length == 0){
         contentBlockerRule.trigger.urlFilter = @".*";
     }
-//    NSString *urlFilter = dictionary[@"trigger"][@"url-filter"];
-//    if (urlFilter.length == 0){
-//        urlFilter = @".*";
-//        dictionary[@"trigger"][@"url-filter"] = @".*";
-////        NSLog(@"rule: %@",rule);
-//    }
-//    
-//    if (nil == [[self dict] objectForKey:urlFilter]){
-//        [self dict][urlFilter] = @(1);
-//    }
-//    else{
-//        NSUInteger count = [[self dict][urlFilter] integerValue];
-//        [self dict][urlFilter] = @(count+1);
-//    }
+
     return contentBlockerRule;
 }
 

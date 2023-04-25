@@ -22,13 +22,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-
     
 }
+
+
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if (88 == self.navigationController.navigationBar.height){
         self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+        
     }
     else{
         self.appearance.backgroundEffect = nil;
@@ -36,6 +38,13 @@
     
     self.navigationItem.standardAppearance = self.appearance;
     self.navigationItem.scrollEdgeAppearance = self.appearance;
+    
+    if (self.enableSearchTabItem){
+        FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
+        [navigationBar showSearchWithOffset:self.navigationController.navigationBar.height - self.naivgationBarBaseLine];
+//        [navigationBar ]
+//        NSLog(@"scrollView %f",self.navigationController.navigationBar.height - self.naivgationBarBaseLine);
+    }
 }
 
 

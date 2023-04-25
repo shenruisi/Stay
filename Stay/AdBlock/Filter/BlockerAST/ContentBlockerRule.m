@@ -133,6 +133,14 @@
 
 @implementation ContentBlockerAction
 
+- (NSMutableSet *)selectors{
+    if (nil == _selectors){
+        _selectors = [[NSMutableSet alloc] init];
+    }
+    
+    return _selectors;
+}
+
 - (NSString *)type{
     if (nil == _type){
         _type = @"block";
@@ -191,7 +199,11 @@
 }
 
 - (BOOL)mergeRule:(ContentBlockerRule *)other{
-    if (![self.action isEqual:other.action]) return NO;
+    if (![self.action.type isEqualToString:other.action.type]) return NO;
+    if (self.action.selector.length > 0 && other.action.selector.length > 0){
+        [self.action.selectors addObject:other.action.selector];
+//        self.action.selector = [NSString stringWithFormat:@"%@, %@",self.action.selector,other.action.selector];
+    }
     
     //Try to Merge
     BOOL mergeDomain = !((self.trigger.ifDomain.count > 0 &&  other.trigger.unlessDomain.count > 0) || (self.trigger.unlessDomain.count > 0 && other.trigger.ifDomain.count > 0));
@@ -200,26 +212,37 @@
     
     if ([self.trigger.ifDomain isEqualToSet:other.trigger.ifDomain]
         && [self.trigger.unlessDomain isEqualToSet:other.trigger.unlessDomain]){
-        self.trigger.resourceType = [NSMutableSet setWithSet:[self.trigger.resourceType setByAddingObjectsFromSet:other.trigger.resourceType]];
-        self.trigger.loadType =  [NSMutableSet setWithSet:[self.trigger.loadType setByAddingObjectsFromSet:other.trigger.loadType]];
+        if (self.trigger.resourceType.count > 0 && other.trigger.resourceType.count > 0){
+            self.trigger.resourceType = [NSMutableSet setWithSet:[self.trigger.resourceType setByAddingObjectsFromSet:other.trigger.resourceType]];
+        }
+        else{
+            self.trigger.resourceType = [[NSMutableSet alloc] init];
+        }
+        
+        if (self.trigger.loadType.count > 0 && other.trigger.loadType.count > 0){
+            self.trigger.loadType =  [NSMutableSet setWithSet:[self.trigger.loadType setByAddingObjectsFromSet:other.trigger.loadType]];
+        }
+        else{
+            self.trigger.loadType = [[NSMutableSet alloc] init];
+        }
         self.trigger.urlFilterIsCaseSensitive = self.trigger.urlFilterIsCaseSensitive || other.trigger.urlFilterIsCaseSensitive;
         return YES;
     }
     
     //Trigger is large
-    if ((self.trigger.resourceType.count == 0 || [other.trigger.resourceType isSubsetOfSet:self.trigger.resourceType]) && (self.trigger.loadType.count == 0 || [other.trigger.resourceType isSubsetOfSet:self.trigger.resourceType])){
-        self.trigger.ifDomain =  [NSMutableSet setWithSet:[self.trigger.ifDomain setByAddingObjectsFromSet:other.trigger.ifDomain]];
-        self.trigger.unlessDomain =  [NSMutableSet setWithSet:[self.trigger.unlessDomain setByAddingObjectsFromSet:other.trigger.unlessDomain]];
-        self.trigger.urlFilterIsCaseSensitive = self.trigger.urlFilterIsCaseSensitive || other.trigger.urlFilterIsCaseSensitive;
-        return YES;
-    }
-    
-    if ((other.trigger.resourceType.count == 0 || [self.trigger.resourceType isSubsetOfSet:other.trigger.resourceType]) && (other.trigger.loadType.count == 0 || [self.trigger.resourceType isSubsetOfSet:other.trigger.resourceType])){
-        self.trigger.ifDomain =  [NSMutableSet setWithSet:[self.trigger.ifDomain setByAddingObjectsFromSet:other.trigger.ifDomain]];
-        self.trigger.unlessDomain =  [NSMutableSet setWithSet:[self.trigger.unlessDomain setByAddingObjectsFromSet:other.trigger.unlessDomain]];
-        self.trigger.urlFilterIsCaseSensitive = self.trigger.urlFilterIsCaseSensitive || other.trigger.urlFilterIsCaseSensitive;
-        return YES;
-    }
+//    if ((self.trigger.resourceType.count == 0 || [other.trigger.resourceType isSubsetOfSet:self.trigger.resourceType]) && (self.trigger.loadType.count == 0 || [other.trigger.resourceType isSubsetOfSet:self.trigger.resourceType])){
+//        self.trigger.ifDomain =  [NSMutableSet setWithSet:[self.trigger.ifDomain setByAddingObjectsFromSet:other.trigger.ifDomain]];
+//        self.trigger.unlessDomain =  [NSMutableSet setWithSet:[self.trigger.unlessDomain setByAddingObjectsFromSet:other.trigger.unlessDomain]];
+//        self.trigger.urlFilterIsCaseSensitive = self.trigger.urlFilterIsCaseSensitive || other.trigger.urlFilterIsCaseSensitive;
+//        return YES;
+//    }
+//    
+//    if ((other.trigger.resourceType.count == 0 || [self.trigger.resourceType isSubsetOfSet:other.trigger.resourceType]) && (other.trigger.loadType.count == 0 || [self.trigger.resourceType isSubsetOfSet:other.trigger.resourceType])){
+//        self.trigger.ifDomain =  [NSMutableSet setWithSet:[self.trigger.ifDomain setByAddingObjectsFromSet:other.trigger.ifDomain]];
+//        self.trigger.unlessDomain =  [NSMutableSet setWithSet:[self.trigger.unlessDomain setByAddingObjectsFromSet:other.trigger.unlessDomain]];
+//        self.trigger.urlFilterIsCaseSensitive = self.trigger.urlFilterIsCaseSensitive || other.trigger.urlFilterIsCaseSensitive;
+//        return YES;
+//    }
     
     return NO;
 }

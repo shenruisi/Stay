@@ -312,3 +312,4 @@ UpgradeMessage="升級到Stay PRO來解鎖%@";
 Dismiss="關閉";
 LatestVersion="已經是最新版本";
 ContentFilterRestoreMessage="你確定要恢復成默認設置嗎？";
+ReloadRulesMessage="你確定要重新加載規則嗎？";
