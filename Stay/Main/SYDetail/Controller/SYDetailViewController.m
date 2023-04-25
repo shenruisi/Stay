@@ -55,6 +55,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = FCStyle.popup;
 
+     self.hidesBottomBarWhenPushed = YES;
+     
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];

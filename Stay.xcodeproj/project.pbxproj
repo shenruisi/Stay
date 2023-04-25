@@ -672,6 +672,10 @@
 		84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
 		84DB5FE929F6990600526857 /* SYDownloadedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */; };
 		84DB5FEA29F6990600526857 /* SYDownloadedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */; };
+		84DB5FED29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FEC29F7AA7400526857 /* DownloadScriptSlideController.m */; };
+		84DB5FEE29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FEC29F7AA7400526857 /* DownloadScriptSlideController.m */; };
+		84DB5FF129F7AB2C00526857 /* DownloadScriptModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FF029F7AB2C00526857 /* DownloadScriptModelViewController.m */; };
+		84DB5FF229F7AB2C00526857 /* DownloadScriptModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FF029F7AB2C00526857 /* DownloadScriptModelViewController.m */; };
 		84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */; };
 		84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */; };
 		84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA0C2962C20D003846AD /* SYChangeDocSlideController.m */; };
@@ -1412,6 +1416,10 @@
 		84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNoDownLoadDetailViewController.m; sourceTree = "<group>"; };
 		84DB5FE729F6990600526857 /* SYDownloadedViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadedViewCell.h; sourceTree = "<group>"; };
 		84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadedViewCell.m; sourceTree = "<group>"; };
+		84DB5FEB29F7AA7400526857 /* DownloadScriptSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadScriptSlideController.h; sourceTree = "<group>"; };
+		84DB5FEC29F7AA7400526857 /* DownloadScriptSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadScriptSlideController.m; sourceTree = "<group>"; };
+		84DB5FEF29F7AB2C00526857 /* DownloadScriptModelViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadScriptModelViewController.h; sourceTree = "<group>"; };
+		84DB5FF029F7AB2C00526857 /* DownloadScriptModelViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadScriptModelViewController.m; sourceTree = "<group>"; };
 		84E8EA07295C7C95003846AD /* SYVideoCellTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVideoCellTableViewCell.h; sourceTree = "<group>"; };
 		84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYVideoCellTableViewCell.m; sourceTree = "<group>"; };
 		84E8EA0B2962C20D003846AD /* SYChangeDocSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYChangeDocSlideController.h; sourceTree = "<group>"; };
@@ -2503,6 +2511,10 @@
 				58FEB1FD283B5BF900BC2A92 /* LoadingSlideController.m */,
 				58FEB200283B5D3F00BC2A92 /* LoadingStatusModalViewController.h */,
 				58FEB201283B5D3F00BC2A92 /* LoadingStatusModalViewController.m */,
+				84DB5FEB29F7AA7400526857 /* DownloadScriptSlideController.h */,
+				84DB5FEC29F7AA7400526857 /* DownloadScriptSlideController.m */,
+				84DB5FEF29F7AB2C00526857 /* DownloadScriptModelViewController.h */,
+				84DB5FF029F7AB2C00526857 /* DownloadScriptModelViewController.m */,
 			);
 			path = Loading;
 			sourceTree = "<group>";
@@ -3666,6 +3678,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				582061C8294C4C0E00A32D0C /* ModalItemView.m in Sources */,
+				84DB5FF129F7AB2C00526857 /* DownloadScriptModelViewController.m in Sources */,
 				3C949B9C297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				58CFA5D128F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
 				84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
@@ -3686,6 +3699,7 @@
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
+				84DB5FED29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
 				5867D14C288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				84BA56F62944BC5D00FD4446 /* SYProgress.m in Sources */,
@@ -3976,6 +3990,7 @@
 				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				849E77DC293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				3C358D562973E57C00118063 /* M3U8SegmentInfoList.m in Sources */,
+				84DB5FF229F7AB2C00526857 /* DownloadScriptModelViewController.m in Sources */,
 				582061E1294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
 				8460E47529925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
@@ -4073,6 +4088,7 @@
 				58ADADE229E7FA0700C00332 /* FCTextField.m in Sources */,
 				582061F7294C516700A32D0C /* SYDownloadModalViewController.m in Sources */,
 				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
+				84DB5FEE29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */,
 				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,

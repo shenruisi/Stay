@@ -341,7 +341,7 @@
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor =  DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+        _tableView.backgroundColor =  [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     
