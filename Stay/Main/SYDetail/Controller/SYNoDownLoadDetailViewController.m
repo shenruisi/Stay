@@ -190,9 +190,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    for (UIView *subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor clearColor];
+
     
     if(self.scriptDic == nil) {
         return cell;
@@ -240,6 +240,8 @@
    
      [self.actBtn setTitle:NSLocalizedString(@"Get", @"")  forState:UIControlStateNormal];
      self.actBtn.backgroundColor = FCStyle.background;
+     self.actBtn.layer.borderWidth = 1;
+     self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
      [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     
     NSArray *plafroms = self.scriptDic[@"platforms"];
@@ -1420,7 +1422,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     

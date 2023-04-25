@@ -32,6 +32,7 @@
 #endif
 #import "SYDownloadSlideController.h"
 #import "SYTaskTableViewCell.h"
+#import "SYDownloadedViewCell.h"
 
 static CGFloat kMacToolbar = 50.0;
 
@@ -339,7 +340,7 @@ UIDocumentPickerDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if([tableView isEqual:self.searchTableView]) {
-        return 137;
+        return 150;
     } else {
         if(self.selectedIdx == 1) {
             return 150;
@@ -467,84 +468,26 @@ UIDocumentPickerDelegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([tableView isEqual:self.searchTableView]) {
-        DownloadResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadResourcecellID"];
-        if (cell == nil) {
-            cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
-        }
-        for (UIView *subView in cell.contentView.subviews) {
-            [subView removeFromSuperview];
-        }
+        SYDownloadedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SYDownloadedViewCell"];
         
+        DownloadResource *resource= self.searchData[indexPath.row];
         
-        cell.contentView.width = self.view.width;
-        cell.downloadResource = self.searchData[indexPath.row];
-        cell.controller = self;
-        
-        if( cell.downloadResource.status == 0) {
-            FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
-            Request *request = [[Request alloc] init];
-            request.url =  cell.downloadResource.downloadUrl;
-            request.fileDir = tab.path;
-            request.fileName = [cell.downloadResource.allPath lastPathComponent];
-            request.fileType = @"video";
-            request.audioUrl = cell.downloadResource.audioUrl;
-            request.key =  cell.downloadResource.firstPath;
-            Task *task =  [[DownloadManager shared]  enqueue:request];
+        if(resource.status == 2) {
+            if (cell == nil) {
+                cell = [[SYDownloadedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SYDownloadedViewCell"];
+            }
             
-            task.block = ^(float progress, NSString *speed, DMStatus status) {
-                if(status == DMStatusFailed) {
-                    [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:cell.downloadResource.downloadUuid];
-                    cell.downloadResource.status = 3;
-                } else if(status == DMStatusDownloading) {
-                    if(cell.downloadResource.status != 0) {
-                        [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:cell.downloadResource.downloadUuid];
-                    }
-    //                [[DataManager shareManager] updateDownloadResourcProcess:progress * 100 uuid:cell.downloadResource.downloadUuid];
-                    cell.downloadResource.status = 0;
-                    cell.downloadResource.downloadProcess = progress * 100;
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        cell.progress.progress = progress;
-                        cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
-                    });
-                    
-                    return;
-                } else if(status == DMStatusComplete) {
-                    [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:cell.downloadResource.downloadUuid];
-                    AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:cell.downloadResource.allPath]];
-                    if (cell.downloadResource.icon.length == 0) {
-                        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-                        CMTime time = CMTimeMake(1, 1);
-                        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:nil error:nil];
-                        if (imageRef != nil) {
-                            UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-                            [[DataManager shareManager] updateIconByuuid:thumbnail uuid:cell.downloadResource.downloadUuid];
-                        }
-                        CGImageRelease(imageRef);
-                    }
-                    [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:cell.downloadResource.downloadUuid];
-                    cell.downloadResource.status = 2;
-                
-        
-                    [self.videoArray removeObject:cell.downloadResource];
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [self updateDownloadingText];
-                        [tableView reloadData];
-                    })  ;
-                    return;
-                } else if(status == DMStatusPending) {
-                    [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:cell.downloadResource.downloadUuid];
-                    cell.downloadResource.status = 1;
-               }
-                
-                dispatch_async(dispatch_get_main_queue(),^{
-                    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
-                });
-            };
+            cell.contentView.width = self.view.width;
+            cell.downloadResource = self.searchData[indexPath.row];
+            cell.controller = self;
+            return cell;
+        } else {
+            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                           reuseIdentifier:nil];
+            return cell;
         }
         
-        return cell;
+        
     } else {
         
         if(self.selectedIdx == 1) {
