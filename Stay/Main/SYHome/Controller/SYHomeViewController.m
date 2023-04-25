@@ -307,6 +307,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.enableTabItem = YES;
+    self.enableSearchTabItem = YES;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     self.leftTitle  = NSLocalizedString(@"Userscripts","Userscripts");
 
@@ -1123,6 +1124,21 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 #pragma mark -searchBarDelegate
 
+- (void)didBeganSearch {
+    [self.searchController setActive:YES];
+    [_results removeAllObjects];
+    [self.tableView reloadData];
+}
+
+- (void)searchTextDidChange:(NSString *)text {
+    [_results removeAllObjects];
+    if(text.length > 0) {
+        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:text]];
+    }
+    [self.tableView reloadData];
+}
+
+
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 //    [searchBar resignFirstResponder];
     [self.searchController setActive:NO];
@@ -1287,6 +1303,26 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         return 0.1;
     }
     return 50;
+}
+
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    for (UIView *view in tableView.subviews){
+        if ([view isKindOfClass:NSClassFromString(@"_UITableViewCellSwipeContainerView")]){
+            for (UIView *pullView in view.subviews){
+                if ([pullView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+                    for (UIView *buttonView in pullView.subviews){
+                        if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
+                            for (UIView *targetView in buttonView.subviews){
+                                if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
+                                    targetView.backgroundColor = [UIColor clearColor];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
