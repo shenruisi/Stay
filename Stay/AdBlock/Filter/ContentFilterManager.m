@@ -9,7 +9,8 @@
 
 @interface ContentFilterManager()
 
-@property (nonatomic, strong) NSString *path;
+@property (nonatomic, strong) NSString *ruleJSONPath;
+@property (nonatomic, strong) NSString *ruleTextPath;
 @end
 
 @implementation ContentFilterManager
@@ -26,12 +27,23 @@ static ContentFilterManager *instance = nil;
 
 - (instancetype)init{
     if (self = [super init]){
-        self.path = [[[[NSFileManager defaultManager]
+        self.ruleJSONPath = [[[[NSFileManager defaultManager]
                        containerURLForSecurityApplicationGroupIdentifier:
-                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilter"];
+                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterJSON"];
         
-        if (![[NSFileManager defaultManager] fileExistsAtPath:self.path]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:self.path
+        self.ruleTextPath = [[[[NSFileManager defaultManager]
+                       containerURLForSecurityApplicationGroupIdentifier:
+                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterText"];
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleJSONPath]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleJSONPath
+                                      withIntermediateDirectories:YES
+                                                       attributes:nil
+                                                            error:nil];
+        }
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleTextPath]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleTextPath
                                       withIntermediateDirectories:YES
                                                        attributes:nil
                                                             error:nil];
@@ -41,24 +53,46 @@ static ContentFilterManager *instance = nil;
     return self;
 }
 
-- (BOOL)existRuleJson:(NSString *)fileName{
-    NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
+- (BOOL)existRuleJSON:(NSString *)fileName{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
     return exist;
 }
 
-- (void)writeToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
+- (void)writeJSONToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
     if ([content isEqualToString:@"[]"]){
         content = @"[{\"trigger\":{\"url-filter\":\"webkit.svg\"},\"action\":{\"type\":\"block\"}}]";
     }
-    NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
     NSLog(@"writeToFileName %@",fileName);
 }
 
-- (NSURL *)contentURLOfFileName:(NSString *)fileName{
-    NSString *filePath = [self.path stringByAppendingPathComponent:fileName];
+- (void)appendJSONToFileName:(NSString *)fileName dictionary:(NSDictionary *)dictionary error:(NSError **)error{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    if (0 == jsonData.length) return;
+    NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
+    if (error) return;
+    [existJsonArray addObject:dictionary];
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:0 error:error];
+    if (error) return;
+    [newData writeToFile:filePath atomically:YES];
+}
+
+- (void)appendTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
+    NSString *filePath = [self.ruleTextPath stringByAppendingPathComponent:fileName];
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    [fileHandle seekToEndOfFile];
+    NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
+    [fileHandle writeData:data];
+    [fileHandle closeFile];
+}
+
+- (NSURL *)ruleJSONURLOfFileName:(NSString *)fileName{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     return [NSURL fileURLWithPath:filePath];
 }
 
 @end
+ 

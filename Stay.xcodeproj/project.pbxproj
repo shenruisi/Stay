@@ -479,8 +479,8 @@
 		58ADADFF29E801CF00C00332 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */; };
 		58ADAE0029E801CF00C00332 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */; };
 		58ADAE0129E801CF00C00332 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */; };
-		58ADAE0229E801CF00C00332 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */; };
-		58ADAE0329E801CF00C00332 /* TiggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */; };
+		58ADAE0229E801CF00C00332 /* TriggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */; };
+		58ADAE0329E801CF00C00332 /* TriggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */; };
 		58ADAE0429E801CF00C00332 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF029E801CF00C00332 /* AddressBlockerAST.m */; };
 		58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF029E801CF00C00332 /* AddressBlockerAST.m */; };
 		58ADAE0629E801CF00C00332 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */; };
@@ -1183,7 +1183,7 @@
 		58ADADEC29E801CF00C00332 /* PipeBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeBlockerAST.h; sourceTree = "<group>"; };
 		58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorBlockerAST.m; sourceTree = "<group>"; };
 		58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsBlockerAST.m; sourceTree = "<group>"; };
-		58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiggerBlockerAST.m; sourceTree = "<group>"; };
+		58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriggerBlockerAST.m; sourceTree = "<group>"; };
 		58ADADF029E801CF00C00332 /* AddressBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBlockerAST.m; sourceTree = "<group>"; };
 		58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
 		58ADADF229E801CF00C00332 /* BlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
@@ -1193,7 +1193,7 @@
 		58ADADF629E801CF00C00332 /* PipeBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeBlockerAST.m; sourceTree = "<group>"; };
 		58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsBlockerAST.h; sourceTree = "<group>"; };
 		58ADADF829E801CF00C00332 /* AddressBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBlockerAST.h; sourceTree = "<group>"; };
-		58ADADF929E801CF00C00332 /* TiggerBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiggerBlockerAST.h; sourceTree = "<group>"; };
+		58ADADF929E801CF00C00332 /* TriggerBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerBlockerAST.h; sourceTree = "<group>"; };
 		58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeSlideController.h; sourceTree = "<group>"; };
 		58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeSlideController.m; sourceTree = "<group>"; };
 		58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeModalViewController.h; sourceTree = "<group>"; };
@@ -2271,8 +2271,8 @@
 				58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */,
 				58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */,
 				58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */,
-				58ADADF929E801CF00C00332 /* TiggerBlockerAST.h */,
-				58ADADEF29E801CF00C00332 /* TiggerBlockerAST.m */,
+				58ADADF929E801CF00C00332 /* TriggerBlockerAST.h */,
+				58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */,
 				58ADAE1529ED2BF800C00332 /* SpecialCommentBlockerAST.h */,
 				58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */,
 			);
@@ -3740,7 +3740,7 @@
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
-				58ADAE0229E801CF00C00332 /* TiggerBlockerAST.m in Sources */,
+				58ADAE0229E801CF00C00332 /* TriggerBlockerAST.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
@@ -4169,7 +4169,7 @@
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				582061C7294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
-				58ADAE0329E801CF00C00332 /* TiggerBlockerAST.m in Sources */,
+				58ADAE0329E801CF00C00332 /* TriggerBlockerAST.m in Sources */,
 				84BA9D18292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				5884031D29667079002CA227 /* UIColor+Convert.m in Sources */,

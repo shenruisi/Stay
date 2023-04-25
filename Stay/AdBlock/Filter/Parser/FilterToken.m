@@ -104,9 +104,9 @@
     return separator;
 }
 
-+ (instancetype)tigger:(NSString *)text{
++ (instancetype)trigger:(NSString *)text{
     FilterToken *tigger = [[FilterToken alloc] init];
-    tigger.type = FilterTokenTypeTigger;
+    tigger.type = FilterTokenTypeTrigger;
     tigger.value = text;
     return tigger;
 }
@@ -322,7 +322,7 @@
     else if (type == FilterTokenTypeNewLine) return @"NewLine";
     else if (type == FilterTokenTypeException) return @"Exception";
     else if (type == FilterTokenTypeSeparator) return @"Separator";
-    else if (type == FilterTokenTypeTigger) return @"Tigger";
+    else if (type == FilterTokenTypeTrigger) return @"Trigger";
     else if (type == FilterTokenTypeOptions) return @"Options";
     else if (type == FilterTokenTypeSelectorElementHiding) return @"Element Hiding";
     else if (type == FilterTokenTypeSelectorElementHidingEmulation) return @"Element Hiding Emulation";

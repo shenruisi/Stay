@@ -181,6 +181,7 @@
         custom.defaultTitle = NSLocalizedString(@"ContentFilterCustom", @"");
         custom.title = NSLocalizedString(@"ContentFilterCustom", @"");
         custom.rulePath = @"Custom.json";
+        custom.path = @"Custom.txt";
         custom.defaultUrl = @"";
         custom.downloadUrl = @"";
         custom.enable = 0;
@@ -194,6 +195,7 @@
         tag.defaultTitle = NSLocalizedString(@"ContentFilterTag", @"");
         tag.title = NSLocalizedString(@"ContentFilterTag", @"");
         tag.rulePath = @"Tag.json";
+        tag.path = @"Tag.txt";
         tag.defaultUrl = @"";
         tag.downloadUrl = @"";
         tag.enable = 0;

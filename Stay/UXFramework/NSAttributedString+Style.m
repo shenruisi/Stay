@@ -12,6 +12,7 @@
 @implementation NSAttributedString(Style)
 
 + (NSMutableAttributedString *)bodyText:(NSString *)text{
+    if (nil == text) text = @"";
     return [[NSMutableAttributedString alloc] initWithString:text attributes:@{
         NSFontAttributeName : [FCStyle.body toHelvetica:0],
         NSForegroundColorAttributeName : FCStyle.fcBlack
@@ -19,6 +20,7 @@
 }
 
 + (NSMutableAttributedString *)captionText:(NSString *)text{
+    if (nil == text) text = @"";
     return [[NSMutableAttributedString alloc] initWithString:text attributes:@{
         NSFontAttributeName : [FCStyle.caption toHelvetica:0],
         NSForegroundColorAttributeName : FCStyle.fcBlack
