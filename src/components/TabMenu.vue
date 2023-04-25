@@ -14,9 +14,9 @@
           <img src="../assets/images/download-sel.png" v-if="item.id == selectedTabId" />
           <img class="unselected"  src="../assets/images/download.png" v-else/>
         </div>
-        <div class="tab-img" :key="item.name" v-if="item.name == 'console_tab'">
-          <img src="../assets/images/console-sel.png" v-if="item.id == selectedTabId" />
-          <img class="unselected" src="../assets/images/console.png" v-else/>
+        <div class="tab-img" :key="item.name" v-if="item.name == 'adblock_tab'">
+          <img src="../assets/images/block-sel.png" v-if="item.id == selectedTabId" />
+          <img class="unselected" src="../assets/images/block.png" v-else/>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@ export default {
         {id: 1, selected: 1, name: 'matched_scripts_tab'},
         {id: 2, selected: 0, name: 'darkmode_tab'},
         {id: 3, selected: 0, name: 'downloader_tab'},
-        {id: 4, selected: 0, name: 'console_tab'}
+        {id: 4, selected: 0, name: 'adblock_tab'}
       ],
       selectedTabId: props.tabId,
       isMobile: isMobile()

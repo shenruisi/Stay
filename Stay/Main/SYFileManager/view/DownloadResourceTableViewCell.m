@@ -268,6 +268,7 @@
         [self.contentView addSubview:_downloadRateLabel];
     
         if(_downloadResource.status == 0) {
+            _downloadSpeedLabel.hidden = NO;
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
             self.downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
             self.downloadSpeedLabel.left = _downloadRateLabel.right + 10;
@@ -294,7 +295,8 @@
             stopLabel.centerX = stop.centerX;
         
         } else if (_downloadResource.status == 1) {
-            
+            _downloadSpeedLabel.hidden = YES;
+
             UILabel *continueLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             continueLabel.tintColor = FCStyle.accent;
             continueLabel.text = NSLocalizedString(@"CONTINUE","");
@@ -315,6 +317,8 @@
             continueLabel.centerX = stop.centerX;
 
         } else if (_downloadResource.status == 3) {
+            _downloadSpeedLabel.hidden = YES;
+
             UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             retryLabel.tintColor = FCStyle.accent;
             retryLabel.text = NSLocalizedString(@"RETRY","");
@@ -337,12 +341,15 @@
 
             _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"DownloadFailed",""),_downloadResource.downloadProcess];
         } else if (_downloadResource.status == 4) {
+            _downloadSpeedLabel.hidden = NO;
 
             _downloadRateLabel.text = NSLocalizedString(@"Transcoding","");
             [_downloadRateLabel sizeToFit];
             self.downloadSpeedLabel.centerY = _downloadRateLabel.centerY;
             self.downloadSpeedLabel.left = _downloadRateLabel.right + 10;
         } else if (_downloadResource.status == 5) {
+            _downloadSpeedLabel.hidden = YES;
+
             UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             retryLabel.tintColor = FCStyle.accent;
             retryLabel.text = NSLocalizedString(@"RETRY","");
@@ -365,6 +372,8 @@
 
             _downloadRateLabel.text = NSLocalizedString(@"TranscodingFailed","");
         } else if (_downloadResource.status == 6){
+            _downloadSpeedLabel.hidden = YES;
+
             UILabel *retryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 52, 18)];
             retryLabel.tintColor = FCStyle.accent;
             retryLabel.text = NSLocalizedString(@"RETRY","");

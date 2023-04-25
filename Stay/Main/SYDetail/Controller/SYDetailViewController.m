@@ -223,10 +223,8 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
      
-     for (UIView *subView in cell.contentView.subviews) {
-         [subView removeFromSuperview];
-     }
-
+     cell.contentView.backgroundColor = [UIColor clearColor];
+     cell.backgroundColor = [UIColor clearColor];
      CGFloat left = 15;
      CGFloat titleLabelLeftSize = 0;
      if(self.script.icon != NULL && self.script.icon.length > 0) {
@@ -269,11 +267,13 @@
      
      if(self.script.active) {
          [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
-         self.actBtn.backgroundColor = FCStyle.accent;
-         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
+         [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
      } else {
          [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
-          self.actBtn.backgroundColor = FCStyle.background;
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.fcBlack.CGColor;
           [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
      }
      
@@ -1455,8 +1455,8 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-        [self.view addSubview:_tableView];
+         _tableView.backgroundColor = [UIColor clearColor];
+         [self.view addSubview:_tableView];
     }
     
     return _tableView;

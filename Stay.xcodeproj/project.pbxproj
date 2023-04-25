@@ -594,6 +594,8 @@
 		8460E4792993ACC8008BC7D0 /* SYReportSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460E4772993ACC8008BC7D0 /* SYReportSlideController.m */; };
 		8460E47C2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460E47B2993ACF0008BC7D0 /* SYReportModalViewController.m */; };
 		8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460E47B2993ACF0008BC7D0 /* SYReportModalViewController.m */; };
+		8481963529EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8481963429EE8ED700F14B1B /* SYTaskTableViewCell.m */; };
+		8481963629EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8481963429EE8ED700F14B1B /* SYTaskTableViewCell.m */; };
 		848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */; };
 		848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 848A48B8279A5BA000D55FFD /* SYVersionUtils.m */; };
 		84932DDD292F50A9004A1EEC /* SYBigImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84932DDC292F50A9004A1EEC /* SYBigImageViewController.m */; };
@@ -668,6 +670,8 @@
 		84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */; };
 		84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
 		84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */; };
+		84DB5FE929F6990600526857 /* SYDownloadedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */; };
+		84DB5FEA29F6990600526857 /* SYDownloadedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */; };
 		84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */; };
 		84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */; };
 		84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E8EA0C2962C20D003846AD /* SYChangeDocSlideController.m */; };
@@ -1312,6 +1316,8 @@
 		8460E4772993ACC8008BC7D0 /* SYReportSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYReportSlideController.m; sourceTree = "<group>"; };
 		8460E47A2993ACF0008BC7D0 /* SYReportModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYReportModalViewController.h; sourceTree = "<group>"; };
 		8460E47B2993ACF0008BC7D0 /* SYReportModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYReportModalViewController.m; sourceTree = "<group>"; };
+		8481963329EE8ED700F14B1B /* SYTaskTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYTaskTableViewCell.h; sourceTree = "<group>"; };
+		8481963429EE8ED700F14B1B /* SYTaskTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYTaskTableViewCell.m; sourceTree = "<group>"; };
 		848A48B4279A4C7800D55FFD /* SYNetworkUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNetworkUtils.h; sourceTree = "<group>"; };
 		848A48B5279A4C7800D55FFD /* SYNetworkUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNetworkUtils.m; sourceTree = "<group>"; };
 		848A48B7279A5BA000D55FFD /* SYVersionUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVersionUtils.h; sourceTree = "<group>"; };
@@ -1404,6 +1410,8 @@
 		84CC9B5C28D1ADFA002EB493 /* HomeDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeDetailCell.m; sourceTree = "<group>"; };
 		84CC9B5F28D1C290002EB493 /* SYNoDownLoadDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYNoDownLoadDetailViewController.h; sourceTree = "<group>"; };
 		84CC9B6028D1C290002EB493 /* SYNoDownLoadDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYNoDownLoadDetailViewController.m; sourceTree = "<group>"; };
+		84DB5FE729F6990600526857 /* SYDownloadedViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadedViewCell.h; sourceTree = "<group>"; };
+		84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadedViewCell.m; sourceTree = "<group>"; };
 		84E8EA07295C7C95003846AD /* SYVideoCellTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYVideoCellTableViewCell.h; sourceTree = "<group>"; };
 		84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYVideoCellTableViewCell.m; sourceTree = "<group>"; };
 		84E8EA0B2962C20D003846AD /* SYChangeDocSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYChangeDocSlideController.h; sourceTree = "<group>"; };
@@ -2623,6 +2631,10 @@
 				849E77D2293D8F3300AD83D7 /* DownloadFileTableViewCell.m */,
 				849E77D9293E0E0C00AD83D7 /* DownloadResourceTableViewCell.h */,
 				849E77DA293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m */,
+				8481963329EE8ED700F14B1B /* SYTaskTableViewCell.h */,
+				8481963429EE8ED700F14B1B /* SYTaskTableViewCell.m */,
+				84DB5FE729F6990600526857 /* SYDownloadedViewCell.h */,
+				84DB5FE829F6990600526857 /* SYDownloadedViewCell.m */,
 				84E8EA07295C7C95003846AD /* SYVideoCellTableViewCell.h */,
 				84E8EA08295C7C95003846AD /* SYVideoCellTableViewCell.m */,
 				84BA56F42944BC5D00FD4446 /* SYProgress.h */,
@@ -3710,6 +3722,7 @@
 				58724A2E28FE4CD400A894D8 /* EmptyViewController.m in Sources */,
 				583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				583B542429DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
+				84DB5FE929F6990600526857 /* SYDownloadedViewCell.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
@@ -3822,6 +3835,7 @@
 				583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
 				583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
+				8481963529EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
@@ -3935,6 +3949,7 @@
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
+				84DB5FEA29F6990600526857 /* SYDownloadedViewCell.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				583B542529DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
 				583B541829DD504500CB292A /* FCNavigationController.m in Sources */,
@@ -4001,6 +4016,7 @@
 				3C949B9D297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
+				8481963629EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,

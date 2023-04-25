@@ -19,6 +19,7 @@
 #import "SYChangeDocSlideController.h"
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
+#import "SYDownloadedViewCell.h"
 #if FC_IOS
 #import "Stay-Swift.h"
 #else
@@ -58,140 +59,34 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    DownloadResource *downloadResource = self.array[indexPath.row];
     if(downloadResource.status == 2) {
-        return 137;
+        return 150;
     } else {
         return 128;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    DownloadResourceTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadResourcecellID"];
+    SYDownloadedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SYDownloadedViewCell"];
     
     DownloadResource *resource= self.array[indexPath.row];
     
     if(resource.status == 2) {
         if (cell == nil) {
-            cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellID"];
+            cell = [[SYDownloadedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SYDownloadedViewCell"];
         }
+        
+        cell.contentView.width = self.view.width;
+        cell.downloadResource = self.array[indexPath.row];
+        cell.controller = self;
+        return cell;
     } else {
-        cell = [[DownloadResourceTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadResourcecellIDR"];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    
-    for (UIView *subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
+        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                       reuseIdentifier:nil];
+        return cell;
     }
     
     
-    
-    cell.contentView.width = self.view.width;
-    cell.downloadResource = self.array[indexPath.row];
-    cell.controller = self;
-    
-    if( cell.downloadResource.status == 0 || cell.downloadResource.status == 4) {
-        FCTab *tab = [[FCShared tabManager] tabOfUUID:cell.downloadResource.firstPath];
-        Request *request = [[Request alloc] init];
-        request.url =  cell.downloadResource.downloadUrl;
-        request.fileDir = tab.path;
-        request.fileName = [cell.downloadResource.allPath lastPathComponent];
-        request.fileType = @"video";
-        request.key =  cell.downloadResource.firstPath;
-        request.audioUrl = cell.downloadResource.audioUrl;
-        Task *task =  [[DownloadManager shared]  enqueue:request];
-        
-        resource.downloadProcess = task.progress * 100;
-        
-        task.block = ^(float progress, NSString *speed, DMStatus status) {
-            if(status == DMStatusFailed) {
-                [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:resource.downloadUuid];
-                cell.downloadResource.status = 3;
-            } else if(status == DMStatusDownloading) {
-                if(resource.status != 0) {
-                    [[DataManager shareManager]updateDownloadResourceStatus:0 uuid:resource.downloadUuid];
-                }
-//                [[DataManager shareManager] updateDownloadResourcProcess:progress * 100 uuid:cell.downloadResource.downloadUuid];
-                resource.status = 0;
-                resource.downloadProcess = progress * 100;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    cell.progress.progress = progress;
-                    cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
-                    [cell.downloadRateLabel sizeToFit];
-                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
-                    cell.downloadSpeedLabel.text = speed;
-                });
-                
-                return;
-            } else if(status == DMStatusComplete) {
-                [[DataManager shareManager]updateDownloadResourceStatus:2 uuid:resource.downloadUuid];
-                AVAsset *asset = [AVAsset assetWithURL:[NSURL fileURLWithPath:resource.allPath]];
-                if (resource.icon.length == 0) {
-                    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:asset];
-                    CMTime time = CMTimeMake(1, 1);
-                    CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:nil error:nil];
-                    if (imageRef != nil) {
-                        UIImage *thumbnail = [UIImage imageWithCGImage:imageRef];
-                        [[DataManager shareManager] updateIconByuuid:thumbnail uuid:resource.downloadUuid];
-                    }
-                    CGImageRelease(imageRef);
-                }
-                [[DataManager shareManager] updateVideoDuration:CMTimeGetSeconds(asset.duration) uuid:resource.downloadUuid];
-                resource.status = 2;
-                [self reloadData];
-            } else if(status == DMStatusPending) {
-                [[DataManager shareManager]updateDownloadResourceStatus:1 uuid:resource.downloadUuid];
-                resource.status = 1;
-            } else if(status == DMStatusTranscoding) {
-                if(resource.status  != 4) {
-                    [[DataManager shareManager]updateDownloadResourceStatus:4 uuid:resource.downloadUuid];
-                }
-                dispatch_async(dispatch_get_main_queue(),^{
-//                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
-                    cell.downloadSpeedLabel.text = speed;
-                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
-                });
-                resource.status = 4;
-                if(speed != nil && speed.length > 0) {
-                    return;
-                }
-            } else if(status == DMStatusFailedTranscode) {
-                [[DataManager shareManager]updateDownloadResourceStatus:5 uuid:resource.downloadUuid];
-                resource.status = 5;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedTranscode", @"")
-                                                                                   message:@""
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                   
-                    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                         style:UIAlertActionStyleCancel
-                         handler:^(UIAlertAction * _Nonnull action) {
-                     }];
-                     [alert addAction:cancel];
-                    [self presentViewController:alert animated:YES completion:nil];
-                });
-            } else if(status == DMStatusFailedNoSpace) {
-                [[DataManager shareManager]updateDownloadResourceStatus:6 uuid:resource.downloadUuid];
-                resource.status = 6;
-                dispatch_async(dispatch_get_main_queue(),^{
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"FailedNoSpace", @"")
-                                                                                   message:@""
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                   
-                    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                         style:UIAlertActionStyleCancel
-                         handler:^(UIAlertAction * _Nonnull action) {
-                     }];
-                     [alert addAction:cancel];
-                    [self presentViewController:alert animated:YES completion:nil];
-                });
-            }
-            
-            dispatch_async(dispatch_get_main_queue(),^{
-                [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationNone];
-            });
-        };
-    }
-    
-    return cell;
+
     
 }
 
@@ -355,7 +250,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.tableView.frame = self.view.bounds;
+//    self.tableView.frame = self.view.bounds;
     self.tabBarController.tabBar.hidden = YES;
     [self reloadData];
 }
@@ -368,9 +263,9 @@
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef FC_MAC
-    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #else
-        self.tableView.frame = self.view.bounds;
+//        self.tableView.frame = self.view.bounds;
 #endif
     
     
@@ -389,12 +284,21 @@
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc]init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
+        
     }
     return _tableView;
 }

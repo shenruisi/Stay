@@ -2,9 +2,9 @@
 let randomYTObj = {}; 
 
 function fetchRandomStr(randomStr, speedRandomStr){
-  window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
+  // window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
   // window.webkit.messageHandlers.log.postMessage('fetchRandomStr---randomStr--'+randomStr);
-  // window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
+  window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
   randomYTObj.randomStr = randomStr;
   randomYTObj.speedRandomStr = speedRandomStr;
 }
@@ -726,17 +726,19 @@ function fetchRandomStr(randomStr, speedRandomStr){
     // }
 
     let n = Utils.queryURLParams(sourceUrl, 'n');
+    // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---n-----'+n);
     if(!n){
       console.log('decodeYoutubeSpeedFun---n-is-null---',n);
       return sourceUrl;
     }
-    // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---ytParam_N_Obj--1---'+JSON.stringify(ytParam_N_Obj));
+    // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---ytParam_N_Obj--1---'+JSON.stringify(ytParam_N_Obj)+n);
     if(!ytParam_N_Obj[n]){
       ytParam_N_Obj[n] = getYoutubeNParam(n);
     }
 
     if(!ytParam_N_Obj[n]){
       console.log('decodeYoutubeSpeedFun---ytParam_N_Obj[n]-is-null---',n);
+      // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---n--2---'+ytParam_N_Obj[n]);
       return sourceUrl
     }
     
@@ -752,6 +754,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
       const decodeSpeedFun = new Function('return '+decodeSpeedFunStr); 
       return decodeSpeedFun()(decodeURIComponent(n));
     } catch (error) {
+      window.webkit.messageHandlers.log.postMessage('getYoutubeNParam---decodeSpeedFun-is-error---'+n+ error);
       return '';
     }
   }

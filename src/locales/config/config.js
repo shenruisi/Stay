@@ -2,6 +2,7 @@
 export default {
   "en": {
     "matched_scripts_tab": "Matched",
+    "adblock_tab": "Content Blocker",
     "console_tab": "Console",
     "darkmode_tab": "Dark Mode",
     "state_actived": "Activated",
@@ -37,9 +38,14 @@ export default {
     'longpress': 'Long press to get video',
     'switch_off': 'Off',
     'switch_on': 'On',
+    'taging_status_btn': 'Tap to Tag Ads on Webpage',
+    'taging': 'Three finger tap to start tagging',
+    'taging_manage_title': 'Webpage tagging rules',
+    'taging_manage_btn': 'Manage',
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
+    "adblock_tab": "内容拦截器",
     "console_tab": "控制台",
     "darkmode_tab": "暗黑模式",
     "state_actived": "已激活",
@@ -75,9 +81,14 @@ export default {
     'longpress': '长按获取视频',
     'switch_off': '关',
     'switch_on': '开',
+    'taging_status_btn': '点击在网页上标记广告',
+    'taging': '用三个手指触屏开始标记',
+    'taging_manage_title': '网页标记规则',
+    'taging_manage_btn': '管理',
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
+    "adblock_tab": "內容攔截器",
     "console_tab": "控制台",
     "darkmode_tab": "暗黑模式",
     "state_actived": "已激活",
@@ -113,6 +124,10 @@ export default {
     'longpress': '長按獲取視頻',
     'switch_on': '開',
     'switch_off': '關',
+    'taging_status_btn': '點擊在網頁上標記廣告',
+    'taging': '用三個手指觸屏開始標記',
+    'taging_manage_title': '網頁標記規則',
+    'taging_manage_btn': '管理',
   }
 }
 /* eslint-disable */

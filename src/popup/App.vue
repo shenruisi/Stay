@@ -4,16 +4,17 @@
     <Header>{{t(selectedTab.name)}}</Header>
     <div class="tab-content">
       <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
-      <template v-if="selectedTab.id==2 || selectedTab.id==3">
+      <template v-if="selectedTab.id==2 || selectedTab.id==3 || selectedTab.id==4">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
+          <AdBlock v-if="selectedTab.id==4"></AdBlock>
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
         <UpgradePro :tabId="selectedTab.id" v-else><a class="what-it" :href="selectedTab.id == 2?'https://www.craft.do/s/PHKJvkZL92BTep':'https://www.craft.do/s/sYLNHtYc0n2rrV'" target="_blank">{{ selectedTab.id == 2 ? t('what_darkmode') : t('what_downloader') }}</a></UpgradePro>
       </template>
-      <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
+      
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>
   </div>
@@ -24,9 +25,9 @@ import Header from '../components/Header.vue';
 import TabMenu from '../components/TabMenu.vue';
 import DarkMode from '../components/DarkMode.vue';
 import Sniffer from '../components/Sniffer.vue';
-import ConsolePusher from '../components/ConsolePusher.vue';
 import UpgradePro from '../components/UpgradePro.vue';
 import MatchedScript from '../components/MatchedScript.vue';
+import AdBlock from '../components/AdBlock.vue';
 import { useI18n } from 'vue-i18n';
 import { isMobile } from '../utils/util'
 
@@ -36,7 +37,7 @@ export default {
   components: {
     Header,
     TabMenu,
-    ConsolePusher,
+    AdBlock,
     Sniffer,
     DarkMode,
     UpgradePro,
@@ -49,7 +50,7 @@ export default {
     const store = global.store;
     const localLan = store.state.localeLan;
     locale.value = store.state.localeLan;
-    console.log('localLan====', localLan, store.state.selectedTab);
+    // console.log('localLan====', localLan, store.state.selectedTab);
     // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
       selectedTab: store.state.selectedTab,
