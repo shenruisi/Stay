@@ -478,7 +478,7 @@ static CGFloat OneStageMovingLength = 50;
         [NSLayoutConstraint activateConstraints:self.searchBlockViewConstraints];
     }
     
-    [UIView animateWithDuration:0.8 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         self.searchBlockView.alpha = 0.3;
         [self.navigationTabItem alphaSubItems:0];
         [self.searchBar setFrame:CGRectMake(0, 0, self.searchBar.size.width, self.searchBar.size.height)];
@@ -510,7 +510,7 @@ static CGFloat OneStageMovingLength = 50;
     [self.searchBar.textFieldContainerLeading setActive:YES];
     [self.navigationTabItem sendSubviewToBack:self.searchBar];
     self.searchTabItem.button.hidden = YES;
-    [UIView animateWithDuration:0.8 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         self.searchBlockView.alpha = 0;
         [self.navigationTabItem alphaSubItems:1];
         [self.searchBar setFrame:CGRectMake(self.navigationTabItem.size.width - OneStageMovingLength, 0, self.searchBar.size.width, self.searchBar.size.height)];

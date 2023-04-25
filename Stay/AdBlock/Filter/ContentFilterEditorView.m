@@ -172,7 +172,6 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
             if (!(lineCount == lines.count && [lineAttributedString.string isEqualToString:@"\n"])){
                 [newAttributedString appendAttributedString:lineAttributedString];
             }
-           
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
