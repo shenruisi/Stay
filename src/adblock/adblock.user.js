@@ -76,7 +76,7 @@ const browser = __b;
     let makeupTagListenerObj = {};
     let moveWrapperDom = null;
     let closeTagingDom = null;
-    let selectDom = null;
+    let preselectedTargetDom = null;
     let threeFingerMoveStart = null;
     let threeFingerMoveEnd = null;
     let selectedDom = null;
@@ -148,58 +148,104 @@ const browser = __b;
         styleDom.id='__stay_select_style';
         const styleText = `
                     .__stay_move_wrapper{
-                        position:fixed;
-                        left:0;
-                        right:0;
-                        top:0;
-                        bottom:0;
-                        z-index:2147483600;
-                        width:100%;
-                        height:100%;
-                        background-color:rgba(0,0,0,0.3);
-                        box-sizing: border-box;
+                      position:fixed;
+                      left:0;
+                      right:0;
+                      top:0;
+                      bottom:0;
+                      z-index:2147483600;
+                      width:100%;
+                      height:100%;
+                      background-color:rgba(0,0,0,0.4);
+                      box-sizing: border-box;
                     }
                     .__stay_close_con{
-                        position:absolute;
-                        right: 20px;
-                        top: 20px;
-                        width:26px;
-                        height:26px;
-                        background: url("https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png") 50% 50% no-repeat;
-                        background-size: 40%;
-                        background-color: #ffffff;
-                        border-radius:50%;
+                      position:absolute;
+                      right: 20px;
+                      top: 20px;
+                      width:26px;
+                      height:26px;
+                      background: url("https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png") 50% 50% no-repeat;
+                      background-size: 40%;
+                      background-color: #ffffff;
+                      border-radius:50%;
                     }
-                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid #B620E0; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid #ffffff; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
                     .__stay_makeup_menu_wrapper{
-                        width:187px;
-                        position:absolute;
-                        padding: 8px 0;
-                        box-sizing: border-box;
+                      width:187px;
+                      position:absolute;
+                      padding: 8px 0;
+                      box-sizing: border-box;
                     }
                     .__stay_makeup_menu_item_box{
-                        width:100%;
-                        box-sizing: border-box;
-                        background-color: #ffffff;
-                        padding-left: 12px;
-                        border-radius: 5px;
-                        box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+                      width:100%;
+                      box-sizing: border-box;
+                      background-color: #ffffff;
+                      padding-left: 12px;
+                      border-radius: 5px;
+                      box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
                     }
                     .__stay_menu_item{
-                        height:45px;
-                        border-bottom: 1px solid #e0e0e0;
-                        display:flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        padding-left: 2px;
-                        padding-right: 12px;
-                        font-size: 16px;
+                      height:45px;
+                      border-bottom: 1px solid #e0e0e0;
+                      display:flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      padding-left: 2px;
+                      padding-right: 12px;
+                      font-size: 16px;
+                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+                      -webkit-font-smoothing: antialiased;
+                      -moz-osx-font-smoothing: grayscale;
                     }
                     .__stay_menu_item:last-child {
-                        border-bottom: none;
+                      border-bottom: none;
                     }
                     .__stay_menu_item img{
-                        width:15px;
+                      width:15px;
+                    }
+                    .__stay_tagged_wrapper{
+                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+                      -webkit-font-smoothing: antialiased;
+                      -moz-osx-font-smoothing: grayscale;
+                      position:fixed; 
+                      z-index:2147483647;
+                      width:160px;
+                      height: 44px;
+                      border-radius: 22px;
+                      line-height: 44px;
+                      text-align: center;
+                      padding-left: 15px;
+                      box-sizing: border-box;
+                      background-color: #fff;
+                      color: #000;
+                      font-weight: 700;
+                      font-size: 16px;
+                      animation: dropIn 1s forwards;
+                      left: 50%;
+                      transform: translate(-50%, -50%);
+                      top: -68px;
+                    }
+                    .__stay_tagged_wrapper::before{
+                      content: '';
+                      background: url("https://res.stayfork.app/scripts/63A0624BB9B6793A0F389D1800E403EA/icon.png") 50% 50% no-repeat;
+                      background-size: 20px;
+                      width: 20px;
+                      height: 20px;
+                      position: absolute;
+                      left: 20px;
+                      top: 50%;
+                      transform: translate(0, -50%);
+                    }
+                    @keyframes dropIn {
+                      0% {
+                        opacity: 0;
+                        transform: translate(-50%, -100%);
+                      }
+                      100% {
+                        opacity: 1;
+                        transform: translate(-50%, 80px);
+                      }
                     }
                 `;
         styleDom.appendChild(document.createTextNode(styleText));
@@ -254,7 +300,7 @@ const browser = __b;
             startSelecteTagAndMakeupAd()
           }else{
             // 页面上操作，需同步到bg
-            makeupTagListenerObj.shouldSetMakeupStatus = true;
+            // makeupTagListenerObj.shouldSetMakeupStatus = true;
             makeupTagListenerObj.makeupStatus = 'on'
           }
         }
@@ -271,7 +317,7 @@ const browser = __b;
             startSelecteTagAndMakeupAd()
           }else{
             // 页面上操作，需同步到bg
-            makeupTagListenerObj.shouldSetMakeupStatus = true;
+            // makeupTagListenerObj.shouldSetMakeupStatus = true;
             makeupTagListenerObj.makeupStatus = 'on'
           }
         }
@@ -296,8 +342,6 @@ const browser = __b;
           browser.runtime.sendMessage({from: 'popup', operate: 'getMakeupTagStatus'}, (response) => {
             console.log('asyncFetchMakeupTagStatus---------',response)
             let makeupTagStatus = response&&response.makeupTagStatus?response.makeupTagStatus:'on';
-            //监听到content发过来的消息就不需要再set
-            makeupTagListenerObj.shouldSetMakeupStatus = false;
             makeupTagListenerObj.makeupStatus = makeupTagStatus;
           });
         }else{
@@ -308,8 +352,6 @@ const browser = __b;
             console.log('asyncFetchMakeupTagStatus---------',e.data.makeupTagStatus)
             window.removeEventListener('message', callback);
             let makeupStatus = e.data.makeupTagStatus
-            //监听到content发过来的消息就不需要再set
-            makeupTagListenerObj.shouldSetMakeupStatus = false;
             makeupTagListenerObj.makeupStatus = makeupStatus;
             
           };
@@ -319,27 +361,6 @@ const browser = __b;
         resolve(true)
       })
     }
-
-    async function asyncSetMakeupTagStatus(makeupTagStatus){
-      console.log('asyncSetMakeupTagStatus----', makeupTagStatus, makeupTagListenerObj)
-      return new Promise((resolve, reject) => {
-        if(!makeupTagListenerObj.shouldSetMakeupStatus){
-          resolve(false);
-          return;
-        }
-        if(isContent){
-          browser.runtime.sendMessage({from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus, type: 'content'}, (response) => {
-            console.log('asyncSetMakeupTagStatus------true---',response)
-          });
-        }else{
-          console.log('asyncSetMakeupTagStatus-----false');
-          const pid = Math.random().toString(36).substring(2, 9);
-          window.postMessage({pid: pid, name: 'SET_MAKEUP_TAG_STATUS',  makeupTagStatus, type: 'content'});
-        }
-        resolve(true);
-      })
-    }
-
 
     /**
      * 异步获取三指触屏状态
@@ -352,8 +373,7 @@ const browser = __b;
           browser.runtime.sendMessage({from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
             console.log('getThreeFingerTapStatus---------',response)
             let threeFingerTapStatus = response&&response.threeFingerTapStatus?response.threeFingerTapStatus:'on';
-            //监听到content发过来的消息就不需要再set
-            makeupTagListenerObj.shouldSetMakeupStatus = false;
+            makeupTagListenerObj.shouldSetThreeFingerTapStatus = false;
             makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
           });
           resolve(true);
@@ -384,7 +404,7 @@ const browser = __b;
         }
         if(isContent){
           console.log('asyncSetThreeFingerTapStatus-----true');
-          browser.runtime.sendMessage({from: 'popup', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type: 'content'}, (response) => {
+          browser.runtime.sendMessage({from: 'content_script', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type: 'content'}, (response) => {
             console.log('asyncSetThreeFingerTapStatus---------',response)
           });
         }else{
@@ -403,22 +423,16 @@ const browser = __b;
         if (!e.data.pid) return;
         if(name == 'pushMakeupTagStatus'){
           let makeupStatus = e.data.makeupTagStatus
-          if(makeupStatus == makeupTagListenerObj.makeupStatus){
-            return;
-          }
-          console.log('pushMakeupTagStatus---------',e.data.makeupTagStatus)
-          //监听到content发过来的消息就不需要再set
-          makeupTagListenerObj.shouldSetMakeupStatus = false;
+          console.log('pushMakeupTagStatus---------',makeupStatus)
           makeupTagListenerObj.makeupStatus = makeupStatus;
         }
         else if(name == 'pushThreeFingerTapStatus'){
+          let threeFingerTapStatus = e.data.threeFingerTapStatus
           if(threeFingerTapStatus == makeupTagListenerObj.threeFingerTapStatus){
             return;
           }
-          let threeFingerTapStatus = e.data.threeFingerTapStatus
-          console.log('pushThreeFingerTapStatus---------',e.data.threeFingerTapStatus)
-          //监听到content发过来的消息就不需要再set
-          makeupTagListenerObj.shouldSetThreeFingerTapStatus = false;
+          console.log('pushThreeFingerTapStatus---------',threeFingerTapStatus)
+          makeupTagListenerObj.shouldSetThreeFingerTapStatus = true;
           makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
         }
       };
@@ -432,8 +446,7 @@ const browser = __b;
         // 如果有正在标记广告，则需要清楚当前标记内容
         stopSelecteTagAndMakeupAd();
       }
-      
-      asyncSetMakeupTagStatus(makeupStatus)
+      // asyncSetMakeupTagStatus(makeupStatus)
     }
 
     function startSelecteTagAndMakeupAd(){
@@ -477,10 +490,10 @@ const browser = __b;
       }
       addListenerClosePanelEvent();
       if(!document.querySelector('#__stay_selected_tag')){
-        selectDom = document.createElement('div');
-        selectDom.id='__stay_selected_tag';
-        selectDom.classList.add('__stay_select_target');
-        document.body.appendChild(selectDom);
+        preselectedTargetDom = document.createElement('div');
+        preselectedTargetDom.id='__stay_selected_tag';
+        preselectedTargetDom.classList.add('__stay_select_target');
+        document.body.appendChild(preselectedTargetDom);
       }
     }
 
@@ -496,7 +509,7 @@ const browser = __b;
       event.stopPropagation(); 
       event.preventDefault();
       console.log('closeTagingDom addListener click---------------');
-      makeupTagListenerObj.shouldSetMakeupStatus = true;
+      // makeupTagListenerObj.shouldSetMakeupStatus = true;
       makeupTagListenerObj.makeupStatus = 'off';
     }
 
@@ -520,7 +533,7 @@ const browser = __b;
     function stopListenerMove(){
       if(Utils.isMobileOrIpad()){
         if(moveWrapperDom){
-          moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
+          moveWrapperDom.removeEventListener('touchend', handleMoveAndSelecteDom);
         }
       }else{
         document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
@@ -532,14 +545,15 @@ const browser = __b;
      */
     function showTagingOperateMenu(event){
       event.stopPropagation();
-      event.preventDefault();
+      // event.preventDefault();
       console.log('addListener click---------------');
       if(showMakeupTagMenu){
         console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
         return;
       }
       showMakeupTagMenu = true;
-      
+      stopListenerMove();
+      preselectedTargetDom.style.borderColor = '#B620E0';
       // todo
       // https://res.stayfork.app/scripts/D83C97B84E098F26C669507121FE9EEC/icon.png
       const tagMenuDom = document.createElement('div');
@@ -555,7 +569,7 @@ const browser = __b;
       const clientHeight = document.documentElement.clientHeight;
       const tagMenuDomHeight = 45*2 + 20;
       const tagMenuDomWidth = 187;
-      const selectedDomRect = selectDom.getBoundingClientRect();
+      const selectedDomRect = preselectedTargetDom.getBoundingClientRect();
       // console.log('selectedDomRect-----',selectedDomRect, ',tagMenuDomWidth--',tagMenuDomWidth,',tagMenuDomHeight---',tagMenuDomHeight);
       
       const clientWidth = document.documentElement.clientWidth;
@@ -592,14 +606,9 @@ const browser = __b;
           tagMenuDom.style.transform = 'translate(-50%, -50%)';
         }
       }
-
-      selectDom.appendChild(tagMenuDom);
-
-      
-      
+      preselectedTargetDom.appendChild(tagMenuDom);
       const menuItemCancelEvent = document.querySelector('#__stay_makeup_menu #__stay_menu_cancel').addEventListener(clickEvent, handleMenuItemClick);
       const menuItemTagingEvent = document.querySelector('#__stay_makeup_menu #__stay_menu_tag').addEventListener(clickEvent, handleMenuItemClick);
-     
     }
 
     function handleMenuItemClick(e){
@@ -608,21 +617,34 @@ const browser = __b;
       let menuItemType = e.currentTarget.getAttribute('type');
           
       if('cancel' === menuItemType){
-        console.log('menu----cancel')
-          
+        // console.log('menu----cancel')
         document.querySelector('#__stay_makeup_menu #__stay_menu_cancel').removeEventListener(clickEvent, handleMenuItemClick);
       }else if('tag' === menuItemType){
-        console.log('menu----tag')
-        // todo
+        // console.log('menu----tag')
         document.querySelector('#__stay_makeup_menu #__stay_menu_tag').removeEventListener(clickEvent, handleMenuItemClick);
+        handleSelectedTag();
         
-        sendSelectedTagToHandler();
       }
-      selectDom.removeChild(document.querySelector('#__stay_makeup_menu'));
+      preselectedTargetDom.removeChild(document.querySelector('#__stay_makeup_menu'));
       hideSeletedTagContentModal()
-      console.log('handleMenuItemClick------removeChild---------', selectDom);
+      // console.log('handleMenuItemClick------removeChild---------', preselectedTargetDom);
       showMakeupTagMenu = false;
       startListenerMove()
+    }
+
+    function handleSelectedTag(){
+
+      const finishTaggedDom = document.createElement('div');
+      finishTaggedDom.id = '__stay_tagged';
+      finishTaggedDom.classList.add('__stay_tagged_wrapper');
+      finishTaggedDom.innerText = 'Tagged';
+      document.body.appendChild(finishTaggedDom);
+      let durationTimer = setTimeout(()=>{
+        finishTaggedDom.remove();
+        clearTimeout(durationTimer);
+        durationTimer = 0;
+      }, 3000);
+      sendSelectedTagToHandler();
     }
 
     async function sendSelectedTagToHandler(){
@@ -647,13 +669,14 @@ const browser = __b;
      * 隐藏标记中的模态框内容
      */
     function hideSeletedTagContentModal(){
-      if(selectDom !=null){
-        selectDom.removeEventListener(clickEvent, showTagingOperateMenu);
-        selectDom.style.width = '0px';
-        selectDom.style.height = '0px';
-        selectDom.style.left = '0px';
-        selectDom.style.top = '0px';
-        selectDom.style.display = 'none';
+      if(preselectedTargetDom !=null){
+        preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
+        preselectedTargetDom.style.width = '0px';
+        preselectedTargetDom.style.height = '0px';
+        preselectedTargetDom.style.left = '0px';
+        preselectedTargetDom.style.top = '0px';
+        preselectedTargetDom.style.display = 'none';
+        preselectedTargetDom.style.borderColor = '#ffffff';
       }
       if(moveWrapperDom!=null){
         moveWrapperDom.style.clipPath = 'none';
@@ -674,7 +697,7 @@ const browser = __b;
     }
 
     function handleMoveAndSelecteDom(event){
-      event.preventDefault();
+      // event.preventDefault();
       console.log('touchmove------handleMoveAndSelecteDom', event)
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
@@ -719,21 +742,19 @@ const browser = __b;
       }
   
       console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
-      while(selectDom.firstChild){
-        selectDom.removeChild(selectDom.firstChild)
+      while(preselectedTargetDom.firstChild){
+        preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
       }
-      selectDom.style.display = 'block';
+      preselectedTargetDom.style.display = 'block';
       showMakeupTagMenu = false;
-      selectDom.addEventListener(clickEvent, showTagingOperateMenu);
+      preselectedTargetDom.addEventListener(clickEvent, showTagingOperateMenu);
       // 计算蒙层裁剪区域
   
       moveWrapperDom.style.clipPath = calcPolygonPoints(targetX, targetY, targetWidth, targetHeight);
-      selectDom.style.width = targetWidth+'px';
-      selectDom.style.height = targetHeight+'px';
-      selectDom.style.left = targetX+'px';
-      selectDom.style.top = targetY+'px';
-
-      stopListenerMove();
+      preselectedTargetDom.style.width = targetWidth+'px';
+      preselectedTargetDom.style.height = targetHeight+'px';
+      preselectedTargetDom.style.left = targetX+'px';
+      preselectedTargetDom.style.top = targetY+'px';
     }
   
   
@@ -770,7 +791,8 @@ const browser = __b;
     }
 
     function startMakeupTag(){
-      asyncFetchMakeupTagStatus();
+      makeupTagListenerObj.makeupStatus = 'off';
+      // asyncFetchMakeupTagStatus();
       listenerMakeupStatusFromPopup();
       asyncFetchThreeFingerTapStatus();
     }
@@ -784,8 +806,6 @@ const browser = __b;
       },
       set:function(newValue){
         makeupStatus = newValue;
-        if(newValue != makeupTagListenerObj.makeupStatus){
-        }
         console.log('makeupTagListenerObj---makeupStatus-----',makeupStatus);
         //监听makeupStatus, 如果发生变化, 则需要触发状态方法
         handleStartMakeupStatus(makeupStatus)
@@ -801,7 +821,7 @@ const browser = __b;
         threeFingerTapStatus = newValue;
         if(newValue != makeupTagListenerObj.threeFingerTapStatus){
         }
-        console.log('makeupTagListenerObj-----threeFingerTapStatus-----',makeupStatus);
+        console.log('makeupTagListenerObj-----threeFingerTapStatus-----',threeFingerTapStatus);
         handleThreeFingerEvent(threeFingerTapStatus)
       }
     });
@@ -839,19 +859,19 @@ const browser = __b;
     else if(name === 'SET_THREE_FINGER_TAG_STATUS'){
       let threeFingerTapStatus = e.data.threeFingerTapStatus;
       let type = e.data.type;
-      browser.runtime.sendMessage({from: 'popup', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type}, (response) => {
+      browser.runtime.sendMessage({from: 'content_script', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type}, (response) => {
       });
     }
-    else if(name === 'pushMakeupTagStatus'){
-      let pid = e.data.pid;
-      let makeupTagStatus = e.data.makeupTagStatus
-      window.postMessage({pid:pid, name: 'pushMakeupTagStatus', makeupTagStatus});
-    }
-    else if(name === 'pushThreeFingerTapStatus'){
-      let pid = e.data.pid;
-      let threeFingerTapStatus = e.data.threeFingerTapStatus
-      window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
-    }
+    // else if(name === 'pushMakeupTagStatus'){
+    //   let pid = e.data.pid;
+    //   let makeupTagStatus = e.data.makeupTagStatus
+    //   window.postMessage({pid:pid, name: 'pushMakeupTagStatus', makeupTagStatus});
+    // }
+    // else if(name === 'pushThreeFingerTapStatus'){
+    //   let pid = e.data.pid;
+    //   let threeFingerTapStatus = e.data.threeFingerTapStatus
+    //   window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
+    // }
     else if(name === 'SEND_SELECTOR_TO_HANDLER'){
       let pid = e.data.pid;
       let selector = e.data.selector;
@@ -861,5 +881,44 @@ const browser = __b;
       });
     }
   })
+
+
+  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
+    const operate = request.operate;
+    if('popup' === requestFrom){
+      // if("getMakeupTagStatus" == request.operate){
+      //   let makeupTagStatus = 'on';
+      //   browser.storage.local.get("stay_makeup_tag_status", (res) => {
+      //       console.log("getMakeupTagStatus-------stay_makeup_tag_status,--------res=",res)
+      //       if(res && res["stay_makeup_tag_status"]){
+      //           makeupTagStatus = res["stay_makeup_tag_status"]
+      //       }
+      //       sendResponse({makeupTagStatus});
+      //   });
+      // }
+      if('startMakeupTagStatus' == operate){
+        let makeupTagStatus = request.makeupTagStatus;
+        // console.log('startMakeupTagStatus------', makeupTagStatus)
+        let type = request.type;
+        if(makeupTagStatus){
+          const pid = Math.random().toString(36).substring(2, 9);
+          window.postMessage({pid:pid, name: 'pushMakeupTagStatus', makeupTagStatus});
+        }
+        sendResponse({makeupTagStatus})
+      }
+      else if('pushThreeFingerTapStatus' == operate){
+        let threeFingerTapStatus = request.threeFingerTapStatus;
+        let type = request.type;
+        if(threeFingerTapStatus){
+          const pid = Math.random().toString(36).substring(2, 9);
+          window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
+        }
+      }
+    }
+
+
+    return true;
+  });
 
 })()

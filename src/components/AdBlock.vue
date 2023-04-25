@@ -45,18 +45,27 @@ export default {
       }
       state.threeFingerTapSwitch = state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
       store.commit('setThreeFingerTapStatusAsync', state.threeFingerTapStatus);
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'setThreeFingerTapStatus', type: 'popup'}, (response) => {
-        console.log('setThreeFingerTapStatus====',response);
+
+      global.browser.tabs.query({
+        active: true,
+        currentWindow: true
+      }, (tabs) => {
+        const message = { from: 'popup', operate: 'pushThreeFingerTapStatus', type: 'popup', threeFingerTapStatus:state.threeFingerTapStatus}
+        global.browser.tabs.sendMessage(tabs[0].id, message, response => {
+          console.log('setThreeFingerTapStatus====',response);
+        })
       })
+
+      
      
     }
 
     const fetchTagingStatus = () => {
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'getMakeupTagStatus'}, (response) => {
-        console.log('getMakeupTagStatus====',response);
-        let makeupTagStatus = response.makeupTagStatus ? response.makeupTagStatus : 'on';
-        state.tagingStatus = makeupTagStatus;
-      })
+      // global.browser.runtime.sendMessage({ from: 'popup', operate: 'getMakeupTagStatus'}, (response) => {
+      //   console.log('getMakeupTagStatus====',response);
+      //   let makeupTagStatus = response.makeupTagStatus ? response.makeupTagStatus : 'on';
+      //   state.tagingStatus = makeupTagStatus;
+      // })
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
         console.log('getThreeFingerTapStatus====',response);
         let threeFingerTapStatus = response.threeFingerTapStatus ? response.threeFingerTapStatus : 'on';
@@ -76,15 +85,22 @@ export default {
     fetchTagingStatus();
 
     const tagingStatusClick = () => {
-      if('on' == state.tagingStatus){
-        window.close();
-        return;
-      }
-      state.tagingStatus = 'on'
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus: state.tagingStatus, type: 'popup'}, (response) => {
-        console.log('setMakeupTagStatus====',response);
-        window.close();
+      global.browser.tabs.query({
+        active: true,
+        currentWindow: true
+      }, (tabs) => {
+        const message = { from: 'popup', operate: 'startMakeupTagStatus', makeupTagStatus: 'on', type: 'popup'};
+        global.browser.tabs.sendMessage(tabs[0].id, message, response => {
+          console.log('setMakeupTagStatus====',response);
+          window.close();
+        })
+
       })
+      
+      // global.browser.runtime.sendMessage({ from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus: state.tagingStatus, type: 'popup'}, (response) => {
+      //   console.log('setMakeupTagStatus====',response);
+      //   window.close();
+      // })
     }
 
     const tagToManageClick = () => {

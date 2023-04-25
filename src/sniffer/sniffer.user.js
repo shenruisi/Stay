@@ -1549,6 +1549,9 @@ const browser = __b;
             transition: all 0.6s;
             box-sizing: border-box;
             visibility: hidden;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
           }
           .__stay-show-modal{
             ${bg}

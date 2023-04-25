@@ -1076,6 +1076,15 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 });
             }
         }
+        return true;
+    }else if ("content_script" == request.from){
+        // console.log("content_script-------request=", request)
+        if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                // console.log("content_script-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
         else if("getThreeFingerTapStatus" == request.operate){
             let threeFingerTapStatus = 'on';
             browser.storage.local.get("three_finger_tap_status", (res) => {
@@ -1093,51 +1102,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 let statusMap = {}
                 statusMap.three_finger_tap_status = threeFingerTapStatus;
                 browser.storage.local.set(statusMap, (res) => {
-                    if('popup' == type){
-                        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                            browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "pushThreeFingerTapStatus", threeFingerTapStatus});
-                        });
-                    }
                     sendResponse(threeFingerTapStatus);
                 });
             }
-        }
-        else if("getMakeupTagStatus" == request.operate){
-            let makeupTagStatus = 'on';
-            browser.storage.local.get("stay_makeup_tag_status", (res) => {
-                console.log("getMakeupTagStatus-------stay_makeup_tag_status,--------res=",res)
-                if(res && res["stay_makeup_tag_status"]){
-                    makeupTagStatus = res["stay_makeup_tag_status"]
-                }
-                sendResponse({makeupTagStatus});
-            });
-        }
-        else if("setMakeupTagStatus" == request.operate){
-            let makeupTagStatus = request.makeupTagStatus;
-            let type = request.type;
-            if(makeupTagStatus){
-                let statusMap = {}
-                statusMap.stay_makeup_tag_status = makeupTagStatus;
-                browser.storage.local.set(statusMap, (res) => {
-                    console.log('setMakeupTagStatus----res------', res);
-                    if('popup' == type){
-                        console.log('setMakeupTagStatus----type------', type);
-                        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                            browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "pushMakeupTagStatus", makeupTagStatus});
-                        });
-                    }
-                    sendResponse(makeupTagStatus);
-                });
-            }
-        }
-        return true;
-    }else if ("content_script" == request.from){
-        // console.log("content_script-------request=", request)
-        if ("GET_STAY_AROUND" === request.operate){
-            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
-                // console.log("content_script-------response=",response);
-                sendResponse({ body: response.body })
-            });
         }
         return true;
     }
