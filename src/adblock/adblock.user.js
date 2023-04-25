@@ -75,7 +75,12 @@ const browser = __b;
     let showMakeupTagMenu = false;
     let makeupTagListenerObj = {};
     let moveWrapperDom = null;
+    let closeTagingDom = null;
     let selectDom = null;
+    let threeFingerMoveStart = null;
+    let threeFingerMoveEnd = null;
+    let selectedDom = null;
+    const distance = 10;
     const Utils = {
       parseToDOM(str){
         let divDom = document.createElement('template');
@@ -203,88 +208,223 @@ const browser = __b;
       
     }
 
+    function handleThreeFingerEvent(threeFingerTapStatus){
+      if(!Utils.isMobileOrIpad()){
+        return;
+      }
+      if(threeFingerTapStatus == 'on'){
+        add3FingerEventListener();
+      }else{
+        remove3FingerEventListener();
+      }
+      asyncSetThreeFingerTapStatus(threeFingerTapStatus)
+    }
+
     /**
      * 绑定三指手势触屏事件
      */
     function add3FingerEventListener(){
-      let start = null;
-      let end = null;
-      const distance = 10;
+      
       // console.log('add3FingerEventListener---------')
-      document.addEventListener('gesturestart', (event) => {
-        // console.log('add3FingerEventListener----gesturestart----',event);
-        if (event.scale === 1 && event.rotation === 0) {
-          start = event.pageX;
-          if(!showMakeupTagPanel){
-            if('on' == makeupTagListenerObj.makeupStatus){
-              startSelecteTagAndMakeupAd()
-            }else{
-              makeupTagListenerObj.makeupStatus = 'on'
-            }
-          }
-        }
-        event.preventDefault();
-      });
+      document.addEventListener('gesturestart', handleGesturestartEvent);
 
-      document.addEventListener('gesturechange', (event) => {
-        // console.log('add3FingerEventListener----gesturechange----',event);
-        if (event.scale === 1 && event.rotation === 0) {
-          end = event.pageX;
-          let moveDistance = Math.abs(Utils.sub(end, start));
-          if(moveDistance <= distance && !showMakeupTagPanel){
-            if('on' == makeupTagListenerObj.makeupStatus){
-              startSelecteTagAndMakeupAd()
-            }else{
-              makeupTagListenerObj.makeupStatus = 'on'
-            }
-          }
-        }
-        // 阻止默认事件
-        event.preventDefault();
-      });
+      document.addEventListener('gesturechange', handleGesturechangeEvent);
 
-      document.addEventListener('gestureend', (event) => {
-        // console.log('add3FingerEventListener----gestureend----',event);
-        start = null;
-        end = null;
-      });
+      document.addEventListener('gestureend', handleGestureendEvent);
     }
 
-    async function startFetchMakeupTagStatus(){
+    /**
+     * 移除三指手势触屏事件
+     */
+    function remove3FingerEventListener(){
+      
+      // console.log('add3FingerEventListener---------')
+      document.removeEventListener('gesturestart', handleGesturestartEvent);
+
+      document.removeEventListener('gesturechange', handleGesturechangeEvent);
+
+      document.removeEventListener('gestureend', handleGestureendEvent);
+    }
+
+    function handleGesturestartEvent(event){
+      if (event.scale === 1 && event.rotation === 0) {
+        threeFingerMoveStart = event.pageX;
+        if(!showMakeupTagPanel){
+          if('on' == makeupTagListenerObj.makeupStatus){
+            startSelecteTagAndMakeupAd()
+          }else{
+            // 页面上操作，需同步到bg
+            makeupTagListenerObj.shouldSetMakeupStatus = true;
+            makeupTagListenerObj.makeupStatus = 'on'
+          }
+        }
+      }
+      event.preventDefault();
+    }
+
+    function handleGesturechangeEvent(event){
+      if (event.scale === 1 && event.rotation === 0) {
+        threeFingerMoveEnd = event.pageX;
+        let moveDistance = Math.abs(Utils.sub(threeFingerMoveEnd, threeFingerMoveStart));
+        if(moveDistance <= distance && !showMakeupTagPanel){
+          if('on' == makeupTagListenerObj.makeupStatus){
+            startSelecteTagAndMakeupAd()
+          }else{
+            // 页面上操作，需同步到bg
+            makeupTagListenerObj.shouldSetMakeupStatus = true;
+            makeupTagListenerObj.makeupStatus = 'on'
+          }
+        }
+      }
+      // 阻止默认事件
+      event.preventDefault();
+    }
+
+    function handleGestureendEvent(){
+      threeFingerMoveStart = null;
+      threeFingerMoveEnd = null;
+    }
+
+    /**
+     * 异步获取标记标签状态
+     * @returns 
+     */
+    async function asyncFetchMakeupTagStatus(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          console.log('getMakeupTagStatus-----true');
+          console.log('asyncFetchMakeupTagStatus-----true');
           browser.runtime.sendMessage({from: 'popup', operate: 'getMakeupTagStatus'}, (response) => {
-            console.log('getMakeupTagStatus---------',response)
+            console.log('asyncFetchMakeupTagStatus---------',response)
             let makeupTagStatus = response&&response.makeupTagStatus?response.makeupTagStatus:'on';
+            //监听到content发过来的消息就不需要再set
+            makeupTagListenerObj.shouldSetMakeupStatus = false;
             makeupTagListenerObj.makeupStatus = makeupTagStatus;
           });
         }else{
-          console.log('getMakeupTagStatus-----false');
+          console.log('asyncFetchMakeupTagStatus-----false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_MAKEUP_TAG_STATUS_RESP') return;
-            console.log('getMakeupTagStatus---------',e.data.makeupTagStatus)
+            console.log('asyncFetchMakeupTagStatus---------',e.data.makeupTagStatus)
             window.removeEventListener('message', callback);
             let makeupStatus = e.data.makeupTagStatus
+            //监听到content发过来的消息就不需要再set
+            makeupTagListenerObj.shouldSetMakeupStatus = false;
             makeupTagListenerObj.makeupStatus = makeupStatus;
+            
           };
           window.postMessage({ id: pid, pid: pid, name: 'GET_MAKEUP_TAG_STATUS' });
+          window.addEventListener('message', callback);
+        }
+        resolve(true)
+      })
+    }
+
+    async function asyncSetMakeupTagStatus(makeupTagStatus){
+      console.log('asyncSetMakeupTagStatus----', makeupTagStatus, makeupTagListenerObj)
+      return new Promise((resolve, reject) => {
+        if(!makeupTagListenerObj.shouldSetMakeupStatus){
+          resolve(false);
+          return;
+        }
+        if(isContent){
+          browser.runtime.sendMessage({from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus, type: 'content'}, (response) => {
+            console.log('asyncSetMakeupTagStatus------true---',response)
+          });
+        }else{
+          console.log('asyncSetMakeupTagStatus-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          window.postMessage({pid: pid, name: 'SET_MAKEUP_TAG_STATUS',  makeupTagStatus, type: 'content'});
+        }
+        resolve(true);
+      })
+    }
+
+
+    /**
+     * 异步获取三指触屏状态
+     * @returns 
+     */
+    async function asyncFetchThreeFingerTapStatus(){
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          console.log('asyncFetchThreeFingerTapStatus-----true');
+          browser.runtime.sendMessage({from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
+            console.log('getThreeFingerTapStatus---------',response)
+            let threeFingerTapStatus = response&&response.threeFingerTapStatus?response.threeFingerTapStatus:'on';
+            //监听到content发过来的消息就不需要再set
+            makeupTagListenerObj.shouldSetMakeupStatus = false;
+            makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
+          });
+          resolve(true);
+        }else{
+          console.log('getThreeFingerTapStatus-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'GET_THREE_FINGER_TAG_STATUS_RESP') return;
+            console.log('getThreeFingerTapStatus---------',e.data.threeFingerTapStatus)
+            window.removeEventListener('message', callback);
+            let threeFingerTapStatus = e.data.threeFingerTapStatus
+            //监听到content发过来的消息就不需要再set
+            makeupTagListenerObj.shouldSetThreeFingerTapStatus = false;
+            makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
+            resolve(true);
+          };
+          window.postMessage({ id: pid, pid: pid, name: 'GET_THREE_FINGER_TAG_STATUS' });
           window.addEventListener('message', callback);
         }
       })
     }
 
-    function startMakeupTag(){
-      startFetchMakeupTagStatus();
-      if(Utils.isMobileOrIpad()){
-        add3FingerEventListener();
-      }
+    async function asyncSetThreeFingerTapStatus(threeFingerTapStatus){
+      return new Promise((resolve, reject) => {
+        if(!makeupTagListenerObj.shouldSetThreeFingerTapStatus){
+          resolve(false);
+          return;
+        }
+        if(isContent){
+          console.log('asyncSetThreeFingerTapStatus-----true');
+          browser.runtime.sendMessage({from: 'popup', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type: 'content'}, (response) => {
+            console.log('asyncSetThreeFingerTapStatus---------',response)
+          });
+        }else{
+          console.log('asyncSetThreeFingerTapStatus-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          window.postMessage({pid: pid, name: 'SET_THREE_FINGER_TAG_STATUS',  threeFingerTapStatus, type: 'content'});
+        }
+        resolve(true);
+      })
     }
 
-    startMakeupTag();
-    
-    
+
+    function listenerMakeupStatusFromPopup(){
+      const callback = e => {
+        const name = e.data.name;
+        if (!e.data.pid) return;
+        if(name == 'pushMakeupTagStatus'){
+          let makeupStatus = e.data.makeupTagStatus
+          if(makeupStatus == makeupTagListenerObj.makeupStatus){
+            return;
+          }
+          console.log('pushMakeupTagStatus---------',e.data.makeupTagStatus)
+          //监听到content发过来的消息就不需要再set
+          makeupTagListenerObj.shouldSetMakeupStatus = false;
+          makeupTagListenerObj.makeupStatus = makeupStatus;
+        }
+        else if(name == 'pushThreeFingerTapStatus'){
+          if(threeFingerTapStatus == makeupTagListenerObj.threeFingerTapStatus){
+            return;
+          }
+          let threeFingerTapStatus = e.data.threeFingerTapStatus
+          console.log('pushThreeFingerTapStatus---------',e.data.threeFingerTapStatus)
+          //监听到content发过来的消息就不需要再set
+          makeupTagListenerObj.shouldSetThreeFingerTapStatus = false;
+          makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
+        }
+      };
+      window.addEventListener('message', callback);
+    }
+
     function handleStartMakeupStatus(makeupStatus){
       if(makeupStatus && makeupStatus == 'on'){
         startSelecteTagAndMakeupAd();
@@ -292,6 +432,8 @@ const browser = __b;
         // 如果有正在标记广告，则需要清楚当前标记内容
         stopSelecteTagAndMakeupAd();
       }
+      
+      asyncSetMakeupTagStatus(makeupStatus)
     }
 
     function startSelecteTagAndMakeupAd(){
@@ -317,7 +459,7 @@ const browser = __b;
         moveWrapperDom.id='__stay_wrapper';
         moveWrapperDom.classList.add('__stay_move_wrapper');
         // https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png
-        const closeTagingDom = document.createElement('div');
+        closeTagingDom = document.createElement('div');
         closeTagingDom.id='__stay_close';
         closeTagingDom.classList.add('__stay_close_con');
         moveWrapperDom.appendChild(closeTagingDom);
@@ -330,17 +472,10 @@ const browser = __b;
           }
           startListenerMove();
         });
-        closeTagingDom.addEventListener(clickEvent, (event)=>{
-          event.stopPropagation();
-          event.preventDefault();
-          console.log('closeTagingDom addListener click---------------');
-          // stopSelecteTagAndMakeupAd();
-          makeupTagListenerObj.makeupStatus = 'off';
-
-        })
       }else{
         moveWrapperDom.style.display = 'block';
       }
+      addListenerClosePanelEvent();
       if(!document.querySelector('#__stay_selected_tag')){
         selectDom = document.createElement('div');
         selectDom.id='__stay_selected_tag';
@@ -349,6 +484,21 @@ const browser = __b;
       }
     }
 
+    function addListenerClosePanelEvent(){
+      closeTagingDom.addEventListener(clickEvent, handleCloseTagingPanel)
+    }
+
+    function removeListenerClosePanelEvent(){
+      closeTagingDom.removeEventListener(clickEvent, handleCloseTagingPanel)
+    }
+
+    function handleCloseTagingPanel(event){
+      event.stopPropagation(); 
+      event.preventDefault();
+      console.log('closeTagingDom addListener click---------------');
+      makeupTagListenerObj.shouldSetMakeupStatus = true;
+      makeupTagListenerObj.makeupStatus = 'off';
+    }
 
 
     /**
@@ -465,14 +615,32 @@ const browser = __b;
         console.log('menu----tag')
         // todo
         document.querySelector('#__stay_makeup_menu #__stay_menu_tag').removeEventListener(clickEvent, handleMenuItemClick);
-          
-          
+        
+        sendSelectedTagToHandler();
       }
       selectDom.removeChild(document.querySelector('#__stay_makeup_menu'));
       hideSeletedTagContentModal()
       console.log('handleMenuItemClick------removeChild---------', selectDom);
       showMakeupTagMenu = false;
       startListenerMove()
+    }
+
+    async function sendSelectedTagToHandler(){
+      return new Promise((resolve, reject)=>{
+        const selector = getSelector(selectedDom);
+        const url = window.location.href;
+        console.log('sendSelectedTagToHandler----------------', selector, url);
+        if(isContent){
+          console.log('sendSelectedTagToHandler-----true');
+          browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url}, (response) => {
+            console.log('sendSelectedTagToHandler---------',response)
+          });
+        }else{
+          console.log('sendSelectedTagToHandler-----false');
+          const pid = Math.random().toString(36).substring(2, 9);
+          window.postMessage({pid: pid, name: 'SEND_SELECTOR_TO_HANDLER',  selector, url});
+        }
+      })
     }
   
     /**
@@ -493,14 +661,13 @@ const browser = __b;
       
     }
 
-
-
     /**
      * 隐藏标记tab面板
      * @returns 
      */
     function hideSeletedTagPanel(){
       if(moveWrapperDom!=null){
+        removeListenerClosePanelEvent();
         moveWrapperDom.style.display = 'none';
         showMakeupTagPanel = false;
       }
@@ -513,18 +680,18 @@ const browser = __b;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
       console.log('moveDoms-----',moveDoms);
-      let moveDom = moveDoms[0];
-      let moveDomRect = moveDom.getBoundingClientRect();
+      selectedDom = moveDoms[0];
+      let moveDomRect = selectedDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
         if(moveDoms.length<3){
-          moveDom = moveDoms[1];
+          selectedDom = moveDoms[1];
         }else if(moveDoms.length > 5){
           let i = 3;
-          moveDom = moveDoms[i];
+          selectedDom = moveDoms[i];
           while(moveDomRect.height >= document.documentElement.clientHeight){
             i = i - 1;
-            moveDom = moveDoms[i];
-            moveDomRect = moveDom.getBoundingClientRect();
+            selectedDom = moveDoms[i];
+            moveDomRect = selectedDom.getBoundingClientRect();
             if(i == 1){
               break;
             }
@@ -533,8 +700,8 @@ const browser = __b;
       }else{
         return;
       }
-      console.log('moveDom-----',moveDom);
-      moveDomRect = moveDom.getBoundingClientRect();
+      console.log('moveDom-----',selectedDom);
+      moveDomRect = selectedDom.getBoundingClientRect();
       if(!moveDomRect || !Object.keys(moveDomRect)){
         return;
       }
@@ -545,7 +712,7 @@ const browser = __b;
       let targetY = moveDomRect.top;
   
       if(targetX == 0){
-        targetX = moveDom.offsetLeft;
+        targetX = selectedDom.offsetLeft;
         if(targetX<0){
           targetX = targetX*(-1);
         }
@@ -602,6 +769,14 @@ const browser = __b;
       return path.join(' > ');
     }
 
+    function startMakeupTag(){
+      asyncFetchMakeupTagStatus();
+      listenerMakeupStatusFromPopup();
+      asyncFetchThreeFingerTapStatus();
+    }
+  
+    startMakeupTag();
+
     /* eslint-disable */
     Object.defineProperty(makeupTagListenerObj, 'makeupStatus', {
       get:function(){
@@ -609,14 +784,31 @@ const browser = __b;
       },
       set:function(newValue){
         makeupStatus = newValue;
-        console.log('makeupTagListenerObj---newValue-----',makeupStatus);
+        if(newValue != makeupTagListenerObj.makeupStatus){
+        }
+        console.log('makeupTagListenerObj---makeupStatus-----',makeupStatus);
         //监听makeupStatus, 如果发生变化, 则需要触发状态方法
         handleStartMakeupStatus(makeupStatus)
       }
     });
 
+    /* eslint-disable */
+    Object.defineProperty(makeupTagListenerObj, 'threeFingerTapStatus', {
+      get:function(){
+        return threeFingerTapStatus;
+      },
+      set:function(newValue){
+        threeFingerTapStatus = newValue;
+        if(newValue != makeupTagListenerObj.threeFingerTapStatus){
+        }
+        console.log('makeupTagListenerObj-----threeFingerTapStatus-----',makeupStatus);
+        handleThreeFingerEvent(threeFingerTapStatus)
+      }
+    });
+
   }
-  
+
+
   window.addEventListener('message', (e) => {
     if (!e || !e.data || !e.data.name) return;
     const name = e.data.name;
@@ -626,6 +818,46 @@ const browser = __b;
         // console.log(response);
         let makeupTagStatus = response&&response.makeupTagStatus?response.makeupTagStatus:'on';
         window.postMessage({pid:pid, name: 'GET_MAKEUP_TAG_STATUS_RESP', makeupTagStatus});
+      });
+    }
+    else if(name === 'SET_MAKEUP_TAG_STATUS'){
+      let pid = e.data.pid;
+      let makeupTagStatus = e.data.makeupTagStatus;
+      let type = e.data.type;
+      browser.runtime.sendMessage({from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus, type}, (response) => {
+        console.log('SET_MAKEUP_TAG_STATUS----',response);
+      });
+    }
+    else if(name === 'GET_THREE_FINGER_TAG_STATUS'){
+      let pid = e.data.pid;
+      browser.runtime.sendMessage({from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
+        // console.log(response);
+        let threeFingerTapStatus = response&&response.threeFingerTapStatus?response.threeFingerTapStatus:'on';
+        window.postMessage({pid:pid, name: 'GET_THREE_FINGER_TAG_STATUS_RESP', threeFingerTapStatus});
+      });
+    }
+    else if(name === 'SET_THREE_FINGER_TAG_STATUS'){
+      let threeFingerTapStatus = e.data.threeFingerTapStatus;
+      let type = e.data.type;
+      browser.runtime.sendMessage({from: 'popup', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type}, (response) => {
+      });
+    }
+    else if(name === 'pushMakeupTagStatus'){
+      let pid = e.data.pid;
+      let makeupTagStatus = e.data.makeupTagStatus
+      window.postMessage({pid:pid, name: 'pushMakeupTagStatus', makeupTagStatus});
+    }
+    else if(name === 'pushThreeFingerTapStatus'){
+      let pid = e.data.pid;
+      let threeFingerTapStatus = e.data.threeFingerTapStatus
+      window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
+    }
+    else if(name === 'SEND_SELECTOR_TO_HANDLER'){
+      let pid = e.data.pid;
+      let selector = e.data.selector;
+      let url = window.location.href;
+      browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url}, (response) => {
+        console.log('sendSelectedTagToHandler---------',response)
       });
     }
   })

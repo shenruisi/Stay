@@ -45,6 +45,9 @@ export default {
       }
       state.threeFingerTapSwitch = state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
       store.commit('setThreeFingerTapStatusAsync', state.threeFingerTapStatus);
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'setThreeFingerTapStatus', type: 'popup'}, (response) => {
+        console.log('setThreeFingerTapStatus====',response);
+      })
      
     }
 
@@ -53,6 +56,13 @@ export default {
         console.log('getMakeupTagStatus====',response);
         let makeupTagStatus = response.makeupTagStatus ? response.makeupTagStatus : 'on';
         state.tagingStatus = makeupTagStatus;
+      })
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
+        console.log('getThreeFingerTapStatus====',response);
+        let threeFingerTapStatus = response.threeFingerTapStatus ? response.threeFingerTapStatus : 'on';
+        state.threeFingerTapStatus = threeFingerTapStatus;
+        state.threeFingerTapSwitch = threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
+        store.commit('setThreeFingerTapStatusAsync', state.blockStatus);
       })
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'getBlockStatus'}, (response) => {
         console.log('getBlockStatus====',response);
@@ -67,11 +77,13 @@ export default {
 
     const tagingStatusClick = () => {
       if('on' == state.tagingStatus){
+        window.close();
         return;
       }
       state.tagingStatus = 'on'
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus: state.tagingStatus}, (response) => {
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'setMakeupTagStatus', makeupTagStatus: state.tagingStatus, type: 'popup'}, (response) => {
         console.log('setMakeupTagStatus====',response);
+        window.close();
       })
     }
 
@@ -152,11 +164,11 @@ export default {
       .manage-btn{
         width: 90px;
         height: 25px;
+        line-height: 23px;
         border-radius: 8px;
         border: 1px solid var(--s-main);
         font-size: 13px;
         color: var(--s-main);
-        line-height: 25px;
       }
     }
     .taging-status{

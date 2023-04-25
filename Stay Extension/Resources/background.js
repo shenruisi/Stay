@@ -1076,6 +1076,32 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 });
             }
         }
+        else if("getThreeFingerTapStatus" == request.operate){
+            let threeFingerTapStatus = 'on';
+            browser.storage.local.get("three_finger_tap_status", (res) => {
+                // console.log("getThreeFingerTapStatus-------three_finger_tap_status--------res=",res)
+                if(res && res["three_finger_tap_status"]){
+                    threeFingerTapStatus = res["three_finger_tap_status"]
+                }
+                sendResponse({threeFingerTapStatus});
+            });
+        }
+        else if("setThreeFingerTapStatus" == request.operate){
+            let threeFingerTapStatus = request.threeFingerTapStatus;
+            let type = request.type;
+            if(threeFingerTapStatus){
+                let statusMap = {}
+                statusMap.three_finger_tap_status = threeFingerTapStatus;
+                browser.storage.local.set(statusMap, (res) => {
+                    if('popup' == type){
+                        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                            browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "pushThreeFingerTapStatus", threeFingerTapStatus});
+                        });
+                    }
+                    sendResponse(threeFingerTapStatus);
+                });
+            }
+        }
         else if("getMakeupTagStatus" == request.operate){
             let makeupTagStatus = 'on';
             browser.storage.local.get("stay_makeup_tag_status", (res) => {
@@ -1088,17 +1114,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("setMakeupTagStatus" == request.operate){
             let makeupTagStatus = request.makeupTagStatus;
+            let type = request.type;
             if(makeupTagStatus){
                 let statusMap = {}
                 statusMap.stay_makeup_tag_status = makeupTagStatus;
                 browser.storage.local.set(statusMap, (res) => {
                     console.log('setMakeupTagStatus----res------', res);
-                    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                        browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "pushMakeupTagStatus"});
-                    });
+                    if('popup' == type){
+                        console.log('setMakeupTagStatus----type------', type);
+                        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                            browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "pushMakeupTagStatus", makeupTagStatus});
+                        });
+                    }
                     sendResponse(makeupTagStatus);
                 });
-
             }
         }
         return true;
@@ -1166,6 +1195,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             browser.runtime.sendNativeMessage("application.id", { type: "ST_speechToText", data: recording}, function (response) {
                 // console.log('POST_AUDIO_RECORD----', response)
                 sendResponse({ text: response.body })
+            });
+        }
+        return true;
+    }else if ("adblock" == request.from){
+        // console.log("content_script-------request=", request)
+        if ("sendSelectorToHandler" === request.operate){
+            const selector = request.selector;
+            const url = request.url;
+            console.log("adblock-------request-----",selector, url);
+            browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, url }, function (response) {
+                console.log("adblock-------response=",response);
+                sendResponse({ body: response.body })
             });
         }
         return true;
