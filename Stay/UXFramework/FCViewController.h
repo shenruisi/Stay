@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UINavigationBarAppearance *appearance;
 @property (nonatomic, assign) CGFloat naivgationBarBaseLine;
 @property (nonatomic, weak) id<FCSearchUpdatingDelegate> searchUpdating;
+@property (nonatomic, strong) UIViewController *searchViewController;
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh;
 - (void)searchTabItemDidClick;

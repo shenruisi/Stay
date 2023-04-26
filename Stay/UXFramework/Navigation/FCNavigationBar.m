@@ -415,7 +415,7 @@ static CGFloat OneStageMovingLength = 50;
 
 @property (nonatomic, strong) FCTabButtonItem *searchTabItem;
 @property (nonatomic, strong) FCBlockView *searchBlockView;
-@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *searchBlockViewConstraints;
+@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *bindViewConstraints;
 @property (nonatomic, assign) BOOL searchBarShouldAppear;
 @end
 
@@ -467,19 +467,27 @@ static CGFloat OneStageMovingLength = 50;
     
     if (cer){
         UIEdgeInsets safeEdgeInsets = cer.view.safeAreaInsets;
-        [cer.view addSubview:self.searchBlockView];
-        [NSLayoutConstraint deactivateConstraints:self.searchBlockViewConstraints];
-        self.searchBlockViewConstraints = @[
-            [self.searchBlockView.leadingAnchor constraintEqualToAnchor:cer.view.leadingAnchor],
-            [self.searchBlockView.trailingAnchor constraintEqualToAnchor:cer.view.trailingAnchor],
-            [self.searchBlockView.topAnchor constraintEqualToAnchor:cer.view.topAnchor constant:safeEdgeInsets.top],
-            [self.searchBlockView.bottomAnchor constraintEqualToAnchor:cer.view.bottomAnchor constant:-safeEdgeInsets.bottom],
+        UIView *bindView = cer.searchViewController ? cer.searchViewController.view : self.searchBlockView;
+        bindView.alpha = 0;
+        [cer.view addSubview:bindView];
+        [NSLayoutConstraint deactivateConstraints:self.bindViewConstraints];
+        self.bindViewConstraints = @[
+            [bindView.leadingAnchor constraintEqualToAnchor:cer.view.leadingAnchor],
+            [bindView.trailingAnchor constraintEqualToAnchor:cer.view.trailingAnchor],
+            [bindView.topAnchor constraintEqualToAnchor:cer.view.topAnchor constant:safeEdgeInsets.top],
+            [bindView.bottomAnchor constraintEqualToAnchor:cer.view.bottomAnchor constant:-safeEdgeInsets.bottom],
         ];
-        [NSLayoutConstraint activateConstraints:self.searchBlockViewConstraints];
+        [NSLayoutConstraint activateConstraints:self.bindViewConstraints];
     }
     
     [UIView animateWithDuration:0.5 animations:^{
-        self.searchBlockView.alpha = 0.3;
+        if (cer.searchViewController){
+            cer.searchViewController.view.alpha = 1;
+        }
+        else{
+            self.searchBlockView.alpha = 0.3;
+        }
+        
         [self.navigationTabItem alphaSubItems:0];
         [self.searchBar setFrame:CGRectMake(0, 0, self.searchBar.size.width, self.searchBar.size.height)];
     } completion:^(BOOL finished) {
@@ -511,7 +519,8 @@ static CGFloat OneStageMovingLength = 50;
     [self.navigationTabItem sendSubviewToBack:self.searchBar];
     self.searchTabItem.button.hidden = YES;
     [UIView animateWithDuration:0.5 animations:^{
-        self.searchBlockView.alpha = 0;
+        UIView *bindView = cer.searchViewController ? cer.searchViewController.view : self.searchBlockView;
+        bindView.alpha = 1;
         [self.navigationTabItem alphaSubItems:1];
         [self.searchBar setFrame:CGRectMake(self.navigationTabItem.size.width - OneStageMovingLength, 0, self.searchBar.size.width, self.searchBar.size.height)];
     } completion:^(BOOL finished) {

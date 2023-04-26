@@ -33,7 +33,13 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.editorView.editable = NO;
+    if (ContentFilterTypeCustom == self.contentFilter.type
+        ||ContentFilterTypeTag == self.contentFilter.type){
+        self.editorView.editable = YES;
+    }
+    else{
+        self.editorView.editable = NO;
+    }
     [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
 }
 
