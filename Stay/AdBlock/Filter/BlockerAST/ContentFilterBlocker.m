@@ -55,7 +55,7 @@
             ast = [[SeparatorBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
         }
         
-        if ([parser isTigger]){
+        if ([parser isTrigger]){
             ast = [[TriggerBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
             if (ast.unsupported){
 //                NSLog(@"Unsupport rule: %@",rule);

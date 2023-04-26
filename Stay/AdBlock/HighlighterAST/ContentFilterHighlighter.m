@@ -39,7 +39,7 @@
             [ret appendAttributedString:ast.attributedString];
         }
         
-        if ([parser isTigger]){
+        if ([parser isTrigger]){
             ast = [[TiggerHighlighterAST alloc] initWithParser:parser args:nil];
             [ret appendAttributedString:ast.attributedString];
         }

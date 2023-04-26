@@ -71,7 +71,9 @@ static ContentFilterManager *instance = nil;
 - (void)appendJSONToFileName:(NSString *)fileName dictionary:(NSDictionary *)dictionary error:(NSError **)error{
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
-    if (0 == jsonData.length) return;
+    if (nil == jsonData){
+        jsonData = [NSData data];
+    }
     NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
     if (error) return;
     [existJsonArray addObject:dictionary];
@@ -82,6 +84,12 @@ static ContentFilterManager *instance = nil;
 
 - (void)appendTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
     NSString *filePath = [self.ruleTextPath stringByAppendingPathComponent:fileName];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        BOOL success = [[NSFileManager defaultManager]  createFileAtPath:filePath contents:nil attributes:nil];
+        if (!success) {
+            return;
+        }
+    }
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
     [fileHandle seekToEndOfFile];
     NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
