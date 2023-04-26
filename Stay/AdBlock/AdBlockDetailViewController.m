@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) UIBarButtonItem *backItem;
 @property (nonatomic, strong) UIBarButtonItem *moreItem;
+@property (nonatomic, strong) UIBarButtonItem *saveItem;
 @property (nonatomic, strong) ContentFilterEditorView *editorView;
 @property (nonatomic, strong) ContentFilterEditSlideController *editSlideController;
 @end
@@ -25,7 +26,13 @@
     [super viewDidLoad];
     self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.leftBarButtonItems = @[self.backItem];
-    self.navigationItem.rightBarButtonItems = @[self.moreItem];
+    if (ContentFilterTypeCustom == self.contentFilter.type
+        ||ContentFilterTypeTag == self.contentFilter.type){
+        self.navigationItem.rightBarButtonItems = @[self.saveItem];
+    }
+    else{
+        self.navigationItem.rightBarButtonItems = @[self.moreItem];
+    }
     self.title = self.contentFilter.title;
     [self editorView];
 }
@@ -73,6 +80,18 @@
     return _moreItem;
 }
 
+- (UIBarButtonItem *)saveItem{
+    if (nil == _saveItem){
+        _saveItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", @"")
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(saveAction:)];
+        _saveItem.tintColor = FCStyle.accent;
+    }
+    
+    return _saveItem;
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     if ([self.editSlideController isShown]){
@@ -112,6 +131,10 @@
     self.editSlideController = [[ContentFilterEditSlideController alloc] initWithContentFilter:self.contentFilter];
     self.editSlideController.baseCer = self;
     [self.editSlideController show];
+}
+
+- (void)saveAction:(id)sender{
+    
 }
 
 @end

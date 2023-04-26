@@ -54,5 +54,22 @@
     return [FCApp keyWindow].rootViewController;
 }
 
++ (CGFloat)secondaryOffsetX{
+    UISplitViewController *splitViewController = [self splitController];
+    if (splitViewController){
+        if (splitViewController.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
+            return 0;
+        }
+        
+        return [self homeViewController].view.frame.size.width;
+    }
+    
+    return 0;
+}
+
++ (CGSize)secondarySize{
+    UIViewController *secondaryController = [self secondaryController];
+    return secondaryController.view.frame.size;
+}
 
 @end

@@ -10,6 +10,7 @@
 #import "UIFont+Convert.h"
 #import "ContentFilterHighlighter.h"
 #import "NSAttributedString+Style.h"
+#import "InputMenu.h"
 
 static NSUInteger LineNumberWidth = 60;
 static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeName";
@@ -116,11 +117,14 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 @end
 
 @interface ContentFilterEditorView()<
- UITextViewDelegate
+ UITextViewDelegate,
+ InputMenuHosting
 >
 @property (nonatomic, strong) ContentFilterTextContainer *textContainer;
 @property (nonatomic, strong) ContentFilterLayoutManager *layoutManager;
 @property (nonatomic, strong) NSTextStorage *textStorage;
+@property (nonatomic, strong) InputMenu *inputMenu;
+@property (nonatomic, strong) NSLayoutConstraint *textViewBottomConstraint;
 @end
 
 @implementation ContentFilterEditorView
@@ -128,9 +132,25 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 - (instancetype)init{
     if (self = [super init]){
         [self textView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(adjustForKeyboard:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(adjustForKeyboard:)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
     }
     
     return self;
+}
+
+- (void)removeFromSuperview{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [super removeFromSuperview];
 }
 
 - (void)setStrings:(NSString *)strings{
@@ -216,10 +236,85 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         [[_textView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor] setActive:YES];
         [[_textView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor] setActive:YES];
         [[_textView.topAnchor constraintEqualToAnchor:self.topAnchor] setActive:YES];
-        [[_textView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor] setActive:YES];
+        self.textViewBottomConstraint = [_textView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:0];
+        [self.textViewBottomConstraint setActive:YES];
     }
     
     return _textView;
+}
+
+- (void)clearStyles{
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 2;
+    self.textView.typingAttributes = @{
+        NSForegroundColorAttributeName : FCStyle.fcBlack,
+        NSFontAttributeName : [FCStyle.caption toHelvetica:0],
+        NSParagraphStyleAttributeName : paragraphStyle
+    };
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    [self.inputMenu show];
+    return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    [self.inputMenu dismiss];
+}
+
+- (InputMenu *)inputMenu{
+#ifdef FC_MAC
+        return nil;
+#else
+        if (nil == _inputMenu){
+            _inputMenu = [[InputMenu alloc] init];
+            _inputMenu.hosting = self;
+        }
+        
+        return _inputMenu;
+#endif
+}
+
+- (BOOL)canUndo{
+    return [self.textView.undoManager canUndo];
+}
+
+- (BOOL)canRedo{
+    return [self.textView.undoManager canRedo];
+}
+
+- (BOOL)canClear{
+    return self.textView.attributedText.length > 0;
+}
+
+- (void)resignFirstResponder{
+    [self.textView resignFirstResponder];
+}
+
+- (void)undo{
+    [self.textView.undoManager undo];
+}
+- (void)redo{
+    [self.textView.undoManager redo];
+}
+
+- (void)clear{
+    [self.textView.textStorage replaceCharactersInRange:NSMakeRange(0, self.textView.attributedText.length)
+                                   withAttributedString:[[NSAttributedString alloc] init]];
+    [self clearStyles];
+}
+
+- (void)adjustForKeyboard:(NSNotification *)note{
+    NSDictionary *info = [note userInfo];
+    CGRect endRect  = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    if ([note.name isEqualToString:UIKeyboardWillShowNotification]){
+        self.textViewBottomConstraint.constant = - 35 - endRect.size.height;
+        
+    }
+    else if ([note.name isEqualToString:UIKeyboardWillHideNotification]){
+        self.textViewBottomConstraint.constant = 0;
+
+    }
 }
 
 @end

@@ -143,6 +143,11 @@
     
 }
 
++ (UIColor *)fcHover{
+    return [UIColor colorNamed: @"FCHover"];
+}
+
+
 + (UIColor *)fcNavigationLineColor{
     return [UIColor colorNamed:@"FCNavigationLineColor"];
 }
@@ -332,6 +337,14 @@
     return [UIFont systemFontOfSize:20];
 #else
     return [UIFont systemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)secondaryCellIcon{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:18];
+#else
+    return [UIFont systemFontOfSize:16];
 #endif
     
 }

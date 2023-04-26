@@ -36,10 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *borderColor;
 @property(class, nonatomic, readonly) UIColor *grayNoteColor;
 @property(class, nonatomic, readonly) UIColor *fcMacIcon;
+@property(class, nonatomic, readonly) UIColor *fcHover;
 @property(class, nonatomic, readonly) UIColor *fcNavigationLineColor;
 @property(class, nonatomic, readonly) UIColor *titleGrayColor;
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
 @property(class, nonatomic, readonly) UIColor *subtitleColor;
+
 
 @property(class, nonatomic, readonly) UIColor *filterCommentColor;
 @property(class, nonatomic, readonly) UIColor *filterExceptionColor;
@@ -71,6 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfSecondaryIcon;
 @property(class, nonatomic, readonly) UIFont *cellIcon;
 @property(class, nonatomic, readonly) UIFont *sfIcon;
+@property(class, nonatomic, readonly) UIFont *secondaryCellIcon;
 
 @property(class, nonatomic, readonly) UIFont *sfSymbolL1;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL1Bold;

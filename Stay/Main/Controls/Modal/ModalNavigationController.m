@@ -19,6 +19,8 @@
 @property (nonatomic, strong) NSMutableArray<ModalViewController *> *controllers;
 @property (nonatomic, strong) FCRoundedShadowView *view;
 @property (nonatomic, assign) CGFloat radius;
+@property (nonatomic, assign) CGFloat borderWidth;
+@property (nonatomic, assign) CACornerMask cornerMask;
 @property (nonatomic, assign) BOOL noRoundShadow;
 @end
 
@@ -70,6 +72,30 @@
         self.rootModalViewController = modalViewController;
         modalViewController.navigationController = self;
         modalViewController.isRoot = YES;
+        [self pushModalViewController:modalViewController];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController
+                                slideController:(FCSlideController *)slideController
+                                         radius:(CGFloat)radius
+                                     boderWidth:(CGFloat)borderWidth
+                                    contentMode:(ModalContentMode)contentMode
+                                  noShadowRound:(BOOL)noShadowRound
+                                     cornerMask:(CACornerMask)cornerMask{
+    if (self = [super init]){
+        self.contentMode = contentMode;
+        self.radius = radius;
+        self.borderWidth = borderWidth;
+        self.noRoundShadow = noShadowRound;
+        self.cornerMask = cornerMask;
+        [self view];
+        self.rootModalViewController = modalViewController;
+        modalViewController.navigationController = self;
+        modalViewController.isRoot = YES;
+        self.slideController = slideController;
         [self pushModalViewController:modalViewController];
     }
     
@@ -194,10 +220,14 @@
 - (FCRoundedShadowView *)view{
     if (nil == _view){
         if (self.noRoundShadow){
-            _view = [[FCRoundedShadowView alloc] init];
+            _view = [[FCRoundedShadowView alloc] initWithNoShadowRadius:self.radius
+                                                             borderWith:self.borderWidth
+                                                             cornerMask:self.cornerMask];
         }
         else{
-            _view = [[FCRoundedShadowView alloc] initWithRadius:self.radius];
+            _view = [[FCRoundedShadowView alloc] initWithRadius:self.radius
+                                                     borderWith:self.borderWidth
+                                                     cornerMask:self.cornerMask];
         }
         
     }

@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable SYNavigationController *)secondaryController;
 + (nullable SYHomeViewController *)homeViewController;
 + (nullable UIViewController *)rootController;
++ (CGFloat)secondaryOffsetX;
++ (CGSize)secondarySize;
 @end
 
 NS_ASSUME_NONNULL_END

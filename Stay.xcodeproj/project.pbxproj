@@ -413,6 +413,14 @@
 		588202B42859F99000B2721A /* FCSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202B32859F99000B2721A /* FCSplitViewController.m */; };
 		588202B82859F9FD00B2721A /* SceneCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202B72859F9FD00B2721A /* SceneCenter.m */; };
 		588202CB285A12C400B2721A /* FCAppKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 588202C1285A100300B2721A /* FCAppKit.m */; };
+		5882257E29F90D6F004CDBF7 /* InputMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882257D29F90D6F004CDBF7 /* InputMenu.m */; };
+		5882257F29F90D6F004CDBF7 /* InputMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882257D29F90D6F004CDBF7 /* InputMenu.m */; };
+		5882258229F90F8F004CDBF7 /* InputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258129F90F8F004CDBF7 /* InputToolbar.m */; };
+		5882258329F90F8F004CDBF7 /* InputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258129F90F8F004CDBF7 /* InputToolbar.m */; };
+		5882258629F914F6004CDBF7 /* InputToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258529F914F6004CDBF7 /* InputToolbarItem.m */; };
+		5882258729F914F6004CDBF7 /* InputToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258529F914F6004CDBF7 /* InputToolbarItem.m */; };
+		5882258A29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */; };
+		5882258B29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */; };
 		588402C9295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		588402CA295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		5884031C29667079002CA227 /* UIColor+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 5884031B29667078002CA227 /* UIColor+Convert.m */; };
@@ -1115,6 +1123,14 @@
 		588202C0285A100300B2721A /* FCAppKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCAppKit.h; sourceTree = "<group>"; };
 		588202C1285A100300B2721A /* FCAppKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCAppKit.m; sourceTree = "<group>"; };
 		588202C7285A12B400B2721A /* macOSNative.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = macOSNative.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		5882257C29F90D6F004CDBF7 /* InputMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputMenu.h; sourceTree = "<group>"; };
+		5882257D29F90D6F004CDBF7 /* InputMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputMenu.m; sourceTree = "<group>"; };
+		5882258029F90F8F004CDBF7 /* InputToolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputToolbar.h; sourceTree = "<group>"; };
+		5882258129F90F8F004CDBF7 /* InputToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolbar.m; sourceTree = "<group>"; };
+		5882258429F914F6004CDBF7 /* InputToolbarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputToolbarItem.h; sourceTree = "<group>"; };
+		5882258529F914F6004CDBF7 /* InputToolbarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolbarItem.m; sourceTree = "<group>"; };
+		5882258829F91692004CDBF7 /* InputToolbarItemSeperator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputToolbarItemSeperator.h; sourceTree = "<group>"; };
+		5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolbarItemSeperator.m; sourceTree = "<group>"; };
 		588402C7295D3272002CA227 /* ToastCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastCenter.h; sourceTree = "<group>"; };
 		588402C8295D3272002CA227 /* ToastCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastCenter.m; sourceTree = "<group>"; };
 		5884031A29667078002CA227 /* UIColor+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Convert.h"; sourceTree = "<group>"; };
@@ -2144,6 +2160,21 @@
 			path = macOSNative;
 			sourceTree = "<group>";
 		};
+		5882257B29F90CFE004CDBF7 /* InputMenu */ = {
+			isa = PBXGroup;
+			children = (
+				5882257C29F90D6F004CDBF7 /* InputMenu.h */,
+				5882257D29F90D6F004CDBF7 /* InputMenu.m */,
+				5882258029F90F8F004CDBF7 /* InputToolbar.h */,
+				5882258129F90F8F004CDBF7 /* InputToolbar.m */,
+				5882258429F914F6004CDBF7 /* InputToolbarItem.h */,
+				5882258529F914F6004CDBF7 /* InputToolbarItem.m */,
+				5882258829F91692004CDBF7 /* InputToolbarItemSeperator.h */,
+				5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */,
+			);
+			path = InputMenu;
+			sourceTree = "<group>";
+		};
 		5889733A2722FF7600BE123E /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -2283,6 +2314,7 @@
 		58ADAE0C29E8F50E00C00332 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				5882257B29F90CFE004CDBF7 /* InputMenu */,
 				58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */,
 				58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */,
 				58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */,
@@ -3738,6 +3770,7 @@
 				583B542429DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
 				84DB5FE929F6990600526857 /* SYDownloadedViewCell.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
+				5882258629F914F6004CDBF7 /* InputToolbarItem.m in Sources */,
 				581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				58ADAE0229E801CF00C00332 /* TriggerBlockerAST.m in Sources */,
@@ -3797,6 +3830,7 @@
 				58DF3FF52898D4820029E1AA /* API.m in Sources */,
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
 				84F48318273A739800217BB3 /* MainTabBarController.m in Sources */,
+				5882258229F90F8F004CDBF7 /* InputToolbar.m in Sources */,
 				583B543C29DD71A500CB292A /* HighlighterAST.m in Sources */,
 				3C8388BE292E55B9007563E6 /* DownloadManager.m in Sources */,
 				582061CA294C4C0E00A32D0C /* ModalItemClickWithIconView.m in Sources */,
@@ -3864,6 +3898,7 @@
 				58A3617529C0218800080465 /* FCViewController.m in Sources */,
 				583B544229DD71A500CB292A /* CommentHighlighterAST.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
+				5882258A29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */,
 				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
@@ -3889,6 +3924,7 @@
 				583B541729DD504500CB292A /* FCNavigationController.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
+				5882257E29F90D6F004CDBF7 /* InputMenu.m in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
@@ -3955,6 +3991,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5882258B29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */,
 				58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */,
 				58ADADE629E800D000C00332 /* FCButton.m in Sources */,
 				58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */,
@@ -4012,6 +4049,7 @@
 				583B53E629DBF9A100CB292A /* FilterToken.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
 				583B540729DD4AF200CB292A /* ContentFilterEditorView.m in Sources */,
+				5882257F29F90D6F004CDBF7 /* InputMenu.m in Sources */,
 				581C2FF829E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */,
 				583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
@@ -4077,6 +4115,7 @@
 				588202622859E73900B2721A /* SYSearchViewController.m in Sources */,
 				84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				58ADADDD29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */,
+				5882258729F914F6004CDBF7 /* InputToolbarItem.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
 				582061CF294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				582061D3294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
@@ -4105,6 +4144,7 @@
 				5882026A2859E73900B2721A /* SYAddScriptController.m in Sources */,
 				587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
+				5882258329F90F8F004CDBF7 /* InputToolbar.m in Sources */,
 				583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
 				58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
