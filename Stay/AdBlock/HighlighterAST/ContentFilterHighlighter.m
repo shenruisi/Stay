@@ -79,7 +79,6 @@
             [ret appendAttributedString:ast.attributedString];
         }
         
-        
     }while(!parser.isEOF);
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

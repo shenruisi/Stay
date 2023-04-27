@@ -82,6 +82,11 @@ static ContentFilterManager *instance = nil;
     [newData writeToFile:filePath atomically:YES];
 }
 
+- (void)writeTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
+    NSString *filePath = [self.ruleTextPath stringByAppendingPathComponent:fileName];
+    [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
+}
+
 - (void)appendTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
     NSString *filePath = [self.ruleTextPath stringByAppendingPathComponent:fileName];
     if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
@@ -96,6 +101,7 @@ static ContentFilterManager *instance = nil;
     [fileHandle writeData:data];
     [fileHandle closeFile];
 }
+
 
 - (NSURL *)ruleJSONURLOfFileName:(NSString *)fileName{
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];

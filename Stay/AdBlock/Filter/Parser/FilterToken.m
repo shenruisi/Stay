@@ -38,6 +38,7 @@
 + (instancetype)newLine{
     FilterToken *newLine = [[FilterToken alloc] init];
     newLine.type = FilterTokenTypeNewLine;
+    newLine.value = @"\n";
     return newLine;
 }
 

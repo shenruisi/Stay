@@ -36,6 +36,7 @@
     return _navController;
 }
 
+
 - (BOOL)blockAction{
     return NO;
 }

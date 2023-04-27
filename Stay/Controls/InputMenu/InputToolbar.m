@@ -12,6 +12,7 @@
 #import "FCStyle.h"
 #import "InputToolbarItemSeperator.h"
 #import "InputMenu.h"
+#import "ContentFilterEditorView.h"
 
 static NSString *InputToolbarCellIdentifier = @"InputToolbarCellIdentifier";
 
@@ -40,7 +41,21 @@ static NSString *InputToolbarCellIdentifier = @"InputToolbarCellIdentifier";
     [self fixedRightView];
     [self keyboardItem];
     [self line];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterEditorDidChange:) name:ContentFilterEditorTextDidChangeNotification object:nil];
 }
+
+- (void)viewWillDisappear{
+    [super viewWillDisappear];
+    
+}
+
+- (void)contentFilterEditorDidChange:(NSNotification *)note{
+    InputMenu *inputMenu = (InputMenu *)self.navigationController.slideController;
+    self.dataSource[2].enabled = [inputMenu.hosting canClear];
+    [self.collectionView reloadData];
+}
+
 
 - (NSArray<InputToolbarItemElement *> *)dataSource{
     if (nil == _dataSource){

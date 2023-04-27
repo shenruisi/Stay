@@ -10,6 +10,8 @@
 #import "ImageHelper.h"
 #import "ContentFilterEditorView.h"
 #import "ContentFilterEditSlideController.h"
+#import "ContentFilterManager.h"
+#import "FCShared.h"
 
 @interface AdBlockDetailViewController ()
 
@@ -104,9 +106,6 @@
         _editorView = [[ContentFilterEditorView alloc] init];
         _editorView.translatesAutoresizingMaskIntoConstraints = NO;
         _editorView.backgroundColor = FCStyle.secondaryBackground;
-//        _editorView.layer.cornerRadius = 10;
-//        _editorView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
-//        _editorView.clipsToBounds = YES;
         [self.view addSubview:_editorView];
         [NSLayoutConstraint activateConstraints:@[
             [_editorView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
@@ -134,7 +133,47 @@
 }
 
 - (void)saveAction:(id)sender{
-    
+    NSString *strings = self.editorView.strings;
+    NSError *error;
+    [[ContentFilterManager shared] writeTextToFileName:self.contentFilter.path content:strings error:&error];
+    if (error){
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock", @"")
+                                                                       message:[error localizedDescription]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        [alert addAction:confirm];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else{
+        __weak AdBlockDetailViewController *weakSelf = self;
+        [self.contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error){
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock", @"")
+                                                                                   message:[error localizedDescription]
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                    }];
+                    [alert addAction:confirm];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
+                else{
+                    UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+                    image = [image imageWithTintColor:FCStyle.fcBlack
+                                        renderingMode:UIImageRenderingModeAlwaysOriginal];
+                    [FCShared.toastCenter show:image
+                                     mainTitle:weakSelf.contentFilter.title
+                                secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+                }
+            });
+        }];
+    }
 }
 
 @end

@@ -9,6 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName const _Nonnull ContentFilterEditorTextDidChangeNotification;
 @interface ContentFilterTextView : UITextView
 @end
 

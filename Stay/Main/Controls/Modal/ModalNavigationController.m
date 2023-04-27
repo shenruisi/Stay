@@ -28,6 +28,7 @@
 
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController radius:(CGFloat)radius{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         self.radius = radius;
         [self view];
         self.rootModalViewController = modalViewController;
@@ -41,6 +42,7 @@
 
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         [self view];
         self.rootModalViewController = modalViewController;
         modalViewController.navigationController = self;
@@ -54,6 +56,7 @@
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController
                                 slideController:(FCSlideController *)slideController{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         [self view];
         self.rootModalViewController = modalViewController;
         modalViewController.navigationController = self;
@@ -67,6 +70,7 @@
 
 - (instancetype)initWithRootModalViewControllerAndNoRoundShadow:(ModalViewController *)modalViewController{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         self.noRoundShadow = YES;
         [self view];
         self.rootModalViewController = modalViewController;

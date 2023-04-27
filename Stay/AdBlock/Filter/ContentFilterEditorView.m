@@ -12,6 +12,8 @@
 #import "NSAttributedString+Style.h"
 #import "InputMenu.h"
 
+NSNotificationName const _Nonnull ContentFilterEditorTextDidChangeNotification = @"app.stay.notification.ContentFilterEditorTextDidChangeNotification";
+
 static NSUInteger LineNumberWidth = 60;
 static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeName";
 
@@ -85,7 +87,19 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 
 @end
 
+@interface ContentFilterTextView()
+
+@property (nonatomic, assign) BOOL textFromPaste;
+@property (nonatomic, assign) NSRange textShouldChangeRange;
+@end
+
 @implementation ContentFilterTextView
+
+- (void)paste:(id)sender{
+    self.textFromPaste = YES;
+    [super paste:sender];
+}
+
 
 - (void)replaceSelectionWithAttributedText:(NSAttributedString *)text
 {
@@ -112,6 +126,48 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
     if (selection.location != NSNotFound){
         self.selectedRange = selection;
     }
+}
+
+- (NSMutableAttributedString *)_lineAttributedStringAtPosition:(UITextPosition *)position lineRange:(NSRangePointer)lineRange{
+    NSInteger line = [self offsetFromPosition:self.beginningOfDocument toPosition:position];
+    *lineRange = [self.text lineRangeForRange:NSMakeRange(line, 0)];
+    NSMutableAttributedString *lineAttributedText = [[NSMutableAttributedString alloc] initWithAttributedString:
+                                                     [self.attributedText attributedSubstringFromRange:*lineRange]];
+    return lineAttributedText;
+}
+
+- (NSMutableAttributedString *)lineAttributedStringAtLocation:(NSUInteger)location lineRange:(NSRangePointer)lineRange{
+    UITextPosition *end = [self positionFromPosition:self.beginningOfDocument offset:location];
+    NSMutableAttributedString *lineAttributedString = [self _lineAttributedStringAtPosition:end lineRange:lineRange];
+    if (location > NSMaxRange(*lineRange)){
+        *lineRange = NSMakeRange(NSNotFound, 0);
+        return nil;
+    }
+    return lineAttributedString;
+}
+
+- (NSArray<NSDictionary *> *)linesAttributedStringAtRange:(NSRange)range
+                                                     linesRange:(NSRangePointer)linesRange{
+    NSMutableArray<NSDictionary *> *linesInfo = [[NSMutableArray alloc] init];
+    NSUInteger location = range.location;
+    NSUInteger outLocation = range.location;
+    NSUInteger outLength = 0;
+    while(location < NSMaxRange(range)){
+        NSRange lineRange;
+        NSAttributedString *line = [self lineAttributedStringAtLocation:location lineRange:&lineRange];
+        if (nil == line){
+            break;
+        }
+        location = NSMaxRange(lineRange);
+        outLocation = MIN(outLocation, lineRange.location);
+        outLength += lineRange.length;
+        [linesInfo addObject:@{
+            @"text":line,
+            @"range":[NSValue valueWithRange:lineRange]
+        }];
+    }
+    *linesRange = NSMakeRange(outLocation, outLength);
+    return linesInfo;
 }
 
 @end
@@ -156,8 +212,8 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 - (void)setStrings:(NSString *)strings{
     if (nil == strings) strings = @"\n";
     [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
-                withAttributedText:[NSAttributedString captionText:strings]
-                     selectedRange:NSMakeRange(0, 0)];
+             withAttributedText:[NSAttributedString captionText:strings]
+                  selectedRange:NSMakeRange(0, 0)];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableAttributedString *newAttributedString = [[NSMutableAttributedString alloc] init];
@@ -174,7 +230,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
                     NSForegroundColorAttributeName : FCStyle.fcBlack,
                     NSParagraphStyleAttributeName : paragraphStyle,
                     CFLineNoAttributeName : @(lineCount)
-                 }];
+                }];
             }
             else{
                 lineAttributedString = [ContentFilterHighlighter rule:line];
@@ -196,11 +252,66 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
-                        withAttributedText:newAttributedString
-                             selectedRange:NSMakeRange(0, 0)];
+                     withAttributedText:newAttributedString
+                          selectedRange:NSMakeRange(0, 0)];
         });
         
     });
+}
+
+- (BOOL)textView:(ContentFilterTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if (textView.markedTextRange){
+        UITextPosition* beginning = textView.beginningOfDocument;
+        UITextPosition *markedStart = textView.markedTextRange.start;
+        NSInteger location = [textView offsetFromPosition:beginning toPosition:markedStart];
+        textView.textShouldChangeRange = NSMakeRange(location,text.length);
+    }
+    else{
+        textView.textShouldChangeRange = NSMakeRange(range.location, text.length);
+    }
+    
+    return YES;
+}
+
+- (void)textViewDidChange:(ContentFilterTextView *)textView{
+    if (textView.markedTextRange != nil){
+        return;
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterEditorTextDidChangeNotification
+                                                        object:self.textView];
+    
+    if (textView.textFromPaste){
+        NSRange linesRange;
+        NSArray<NSDictionary *> *linesInfo = [textView linesAttributedStringAtRange:textView.textShouldChangeRange linesRange:&linesRange];
+        NSUInteger lastLineLocation = linesRange.location;
+        NSUInteger lastLineLength = 0;
+        NSMutableAttributedString *newLinesAttributedString = [[NSMutableAttributedString alloc] init];
+        NSMutableAttributedString *lastLineAttributedString;
+        NSUInteger lineCount = 0;
+        for (NSDictionary *lineInfo in linesInfo){
+            lineCount++;
+            NSAttributedString *line = lineInfo[@"text"];
+            NSRange lineRange = [lineInfo[@"range"] rangeValue];
+            NSString *ruleString = line.string;
+            NSMutableAttributedString *newAttributedString = [ContentFilterHighlighter rule:ruleString];
+            [newAttributedString addAttributes:@{
+                CFLineNoAttributeName : @(lineCount)
+            } range:NSMakeRange(0, newAttributedString.length)];
+            [newLinesAttributedString appendAttributedString:newAttributedString];
+            lastLineAttributedString = newAttributedString;
+            lastLineLocation = MIN(lastLineLocation,lineRange.location);
+            lastLineLength += newAttributedString.length;
+        }
+        [textView replaceRange:linesRange withAttributedText:newLinesAttributedString selectedRange:NSMakeRange(NSNotFound, 0)];
+    }
+    else{
+        
+    }
+}
+
+- (NSString *)strings{
+    return self.textView.attributedText.string;
 }
 
 - (void)setEditable:(BOOL)editable{
