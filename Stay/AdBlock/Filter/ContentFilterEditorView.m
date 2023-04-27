@@ -91,6 +91,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 
 @property (nonatomic, assign) BOOL textFromPaste;
 @property (nonatomic, assign) NSRange textShouldChangeRange;
+@property (nonatomic, copy) NSString *willTypingText;
 @end
 
 @implementation ContentFilterTextView
@@ -126,6 +127,11 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
     if (selection.location != NSNotFound){
         self.selectedRange = selection;
     }
+}
+
+- (NSMutableAttributedString *)activateLineAttributedString:(NSRangePointer)lineRange{
+    UITextPosition *cursorPosition = self.selectedTextRange.end;
+    return [self _lineAttributedStringAtPosition:cursorPosition lineRange:lineRange];
 }
 
 - (NSMutableAttributedString *)_lineAttributedStringAtPosition:(UITextPosition *)position lineRange:(NSRangePointer)lineRange{
@@ -170,6 +176,15 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
     return linesInfo;
 }
 
+- (BOOL)isTypingEnter{
+    return [self.willTypingText isEqualToString:@"\n"];
+}
+
+
+- (BOOL)isTypingDelete{
+    return [self.willTypingText isEqualToString:@"\aDelete"];
+}
+
 @end
 
 @interface ContentFilterEditorView()<
@@ -181,6 +196,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 @property (nonatomic, strong) NSTextStorage *textStorage;
 @property (nonatomic, strong) InputMenu *inputMenu;
 @property (nonatomic, strong) NSLayoutConstraint *textViewBottomConstraint;
+@property (nonatomic, assign) NSUInteger nextLineCount;
 @end
 
 @implementation ContentFilterEditorView
@@ -210,45 +226,13 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 }
 
 - (void)setStrings:(NSString *)strings{
-    if (nil == strings) strings = @"\n";
+    if (0 == strings.length) strings = @"\n";
     [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
              withAttributedText:[NSAttributedString captionText:strings]
                   selectedRange:NSMakeRange(0, 0)];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSMutableAttributedString *newAttributedString = [[NSMutableAttributedString alloc] init];
-        NSArray<NSString *> *lines = [strings componentsSeparatedByString:@"\n"];
-        NSInteger lineCount = 0;
-        for (NSString *line in lines){
-            lineCount++;
-            NSMutableAttributedString *lineAttributedString;
-            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.lineSpacing = 2;
-            if (line.length == 0){
-                lineAttributedString = [[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
-                    NSFontAttributeName : [FCStyle.caption toHelvetica:0],
-                    NSForegroundColorAttributeName : FCStyle.fcBlack,
-                    NSParagraphStyleAttributeName : paragraphStyle,
-                    CFLineNoAttributeName : @(lineCount)
-                }];
-            }
-            else{
-                lineAttributedString = [ContentFilterHighlighter rule:line];
-                [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
-                    NSFontAttributeName : [FCStyle.caption toHelvetica:0],
-                    NSForegroundColorAttributeName : FCStyle.fcBlack,
-                    NSParagraphStyleAttributeName : paragraphStyle,
-                }]];
-                
-                [lineAttributedString addAttributes:@{
-                    CFLineNoAttributeName : @(lineCount)
-                } range:NSMakeRange(0, lineAttributedString.length)];
-            }
-            
-            if (!(lineCount == lines.count && [lineAttributedString.string isEqualToString:@"\n"])){
-                [newAttributedString appendAttributedString:lineAttributedString];
-            }
-        }
+        NSMutableAttributedString *newAttributedString = [self replaceStringToAttributedString:strings];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.textView replaceRange:NSMakeRange(0, self.textView.attributedText.length)
@@ -257,6 +241,38 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         });
         
     });
+}
+
+- (NSMutableAttributedString *)replaceStringToAttributedString:(NSString *)strings{
+    NSMutableAttributedString *newAttributedString = [[NSMutableAttributedString alloc] init];
+    NSInteger lineCount = 0;
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 2;
+    NSMutableString *line = [[NSMutableString alloc] init];
+    for (NSUInteger i = 0; i < strings.length; i++){
+        NSString *character = [strings substringWithRange:NSMakeRange(i, 1)];
+        if ([character isEqualToString:@"\n"]){
+            lineCount++;
+            NSMutableAttributedString *lineAttributedString = [ContentFilterHighlighter rule:line];
+            [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
+                NSFontAttributeName : [FCStyle.caption toHelvetica:0],
+                NSForegroundColorAttributeName : FCStyle.fcBlack,
+                NSParagraphStyleAttributeName : paragraphStyle,
+            }]];
+            
+            [lineAttributedString addAttributes:@{
+                CFLineNoAttributeName : @(lineCount)
+            } range:NSMakeRange(0, lineAttributedString.length)];
+            
+            [line deleteCharactersInRange:NSMakeRange(0, line.length)];
+            [newAttributedString appendAttributedString:lineAttributedString];
+        }
+        else{
+            [line appendString:character];
+        }
+    }
+    
+    return newAttributedString;
 }
 
 - (BOOL)textView:(ContentFilterTextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -268,6 +284,13 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
     }
     else{
         textView.textShouldChangeRange = NSMakeRange(range.location, text.length);
+    }
+    textView.willTypingText = text.length > 0 ? text : @"\aDelete";
+    if ([textView isTypingEnter]){
+        NSRange lineRange;
+        NSAttributedString *lineAttributedString = [textView activateLineAttributedString:&lineRange];
+        NSNumber *lineNo = [lineAttributedString attribute:CFLineNoAttributeName atIndex:0 effectiveRange:nil];
+        self.nextLineCount = [lineNo integerValue];
     }
     
     return YES;
@@ -306,7 +329,30 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         [textView replaceRange:linesRange withAttributedText:newLinesAttributedString selectedRange:NSMakeRange(NSNotFound, 0)];
     }
     else{
+        NSRange activateLineRange;
+        NSAttributedString *lineAttributedText = [textView activateLineAttributedString:&activateLineRange];
+        NSNumber *lineNo;
+        for (NSUInteger i = 0; i < lineAttributedText.length; i++){
+            lineNo = [lineAttributedText attribute:CFLineNoAttributeName atIndex:i effectiveRange:nil];
+            if (lineNo) break;
+        }
+        NSString *ruleString = lineAttributedText.string;
         
+        NSMutableAttributedString *newLineAttributedString = [ContentFilterHighlighter rule:ruleString];
+        if (lineNo){
+            [newLineAttributedString addAttributes:@{
+                CFLineNoAttributeName : lineNo
+            } range:NSMakeRange(0, newLineAttributedString.length)];
+        }
+        
+        [textView.textStorage replaceCharactersInRange:activateLineRange withAttributedString:newLineAttributedString];
+        
+        if ([textView isTypingEnter]
+            ||[textView isTypingDelete]){
+            NSMutableAttributedString *newAttributedString = [self replaceStringToAttributedString:self.textView.attributedText.string];
+            
+            [textView.textStorage replaceCharactersInRange:NSMakeRange(0, newAttributedString.length) withAttributedString:newAttributedString];
+        }
     }
 }
 
