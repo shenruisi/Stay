@@ -520,13 +520,19 @@ static CGFloat OneStageMovingLength = 50;
     self.searchTabItem.button.hidden = YES;
     [UIView animateWithDuration:0.5 animations:^{
         UIView *bindView = cer.searchViewController ? cer.searchViewController.view : self.searchBlockView;
-        bindView.alpha = 1;
+        bindView.alpha = 0;
         [self.navigationTabItem alphaSubItems:1];
         [self.searchBar setFrame:CGRectMake(self.navigationTabItem.size.width - OneStageMovingLength, 0, self.searchBar.size.width, self.searchBar.size.height)];
     } completion:^(BOOL finished) {
         self.searchBar.leftAccessory.hidden = YES;
-        [self.searchBlockView removeFromSuperview];
-        self.searchBlockView = nil;
+        if (cer.searchViewController){
+            [cer.searchViewController.view removeFromSuperview];
+        }
+        else{
+            [self.searchBlockView removeFromSuperview];
+            self.searchBlockView = nil;
+        }
+       
         
         [UIView animateWithDuration:0.3 animations:^{
             [self.searchBar setFrame:CGRectMake(self.navigationTabItem.size.width, 0, self.searchBar.size.width, self.searchBar.size.height)];

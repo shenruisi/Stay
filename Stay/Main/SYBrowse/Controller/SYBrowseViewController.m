@@ -790,10 +790,6 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
-
-    self.navigationItem.standardAppearance = self.appearance;
-    self.navigationItem.scrollEdgeAppearance = self.appearance;
     _selectedIdx = 0;
     self.enableTabItem = YES;
     self.navigationTabItem.leftTabButtonItems = @[self.featuredTabItem, self.allTabItem];
@@ -1319,8 +1315,8 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-
+    [self scrollEffectHandle:scrollView];
+    
      CGPoint offset = scrollView.contentOffset;
      CGRect bounds = scrollView.bounds;
      CGSize size = scrollView.contentSize;

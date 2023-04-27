@@ -20,13 +20,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL enableSearchTabItem;
 @property (nonatomic, strong) NSString *searchPlaceholder;
 @property (nonatomic, strong) UINavigationBarAppearance *appearance;
-@property (nonatomic, assign) CGFloat naivgationBarBaseLine;
+@property (nonatomic, assign) CGFloat navigationBarBaseLine;
 @property (nonatomic, weak) id<FCSearchUpdatingDelegate> searchUpdating;
 @property (nonatomic, strong) UIViewController *searchViewController;
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh;
 - (void)searchTabItemDidClick;
 - (void)endSearch;
+- (UINavigationBarAppearance *)navigationBarEffect:(CGFloat)yOffset;
+- (void)scrollEffectHandle:(UIScrollView *)scrollView;
 @end
 
 NS_ASSUME_NONNULL_END

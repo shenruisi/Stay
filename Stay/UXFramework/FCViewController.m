@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.enableTabItem = NO;
+    
     
     self.appearance = [[UINavigationBarAppearance alloc] init];
     [self.appearance configureWithTransparentBackground];
@@ -28,26 +28,52 @@
     NSArray<UIColor *> *colors = FCStyle.accentGradient;
     gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
     [self.view.layer insertSublayer:gradientLayer atIndex:0];
+//    self.appearance = [[UINavigationBarAppearance alloc] init];
+//    [self.appearance configureWithTransparentBackground];
+//    self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+//
+//    self.navigationItem.standardAppearance = self.appearance;
+//    self.navigationItem.scrollEdgeAppearance = self.appearance;
+    self.enableTabItem = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.naivgationBarBaseLine = self.navigationController.navigationBar.height;
+    self.navigationBarBaseLine = self.navigationController.navigationBar.height + (self.enableTabItem ? 44 : 0);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (44 == self.navigationController.navigationBar.height){
-        self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+    [self scrollEffectHandle:scrollView];
+}
+
+- (void)scrollEffectHandle:(UIScrollView *)scrollView{
+    UINavigationBarAppearance *appearance =  [self navigationBarEffect:scrollView.contentOffset.y];
+    self.navigationItem.standardAppearance = appearance;
+    self.navigationItem.scrollEdgeAppearance = appearance;
+}
+
+- (UINavigationBarAppearance *)navigationBarEffect:(CGFloat)yOffset{
+    if (yOffset >= 0){
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        appearance.backgroundEffect =  [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+        return appearance;
     }
     else{
-        self.appearance.backgroundEffect = nil;
+        if (yOffset + self.navigationBarBaseLine >= 0){
+            UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+            appearance.backgroundEffect =  [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
+            return appearance;
+        }
+        else{
+            UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+            [appearance configureWithTransparentBackground];
+            appearance.backgroundColor = UIColor.clearColor;
+            appearance.backgroundEffect = nil;
+            return appearance;
+        }
     }
-    
-    self.navigationItem.standardAppearance = self.appearance;
-    self.navigationItem.scrollEdgeAppearance = self.appearance;
-    
-    
 }
+
 
 - (void)setEnableTabItem:(BOOL)enableTabItem{
     _enableTabItem = enableTabItem;

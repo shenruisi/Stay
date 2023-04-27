@@ -28,29 +28,21 @@
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (88 == self.navigationController.navigationBar.height){
-        self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
-        
-    }
-    else{
-        self.appearance.backgroundEffect = nil;
-    }
+    [super scrollEffectHandle:scrollView];
     
-    self.navigationItem.standardAppearance = self.appearance;
-    self.navigationItem.scrollEdgeAppearance = self.appearance;
-    
-    if (self.enableSearchTabItem && self.naivgationBarBaseLine > 0){
+    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0){
         FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
-        [navigationBar showSearchWithOffset:self.navigationController.navigationBar.height - self.naivgationBarBaseLine];
-//        [navigationBar ]
-//        NSLog(@"scrollView %f",self.navigationController.navigationBar.height - self.naivgationBarBaseLine);
+        [navigationBar showSearchWithOffset:self.navigationController.navigationBar.height - self.navigationBarBaseLine];
     }
 }
 
 
+
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-    FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
-    [navigationBar startSearch];
+    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0){
+        FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
+        [navigationBar startSearch];
+    }
 }
 
 - (void)viewWillLayoutSubviews{
