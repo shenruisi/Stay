@@ -316,3 +316,4 @@ ReloadRulesMessage="你確定要重新加載規則嗎？";
 BackgroundColor="背景色";
 GradientColor="漸變色";
 SolidColor="純色";
+Store="商店";

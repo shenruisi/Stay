@@ -318,3 +318,4 @@ ReloadRulesMessage="你确定要重新加载规则吗？";
 BackgroundColor="背景色";
 GradientColor="渐变色";
 SolidColor="纯色";
+Store="商店";

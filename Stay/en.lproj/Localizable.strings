@@ -317,8 +317,7 @@ ReloadRulesMessage="Are you sure you want to reload the rules?";
 BackgroundColor="Background Color";
 GradientColor="Gradient Color";
 SolidColor="Solid Color";
-
-
+Store="Store";
 
 
 

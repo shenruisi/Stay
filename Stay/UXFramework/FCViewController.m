@@ -46,6 +46,11 @@
     return _gradientLayer;
 }
 
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [self backgrundColorTypeDidChange:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.enableTabItem = _enableTabItem;

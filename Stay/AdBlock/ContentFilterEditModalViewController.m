@@ -162,11 +162,13 @@
         [_saveButton addTarget:self action:@selector(saveAction:) forControlEvents:UIControlEventTouchUpInside];
         [_saveButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Save", @"")
                                                                 attributes:@{
-            NSForegroundColorAttributeName : FCStyle.fcWhite,
+            NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.bodyBold
         }] forState:UIControlStateNormal];
-        _saveButton.backgroundColor = FCStyle.accent;
+        _saveButton.backgroundColor = UIColor.clearColor;
         _saveButton.layer.cornerRadius = 10;
+        _saveButton.layer.borderColor = FCStyle.accent.CGColor;
+        _saveButton.layer.borderWidth = 1;
         _saveButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:_saveButton];
         
@@ -230,7 +232,7 @@
         [_restoreButton addTarget:self action:@selector(restoreAction:) forControlEvents:UIControlEventTouchUpInside];
         [_restoreButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"ContentFilterRestore", @"")
                                                                 attributes:@{
-            NSForegroundColorAttributeName : FCStyle.fcWhite,
+            NSForegroundColorAttributeName : UIColor.whiteColor,
             NSFontAttributeName : FCStyle.bodyBold
         }] forState:UIControlStateNormal];
         _restoreButton.backgroundColor = UIColor.redColor;
