@@ -317,3 +317,5 @@ BackgroundColor="背景色";
 GradientColor="漸變色";
 SolidColor="純色";
 Store="商店";
+Userscripts="用戶腳本";
+Settings="設置";

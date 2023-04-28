@@ -561,7 +561,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.leftTitle = NSLocalizedString(@"settings.more","more");
+    self.leftTitle = NSLocalizedString(@"Settings","");
     
     self.view.backgroundColor = FCStyle.background;
     [self tableView];

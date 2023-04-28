@@ -319,3 +319,5 @@ BackgroundColor="背景色";
 GradientColor="渐变色";
 SolidColor="纯色";
 Store="商店";
+Userscripts="用户脚本";
+Settings="设置";
