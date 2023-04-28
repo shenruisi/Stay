@@ -314,3 +314,6 @@ Dismiss="Dismiss";
 LatestVersion="Already the latest version";
 ContentFilterRestoreMessage="Are you sure you want to restore the default settings?";
 ReloadRulesMessage="Are you sure you want to reload the rules?";
+BackgroundColor="Background Color";
+GradientColor="Gradient Color";
+SolidColor="Solid Color";

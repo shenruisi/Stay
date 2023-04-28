@@ -315,3 +315,6 @@ Dismiss="关闭";
 LatestVersion="已经是最新版本";
 ContentFilterRestoreMessage="你确定要恢复成默认设置吗？";
 ReloadRulesMessage="你确定要重新加载规则吗？";
+BackgroundColor="背景色";
+GradientColor="渐变色";
+SolidColor="纯色";

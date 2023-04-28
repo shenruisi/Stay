@@ -7,9 +7,11 @@
 
 #import "FCViewController.h"
 #import "FCStyle.h"
+#import "FCConfig.h"
 
 @interface FCViewController ()<UINavigationBarDelegate>
 
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
 @end
 
 @implementation FCViewController
@@ -23,23 +25,45 @@
     self.appearance.backgroundColor = UIColor.clearColor;
     self.appearance.backgroundEffect = nil;
     
-    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-    gradientLayer.frame = self.view.bounds;
-    NSArray<UIColor *> *colors = FCStyle.accentGradient;
-    gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
-    [self.view.layer insertSublayer:gradientLayer atIndex:0];
-//    self.appearance = [[UINavigationBarAppearance alloc] init];
-//    [self.appearance configureWithTransparentBackground];
-//    self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
-//
-//    self.navigationItem.standardAppearance = self.appearance;
-//    self.navigationItem.scrollEdgeAppearance = self.appearance;
+    [self gradientLayer];
     self.enableTabItem = NO;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(backgrundColorTypeDidChange:)
+                                                 name:@"BackgroundColorDidChange"
+                                               object:nil];
+}
+
+- (CAGradientLayer *)gradientLayer{
+    if (nil == _gradientLayer){
+        _gradientLayer = [CAGradientLayer layer];
+        _gradientLayer.frame = self.view.bounds;
+        NSArray<UIColor *> *colors = FCStyle.accentGradient;
+        _gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
+        [self.view.layer insertSublayer:_gradientLayer atIndex:0];
+    }
+    
+    return _gradientLayer;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.enableTabItem = _enableTabItem;
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.navigationBarBaseLine = self.navigationController.navigationBar.height + (self.enableTabItem ? 44 : 0);
+}
+
+- (void)backgrundColorTypeDidChange:(NSNotification *)note{
+    NSArray<UIColor *> *colors = FCStyle.accentGradient;
+    self.gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -93,11 +117,6 @@
     return [self fcNavigationBar].navigationTabItem;
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    self.enableTabItem = _enableTabItem;
-}
-
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{}
 
 - (void)searchTabItemDidClick{}
@@ -110,6 +129,12 @@
 
 - (void)endSearch{
     [[self fcNavigationBar] cancelSearch];
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"BackgroundColorDidChange"
+                                                  object:nil];
 }
 
 @end

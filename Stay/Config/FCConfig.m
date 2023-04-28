@@ -51,6 +51,7 @@ static FCConfig *k_config = nil;
         [SharedStorageManager shared].userDefaultsExRO.deviceID = deviceID;
         [self setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"System" setWhenNil:YES];
         [self setIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency value:10 setWhenNil:YES];
+        [self setStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType value:@"gradient" setWhenNil:YES];
     }
     
     return self;
