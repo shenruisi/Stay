@@ -80,6 +80,39 @@ const browser = __b;
     let threeFingerMoveStart = null;
     let threeFingerMoveEnd = null;
     let selectedDom = null;
+    let i18nProp = {};
+    const AdLangMessage = {
+      'en_US': {
+        'tag_as_ad': 'Tag as ad',
+        'expand': 'Expand',
+        'narrow_down': 'Narrow down',
+        'previous_sibling': 'Previous sibling',
+        'next_sibling': 'Next sibling',
+        'cancel': 'Cancel',
+        'select_note': 'Tap to select an element',
+        'select_confirm': 'Tap again to confirm the element',
+      },
+      'zh_CN': {
+        'tag_as_ad': '标记为广告',
+        'expand': '扩大',
+        'narrow_down': '缩小',
+        'previous_sibling': '前个兄弟节点',
+        'next_sibling': '下个兄弟节点',
+        'cancel': '取消',
+        'select_note': '点击选择一个元素',
+        'select_confirm': '再次点击确认元素',
+      },
+      'zh_HK': {
+        'tag_as_ad': '標記為廣告',
+        'expand': '擴大',
+        'narrow_down': '縮小',
+        'previous_sibling': '前個兄弟節點',
+        'next_sibling': '下個兄弟節點',
+        'cancel': '取消',
+        'select_note': '點擊選擇一個元素',
+        'select_confirm': '再次點擊確認元素',
+      },
+    }
     const distance = 10;
     const Utils = {
       parseToDOM(str){
@@ -95,6 +128,9 @@ const browser = __b;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
         return getArr.length ? true : false;
+      },
+      isDark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       },
       sub(a, b) {
         let c, d, e;
@@ -141,7 +177,28 @@ const browser = __b;
     }
     const clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
     const borderSize = 2;
+    function languageCode() {
+      let lang = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0]
+        : (navigator.language || navigator.userLanguage /* IE */ || 'en');
+      lang = lang.toLowerCase();
+      lang = lang.replace(/-/, '_'); // some browsers report language as en-US instead of en_US
+      if (lang.length > 3) {
+        lang = lang.substring(0, 3) + lang.substring(3).toUpperCase();
+      }
+      if (lang == 'zh_TW' || lang == 'zh_MO'){
+        lang = 'zh_HK'
+      }
+      return lang;
+    }
+    
     function createStyleTag(){
+      let closeBg = '#ffffff';
+      let closePopup = 'https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png';
+      if(Utils.isDark()){
+        closePopup = 'https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png';
+        closeBg = '#1C1C1C';
+      }
+      
       if(!document.querySelector('#__stay_select_style')){
         const styleDom = document.createElement('style');
         styleDom.type = 'text/css';
@@ -165,9 +222,9 @@ const browser = __b;
                       top: 20px;
                       width:26px;
                       height:26px;
-                      background: url("https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png") 50% 50% no-repeat;
+                      background: url("${closePopup}") 50% 50% no-repeat;
                       background-size: 40%;
-                      background-color: #ffffff;
+                      background-color: ${closeBg};
                       border-radius:50%;
                     }
                     .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid #ffffff; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
@@ -187,7 +244,7 @@ const browser = __b;
                     }
                     .__stay_menu_item{
                       -webkit-user-select: none;
-                      height:45px;
+                      height:40px;
                       border-bottom: 1px solid #e0e0e0;
                       display:flex;
                       justify-content: space-between;
@@ -199,11 +256,40 @@ const browser = __b;
                       -webkit-font-smoothing: antialiased;
                       -moz-osx-font-smoothing: grayscale;
                     }
+                    .__item_disabled div,.__item_disabled img{
+                      opacity: 0.3;
+                    }
+                    .__stay_weight{
+                      font-weight: 600;
+                    }
                     .__stay_menu_item:last-child {
                       border-bottom: none;
                     }
                     .__stay_menu_item img{
                       width:15px;
+                    }
+                    .__stay_select_note_warpper{
+                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+                      -webkit-font-smoothing: antialiased;
+                      -moz-osx-font-smoothing: grayscale;
+                      position:fixed; 
+                      z-index:2147483647;
+                      display: inline-block;
+                      word-break: keep-all;
+                      white-space: nowrap;
+                      height: 25px;
+                      border-radius: 10px;
+                      line-height: 25px;
+                      text-align: center;
+                      padding: 0 15px;
+                      box-sizing: border-box;
+                      background-color: #fff;
+                      color: #000;
+                      font-weight: 700;
+                      font-size: 13px;
+                      left: 50%;
+                      transform: translate(-50%);
+                      top: -60px;
                     }
                     .__stay_tagged_wrapper{
                       font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -468,7 +554,6 @@ const browser = __b;
         moveWrapperDom = document.createElement('div');
         moveWrapperDom.id='__stay_wrapper';
         moveWrapperDom.classList.add('__stay_move_wrapper');
-        // https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png
         closeTagingDom = document.createElement('div');
         closeTagingDom.id='__stay_close';
         closeTagingDom.classList.add('__stay_close_con');
@@ -492,6 +577,7 @@ const browser = __b;
         preselectedTargetDom.classList.add('__stay_select_target');
         document.body.appendChild(preselectedTargetDom);
       }
+      showSelectTagNoteToast(i18nProp['select_note']);
     }
 
     function addListenerClosePanelEvent(){
@@ -508,6 +594,7 @@ const browser = __b;
       console.log('closeTagingDom addListener click---------------');
       // makeupTagListenerObj.shouldSetMakeupStatus = true;
       makeupTagListenerObj.makeupStatus = 'off';
+      hideSelectTagNoteToast();
     }
 
 
@@ -541,31 +628,55 @@ const browser = __b;
      * 展示标记菜单
      */
     function showTagingOperateMenu(event){
-      event.stopPropagation();
-      // event.preventDefault();
+      if(event){
+        event.stopPropagation();
+      }
       console.log('addListener click---------------');
       if(showMakeupTagMenu){
         console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
         return;
       }
+      hideSelectTagNoteToast();
       showMakeupTagMenu = true;
       stopListenerMove();
       stopWindowScroll();
       preselectedTargetDom.style.borderColor = '#B620E0';
       // todo
-      // https://res.stayfork.app/scripts/D83C97B84E098F26C669507121FE9EEC/icon.png
+      let closeMenu = 'https://res.stayfork.app/scripts/95CF6156C3CCD94629AF09F81A6CD5FF/icon.png';
+      let expand = 'https://res.stayfork.app/scripts/0D45496300EC4B6360E44B69B92D1132/icon.png';
+      let narrowDown = 'https://res.stayfork.app/scripts/9902FE8B6AFA251ED975C492E184DDCA/icon.png';
+      let nextSibling = 'https://res.stayfork.app/scripts/069AF48A98B2955589200B6106838811/icon.png';
+      let previousSibling = 'https://res.stayfork.app/scripts/51245F785BF8817F78D5ABD914147DF5/icon.png';
+      if(Utils.isDark()){
+        expand = 'https://res.stayfork.app/scripts/5C42A87EF2288BEDF260D06E54A4F88F/icon.png';
+        narrowDown = 'https://res.stayfork.app/scripts/DA3CFBDA1D7F29E4D99D392EE6C40496/icon.png';
+        nextSibling = 'https://res.stayfork.app/scripts/C0E56AB1BFFE7709D81492B76B2588C5/icon.png';
+        previousSibling = 'https://res.stayfork.app/scripts/C02CEFF452C9B642CA4594FFFB910C12/icon.png';
+        closeMenu = 'https://res.stayfork.app/scripts/C3E3730228847D228F85ADF68B2336B0/icon.png';
+      }
+
       const tagMenuDom = document.createElement('div');
       tagMenuDom.id = '__stay_makeup_menu';
       tagMenuDom.classList.add('__stay_makeup_menu_wrapper');
+
+      let hasExpand = getValidParentNode()?true:false;
+      let hasNarrowDown = getValidFirstChildNode()?true:false;
+      let hasPreviousSibling = getValidPreviousSiblingNode()?true:false;
+      let hasNextSibling = getValidNextSiblingNode()?true:false;
       const tagMenuDomStr = [
         '<div class="__stay_makeup_menu_item_box">',
-        '<div class="__stay_menu_item" id="__stay_menu_tag" type="tag"><div>Tag as ad</div><img src="https://res.stayfork.app/scripts/D83C97B84E098F26C669507121FE9EEC/icon.png"></div>',
-        '<div class="__stay_menu_item" id="__stay_menu_cancel" type="cancel"><div>Cancel</div><img src="https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png"></div>',
+        `<div class="__stay_menu_item" id="__stay_menu_tag" type="tag" node='true'><div class="__stay_weight">${i18nProp['tag_as_ad']}</div><img src="https://res.stayfork.app/scripts/92F21CD62874A8A6EFAF6A57618224D6/icon.png"></div>`,
+        `<div class="__stay_menu_item ${!hasExpand?'__item_disabled':''}" id="__stay_menu_expand" type="expand" node='${hasExpand}'><div class="__stay_weight">${i18nProp['expand']}</div><img src="${expand}"></div>`,
+        `<div class="__stay_menu_item ${!hasNarrowDown?'__item_disabled':''}" id="__stay_menu_narrowDown" type="narrowDown" node='${hasNarrowDown}'><div class="__stay_weight">${i18nProp['narrow_down']}</div><img src="${narrowDown}"></div>`,
+        `<div class="__stay_menu_item ${!hasPreviousSibling?'__item_disabled':''}" id="__stay_menu_previousSibling" type="previousSibling" node='${hasPreviousSibling}'><div class="__stay_weight">${i18nProp['previous_sibling']}</div><img src="${previousSibling}"></div>`,
+        `<div class="__stay_menu_item ${!hasNextSibling?'__item_disabled':''}" id="__stay_menu_nextSibling" type="nextSibling" node='${hasNextSibling}'><div class="__stay_weight">${i18nProp['next_sibling']}</div><img src="${nextSibling}"></div>`,
+        `<div class="__stay_menu_item" id="__stay_menu_cancel" type="cancel" node='true'><div>${i18nProp['cancel']}</div><img src="${closeMenu}"></div>`,
         '</div>'
       ];
       tagMenuDom.appendChild(Utils.parseToDOM(tagMenuDomStr.join('')));
+
       const clientHeight = document.documentElement.clientHeight;
-      const tagMenuDomHeight = 45*2 + 20;
+      const tagMenuDomHeight = 40*6 + 20;
       const tagMenuDomWidth = 187;
       const selectedDomRect = preselectedTargetDom.getBoundingClientRect();
       // console.log('selectedDomRect-----',selectedDomRect, ',tagMenuDomWidth--',tagMenuDomWidth,',tagMenuDomHeight---',tagMenuDomHeight);
@@ -597,38 +708,128 @@ const browser = __b;
         if(selectedDomRect.y >= tagMenuDomHeight){
           tagMenuDom.style.bottom = '100%';
         }else{
-          // 均不符合上要求，则在选中区域中居中展示
+          // 均不符合上要求，则在选中区域上方或下方靠border展示
           tagMenuDom.style.position = 'fixed';
-          tagMenuDom.style.top = '50%';
-          tagMenuDom.style.left = '50%';
-          tagMenuDom.style.transform = 'translate(-50%, -50%)';
+          // 选中区域上方大于下方
+          if(selectedBottomY > selectedBottomHeight){
+            tagMenuDom.style.top = '0';
+          }else{
+            tagMenuDom.style.bottom = '0';
+          }
+          // tagMenuDom.style.left = '50%';
+          // tagMenuDom.style.transform = 'translate(-50%, -50%)';
         }
       }
       preselectedTargetDom.appendChild(tagMenuDom);
-      const menuItemCancelEvent = document.querySelector('#__stay_makeup_menu #__stay_menu_cancel').addEventListener(clickEvent, handleMenuItemClick);
-      const menuItemTagingEvent = document.querySelector('#__stay_makeup_menu #__stay_menu_tag').addEventListener(clickEvent, handleMenuItemClick);
+      const menuItemEvent = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box').addEventListener(clickEvent, handleMenuItemClick);
     }
 
+    function getValidParentNode(){
+      let parentNodeDom = selectedDom;
+      // let parentNode
+      while(parentNodeDom){
+        parentNodeDom = parentNodeDom.parentNode
+        if(parentNodeDom && parentNodeDom.nodeName != '#text' && parentNodeDom.getBoundingClientRect().width>0){
+          break;
+        }
+      }
+      if(!parentNodeDom || parentNodeDom.nodeName == '#text'){
+        return null;
+      }
+      return parentNodeDom;
+    }
+
+    function getValidFirstChildNode(){
+      let firstChildNode = selectedDom;
+      // let parentNode
+      while(firstChildNode){
+        firstChildNode = firstChildNode.firstChild;
+        if(firstChildNode && firstChildNode.nodeName != '#text' && firstChildNode.getBoundingClientRect().width>0){
+          break;
+        }
+      }
+      if(!firstChildNode || firstChildNode.nodeName == '#text'){
+        return null;
+      }
+      return firstChildNode;
+    }
+
+    function getValidPreviousSiblingNode(){
+      let previousSiblingNode = selectedDom;
+      // let parentNode
+      while(previousSiblingNode){
+        previousSiblingNode = previousSiblingNode.previousSibling
+        if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0){
+          break;
+        }
+      }
+      if(!previousSiblingNode || previousSiblingNode.nodeName == '#text'){
+        return null;
+      }
+      return previousSiblingNode;
+    }
+
+    function getValidNextSiblingNode(){
+      let nextSiblingNode = selectedDom;
+      // let parentNode
+      while(nextSiblingNode){
+        nextSiblingNode = nextSiblingNode.nextSibling
+        if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0){
+          break;
+        }
+      }
+      if(!nextSiblingNode){
+        return null;
+      }
+      if(nextSiblingNode.nodeName == '#text'){
+        return null;
+      }
+      return nextSiblingNode;
+    }
+
+    /**
+     * 选中区域菜单项处理事件
+     * @param {Event} e 
+     */
     function handleMenuItemClick(e){
       e.preventDefault();
       e.stopPropagation();
-      let menuItemType = e.currentTarget.getAttribute('type');
-          
-      if('cancel' === menuItemType){
-        // console.log('menu----cancel')
-        document.querySelector('#__stay_makeup_menu #__stay_menu_cancel').removeEventListener(clickEvent, handleMenuItemClick);
-      }else if('tag' === menuItemType){
-        // console.log('menu----tag')
-        document.querySelector('#__stay_makeup_menu #__stay_menu_tag').removeEventListener(clickEvent, handleMenuItemClick);
-        handleSelectedTag();
+      const item = e.target.closest('.__stay_menu_item');
+      const menuItemBox = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box');
+      // 如果事件目标元素是具有 "item" 类的元素
+      if (item && item.parentNode === menuItemBox) {
+        let hasNode = item.getAttribute('node');
+        console.log(`Clicked item: ${item.textContent}, ${hasNode}`);
+        if(hasNode === 'false'){
+          return;
+        }
+        
+        let menuItemType = item.getAttribute('type');
+
+        menuItemBox.removeEventListener(clickEvent, handleMenuItemClick);
+        preselectedTargetDom.removeChild(document.querySelector('#__stay_makeup_menu'));
+        hideSeletedTagContentModal();
+        showMakeupTagMenu = false;
+        startListenerMove();
+        removeStopWindowScroll();
+        if('tag' === menuItemType){
+          handleSelectedTag();
+          showSelectTagNoteToast(i18nProp['select_note']);
+        }else if('expand' === menuItemType){
+          handleSelecteTagPosition(getValidParentNode(), true);
+        }else if('narrowDown' === menuItemType){
+          handleSelecteTagPosition(getValidFirstChildNode(), true);
+        }else if('previousSibling' === menuItemType){
+          handleSelecteTagPosition(getValidPreviousSiblingNode(), true);
+        }else if('nextSibling' === menuItemType){
+          handleSelecteTagPosition(getValidNextSiblingNode(), true);
+        }else{
+          console.log('menu----cancel-----',menuItemType)
+          showSelectTagNoteToast(i18nProp['select_note']);
+        }
         
       }
-      preselectedTargetDom.removeChild(document.querySelector('#__stay_makeup_menu'));
-      hideSeletedTagContentModal()
-      // console.log('handleMenuItemClick------removeChild---------', preselectedTargetDom);
-      showMakeupTagMenu = false;
-      startListenerMove();
-      removeStopWindowScroll();
+      
     }
 
     function stopWindowScroll(){
@@ -672,8 +873,6 @@ const browser = __b;
         clearTimeout(durationTimer);
         durationTimer = 0;
       }, 2000);
-
-      
       sendSelectedTagToHandler();
     }
 
@@ -681,6 +880,8 @@ const browser = __b;
       return new Promise((resolve, reject)=>{
         const selector = getSelector(selectedDom);
         const url = window.location.href;
+        selectedDom.display = 'none';
+        selectedDom = null;
         console.log('sendSelectedTagToHandler----------------', selector, url);
         if(isContent){
           console.log('sendSelectedTagToHandler-----true');
@@ -727,23 +928,23 @@ const browser = __b;
     }
 
     function handleMoveAndSelecteDom(event){
-      console.log('touchmove------handleMoveAndSelecteDom', event)
+      // console.log('touchmove------handleMoveAndSelecteDom', event)
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
-      console.log('moveDoms-----',moveDoms);
-      selectedDom = moveDoms[0];
-      let moveDomRect = selectedDom.getBoundingClientRect();
+      // console.log('moveDoms-----',moveDoms);
+      let selectePositionDom = moveDoms[0];
+      let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
         if(moveDoms.length<3){
-          selectedDom = moveDoms[1];
+          selectePositionDom = moveDoms[1];
         }else if(moveDoms.length > 5){
           let i = 3;
-          selectedDom = moveDoms[i];
+          selectePositionDom = moveDoms[i];
           while(moveDomRect.height >= document.documentElement.clientHeight){
             i = i - 1;
-            selectedDom = moveDoms[i];
-            moveDomRect = selectedDom.getBoundingClientRect();
+            selectePositionDom = moveDoms[i];
+            moveDomRect = selectePositionDom.getBoundingClientRect();
             if(i == 1){
               break;
             }
@@ -752,13 +953,33 @@ const browser = __b;
       }else{
         return;
       }
-      console.log('moveDom-----',selectedDom);
-      moveDomRect = selectedDom.getBoundingClientRect();
-      if(!moveDomRect || !Object.keys(moveDomRect)){
+      // console.log('moveDom-----',selectedDom);
+      handleSelecteTagPosition(selectePositionDom, false)
+    }
+
+    /**
+     * 绘制选中区域
+     * @param {Document} selectePositionDom 
+     * @param {boolean} showMenu 
+     * @returns 
+     */
+    function handleSelecteTagPosition(selectePositionDom, showMenu){
+      if(!selectePositionDom){
+        console.log('handleSelecteTagPosition---selectePositionDom is null');
         return;
       }
+      selectedDom = selectePositionDom
+      let moveDomRect = selectedDom.getBoundingClientRect();
+      if(!moveDomRect || !Object.keys(moveDomRect)){
+        console.log('handleSelecteTagPosition---moveDomRect is null');
+        return;
+      }
+      if(!showMenu){
+        showSelectTagNoteToast(i18nProp['select_confirm']);
+      }
+      
       let targetWidth = moveDomRect.width;
-  
+      // console.log('handleSelecteTagPosition------selectedDom----',selectedDom)
       let targetHeight = moveDomRect.height;
       let targetX = moveDomRect.left;
       let targetY = moveDomRect.top;
@@ -769,7 +990,7 @@ const browser = __b;
           targetX = targetX*(-1);
         }
       }
-  
+      preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
       // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
       while(preselectedTargetDom.firstChild){
         preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
@@ -784,9 +1005,50 @@ const browser = __b;
       preselectedTargetDom.style.height = targetHeight+'px';
       preselectedTargetDom.style.left = targetX+'px';
       preselectedTargetDom.style.top = targetY+'px';
+
+      if(showMenu){
+        showTagingOperateMenu();
+      }
     }
+
+    function showSelectTagNoteToast(note){
+      let selectNoteDom = document.querySelector('#__stay_select_note');
+      if(!selectNoteDom){
+        selectNoteDom = document.createElement('div');
+        selectNoteDom.id = '__stay_select_note';
+        selectNoteDom.classList.add('__stay_select_note_warpper');
+        selectNoteDom.innerHTML = note;
+        document.body.appendChild(selectNoteDom);
+        selectNoteDom.style.animation = 'dropIn 0.5s forwards';
+      }else{
+        selectNoteDom.style.display = 'inline-block';
+        selectNoteDom.innerHTML = note;
+        selectNoteDom.style.animation = 'dropIn 0.5s forwards';
+      }
+    }
+
+    function hideSelectTagNoteToast(){
+      let selectNoteDom = document.querySelector('#__stay_select_note');
+      if(selectNoteDom){
+        selectNoteDom.style.animation = 'dropOut 0.5s forwards';
+        let durationTimer = setTimeout(()=>{
+          selectNoteDom.style.display = 'none';
+          clearTimeout(durationTimer);
+          durationTimer = 0;
+        }, 500);
+      }
+    }
+
+    
   
-  
+    /**
+     * 计算选中区域的裁剪坐标
+     * @param {Number} targetX 
+     * @param {Number} targetY 
+     * @param {Number} targetWidth 
+     * @param {Number} targetHeight 
+     * @returns 
+     */
     function calcPolygonPoints(targetX, targetY, targetWidth, targetHeight){
       targetX = Utils.add(targetX, borderSize);
       targetY = Utils.add(targetY, borderSize);
@@ -847,6 +1109,8 @@ const browser = __b;
     });
 
     function startMakeupTag(){
+      let browserLangurage = languageCode()
+      i18nProp = AdLangMessage[browserLangurage] || AdLangMessage['en_US'];
       makeupTagListenerObj.makeupStatus = 'off';
       asyncFetchThreeFingerTapStatus();
       // asyncFetchMakeupTagStatus();
