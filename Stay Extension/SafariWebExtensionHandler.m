@@ -468,21 +468,23 @@
         NSString *selector = message[@"selector"];
         
         if (url.length > 0 && selector.length > 0){
-            NSURL *uri = [NSURL URLWithString:url];
+            NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+            [set addCharactersInString:@"#"];
+            NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
             NSString *host = uri.host;
             NSString *path = uri.path;
             if ([path isEqualToString:@"/"]){
                 path = @"";
             }
             path = path ? path : @"";
-            NSString *fragment = uri.fragment ?  uri.fragment : @"";
+//            NSString *fragment = uri.fragment ?  uri.fragment : @"";
             
-            NSString *rule = [NSString stringWithFormat:@"||%@%@%@##%@\n",host,path,fragment,selector];
+            NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
             
             [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:rule error:nil];
             NSDictionary *dictionary = @{
                 @"trigger" : @{
-                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@%@",host,path,fragment]
+                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
                 },
                 @"action" : @{
                     @"type" : @"css-display-none",

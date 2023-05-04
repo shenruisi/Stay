@@ -65,7 +65,7 @@ static ContentFilterManager *instance = nil;
     }
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:error];
-    NSLog(@"writeToFileName %@",fileName);
+    NSLog(@"writeToFileName %@ %@",fileName,*error);
 }
 
 - (void)appendJSONToFileName:(NSString *)fileName dictionary:(NSDictionary *)dictionary error:(NSError **)error{
@@ -77,7 +77,7 @@ static ContentFilterManager *instance = nil;
     NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
     if (error) return;
     [existJsonArray addObject:dictionary];
-    NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:0 error:error];
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:NSJSONWritingWithoutEscapingSlashes error:error];
     if (error) return;
     [newData writeToFile:filePath atomically:YES];
 }
