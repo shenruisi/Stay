@@ -23,8 +23,9 @@
 
 - (void)fillData:(ModalItemElement *)element{
     [super fillData:element];
+    UIFont *font = element.generalEntity.accessoryFont ? element.generalEntity.accessoryFont : FCStyle.sfSecondaryIcon;
     UIImage *image =  [UIImage systemImageNamed:@"chevron.right"
-                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfSecondaryIcon]];
+                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont: font]];
     image = [image imageWithTintColor:FCStyle.fcSecondaryBlack
                         renderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.imageView setImage:image];
@@ -35,9 +36,10 @@
         _imageView = [[FCLayoutImageView alloc] init];
         _imageView.contentMode = UIViewContentModeRight;
         __weak ModalItemAccessoryView *weakSelf = self;
+        UIFont *font = self.element.generalEntity.accessoryFont ? self.element.generalEntity.accessoryFont : FCStyle.sfSecondaryIcon;
         _imageView.fcLayout = ^(UIView * _Nonnull itself, UIView * _Nonnull superView) {
             [itself setFrame:CGRectMake(superView.width - weakSelf.element.spacing3 - FCStyle.sfSecondaryIcon.lineHeight,
-                                        (superView.height - FCStyle.sfSecondaryIcon.lineHeight) / 2,
+                                        (superView.height - font.lineHeight) / 2,
                                         FCStyle.sfSecondaryIcon.lineHeight,
                                         FCStyle.sfSecondaryIcon.lineHeight)];
         };

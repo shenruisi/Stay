@@ -254,6 +254,8 @@
         _enableStayElemnt = [[ModalItemElement alloc] init];
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"EnableStayStep1", @"");
+        general.titleFont = FCStyle.headlineBold;
+        general.accessoryFont = FCStyle.sfSecondaryIconBold;
         _enableStayElemnt.generalEntity = general;
         _enableStayElemnt.renderMode = ModalItemElementRenderModeSingle;
         _enableStayElemnt.type = ModalItemElementTypeAccessory;

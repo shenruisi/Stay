@@ -71,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfActbar;
 @property(class, nonatomic, readonly) UIFont *sfNavigationBar;
 @property(class, nonatomic, readonly) UIFont *sfSecondaryIcon;
+@property(class, nonatomic, readonly) UIFont *sfSecondaryIconBold;
 @property(class, nonatomic, readonly) UIFont *cellIcon;
 @property(class, nonatomic, readonly) UIFont *sfIcon;
 @property(class, nonatomic, readonly) UIFont *secondaryCellIcon;

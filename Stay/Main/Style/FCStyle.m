@@ -332,6 +332,14 @@
 #endif
 }
 
++ (UIFont *)sfSecondaryIconBold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:15];
+#else
+    return [UIFont boldSystemFontOfSize:13];
+#endif
+}
+
 + (UIFont *)cellIcon{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:20];
