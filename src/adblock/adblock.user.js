@@ -243,6 +243,8 @@ const browser = __b;
                       box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
                     }
                     .__stay_menu_item{
+                      opacity:1!important;
+                      filter:none;
                       -webkit-user-select: none;
                       height:40px;
                       border-bottom: 1px solid #e0e0e0;
@@ -730,6 +732,10 @@ const browser = __b;
         // let parentNode
         while(parentNodeDom){
           parentNodeDom = parentNodeDom.parentNode
+          if(['BODY','HTML'].includes(parentNodeDom.nodeName)){
+            parentNodeDom = null;
+            break;
+          }
           if(parentNodeDom && parentNodeDom.nodeName != '#text' && parentNodeDom.getBoundingClientRect().width>0){
             break;
           }
@@ -772,6 +778,10 @@ const browser = __b;
           if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0){
             break;
           }
+          if(['SCRIPT','STYLE','LINK'].includes(previousSiblingNode.nodeName)){
+            previousSiblingNode = null;
+            break;
+          }
         }
         if(!previousSiblingNode || previousSiblingNode.nodeName == '#text'){
           return null;
@@ -790,6 +800,10 @@ const browser = __b;
         while(nextSiblingNode){
           nextSiblingNode = nextSiblingNode.nextSibling
           if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0){
+            break;
+          }
+          if(['SCRIPT','STYLE','LINK'].includes(nextSiblingNode.nodeName)){
+            nextSiblingNode = null;
             break;
           }
         }
