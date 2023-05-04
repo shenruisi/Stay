@@ -130,7 +130,7 @@
         }
 #else
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 3;
+            [((FCTabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).fcTabBar selectIndex:4];
             [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
         }
 #endif
