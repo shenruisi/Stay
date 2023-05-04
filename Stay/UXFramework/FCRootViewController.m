@@ -29,11 +29,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [super scrollEffectHandle:scrollView];
-    
-    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0){
-        FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
-        [navigationBar showSearchWithOffset:self.navigationController.navigationBar.height - self.navigationBarBaseLine];
-    }
+
 }
 
 

@@ -508,6 +508,7 @@ static CGFloat OneStageMovingLength = 50;
 }
 
 - (void)cancelSearch{
+    self.searchBar.textField.text = @"";
     FCViewController *cer = [self topController];
     if ([cer.searchUpdating respondsToSelector:@selector(willEndSearch)]){
         [cer.searchUpdating willEndSearch];

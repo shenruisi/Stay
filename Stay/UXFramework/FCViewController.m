@@ -79,6 +79,11 @@
     UINavigationBarAppearance *appearance =  [self navigationBarEffect:scrollView.contentOffset.y];
     self.navigationItem.standardAppearance = appearance;
     self.navigationItem.scrollEdgeAppearance = appearance;
+    
+    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0){
+        FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
+        [navigationBar showSearchWithOffset:self.navigationController.navigationBar.height - self.navigationBarBaseLine];
+    }
 }
 
 - (UINavigationBarAppearance *)navigationBarEffect:(CGFloat)yOffset{

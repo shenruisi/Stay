@@ -832,8 +832,9 @@ UIPopoverPresentationControllerDelegate
     self.searchViewController = search;
     [self.searchViewController.view addSubview:self.searchTableView];
 
-    [self tableView];
-    [self queryData];
+//    [self tableView];
+//    [self queryData];
+    [self.navigationTabItem activeItem:self.featuredTabItem];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:@"changeTab" object:nil];
     
@@ -874,7 +875,7 @@ UIPopoverPresentationControllerDelegate
 
 - (void)reloadAllTableview {
     dispatch_async(dispatch_get_main_queue(),^{
-        
+
         [self.tableView reloadData];
         [self.searchTableView reloadData];
         [self.allTableView reloadData];
@@ -882,10 +883,10 @@ UIPopoverPresentationControllerDelegate
 }
 
 #pragma mark - UISearchResultsUpdating
-- (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
-    NSString *inputStr = searchController.searchBar.text;
-    return;
-}
+//- (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
+//    NSString *inputStr = searchController.searchBar.text;
+//    return;
+//}
 
 #pragma mark -searchBarDelegate
 
@@ -1106,12 +1107,12 @@ UIPopoverPresentationControllerDelegate
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
             options:NSJSONReadingMutableContainers
             error:nil];
-            
-            
+
+
             NSMutableArray *array = dic[@"biz"];
-            
+
             NSMutableArray *finalArray = [NSMutableArray array];
-            
+
             if(array != NULL && array.count > 0) {
                 for(int i = 0;i < array.count; i++){
                     NSDictionary *dic = array[i];
@@ -1122,15 +1123,19 @@ UIPopoverPresentationControllerDelegate
                     }
                 }
             }
-    
+
             self.datas = finalArray;
             dispatch_async(dispatch_get_main_queue(),^{
-                [self.simpleLoadingView stop];
+//                [self.simpleLoadingView stop];
+                [self.simpleLoadingView removeFromSuperview];
+                self.simpleLoadingView = nil;
                 [self.tableView reloadData];
             });
         } failBlock:^(NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(),^{
-                [self.simpleLoadingView stop];
+//                [self.simpleLoadingView stop];
+                [self.simpleLoadingView removeFromSuperview];
+                self.simpleLoadingView = nil;
                 [self.tableView reloadData];
             });
         }];
@@ -1166,12 +1171,16 @@ UIPopoverPresentationControllerDelegate
             }
             [self.allDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self.simpleLoadingView stop];
+//                        [self.simpleLoadingView stop];
+                        [self.simpleLoadingView removeFromSuperview];
+                        self.simpleLoadingView = nil;
                         [self.allTableView reloadData];
                     });
                 } failBlock:^(NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self.simpleLoadingView stop];
+//                        [self.simpleLoadingView stop];
+                        [self.simpleLoadingView removeFromSuperview];
+                        self.simpleLoadingView = nil;
                         [self.allTableView reloadData];
                     });
                     _allDataQuerying = false;
@@ -1368,8 +1377,8 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self scrollEffectHandle:scrollView];
-    
+    [super scrollEffectHandle:scrollView];
+
      CGPoint offset = scrollView.contentOffset;
      CGRect bounds = scrollView.bounds;
      CGSize size = scrollView.contentSize;
@@ -1448,14 +1457,22 @@ UIPopoverPresentationControllerDelegate
     }
 }
 
-
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]init];
+        _tableView = [[UITableView alloc] init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.showsVerticalScrollIndicator = YES;
+        _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        //TODO:
+        if (@available(iOS 15.0, *)){
+           _tableView.sectionHeaderTopPadding = 0;
+        }
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.sectionFooterHeight = 0;
         _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
                 
@@ -1481,7 +1498,17 @@ UIPopoverPresentationControllerDelegate
         _allTableView.hidden = true;
         _allTableView.backgroundColor = [UIColor clearColor];
         _allTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.showsVerticalScrollIndicator = YES;
+        _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        //TODO:
+        if (@available(iOS 15.0, *)){
+           _tableView.sectionHeaderTopPadding = 0;
+        }
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.sectionFooterHeight = 0;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_allTableView];
+        
         
         [NSLayoutConstraint activateConstraints:@[
             [_allTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
@@ -1510,7 +1537,7 @@ UIPopoverPresentationControllerDelegate
                                                                                  (self.view.frame.size.height - 50) / 2,
                                                                                  self.view.frame.size.width, 50)];
         
-        [self.view addSubview:_simpleLoadingView];
+//        [self.view addSubview:_simpleLoadingView];
     }
     
     return _simpleLoadingView;
