@@ -786,15 +786,17 @@
 - (void) switchAction:(id)sender {
     self.script.active = !self.script.active;
     
-    if(self.script.active) {
-        [self.actBtn setTitle:NSLocalizedString(@"Activated", @"")  forState:UIControlStateNormal];
-        self.actBtn.backgroundColor = FCStyle.accent;
-        [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    } else {
-        [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
-         self.actBtn.backgroundColor = FCStyle.background;
-         [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
-    }
+     if(self.script.active) {
+         [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
+         [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+     } else {
+         [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.fcBlack.CGColor;
+          [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
+     }
     
     if (self.script.active) {
         [[DataManager shareManager] updateScrpitStatus:1 numberId:self.script.uuid];

@@ -122,6 +122,10 @@
     btn.layer.cornerRadius = 10;
     btn.layer.borderWidth = 1;
     btn.layer.borderColor = FCStyle.accent.CGColor;
+    
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [self.contentView addSubview:indicatorView];
+    
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{
@@ -143,6 +147,12 @@
         
         if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
             btnName = NSLocalizedString(@"Downloading", @"");
+            btn.hidden = true;
+            indicatorView.hidden = false;
+            [indicatorView startAnimating];
+        } else {
+            btn.hidden = false;
+            indicatorView.hidden = true;
         }
         
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
@@ -153,7 +163,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
-        
+        objc_setAssociatedObject (btn , @"iconUrl", dic[@"icon_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+
         [btn sizeToFit];
         btn.width = btn.width + 20;
         if(btn.width < 67) {
@@ -172,6 +183,9 @@
     btn.right = self.contentView.width - 15;
     btn.layer.cornerRadius = 12.5;
     [self.contentView addSubview:btn];
+    indicatorView.center = btn.center;
+    
+    
     
     UILabel *installLabel = [[UILabel alloc] init];
     NSNumber *install = dic[@"installs"];

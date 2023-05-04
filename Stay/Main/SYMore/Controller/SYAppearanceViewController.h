@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification;
 
-@interface SYAppearanceViewController : UIViewController
+@interface SYAppearanceViewController : FCViewController
 
 @end
 

@@ -23,6 +23,7 @@
     [self mainLabel];
     [self downloadLabel];
     [self iconView];
+    self.mainLabel.top = self.imageBox.bottom + 12;
 }
 
 - (void)updateMainText:(NSString *)text{

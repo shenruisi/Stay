@@ -237,8 +237,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
  UITableViewDelegate,
  UITableViewDataSource,
  UISearchResultsUpdating,
- UISearchBarDelegate,
- UISearchControllerDelegate,
  UIPopoverPresentationControllerDelegate,
  UIDocumentPickerDelegate
 >
@@ -287,6 +285,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, assign) NSInteger selectedIdx;
 
+@property (nonatomic, assign) Boolean searchStatus;
+
+
 @end
 
 @implementation SYHomeViewController
@@ -308,6 +309,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [super viewDidLoad];
     self.enableTabItem = YES;
     self.enableSearchTabItem = YES;
+    self.searchUpdating = self;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     self.leftTitle  = NSLocalizedString(@"Userscripts","Userscripts");
 
@@ -1125,7 +1127,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #pragma mark -searchBarDelegate
 
 - (void)didBeganSearch {
-    [self.searchController setActive:YES];
+    self.searchStatus = YES;
     [_results removeAllObjects];
     [self.tableView reloadData];
 }
@@ -1135,6 +1137,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     if(text.length > 0) {
         [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:text]];
     }
+    [self.tableView reloadData];
+}
+
+- (void)didEndSearch {
+    self.searchStatus = NO;
+    [_results removeAllObjects];
     [self.tableView reloadData];
 }
 
@@ -1187,7 +1195,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.searchController.active) {
+    if (self.searchStatus) {
         return self.results.count;
     }
     
@@ -1217,7 +1225,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //    }
     // 这里通过searchController的active属性来区分展示数据源是哪个
     UserScript *model = nil;
-    if (self.searchController.active ) {
+    if (self.searchStatus) {
         model = _results[indexPath.row];
     } else {
         if(_selectedIdx == 1) {
@@ -1274,7 +1282,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
          [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
     }
     else{
-        if (self.searchController.active) {
+        if (self.searchStatus) {
             UserScript *model = _results[indexPath.row];
             SYDetailViewController *cer = [[SYDetailViewController alloc] init];
             cer.isSearch = false;
@@ -1299,7 +1307,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchController.view]) {
+    if(self.searchStatus) {
         return 0.1;
     }
     return 50;
@@ -1328,7 +1336,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     //Fixed retains self
     __weak SYHomeViewController *weakSelf = self;
-    if (self.searchController.active) {
+    if (self.searchStatus) {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDelete", @"")
@@ -1379,8 +1387,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
              [alert addAction:cancel];
             [self presentViewController:alert animated:YES completion:nil];
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
+        deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
 
     } else {
@@ -1434,9 +1441,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self presentViewController:alert animated:YES completion:nil];
             
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
         
+        
+        deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
         UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
                 UserScript *model;
                 if(weakSelf.selectedIdx == 1) {
@@ -1480,14 +1487,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }
         
         if (model.active) {
-            stopAction.image = [UIImage imageNamed:@"stop"];
+            stopAction.image = [[UIImage imageNamed:@"stop"] imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
             stopAction.backgroundColor = FCStyle.accent;
         } else {
-            stopAction.image = [UIImage imageNamed:@"play"];
+            stopAction.image = [[UIImage imageNamed:@"play"] imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
             stopAction.backgroundColor = FCStyle.accent;
         }
         
-        UIImage *image = [UIImage systemImageNamed:@"square.and.arrow.up" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+        UIImage *image = [ImageHelper sfNamed:@"square.and.arrow.up"  font:FCStyle.subHeadline color:FCStyle.accent];
      
         UIContextualAction *shareAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             self.sYSelectTabViewController = nil;
