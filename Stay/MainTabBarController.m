@@ -139,7 +139,7 @@
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    [self.welcomeSliderController show];
+//    [self.welcomeSliderController show];
 }
 
 

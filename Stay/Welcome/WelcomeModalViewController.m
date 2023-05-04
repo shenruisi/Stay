@@ -12,6 +12,7 @@
 #import "ModalItemElement.h"
 #import "ModalItemViewFactory.h"
 #import "ModalSectionView.h"
+#import "FCButton.h"
 
 @interface WelcomeModalViewController()<
  UITableViewDelegate,
@@ -31,6 +32,7 @@
 @property (nonatomic, strong) ModalItemElement *enableStayElemnt;
 @property (nonatomic, strong) ModalItemElement *installUserscriptElement;
 @property (nonatomic, strong) ModalItemElement *doneElement;
+@property (nonatomic, strong) FCButton *skipButton;
 @end
 
 @implementation WelcomeModalViewController
@@ -48,10 +50,13 @@
     [self djImageView];
     [self developedLabel1];
     [self tableView];
+    [self skipButton];
 }
 
 - (void)viewWillAppear{
     [super viewWillAppear];
+    self.installUserscriptElement.enable = NO;
+    
     [self.tableView reloadData];
 }
 
@@ -214,6 +219,7 @@
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.sectionFooterHeight = 0;
+        _tableView.allowsSelection = NO;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.backgroundColor = UIColor.clearColor;
         [self.view addSubview:_tableView];
@@ -252,11 +258,19 @@
 - (ModalItemElement *)enableStayElemnt{
     if (nil == _enableStayElemnt){
         _enableStayElemnt = [[ModalItemElement alloc] init];
+        _enableStayElemnt.shadowRound = YES;
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"EnableStayStep1", @"");
+        general.titleFont = FCStyle.headlineBold;
+        general.accessoryFont = FCStyle.sfSecondaryIconBold;
+        ModalItemDataEntityAccessory *accessory = [[ModalItemDataEntityAccessory alloc] init];
         _enableStayElemnt.generalEntity = general;
+        _enableStayElemnt.accessoryEntity = accessory;
         _enableStayElemnt.renderMode = ModalItemElementRenderModeSingle;
         _enableStayElemnt.type = ModalItemElementTypeAccessory;
+        _enableStayElemnt.action = ^(ModalItemElement * _Nonnull element) {
+            NSLog(@"a");
+        };
     }
     
     return _enableStayElemnt;
@@ -265,9 +279,14 @@
 - (ModalItemElement *)installUserscriptElement{
     if (nil == _installUserscriptElement){
         _installUserscriptElement = [[ModalItemElement alloc] init];
+        _installUserscriptElement.shadowRound = YES;
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"InstallUserscriptStep2", @"");
+        general.titleFont = FCStyle.headlineBold;
+        general.accessoryFont = FCStyle.sfSecondaryIconBold;
+        ModalItemDataEntityAccessory *accessory = [[ModalItemDataEntityAccessory alloc] init];
         _installUserscriptElement.generalEntity = general;
+        _installUserscriptElement.accessoryEntity = accessory;
         _installUserscriptElement.renderMode = ModalItemElementRenderModeSingle;
         _installUserscriptElement.type = ModalItemElementTypeAccessory;
     }
@@ -278,14 +297,65 @@
 - (ModalItemElement *)doneElement{
     if (nil == _doneElement){
         _doneElement = [[ModalItemElement alloc] init];
+        _doneElement.shadowRound = YES;
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"DoneStep3", @"");
+        general.titleFont = FCStyle.headlineBold;
+        general.accessoryFont = FCStyle.sfSecondaryIconBold;
+        ModalItemDataEntityAccessory *accessory = [[ModalItemDataEntityAccessory alloc] init];
         _doneElement.generalEntity = general;
+        _doneElement.accessoryEntity = accessory;
         _doneElement.renderMode = ModalItemElementRenderModeSingle;
         _doneElement.type = ModalItemElementTypeAccessory;
     }
     
     return _doneElement;
+}
+
+- (FCButton *)skipButton{
+    if (nil == _skipButton){
+        _skipButton = [[FCButton alloc] init];
+        [_skipButton addTarget:self action:@selector(skipAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_skipButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"WelcomeSkip", @"")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.accent,
+            NSFontAttributeName : FCStyle.bodyBold
+        }] forState:UIControlStateNormal];
+        _skipButton.backgroundColor = UIColor.clearColor;
+        _skipButton.layer.cornerRadius = 10;
+        _skipButton.layer.borderColor = FCStyle.accent.CGColor;
+        _skipButton.layer.borderWidth = 1;
+        _skipButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:_skipButton];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_skipButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-88],
+            [_skipButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20],
+            [_skipButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20],
+            [_skipButton.heightAnchor constraintEqualToConstant:45]
+        ]];
+    }
+    
+    return _skipButton;
+}
+
+- (void)skipAction:(id)sender{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Stay"
+                                                                   message:NSLocalizedString(@"WelcomeSkipAlert", @"")
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * _Nonnull action) {
+        [self.navigationController.slideController dismiss];
+    }];
+    [alert addAction:confirm];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+         style:UIAlertActionStyleCancel
+         handler:^(UIAlertAction * _Nonnull action) {
+     }];
+     [alert addAction:cancel];
+    [FCApp.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+    
 }
 
 - (CGSize)mainViewSize{
