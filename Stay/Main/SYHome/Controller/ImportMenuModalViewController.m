@@ -12,6 +12,8 @@
 
 - (void)setTitle:(NSString *)title subTitle:(NSString *)subTitle;
 - (void)setSFSymbol:(NSString *)sfName;
+- (void)setImageByName:(NSString *)name;
+
 - (void)addTarget:(id)target action:(SEL)selector;
 
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -98,7 +100,13 @@
     self.iconImageView.image = image;
 }
 
-
+- (void)setImageByName:(NSString *)name {
+    
+    
+//    [UIImage imageNamed:@"GreasyforkIcon" inBundle:<#(nullable NSBundle *)#> withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:22]]]]
+    UIImage *image = [UIImage imageNamed:name];
+    self.iconImageView.image = image;
+}
 
 - (void)addTarget:(id)target action:(SEL)selector{
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:target action:selector];
@@ -142,7 +150,7 @@
     if (nil == _writeButton){
         _writeButton = [[_MenuButton alloc] initWithFrame:CGRectMake(15, 62, self.view.frame.size.width - 30, 70)];
         [_writeButton setTitle:NSLocalizedString(@"settings.addScript", @"") subTitle:NSLocalizedString(@"settings.addScriptDesc", @"")];
-        [_writeButton setSFSymbol:@"pencil.circle.fill"];
+        [_writeButton setSFSymbol:@"doc.badge.plus"];
         [_writeButton addTarget:self action:@selector(writeAction)];
         [self.view addSubview:_writeButton];
     }
@@ -153,7 +161,7 @@
     if (nil == _linkButton){
         _linkButton = [[_MenuButton alloc] initWithFrame:CGRectMake(15, self.writeButton.bottom + 15, self.view.frame.size.width - 30, 70)];
         [_linkButton setTitle:NSLocalizedString(@"settings.addScriptFromUrl", @"") subTitle:NSLocalizedString(@"settings.addScriptFromUrlDesc", @"")];
-        [_linkButton setSFSymbol:@"link.circle.fill"];
+        [_linkButton setSFSymbol:@"link"];
         [_linkButton addTarget:self action:@selector(linkAction)];
         [self.view addSubview:_linkButton];
     }
@@ -164,7 +172,7 @@
     if (nil == _greasyForkButton){
         _greasyForkButton = [[_MenuButton alloc] initWithFrame:CGRectMake(15, self.linkButton.bottom + 15, self.view.frame.size.width - 30, 70)];
         [_greasyForkButton setTitle:NSLocalizedString(@"settings.addScriptFromWeb", @"") subTitle:NSLocalizedString(@"settings.addScriptFromWebDesc", @"")];
-        [_greasyForkButton setSFSymbol:@"g.circle.fill"];
+        [_greasyForkButton setImageByName:@"GreasyforkIcon"];
         [_greasyForkButton addTarget:self action:@selector(greasyForkAction)];
         [self.view addSubview:_greasyForkButton];
     }
@@ -175,7 +183,7 @@
     if (nil == _fileButton){
         _fileButton = [[_MenuButton alloc] initWithFrame:CGRectMake(15, self.greasyForkButton.bottom + 15, self.view.frame.size.width - 30, 70)];
         [_fileButton setTitle:NSLocalizedString(@"settings.importFromFile", @"") subTitle:NSLocalizedString(@"settings.importFromFileDesc", @"") ];
-        [_fileButton setSFSymbol:@"doc.circle.fill"];
+        [_fileButton setSFSymbol:@"folder"];
         [_fileButton addTarget:self action:@selector(fileAction)];
         [self.view addSubview:_fileButton];
     }
