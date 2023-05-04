@@ -421,6 +421,10 @@
 		5882258729F914F6004CDBF7 /* InputToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258529F914F6004CDBF7 /* InputToolbarItem.m */; };
 		5882258A29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */; };
 		5882258B29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */; };
+		5882259629FF6BF8004CDBF7 /* WelcomeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882259529FF6BF8004CDBF7 /* WelcomeSlideController.m */; };
+		5882259729FF6BF8004CDBF7 /* WelcomeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882259529FF6BF8004CDBF7 /* WelcomeSlideController.m */; };
+		5882259A29FF6C1B004CDBF7 /* WelcomeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882259929FF6C1B004CDBF7 /* WelcomeModalViewController.m */; };
+		5882259B29FF6C1B004CDBF7 /* WelcomeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5882259929FF6C1B004CDBF7 /* WelcomeModalViewController.m */; };
 		588402C9295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		588402CA295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		5884031C29667079002CA227 /* UIColor+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 5884031B29667078002CA227 /* UIColor+Convert.m */; };
@@ -1131,6 +1135,10 @@
 		5882258529F914F6004CDBF7 /* InputToolbarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolbarItem.m; sourceTree = "<group>"; };
 		5882258829F91692004CDBF7 /* InputToolbarItemSeperator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputToolbarItemSeperator.h; sourceTree = "<group>"; };
 		5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolbarItemSeperator.m; sourceTree = "<group>"; };
+		5882259429FF6BF8004CDBF7 /* WelcomeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WelcomeSlideController.h; sourceTree = "<group>"; };
+		5882259529FF6BF8004CDBF7 /* WelcomeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WelcomeSlideController.m; sourceTree = "<group>"; };
+		5882259829FF6C1B004CDBF7 /* WelcomeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WelcomeModalViewController.h; sourceTree = "<group>"; };
+		5882259929FF6C1B004CDBF7 /* WelcomeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WelcomeModalViewController.m; sourceTree = "<group>"; };
 		588402C7295D3272002CA227 /* ToastCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToastCenter.h; sourceTree = "<group>"; };
 		588402C8295D3272002CA227 /* ToastCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastCenter.m; sourceTree = "<group>"; };
 		5884031A29667078002CA227 /* UIColor+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Convert.h"; sourceTree = "<group>"; };
@@ -2008,6 +2016,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				5882259329FF6B7E004CDBF7 /* Welcome */,
 				58ADAE0C29E8F50E00C00332 /* Controls */,
 				58A3617229C020F700080465 /* UXFramework */,
 				583A10B229B831CC00BA4A11 /* AdBlock */,
@@ -2173,6 +2182,17 @@
 				5882258929F91692004CDBF7 /* InputToolbarItemSeperator.m */,
 			);
 			path = InputMenu;
+			sourceTree = "<group>";
+		};
+		5882259329FF6B7E004CDBF7 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				5882259429FF6BF8004CDBF7 /* WelcomeSlideController.h */,
+				5882259529FF6BF8004CDBF7 /* WelcomeSlideController.m */,
+				5882259829FF6C1B004CDBF7 /* WelcomeModalViewController.h */,
+				5882259929FF6C1B004CDBF7 /* WelcomeModalViewController.m */,
+			);
+			path = Welcome;
 			sourceTree = "<group>";
 		};
 		5889733A2722FF7600BE123E /* Images */ = {
@@ -3925,6 +3945,8 @@
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
 				5882257E29F90D6F004CDBF7 /* InputMenu.m in Sources */,
+				5882259A29FF6C1B004CDBF7 /* WelcomeModalViewController.m in Sources */,
+				5882259629FF6BF8004CDBF7 /* WelcomeSlideController.m in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
 				58EA4455286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
@@ -3997,6 +4019,7 @@
 				58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */,
 				583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
+				5882259729FF6BF8004CDBF7 /* WelcomeSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
@@ -4130,6 +4153,7 @@
 				84DB5FEE29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */,
 				588202652859E73900B2721A /* NavigationController.m in Sources */,
 				3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */,
+				5882259B29FF6C1B004CDBF7 /* WelcomeModalViewController.m in Sources */,
 				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
@@ -4822,12 +4846,14 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 139;
+				CURRENT_PROJECT_VERSION = 140;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Stay Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
 				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -4837,7 +4863,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.9;
+				MARKETING_VERSION = 2.5.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -4856,12 +4882,14 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 139;
+				CURRENT_PROJECT_VERSION = 140;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Stay Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
 				INFOPLIST_KEY_WKWatchOnly = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -4871,7 +4899,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.3.9;
+				MARKETING_VERSION = 2.5.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
@@ -4895,7 +4923,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 139;
+				CURRENT_PROJECT_VERSION = 140;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4926,7 +4954,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.9;
+				MARKETING_VERSION = 2.5.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_IOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
@@ -4951,7 +4979,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 139;
+				CURRENT_PROJECT_VERSION = 140;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -4982,7 +5010,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 2.3.9;
+				MARKETING_VERSION = 2.5.0;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_IOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;

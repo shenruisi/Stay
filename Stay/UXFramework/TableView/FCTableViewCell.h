@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^tapAction)(id);
 @property (nonatomic, copy) void (^doubleTapAction)(id);
 @property (nonatomic, assign) BOOL active;
+@property (nonatomic, weak) UIViewController *cer;
 + (NSString *)identifier;
 + (UIEdgeInsets)contentInset;
 - (void)buildWithElement:(ElementType)element;

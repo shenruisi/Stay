@@ -22,10 +22,11 @@
 #else
 #import "Stay-Swift.h"
 #endif
+#import "WelcomeSlideController.h"
 
 @interface MainTabBarController ()
 
-
+@property (nonatomic, strong) WelcomeSlideController *welcomeSliderController;
 @end
 
 @implementation MainTabBarController
@@ -127,10 +128,28 @@
     // Do any additional setup after loading the view.
 }
 
+
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    [self.welcomeSliderController show];
+}
+
+
+- (WelcomeSlideController *)welcomeSliderController{
+    if (nil == _welcomeSliderController){
+        _welcomeSliderController = [[WelcomeSlideController alloc] init];
+    }
+    
+    return _welcomeSliderController;
+}
 
 //-(void)createTabbar
 //{

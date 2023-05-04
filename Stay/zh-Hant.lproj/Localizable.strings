@@ -319,3 +319,7 @@ SolidColor="純色";
 Store="商店";
 Userscripts="用戶腳本";
 Settings="設置";
+WelcomeTo="歡迎來到";
+EnableStayStep1="1. 激活Stay Safari擴展。";
+InstallUserscriptStep2="2. 安裝我的第一個腳本。";
+DoneStep3="3. 完成。開始我的Stay旅程。";

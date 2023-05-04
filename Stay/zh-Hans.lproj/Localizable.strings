@@ -321,3 +321,7 @@ SolidColor="纯色";
 Store="商店";
 Userscripts="用户脚本";
 Settings="设置";
+WelcomeTo="欢迎来到";
+EnableStayStep1="1. 激活Stay Safari扩展。";
+InstallUserscriptStep2="2. 安装我的第一个脚本。";
+DoneStep3="3. 完成。开始我的Stay旅程。";

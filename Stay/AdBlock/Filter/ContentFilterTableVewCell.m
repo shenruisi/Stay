@@ -11,6 +11,7 @@
 #import "StateView.h"
 #import "UIView+Duplicate.h"
 #import "FCStore.h"
+#import <SafariServices/SafariServices.h>
 
 @interface ContentFilterTableVewCell()
 
@@ -308,6 +309,7 @@
             NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.footnoteBold
         }] forState:UIControlStateNormal];
+        [_enableButton addTarget:self action:@selector(enableAction:) forControlEvents:UIControlEventTouchUpInside];
         _enableButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.fcContentView addSubview:_enableButton];
         [NSLayoutConstraint activateConstraints:@[
@@ -344,6 +346,15 @@
     }
     
     return _proLabel;
+}
+
+- (void)enableAction:(id)sender{
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:@"https://www.craft.do/s/Zmlkwi42U4r5N0"]];
+#else
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.craft.do/s/Zmlkwi42U4r5N0"]];
+        [self.cer presentViewController:safariVc animated:YES completion:nil];
+#endif
 }
 
 + (NSString *)identifier{

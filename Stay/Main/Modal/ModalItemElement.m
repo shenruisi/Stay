@@ -54,13 +54,16 @@
         return self.latestContentHeight;
     }
     
+    UIFont *titleFont = self.generalEntity.titleFont ? self.generalEntity.titleFont : FCStyle.body;
+    UIFont *subtitleFont = self.generalEntity.subtitleFont ? self.generalEntity.subtitleFont : FCStyle.footnote;
+    
     CGFloat contentWidth = 0;
     CGFloat contentHeight = [self baseHeight];
     NSMutableDictionary *contentUserInfo = [[NSMutableDictionary alloc] init];
     contentWidth = width - self.spacing3 -  self.spacing3;
     CGRect rect = [self.generalEntity.title boundingRectWithSize:CGSizeMake(contentWidth, CGFLOAT_MAX)
                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:@{NSFontAttributeName : FCStyle.body}
+                                                      attributes:@{NSFontAttributeName : titleFont}
                                                    context:nil];
     contentUserInfo[@"titleWidth"] = @(rect.size.width);
     
@@ -68,7 +71,7 @@
     if (self.generalEntity.subtitle.length > 0){
         rect = [self.generalEntity.subtitle boundingRectWithSize:CGSizeMake(contentWidth, CGFLOAT_MAX)
                                                        options:NSStringDrawingUsesLineFragmentOrigin
-                                                    attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                                      attributes:@{NSFontAttributeName : subtitleFont}
                                                        context:nil];
         contentUserInfo[@"subtitleWidth"] = @(rect.size.width);
     }

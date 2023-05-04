@@ -320,3 +320,7 @@ SolidColor="Solid Color";
 Store="Store";
 Userscripts="Userscripts";
 Settings="Settings";
+WelcomeTo="Welcome to";
+EnableStayStep1="1. Enable Stay Safari Extension.";
+InstallUserscriptStep2="2. Install My First Userscript.";
+DoneStep3="3. Done. Start My Stay Journey.";

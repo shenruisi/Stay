@@ -166,6 +166,7 @@
     if (nil == cell){
         cell = [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
+    cell.cer = self;
     cell.element = contentFilter;
     cell.tapAction = ^(id element) {
         ContentFilter *contentFilter = (ContentFilter *)element;
