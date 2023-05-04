@@ -13,6 +13,8 @@
 #import "ModalItemViewFactory.h"
 #import "ModalSectionView.h"
 #import "FCButton.h"
+#import "EnableStayModalViewController.h"
+#import "InstallUserscriptModalViewController.h"
 
 @interface WelcomeModalViewController()<
  UITableViewDelegate,
@@ -39,11 +41,9 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.hideNavigationBar = NO;
     self.navigationBar.backgroundColor = UIColor.clearColor;
     self.navigationBar.showCancel = NO;
-    
-    [self.view.layer insertSublayer:self.gradientLayer atIndex:0];
+    [self gradientLayer];
     [self welcomeLabel];
     [self stayLabel];
     [self developedLabel2];
@@ -55,7 +55,9 @@
 
 - (void)viewWillAppear{
     [super viewWillAppear];
-    self.installUserscriptElement.enable = NO;
+//    self.enableStayElemnt.accessoryEntity.animation = YES;
+//    self.installUserscriptElement.enable = NO;
+    self.doneElement.enable = NO;
     
     [self.tableView reloadData];
 }
@@ -103,10 +105,10 @@
 - (CAGradientLayer *)gradientLayer{
     if (nil == _gradientLayer){
         _gradientLayer = [CAGradientLayer layer];
-        _gradientLayer.frame = self.view.bounds;
+        _gradientLayer.frame = [self getMainView].bounds;
         NSArray<UIColor *> *colors = FCStyle.accentGradient;
         _gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
-        [self.view.layer insertSublayer:_gradientLayer atIndex:0];
+        [[self getMainView].layer insertSublayer:_gradientLayer atIndex:0];
     }
     
     return _gradientLayer;
@@ -258,6 +260,7 @@
 - (ModalItemElement *)enableStayElemnt{
     if (nil == _enableStayElemnt){
         _enableStayElemnt = [[ModalItemElement alloc] init];
+        __weak WelcomeModalViewController *weakSelf = (WelcomeModalViewController *)self;
         _enableStayElemnt.shadowRound = YES;
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"EnableStayStep1", @"");
@@ -269,7 +272,11 @@
         _enableStayElemnt.renderMode = ModalItemElementRenderModeSingle;
         _enableStayElemnt.type = ModalItemElementTypeAccessory;
         _enableStayElemnt.action = ^(ModalItemElement * _Nonnull element) {
-            NSLog(@"a");
+            if (element.enable){
+                EnableStayModalViewController *cer = [[EnableStayModalViewController alloc] init];
+                cer.fullScreen = YES;
+                [weakSelf.navigationController pushModalViewController:cer];
+            }
         };
     }
     
@@ -279,6 +286,7 @@
 - (ModalItemElement *)installUserscriptElement{
     if (nil == _installUserscriptElement){
         _installUserscriptElement = [[ModalItemElement alloc] init];
+        __weak WelcomeModalViewController *weakSelf = (WelcomeModalViewController *)self;
         _installUserscriptElement.shadowRound = YES;
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"InstallUserscriptStep2", @"");
@@ -289,6 +297,13 @@
         _installUserscriptElement.accessoryEntity = accessory;
         _installUserscriptElement.renderMode = ModalItemElementRenderModeSingle;
         _installUserscriptElement.type = ModalItemElementTypeAccessory;
+        _installUserscriptElement.action = ^(ModalItemElement * _Nonnull element) {
+            if (element.enable){
+                InstallUserscriptModalViewController *cer = [[InstallUserscriptModalViewController alloc] init];
+                cer.fullScreen = YES;
+                [weakSelf.navigationController pushModalViewController:cer];
+            }
+        };
     }
     
     return _installUserscriptElement;

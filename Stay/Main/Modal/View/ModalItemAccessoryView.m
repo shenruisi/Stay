@@ -19,6 +19,7 @@
 - (void)estimateDisplay{
     [super estimateDisplay];
     [self imageView];
+   
 }
 
 - (void)fillData:(ModalItemElement *)element{
@@ -40,12 +41,7 @@
     
     [self.imageView setImage:image];
     
-    if (element.accessoryEntity.animation){
-        
-    }
-    else{
-        
-    }
+    
 }
 
 
@@ -56,10 +52,24 @@
         __weak ModalItemAccessoryView *weakSelf = self;
         UIFont *font = self.element.generalEntity.accessoryFont ? self.element.generalEntity.accessoryFont : FCStyle.sfSecondaryIcon;
         _imageView.fcLayout = ^(UIView * _Nonnull itself, UIView * _Nonnull superView) {
-            [itself setFrame:CGRectMake(superView.width - weakSelf.element.spacing3 - FCStyle.sfSecondaryIcon.lineHeight,
+            [itself setFrame:CGRectMake(superView.width - weakSelf.element.spacing3 - font.lineHeight,
                                         (superView.height - font.lineHeight) / 2,
                                         FCStyle.sfSecondaryIcon.lineHeight,
                                         FCStyle.sfSecondaryIcon.lineHeight)];
+            
+            if (weakSelf.element.accessoryEntity.animation){
+                [weakSelf.imageView.layer removeAllAnimations];
+                CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
+                animation.fromValue = [NSValue valueWithCGPoint:CGPointMake(itself.center.x, itself.center.y)];
+                animation.toValue = [NSValue valueWithCGPoint:CGPointMake(itself.center.x + 5, itself.center.y)];
+                animation.autoreverses = YES;
+                animation.repeatCount = HUGE_VALF;
+                animation.duration = 1;
+                [weakSelf.imageView.layer addAnimation:animation forKey:@"wave"];
+            }
+            else{
+                [weakSelf.imageView.layer removeAllAnimations];
+            }
         };
         [self.contentView addSubview:_imageView];
     }

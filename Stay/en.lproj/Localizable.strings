@@ -331,6 +331,8 @@ InstallUserscriptStep2="2. Install My First Userscript.";
 DoneStep3="3. Done. Start My Stay Journey.";
 WelcomeSkip="I am an experienced user, skip for now.";
 WelcomeSkipAlert="Are you sure you want to skip now?";
+EnableStay="Enable Stay";
+InstallUserscript="Install Userscript";
 
 
 

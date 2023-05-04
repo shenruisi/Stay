@@ -95,6 +95,10 @@
 		3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */; };
 		3CFFDCF22984106100AEEB3F /* FCShared.m in Sources */ = {isa = PBXBuildFile; fileRef = 58AC12E32860750800875D6D /* FCShared.m */; };
+		5805D94E2A037FB600F46709 /* EnableStayModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D94D2A037FB600F46709 /* EnableStayModalViewController.m */; };
+		5805D94F2A037FB600F46709 /* EnableStayModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D94D2A037FB600F46709 /* EnableStayModalViewController.m */; };
+		5805D9522A037FCF00F46709 /* InstallUserscriptModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D9512A037FCF00F46709 /* InstallUserscriptModalViewController.m */; };
+		5805D9532A037FCF00F46709 /* InstallUserscriptModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D9512A037FCF00F46709 /* InstallUserscriptModalViewController.m */; };
 		581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811063429E695FF0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811063329E695FF0073E9CF /* blockerList.json */; };
 		5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */; };
@@ -893,6 +897,10 @@
 		3CA742AB29A2180100AB9F12 /* MySlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySlider.swift; sourceTree = "<group>"; };
 		3CEDDDBB2995ED92001D13CD /* SYParseModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYParseModalViewController.h; sourceTree = "<group>"; };
 		3CEDDDBC2995ED92001D13CD /* SYParseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYParseModalViewController.m; sourceTree = "<group>"; };
+		5805D94C2A037FB600F46709 /* EnableStayModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnableStayModalViewController.h; sourceTree = "<group>"; };
+		5805D94D2A037FB600F46709 /* EnableStayModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EnableStayModalViewController.m; sourceTree = "<group>"; };
+		5805D9502A037FCF00F46709 /* InstallUserscriptModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InstallUserscriptModalViewController.h; sourceTree = "<group>"; };
+		5805D9512A037FCF00F46709 /* InstallUserscriptModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstallUserscriptModalViewController.m; sourceTree = "<group>"; };
 		5811063129E695FF0073E9CF /* Stay Content Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5811063329E695FF0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
 		5811063529E695FF0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
@@ -2195,6 +2203,10 @@
 				5882259529FF6BF8004CDBF7 /* WelcomeSlideController.m */,
 				5882259829FF6C1B004CDBF7 /* WelcomeModalViewController.h */,
 				5882259929FF6C1B004CDBF7 /* WelcomeModalViewController.m */,
+				5805D94C2A037FB600F46709 /* EnableStayModalViewController.h */,
+				5805D94D2A037FB600F46709 /* EnableStayModalViewController.m */,
+				5805D9502A037FCF00F46709 /* InstallUserscriptModalViewController.h */,
+				5805D9512A037FCF00F46709 /* InstallUserscriptModalViewController.m */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -3744,6 +3756,7 @@
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
+				5805D9522A037FCF00F46709 /* InstallUserscriptModalViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
 				8460E4782993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
@@ -3813,6 +3826,7 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				5805D94E2A037FB600F46709 /* EnableStayModalViewController.m in Sources */,
 				583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
@@ -4030,6 +4044,7 @@
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
 				5882024B2859E73900B2721A /* FCStyle.m in Sources */,
+				5805D9532A037FCF00F46709 /* InstallUserscriptModalViewController.m in Sources */,
 				84DB5FEA29F6990600526857 /* SYDownloadedViewCell.m in Sources */,
 				5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				583B542529DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
@@ -4225,6 +4240,7 @@
 				583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
 				3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
+				5805D94F2A037FB600F46709 /* EnableStayModalViewController.m in Sources */,
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				583B540B29DD4DFA00CB292A /* UIFont+Convert.m in Sources */,

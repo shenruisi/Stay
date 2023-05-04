@@ -172,8 +172,14 @@
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
             pushedView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            CGPoint newOrigin = CGPointMake(oldFrame.origin.x - (newSize.width - oldFrame.size.width), oldFrame.origin.y - (newSize.height - oldFrame.size.height));
-            [self.view setFrame:CGRectMake(newOrigin.x, newOrigin.y, pushedView.frame.size.width, pushedView.frame.size.height)];
+            if (self.contentMode == ModalContentModeBottom){
+                CGPoint newOrigin = CGPointMake(oldFrame.origin.x - (newSize.width - oldFrame.size.width), oldFrame.origin.y - (newSize.height - oldFrame.size.height));
+                [self.view setFrame:CGRectMake(newOrigin.x, newOrigin.y, pushedView.frame.size.width, pushedView.frame.size.height)];
+            }
+            else if (self.contentMode == ModalContentModeLeft){
+                CGPoint newOrigin = CGPointMake(oldFrame.origin.x, oldFrame.origin.y - (newSize.height - oldFrame.size.height));
+                [self.view setFrame:CGRectMake(newOrigin.x, newOrigin.y, pushedView.frame.size.width, pushedView.frame.size.height)];
+            }
         }
                          completion:^(BOOL finished) {
                 [self.currentModalViewController viewDidDisappear];

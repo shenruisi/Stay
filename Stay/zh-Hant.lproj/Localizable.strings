@@ -325,3 +325,5 @@ InstallUserscriptStep2="2. 安裝我的第一個腳本。";
 DoneStep3="3. 完成。開始我的Stay旅程。";
 WelcomeSkip="我了解如何操作，現在跳過。";
 WelcomeSkipAlert="確定要現在跳過嗎？";
+EnableStay="激活Stay";
+InstallUserscript="安裝腳本";
