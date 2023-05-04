@@ -213,7 +213,7 @@ UITableViewDataSource
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
+//    self.view.backgroundColor = FCStyle.background;
     [self tableView];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.appearance",@"Appearance");
@@ -427,7 +427,7 @@ UITableViewDataSource
         _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     

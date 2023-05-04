@@ -31,7 +31,7 @@
 #import "NSString+Urlencode.h"
 #import "SharedStorageManager.h"
 #import <CommonCrypto/CommonDigest.h>
-
+#import "SYDownloadingCircleView.h"
 #ifdef FC_MAC
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
@@ -42,6 +42,8 @@
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
 #import "FCTableViewCell.h"
+#import "DownloadScriptSlideController.h"
+
 
 @interface _FeaturedBannerTableViewCell<ElementType> : FCTableViewCell<ElementType>
 @property (nonatomic, strong) NSArray *entity;
@@ -577,10 +579,14 @@
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 67, 25);
-//    btn.backgroundColor = FCStyle.background;
     btn.layer.cornerRadius = 10;
     btn.layer.borderWidth = 1;
     btn.layer.borderColor = FCStyle.accent.CGColor;
+    
+    SYDownloadingCircleView *circleView = [[SYDownloadingCircleView alloc] initWithFrame:CGRectMake(0, 0, 48, 48)];
+    circleView.backgroundColor = [UIColor clearColor];
+    circleView.hidden = true;
+    [view addSubview:circleView];
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{
@@ -600,7 +606,12 @@
         NSString *btnName = NSLocalizedString(@"Get", @"");
         
         if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
-            btnName = NSLocalizedString(@"Downloading", @"");
+//            btnName = NSLocalizedString(@"Downloading", @"");
+            btn.hidden = true;
+            circleView.hidden = false;
+        } else {
+            btn.hidden = false;
+            circleView.hidden = true;
         }
         
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
@@ -611,6 +622,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject (btn , @"iconUrl", dic[@"icon_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+
         [btn sizeToFit];
         btn.width = btn.width + 20;
         if(btn.width < 67) {
@@ -631,6 +644,11 @@
     btn.layer.cornerRadius = 12.5;
     
     [view addSubview:btn];
+    circleView.center = btn.center;
+    
+
+    
+    
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(noDownloadDetail:)];
     if(entity != nil) {
         tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.controller action:@selector(queryDetail:)];
@@ -773,7 +791,7 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, assign) NSInteger pageNo;
 @property (nonatomic, assign) NSInteger searchPageNo;
 
-@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@property (nonatomic, strong) DownloadScriptSlideController *loadingSlideController;
 @property (nonatomic, assign) bool inSearch;
 @property (nonatomic, assign) bool allDataEnd;
 @property (nonatomic, assign) bool allDataQuerying;
@@ -851,9 +869,12 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)reloadAllTableview {
-    [self.tableView reloadData];
-    [self.searchTableView reloadData];
-    [self.allTableView reloadData];
+    dispatch_async(dispatch_get_main_queue(),^{
+        
+        [self.tableView reloadData];
+        [self.searchTableView reloadData];
+        [self.allTableView reloadData];
+    });
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -952,7 +973,6 @@ UIPopoverPresentationControllerDelegate
             cell.navigationController = self.navigationController;
             cell.entity = dic[@"blocks"];
             cell.contentView.backgroundColor = [UIColor clearColor];
-
 //            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }else {
@@ -990,6 +1010,7 @@ UIPopoverPresentationControllerDelegate
         cell.controller = self;
         cell.navigationController = self.navigationController;
         cell.entity = self.allDatas[indexPath.row];
+        cell.selectedUrl = _selectedUrl;
         cell.contentView.backgroundColor = [UIColor clearColor];
         return cell;
     } else {
@@ -1175,11 +1196,13 @@ UIPopoverPresentationControllerDelegate
     NSString *url = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
     NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
+    NSString *iconUrl = objc_getAssociatedObject(sender,@"iconUrl");
 
     _selectedUrl = url;
     [self reloadAllTableview];
 
-    self.loadingSlideController.originSubText = name;
+    self.loadingSlideController.originMainText = name;
+    self.loadingSlideController.iconUrl = iconUrl;
     [self.loadingSlideController show];
 
 
@@ -1210,7 +1233,7 @@ UIPopoverPresentationControllerDelegate
                     [self reloadAllTableview];
                 });
             } else {
-                [self.loadingSlideController updateSubText:userScript.errorMessage];
+//                [self.loadingSlideController updateSubText:userScript.errorMessage];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                                dispatch_get_main_queue(), ^{
                     if (self.loadingSlideController.isShown){
@@ -1235,7 +1258,7 @@ UIPopoverPresentationControllerDelegate
         BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
         BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
         if(!saveSuccess || !saveResourceSuccess) {
-            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+//            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
             dispatch_get_main_queue(), ^{
                 if (self.loadingSlideController.isShown){
@@ -1507,8 +1530,8 @@ UIPopoverPresentationControllerDelegate
 
 - (LoadingSlideController *)loadingSlideController{
     if (nil == _loadingSlideController){
-        _loadingSlideController = [[LoadingSlideController alloc] init];
-        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+        _loadingSlideController = [[DownloadScriptSlideController alloc] init];
+//        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
     }
     
     return _loadingSlideController;

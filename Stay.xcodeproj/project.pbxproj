@@ -701,6 +701,8 @@
 		84FD42802851FD5D00B25A17 /* SYSelectTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD427F2851FD5D00B25A17 /* SYSelectTabViewController.m */; };
 		84FD4283285315D300B25A17 /* SYSelectBarModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */; };
 		84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
+		84FE418429FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FE418329FB9CFF00D7EDED /* SYDownloadingCircleView.m */; };
+		84FE418529FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FE418329FB9CFF00D7EDED /* SYDownloadingCircleView.m */; };
 		AD41FC7DED0EBCFF7C4235AB /* libPods-Stay-Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8656D7B23E583F217D908B6 /* libPods-Stay-Mac.a */; };
 		B77AC65E261A7CF9A19D79B8 /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
 /* End PBXBuildFile section */
@@ -1461,6 +1463,8 @@
 		84FD4282285315D300B25A17 /* SYSelectBarModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYSelectBarModalViewController.m; sourceTree = "<group>"; };
 		84FD4284285B72E400B25A17 /* SYExpandViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYExpandViewController.h; sourceTree = "<group>"; };
 		84FD4285285B72E400B25A17 /* SYExpandViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYExpandViewController.m; sourceTree = "<group>"; };
+		84FE418229FB9CFF00D7EDED /* SYDownloadingCircleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadingCircleView.h; sourceTree = "<group>"; };
+		84FE418329FB9CFF00D7EDED /* SYDownloadingCircleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadingCircleView.m; sourceTree = "<group>"; };
 		AFC033266A9F46E1635E10FC /* Pods-Stay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.debug.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.debug.xcconfig"; sourceTree = "<group>"; };
 		C8BA24D808D9B11412496955 /* Pods-Stay-Mac.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay-Mac.debug.xcconfig"; path = "Target Support Files/Pods-Stay-Mac/Pods-Stay-Mac.debug.xcconfig"; sourceTree = "<group>"; };
 		D8656D7B23E583F217D908B6 /* libPods-Stay-Mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stay-Mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2845,6 +2849,8 @@
 			children = (
 				84CC9B5728D17DF5002EB493 /* BrowseDetailTableViewCell.h */,
 				84CC9B5828D17DF5002EB493 /* BrowseDetailTableViewCell.m */,
+				84FE418229FB9CFF00D7EDED /* SYDownloadingCircleView.h */,
+				84FE418329FB9CFF00D7EDED /* SYDownloadingCircleView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3872,6 +3878,7 @@
 				58ADAE0429E801CF00C00332 /* AddressBlockerAST.m in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
+				84FE418429FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */,
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
 				58ADADFC29E801CF00C00332 /* BlockerAST.m in Sources */,
@@ -4014,6 +4021,7 @@
 				5882024D2859E73900B2721A /* UserscriptInfo.m in Sources */,
 				583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */,
 				3C949B93297029F50068231A /* M3U8ExtXKey.m in Sources */,
+				84FE418529FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
 				3C949B99297029F50068231A /* M3U8LineReader.m in Sources */,

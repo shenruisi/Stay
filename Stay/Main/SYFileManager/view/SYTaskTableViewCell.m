@@ -332,6 +332,8 @@
         _progressView.progressViewStyle= UIProgressViewStyleDefault;
         _progressView.trackTintColor= [UIColor clearColor];
         _progressView.translatesAutoresizingMaskIntoConstraints = NO;
+        _progressView.layer.cornerRadius = 10;
+        _progressView.clipsToBounds = YES;
         [self.fcContentView addSubview:_progressView];
         [NSLayoutConstraint activateConstraints:@[
             [_progressView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor],

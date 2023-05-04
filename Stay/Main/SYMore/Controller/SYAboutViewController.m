@@ -93,7 +93,7 @@ UITableViewDataSource
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
+//    self.view.backgroundColor = FCStyle.background;
 
     [self tableView];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
@@ -143,7 +143,7 @@ UITableViewDataSource
     if(indexPath.section == 0) {
         UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         [cell.contentView addSubview:[self createAboutHeaderView]];
-        cell.contentView.backgroundColor = FCStyle.background;
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     } else {
         _AbountTableViewCell *cell = nil;
@@ -244,6 +244,7 @@ UITableViewDataSource
 
 - (UIView *)createAboutHeaderView {
     UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width - 30, 215)];
+    backView.backgroundColor = [UIColor clearColor];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 160, 160)];
     imageView.image = [UIImage imageNamed:@"stay-mac1024-1"];
@@ -289,7 +290,7 @@ UITableViewDataSource
         _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     
