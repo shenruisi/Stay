@@ -91,7 +91,7 @@
 }
 
 - (void)searchStartCheck:(UIScrollView *)scrollView{
-    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0){
+    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0 && !self.fcNavigationBar.inSearch){
         FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
         [navigationBar startSearch];
     }

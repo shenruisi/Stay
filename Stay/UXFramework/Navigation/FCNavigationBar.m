@@ -492,6 +492,7 @@ static CGFloat OneStageMovingLength = 50;
         [self.searchBar setFrame:CGRectMake(0, 0, self.searchBar.size.width, self.searchBar.size.height)];
     } completion:^(BOOL finished) {
         if ([cer.searchUpdating respondsToSelector:@selector(willBeginSearch)]){
+            self.inSearch = YES;
             [cer.searchUpdating didBeganSearch];
         }
         [self.searchBar.textField becomeFirstResponder];
@@ -543,6 +544,7 @@ static CGFloat OneStageMovingLength = 50;
         } completion:^(BOOL finished) {
             self.searchBarShouldAppear = NO;
             if ([cer.searchUpdating respondsToSelector:@selector(didEndSearch)]){
+                self.inSearch = NO;
                 [cer.searchUpdating didEndSearch];
             }
         }];
@@ -615,6 +617,7 @@ static CGFloat OneStageMovingLength = 50;
         [self searchBarAppearSecondStage];
     }
 }
+
 
 - (void)touched{
     [self searchBarDidClickCancel];

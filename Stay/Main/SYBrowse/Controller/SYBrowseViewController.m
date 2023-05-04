@@ -1378,6 +1378,7 @@ UIPopoverPresentationControllerDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [super scrollEffectHandle:scrollView];
+    [super searchEffectHanlde:scrollView];
 
      CGPoint offset = scrollView.contentOffset;
      CGRect bounds = scrollView.bounds;
@@ -1525,7 +1526,14 @@ UIPopoverPresentationControllerDelegate
         _searchTableView = [[UITableView alloc]initWithFrame:self.searchViewController.view.bounds style:UITableViewStylePlain];
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
+        _searchTableView.showsVerticalScrollIndicator = YES;
+        _searchTableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        if (@available(iOS 15.0, *)){
+            _searchTableView.sectionHeaderTopPadding = 0;
+        }
+        _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _searchTableView.sectionFooterHeight = 0;
 //        _searchTableView.backgroundColor = FCStyle.background;
     }
     return _searchTableView;

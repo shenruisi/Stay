@@ -21,17 +21,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
 }
-
-
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [super scrollEffectHandle:scrollView];
     [super searchEffectHanlde:scrollView];
 }
-
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
     [super searchStartCheck:scrollView];

@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL enableTabItem;
 @property (nonatomic, assign) BOOL enableTabItemSearch;
 @property (nonatomic, strong) FCSearchBar *searchBar;
+@property (nonatomic, assign) BOOL inSearch;
 - (void)rightItemClick:(FCTabButtonItem *)item;
 - (void)showSearchWithOffset:(CGFloat)offset;
 - (void)startSearch;
