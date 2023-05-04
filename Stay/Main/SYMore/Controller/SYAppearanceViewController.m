@@ -223,6 +223,7 @@ UITableViewDataSource
     [super viewDidLoad];
 //    self.view.backgroundColor = FCStyle.background;
     [self tableView];
+    self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.appearance",@"Appearance");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];

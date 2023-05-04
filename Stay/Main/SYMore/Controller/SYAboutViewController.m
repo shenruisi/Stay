@@ -94,7 +94,7 @@ UITableViewDataSource
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    self.view.backgroundColor = FCStyle.background;
-
+    self.hidesBottomBarWhenPushed = YES;
     [self tableView];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.about",@"About");

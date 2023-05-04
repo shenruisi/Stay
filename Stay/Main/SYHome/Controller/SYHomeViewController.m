@@ -1388,6 +1388,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self presentViewController:alert animated:YES completion:nil];
         }];
         deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
+        deleteAction.backgroundColor = [UIColor clearColor];
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
 
     } else {
@@ -1442,6 +1443,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             
         }];
         
+        deleteAction.backgroundColor = [UIColor clearColor];
+
+        
         
         deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
         UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
@@ -1488,11 +1492,11 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         
         if (model.active) {
             stopAction.image = [[UIImage imageNamed:@"stop"] imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
-            stopAction.backgroundColor = FCStyle.accent;
         } else {
             stopAction.image = [[UIImage imageNamed:@"play"] imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
-            stopAction.backgroundColor = FCStyle.accent;
         }
+        
+        stopAction.backgroundColor = [UIColor clearColor];
         
         UIImage *image = [ImageHelper sfNamed:@"square.and.arrow.up"  font:FCStyle.subHeadline color:FCStyle.accent];
      
@@ -1510,9 +1514,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self.sYSelectTabViewController show];
         }];
         shareAction.image = image;
-        shareAction.backgroundColor = FCStyle.fcBlue;
+        shareAction.backgroundColor = [UIColor clearColor];
 
-        
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,shareAction,stopAction]];
     }
 }
