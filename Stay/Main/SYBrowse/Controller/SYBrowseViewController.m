@@ -776,7 +776,6 @@ UISearchBarDelegate,
 UISearchControllerDelegate,
 UIPopoverPresentationControllerDelegate
 >
-@property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *datas; //featuredata
 @property (nonatomic, strong) NSMutableArray *allDatas;
 @property (nonatomic, strong) NSMutableArray *searchDatas;
@@ -800,6 +799,7 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, strong) NSString  *selectedUrl;
 @property (nonatomic, strong) FCTabButtonItem *featuredTabItem;
 @property (nonatomic, strong) FCTabButtonItem *allTabItem;
+@property (nonatomic, assign) Boolean searchStatus;
 
 
 @end
@@ -810,6 +810,8 @@ UIPopoverPresentationControllerDelegate
     [super viewDidLoad];
     _selectedIdx = 0;
     self.enableTabItem = YES;
+    self.enableSearchTabItem = YES;
+    self.searchUpdating = self;
     self.navigationTabItem.leftTabButtonItems = @[self.featuredTabItem, self.allTabItem];
     self.leftTitle  = NSLocalizedString(@"Store","");//    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
@@ -825,9 +827,11 @@ UIPopoverPresentationControllerDelegate
 //    self.searchController.delegate = self;
 //    self.searchController.searchBar.delegate = self;
 //    [self.searchController.searchBar setTintColor:FCStyle.accent];
-//    [self.searchController.view addSubview:self.searchTableView];
-    // Do any additional setup after loading the view.
-//    [self.view addSubview:self.segmentedControl];
+    
+    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+    self.searchViewController = search;
+    [self.searchViewController.view addSubview:self.searchTableView];
+
     [self tableView];
     [self queryData];
     
@@ -885,34 +889,60 @@ UIPopoverPresentationControllerDelegate
 
 #pragma mark -searchBarDelegate
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-//    [searchBar resignFirstResponder];
-    [self.searchController setActive:NO];
-    _inSearch = false;
+
+#pragma mark -searchBarDelegate
+
+- (void)didBeganSearch {
+    self.searchStatus = YES;
     [_searchDatas removeAllObjects];
     [self.searchTableView reloadData];
-//    [self.tableView reloadData];
-
-}
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    [self.searchController setActive:YES];
-    _searchPageNo = 1;
-    _inSearch = true;
-    [self.searchTableView reloadData];
-    return YES;
 }
 
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchTextDidChange:(NSString *)text {
     [_searchDatas removeAllObjects];
-    if(searchText.length > 0) {
+    if(text.length > 0) {
         _searchPageNo = 1;
         _searchDataEnd = false;
-//        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
-       [self querySearchData:searchText];
+       [self querySearchData:text];
     }
     [self.searchTableView reloadData];
 }
+
+- (void)didEndSearch {
+    self.searchStatus = NO;
+    [_searchDatas removeAllObjects];
+    [self.searchTableView reloadData];
+}
+
+
+//- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+////    [searchBar resignFirstResponder];
+//    [self.searchController setActive:NO];
+//    _inSearch = false;
+//    [_searchDatas removeAllObjects];
+//    [self.searchTableView reloadData];
+////    [self.tableView reloadData];
+//
+//}
+//- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+//    [self.searchController setActive:YES];
+//    _searchPageNo = 1;
+//    _inSearch = true;
+//    [self.searchTableView reloadData];
+//    return YES;
+//}
+//
+//
+//- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+//    [_searchDatas removeAllObjects];
+//    if(searchText.length > 0) {
+//        _searchPageNo = 1;
+//        _searchDataEnd = false;
+////        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
+//       [self querySearchData:searchText];
+//    }
+//    [self.searchTableView reloadData];
+//}
 
 
 #pragma mark - UITableViewDelegate
@@ -1347,10 +1377,10 @@ UIPopoverPresentationControllerDelegate
      float y = offset.y + bounds.size.height - inset.bottom;
      float h = size.height;
      float reload_distance = 10;
-    if ([scrollView isEqual:self.searchTableView] && self.searchController.searchBar.text.length > 0) {
-        
-        [self.searchController.searchBar.searchTextField resignFirstResponder];
-    }
+//    if ([scrollView isEqual:self.searchTableView] && self.searchController.searchBar.text.length > 0) {
+//
+//        [self.searchController.searchBar.searchTextField resignFirstResponder];
+//    }
      if(y > h + reload_distance) {
         if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:self.allTableView]) {
              if(_allDataQuerying) {
@@ -1358,12 +1388,12 @@ UIPopoverPresentationControllerDelegate
              }
              _pageNo++;
             [self queryAllData];
-        } else if([scrollView isEqual:self.searchTableView] && !_searchDataEnd  && self.searchController.searchBar.text.length > 0) {
+        } else if([scrollView isEqual:self.searchTableView] && !_searchDataEnd  && self.fcNavigationBar.searchBar.textField.text.length > 0) {
             if(_searchDataQuerying) {
                 return;
             }
             _searchPageNo++;
-            [self querySearchData:self.searchController.searchBar.text];
+            [self querySearchData:self.fcNavigationBar.searchBar.textField.text];
         }
      }
 }
@@ -1465,7 +1495,7 @@ UIPopoverPresentationControllerDelegate
 
 - (UITableView *)searchTableView {
     if (_searchTableView == nil) {
-        _searchTableView = [[UITableView alloc]initWithFrame:self.searchController.view.bounds style:UITableViewStylePlain];
+        _searchTableView = [[UITableView alloc]initWithFrame:self.searchViewController.view.bounds style:UITableViewStylePlain];
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
