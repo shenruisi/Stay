@@ -464,6 +464,7 @@
         
     }
     else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
+        //
         NSString *url = message[@"url"];
         NSString *selector = message[@"selector"];
         
