@@ -629,16 +629,25 @@ static CGFloat OneStageMovingLength = 50;
     }
 }
 
+
 - (FCSearchBar *)searchBar{
     if (nil == _searchBar){
         _searchBar = [[FCSearchBar alloc] init];
         _searchBar.delegate = self;
         _searchBar.textField.delegate = self;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(controlTextDidChange:) name:UITextFieldTextDidChangeNotification
+                                                   object:_searchBar.textField];
         [self.navigationTabItem addSubview:self.searchBar];
         [self.navigationTabItem sendSubviewToBack:self.searchBar];
     }
     
     return _searchBar;
+}
+
+- (void)removeFromSuperview{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.searchBar.textField];
+    [super removeFromSuperview];
 }
 
 - (FCBlockView *)searchBlockView{
