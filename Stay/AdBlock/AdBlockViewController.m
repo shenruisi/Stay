@@ -72,8 +72,7 @@
     [super viewDidLoad];
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
     self.enableTabItem = YES;
-    self.enableSearchTabItem = YES;
-//    self.navigationItem.rightBarButtonItem = self.addItem;
+//    self.enableSearchTabItem = YES;
     self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
     [self tableView];
     

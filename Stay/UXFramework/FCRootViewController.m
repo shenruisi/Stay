@@ -71,7 +71,7 @@
     if (nil == _leftTitleLabel){
         _leftTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
         _leftTitleLabel.font = FCStyle.headlineBold;
-        _leftTitleLabel.backgroundColor = FCStyle.fcBlack;
+        _leftTitleLabel.textColor = FCStyle.fcBlack;
         _leftTitleLabel.backgroundColor = UIColor.clearColor;
     }
     

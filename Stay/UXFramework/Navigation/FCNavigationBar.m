@@ -34,13 +34,13 @@ static CGFloat OneStageMovingLength = 50;
         [self setAttributedTitle:[[NSAttributedString alloc] initWithString:_item.title
                                                                  attributes:@{
             NSForegroundColorAttributeName : FCStyle.fcBlack,
-            NSFontAttributeName : FCStyle.body
+            NSFontAttributeName : FCStyle.headlineBold
         }] forState:UIControlStateNormal];
         
         [self setAttributedTitle:[[NSAttributedString alloc] initWithString:_item.title
                                                                  attributes:@{
             NSForegroundColorAttributeName : FCStyle.accent,
-            NSFontAttributeName : FCStyle.body
+            NSFontAttributeName : FCStyle.headlineBold
         }] forState:UIControlStateSelected];
     }
     
@@ -114,9 +114,9 @@ static CGFloat OneStageMovingLength = 50;
     _TabButton *prevButton;
     for (NSUInteger i = 0; i < _leftTabButtonItems.count; i++){
         FCTabButtonItem *item = [_leftTabButtonItems objectAtIndex:i];
-        CGRect rect = [item.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.body.pointSize)
+        CGRect rect = [item.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.headlineBold.pointSize)
                                                options:NSStringDrawingUsesLineFragmentOrigin
-                                            attributes:@{NSFontAttributeName : FCStyle.body}
+                                            attributes:@{NSFontAttributeName : FCStyle.headlineBold}
                                                context:nil];
         _TabButton *button = [[_TabButton alloc] init];
         button.item = item;

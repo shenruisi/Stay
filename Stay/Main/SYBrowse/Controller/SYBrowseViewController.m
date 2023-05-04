@@ -811,7 +811,7 @@ UIPopoverPresentationControllerDelegate
     _selectedIdx = 0;
     self.enableTabItem = YES;
     self.navigationTabItem.leftTabButtonItems = @[self.featuredTabItem, self.allTabItem];
-    self.leftTitle  = NSLocalizedString(@"settings.search","search");//    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+    self.leftTitle  = NSLocalizedString(@"Store","");//    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
 //    search.searchBar.placeholder = NSLocalizedString(@"SearchUserscripts", @"");

@@ -4916,8 +4916,11 @@
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Stay uses the camera to save videos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Stay uses Photo Library to save videos.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -4969,8 +4972,11 @@
 				GENERATE_PKGINFO_FILE = NO;
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Stay uses the camera to save videos.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Stay uses Photo Library to save videos.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

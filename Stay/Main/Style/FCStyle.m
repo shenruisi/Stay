@@ -6,6 +6,7 @@
 //
 
 #import "FCStyle.h"
+#import "FCConfig.h"
 
 @implementation FCStyle
 
@@ -26,13 +27,12 @@
 }
 
 + (NSArray<UIColor *> *)accentGradient{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *themeColor = [userDefaults objectForKey:@"themeColor"];
-
-    if(themeColor == nil ) {
+    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType];
+    if ([type isEqualToString:@"gradient"]){
         return  @[[UIColor colorNamed:@"AccentGradient1"],[UIColor colorNamed:@"AccentGradient2"]];
-    } else {
-        return nil;
+    }
+    else{
+        return  @[[self background],[self background]];
     }
 }
 
