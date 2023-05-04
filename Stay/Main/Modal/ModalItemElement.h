@@ -36,6 +36,7 @@ typedef enum {
 @property (nonatomic, strong) UIFont *subtitleFont;
 @property (nonatomic, strong) NSString *tips;
 @property (nonatomic, strong) NSString *uuid;
+@property (nonatomic, strong) UIFont *accessoryFont;
 @end
 
 @interface ModalItemDataEntityIcon : NSObject

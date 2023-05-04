@@ -621,7 +621,12 @@ static CGFloat OneStageMovingLength = 50;
 
 - (void)controlTextDidChange:(NSNotification *)obj{
     UITextField *searchField = (UITextField *)obj.object;
+    
     if (searchField == self.searchBar.textField){
+        if (self.searchBlockView){
+            [self.searchBlockView removeFromSuperview];
+            self.searchBlockView = nil;
+        }
         FCViewController *cer = [self topController];
         if ([cer.searchUpdating respondsToSelector:@selector(searchTextDidChange:)]){
             [cer.searchUpdating searchTextDidChange:searchField.text];
