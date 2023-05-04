@@ -29,16 +29,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [super scrollEffectHandle:scrollView];
-
+    [super searchEffectHanlde:scrollView];
 }
 
 
-
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-    if (self.enableSearchTabItem && self.navigationBarBaseLine > 0){
-        FCNavigationBar *navigationBar = (FCNavigationBar *)self.navigationController.navigationBar;
-        [navigationBar startSearch];
-    }
+    [super searchStartCheck:scrollView];
 }
 
 - (void)viewWillLayoutSubviews{

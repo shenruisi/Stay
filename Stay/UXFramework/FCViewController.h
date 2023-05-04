@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)endSearch;
 - (UINavigationBarAppearance *)navigationBarEffect:(CGFloat)yOffset;
 - (void)scrollEffectHandle:(UIScrollView *)scrollView;
+- (void)searchEffectHanlde:(UIScrollView *)scrollView;
+- (void)searchStartCheck:(UIScrollView *)scrollView;
 @end
 
 NS_ASSUME_NONNULL_END
