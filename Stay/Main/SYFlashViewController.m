@@ -61,7 +61,7 @@
 #else
     if (FCDeviceTypeIPhone == [DeviceHelper type]){
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 1;
+            [((FCTabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).fcTabBar selectIndex:2];
         }
     }
 #endif
