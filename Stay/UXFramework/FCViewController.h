@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<FCSearchUpdatingDelegate> searchUpdating;
 @property (nonatomic, strong) UIViewController *searchViewController;
 
+@property (nonatomic, strong) FCNavigationBar *fcNavigationBar;
+
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh;
 - (void)searchTabItemDidClick;
 - (void)endSearch;

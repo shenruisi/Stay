@@ -24,12 +24,30 @@
 - (void)fillData:(ModalItemElement *)element{
     [super fillData:element];
     UIFont *font = element.generalEntity.accessoryFont ? element.generalEntity.accessoryFont : FCStyle.sfSecondaryIcon;
-    UIImage *image =  [UIImage systemImageNamed:@"chevron.right"
-                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont: font]];
-    image = [image imageWithTintColor:FCStyle.fcSecondaryBlack
-                        renderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *image;
+    if (element.accessoryEntity.checkmark){
+        image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont: font]];
+        image = [image imageWithTintColor:element.enable ? FCStyle.accent : FCStyle.fcSeparator
+                            renderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
+    else{
+        image =  [UIImage systemImageNamed:@"chevron.right"
+                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont: font]];
+        image = [image imageWithTintColor:element.enable ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator
+                            renderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
+    
     [self.imageView setImage:image];
+    
+    if (element.accessoryEntity.animation){
+        
+    }
+    else{
+        
+    }
 }
+
 
 - (FCLayoutImageView *)imageView{
     if (nil == _imageView){

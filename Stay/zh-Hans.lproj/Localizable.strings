@@ -325,3 +325,5 @@ WelcomeTo="欢迎来到";
 EnableStayStep1="1. 激活Stay Safari扩展。";
 InstallUserscriptStep2="2. 安装我的第一个脚本。";
 DoneStep3="3. 完成。开始我的Stay旅程。";
+WelcomeSkip="我了解如何操作，现在跳过。";
+WelcomeSkipAlert="确定要现在跳过吗？";

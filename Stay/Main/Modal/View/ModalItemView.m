@@ -11,6 +11,7 @@
 #import "FCLayoutLabel.h"
 #import "FCProLabel.h"
 #import "FCStore.h"
+#import "FCRoundedShadowView2.h"
 
 @interface ModalItemContent()
 
@@ -23,6 +24,7 @@
 - (instancetype)init{
     if (self = [super init]){
         self.backgroundColor = FCStyle.secondaryPopup;
+        [self appendBackgroundView];
         [self titleLabel];
         [self subtitleLabel];
         [self proLabel];
@@ -31,6 +33,7 @@
     return self;
 }
 
+- (void)appendBackgroundView{}
 
 - (FCLayoutLabel *)titleLabel{
     if (nil == _titleLabel){
@@ -65,6 +68,42 @@
 }
 
 @end
+
+@interface ModalItemContentShadowRound()
+
+@property (nonatomic, strong) FCRoundedShadowView2 *backgroundView;
+@end
+
+@implementation ModalItemContentShadowRound
+
+- (void)appendBackgroundView{
+    [self backgroundView];
+}
+
+- (FCRoundedShadowView2 *)backgroundView{
+    if (nil == _backgroundView){
+        _backgroundView = [[FCRoundedShadowView2 alloc] initWithRadius:10
+                                                           borderWith:1
+                                                           cornerMask:kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner];
+        
+        _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:_backgroundView];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_backgroundView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+            [_backgroundView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+            [_backgroundView.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [_backgroundView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+        ]];
+    }
+    
+    return _backgroundView;
+}
+
+
+
+@end
+
 
 @interface ModalItemView()
 
@@ -134,6 +173,12 @@
 }
 
 - (void)fillData:(ModalItemElement *)element{
+    if (element.generalEntity.titleFont){
+        self.contentView.titleLabel.font = element.generalEntity.titleFont;
+    }
+    
+    self.contentView.titleLabel.textColor = element.enable ? FCStyle.fcBlack : FCStyle.fcSeparator;
+    
     [self.contentView.titleLabel setText:element.generalEntity.title];
     if (element.generalEntity.subtitle.length > 0){
         [self.contentView.subtitleLabel setText:element.generalEntity.subtitle];
@@ -145,7 +190,13 @@
 
 - (ModalItemContent *)contentView{
     if (nil == _contentView){
-        _contentView = [[ModalItemContent alloc] init];
+        if (self.element.shadowRound){
+            _contentView = [[ModalItemContentShadowRound alloc] init];
+        }
+        else{
+            _contentView = [[ModalItemContent alloc] init];
+        }
+        
         _contentView.layoutSelfWhenLayoutSubviews = YES;
         __weak ModalItemView *weakSelf = self;
         _contentView.fcLayout = ^(UIView * _Nonnull itself, UIView * _Nonnull superView) {

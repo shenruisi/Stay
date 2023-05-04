@@ -52,6 +52,8 @@ typedef enum {
 @interface ModalItemDataEntityAccessory : NSObject
 
 @property (nonatomic, strong) NSString *text;
+@property (nonatomic, assign) BOOL animation;
+@property (nonatomic, assign) BOOL checkmark;
 @end
 
 @interface ModalItemDataEntitySplit : NSObject
@@ -98,6 +100,8 @@ typedef enum {
 @property (nonatomic, assign) ModalItemElementRenderMode renderMode;
 
 @property (nonatomic, copy) void(^action)(ModalItemElement *element);
+
+@property (nonatomic, assign) BOOL shadowRound;
 
 - (CGFloat)contentHeightWithWidth:(CGFloat)width;
 - (void)clear;
