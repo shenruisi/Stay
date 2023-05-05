@@ -547,6 +547,34 @@
             @"rules":rules
         };
     }
+    else if ([message[@"type"] isEqualToString:@"deleteTagRule"]){
+        NSString *targetUUID = message[@"uuid"];
+        NSError *error;
+        NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error]];
+        NSMutableString *content = [[NSMutableString alloc] init];
+        for (int i = 0; i < jsonArray.count; i++){
+            NSDictionary *rule = jsonArray[i];
+            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+            NSString *selector = rule[@"action"][@"selector"];
+            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+            if ([targetUUID isEqualToString:uuid]){
+                [jsonArray removeObjectAtIndex:i];
+                i--;
+            }
+            else{
+                NSString *textRule = [NSString stringWithFormat:@"%@##%@\n",[urlFilter stringByReplacingOccurrencesOfString:@"^https?://" withString:@"||"],selector];
+                [content appendString:textRule];
+            }
+        }
+        
+        [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:content error:nil];
+        [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
+        
+        NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+        [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+            NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+        }];
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,

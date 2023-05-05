@@ -68,6 +68,14 @@ static ContentFilterManager *instance = nil;
     NSLog(@"writeToFileName %@ %@",fileName,*error);
 }
 
+- (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error{
+    NSData *data = [NSJSONSerialization dataWithJSONObject:array options:NSJSONWritingWithoutEscapingSlashes error:error];
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    if (error) return;
+    [data writeToFile:filePath atomically:YES];;
+}
+
+
 - (void)appendJSONToFileName:(NSString *)fileName dictionary:(NSDictionary *)dictionary error:(NSError **)error{
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
