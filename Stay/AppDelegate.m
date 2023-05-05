@@ -50,6 +50,8 @@
 #import "SYVersionUtils.h"
 #import "API.h"
 
+#import "AdBlockDetailViewController.h"
+
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
@@ -207,14 +209,25 @@
             
     }];
     
-//    [[VideoParser shared] parse:@"https://m.toutiao.com/video/7182409246737334787/?from_page_type=feed&upstream_biz=toutiao_m&W2atIF=1" completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
-//        NSLog(@"videoItems %@",videoItems);
-//    }];
-//    [[VideoParser shared] parse:@"http://xhslink.com/qJdpan" completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
-//        NSLog(@"videoItems %@",videoItems);
-//    }];
+    [[IACManager sharedManager] handleAction:@"adblock" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        NSString *type = [inputParameters[@"type"] lowercaseString];
+        NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
+        for (ContentFilter *contentFilter in contentFilters){
+            NSString *contentFilterType = [ContentFilter stringOfType:contentFilter.type];
+            if ([[contentFilterType lowercaseString] isEqualToString:type]){
+                AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
+                cer.contentFilter = contentFilter;
+                #ifdef FC_MAC
+                    [[QuickAccess secondaryController] pushViewController:cer];
+                #else
+                    UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+                    [nav pushViewController:cer animated:true];
+                #endif
+                break;
+            }
+        }
+    }];
     
-//    [[API shared] downloadYoutube:@"21246a91"];
     return YES;
 }
 
