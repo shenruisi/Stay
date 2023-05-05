@@ -501,6 +501,26 @@
         }
         
     }
+    else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){
+        dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+        __block BOOL enabled;
+        [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+            enabled = state.enabled;
+            dispatch_semaphore_signal(semaphore);
+        }];
+        
+        dispatch_semaphore_wait(semaphore, deadline);
+        
+        [SharedStorageManager shared].extensionConfig = nil;
+        NSNumber *tagStatus = [SharedStorageManager shared].extensionConfig.tagStatus;
+            
+        body = @{
+            @"enabled" : @(enabled),
+            @"tag_status" : tagStatus
+        };
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,

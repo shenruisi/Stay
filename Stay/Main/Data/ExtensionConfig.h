@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ExtensionConfig : FCDisk<NSSecureCoding>
 
 @property (nonatomic, assign) BOOL showBadge;
+@property (nonatomic, strong) NSNumber *tagStatus;
 @end
 
 NS_ASSUME_NONNULL_END

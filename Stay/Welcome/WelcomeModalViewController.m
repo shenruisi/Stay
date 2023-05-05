@@ -15,6 +15,12 @@
 #import "FCButton.h"
 #import "EnableStayModalViewController.h"
 #import "InstallUserscriptModalViewController.h"
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
+
 
 @interface WelcomeModalViewController()<
  UITableViewDelegate,
@@ -35,6 +41,7 @@
 @property (nonatomic, strong) ModalItemElement *installUserscriptElement;
 @property (nonatomic, strong) ModalItemElement *doneElement;
 @property (nonatomic, strong) FCButton *skipButton;
+@property (nonatomic, strong) LottieView *congratulationsLottieView;
 @end
 
 @implementation WelcomeModalViewController
@@ -60,6 +67,8 @@
     self.doneElement.enable = NO;
     
     [self.tableView reloadData];
+    
+    
 }
 
 
@@ -355,6 +364,8 @@
 }
 
 - (void)skipAction:(id)sender{
+    [[self congratulationsLottieView] play];
+    return;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Stay"
                                                                    message:NSLocalizedString(@"WelcomeSkipAlert", @"")
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -371,6 +382,22 @@
      [alert addAction:cancel];
     [FCApp.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
     
+}
+
+- (LottieView *)congratulationsLottieView{
+    if (nil == _congratulationsLottieView){
+        _congratulationsLottieView = [[LottieView alloc] initWithAnimationName:@"congratulations"];
+        _congratulationsLottieView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:_congratulationsLottieView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_congratulationsLottieView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_congratulationsLottieView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_congratulationsLottieView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-80],
+            [_congratulationsLottieView.heightAnchor constraintEqualToConstant:300]
+        ]];
+    }
+    
+    return _congratulationsLottieView;
 }
 
 - (CGSize)mainViewSize{

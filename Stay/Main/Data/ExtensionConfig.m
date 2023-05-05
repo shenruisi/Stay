@@ -30,11 +30,13 @@
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.showBadge forKey:@"showBadge"];
+    [coder encodeObject:self.tagStatus forKey:@"tagStatus"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _showBadge = [coder decodeBoolForKey:@"showBadge"];
+        _tagStatus = [coder decodeObjectForKey:@"tagStatus"];
     }
     
     return self;
@@ -54,12 +56,19 @@
                                                                      fromData:data
                                                                         error:nil];
     _showBadge = extensionConfig.showBadge;
+    _tagStatus = extensionConfig.tagStatus ? extensionConfig.tagStatus : @(1);
 }
 
 - (void)setShowBadge:(BOOL)showBadge{
     _showBadge = showBadge;
     [self flush];
 }
+
+- (void)setTagStatus:(NSNumber *)tagStatus{
+    _tagStatus = tagStatus;
+    [self flush];
+}
+
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {
     return  _extensionConfigQueue;
