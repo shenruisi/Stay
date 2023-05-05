@@ -1095,7 +1095,7 @@ UIPopoverPresentationControllerDelegate
 
 - (void)queryData{
     if (self.datas.count == 0){
-        [self.simpleLoadingView start];
+        [self startHeadLoading];
     }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
@@ -1126,16 +1126,12 @@ UIPopoverPresentationControllerDelegate
 
             self.datas = finalArray;
             dispatch_async(dispatch_get_main_queue(),^{
-//                [self.simpleLoadingView stop];
-                [self.simpleLoadingView removeFromSuperview];
-                self.simpleLoadingView = nil;
+                [self stopHeadLoading];
                 [self.tableView reloadData];
             });
         } failBlock:^(NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(),^{
-//                [self.simpleLoadingView stop];
-                [self.simpleLoadingView removeFromSuperview];
-                self.simpleLoadingView = nil;
+                [self stopHeadLoading];
                 [self.tableView reloadData];
             });
         }];
@@ -1145,7 +1141,7 @@ UIPopoverPresentationControllerDelegate
 }
 - (void)queryAllData{
     if (self.allDatas.count == 0){
-        [self.simpleLoadingView start];
+        [self startHeadLoading];
     }
     
     if(_allDataQuerying) {
@@ -1171,16 +1167,12 @@ UIPopoverPresentationControllerDelegate
             }
             [self.allDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
-//                        [self.simpleLoadingView stop];
-                        [self.simpleLoadingView removeFromSuperview];
-                        self.simpleLoadingView = nil;
+                        [self stopHeadLoading];
                         [self.allTableView reloadData];
                     });
                 } failBlock:^(NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(),^{
-//                        [self.simpleLoadingView stop];
-                        [self.simpleLoadingView removeFromSuperview];
-                        self.simpleLoadingView = nil;
+                        [self stopHeadLoading];
                         [self.allTableView reloadData];
                     });
                     _allDataQuerying = false;

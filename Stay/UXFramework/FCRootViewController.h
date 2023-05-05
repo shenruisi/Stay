@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FCRootViewController : FCViewController
 
 @property (nonatomic, strong) NSString *leftTitle;
+- (void)startHeadLoading;
+- (void)stopHeadLoading;
 @end
 
 NS_ASSUME_NONNULL_END
