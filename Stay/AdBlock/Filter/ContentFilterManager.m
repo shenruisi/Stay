@@ -102,6 +102,14 @@ static ContentFilterManager *instance = nil;
     [fileHandle closeFile];
 }
 
+- (NSArray *)ruleJSONArray:(NSString *)fileName error:(NSError **)error{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    if (nil == jsonData) return @[];
+    NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error];
+    return jsonArray;
+}
+
 
 - (NSURL *)ruleJSONURLOfFileName:(NSString *)fileName{
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];

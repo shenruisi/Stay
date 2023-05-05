@@ -14,6 +14,7 @@
 #import "FCShared.h"
 #import <Speech/Speech.h>
 #import "ContentFilterManager.h"
+#import "MyAdditions.h"
 
 @interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
 
@@ -519,6 +520,31 @@
         body = @{
             @"enabled" : @(enabled),
             @"tag_status" : tagStatus
+        };
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchTagRules"]){
+        NSString *url = message[@"url"];
+        NSUInteger urlLength = url.length;
+        NSError *error;
+        NSMutableArray *rules = [[NSMutableArray alloc] init];
+        NSArray *jsonArray = [[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error];
+        for (NSDictionary *rule in jsonArray){
+            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+            NSRegularExpression *expression = [[NSRegularExpression alloc] initWithPattern:urlFilter options:0 error:nil];
+            NSArray *results = [expression matchesInString:url options:0 range:NSMakeRange(0, urlLength)];
+            if (results.count > 0){
+                NSString *selector = rule[@"action"][@"selector"];
+                NSString *urlAndSelector = [NSString stringWithFormat:@"%@%@",urlFilter,selector];
+                [rules addObject:@{
+                    @"uuid":[urlAndSelector md5],
+                    @"url-filter": urlFilter,
+                    @"selector": selector
+                }];
+            }
+        }
+        
+        body = @{
+            @"rules":rules
         };
     }
 
