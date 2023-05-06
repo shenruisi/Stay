@@ -830,7 +830,6 @@ UIPopoverPresentationControllerDelegate
     
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
     self.searchViewController = search;
-    [self.searchViewController.view addSubview:self.searchTableView];
 
 //    [self tableView];
 //    [self queryData];
@@ -1523,7 +1522,9 @@ UIPopoverPresentationControllerDelegate
 
 - (UITableView *)searchTableView {
     if (_searchTableView == nil) {
-        _searchTableView = [[UITableView alloc]initWithFrame:self.searchViewController.view.bounds style:UITableViewStylePlain];
+//        _searchTableView = [[UITableView alloc]initWithFrame:self.searchViewController.view.bounds style:UITableViewStylePlain];
+        _searchTableView = [[UITableView alloc]init];
+
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
         _searchTableView.showsVerticalScrollIndicator = YES;
@@ -1534,7 +1535,17 @@ UIPopoverPresentationControllerDelegate
         }
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _searchTableView.sectionFooterHeight = 0;
+        
+        _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.searchViewController.view addSubview:self.searchTableView];
+
 //        _searchTableView.backgroundColor = FCStyle.background;
+        [NSLayoutConstraint activateConstraints:@[
+            [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
+            [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
+            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
     }
     return _searchTableView;
 }
