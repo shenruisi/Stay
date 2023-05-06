@@ -24,6 +24,7 @@
 #import "SYWebsiteViewController.h"
 #import "SYSubmitScriptSlideController.h"
 #import "SYReportSlideController.h"
+#import "DefaultIcon.h"
 
 #import "QuickAccess.h"
 
@@ -229,23 +230,27 @@
      cell.backgroundColor = [UIColor clearColor];
      CGFloat left = 15;
      CGFloat titleLabelLeftSize = 0;
-     if(self.script.icon != NULL && self.script.icon.length > 0) {
-          UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
-          imageBox.layer.cornerRadius = 30;
-          imageBox.layer.borderWidth = 1;
-          imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-          imageBox.backgroundColor = FCStyle.fcWhite;
-          UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
-      //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-          [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
+     UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
+     imageBox.layer.cornerRadius = 30;
+     imageBox.layer.borderWidth = 1;
+     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+     imageBox.backgroundColor = FCStyle.fcWhite;
+     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
+ //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
 
-          imageView.clipsToBounds = YES;
-          imageView.centerX = 59;
-          imageView.centerY = 59;
-          imageView.contentMode = UIViewContentModeScaleAspectFit;
-          [imageBox addSubview:imageView];
-          [cell.contentView addSubview:imageBox];
-         titleLabelLeftSize = 15 + 118;
+     imageView.clipsToBounds = YES;
+     imageView.centerX = 59;
+     imageView.centerY = 59;
+     imageView.contentMode = UIViewContentModeScaleAspectFit;
+     [imageBox addSubview:imageView];
+     [cell.contentView addSubview:imageBox];
+    titleLabelLeftSize = 15 + 118;
+
+     
+     if( self.script.icon.length <= 0) {
+         [imageView setImage:[DefaultIcon iconWithTitle: self.script.name size:CGSizeMake(78, 78)]];
+     } else {
+          [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
      }
      
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 15, self.view.width - titleLabelLeftSize - left * 2, 21)];

@@ -360,7 +360,7 @@
             [_runBtn.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:16],
             [_runBtn.bottomAnchor constraintEqualToAnchor:self.imageBox.bottomAnchor constant:-2],
             [_runBtn.heightAnchor constraintEqualToConstant:30],
-            [_runBtn.widthAnchor constraintEqualToConstant:rect.size.width + 10]
+            [_runBtn.widthAnchor constraintEqualToConstant:rect.size.width + 20]
         ]];
 
     }

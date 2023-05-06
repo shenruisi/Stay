@@ -43,6 +43,7 @@
 #import "DeviceHelper.h"
 #import "FCTableViewCell.h"
 #import "DownloadScriptSlideController.h"
+#import "DefaultIcon.h"
 
 
 @interface _FeaturedBannerTableViewCell<ElementType> : FCTableViewCell<ElementType>
@@ -517,8 +518,9 @@
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
     imageView.contentMode =  UIViewContentModeScaleAspectFit;
-    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-
+    NSString *iconUrl = dic[@"icon_url"];
+    
+    
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
     imageView.centerY = 24;
@@ -527,12 +529,8 @@
 //    view.backgroundColor = FCStyle.secondaryBackground;
     
     CGFloat left = 0;
-    NSString *icon = dic[@"icon_url"];
-    if( icon != nil && icon.length > 0){
-        left = imageBox.right + 10;
-    } else {
-        imageBox.hidden = true;
-    }
+    left = imageBox.right + 10;
+   
     
     NSString *name = @"name";
     NSString *desc = @"desc";
@@ -551,10 +549,6 @@
     [view addSubview:subLabel];
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
-    if( icon == nil || icon.length <= 0){
-        headerLabel.width = 260;
-        subLabel.width = 260;
-    }
         
     NSDictionary *locate = dic[@"locales"];
     if(locate != NULL  && locate.count > 0) {
@@ -563,6 +557,12 @@
             headerLabel.text = localLanguage[name];
             subLabel.text = localLanguage[@"description"];
         }
+    }
+    
+    if(iconUrl.length > 0) {
+        [imageView sd_setImageWithURL:[NSURL URLWithString: iconUrl]];
+    } else {
+        [imageView setImage:[DefaultIcon iconWithTitle: headerLabel.text size:CGSizeMake(26, 26)]];
     }
     
     

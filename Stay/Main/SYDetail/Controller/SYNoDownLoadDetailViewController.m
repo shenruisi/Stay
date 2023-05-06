@@ -30,7 +30,7 @@
 #import "SYScanImage.h"
 #import "SYBigImageViewController.h"
 #import "FCRoundedShadowView2.h";
-
+#import "DefaultIcon.h"
 #ifdef FC_MAC
 #import "FCShared.h"
 #import "Plugin.h"
@@ -202,24 +202,26 @@
     CGFloat titleLabelLeftSize = 0;
     NSString *icon = self.scriptDic[@"icon_url"];
     
-    if(icon != NULL && icon.length > 0) {
-         UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
-         imageBox.layer.cornerRadius = 30;
-         imageBox.layer.borderWidth = 1;
-         imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-         imageBox.backgroundColor = FCStyle.fcWhite;
+    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
+    imageBox.layer.cornerRadius = 30;
+    imageBox.layer.borderWidth = 1;
+    imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+    imageBox.backgroundColor = FCStyle.fcWhite;
 
-         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
-         [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
-         imageView.clipsToBounds = YES;
-         imageView.centerX = 59;
-         imageView.centerY = 59;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-         [imageBox addSubview:imageView];
-         [cell.contentView addSubview:imageBox];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
+    imageView.clipsToBounds = YES;
+    imageView.centerX = 59;
+    imageView.centerY = 59;
+   imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [imageBox addSubview:imageView];
+    [cell.contentView addSubview:imageBox];
 
-         titleLabelLeftSize = 15 + 118;
-     }
+    titleLabelLeftSize = 15 + 118;
+    if( icon.length <= 0) {
+        [imageView setImage:[DefaultIcon iconWithTitle: self.scriptDic[@"name"] size:CGSizeMake(78, 78)]];
+    } else {
+        [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
+    }
      
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 20, self.view.width - titleLabelLeftSize - left * 2, 21)];
      titleLabel.font = FCStyle.title3Bold;

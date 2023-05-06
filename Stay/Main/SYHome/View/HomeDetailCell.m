@@ -116,7 +116,7 @@
         
         
         [self.updateBtnConstraints addObjectsFromArray:@[[self.updateBtn.heightAnchor constraintEqualToConstant:25],
-                                                           [self.updateBtn.widthAnchor constraintEqualToConstant:rect.size.width + 10],
+                                                           [self.updateBtn.widthAnchor constraintEqualToConstant:rect.size.width + 20],
                                                            [self.updateBtn.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
                                                     [self.updateBtn.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-11],]];
 
@@ -133,30 +133,16 @@
         
     } else {
         self.updateBtn.hidden = true;
+        
+        [self.titleConstraints addObjectsFromArray:@[
+            [self.headerLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-90],
+        ]];
+        [self.subTitleConstraints addObjectsFromArray:@[
+            [self.subLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-90],
 
+        ]];
         
         
-        if (dic.icon != NULL && dic.icon.length > 0) {
-            [self.titleConstraints addObjectsFromArray:@[
-                [self.headerLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-90],
-            ]];
-            [self.subTitleConstraints addObjectsFromArray:@[
-                [self.subLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-90],
-
-            ]];
-            
-        } else {
-
-            
-            [self.titleConstraints addObjectsFromArray:@[
-                [self.headerLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-40],
-            ]];
-            [self.subTitleConstraints addObjectsFromArray:@[
-                [self.subLabel.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor constant:-40],
-
-            ]];
-            
-        }
     }
     
 
