@@ -73,7 +73,7 @@
     if(dic.icon.length > 0) {
         [self.iconImageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
     } else {
-        [self.iconImageView setImage:[DefaultIcon iconWithTitle:dic.name size:CGSizeMake(48, 48)]];
+        [self.iconImageView setImage:[DefaultIcon iconWithTitle:dic.name size:CGSizeMake(26, 26)]];
     }
     
     
@@ -297,8 +297,8 @@
         [NSLayoutConstraint activateConstraints:@[
             [_iconImageView.centerXAnchor constraintEqualToAnchor:self.imageBox.centerXAnchor],
             [_iconImageView.centerYAnchor constraintEqualToAnchor:self.imageBox.centerYAnchor],
-            [_iconImageView.heightAnchor constraintEqualToConstant:48],
-            [_iconImageView.widthAnchor constraintEqualToConstant:48]
+            [_iconImageView.heightAnchor constraintEqualToConstant:26],
+            [_iconImageView.widthAnchor constraintEqualToConstant:26]
         ]];
     }
     

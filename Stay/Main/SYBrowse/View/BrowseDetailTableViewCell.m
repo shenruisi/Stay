@@ -16,6 +16,7 @@
 #import "API.h"
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
+#import "DefaultIcon.h"
 @implementation BrowseDetailTableViewCell
 
 
@@ -53,6 +54,7 @@
     UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(15, 12, 48, 48)];
     imageBox.layer.cornerRadius = 8;
     imageBox.layer.borderWidth = 1;
+    imageBox.clipsToBounds = YES;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
@@ -69,12 +71,9 @@
     
     NSString *icon = dic[@"icon_url"];
     CGFloat left = 15;
-    if( icon != nil && icon.length > 0){
-        left = imageBox.right + 10;
-    } else {
-        imageBox.hidden = true;
-    }
-    
+    left = imageBox.right + 10;
+
+  
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 15, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  138;
@@ -112,6 +111,11 @@
             subLabel.text = localLanguage[@"description"];
         }
     }
+    
+    if(icon.length <= 0){
+        [imageView setImage:[DefaultIcon iconWithTitle:headerLabel.text size:CGSizeMake(48, 48)]];
+    }
+    
     NSString *uuid = dic[@"uuid"];
     
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
