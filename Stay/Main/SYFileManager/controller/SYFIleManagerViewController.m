@@ -144,8 +144,7 @@ UIDocumentPickerDelegate
     self.leftTitle  = NSLocalizedString(@"Downloader","Downloader");
 
     UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
-    self.searchViewController = search;
-    
+    self.searchViewController = [[FCViewController alloc] init];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(buildFolder:)
                                                  name:@"app.stay.notification.SYFolderChangeNotification"
@@ -721,7 +720,7 @@ UIDocumentPickerDelegate
                 [addDocBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
                 addDocBtn.titleLabel.font = FCStyle.footnoteBold;
         //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
-//                addDocBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
+                addDocBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
                 addDocBtn.layer.cornerRadius = 10;
                 addDocBtn.layer.borderWidth = 1;
                 addDocBtn.layer.borderColor = FCStyle.borderColor.CGColor;
@@ -732,6 +731,7 @@ UIDocumentPickerDelegate
                 [NSLayoutConstraint activateConstraints:@[
                     [addDocBtn.topAnchor constraintEqualToAnchor:cell.contentView.topAnchor constant:14],
                     [addDocBtn.heightAnchor constraintEqualToConstant:35],
+                    [addDocBtn.widthAnchor constraintEqualToConstant:134],
                     [addDocBtn.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:15],
                 ]];
                 
@@ -1118,8 +1118,9 @@ UIDocumentPickerDelegate
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _searchTableView.sectionHeaderTopPadding = 0;
-        
+        if (@available(iOS 15.0, *)){
+            _searchTableView.sectionHeaderTopPadding = 0;
+        }
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.searchViewController.view addSubview:self.searchTableView];
 
@@ -1127,7 +1128,7 @@ UIDocumentPickerDelegate
         [NSLayoutConstraint activateConstraints:@[
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
-            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
+//            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
             [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
         ]];
     }

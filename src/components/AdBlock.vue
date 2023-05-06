@@ -104,7 +104,7 @@ export default {
     }
 
     const tagToManageClick = () => {
-      let openUrl = 'stay://x-callback-url/block';
+      let openUrl = 'stay://x-callback-url/adblock?type=tag';
       global.openUrlInSafariPopup(openUrl);
     }
     

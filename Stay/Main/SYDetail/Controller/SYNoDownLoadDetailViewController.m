@@ -29,7 +29,7 @@
 #import "SYWebsiteViewController.h"
 #import "SYScanImage.h"
 #import "SYBigImageViewController.h"
-
+#import "FCRoundedShadowView2.h";
 
 #ifdef FC_MAC
 #import "FCShared.h"
@@ -66,7 +66,7 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = FCStyle.popup;
-
+    self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
  
     [self queryData];
@@ -207,6 +207,8 @@
          imageBox.layer.cornerRadius = 30;
          imageBox.layer.borderWidth = 1;
          imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+         imageBox.backgroundColor = FCStyle.fcWhite;
+
          UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
          [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
          imageView.clipsToBounds = YES;
@@ -361,15 +363,19 @@
         
         CGFloat imageleft = 15;
         for(int i = 0; i < picArray.count; i++) {
+            FCRoundedShadowView2 *imageBackView = [[FCRoundedShadowView2 alloc] initWithRadius:25
+                                                                                    borderWith:1 cornerMask:kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner];
+            imageBackView.frame = CGRectMake(0, 0, 250, 540);
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
             [imageView sd_setImageWithURL:picArray[i]];
             imageView.layer.cornerRadius = 25;
-            imageView.layer.borderWidth = 1;
-            imageView.layer.borderColor = FCStyle.borderColor.CGColor;
+//            imageView.layer.borderWidth = 1;
             imageView.userInteractionEnabled = false;
             imageView.layer.masksToBounds = YES;
-            imageView.left = imageleft;
-            [imageScrollView addSubview:imageView];
+            imageBackView.left = imageleft;
+            [imageBackView addSubview:imageView];
+            [imageScrollView addSubview:imageBackView];
+
             imageleft += 27 + 250;
             imageScrollView.contentSize = CGSizeMake(imageleft + 15, 540);
             

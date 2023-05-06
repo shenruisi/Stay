@@ -1175,6 +1175,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log("adblock-------response=",response);
                 sendResponse({ body: response.body })
             });
+            const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
+            // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            //     console.log("request.executeScript------", code);
+            //     browser.tabs.executeScript(tabs[0].id, { code: code}, (res)=>{
+            //         console.log("response.executeScript------", res);
+            //     })
+            // });
         }
         return true;
     }
