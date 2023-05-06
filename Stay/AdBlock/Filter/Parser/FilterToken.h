@@ -68,7 +68,8 @@ typedef enum{
     FilterTokenTypeIfDefineEnd,
     FilterTokenTypeInfo,
     FilterTokenTypePipe,
-    FilterTokenTypeAddress
+    FilterTokenTypeAddress,
+    FilterTokenTypeJSAPI
 } FilterTokenType;
 
 @interface FilterToken : NSObject
@@ -97,6 +98,7 @@ typedef enum{
 + (instancetype)info:(NSString *)text;
 + (instancetype)pipe;
 + (instancetype)address;
++ (instancetype)jsAPI:(NSString *)text;
 
 + (NSString *)stringOfType:(FilterTokenType)type;
 - (NSString *)toString;

@@ -28,6 +28,10 @@
         BlockerAST *ast;
         [parser nextToken];
         
+        if ([parser isJSAPI]){
+            return nil;
+        }
+        
         if ([parser isInfo] || [parser isComment] ){
             if ([parser isSepcialComment]){
                 *isSpecialComment = YES;

@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FCButton : UIButton
 
+@property (nonatomic, strong) UIColor *loadingBackgroundColor;
+@property (nonatomic, strong) UIColor *loadingTitleColor;
+@property (nonatomic, strong) UIColor *loadingBorderColor;
 - (void)startLoading;
 - (void)stopLoading;
 @end

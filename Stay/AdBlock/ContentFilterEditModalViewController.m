@@ -34,7 +34,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.navigationBar.hidden = NO;
+    self.hideNavigationBar = NO;
     self.navigationBar.showCancel = YES;
     self.title = self.contentFilter.title;
     [self tableView];
@@ -165,6 +165,9 @@
             NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.bodyBold
         }] forState:UIControlStateNormal];
+        _saveButton.loadingBackgroundColor = UIColor.clearColor;
+        _saveButton.loadingTitleColor = FCStyle.fcSeparator;
+        _saveButton.loadingBorderColor = FCStyle.fcSeparator;
         _saveButton.backgroundColor = UIColor.clearColor;
         _saveButton.layer.cornerRadius = 10;
         _saveButton.layer.borderColor = FCStyle.accent.CGColor;
@@ -221,6 +224,7 @@
     if (self.titleElement.inputEntity.text.length > 0
         && ![self.titleElement.inputEntity.text isEqualToString:originTitle]){
         self.contentFilter.title = self.titleElement.inputEntity.text;
+        self.title = self.titleElement.inputEntity.text;
         [[DataManager shareManager] updateContentFilterTitle:self.contentFilter.title uuid:self.contentFilter.uuid];
     }
     

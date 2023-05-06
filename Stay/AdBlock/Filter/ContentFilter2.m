@@ -13,6 +13,8 @@
 #import "DataManager.h"
 #import "SYVersionUtils.h"
 
+static NSUInteger MAX_RULE_COUNT = 50000;
+
 @interface ContentFilter(){
 }
 
@@ -92,9 +94,10 @@
     ContentBlockerRule *universalRule;
     NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
     for (NSString *line in lines){
-        if (line.length > 0){
+        NSString *newLine = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+        if (newLine.length > 0){
             BOOL isSepcialComment;
-            ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:line isSpecialComment:&isSepcialComment];
+            ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:newLine isSpecialComment:&isSepcialComment];
             if (nil == universalRule && [contentBlockerRule.trigger.urlFilter isEqualToString:@".*"]){
                 universalRule = contentBlockerRule;
             }
@@ -199,6 +202,14 @@
             }
         }];
         
+        NSError *maxRuleCountError;
+        if (jsonRules.count > MAX_RULE_COUNT){
+            jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];
+            maxRuleCountError = [[NSError alloc] initWithDomain:@"Content Filter Error" code:-500 userInfo:
+                @{NSLocalizedDescriptionKey:NSLocalizedString(@"RuleMaxCountError", @"")}
+            ];
+        }
+        
         NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error] encoding:NSUTF8StringEncoding];
         
         if (error){
@@ -219,7 +230,13 @@
         
         [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
             if (completion){
-                completion(error);
+                if (maxRuleCountError){
+                    completion(maxRuleCountError);
+                }
+                else{
+                    completion(error);
+                }
+                
             }
             NSLog(@"Update&reloadContentBlockerWithIdentifier:%@ error:%@",self.contentBlockerIdentifier, error);
         }];
@@ -230,6 +247,11 @@
 - (void)restoreRulesWithCompletion:(void(^)(NSError *))completion{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:self.sharedPath error:&error];
+        if (error){
+            completion(error);
+            return;
+        }
         NSString *content = [[NSString alloc] initWithContentsOfFile:self.resourcePath encoding:NSUTF8StringEncoding error:&error];
         if (error){
             completion(error);

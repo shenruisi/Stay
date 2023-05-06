@@ -11,6 +11,8 @@
 @interface FCButton()
 
 @property (nonatomic, strong) UIColor *savedBackgroundColor;
+@property (nonatomic, strong) UIColor *savedTitleColor;
+@property (nonatomic, strong) UIColor *savedBorderColor;
 @property (nonatomic, strong) NSString *savedTitle;
 @property (nonatomic, strong) UIActivityIndicatorView *loadingView;
 @end
@@ -26,20 +28,40 @@
 }
 
 - (void)startLoading{
-    NSDictionary *attributes = [self.currentAttributedTitle attributesAtIndex:0 effectiveRange:nil];
     self.savedTitle = self.currentAttributedTitle.string;
-    [self setAttributedTitle:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@...",self.savedTitle] attributes:attributes] forState:UIControlStateNormal];
     self.savedBackgroundColor = self.backgroundColor;
-    self.backgroundColor = FCStyle.fcSeparator;
+    if (self.loadingTitleColor){
+        self.savedTitleColor = [self.currentAttributedTitle attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:nil];
+    }
+    if (self.loadingBorderColor){
+        self.savedBorderColor = [UIColor colorWithCGColor:self.layer.borderColor];
+    }
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self.currentAttributedTitle attributesAtIndex:0 effectiveRange:nil]];
+    self.savedTitle = self.currentAttributedTitle.string;
+    if (self.loadingTitleColor){
+        [attributes setObject:self.loadingTitleColor forKey:NSForegroundColorAttributeName];
+    }
+    [self setAttributedTitle:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@...",self.savedTitle] attributes:attributes] forState:UIControlStateNormal];
+    self.backgroundColor = self.loadingBackgroundColor ? self.loadingBackgroundColor : FCStyle.fcSeparator;
+    if (self.loadingBorderColor){
+        self.layer.borderColor = self.loadingBorderColor.CGColor;
+    }
+    
     [self.loadingView startAnimating];
 }
 
 - (void)stopLoading{
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSDictionary *attributes = [self.currentAttributedTitle attributesAtIndex:0 effectiveRange:nil];
+        NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[self.currentAttributedTitle attributesAtIndex:0 effectiveRange:nil]];
+        if (self.loadingTitleColor){
+            [attributes setObject:self.savedTitleColor forKey:NSForegroundColorAttributeName];
+        }
         [self setAttributedTitle:[[NSAttributedString alloc] initWithString:self.savedTitle
                                                                 attributes:attributes] forState:UIControlStateNormal];
         self.backgroundColor = self.savedBackgroundColor;
+        if (self.loadingBorderColor){
+            self.layer.borderColor = self.savedBorderColor.CGColor;
+        }
         [self.loadingView stopAnimating];
     });
     

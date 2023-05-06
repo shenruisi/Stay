@@ -280,6 +280,13 @@
     return address;
 }
 
++ (instancetype)jsAPI:(NSString *)text{
+    FilterToken *jsAPI = [[FilterToken alloc] init];
+    jsAPI.type = FilterTokenTypeJSAPI;
+    jsAPI.value = text;
+    return jsAPI;
+}
+
 - (NSString *)toString{
     if (self.type == FilterTokenTypeComment){
         return [NSString stringWithFormat:@"!%@",self.value];

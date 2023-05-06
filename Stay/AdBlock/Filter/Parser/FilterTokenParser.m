@@ -136,63 +136,79 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     }
     
     if ([self isSelectorStart:self.lastChars]){
-        self.lastChars = [self getChars];
-        if ([self.lastChars isEqualToString:@"#"]){
-            NSMutableString *selector = [[NSMutableString alloc] init];
-            while(![self isEnd:(self.lastChars = [self getChars])]){
-                [selector appendString:self.lastChars];
-            }
+        //Parse JS API
+        NSString *probChars = [self probGetChars:2];
+        if ([probChars isEqualToString:@"%#"]){
+            [self forward:2];
+            self.lastChars = [self getChars];
+            NSMutableString *jsAPI = [[NSMutableString alloc] init];
+            do{
+                [jsAPI appendString:self.lastChars];
+                self.lastChars = [self getChars];
+            }while(![self isEnd:self.lastChars]);
             [self backward];
-            return [FilterToken selectorElementHiding:selector];
-        }
-        else if ([self.lastChars isEqualToString:@"?"]){
-            self.lastChars = [self getChars];
-            if ([self.lastChars isEqualToString:@"#"]){
-                NSMutableString *selector = [[NSMutableString alloc] init];
-                while(![self isEnd:(self.lastChars = [self getChars])]){
-                    [selector appendString:self.lastChars];
-                }
-                [self backward];
-                return [FilterToken selectorElementHidingEmulation:selector];
-            }
-            else{
-                [self backward];
-                return [FilterToken undefined:@"#?"];
-            }
-        }
-        else if ([self.lastChars isEqualToString:@"@"]){
-            self.lastChars = [self getChars];
-            if ([self.lastChars isEqualToString:@"#"]){
-                NSMutableString *selector = [[NSMutableString alloc] init];
-                while(![self isEnd:(self.lastChars = [self getChars])]){
-                    [selector appendString:self.lastChars];
-                }
-                [self backward];
-                return [FilterToken selectorElementHidingException:selector];
-            }
-            else{
-                [self backward];
-                return [FilterToken undefined:@"#@"];
-            }
-        }
-        else if ([self.lastChars isEqualToString:@"$"]){
-            self.lastChars = [self getChars];
-            if ([self.lastChars isEqualToString:@"#"]){
-                NSMutableString *selector = [[NSMutableString alloc] init];
-                while(![self isEnd:(self.lastChars = [self getChars])]){
-                    [selector appendString:self.lastChars];
-                }
-                [self backward];
-                return [FilterToken selectorElementSnippetFilter:selector];
-            }
-            else{
-                [self backward];
-                return [FilterToken undefined:@"#$"];
-            }
+            return [FilterToken jsAPI:jsAPI];
         }
         else{
-            [self backward];
-            return [FilterToken undefined:self.lastChars];
+            //Parse Selector
+            self.lastChars = [self getChars];
+            if ([self.lastChars isEqualToString:@"#"]){
+                NSMutableString *selector = [[NSMutableString alloc] init];
+                while(![self isEnd:(self.lastChars = [self getChars])]){
+                    [selector appendString:self.lastChars];
+                }
+                [self backward];
+                return [FilterToken selectorElementHiding:selector];
+            }
+            else if ([self.lastChars isEqualToString:@"?"]){
+                self.lastChars = [self getChars];
+                if ([self.lastChars isEqualToString:@"#"]){
+                    NSMutableString *selector = [[NSMutableString alloc] init];
+                    while(![self isEnd:(self.lastChars = [self getChars])]){
+                        [selector appendString:self.lastChars];
+                    }
+                    [self backward];
+                    return [FilterToken selectorElementHidingEmulation:selector];
+                }
+                else{
+                    [self backward];
+                    return [FilterToken undefined:@"#?"];
+                }
+            }
+            else if ([self.lastChars isEqualToString:@"@"]){
+                self.lastChars = [self getChars];
+                if ([self.lastChars isEqualToString:@"#"]){
+                    NSMutableString *selector = [[NSMutableString alloc] init];
+                    while(![self isEnd:(self.lastChars = [self getChars])]){
+                        [selector appendString:self.lastChars];
+                    }
+                    [self backward];
+                    return [FilterToken selectorElementHidingException:selector];
+                }
+                else{
+                    [self backward];
+                    return [FilterToken undefined:@"#@"];
+                }
+            }
+            else if ([self.lastChars isEqualToString:@"$"]){
+                self.lastChars = [self getChars];
+                if ([self.lastChars isEqualToString:@"#"]){
+                    NSMutableString *selector = [[NSMutableString alloc] init];
+                    while(![self isEnd:(self.lastChars = [self getChars])]){
+                        [selector appendString:self.lastChars];
+                    }
+                    [self backward];
+                    return [FilterToken selectorElementSnippetFilter:selector];
+                }
+                else{
+                    [self backward];
+                    return [FilterToken undefined:@"#$"];
+                }
+            }
+            else{
+                [self backward];
+                return [FilterToken undefined:self.lastChars];
+            }
         }
     }
     
@@ -343,6 +359,7 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     return [chars isEqualToString:@"\n"];
 }
 
+
 - (BOOL)isEnd:(NSString *)chars{
     return [self isNewLine:chars] || [self isEOF:chars];
 }
@@ -370,6 +387,8 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentHomepage
     || self.opaqueCurToken.type == FilterTokenTypeSpecialCommentRedirect;
 }
+
+
 
 - (BOOL)isComment{
     return self.opaqueCurToken.type == FilterTokenTypeComment || self.isSepcialComment;
@@ -412,6 +431,10 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
 
 - (BOOL)isPipe{
     return self.opaqueCurToken.type == FilterTokenTypePipe;
+}
+
+- (BOOL)isJSAPI{
+    return self.opaqueCurToken.type == FilterTokenTypeJSAPI;
 }
 
 @end
