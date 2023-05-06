@@ -15,7 +15,6 @@
 
 @interface AdBlockDetailViewController ()
 
-@property (nonatomic, strong) UIBarButtonItem *backItem;
 @property (nonatomic, strong) UIBarButtonItem *moreItem;
 @property (nonatomic, strong) UIBarButtonItem *saveItem;
 @property (nonatomic, strong) ContentFilterEditorView *editorView;
@@ -27,7 +26,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.hidesBottomBarWhenPushed = YES;
-    self.navigationItem.leftBarButtonItems = @[self.backItem];
     if (ContentFilterTypeCustom == self.contentFilter.type
         ||ContentFilterTypeTag == self.contentFilter.type){
         self.navigationItem.rightBarButtonItems = @[self.saveItem];
@@ -56,18 +54,6 @@
     [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
 }
 
-- (UIBarButtonItem *)backItem{
-    if (nil == _backItem){
-        _backItem = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"chevron.backward"
-                                                                           font:FCStyle.headline
-                                                                          color:FCStyle.accent]
-                                                     style:UIBarButtonItemStylePlain
-                                                    target:self
-                                                    action:@selector(backAction:)];
-    }
-    
-    return _backItem;
-}
 
 - (UIBarButtonItem *)moreItem{
     if (nil == _moreItem){
