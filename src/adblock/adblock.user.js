@@ -910,9 +910,20 @@ const browser = __b;
 
     async function sendSelectedTagToHandler(){
       return new Promise((resolve, reject)=>{
+        // console.log(selectedDom);
         const selector = getSelector(selectedDom);
-        const url = window.location.href;
-        selectedDom.style.display = 'none';
+        let localUrl = window.location.href;
+        let url = localUrl;
+        let selDom = document.querySelector(selector);
+        if(selDom){
+          // url = url + '#tag=yes123123123123123';
+          // console.log('selDom----------',selDom);
+          selDom.style.display = 'none';
+        }else{
+          // url = url + '#tag=nonononononono';
+          // console.log('selDom----null------',selDom);
+        }
+        // selectedDom.style.display = 'none';
         selectedDom = null;
         console.log('sendSelectedTagToHandler----------------', selector, url);
         if(isContent){
@@ -925,6 +936,7 @@ const browser = __b;
           const pid = Math.random().toString(36).substring(2, 9);
           window.postMessage({pid: pid, name: 'SEND_SELECTOR_TO_HANDLER',  selector, url});
         }
+        resolve(true)
       })
     }
   
@@ -1097,22 +1109,50 @@ const browser = __b;
       let path = [];
       while (el.nodeType === Node.ELEMENT_NODE) {
         let selector = el.nodeName.toLowerCase();
-        if (el.id) {
+        if(selector == 'body'){
+          path.unshift(selector);
+          break;
+        }
+        if (el.id && checkStaticSelectorId(el.id)) {
           selector += '#' + el.id;
           path.unshift(selector);
           break;
-        } else {
-          let sib = el,
-            nth = 1;
-          while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++);
-          selector += ':nth-child(' + nth + ')';
+        }else if(el.className){
+          selector += `.${el.className.replace(/\s+/g, '.')}`
+        }else {
+          // let sib = el,nth = 1;
+          // while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++);
+          // selector += ':nth-child(' + nth + ')';
+          const siblings = Array.from(el.parentNode.children).filter(sibling => sibling.nodeName === el.nodeName);
+          if (siblings.length > 1) {
+            const index = siblings.indexOf(el);
+            selector += `:nth-child(${index + 1})`;
+          }
         }
         path.unshift(selector);
         el = el.parentNode;
       }
       return path.join(' > ');
     }
+    // "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)" 
 
+    /**
+     * 判断id是否是随机生成
+     * 1、是否a-zA-Z0-9组成且长度大于10
+     * 2、是，认定为随机字符串组成的id,
+     * 3、否，认定为静态id
+     * @param {String} idStr 
+     * @returns 
+     */
+    function checkStaticSelectorId(idStr){
+      if(!idStr){
+        return false;
+      }
+      if(/^[0-9a-zA-Z]*$/.test(idStr) && idStr.length>10){
+        return false;
+      }
+      return true;
+    }
     
 
     /* eslint-disable */
@@ -1197,13 +1237,24 @@ const browser = __b;
     //   let threeFingerTapStatus = e.data.threeFingerTapStatus
     //   window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
     // }
+
+    // [Log] sendSelectedTagToHandler---------------- – "div#app > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)" – "http://172.16.4.103:4000/#tag=nonononononono" (172.16.4.103, line 847)
+
     else if(name === 'SEND_SELECTOR_TO_HANDLER'){
       let pid = e.data.pid;
       let selector = e.data.selector;
-      let url = window.location.href;
+      let url = e.data.url;
       browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url}, (response) => {
         console.log('sendSelectedTagToHandler---------',response)
       });
+      const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
+      
+      // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      //   console.log("request.executeScript------", code);
+      //   browser.tabs.executeScript(tabs[0].id, { code: code}, (res)=>{
+      //       console.log("response.executeScript------", res);
+      //   })
+      // });
     }
   })
 
