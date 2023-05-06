@@ -717,7 +717,7 @@ UIDocumentPickerDelegate
                 UIButton *addDocBtn =  [[UIButton alloc] init];
                 [addDocBtn setImage:[ImageHelper sfNamed:@"folder.badge.plus" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
                 [addDocBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
-                [addDocBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+                [addDocBtn setTitleColor:FCStyle.fcSecondaryBlack forState:UIControlStateNormal];
                 addDocBtn.titleLabel.font = FCStyle.footnoteBold;
         //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
                 addDocBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);

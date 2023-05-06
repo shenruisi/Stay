@@ -17,7 +17,6 @@
 - (ModalNavigationController *)navController{
     if (nil == _navController){
         DownloadScriptModelViewController *cer = [[DownloadScriptModelViewController alloc] init];
-        cer.hideNavigationBar = YES;
         cer.originMainText = self.originMainText;
         cer.iconUrl= self.iconUrl;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer radius:15];

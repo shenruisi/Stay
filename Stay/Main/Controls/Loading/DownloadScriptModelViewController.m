@@ -20,8 +20,9 @@
 @implementation DownloadScriptModelViewController
 - (void)viewDidLoad{
     [super viewDidLoad];
+    self.hideNavigationBar = NO;
+    self.title = NSLocalizedString(@"Download Userscript", @"");
     [self mainLabel];
-    [self downloadLabel];
     [self iconView];
     self.mainLabel.top = self.imageBox.bottom + 12;
 }
@@ -64,6 +65,8 @@
         _iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
         if(self.iconUrl.length > 0) {
             [_iconView sd_setImageWithURL:[NSURL URLWithString: self.iconUrl]];
+        } else {
+            
         }
         _iconView.contentMode =  UIViewContentModeScaleAspectFit;
         _iconView.clipsToBounds = YES;
@@ -77,7 +80,7 @@
 
 - (UIView *)imageBox {
     if(nil == _imageBox) {
-        _imageBox = [[UIView alloc] initWithFrame:CGRectMake(15, 62, 48, 48)];
+        _imageBox = [[UIView alloc] initWithFrame:CGRectMake(15, 25, 48, 48)];
         _imageBox.layer.cornerRadius = 8;
         _imageBox.layer.borderWidth = 1;
         _imageBox.layer.borderColor = FCStyle.borderColor.CGColor;

@@ -1596,7 +1596,7 @@ UIPopoverPresentationControllerDelegate
     return _allTabItem;
 }
 
-- (LoadingSlideController *)loadingSlideController{
+- (DownloadScriptSlideController *)loadingSlideController{
     if (nil == _loadingSlideController){
         _loadingSlideController = [[DownloadScriptSlideController alloc] init];
 //        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
