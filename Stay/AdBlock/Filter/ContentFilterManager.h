@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)appendTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (NSURL *)ruleJSONURLOfFileName:(NSString *)fileName;
 - (BOOL)existRuleJSON:(NSString *)fileName;
+- (NSArray *)ruleJSONArray:(NSString *)fileName error:(NSError **)error;
+- (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SYSubscribeController: UIViewController {
+class SYSubscribeController: FCViewController {
     
     let lifeBtn = UIControl()
     let payBtn = UIControl()
@@ -21,6 +21,7 @@ class SYSubscribeController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.hidesBottomBarWhenPushed = true
         navigationItem.largeTitleDisplayMode = .never
         view.backgroundColor = FCStyle.background
         self.title = NSLocalizedString("Upgrade", comment: "")

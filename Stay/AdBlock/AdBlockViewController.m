@@ -19,6 +19,7 @@
 #import "ContentFilterManager.h"
 #import "UIColor+Convert.h"
 #import "ImageHelper.h"
+#import "SharedStorageManager.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -201,6 +202,9 @@
 - (void)updateStatus:(ContentFilter *)contentFilter{
     if (contentFilter.active){
         contentFilter.status = 0;
+        if (ContentFilterTypeTag == contentFilter.type){
+            [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
+        }
         [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
         [self.activatedSource removeObject:contentFilter];
         [self.stoppedSource addObject:contentFilter];
@@ -213,6 +217,9 @@
     }
     else{
         contentFilter.status = 1;
+        if (ContentFilterTypeTag == contentFilter.type){
+            [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
+        }
         [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
         [self.stoppedSource removeObject:contentFilter];
         [self.activatedSource addObject:contentFilter];

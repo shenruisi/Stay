@@ -189,6 +189,15 @@
         for (ContentBlockerRule *rule in contentBlockerRules){
             [jsonRules addObject:[rule toDictionary]];
         }
+       
+        [jsonRules addObject:@{
+            @"trigger" : @{
+                @"url-filter" : @"webkit.svg"
+            },
+            @"action" : @{
+                @"type" : @"block"
+            }
+        }];
         
         NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error] encoding:NSUTF8StringEncoding];
         
@@ -207,6 +216,7 @@
             }
             return;
         }
+        
         [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
             if (completion){
                 completion(error);

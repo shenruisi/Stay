@@ -8,10 +8,12 @@
 #import "FCViewController.h"
 #import "FCStyle.h"
 #import "FCConfig.h"
+#import "ImageHelper.h"
 
 @interface FCViewController ()<UINavigationBarDelegate>
 
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
+@property (nonatomic, strong) UIBarButtonItem *backItem;
 @end
 
 @implementation FCViewController
@@ -19,6 +21,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if (self.navigationController.viewControllers.count > 1){
+        self.navigationItem.leftBarButtonItems = @[self.backItem];
+    }
     
     self.appearance = [[UINavigationBarAppearance alloc] init];
     [self.appearance configureWithTransparentBackground];
@@ -32,6 +37,23 @@
                                              selector:@selector(backgrundColorTypeDidChange:)
                                                  name:@"BackgroundColorDidChange"
                                                object:nil];
+}
+
+- (UIBarButtonItem *)backItem{
+    if (nil == _backItem){
+        _backItem = [[UIBarButtonItem alloc] initWithImage:[ImageHelper sfNamed:@"chevron.backward"
+                                                                           font:FCStyle.headline
+                                                                          color:FCStyle.accent]
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(backAction:)];
+    }
+    
+    return _backItem;
+}
+
+- (void)backAction:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (CAGradientLayer *)gradientLayer{
