@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollEffectHandle:(UIScrollView *)scrollView;
 - (void)searchEffectHanlde:(UIScrollView *)scrollView;
 - (void)searchStartCheck:(UIScrollView *)scrollView;
+- (void)clear;
 @end
 
 NS_ASSUME_NONNULL_END

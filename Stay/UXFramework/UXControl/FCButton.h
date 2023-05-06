@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor *loadingBackgroundColor;
 @property (nonatomic, strong) UIColor *loadingTitleColor;
 @property (nonatomic, strong) UIColor *loadingBorderColor;
+@property (nonatomic, strong) UIColor *loadingViewColor;
 - (void)startLoading;
 - (void)stopLoading;
 @end

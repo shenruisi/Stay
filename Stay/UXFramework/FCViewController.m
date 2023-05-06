@@ -174,6 +174,11 @@
     [[self fcNavigationBar] cancelSearch];
 }
 
+- (void)removeFromParentViewController{
+    [self clear];
+    [super removeFromParentViewController];
+}
+
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"BackgroundColorDidChange"
