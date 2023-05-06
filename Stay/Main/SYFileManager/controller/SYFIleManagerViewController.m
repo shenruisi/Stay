@@ -651,7 +651,7 @@ UIDocumentPickerDelegate
                 cell.contentView.backgroundColor =  [UIColor clearColor];
                 cell.backgroundColor = [UIColor clearColor];
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 71, 27, 20)];
-                [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
+                [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:22] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
                 [cell.contentView addSubview:imageView];
 

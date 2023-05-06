@@ -8,6 +8,7 @@
 #import "DownloadScriptModelViewController.h"
 #import "FCStyle.h"
 #import "UIImageView+WebCache.h"
+#import "DefaultIcon.h"
 
 @interface DownloadScriptModelViewController()
 
@@ -62,11 +63,11 @@
 
 - (UIImageView *)iconView {
     if(nil == _iconView) {
-        _iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+        _iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 48, 48)];
         if(self.iconUrl.length > 0) {
             [_iconView sd_setImageWithURL:[NSURL URLWithString: self.iconUrl]];
         } else {
-            
+            [_iconView setImage:[DefaultIcon iconWithTitle:self.originMainText size:CGSizeMake(48, 48)]];
         }
         _iconView.contentMode =  UIViewContentModeScaleAspectFit;
         _iconView.clipsToBounds = YES;
@@ -84,6 +85,7 @@
         _imageBox.layer.cornerRadius = 8;
         _imageBox.layer.borderWidth = 1;
         _imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+        _imageBox.clipsToBounds = YES;
         _imageBox.centerX =  self.view.frame.size.width / 2;
         [self.view addSubview:_imageBox];
     }

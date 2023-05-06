@@ -69,37 +69,29 @@
     [self.titleConstraints removeAllObjects];
     [self.subTitleConstraints removeAllObjects];
 
-    [self.iconImageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
-    if(dic.active == 0 && dic.icon != NULL && dic.icon.length > 0) {
+    
+    if(dic.icon.length > 0) {
+        [self.iconImageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
+    } else {
+        [self.iconImageView setImage:[DefaultIcon iconWithTitle:dic.name size:CGSizeMake(48, 48)]];
+    }
+    
+    
+    if(dic.active == 0) {
         self.iconImageView.image = [self makeGrayImage:self.iconImageView.image];
     }
     
-    if (dic.icon != NULL && dic.icon.length > 0) {
-        self.imageBox.hidden = false;
-        [self.titleConstraints addObjectsFromArray:@[
-                    [self.headerLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
-                    [self.headerLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
-        ]];
-        
-        [self.subTitleConstraints addObjectsFromArray:@[
-            [self.subLabel.topAnchor constraintEqualToAnchor:self.headerLabel.bottomAnchor constant:5],
-            [self.subLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
-        ]];
-        
+    [self.titleConstraints addObjectsFromArray:@[
+                [self.headerLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
+                [self.headerLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
+    ]];
+    
+    [self.subTitleConstraints addObjectsFromArray:@[
+        [self.subLabel.topAnchor constraintEqualToAnchor:self.headerLabel.bottomAnchor constant:5],
+        [self.subLabel.leftAnchor constraintEqualToAnchor:self.imageBox.rightAnchor constant:10],
+    ]];
+    
 
-    } else {
-        self.imageBox.hidden = true;
-        [self.titleConstraints addObjectsFromArray:@[
-            [self.headerLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:15],
-            [self.headerLabel.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
-        
-        ]];
-        
-        [self.subTitleConstraints addObjectsFromArray:@[
-            [self.subLabel.topAnchor constraintEqualToAnchor:self.headerLabel.bottomAnchor constant:5],
-            [self.subLabel.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
-        ]];
-    }
     
     self.headerLabel.textColor = dic.active == 0 ? [FCStyle.fcBlack colorWithAlphaComponent:0.5] : FCStyle.fcBlack;
     self.headerLabel.text = dic.name;
@@ -282,6 +274,7 @@
         _imageBox.layer.borderWidth = 1;
         _imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
         _imageBox.translatesAutoresizingMaskIntoConstraints = NO;
+        _imageBox.clipsToBounds = YES;
         [self.fcContentView addSubview:_imageBox];
         [NSLayoutConstraint activateConstraints:@[
             [_imageBox.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
@@ -304,8 +297,8 @@
         [NSLayoutConstraint activateConstraints:@[
             [_iconImageView.centerXAnchor constraintEqualToAnchor:self.imageBox.centerXAnchor],
             [_iconImageView.centerYAnchor constraintEqualToAnchor:self.imageBox.centerYAnchor],
-            [_iconImageView.heightAnchor constraintEqualToConstant:26],
-            [_iconImageView.widthAnchor constraintEqualToConstant:26]
+            [_iconImageView.heightAnchor constraintEqualToConstant:48],
+            [_iconImageView.widthAnchor constraintEqualToConstant:48]
         ]];
     }
     
