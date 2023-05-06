@@ -14,6 +14,8 @@
 #import <objc/runtime.h>
 #import "ImageHelper.h"
 #import "QuickAccess.h"
+#import "DefaultIcon.h"
+
 @interface HomeDetailCell()
 
 @property (nonatomic, strong) UIView *imageBox;

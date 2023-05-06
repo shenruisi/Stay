@@ -105,6 +105,8 @@
 		5805D9592A04A54000F46709 /* congratulations.json in Resources */ = {isa = PBXBuildFile; fileRef = 5805D9572A04A54000F46709 /* congratulations.json */; };
 		5805D95A2A04E28C00F46709 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
 		5805D95B2A04E28D00F46709 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
+		5805D95E2A0632B800F46709 /* DefaultIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D95D2A0632B800F46709 /* DefaultIcon.m */; };
+		5805D95F2A0632B800F46709 /* DefaultIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D95D2A0632B800F46709 /* DefaultIcon.m */; };
 		581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811063429E695FF0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811063329E695FF0073E9CF /* blockerList.json */; };
 		5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */; };
@@ -897,6 +899,8 @@
 		5805D9512A037FCF00F46709 /* InstallUserscriptModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstallUserscriptModalViewController.m; sourceTree = "<group>"; };
 		5805D9542A04A3FE00F46709 /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		5805D9572A04A54000F46709 /* congratulations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = congratulations.json; sourceTree = "<group>"; };
+		5805D95C2A0632B800F46709 /* DefaultIcon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DefaultIcon.h; sourceTree = "<group>"; };
+		5805D95D2A0632B800F46709 /* DefaultIcon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DefaultIcon.m; sourceTree = "<group>"; };
 		5811063129E695FF0073E9CF /* Stay Content Basic.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Basic.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5811063329E695FF0073E9CF /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
 		5811063529E695FF0073E9CF /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
@@ -2341,6 +2345,8 @@
 				58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */,
 				58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */,
 				58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */,
+				5805D95C2A0632B800F46709 /* DefaultIcon.h */,
+				5805D95D2A0632B800F46709 /* DefaultIcon.m */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -3746,6 +3752,7 @@
 				3C949B96297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
+				5805D95E2A0632B800F46709 /* DefaultIcon.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
 				84DB5FED29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
@@ -4095,6 +4102,7 @@
 				5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
 				8481963629EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
+				5805D95F2A0632B800F46709 /* DefaultIcon.m in Sources */,
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				84C2B408288D955F002A0C1B /* FirstFlashView.m in Sources */,
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
