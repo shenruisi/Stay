@@ -121,30 +121,20 @@
 @property (nonatomic, strong) _MenuButton *linkButton;
 @property (nonatomic, strong) _MenuButton *greasyForkButton;
 @property (nonatomic, strong) _MenuButton *fileButton;
-@property (nonatomic, strong) UILabel *titleLabel;
 @end
 
 @implementation ImportMenuModalViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self titleLabel];
+    self.hideNavigationBar = NO;
+    self.title = NSLocalizedString(@"settings.addScriptTitle", @"");
     [self writeButton];
     [self linkButton];
     [self greasyForkButton];
     [self fileButton];
 }
 
-- (UILabel *)titleLabel {
-    if(nil == _titleLabel) {
-        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 23, 200, 21)];
-        _titleLabel.font = FCStyle.headlineBold;
-        _titleLabel.textColor = FCStyle.fcBlack;
-        _titleLabel.text = NSLocalizedString(@"settings.addScriptTitle", @"");
-        [self.view addSubview:_titleLabel];
-    }
-    return _titleLabel;
-}
 
 - (_MenuButton *)writeButton{
     if (nil == _writeButton){
@@ -210,4 +200,6 @@
     return CGSizeMake(MIN(kScreenWidth - 30, 450), 410);
 }
 
+- (void)clear{
+}
 @end

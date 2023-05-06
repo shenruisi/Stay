@@ -126,6 +126,8 @@ UIDocumentPickerDelegate
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, strong) NSMutableArray *videoArray;
 @property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
+@property (nonatomic, assign) Boolean searchStatus;
+
 @end
 
 @implementation SYFIleManagerViewController
@@ -136,10 +138,14 @@ UIDocumentPickerDelegate
     self.navigationItem.standardAppearance = self.appearance;
     self.navigationItem.scrollEdgeAppearance = self.appearance;
     self.enableTabItem = YES;
+    self.enableSearchTabItem = YES;
+    self.searchUpdating = self;
     self.navigationTabItem.leftTabButtonItems = @[self.downloadBtn, self.downloadingBtn];
     self.leftTitle  = NSLocalizedString(@"Downloader","Downloader");
 
-
+    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+    self.searchViewController = search;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(buildFolder:)
                                                  name:@"app.stay.notification.SYFolderChangeNotification"
@@ -211,6 +217,28 @@ UIDocumentPickerDelegate
     return;
 }
 #pragma mark -searchBarDelegate
+
+
+- (void)didBeganSearch {
+    self.searchStatus = YES;
+    [self.searchData removeAllObjects];
+    [self.searchTableView reloadData];
+}
+
+- (void)searchTextDidChange:(NSString *)text {
+    [self.searchData removeAllObjects];
+    if(text.length > 0) {
+        [self.searchData addObjectsFromArray:[[DataManager shareManager] selectDownloadResourceByTitle:text]];
+    }
+    [self.searchTableView reloadData];
+}
+
+- (void)didEndSearch {
+    self.searchStatus = NO;
+    [self.searchData removeAllObjects];
+    [self.searchTableView reloadData];
+}
+
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 //    [searchBar resignFirstResponder];
@@ -345,27 +373,30 @@ UIDocumentPickerDelegate
         if(self.selectedIdx == 1) {
             return 150;
         } else {
+            if(indexPath.row == 0) {
+                return 105;
+            }
             return 61.5;
         }
     }
 }
 
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//    return 1;
+//}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
-        return 0.1f;
-    } else {
-        if(self.selectedIdx == 1) {
-            return 0.1f;
-        } else {
-            return 38;
-        }
-    }
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//    if([tableView isEqual:self.searchTableView]) {
+//        return 0.1f;
+//    } else {
+//        if(self.selectedIdx == 1) {
+//            return 0.1f;
+//        } else {
+//            return 38;
+//        }
+//    }
+//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if([tableView isEqual:self.searchTableView]) {
@@ -408,7 +439,6 @@ UIDocumentPickerDelegate
 
                     if (FCDeviceTypeMac == [DeviceHelper type]) {
 #ifdef FC_MAC
-
                         NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
                         NSData *loadPath =[groupUserDefaults objectForKey:@"bookmark"];
                         NSURL *loadUrl = [NSURL URLByResolvingBookmarkData:loadPath options:0 relativeToURL:nil bookmarkDataIsStale:nil error:nil];
@@ -430,41 +460,6 @@ UIDocumentPickerDelegate
         }
     }
 }
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
-        return nil;
-    } else {
-        
-        if(self.selectedIdx == 1) {
-            return nil;
-        }
-        
-        UIView *headrView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 46)];
-//        headrView.backgroundColor = FCStyle.secondaryBackground;
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 20, 100, 18)];
-        label.font = FCStyle.headlineBold;
-        label.text = NSLocalizedString(@"Folders", @"");
-        
-        [headrView addSubview:label];
-        
-        
-        UIImageView *addImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-        [addImage setImage:[ImageHelper sfNamed:@"plus.circle" font:[UIFont systemFontOfSize:17] color:FCStyle.accent]];
-        
-        addImage.centerY = label.centerY;
-        addImage.right = self.view.width - 17;
-        [headrView addSubview:addImage];
-
-        UITapGestureRecognizer *tapGestureRecognizer1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addFolder:)];
-        [addImage addGestureRecognizer:tapGestureRecognizer1];
-        //让UIImageView和它的父类开启用户交互属性
-        [addImage setUserInteractionEnabled:YES];
-        
-        return headrView;
-    }
-}
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([tableView isEqual:self.searchTableView]) {
@@ -650,18 +645,19 @@ UIDocumentPickerDelegate
             return cell;
         } else {
             if(indexPath.row == 0) {
+          
                 NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
                 UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DownloadcellID1"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.contentView.backgroundColor =  [UIColor clearColor];
                 cell.backgroundColor = [UIColor clearColor];
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 27, 20)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 71, 27, 20)];
                 [imageView setImage:[ImageHelper sfNamed:@"folder.fill" font:[UIFont systemFontOfSize:26] color: RGB(146, 209, 243)]];
                 imageView.contentMode = UIViewContentModeBottom;
                 [cell.contentView addSubview:imageView];
 
                 
-                UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, self.self.view.width - 100, 18)];
+                UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 71, self.self.view.width - 100, 18)];
                 name.text = NSLocalizedString(@"Undefined","");
                 if (dic != NULL) {
                     name.text = dic[@"fileName"];
@@ -717,6 +713,28 @@ UIDocumentPickerDelegate
                 line.bottom =  imageView.bottom + 21;
                 line.left = 10;
                 [cell.contentView addSubview:line];
+                
+                
+                UIButton *addDocBtn =  [[UIButton alloc] init];
+                [addDocBtn setImage:[ImageHelper sfNamed:@"folder.badge.plus" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
+                [addDocBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
+                [addDocBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+                addDocBtn.titleLabel.font = FCStyle.footnoteBold;
+        //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
+//                addDocBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
+                addDocBtn.layer.cornerRadius = 10;
+                addDocBtn.layer.borderWidth = 1;
+                addDocBtn.layer.borderColor = FCStyle.borderColor.CGColor;
+                addDocBtn.translatesAutoresizingMaskIntoConstraints = NO;
+
+                [addDocBtn addTarget:self action:@selector(addFolder:) forControlEvents:UIControlEventTouchUpInside];
+                [cell.contentView addSubview:addDocBtn];
+                [NSLayoutConstraint activateConstraints:@[
+                    [addDocBtn.topAnchor constraintEqualToAnchor:cell.contentView.topAnchor constant:14],
+                    [addDocBtn.heightAnchor constraintEqualToConstant:35],
+                    [addDocBtn.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:15],
+                ]];
+                
                 return  cell;
             } else {
                 DownloadFileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadcellID"];
@@ -875,7 +893,7 @@ UIDocumentPickerDelegate
     }
 }
 
--(void)addFolder:(UITapGestureRecognizer *)tap{
+-(void)addFolder:(UIButton *)tap{
     self.folderSlideController = nil;
     [self.folderSlideController show];
 }
@@ -1096,12 +1114,22 @@ UIDocumentPickerDelegate
 
 - (UITableView *)searchTableView {
     if (_searchTableView == nil) {
-        _searchTableView = [[UITableView alloc]initWithFrame:self.searchController.view.bounds style:UITableViewStylePlain];
+        _searchTableView = [[UITableView alloc]init];
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _searchTableView.sectionHeaderTopPadding = 0;
-        _searchTableView.backgroundColor = FCStyle.background;
+        
+        _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.searchViewController.view addSubview:self.searchTableView];
+
+        _searchTableView.backgroundColor =  FCStyle.accentGradient[1];
+        [NSLayoutConstraint activateConstraints:@[
+            [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
+            [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
+            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
     }
     return _searchTableView;
 }
@@ -1134,7 +1162,7 @@ UIDocumentPickerDelegate
 - (FCTabButtonItem *)downloadBtn {
     if(_downloadBtn == nil) {
         _downloadBtn = [[FCTabButtonItem alloc] init];
-        _downloadBtn.title = NSLocalizedString(@"Downloaded","Downloaded");
+        _downloadBtn.title = NSLocalizedString(@"Folders","");
     }
     
     return  _downloadBtn;
