@@ -15,6 +15,8 @@
 
 static NSUInteger MAX_RULE_COUNT = 50000;
 
+NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
+
 @interface ContentFilter(){
 }
 

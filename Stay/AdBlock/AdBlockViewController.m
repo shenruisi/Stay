@@ -87,6 +87,8 @@
 #else
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 #endif
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
 }
 
 - (void)onBecomeActive:(NSNotification *)note{
@@ -136,6 +138,11 @@
         });
     });
 }
+
+- (void)contentFilterDidUpdateHandler:(NSNotification *)note{
+    [self.tableView reloadData];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];

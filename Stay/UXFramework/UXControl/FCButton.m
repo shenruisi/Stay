@@ -67,10 +67,16 @@
     
 }
 
+- (void)setLoadingViewColor:(UIColor *)loadingViewColor{
+    if (_loadingView){
+        _loadingView.color = loadingViewColor;
+    }
+}
+
 - (UIActivityIndicatorView *)loadingView{
     if (nil == _loadingView){
         _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-        _loadingView.color = FCStyle.fcWhite;
+        _loadingView.color = self.loadingViewColor ? self.loadingViewColor : FCStyle.fcWhite;
         _loadingView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_loadingView];
         

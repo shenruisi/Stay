@@ -35,6 +35,12 @@
     }
     self.title = self.contentFilter.title;
     [self editorView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
+}
+
+- (void)contentFilterDidUpdateHandler:(NSNotification *)note{
+    self.title = self.contentFilter.title;
 }
 
 
@@ -51,7 +57,9 @@
 }
 
 - (void)refreshRules{
-    [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
+    });
 }
 
 
@@ -160,6 +168,12 @@
             });
         }];
     }
+}
+
+- (void)clear{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:ContentFilterDidUpdateNotification
+                                                  object:nil];
 }
 
 @end

@@ -168,6 +168,7 @@
         _saveButton.loadingBackgroundColor = UIColor.clearColor;
         _saveButton.loadingTitleColor = FCStyle.fcSeparator;
         _saveButton.loadingBorderColor = FCStyle.fcSeparator;
+        _saveButton.loadingViewColor = FCStyle.fcSecondaryBlack;
         _saveButton.backgroundColor = UIColor.clearColor;
         _saveButton.layer.cornerRadius = 10;
         _saveButton.layer.borderColor = FCStyle.accent.CGColor;
@@ -199,8 +200,23 @@
         [self.contentFilter checkUpdatingIfNeeded:YES completion:^(NSError * _Nonnull error) {
             [button stopLoading];
             [weakSelf.navigationController.slideController stopLoading];
-            if (nil == error){
+            if (nil == error || (error && [error.domain isEqualToString:@"Content Filter Error"])){
                 [[DataManager shareManager] updateContentFilterDownloadUrl:weakSelf.contentFilter.downloadUrl uuid:weakSelf.contentFilter.uuid];
+                AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
+                [cer refreshRules];
+                if (error){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
+                                                                                       message:[error localizedDescription]
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                          style:UIAlertActionStyleDefault
+                                                                        handler:^(UIAlertAction * _Nonnull action) {
+                            }];
+                        [alert addAction:confirm];
+                        [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
+                    });
+                }
             }
             else{
                 self.contentFilter.downloadUrl = originDownloadUrl;
@@ -227,6 +243,8 @@
         self.title = self.titleElement.inputEntity.text;
         [[DataManager shareManager] updateContentFilterTitle:self.contentFilter.title uuid:self.contentFilter.uuid];
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidUpdateNotification object:nil];
     
 }
 
@@ -275,10 +293,12 @@
             self.titleElement.inputEntity.text = self.contentFilter.title;
             self.linkElement.inputEntity.text = self.contentFilter.downloadUrl;
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.title = self.contentFilter.title;
                 [self.navigationController.slideController stopLoading];
                 AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
                 [cer refreshRules];
                 [self.tableView reloadData];
+                [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidUpdateNotification object:nil];
             });
         }];
         
