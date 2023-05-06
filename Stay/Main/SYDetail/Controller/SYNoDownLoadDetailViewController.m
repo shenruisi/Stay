@@ -912,6 +912,7 @@
     if (nil == _rightIcon){
         _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Get", @"")  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
         
+        _rightIcon.tintColor = FCStyle.accent;
     }
     return _rightIcon;
 }

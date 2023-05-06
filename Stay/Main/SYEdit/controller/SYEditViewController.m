@@ -36,6 +36,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.hidesBottomBarWhenPushed = YES;
+
     UIColor *textColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
             if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
                 return [UIColor blackColor];
@@ -44,7 +46,6 @@
                 return [UIColor whiteColor];
             }
         }];
-    self.view.backgroundColor = FCStyle.background;
     UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0.0,0.0,200,44.0)];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setNumberOfLines:0];
@@ -77,12 +78,11 @@
     self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {
         if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
-            self.rightBarButtonItems = @[[self rightIcon]];
+            self.navigationItem.rightBarButtonItems = @[[self rightIcon]];
         }
         else{
-            self.navigationItem.rightBarButtonItem = [self rightIcon];
+            self.navigationItem.rightBarButtonItems = @[[self rightIcon]];
         }
-        
     }
     
 
@@ -248,8 +248,10 @@
     if (nil == _rightIcon){
         if(self.isEdit) {
             _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.save","save") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+            _rightIcon.tintColor = FCStyle.accent;
         } else {
             _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings.create","Create") style:UIBarButtonItemStylePlain target:self action:@selector(saveBtnClick:)];
+            _rightIcon.tintColor = FCStyle.accent;
         }
     }
     return _rightIcon;

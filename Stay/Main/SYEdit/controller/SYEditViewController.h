@@ -8,9 +8,10 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 #import "SYSecondaryViewController.h"
+#import "FCViewController.h"
 
 
-@interface SYEditViewController : SYSecondaryViewController
+@interface SYEditViewController : FCViewController
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
