@@ -1709,8 +1709,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-//        _tableView.backgroundColor = FCStyle.background;
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
 

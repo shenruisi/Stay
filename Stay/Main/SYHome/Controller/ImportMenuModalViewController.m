@@ -138,7 +138,7 @@
 
 - (_MenuButton *)writeButton{
     if (nil == _writeButton){
-        _writeButton = [[_MenuButton alloc] initWithFrame:CGRectMake(15, 62, self.view.frame.size.width - 30, 70)];
+        _writeButton = [[_MenuButton alloc] initWithFrame:CGRectMake(15, 12, self.view.frame.size.width - 30, 70)];
         [_writeButton setTitle:NSLocalizedString(@"settings.addScript", @"") subTitle:NSLocalizedString(@"settings.addScriptDesc", @"")];
         [_writeButton setSFSymbol:@"doc.badge.plus"];
         [_writeButton addTarget:self action:@selector(writeAction)];

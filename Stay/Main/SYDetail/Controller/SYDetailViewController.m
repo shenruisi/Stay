@@ -234,7 +234,7 @@
           imageBox.layer.cornerRadius = 30;
           imageBox.layer.borderWidth = 1;
           imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-          
+          imageBox.backgroundColor = FCStyle.fcWhite;
           UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
       //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
           [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
