@@ -1,20 +1,37 @@
 <template>
   <div class="stay-popup-warpper" :class="isMobile?'mobile-bottom':'mac-bottom'">
-    <!-- <div class="hide-temp"></div> -->
-    <Header>{{t(selectedTab.name)}}</Header>
-    <div class="tab-content">
-      <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
+    <Header :titleInfo="t(selectedTab.name)">
+      <!-- MatchedScript -->
+      <!-- adblock -->
+      <div class="tab-wrapper"  v-if="selectedTab.id==1 || selectedTab.id==4">
+        <div
+          class="tab"
+          @click="tabActionClick('tab_1',selectedTab.name)"
+          :class="{ active: showTab == 'tab_1' }"
+        >
+          <div class="tab-text">{{ selectedTab.id==1 ? t("state_actived") :  t("web_tag")}}</div>
+        </div>
+        <div
+          class="tab"
+          @click="tabActionClick('tab_2', selectedTab.name)"
+          :class="{ active: showTab == 'tab_2' }"
+        >
+          <div class="tab-text">{{ selectedTab.id==1 ? t("state_stopped") :  t("tag_rules")}}</div>
+        </div>
+      </div>
+    </Header>
+    <div class="tab-content" :style="{paddingTop: (selectedTab.id == 1 || selectedTab.id == 4)?'32px':'0'}">
+      <MatchedScript v-if="selectedTab.id==1" ref="matchedScriptRef" :currentTab="showTab"></MatchedScript>
       <template v-if="selectedTab.id==2 || selectedTab.id==3 || selectedTab.id==4">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
-          <AdBlock v-if="selectedTab.id==4"></AdBlock>
+          <AdBlock v-if="selectedTab.id==4" ref="adBlockRef" :currentTab="showTab"></AdBlock>
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
         <UpgradePro :tabId="selectedTab.id" v-else><a class="what-it" :href="selectedTab.id == 2?'https://www.craft.do/s/PHKJvkZL92BTep':'https://www.craft.do/s/sYLNHtYc0n2rrV'" target="_blank">{{ selectedTab.id == 2 ? t('what_darkmode') : t('what_downloader') }}</a></UpgradePro>
       </template>
-      
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>
   </div>
@@ -60,8 +77,17 @@ export default {
       darkmodeToggleStatus: store.state.darkmodeToggleStatus,
       siteEnabled: store.state.siteEnabled,
       longPressStatus: store.state.longPressStatus,
-      isMobile: isMobile()
+      isMobile: isMobile(),
+      showTab:  store.state.tabAction[store.state.selectedTab.name] || 'tab_1'
     })
+
+    const tabActionClick = (tabId, menuName) => {
+      state.showTab = tabId;
+      let tabAction = store.state.tabAction;
+      tabAction[menuName] = tabId;
+
+      store.commit('setTabAction', tabAction);
+    }
     
     const setTabName = (selectedTab) => {
       state.selectedTab = selectedTab;
@@ -108,7 +134,8 @@ export default {
       ...toRefs(state),
       t,
       tm,
-      setTabName
+      setTabName,
+      tabActionClick
     };
   }
 };
@@ -129,10 +156,41 @@ export default {
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  
-  .hide-temp{
-    height: 38px;
+  .tab-wrapper{
     width: 100%;
+    height: 32px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    
+    .tab{
+      padding: 0 10px;
+      text-align: center;
+      height: 100%;
+      cursor: pointer;
+      position: relative;
+      .tab-text{
+        height: 100%;
+        font-size: 16px;
+        position: relative;
+      }
+      &.active{
+        // background-color: var(--dm-bg);
+        color: var(--s-main);
+        // border-radius: 8px;
+        .tab-text::after{
+          content: '';
+          width: 40px;
+          height: 2px;
+          background-color: var(--s-main);
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+    }
+    
   }
   .tab-content{
     width: 100%;
@@ -141,7 +199,7 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: var(--dm-bg);
+    // background-color: var(--dm-bg);
     flex: 1;
     // padding-bottom: 52px;
     a.what-it{
@@ -160,7 +218,7 @@ export default {
     padding-bottom: 60px;
   }
   .mobile-bottom{
-    padding-bottom: 80px;
+    padding-bottom: 76px;
   }
 }
 </style>

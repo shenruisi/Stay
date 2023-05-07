@@ -1,22 +1,6 @@
 <template>
   <div class="popup-matched-wrapper">
     <div class="matched-script-box" v-if="scriptStateList && scriptStateList.length">
-      <div class="tab-wrapper">
-        <div
-          class="tab activated"
-          @click="tabACtion('activated')"
-          :class="{ active: showTab == 'activated' }"
-        >
-          <div class="tab-text">{{ t("state_actived") }}</div>
-        </div>
-        <div
-          class="tab stopped"
-          @click="tabACtion('stopped')"
-          :class="{ active: showTab == 'stopped' }"
-        >
-          <div class="tab-text">{{ t("state_stopped") }}</div>
-        </div>
-      </div>
       <div class="matched-script-content">
         <template  v-if="showTab == 'activated'">
           <ScriptItem v-for="(item, i) in activatedScriptList" :key="i" :tabState="showTab" :scriptItem="item" 
@@ -45,7 +29,7 @@
 </template>
 
 <script>
-import { reactive, inject, toRefs } from 'vue'
+import { reactive, inject, toRefs, watch } from 'vue'
 import ScriptItem from './ScriptItem.vue';
 import { useI18n } from 'vue-i18n';
 import RegisterMenuItem from './RegisterMenuItem.vue'
@@ -55,13 +39,14 @@ export default {
     ScriptItem,
     RegisterMenuItem
   },
+  props: ['currentTab'],
   setup (props, {emit, expose}) {
     const { t, tm } = useI18n();
     const global = inject('global');
     const store = global.store;
     const state = reactive({
       browserUrl: store.state.browserUrl,
-      showTab: 'activated',
+      showTab: props.currentTab && 'tab_1'== props.currentTab ? 'activated':'stopped',
       scriptStateList: [],
       activatedScriptList: [],
       stoppedScriptList: [],
@@ -70,10 +55,19 @@ export default {
       registerMenuMap:{}
     });
 
-    const tabACtion = (tabName) => {
-      state.showTab = tabName;
-      spliteActivatedScript();
-    }
+    watch(
+      props,
+      (newProps) => {
+        // 接收到的props的值
+        let showTab = props.currentTab && 'tab_1'== newProps.currentTab ? 'activated':'stopped';
+        if(state.showTab != showTab){
+          state.showTab = showTab;
+          spliteActivatedScript();
+        }
+
+      },
+      { immediate: true, deep: true }
+    );
 
     const spliteActivatedScript = () => {
       state.stoppedScriptList = state.stoppedScriptList.filter(item=>{
@@ -226,7 +220,6 @@ export default {
       ...toRefs(state),
       t,
       tm,
-      tabACtion,
       handleState,
       handleWebsite,
       handleWebsiteDisabled,
@@ -249,39 +242,9 @@ export default {
     flex:1;
     .matched-script-box{
       width: 100%;
-      .tab-wrapper {
-        height: 30px;
-        width: 240px;
-        margin: 10px auto 0px auto;
-        border-radius: 8px;
-        background-color: var(--dm-bg-f7);
-        display: flex;
-        justify-content: center;
-        justify-items: center;
-        align-items: center;
-        .tab {
-          width: 50%;
-          height: 24px;
-          line-height: 24px;
-          font-size: 13px;
-          font-weight: 700;
-          color: var(--dm-font);
-          padding: 0 8px;
-          display: flex;
-          justify-content: center;
-          justify-items: center;
-          align-items: center;
-          .tab-text {
-            width: 100%;
-            cursor: pointer;
-          }
-          &.active .tab-text {
-            width: 100%;
-            background-color: var(--dm-bg);
-            color: var(--s-main);
-            border-radius: 8px;
-          }
-        }
+      .matched-script-content{
+        width: 100%;
+        padding: 10px 10px 0 10px;
       }
     }
     .null-data{

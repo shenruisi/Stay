@@ -162,9 +162,13 @@ body.dialog-open {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: var(--dm-bg);
   overflow-y: scroll;
   overflow-x: hidden;
+  // background-color: var(--dm-bg);
+  background: -webkit-linear-gradient(#F8F8FE, #EDE8F3); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#F8F8FE, #EDE8F3); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#F8F8FE, #EDE8F3); /* Firefox 3.6 - 15 */
+  background: linear-gradient(#F8F8FE, #EDE8F3); /* 标准的语法（必须放在最后） */
 }
 
 

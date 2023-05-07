@@ -1,11 +1,18 @@
 <template>
   <div class="popup-adblock-wrapper">
-    <div class="adblock-manage">
-      <div class="manage-info">
-        <div class="title">{{  t('taging_manage_title') }}</div>
-        <div class="block-status" :class="blockStatus=='on'?'block-on':'block-off'">{{ blockStatusText }}</div>
+    <div class="adblock-manage-box">
+
+      <div class="adblock-manage">
+        <div class="manage-info">
+          <div class="title">{{  t('taging_manage_title') }}</div>
+          <div class="block-status" :class="blockStatus=='on'?'block-on':'block-off'">{{ blockStatusText }}</div>
+        </div>
+        <div class="manage-btn" @click="tagToManageClick">{{  t('taging_manage_btn') }}</div>
       </div>
-      <div class="manage-btn" @click="tagToManageClick">{{  t('taging_manage_btn') }}</div>
+      <div class="blocker-enabled">
+        <div class="blocker-info">{{  t('blocker_info') }}</div>
+        <div class="enable-btn" @click="tagToEnableClick">{{  t('blocker_enable') }}</div>
+      </div>
     </div>
     <div class="taging-status" @click="tagingStatusClick">{{  t('taging_status_btn') }}</div>
     <div class="three-finger-switch"  v-if="isMobileOrIpad">
@@ -15,27 +22,44 @@
   </div>
 </template>
 <script>
-import { reactive, inject, toRefs } from 'vue'
+import { reactive, inject, toRefs,watch } from 'vue'
 import { isMobileOrIpad } from '../utils/util'
 import { useI18n } from 'vue-i18n';
     
     
 export default {
   name: 'AdBlockComp',
+  props: ['currentTab'],
   setup (props, {emit, expose}) {
     const global = inject('global');
     const store = global.store;
     const { t, tm } = useI18n();
     const state = reactive({
       scriptConsole: [],
+      browserUrl: '',
+      blockerEnabled: store.state.blockerEnabled,
       blockStatus: store.state.blockStatus,
       blockStatusText: store.state.blockStatus == 'on' ? t('state_actived'):t('state_stopped'),
       isMobileOrIpad: isMobileOrIpad(),
       tagingStatus: '',
       threeFingerTapStatus: store.state.threeFingerTapStatus,
       threeFingerTapSwitch: store.state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off'),
+      showTab: props.currentTab && 'tab_1'== props.currentTab ? 'webTag':'tagRules',
     });
 
+    watch(
+      props,
+      (newProps) => {
+        // 接收到的props的值
+        let showTab = props.currentTab && 'tab_1'== props.currentTab ? 'webTag':'tagRules';
+        if(state.showTab != showTab){
+          state.showTab = showTab;
+          // spliteActivatedScript();
+        }
+
+      },
+      { immediate: true, deep: true }
+    );
     const threeFingerSwitchClick = () => {
       // console.log('threeFingerSwitchClick====')
       if(state.threeFingerTapStatus == 'on'){
@@ -44,7 +68,7 @@ export default {
         state.threeFingerTapStatus = 'on';
       }
       state.threeFingerTapSwitch = state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
-      store.commit('setThreeFingerTapStatusAsync', state.threeFingerTapStatus);
+      store.commit('setThreeFingerTapStatus', state.threeFingerTapStatus);
 
       global.browser.tabs.query({
         active: true,
@@ -61,28 +85,40 @@ export default {
     }
 
     const fetchTagingStatus = () => {
-      // global.browser.runtime.sendMessage({ from: 'popup', operate: 'getMakeupTagStatus'}, (response) => {
-      //   console.log('getMakeupTagStatus====',response);
-      //   let makeupTagStatus = response.makeupTagStatus ? response.makeupTagStatus : 'on';
-      //   state.tagingStatus = makeupTagStatus;
-      // })
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
+      global.browser.runtime.sendMessage({ from: 'content_script', operate: 'getThreeFingerTapStatus'}, (response) => {
         console.log('getThreeFingerTapStatus====',response);
         let threeFingerTapStatus = response.threeFingerTapStatus ? response.threeFingerTapStatus : 'on';
         state.threeFingerTapStatus = threeFingerTapStatus;
         state.threeFingerTapSwitch = threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
-        store.commit('setThreeFingerTapStatusAsync', state.blockStatus);
+        store.commit('setThreeFingerTapStatus', state.blockStatus);
       })
-      global.browser.runtime.sendMessage({ from: 'popup', operate: 'getBlockStatus'}, (response) => {
-        console.log('getBlockStatus====',response);
-        let blockStatus = response&&response.blockStatus ? response.blockStatus : 'on';
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchTagStatus'}, (response) => {
+        console.log('fetchTagStatus====',response);
+        // tag_status
+        // enabled
+        let blockStatus = response&&response.tag_status ? response.tag_status : 'on';
         state.blockStatus = blockStatus;
-        store.commit('setBlockStatusAsync', state.blockStatus);
         state.blockStatusText = blockStatus == 'on' ? t('state_actived'):t('state_stopped');
+        state.blockerEnabled = response.enable;
+        store.commit('setBlockStatus', state.blockStatus);
+        store.commit('setBlockerEnable', state.blockerEnabled);
       })
     }
 
+    const fetchWebTagRules = () => {
+      global.browser.tabs.getSelected(null, (tab) => {
+        state.browserUrl = tab.url;
+        console.log('state.browserUrl----tab-----', state.browserUrl);
+        store.commit('setBrowserUrl', tab.url);
+        global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchTagRules', url: state.browserUrl}, (response) => {
+          console.log('fetchTagRules====',response);
+        })
+      })
+      
+    }
+
     fetchTagingStatus();
+    fetchWebTagRules();
 
     const tagingStatusClick = () => {
       global.browser.tabs.query({
@@ -126,65 +162,93 @@ export default {
     width: 100%;
     height: 100%;
     padding: 10px;
-    .adblock-manage{
-      background-color: var(--dm-bg);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    .adblock-manage-box{
       width: 100%;
-      padding: 0 13px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 8px 13px 10px 13px;
       border: 1px solid var(--dm-bd);
       border-radius: 10px;
+      background-color: var(--dm-bg);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       margin-bottom: 15px;
-      margin-top: 15px;
-      height: 70px;
-      .manage-info{
+      margin-top: 5px;
+      .adblock-manage{
+        width: 100%;
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
-        align-items: flex-start;
-        height: 46px;
-        .title{
-          color: var(--dm-font);
-          font-size: 16px;
-          font-weight: 400;
+        align-items: center;
+        padding-bottom: 4px;
+        height: 48px;
+        .manage-info{
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: flex-start;
+          height: 44px;
+          .title{
+            color: var(--dm-font);
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .block-status{
+            font-size: 13px;
+            position: relative;
+            padding-left: 20px;
+            &::after{
+              content: '';
+              position: absolute;
+              left: 0px;
+              width: 10px;
+              height: 10px;
+              top: 50%;
+              transform: translateY(-50%);
+              object-fit: contain;
+              border-radius: 50%;
+            }
+          }
+          .block-on{
+            &::after{
+              background: var(--s-main);
+            }
+          }
+          .block-off{
+            &::after{
+            background: var(--dm-bd);
+            }
+          }
         }
-        .block-status{
+        .manage-btn{
+          width: 90px;
+          height: 25px;
+          line-height: 23px;
+          border-radius: 8px;
+          border: 1px solid var(--s-main);
           font-size: 13px;
-          position: relative;
-          padding-left: 20px;
-          &::after{
-            content: '';
-            position: absolute;
-            left: 0px;
-            width: 10px;
-            height: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            object-fit: contain;
-            border-radius: 50%;
-          }
-        }
-        .block-on{
-          &::after{
-            background: var(--s-main);
-          }
-        }
-        .block-off{
-          &::after{
-          background: var(--dm-bd);
-          }
+          color: var(--s-main);
         }
       }
-      .manage-btn{
-        width: 90px;
-        height: 25px;
-        line-height: 23px;
-        border-radius: 8px;
-        border: 1px solid var(--s-main);
-        font-size: 13px;
-        color: var(--s-main);
+      .blocker-enabled{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .blocker-info{
+          height: 25px;
+          background-color: rgba(182, 31, 224, 0.1);
+          color: var(--s-main);
+          border-radius: 8px;
+          font-size: 13px;
+          padding: 0 8px;
+          line-height: 25px;
+        }
+        .enable-btn{
+          width: 90px;
+          height: 25px;
+          line-height: 23px;
+          border-radius: 8px;
+          border: 1px solid var(--s-main);
+          font-size: 13px;
+          color: var(--s-main);
+        }
       }
     }
     .taging-status{

@@ -1076,6 +1076,28 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 });
             }
         }
+        else if('fetchTagRules' == requestOperate){
+            const url = request.url;
+            console.log('fetchTagRules----request', request)
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchTagRules", url }, function (response) {
+                console.log("fetchTagRules-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
+        else if('deleteTagRule' == requestOperate){
+            const uuid = request.uuid;
+            browser.runtime.sendNativeMessage("application.id", { type: "deleteTagRule", uuid }, function (response) {
+                console.log("deleteTagRule-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
+        else if('fetchTagStatus' == requestOperate){
+            console.log("fetchTagStatus-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchTagStatus" }, function (response) {
+                console.log("fetchTagStatus-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }else if ("content_script" == request.from){
         // console.log("content_script-------request=", request)
@@ -1088,7 +1110,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if("getThreeFingerTapStatus" == request.operate){
             let threeFingerTapStatus = 'on';
             browser.storage.local.get("three_finger_tap_status", (res) => {
-                // console.log("getThreeFingerTapStatus-------three_finger_tap_status--------res=",res)
+                console.log("getThreeFingerTapStatus-------three_finger_tap_status--------res=",res)
                 if(res && res["three_finger_tap_status"]){
                     threeFingerTapStatus = res["three_finger_tap_status"]
                 }
