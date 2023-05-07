@@ -678,8 +678,8 @@ UIDocumentPickerDelegate
                 subTitle.font = FCStyle.footnoteBold;
                 subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
-                subTitle.top = name.bottom;
-                subTitle.left = imageView.right + 10;
+                subTitle.centerY = name.centerY;
+                subTitle.left = name.right + 2;
                 [cell.contentView addSubview:subTitle];
                 
                 
@@ -705,11 +705,12 @@ UIDocumentPickerDelegate
                 setDicBtn.width = setDicBtn.width + 20;
                 setDicBtn.centerY = imageView.centerY;
                 setDicBtn.right = rightIcon.left - 16;
-                
+                setDicBtn.layer.borderWidth = 1;
+                setDicBtn.layer.borderColor = FCStyle.accent.CGColor;
                 [cell.contentView addSubview:setDicBtn];
                 UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0, self.view.width - 10, 0.5)];
                 line.backgroundColor = FCStyle.fcSeparator;
-                line.bottom =  imageView.bottom + 21;
+                line.bottom =  setDicBtn.bottom + 9;
                 line.left = 10;
                 [cell.contentView addSubview:line];
                 
