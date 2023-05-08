@@ -418,8 +418,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
-    
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeScriptStatus:) name:@"changeScriptStatus" object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
 
 #ifndef FC_MAC
@@ -1241,6 +1241,39 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //    cell.contentView.width = self.view.width;
     cell.controller = self;
     cell.scrpit = model;
+    cell.element = model;
+    
+    
+    __weak SYHomeViewController *weakSelf = (SYHomeViewController *)self;
+
+    cell.tapAction = ^(id element) {
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && weakSelf.splitViewController.viewControllers.count >= 2){
+            if (weakSelf.selectedRow != indexPath.row){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:weakSelf.selectedRow inSection:0]];
+                cell.selected = NO;
+            }
+            UserScript *userscript = element;
+            weakSelf.selectedRow = indexPath.row;
+            weakSelf.selectedUUID = userscript.uuid;
+            [[QuickAccess secondaryController] pushViewController:
+             [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
+        }
+        else{
+            if (weakSelf.searchStatus) {
+                SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+                cer.isSearch = false;
+                cer.script = element ;
+                [weakSelf.navigationController pushViewController:cer animated:true];
+            } else {
+                SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+                cer.script = element;
+                cer.isSearch = false;
+                [weakSelf.navigationController pushViewController:cer animated:true];
+            }
+        }
+        
+    };
 
     return cell;
 }
@@ -1262,46 +1295,46 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-        && self.splitViewController.viewControllers.count >= 2){
-        if (self.selectedRow != indexPath.row){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
-            cell.selected = NO;
-        }
-        UserScript *userscript;
-        if(_selectedIdx == 1) {
-            userscript = self.stopDatas[indexPath.row];
-        } else {
-            userscript = self.activeDatas[indexPath.row];
-        }
-        
-        self.selectedRow = indexPath.row;
-        self.selectedUUID = userscript.uuid;
-        [[QuickAccess secondaryController] pushViewController:
-         [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
-    }
-    else{
-        if (self.searchStatus) {
-            UserScript *model = _results[indexPath.row];
-            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-            cer.isSearch = false;
-            cer.script = model;
-            [self.navigationController pushViewController:cer animated:true];
-        } else {
-            UserScript *model;
-            if(_selectedIdx == 1) {
-                model = self.stopDatas[indexPath.row];
-            } else {
-                model = self.activeDatas[indexPath.row];
-            }
-            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-            cer.script = model;
-            cer.isSearch = false;
-            [self.navigationController pushViewController:cer animated:true];
-        }
-    }
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+//        && self.splitViewController.viewControllers.count >= 2){
+//        if (self.selectedRow != indexPath.row){
+//            UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
+//            cell.selected = NO;
+//        }
+//        UserScript *userscript;
+//        if(_selectedIdx == 1) {
+//            userscript = self.stopDatas[indexPath.row];
+//        } else {
+//            userscript = self.activeDatas[indexPath.row];
+//        }
+//
+//        self.selectedRow = indexPath.row;
+//        self.selectedUUID = userscript.uuid;
+//        [[QuickAccess secondaryController] pushViewController:
+//         [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
+//    }
+//    else{
+//        if (self.searchStatus) {
+//            UserScript *model = _results[indexPath.row];
+//            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+//            cer.isSearch = false;
+//            cer.script = model;
+//            [self.navigationController pushViewController:cer animated:true];
+//        } else {
+//            UserScript *model;
+//            if(_selectedIdx == 1) {
+//                model = self.stopDatas[indexPath.row];
+//            } else {
+//                model = self.activeDatas[indexPath.row];
+//            }
+//            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+//            cer.script = model;
+//            cer.isSearch = false;
+//            [self.navigationController pushViewController:cer animated:true];
+//        }
+//    }
+//}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 100.f;
 }
@@ -1524,6 +1557,38 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return YES;
 }
 
+
+- (void)changeScriptStatus:(NSNotification *)sender {
+    
+    UserScript *model = sender.object;
+
+    if (model.active == 1) {
+        [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+        
+        model.active = 0;
+        [self.handStopDatas addObject:model];
+        [self.handActiveDatas removeObject:model];
+        
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+            @"uuid":model.uuid
+        }];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
+    } else if (model.active == 0) {
+        [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+        
+        model.active = 1;
+        [self.handActiveDatas addObject:model];
+        [self.handStopDatas removeObject:model];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+            @"uuid":model.uuid
+        }];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
+    }
+    [_tableView setEditing:NO animated:YES];
+    [self reloadTableView];
+    [self initScrpitContent];
+    [_tableView reloadData];
+}
 
 - (void)import{
     [self addBtnClick:nil];

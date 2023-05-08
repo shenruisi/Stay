@@ -519,8 +519,6 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
     imageView.contentMode =  UIViewContentModeScaleAspectFit;
     NSString *iconUrl = dic[@"icon_url"];
-    
-    
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
     imageView.centerY = 24;
@@ -562,7 +560,10 @@
     if(iconUrl.length > 0) {
         [imageView sd_setImageWithURL:[NSURL URLWithString: iconUrl]];
     } else {
-        [imageView setImage:[DefaultIcon iconWithTitle: headerLabel.text size:CGSizeMake(26, 26)]];
+        [imageView setImage:[DefaultIcon iconWithTitle: headerLabel.text size:CGSizeMake(48, 48)]];
+        imageView.size = CGSizeMake(48, 48);
+        imageView.centerX = 24;
+        imageView.centerY = 24;
     }
     
     
@@ -1230,7 +1231,7 @@ UIPopoverPresentationControllerDelegate
 
     _selectedUrl = url;
     [self reloadAllTableview];
-
+    self.loadingSlideController = nil;
     self.loadingSlideController.originMainText = name;
     self.loadingSlideController.iconUrl = iconUrl;
     [self.loadingSlideController show];

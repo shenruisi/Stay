@@ -67,7 +67,8 @@
         if(self.iconUrl.length > 0) {
             [_iconView sd_setImageWithURL:[NSURL URLWithString: self.iconUrl]];
         } else {
-            [_iconView setImage:[DefaultIcon iconWithTitle:self.originMainText size:CGSizeMake(26, 26)]];
+            [_iconView setImage:[DefaultIcon iconWithTitle:self.originMainText size:CGSizeMake(48, 48)]];
+            _iconView.size = CGSizeMake(48, 48);
         }
         _iconView.contentMode =  UIViewContentModeScaleAspectFit;
         _iconView.clipsToBounds = YES;

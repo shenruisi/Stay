@@ -119,7 +119,7 @@
     NSString *url = self.scriptDic[@"hosting_url"];
     NSString *name = self.scriptDic[@"name"];
     NSString *icon = self.scriptDic[@"icon_url"];
-
+    self.loadingSlideController = nil;
     self.loadingSlideController.originMainText = name;
     self.loadingSlideController.iconUrl = icon;
     [self.loadingSlideController show];

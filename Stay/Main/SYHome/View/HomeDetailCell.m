@@ -59,6 +59,235 @@
     
 }
 
+- (void)doubleTap:(CGPoint)location{
+    [super doubleTap:location];
+    
+    UIView *containerView = [self.fcContentView.containerView duplicate];
+    containerView.backgroundColor  = FCStyle.popup;
+    [self.contentView addSubview:containerView];
+    containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [containerView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:[FCTableViewCell contentInset].left],
+        [containerView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor constant:-[FCTableViewCell contentInset].right],
+        [containerView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:[FCTableViewCell contentInset].top],
+        [containerView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-[FCTableViewCell contentInset].bottom]
+    ]];
+    
+    UIView *imageBoxTmp = [[UIView alloc] init];
+    imageBoxTmp.layer.cornerRadius = 10;
+    imageBoxTmp.layer.borderWidth = 1;
+    imageBoxTmp.layer.borderColor = FCStyle.borderColor.CGColor;
+    imageBoxTmp.translatesAutoresizingMaskIntoConstraints = NO;
+    imageBoxTmp.clipsToBounds = YES;;
+    [containerView addSubview:imageBoxTmp];
+    
+    UIImageView *image = [[UIImageView alloc] init];
+    image.contentMode =  UIViewContentModeScaleAspectFit;
+    image.clipsToBounds = YES;
+    image.translatesAutoresizingMaskIntoConstraints = NO;
+    [imageBoxTmp addSubview:image];
+    [NSLayoutConstraint activateConstraints:@[
+        [image.centerXAnchor constraintEqualToAnchor:imageBoxTmp.centerXAnchor],
+        [image.centerYAnchor constraintEqualToAnchor:imageBoxTmp.centerYAnchor],
+    ]];
+    
+    UserScript *dic = self.scrpit;
+    
+    if(dic.icon.length > 0) {
+        [image sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
+        [NSLayoutConstraint activateConstraints:@[
+            [image.heightAnchor constraintEqualToConstant:26],
+            [image.widthAnchor constraintEqualToConstant:26]
+        ]];
+      
+    } else {
+        [image setImage:[DefaultIcon iconWithTitle:dic.name size:CGSizeMake(48, 48)]];
+        [NSLayoutConstraint activateConstraints:@[
+            [image.heightAnchor constraintEqualToConstant:48],
+            [image.widthAnchor constraintEqualToConstant:48]
+        ]];
+    }
+    
+    if(dic.active == 0) {
+        image.image = [self makeGrayImage:image.image];
+    }
+
+    [NSLayoutConstraint activateConstraints:@[
+        [imageBoxTmp.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:15],
+        [imageBoxTmp.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:12],
+        [imageBoxTmp.heightAnchor constraintEqualToConstant:48],
+        [imageBoxTmp.widthAnchor constraintEqualToConstant:48]
+
+    ]];
+
+    
+    UILabel *nameLabel = (UILabel *)[self.headerLabel duplicate];
+    nameLabel.textColor =  dic.active == 1?[FCStyle.fcBlack colorWithAlphaComponent:0.5] : FCStyle.fcBlack;
+    nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:nameLabel];
+    [NSLayoutConstraint activateConstraints:@[
+        [nameLabel.leftAnchor constraintEqualToAnchor:imageBoxTmp.rightAnchor constant:10],
+        [nameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:15]
+    ]];
+    
+    UILabel *subTitleLabel = (UILabel *)[self.subLabel duplicate];
+    subTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    subTitleLabel.textColor =  dic.active == 1 ?  [FCStyle.fcSecondaryBlack colorWithAlphaComponent:0.5] : FCStyle.fcSecondaryBlack;
+    [containerView addSubview:subTitleLabel];
+    [NSLayoutConstraint activateConstraints:@[
+        [subTitleLabel.topAnchor constraintEqualToAnchor:nameLabel.bottomAnchor constant:5],
+        [subTitleLabel.leftAnchor constraintEqualToAnchor:imageBoxTmp.rightAnchor constant:10],
+    ]];
+    
+    UIView *tmpSplitView = [[UIView alloc] init];
+    tmpSplitView.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:tmpSplitView];
+    tmpSplitView.layer.cornerRadius = 4;
+    [NSLayoutConstraint activateConstraints:@[
+        [tmpSplitView.widthAnchor constraintEqualToConstant:8],
+        [tmpSplitView.heightAnchor constraintEqualToConstant:8],
+        [tmpSplitView.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-10],
+        [tmpSplitView.leadingAnchor constraintEqualToAnchor:containerView.leadingAnchor constant:15],
+
+    ]];
+    [tmpSplitView setBackgroundColor:dic.active == 1 ?[FCStyle.grayNoteColor colorWithAlphaComponent:0.5]:FCStyle.accent];
+
+    UILabel *statusView =  [[UILabel alloc] init];
+    statusView.translatesAutoresizingMaskIntoConstraints = NO;
+    statusView.font = FCStyle.footnoteBold;
+    [containerView addSubview:statusView];
+
+    statusView.textColor = dic.active == 1 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.accent;
+    statusView.text = dic.active == 1 ? NSLocalizedString(@"Stopped", @"") : NSLocalizedString(@"Activated", @"");
+    
+
+    UIView *splitLine = [[UIView alloc] init];
+    splitLine.translatesAutoresizingMaskIntoConstraints = NO;
+    splitLine.backgroundColor = FCStyle.fcSeparator;
+    [containerView addSubview:splitLine];
+    [NSLayoutConstraint activateConstraints:@[
+        [splitLine.widthAnchor constraintEqualToConstant:1],
+        [splitLine.heightAnchor constraintEqualToConstant:13],
+    ]];
+    
+    
+
+    [NSLayoutConstraint activateConstraints:@[
+        [statusView.centerYAnchor constraintEqualToAnchor:tmpSplitView.centerYAnchor],
+        [statusView.leftAnchor constraintEqualToAnchor:tmpSplitView.rightAnchor constant:5],
+        [splitLine.centerYAnchor constraintEqualToAnchor:tmpSplitView.centerYAnchor],
+        [splitLine.leftAnchor constraintEqualToAnchor:statusView.rightAnchor constant:3],
+
+    ]];
+    
+    
+    UIImageView *tmpVersionImageView = [[UIImageView alloc] init];
+    tmpVersionImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:tmpVersionImageView];
+    [NSLayoutConstraint activateConstraints:@[
+        [tmpVersionImageView.widthAnchor constraintEqualToConstant:15],
+        [tmpVersionImageView.heightAnchor constraintEqualToConstant:15],
+    ]];
+    
+    
+    UIImage *tmpImage =  [UIImage systemImageNamed:@"v.circle.fill"
+                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+    tmpImage = [tmpImage imageWithTintColor: dic.active == 1 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor renderingMode:UIImageRenderingModeAlwaysOriginal];
+    [tmpVersionImageView setImage:tmpImage];
+    
+    
+    
+    
+    
+    UILabel *tmpVersionLabel = [[UILabel alloc] init];
+    tmpVersionLabel.font = FCStyle.footnoteBold;
+    tmpVersionLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:tmpVersionLabel];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [tmpVersionImageView.centerYAnchor constraintEqualToAnchor:splitLine.centerYAnchor],
+        [tmpVersionImageView.leftAnchor constraintEqualToAnchor:splitLine.rightAnchor constant:3],
+    ]];
+    
+
+
+    tmpVersionLabel.text = dic.version;
+    tmpVersionLabel.textColor = dic.active == 1 ? [FCStyle.grayNoteColor colorWithAlphaComponent:0.5] : FCStyle.grayNoteColor;
+    [NSLayoutConstraint activateConstraints:@[
+        [tmpVersionLabel.centerYAnchor constraintEqualToAnchor:splitLine.centerYAnchor],
+        [tmpVersionLabel.leftAnchor constraintEqualToAnchor:tmpVersionImageView.rightAnchor constant:5],
+    ]];
+    
+    
+    UIButton *tmpUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [tmpUpdateBtn setTitle:NSLocalizedString(@"settings.update","update") forState:UIControlStateNormal];
+    [tmpUpdateBtn setTitleColor: FCStyle.accent forState:UIControlStateNormal];
+    tmpUpdateBtn.titleLabel.font = FCStyle.footnoteBold;
+    tmpUpdateBtn.layer.cornerRadius = 10;
+    tmpUpdateBtn.layer.borderWidth = 1;
+    tmpUpdateBtn.layer.borderColor = FCStyle.accent.CGColor;
+    tmpUpdateBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:tmpUpdateBtn];
+    
+    
+    NSString *uuid = dic.uuid;
+    ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
+    if(entity != nil && entity.needUpdate && !dic.updateSwitch && entity.updateScript != NULL && entity.updateScript.content != NULL){
+        tmpUpdateBtn.hidden = false;
+        CGRect rect = [tmpUpdateBtn.titleLabel.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.body.pointSize)
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                            attributes:@{NSFontAttributeName : FCStyle.footnoteBold}
+                                               context:nil];
+        
+        
+        [NSLayoutConstraint activateConstraints:@[[tmpUpdateBtn.heightAnchor constraintEqualToConstant:25],
+                                                           [tmpUpdateBtn.widthAnchor constraintEqualToConstant:rect.size.width + 20],
+                                                           [tmpUpdateBtn.topAnchor constraintEqualToAnchor:containerView.topAnchor constant:15],
+                                                    [tmpUpdateBtn.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-11],]];
+
+
+        [NSLayoutConstraint activateConstraints:@[
+            [nameLabel.rightAnchor constraintEqualToAnchor:tmpUpdateBtn.leftAnchor constant:-11],
+        ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [subTitleLabel.widthAnchor constraintEqualToAnchor:nameLabel.widthAnchor]
+
+        ]];
+    
+        
+    } else {
+        tmpUpdateBtn.hidden = true;
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [nameLabel.widthAnchor constraintEqualToAnchor:containerView.widthAnchor constant:-90],
+        ]];
+        [NSLayoutConstraint activateConstraints:@[
+            [subTitleLabel.widthAnchor constraintEqualToAnchor:containerView.widthAnchor constant:-90],
+        ]];
+        
+        
+    }
+    
+    
+    UIView *maskView = [[UIView alloc] init];
+    maskView.backgroundColor = UIColor.blackColor;
+    maskView.layer.cornerRadius = 0;
+    containerView.maskView = maskView;
+    CGFloat radius =  MAX((self.size.width - location.x),location.x);
+    [maskView setFrame:CGRectMake(location.x, location.y, 0, 0)];
+    [UIView animateWithDuration:0.5
+                     animations:^{
+        [maskView setFrame:CGRectMake(location.x - radius, location.y - radius, radius * 2, radius * 2)];
+        maskView.layer.cornerRadius = radius;
+    } completion:^(BOOL finished) {
+        containerView.maskView = nil;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeScriptStatus" object:self.scrpit];
+        [containerView removeFromSuperview];
+        
+    }];
+}
+
+
 - (void )createCellView:(UserScript *)dic{
     
     
@@ -66,8 +295,6 @@
     [NSLayoutConstraint deactivateConstraints:self.subTitleConstraints];
     [NSLayoutConstraint deactivateConstraints:self.updateBtnConstraints];
     [NSLayoutConstraint deactivateConstraints:self.imageViewConstraints];
-
-//    [self.fcContentView layoutIfNeeded];
 
     [self.updateBtnConstraints removeAllObjects];
     [self.titleConstraints removeAllObjects];
