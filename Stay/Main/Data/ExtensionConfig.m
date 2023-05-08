@@ -42,6 +42,11 @@
     return self;
 }
 
+- (void)initOnEmpty{
+    _showBadge = NO;
+    _tagStatus = @(1);
+}
+
 - (NSData * _Nullable)archiveData {
     NSError *error = nil;
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self

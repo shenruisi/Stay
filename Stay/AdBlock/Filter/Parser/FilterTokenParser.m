@@ -275,7 +275,8 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
         }while(![self isEnd:self.lastChars]
                && ![self isRegexStart:self.lastChars]);
         
-        if ([self isRegexStart:self.lastChars]){
+        if ([self isRegexStart:self.lastChars] &&
+            ([self probGetChars:1] == nil || [[self probGetChars:1] isEqualToString:@"$"])){
             [tigger appendString:self.lastChars];
             return [FilterToken trigger:tigger];
         }

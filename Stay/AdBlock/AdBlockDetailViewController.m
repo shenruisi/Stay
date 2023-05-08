@@ -57,9 +57,11 @@
 }
 
 - (void)refreshRules{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
-    });
+    if (![[NSThread currentThread] isMainThread]){
+        [self performSelectorOnMainThread:@selector(refreshRules) withObject:nil waitUntilDone:YES];
+        return;
+    }
+    [self.editorView setStrings:[self.contentFilter fetchRules:nil]];
 }
 
 
