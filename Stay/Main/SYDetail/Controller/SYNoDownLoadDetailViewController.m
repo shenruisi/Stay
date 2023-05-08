@@ -210,6 +210,13 @@
 
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
     imageView.clipsToBounds = YES;
+    if( icon.length <= 0) {
+        [imageView setImage:[DefaultIcon iconWithTitle: self.scriptDic[@"name"] size:CGSizeMake(118, 118)]];
+        imageView.size = CGSizeMake(118, 118);
+    } else {
+        [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
+    }
+     
     imageView.centerX = 59;
     imageView.centerY = 59;
    imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -217,12 +224,7 @@
     [cell.contentView addSubview:imageBox];
 
     titleLabelLeftSize = 15 + 118;
-    if( icon.length <= 0) {
-        [imageView setImage:[DefaultIcon iconWithTitle: self.scriptDic[@"name"] size:CGSizeMake(78, 78)]];
-    } else {
-        [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
-    }
-     
+ 
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 20, self.view.width - titleLabelLeftSize - left * 2, 21)];
      titleLabel.font = FCStyle.title3Bold;
      titleLabel.textColor = FCStyle.fcBlack;

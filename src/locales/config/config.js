@@ -42,6 +42,9 @@ export default {
     'taging': 'Three finger tap to start tagging',
     'taging_manage_title': 'Webpage tagging rules',
     'taging_manage_btn': 'Manage',
+    'web_tag': 'Web Tag',
+    'blocker_enable': 'Enable',
+    'blocker_info': 'Tag Content Blocker is not enabled'
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -85,6 +88,8 @@ export default {
     'taging': '用三个手指触屏开始标记',
     'taging_manage_title': '网页标记规则',
     'taging_manage_btn': '管理',
+    'blocker_enable': '开启',
+    'blocker_info': '标记内容拦截器未开启'
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -128,6 +133,8 @@ export default {
     'taging': '用三個手指觸屏開始標記',
     'taging_manage_title': '網頁標記規則',
     'taging_manage_btn': '管理',
+    'blocker_enable': '開啟',
+    'blocker_info': '標記內容攔截器未開啟'
   }
 }
 /* eslint-disable */

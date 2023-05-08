@@ -235,9 +235,17 @@
      imageBox.layer.borderWidth = 1;
      imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
      imageBox.backgroundColor = FCStyle.fcWhite;
+     imageBox.clipsToBounds = YES;
      UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
  //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
 
+     if( self.script.icon.length <= 0) {
+         [imageView setImage:[DefaultIcon iconWithTitle: self.script.name size:CGSizeMake(118, 118)]];
+          imageView.size = CGSizeMake(118, 118);
+     } else {
+          [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
+     }
+     
      imageView.clipsToBounds = YES;
      imageView.centerX = 59;
      imageView.centerY = 59;
@@ -247,11 +255,7 @@
     titleLabelLeftSize = 15 + 118;
 
      
-     if( self.script.icon.length <= 0) {
-         [imageView setImage:[DefaultIcon iconWithTitle: self.script.name size:CGSizeMake(78, 78)]];
-     } else {
-          [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
-     }
+  
      
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 15, self.view.width - titleLabelLeftSize - left * 2, 21)];
      titleLabel.font = FCStyle.title3Bold;

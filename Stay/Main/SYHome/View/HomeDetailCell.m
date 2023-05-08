@@ -23,7 +23,7 @@
 @property (nonatomic, strong) UILabel *headerLabel;
 @property (nonatomic, strong) UILabel *subLabel;
 @property (nonatomic, strong) UIButton *updateBtn;
-@property (nonatomic, strong) UIImageView *sImageView;
+@property (nonatomic, strong) UIView *sImageView;
 @property (nonatomic, strong) UILabel *actLabel;
 @property (nonatomic, strong) UIView *splitView;
 @property (nonatomic, strong) UIImageView *versionImageView;
@@ -34,6 +34,8 @@
 @property (nonatomic, strong) NSMutableArray *titleConstraints;
 @property (nonatomic, strong) NSMutableArray *subTitleConstraints;
 @property (nonatomic, strong) NSMutableArray *updateBtnConstraints;
+@property (nonatomic, strong) NSMutableArray *imageViewConstraints;
+
 
 @end
 
@@ -63,18 +65,29 @@
     [NSLayoutConstraint deactivateConstraints:self.titleConstraints];
     [NSLayoutConstraint deactivateConstraints:self.subTitleConstraints];
     [NSLayoutConstraint deactivateConstraints:self.updateBtnConstraints];
+    [NSLayoutConstraint deactivateConstraints:self.imageViewConstraints];
+
 //    [self.fcContentView layoutIfNeeded];
 
     [self.updateBtnConstraints removeAllObjects];
     [self.titleConstraints removeAllObjects];
     [self.subTitleConstraints removeAllObjects];
-
+    [self.imageViewConstraints removeAllObjects];
+    
     
     if(dic.icon.length > 0) {
         [self.iconImageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
+        
+        [self.imageViewConstraints addObjectsFromArray:@[[_iconImageView.heightAnchor constraintEqualToConstant:26],
+                                                         [_iconImageView.widthAnchor constraintEqualToConstant:26]]];
+        
     } else {
-        [self.iconImageView setImage:[DefaultIcon iconWithTitle:dic.name size:CGSizeMake(26, 26)]];
+        [self.iconImageView setImage:[DefaultIcon iconWithTitle:dic.name size:CGSizeMake(48, 48)]];
+        [self.imageViewConstraints addObjectsFromArray:@[[_iconImageView.heightAnchor constraintEqualToConstant:48],
+                                                         [_iconImageView.widthAnchor constraintEqualToConstant:48]]];
     }
+    
+    
     
     
     if(dic.active == 0) {
@@ -148,14 +161,10 @@
 
     [NSLayoutConstraint activateConstraints:self.titleConstraints];
     [NSLayoutConstraint activateConstraints:self.subTitleConstraints];
+    [NSLayoutConstraint activateConstraints:self.imageViewConstraints];
 
     
-    UIImage *simage =  [UIImage systemImageNamed:@"s.circle.fill"
-                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
-    simage = [simage imageWithTintColor:dic.active == 0 ?[FCStyle.grayNoteColor colorWithAlphaComponent:0.5]:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
-    
-    
-    [self.sImageView setImage:simage];
+    [self.sImageView setBackgroundColor:dic.active == 0 ?[FCStyle.grayNoteColor colorWithAlphaComponent:0.5]:FCStyle.accent];
     
     
     
@@ -263,7 +272,7 @@
         _imageBox.clipsToBounds = YES;
         [self.fcContentView addSubview:_imageBox];
         [NSLayoutConstraint activateConstraints:@[
-            [_imageBox.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
+            [_imageBox.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:15],
             [_imageBox.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:12],
             [_imageBox.heightAnchor constraintEqualToConstant:48],
             [_imageBox.widthAnchor constraintEqualToConstant:48]
@@ -283,9 +292,9 @@
         [NSLayoutConstraint activateConstraints:@[
             [_iconImageView.centerXAnchor constraintEqualToAnchor:self.imageBox.centerXAnchor],
             [_iconImageView.centerYAnchor constraintEqualToAnchor:self.imageBox.centerYAnchor],
-            [_iconImageView.heightAnchor constraintEqualToConstant:26],
-            [_iconImageView.widthAnchor constraintEqualToConstant:26]
         ]];
+        
+ 
     }
     
     return _iconImageView;
@@ -328,17 +337,18 @@
     return _updateBtn;
 }
 
-- (UIImageView *)sImageView {
+- (UIView *)sImageView {
     if(_sImageView == nil) {
         
-        _sImageView = [[UIImageView alloc] init];
+        _sImageView = [[UIView alloc] init];
         _sImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.fcContentView addSubview:_sImageView];
+        _sImageView.layer.cornerRadius = 4;
         [NSLayoutConstraint activateConstraints:@[
-            [_sImageView.widthAnchor constraintEqualToConstant:15],
-            [_sImageView.heightAnchor constraintEqualToConstant:15],
+            [_sImageView.widthAnchor constraintEqualToConstant:8],
+            [_sImageView.heightAnchor constraintEqualToConstant:8],
             [_sImageView.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-10],
-            [_sImageView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:20],
+            [_sImageView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:15],
 
         ]];
     }
@@ -428,6 +438,13 @@
         _updateBtnConstraints = [NSMutableArray array];
     }
     return _updateBtnConstraints;
+}
+
+- (NSMutableArray *)imageViewConstraints {
+    if(_imageViewConstraints == nil) {
+        _imageViewConstraints = [NSMutableArray array];
+    }
+    return _imageViewConstraints;
 }
 
 @end

@@ -27,11 +27,11 @@
           </select>
         </div>
       </div>
-      <div class="action-cell">
-        <div class="cell-icon menu" v-if="script.grants.length && (script.grants.includes('GM.registerMenuCommand') || script.grants.includes('GM_registerMenuCommand'))" @click="showRegisterMenu(script.uuid, script.active)">{{t("menu")}}</div>
-        <div class="cell-icon open-app" @click="openInAPP(script.uuid)">{{t("open_app")}}</div>
-        <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
-      </div>
+    </div>
+    <div class="action-cell">
+      <div class="cell-icon menu" v-if="script.grants.length && (script.grants.includes('GM.registerMenuCommand') || script.grants.includes('GM_registerMenuCommand'))" @click="showRegisterMenu(script.uuid, script.active)">{{t("menu")}}</div>
+      <div class="cell-icon open-app" @click="openInAPP(script.uuid)">{{t("open_app")}}</div>
+      <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
     </div>
     
   </div>
@@ -192,13 +192,17 @@ export default {
 <style lang="less" scoped>
 .script-item-box{
   width: 100%;
-  padding: 10px 0 0 10px;
+  // padding: 6px 0px;
+  background-color: var(--dm-bg);
+  border: 1px solid var(--dm-bd);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 10px;
   .script-item{
     width: 100%;
-    border-bottom: 1px solid var(--dm-bd);
-    background-color: var(--dm-bg);
     user-select: none;
-    padding-bottom: 6px;
+    padding-left: 10px;
+    // padding-bottom: 6px;
     &.disabled{
       .script-info{
         .state{
@@ -238,8 +242,8 @@ export default {
       }
       .active-state{
         position: absolute;
-        right: 0;
-        top: 0;
+        right: 10px;
+        top: 10px;
         width: 40px;
         height: 50px;
         overflow: hidden;
@@ -304,7 +308,7 @@ export default {
       justify-content: flex-start;
       align-items: center;
       position: relative;
-      padding: 4px 0 2px 0;
+      padding: 1px 0 5px 0;
       .check-box{
         width: 16px;
         height: 16px;
@@ -357,7 +361,7 @@ export default {
       }
       .select-options{
         height: 24px;
-        width: 200px;
+        width: 130px;
         position: relative;
         text-align: left;
         .selected-text{
@@ -404,42 +408,34 @@ export default {
       }
 
     }
-    .action-cell{
-      width: 100%;
-      padding: 2px 0;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
+    
+  }
+  .action-cell{
+    width: 100%;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    border-top: 1px solid var(--dm-bd);
+    .cell-icon{
       position: relative;
-      .cell-icon{
-        position: relative;
-        height: 24px;
-        line-height: 24px;
-        margin-right: 4px;
-        padding-left: 30px;
-        padding-right: 8px;
-        font-family: Helvetica Neue;
-        font-size: 13px;
-        color: var(--s-main);
-        font-weight: 700;
-        border-radius: 8px;
-        background-color: var(--dm-bg-f7);
-        cursor: default;
-      }
-      .menu{
-        &::before{
-          position:absolute;
-          left: 6px;
-          top: 50%;
-          transform: translate(0, -50%);
-          content: "";
-          width: 19px;
-          height: 19px;
-          background: url("../assets/images/menu.png") no-repeat 50% 50%;
-          background-size: contain;
-        }
-      }
-      .manually::after{
+      height: 24px;
+      line-height: 22px;
+      margin-right: 4px;
+      padding-left: 30px;
+      padding-right: 8px;
+      font-family: Helvetica Neue;
+      font-size: 13px;
+      color: var(--s-main);
+      font-weight: 700;
+      border-radius: 8px;
+      // background-color: var(--dm-bg-f7);
+      border: 1px solid var(--s-main);
+      cursor: default;
+    }
+    .menu{
+      &::before{
         position:absolute;
         left: 6px;
         top: 50%;
@@ -447,23 +443,34 @@ export default {
         content: "";
         width: 19px;
         height: 19px;
-        background: url("../assets/images/manaully.png") no-repeat 50% 50%;
+        background: url("../assets/images/menu.png") no-repeat 50% 50%;
         background-size: contain;
       }
-      .open-app::after{
-        position:absolute;
-        left: 6px;
-        top: 50%;
-        transform: translate(0, -50%);
-        content: "";
-        width: 19px;
-        height: 19px;
-        background: url("../assets/images/openinapp.png") no-repeat 50% 50%;
-        background-size: contain;
-
-      }
+    }
+    .manually::after{
+      position:absolute;
+      left: 6px;
+      top: 50%;
+      transform: translate(0, -50%);
+      content: "";
+      width: 19px;
+      height: 19px;
+      background: url("../assets/images/manaully.png") no-repeat 50% 50%;
+      background-size: contain;
+    }
+    .open-app::after{
+      position:absolute;
+      left: 6px;
+      top: 50%;
+      transform: translate(0, -50%);
+      content: "";
+      width: 19px;
+      height: 19px;
+      background: url("../assets/images/openinapp.png") no-repeat 50% 50%;
+      background-size: contain;
 
     }
+
   }
   
 }
