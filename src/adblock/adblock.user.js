@@ -972,7 +972,10 @@ const browser = __b;
     }
 
     function handleMoveAndSelecteDom(event){
-      // console.log('touchmove------handleMoveAndSelecteDom', event)
+      console.log('touchmove------handleMoveAndSelecteDom', event);
+      if(event.touches && event.touches.length>1){
+        return;
+      }
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);

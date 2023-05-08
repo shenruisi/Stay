@@ -203,7 +203,7 @@ UITableViewDataSource
                       ,@"url":@"https://t.me/fastclipchat",
                       @"subtitle":@"t.me/fastclipchat",
                     },
-                    @{@"title":NSLocalizedString(@"settings.joinQQ",@""),@"url":@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=714147685&key=c987123ea55d74e0b3fa84e3169d6be6d24fb1849e78f57c0f573e9d45e67217&card_type=group&source=external&jump_from=webapi"},
+                    @{@"title":NSLocalizedString(@"settings.joinQQ",@""),@"url":[NSString stringWithFormat:@"mqqapi://card/show_pslcard?src_type=internal&version=1&uin=%@&key=%@&card_type=group&source=external&jump_from=webapi", @"431224121",@"a45950c90b2dc1e42bb4be8bb1ebd60c1385455c99276cef6257f8f8c237431a"]},
                     @{@"title":NSLocalizedString(@"settings.joinTwitter",@""),
                       @"url":@"https://mobile.twitter.com/stayfork",
                       @"subtitle":@"@stayfork"

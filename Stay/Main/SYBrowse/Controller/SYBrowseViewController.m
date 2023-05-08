@@ -519,8 +519,6 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
     imageView.contentMode =  UIViewContentModeScaleAspectFit;
     NSString *iconUrl = dic[@"icon_url"];
-    
-    
     imageView.clipsToBounds = YES;
     imageView.centerX = 24;
     imageView.centerY = 24;
@@ -562,7 +560,10 @@
     if(iconUrl.length > 0) {
         [imageView sd_setImageWithURL:[NSURL URLWithString: iconUrl]];
     } else {
-        [imageView setImage:[DefaultIcon iconWithTitle: headerLabel.text size:CGSizeMake(26, 26)]];
+        [imageView setImage:[DefaultIcon iconWithTitle: headerLabel.text size:CGSizeMake(48, 48)]];
+        imageView.size = CGSizeMake(48, 48);
+        imageView.centerX = 24;
+        imageView.centerY = 24;
     }
     
     
@@ -828,7 +829,7 @@ UIPopoverPresentationControllerDelegate
 //    self.searchController.searchBar.delegate = self;
 //    [self.searchController.searchBar setTintColor:FCStyle.accent];
     
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+    FCViewController *search = [[FCViewController alloc]init];
     self.searchViewController = search;
 
 //    [self tableView];
@@ -1230,7 +1231,7 @@ UIPopoverPresentationControllerDelegate
 
     _selectedUrl = url;
     [self reloadAllTableview];
-
+    self.loadingSlideController = nil;
     self.loadingSlideController.originMainText = name;
     self.loadingSlideController.iconUrl = iconUrl;
     [self.loadingSlideController show];
@@ -1490,15 +1491,13 @@ UIPopoverPresentationControllerDelegate
         _allTableView.hidden = true;
         _allTableView.backgroundColor = [UIColor clearColor];
         _allTableView.translatesAutoresizingMaskIntoConstraints = NO;
-        _tableView.showsVerticalScrollIndicator = YES;
-        _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        _allTableView.showsVerticalScrollIndicator = YES;
         //TODO:
         if (@available(iOS 15.0, *)){
-           _tableView.sectionHeaderTopPadding = 0;
+            _allTableView.sectionHeaderTopPadding = 0;
         }
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.sectionFooterHeight = 0;
-        _tableView.backgroundColor = [UIColor clearColor];
+        _allTableView.sectionFooterHeight = 0;
+        _allTableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_allTableView];
         
         
@@ -1520,8 +1519,8 @@ UIPopoverPresentationControllerDelegate
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
         _searchTableView.showsVerticalScrollIndicator = YES;
-        _searchTableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _searchTableView.backgroundColor = [UIColor clearColor];
         if (@available(iOS 15.0, *)){
             _searchTableView.sectionHeaderTopPadding = 0;
         }

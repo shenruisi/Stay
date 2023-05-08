@@ -142,8 +142,6 @@ UIDocumentPickerDelegate
     self.searchUpdating = self;
     self.navigationTabItem.leftTabButtonItems = @[self.downloadBtn, self.downloadingBtn];
     self.leftTitle  = NSLocalizedString(@"Downloader","Downloader");
-
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
     self.searchViewController = [[FCViewController alloc] init];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(buildFolder:)
@@ -1125,7 +1123,7 @@ UIDocumentPickerDelegate
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.searchViewController.view addSubview:self.searchTableView];
 
-        _searchTableView.backgroundColor =  FCStyle.accentGradient[1];
+        _searchTableView.backgroundColor = [UIColor clearColor];
         [NSLayoutConstraint activateConstraints:@[
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],

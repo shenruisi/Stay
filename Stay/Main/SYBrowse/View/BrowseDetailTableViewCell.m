@@ -114,6 +114,9 @@
     
     if(icon.length <= 0){
         [imageView setImage:[DefaultIcon iconWithTitle:headerLabel.text size:CGSizeMake(48, 48)]];
+        imageView.size = CGSizeMake(48, 48);
+        imageView.centerX = 24;
+        imageView.centerY = 24;
     }
     
     NSString *uuid = dic[@"uuid"];
