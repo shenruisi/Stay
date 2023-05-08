@@ -1491,15 +1491,13 @@ UIPopoverPresentationControllerDelegate
         _allTableView.hidden = true;
         _allTableView.backgroundColor = [UIColor clearColor];
         _allTableView.translatesAutoresizingMaskIntoConstraints = NO;
-        _tableView.showsVerticalScrollIndicator = YES;
-        _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        _allTableView.showsVerticalScrollIndicator = YES;
         //TODO:
         if (@available(iOS 15.0, *)){
-           _tableView.sectionHeaderTopPadding = 0;
+            _allTableView.sectionHeaderTopPadding = 0;
         }
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.sectionFooterHeight = 0;
-        _tableView.backgroundColor = [UIColor clearColor];
+        _allTableView.sectionFooterHeight = 0;
+        _allTableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_allTableView];
         
         
