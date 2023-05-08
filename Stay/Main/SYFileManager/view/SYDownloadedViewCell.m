@@ -178,7 +178,9 @@
         [_savePhotoBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         _savePhotoBtn.titleLabel.font = FCStyle.footnoteBold;
 //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
-        _savePhotoBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
+//        _savePhotoBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
+        _savePhotoBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
+
         _savePhotoBtn.translatesAutoresizingMaskIntoConstraints = NO;
         _savePhotoBtn.layer.borderColor = FCStyle.accent.CGColor;
         _savePhotoBtn.layer.borderWidth = 1;
@@ -188,7 +190,6 @@
             [_savePhotoBtn.topAnchor constraintEqualToAnchor:self.progressView.bottomAnchor constant:7],
             [_savePhotoBtn.heightAnchor constraintEqualToConstant:25],
             [_savePhotoBtn.widthAnchor constraintEqualToConstant:155],
-
             [_savePhotoBtn.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
         ]];
         
