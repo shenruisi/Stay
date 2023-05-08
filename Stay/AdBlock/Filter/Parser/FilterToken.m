@@ -246,6 +246,13 @@
     return selectorElementSnippetFilter;
 }
 
++ (instancetype)elementCSSRule:(NSString *)cssRule{
+    FilterToken *elementCSSRule = [[FilterToken alloc] init];
+    elementCSSRule.type = FilterTokenTypeElementCSSRule;
+    elementCSSRule.value = cssRule;
+    return elementCSSRule;
+}
+
 + (instancetype)ifDefineStart:(NSString *)condition{
     FilterToken *ifDefineStart = [[FilterToken alloc] init];
     ifDefineStart.type = FilterTokenTypeIfDefineStart;
@@ -280,11 +287,18 @@
     return address;
 }
 
-+ (instancetype)jsAPI:(NSString *)text{
++ (instancetype)jsAPI:(NSString *)js{
     FilterToken *jsAPI = [[FilterToken alloc] init];
     jsAPI.type = FilterTokenTypeJSAPI;
-    jsAPI.value = text;
+    jsAPI.value = js;
     return jsAPI;
+}
+
++ (instancetype)jsAPIException:(NSString *)js{
+    FilterToken *jsAPIException = [[FilterToken alloc] init];
+    jsAPIException.type = FilterTokenTypeJSAPIException;
+    jsAPIException.value = js;
+    return jsAPIException;
 }
 
 - (NSString *)toString{

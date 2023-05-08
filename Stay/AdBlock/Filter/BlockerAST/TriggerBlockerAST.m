@@ -67,9 +67,13 @@
             self.unsupported = YES;
             return;
         }
+        
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\?" withString:@"\\?"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"." withString:@"\\."];
-
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
+        //issue ×
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"×" withString:@"\\U00d"];
+        
         [self.contentBlockerRule.trigger appendUrlFilter:urlFilter];
     }
 }

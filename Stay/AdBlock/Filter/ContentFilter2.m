@@ -13,7 +13,7 @@
 #import "DataManager.h"
 #import "SYVersionUtils.h"
 
-static NSUInteger MAX_RULE_COUNT = 50000;
+static NSUInteger MAX_RULE_COUNT = 10000;
 
 NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
 
@@ -101,7 +101,9 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             BOOL isSepcialComment;
             ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:newLine isSpecialComment:&isSepcialComment];
             if (nil == universalRule && [contentBlockerRule.trigger.urlFilter isEqualToString:@".*"]){
-                universalRule = contentBlockerRule;
+                if (contentBlockerRule.action.selector.length > 0){
+                    universalRule = contentBlockerRule;
+                }
             }
             
             if (contentBlockerRule && !isSepcialComment){
@@ -206,13 +208,18 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         
         NSError *maxRuleCountError;
         if (jsonRules.count > MAX_RULE_COUNT){
-            jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];
+            int start = 12400;
+            int end = 12450;
+            int length = end - start;
+            
+            jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(start, length)]];
             maxRuleCountError = [[NSError alloc] initWithDomain:@"Content Filter Error" code:-500 userInfo:
                 @{NSLocalizedDescriptionKey:NSLocalizedString(@"RuleMaxCountError", @"")}
             ];
         }
+        NSData *data = [NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error];
         
-        NSString *ret = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error] encoding:NSUTF8StringEncoding];
+        NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
         if (error){
             if (completion){
@@ -221,7 +228,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             return;
         }
 
-        [[ContentFilterManager shared] writeJSONToFileName:self.rulePath content:ret error:&error];
+        [[ContentFilterManager shared] writeJSONToFileName:self.rulePath data:data error:&error];
         
         if (error){
             if (completion){

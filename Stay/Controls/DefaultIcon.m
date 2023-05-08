@@ -18,7 +18,7 @@
     NSArray<UIColor *> *colors = FCStyle.accentGradient;
     gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
 //    [label.layer insertSublayer:gradientLayer atIndex:0];
-    label.font = [UIFont boldSystemFontOfSize:size.width/2];
+    label.font = [UIFont boldSystemFontOfSize:size.width/2.5];
     label.textColor = FCStyle.fcSecondaryBlack;
     label.textAlignment = NSTextAlignmentCenter;
     label.text = firstChar;

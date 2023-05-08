@@ -59,6 +59,12 @@ static ContentFilterManager *instance = nil;
     return exist;
 }
 
+- (void)writeJSONToFileName:(NSString *)fileName data:(NSData *)data error:(NSError **)error{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    [data writeToFile:filePath atomically:YES];
+    NSLog(@"writeToFileName %@ %@",fileName,*error);
+}
+
 - (void)writeJSONToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
     if ([content isEqualToString:@"[]"]){
         content = @"[{\"trigger\":{\"url-filter\":\"webkit.svg\"},\"action\":{\"type\":\"block\"}}]";
