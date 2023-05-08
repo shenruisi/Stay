@@ -829,7 +829,7 @@ UIPopoverPresentationControllerDelegate
 //    self.searchController.searchBar.delegate = self;
 //    [self.searchController.searchBar setTintColor:FCStyle.accent];
     
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+    FCViewController *search = [[FCViewController alloc]init];
     self.searchViewController = search;
 
 //    [self tableView];
@@ -1521,8 +1521,8 @@ UIPopoverPresentationControllerDelegate
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
         _searchTableView.showsVerticalScrollIndicator = YES;
-        _searchTableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _searchTableView.backgroundColor = [UIColor clearColor];
         if (@available(iOS 15.0, *)){
             _searchTableView.sectionHeaderTopPadding = 0;
         }
