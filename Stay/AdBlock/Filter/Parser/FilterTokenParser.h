@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isSeparator;
 @property (nonatomic, readonly) BOOL isPipe;
 @property (nonatomic, readonly) BOOL isJSAPI;
+@property (nonatomic, readonly) BOOL isDefineStart;
+@property (nonatomic, readonly) BOOL isDefineEnd;
+@property (nonatomic, readonly) BOOL isCSSRule;
+@property (nonatomic, readonly) BOOL isJSAPIException;
 - (instancetype)initWithChars:(NSString *)chars;
 
 - (void)nextToken;

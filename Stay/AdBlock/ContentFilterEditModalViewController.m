@@ -199,13 +199,13 @@
         __weak ContentFilterEditModalViewController *weakSelf = self;
         [self.contentFilter checkUpdatingIfNeeded:YES completion:^(NSError * _Nonnull error) {
             [button stopLoading];
-            [weakSelf.navigationController.slideController stopLoading];
             if (nil == error || (error && [error.domain isEqualToString:@"Content Filter Error"])){
                 [[DataManager shareManager] updateContentFilterDownloadUrl:weakSelf.contentFilter.downloadUrl uuid:weakSelf.contentFilter.uuid];
                 AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
                 [cer refreshRules];
                 if (error){
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf.navigationController.slideController stopLoading];
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
                                                                                        message:[error localizedDescription]
                                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -221,6 +221,7 @@
             else{
                 self.contentFilter.downloadUrl = originDownloadUrl;
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.navigationController.slideController stopLoading];
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
                                                                                    message:[error localizedDescription]
                                                                             preferredStyle:UIAlertControllerStyleAlert];

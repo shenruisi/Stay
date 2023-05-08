@@ -28,11 +28,15 @@
         BlockerAST *ast;
         [parser nextToken];
         
-        if ([parser isJSAPI]){
+        if ([parser isJSAPI] || [parser isJSAPI]){
             return nil;
         }
         
-        if ([parser isInfo] || [parser isComment] ){
+        if ([parser isInfo]
+            || [parser isComment]
+            || [parser isDefineStart]
+            || [parser isDefineEnd]
+            || [parser isCSSRule]){
             if ([parser isSepcialComment]){
                 *isSpecialComment = YES;
                 ast = [[SpecialCommentBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];

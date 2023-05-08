@@ -329,4 +329,4 @@ WelcomeSkip="我了解如何操作，现在跳过。";
 WelcomeSkipAlert="确定要现在跳过吗？";
 EnableStay="激活Stay";
 InstallUserscript="安装脚本";
-RuleMaxCountError="当前规则数量大于5万条，Stay将会自动截取规则，你可以尝试手动删除一些规则来确保所有规则都生效。";
+RuleMaxCountError="规则条数过多，Stay将会自动截取规则，你可以尝试手动删除一些规则来确保所有规则都生效。";

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContentFilterManager : NSObject
 
 + (instancetype)shared;
-- (void)writeJSONToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
+//- (void)writeJSONToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (void)appendJSONToFileName:(NSString *)fileName dictionary:(NSDictionary *)dictionary error:(NSError **)error;
 - (void)writeTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (void)appendTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)existRuleJSON:(NSString *)fileName;
 - (NSArray *)ruleJSONArray:(NSString *)fileName error:(NSError **)error;
 - (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error;
+- (void)writeJSONToFileName:(NSString *)fileName data:(NSData *)data error:(NSError **)error;
 @end
 
 NS_ASSUME_NONNULL_END
