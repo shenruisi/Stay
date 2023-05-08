@@ -29,9 +29,36 @@
         
         urlFilter = [urlFilter substringWithRange:NSMakeRange(1, urlFilter.length - 2)];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\w" withString:@"."];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\s" withString:@"."];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\S" withString:@"."];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\W" withString:@"[^A-Za-z0-9_]"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\d" withString:@"[0-9]"];
-        NSRegularExpression *regexReplace1 = [NSRegularExpression regularExpressionWithPattern:@"\\{\\d+,\\d*\\}" options:0 error:nil];
-        urlFilter = [regexReplace1 stringByReplacingMatchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length) withTemplate:@"+"];
+        NSRegularExpression *replaceRegex = [NSRegularExpression regularExpressionWithPattern:@"\\{\\d+,\\d*\\}" options:0 error:nil];
+        urlFilter = [replaceRegex stringByReplacingMatchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length) withTemplate:@"+"];
+        
+        NSArray<NSTextCheckingResult *> *capResults;
+        do{
+            NSRegularExpression *capRegex = [NSRegularExpression regularExpressionWithPattern:@"(\\[[0-9a-zA-Z\\-]+\\])\\{(\\d)\\}" options:0 error:nil];
+            capResults = [capRegex matchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length)];
+            for (NSTextCheckingResult *result in capResults){
+                NSInteger n = result.numberOfRanges;
+                if (n == 3){
+                    NSRange range1 = [result rangeAtIndex:1];
+                    NSRange range2 = [result rangeAtIndex:2];
+                    NSString *cap1 = [urlFilter substringWithRange:range1];
+                    NSString *cap2 = [urlFilter substringWithRange:range2];
+                    NSUInteger times = [cap2 integerValue];
+                    NSMutableString *replaceStr = [[NSMutableString alloc] init];
+                    for (int i = 0; i < times; i++){
+                        [replaceStr appendString:cap1];
+                    }
+                    urlFilter = [urlFilter stringByReplacingCharactersInRange:NSMakeRange(range1.location, range1.length + range2.length + 2) withString:replaceStr];
+                }
+                break;
+            }
+            
+        }while(capResults.count > 0);
+        
         [self.contentBlockerRule.trigger appendUrlFilter:urlFilter];
     }
     else{

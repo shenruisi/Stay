@@ -123,13 +123,13 @@
         [self addColumn:@"download_resource" column:@"audioUrl"];
     }
     
-//    [self deleteTable:@"content_filter"];
+    [self deleteTable:@"content_filter"];
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];
         basic.defaultTitle = NSLocalizedString(@"ContentFilterBasic", @"");
         basic.title = NSLocalizedString(@"ContentFilterBasic", @"");
-        basic.path = @"Basic.txt";
+        basic.path = @"EasyList.txt";
         basic.rulePath = @"Basic.json";
         basic.defaultUrl = @"https://easylist.to/easylist/easylist.txt";
         basic.downloadUrl = @"https://easylist.to/easylist/easylist.txt";
