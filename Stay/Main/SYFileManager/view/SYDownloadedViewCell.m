@@ -180,11 +180,16 @@
 //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
         _savePhotoBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
         _savePhotoBtn.translatesAutoresizingMaskIntoConstraints = NO;
+        _savePhotoBtn.layer.borderColor = FCStyle.accent.CGColor;
+        _savePhotoBtn.layer.borderWidth = 1;
+        _savePhotoBtn.layer.cornerRadius = 8;
         [self.fcContentView addSubview:_savePhotoBtn];
         [NSLayoutConstraint activateConstraints:@[
-            [_savePhotoBtn.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-8],
-            [_savePhotoBtn.heightAnchor constraintEqualToConstant:20],
-            [_savePhotoBtn.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:22],
+            [_savePhotoBtn.topAnchor constraintEqualToAnchor:self.progressView.bottomAnchor constant:7],
+            [_savePhotoBtn.heightAnchor constraintEqualToConstant:25],
+            [_savePhotoBtn.widthAnchor constraintEqualToConstant:155],
+
+            [_savePhotoBtn.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
         ]];
         
         
@@ -202,6 +207,9 @@
         [_saveFileBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
         [_saveFileBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         _saveFileBtn.titleLabel.font = FCStyle.footnoteBold;
+        _saveFileBtn.layer.borderColor = FCStyle.accent.CGColor;
+        _saveFileBtn.layer.borderWidth = 1;
+        _saveFileBtn.layer.cornerRadius = 8;
 //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
         _saveFileBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
         _saveFileBtn.translatesAutoresizingMaskIntoConstraints = NO;
@@ -209,14 +217,18 @@
         if(FCDeviceTypeMac == DeviceHelper.type) {
             [NSLayoutConstraint activateConstraints:@[
                 [_saveFileBtn.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-8],
-                [_saveFileBtn.heightAnchor constraintEqualToConstant:20],
-                [_saveFileBtn.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:22],
+                [_saveFileBtn.heightAnchor constraintEqualToConstant:25],
+                [_saveFileBtn.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
+                [_saveFileBtn.widthAnchor constraintEqualToConstant:147],
+
             ]];
         } else {
             [NSLayoutConstraint activateConstraints:@[
                 [_saveFileBtn.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-8],
-                [_saveFileBtn.heightAnchor constraintEqualToConstant:20],
-                [_saveFileBtn.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-30],
+                [_saveFileBtn.heightAnchor constraintEqualToConstant:25],
+                [_saveFileBtn.leftAnchor constraintEqualToAnchor:self.savePhotoBtn.rightAnchor constant:11],
+                [_saveFileBtn.widthAnchor constraintEqualToConstant:147],
+
             ]];
         }
     }

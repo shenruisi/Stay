@@ -59,7 +59,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
    DownloadResource *downloadResource = self.array[indexPath.row];
     if(downloadResource.status == 2) {
-        return 150;
+        return 160;
     } else {
         return 128;
     }
@@ -88,6 +88,26 @@
     
 
     
+}
+
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    for (UIView *view in tableView.subviews){
+        if ([view isKindOfClass:NSClassFromString(@"_UITableViewCellSwipeContainerView")]){
+            for (UIView *pullView in view.subviews){
+                if ([pullView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+                    for (UIView *buttonView in pullView.subviews){
+                        if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
+                            for (UIView *targetView in buttonView.subviews){
+                                if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
+                                    targetView.backgroundColor = [UIColor clearColor];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -131,8 +151,10 @@
             [self presentViewController:alert animated:YES completion:nil];
             [tableView setEditing:NO animated:YES];
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
+    
+    deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:RGB(224, 32, 32) renderingMode:UIImageRenderingModeAlwaysOriginal];
+
+    deleteAction.backgroundColor = [UIColor clearColor];
         
     
     UIContextualAction *changeFloderAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
@@ -149,8 +171,8 @@
         [tableView setEditing:NO animated:YES];
     }];
     
-    changeFloderAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
-    changeFloderAction.backgroundColor = FCStyle.accent;
+    changeFloderAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15] color:FCStyle.accent];
+    changeFloderAction.backgroundColor = [UIColor clearColor];
     
     return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeFloderAction]];
     
