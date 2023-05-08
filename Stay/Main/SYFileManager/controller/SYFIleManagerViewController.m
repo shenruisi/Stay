@@ -365,7 +365,7 @@ UIDocumentPickerDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if([tableView isEqual:self.searchTableView]) {
-        return 150;
+        return 160;
     } else {
         if(self.selectedIdx == 1) {
             return 150;
@@ -757,6 +757,26 @@ UIDocumentPickerDelegate
     }
 }
 
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    for (UIView *view in tableView.subviews){
+        if ([view isKindOfClass:NSClassFromString(@"_UITableViewCellSwipeContainerView")]){
+            for (UIView *pullView in view.subviews){
+                if ([pullView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+                    for (UIView *buttonView in pullView.subviews){
+                        if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
+                            for (UIView *targetView in buttonView.subviews){
+                                if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
+                                    targetView.backgroundColor = [UIColor clearColor];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     //Fixed retains self
     __weak SYFIleManagerViewController *weakSelf = self;
@@ -829,8 +849,8 @@ UIDocumentPickerDelegate
                 [self presentViewController:alert animated:YES completion:nil];
                 [tableView setEditing:NO animated:YES];
             }];
-            deleteAction.image = [UIImage imageNamed:@"delete"];
-            deleteAction.backgroundColor = RGB(224, 32, 32);
+        deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:RGB(224, 32, 32) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        deleteAction.backgroundColor =  [UIColor clearColor];
             
         UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             FCTab *tab = [FCShared tabManager].tabs[indexPath.row - 1];
@@ -839,9 +859,9 @@ UIDocumentPickerDelegate
             [tableView setEditing:NO animated:YES];
         }];
         
-        changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15]];
+        changeTitleAction.image = [ImageHelper sfNamed:@"pencil" font:[UIFont systemFontOfSize:15] color:FCStyle.accent];
 
-        changeTitleAction.backgroundColor = FCStyle.accent;
+        changeTitleAction.backgroundColor = [UIColor clearColor];
         
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,changeTitleAction]];
     } else if ([tableView isEqual:self.tableView] && self.selectedIdx == 1) {
@@ -882,8 +902,8 @@ UIDocumentPickerDelegate
             [self presentViewController:alert animated:YES completion:nil];
             [tableView setEditing:NO animated:YES];
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
+        deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:RGB(224, 32, 32) renderingMode:UIImageRenderingModeAlwaysOriginal];
+        deleteAction.backgroundColor =  [UIColor clearColor];
         
 
     return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
@@ -1127,7 +1147,7 @@ UIDocumentPickerDelegate
         [NSLayoutConstraint activateConstraints:@[
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
-//            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
             [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
         ]];
     }

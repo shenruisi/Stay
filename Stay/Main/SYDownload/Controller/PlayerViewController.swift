@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 
 @objc
-class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UITableViewDelegate {
+class PlayerViewController: FCViewController, UITableViewDataSource, UITableViewDelegate {
     
     private static var shared: PlayerViewController?
     
@@ -76,12 +76,12 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         view.backgroundColor = .black
-        
+        self.hidesBottomBarWhenPushed = true
         videoView = VideoPlayerView(resources: resources, controller: self)
         videoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(videoView)
         
-        container.backgroundColor = FCStyle.secondaryBackground
+        container.backgroundColor = UIColor.clear
         container.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(container)
         
@@ -106,7 +106,7 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.rowHeight = 104.5
-        tableView.backgroundColor = FCStyle.secondaryBackground
+        tableView.backgroundColor = UIColor.clear
         tableView.register(SYVideoCellTableViewCell.self, forCellReuseIdentifier: "SYVideoCellTableViewCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(tableView)
@@ -164,9 +164,11 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
             let airBtn = AVRoutePickerView()
             airBtn.prioritizesVideoDevices = true
             airBtn.delegate = videoView
-            rightBarButtonItems = [UIBarButtonItem(customView: airBtn)]
+            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: airBtn)]
+        
+            
         } else {
-            rightBarButtonItems = []
+            self.navigationItem.rightBarButtonItems = []
         }
     }
     
