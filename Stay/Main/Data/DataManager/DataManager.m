@@ -123,7 +123,7 @@
         [self addColumn:@"download_resource" column:@"audioUrl"];
     }
     
-//    [self deleteTable:@"content_filter"];
+    [self deleteTable:@"content_filter"];
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];

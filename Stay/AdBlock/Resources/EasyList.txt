@@ -1,1 +1,1 @@
-||beerfaucet.io/promo/300×250.gif
+/\.com\/\d+/[0-9a-z]+\.js$/$script,~third-party,domain=hentai2w.com

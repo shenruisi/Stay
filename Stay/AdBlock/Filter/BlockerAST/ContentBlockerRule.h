@@ -39,9 +39,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) ContentBlockerTrigger *trigger;
 @property (nonatomic, strong) ContentBlockerAction *action;
 @property (nonatomic, strong) NSMutableDictionary *specialComment;
+@property (nonatomic, strong) NSString *originRule;
 
 - (BOOL)mergeRule:(ContentBlockerRule *)other;
 - (NSDictionary *)toDictionary;
+- (NSString *)key;
 @end
 
 NS_ASSUME_NONNULL_END

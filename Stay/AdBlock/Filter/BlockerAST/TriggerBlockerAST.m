@@ -38,7 +38,7 @@
         
         NSArray<NSTextCheckingResult *> *capResults;
         do{
-            NSRegularExpression *capRegex = [NSRegularExpression regularExpressionWithPattern:@"(\\[[0-9a-zA-Z\\-]+\\])\\{(\\d)\\}" options:0 error:nil];
+            NSRegularExpression *capRegex = [NSRegularExpression regularExpressionWithPattern:@"(\\[[0-9a-zA-Z\\-]+\\])\\{(\\d+)\\}" options:0 error:nil];
             capResults = [capRegex matchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length)];
             for (NSTextCheckingResult *result in capResults){
                 NSInteger n = result.numberOfRanges;
@@ -67,7 +67,7 @@
             self.unsupported = YES;
             return;
         }
-        
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\d" withString:@"[0-9]"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\?" withString:@"\\?"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"." withString:@"\\."];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];

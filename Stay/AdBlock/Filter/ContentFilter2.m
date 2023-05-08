@@ -100,19 +100,18 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         if (newLine.length > 0){
             BOOL isSepcialComment;
             ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:newLine isSpecialComment:&isSepcialComment];
-            if (nil == universalRule && [contentBlockerRule.trigger.urlFilter isEqualToString:@".*"]){
-                if (contentBlockerRule.action.selector.length > 0){
-                    universalRule = contentBlockerRule;
-                }
+            contentBlockerRule.originRule = newLine;
+            if (nil == universalRule && [contentBlockerRule.key isEqualToString:@".*[SEL]"]){
+                universalRule = contentBlockerRule;
             }
             
             if (contentBlockerRule && !isSepcialComment){
-                ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.trigger.urlFilter];
+                ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.key];
                 if (existContentBlockerRule){
                     if ([contentBlockerRule isEqual:existContentBlockerRule]){
                     }
                     else if ([contentBlockerRule.action.type isEqualToString:@"ignore-previous-rules"]){
-                        [ruleMergeDict removeObjectForKey:contentBlockerRule.trigger.urlFilter];
+                        [ruleMergeDict removeObjectForKey:contentBlockerRule.key];
                         [contentBlockerRules removeObject:existContentBlockerRule];
                     }
                     else{
@@ -122,7 +121,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                     }
                 }
                 else{
-                    [ruleMergeDict setObject:contentBlockerRule forKey:contentBlockerRule.trigger.urlFilter];
+                    [ruleMergeDict setObject:contentBlockerRule forKey:contentBlockerRule.key];
                     if (universalRule != contentBlockerRule){
                         [contentBlockerRules addObject:contentBlockerRule];
                     }
@@ -151,6 +150,8 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             }
         }
     }
+    
+    ContentBlockerRule *contentBlockerRule = [ruleMergeDict objectForKey:@".*"];
     
     if (updateFilterInfo){
         [[DataManager shareManager]
@@ -208,8 +209,8 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         
         NSError *maxRuleCountError;
         if (jsonRules.count > MAX_RULE_COUNT){
-            int start = 12400;
-            int end = 12450;
+            int start = 14000;
+            int end = 15000;
             int length = end - start;
             
             jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(start, length)]];

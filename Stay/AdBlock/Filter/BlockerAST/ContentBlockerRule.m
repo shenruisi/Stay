@@ -186,16 +186,30 @@
 }
 
 - (NSDictionary *)toDictionary{
-    return @{
-        @"trigger":[self.trigger toDictionary],
-        @"action":[self.action toDictionary]
-    };
+    if (self.originRule){
+        return @{
+            @"trigger":[self.trigger toDictionary],
+            @"action":[self.action toDictionary],
+            @"origin_rule":self.originRule
+        };
+    }
+    else{
+        return @{
+            @"trigger":[self.trigger toDictionary],
+            @"action":[self.action toDictionary]
+        };
+    }
+    
 }
 
 - (BOOL)isEqual:(id)object{
     ContentBlockerRule *other = (ContentBlockerRule *)object;
     if (self == other) return YES;
     return [self.trigger isEqual:other.trigger] && [self.action isEqual:other.action];
+}
+
+- (NSString *)key{
+    return [NSString stringWithFormat:@"%@%@",self.trigger.urlFilter, self.action.selector.length > 0 ? @"[SEL]":@""];
 }
 
 - (BOOL)mergeRule:(ContentBlockerRule *)other{
