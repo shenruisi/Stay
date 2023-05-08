@@ -473,15 +473,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }
     }
     
-    if(self.handActiveDatas.count > 0) {
-        [_stopDatas replaceObjectsInRange:NSMakeRange(0,0)
-                     withObjectsFromArray:self.handActiveDatas];
-    }
-    
-    if(self.handStopDatas.count > 0) {
-        [_activeDatas replaceObjectsInRange:NSMakeRange(0,0)
-                     withObjectsFromArray:self.handStopDatas];
-    }
+//    if(self.handActiveDatas.count > 0) {
+//        [_stopDatas replaceObjectsInRange:NSMakeRange(0,0)
+//                     withObjectsFromArray:self.handActiveDatas];
+//    }
+//
+//    if(self.handStopDatas.count > 0) {
+//        [_activeDatas replaceObjectsInRange:NSMakeRange(0,0)
+//                     withObjectsFromArray:self.handStopDatas];
+//    }
     
     
 }
@@ -1492,9 +1492,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
                     
                     model.active = 0;
-                    [weakSelf.handStopDatas addObject:model];
-                    [weakSelf.handActiveDatas removeObject:model];
-                    
+//                    [weakSelf.handStopDatas addObject:model];
+//                    [weakSelf.handActiveDatas removeObject:model];
+//
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
                         @"uuid":model.uuid
                     }];
@@ -1503,15 +1503,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
                     
                     model.active = 1;
-                    [weakSelf.handActiveDatas addObject:model];
-                    [weakSelf.handStopDatas removeObject:model];
+//                    [weakSelf.handActiveDatas addObject:model];
+//                    [weakSelf.handStopDatas removeObject:model];
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
                         @"uuid":model.uuid
                     }];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
-                [weakSelf reloadTableView];
+//                [weakSelf reloadTableView];
                 [weakSelf initScrpitContent];
                 [tableView reloadData];
         }];
@@ -1566,8 +1566,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
         
         model.active = 0;
-        [self.handStopDatas addObject:model];
-        [self.handActiveDatas removeObject:model];
+//        [self.handStopDatas addObject:model];
+//        [self.handActiveDatas removeObject:model];
         
         NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
             @"uuid":model.uuid
@@ -1577,15 +1577,23 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
         
         model.active = 1;
-        [self.handActiveDatas addObject:model];
-        [self.handStopDatas removeObject:model];
+//        [self.handActiveDatas addObject:model];
+//        [self.handStopDatas removeObject:model];
         NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
             @"uuid":model.uuid
         }];
         [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
     [_tableView setEditing:NO animated:YES];
-    [self reloadTableView];
+    int count = 0;
+    if(_selectedIdx == 1) {
+        count = self.stopDatas.count;
+    } else {
+        count = self.activeDatas.count;
+    }
+    
+    self.tableView.hidden = _datas.count == 0;
+    self.emptyTipsView.hidden = _datas.count > 0;
     [self initScrpitContent];
     [_tableView reloadData];
 }
