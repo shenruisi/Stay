@@ -1,6 +1,5 @@
 <template>
-  <div class="popup-header-wrapper">
-    
+  <div class="popup-header-wrapper" ref="headerRef" >
     <div class="header-content">
       <div class="stay-icon" @click="clickStayAction"></div>
       <div class="pro" v-if="isStayPro">PRO</div>
@@ -12,7 +11,7 @@
 </template>
 
 <script>
-import { reactive, toRefs, inject, watch } from 'vue'
+import { reactive, toRefs, inject, watch, ref, onMounted,nextTick } from 'vue'
 import { useI18n } from 'vue-i18n';
 export default {
   name: 'headerComp',
@@ -27,7 +26,17 @@ export default {
       isStayPro: store.state.isStayPro,
       title: props.titleInfo
     })
+    const headerRef = ref(null);
+    // headerRef.value.style.backdropFilter = 'blur(16px)';
 
+    onMounted(() => {
+      console.log(headerRef.value);
+      let timer = setTimeout(() => {
+        headerRef.value.style = '-webkit-backdrop-filter: blur(16px) saturate(150%)';
+        clearTimeout(timer);
+        timer = null;
+      }, 200)
+    })
     const clickStayAction = () => {
       // window.open('stay://');
       global.openUrlInSafariPopup('stay://');
@@ -50,6 +59,7 @@ export default {
     );
     
     return {
+      headerRef,
       ...toRefs(state),
       clickStayAction,
       clickStaySwitchAction,
@@ -62,15 +72,16 @@ export default {
 <style lang="less" scoped>
   .popup-header-wrapper{
     width: 100%;
+    background-color: var(--dm-bg-f6drop);
+    // -webkit-backdrop-filter: saturate(150%) blur(16px);
+    // backdrop-filter: saturate(150%) blur(16px);
+    transform: translateZ(0);
     position: fixed;
-    
     top: 0;
     left: 0;
     right: 0;
-    background-color: var(--dm-bg-f6);
     border-bottom: 1px solid var(--dm-bd);
     z-index: 999;
-    
     .stay-switch{
       position: absolute;
       right: 0;

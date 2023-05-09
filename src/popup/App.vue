@@ -3,7 +3,7 @@
     <Header :titleInfo="t(selectedTab.name)">
       <!-- MatchedScript -->
       <!-- adblock -->
-      <div class="tab-wrapper"  v-if="selectedTab.id==1 || selectedTab.id==4">
+      <div class="tab-wrapper" :class="selectedTab.id==1?'script':'adblock'" v-if="selectedTab.id==1 || selectedTab.id==4">
         <div
           class="tab"
           @click="tabActionClick('tab_1',selectedTab.name)"
@@ -162,13 +162,24 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    
+    &.script{
+      .tab-text::after{
+        width: 40px;
+      }
+    }
+    &.adblock{
+      .tab-text::after{
+        width: 80px;
+      }
+    }
     .tab{
       padding: 0 10px;
       text-align: center;
       height: 100%;
       cursor: pointer;
       position: relative;
+      color: var(--dm-font);
+      font-weight: 600;
       .tab-text{
         height: 100%;
         font-size: 16px;
@@ -180,7 +191,6 @@ export default {
         // border-radius: 8px;
         .tab-text::after{
           content: '';
-          width: 40px;
           height: 2px;
           background-color: var(--s-main);
           position: absolute;

@@ -140,10 +140,12 @@ body.dialog-open {
   --dm-font: var(--s-black);
   --dm-bg: var(--s-white);
   --dm-bg-f6: var(--s-f6);
+  --dm-bg-f6drop: rgba(246, 246, 246, 0.1);
   --dm-bd: var(--s-e0);
   --dm-bg-f7: var(--s-f7);
   --dm-font-2: var(--s-8a);
   --dm-font-3: var(--s-000-50);
+  --dm-bg-linear: -webkit-linear-gradient(#F8F8FE, #EDE8F3);
 }
 
 #app {
@@ -165,10 +167,10 @@ body.dialog-open {
   overflow-y: scroll;
   overflow-x: hidden;
   // background-color: var(--dm-bg);
-  background: -webkit-linear-gradient(#F8F8FE, #EDE8F3); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(#F8F8FE, #EDE8F3); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(#F8F8FE, #EDE8F3); /* Firefox 3.6 - 15 */
-  background: linear-gradient(#F8F8FE, #EDE8F3); /* 标准的语法（必须放在最后） */
+  background: var(--dm-bg-linear); /* Safari 5.1 - 6.0 */
+  // background: -o-linear-gradient(#F8F8FE, #EDE8F3); /* Opera 11.1 - 12.0 */
+  // background: -moz-linear-gradient(#F8F8FE, #EDE8F3); /* Firefox 3.6 - 15 */
+  // background: linear-gradient(#F8F8FE, #EDE8F3); /* 标准的语法（必须放在最后） */
 }
 
 
@@ -181,6 +183,8 @@ body.dialog-open {
     --dm-font-2: var(--s-6f);
     --dm-bg-f7: var(--s-13);
     --dm-font-3: var(--s-7a);
+    --dm-bg-linear: #1C1C1C;
+    --dm-bg-f6drop: var(--s-13);
   }
   
 }

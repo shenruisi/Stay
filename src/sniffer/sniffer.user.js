@@ -1555,7 +1555,7 @@ const browser = __b;
           }
           .__stay-show-modal{
             ${bg}
-            -webkit-backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(10px); 
           }
           .__stay-sinffer-content{
             width:100%;
