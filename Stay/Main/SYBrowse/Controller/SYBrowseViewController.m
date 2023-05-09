@@ -516,11 +516,12 @@
     imageBox.layer.cornerRadius = 10;
     imageBox.layer.borderWidth = 1;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-    
+    imageBox.clipsToBounds = YES;
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
     imageView.contentMode =  UIViewContentModeScaleAspectFit;
     NSString *iconUrl = dic[@"icon_url"];
     imageView.clipsToBounds = YES;
+    imageView.layer.masksToBounds = YES;
     imageView.centerX = 24;
     imageView.centerY = 24;
     [imageBox addSubview:imageView];

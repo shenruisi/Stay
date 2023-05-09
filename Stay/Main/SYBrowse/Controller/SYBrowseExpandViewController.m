@@ -119,6 +119,7 @@
     }
     
     [self.tableView reloadData];
+    self.hidesBottomBarWhenPushed = YES;
 //    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.

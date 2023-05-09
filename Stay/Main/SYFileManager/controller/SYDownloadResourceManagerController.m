@@ -40,6 +40,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self reloadData];
+    self.hidesBottomBarWhenPushed = YES;
     // Do any additional setup after loading the view.
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.

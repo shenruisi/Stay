@@ -188,6 +188,7 @@ UIDocumentPickerDelegate
 
 - (void)changeDownloading {
     self.selectedIdx = 1;
+    [self.navigationTabItem activeItem:self.downloadingBtn];
     dispatch_async(dispatch_get_main_queue(),^{
         [self.videoArray removeAllObjects];
         [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
