@@ -63,6 +63,8 @@
 #import "VideoParser.h"
 //#import <Bugsnag/Bugsnag.h>
 
+#import "WelcomeSlideController.h"
+
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -287,6 +289,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, assign) Boolean searchStatus;
 
+@property (nonatomic, strong) WelcomeSlideController *welcomeSlideController;
 
 @end
 
@@ -425,20 +428,21 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #ifndef FC_MAC
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
-        SYFlashViewController *cer = [[SYFlashViewController alloc] init];
-        if (!(FCDeviceTypeIPad == DeviceHelper.type)){
-            cer.modalPresentationStyle = 0;
-        } else {
-            cer.isMore = true;
-        }
-        [self presentViewController:cer animated:YES completion:nil];
-        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
+        [self.welcomeSlideController show];
     }
 #endif
     
 //    self.tableView.sectionHeaderTopPadding = 0;
 //    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
+}
+
+- (WelcomeSlideController *)welcomeSlideController{
+    if (nil == _welcomeSlideController){
+        _welcomeSlideController = [[WelcomeSlideController alloc] init];
+    }
+    
+    return _welcomeSlideController;
 }
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{

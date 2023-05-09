@@ -11,6 +11,8 @@
 #import "ImageHelper.h"
 #import "Tampermonkey.h"
 #import "DataManager.h"
+#import "SharedStorageManager.h"
+
 @interface EnableStayModalViewController()
 
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
@@ -70,6 +72,31 @@
     [self number6];
     [self tipsLabel6];
     [self feedbackBtn];
+    
+#ifdef FC_MAC
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onBecomeActive:)
+                                                 name:SVCDidBecomeActiveNotification
+                                               object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+#endif
+}
+
+- (void)clear{
+#ifdef FC_MAC
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SVCDidBecomeActiveNotification object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+#endif
+}
+
+- (void)onBecomeActive:(NSNotification *)note{
+    [SharedStorageManager shared].userDefaults = nil;
+    BOOL safariExtensionEnabled = [SharedStorageManager shared].userDefaults.safariExtensionEnabled;
+    if (safariExtensionEnabled){
+        [self.navigationController popModalViewController];
+    }
 }
 
 #pragma click
@@ -167,7 +194,7 @@
         _tapBtn.translatesAutoresizingMaskIntoConstraints = NO;
         _tapBtn.layer.masksToBounds = YES;
         _tapBtn.layer.cornerRadius = 10;
-        [_tapBtn addTarget:self action:@selector(penTutorial) forControlEvents:UIControlEventTouchUpInside];
+        [_tapBtn addTarget:self action:@selector(openTutorial) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_tapBtn];
 
         CGRect rect = [_tapBtn.titleLabel.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.bodyBold.pointSize)

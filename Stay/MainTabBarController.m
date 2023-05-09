@@ -138,18 +138,10 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-//    [self.welcomeSliderController show];
 }
 
 
-- (WelcomeSlideController *)welcomeSliderController{
-    if (nil == _welcomeSliderController){
-        _welcomeSliderController = [[WelcomeSlideController alloc] init];
-    }
-    
-    return _welcomeSliderController;
-}
+
 
 //-(void)createTabbar
 //{

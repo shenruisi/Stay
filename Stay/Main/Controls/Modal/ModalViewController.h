@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGFloat)maxViewWidth;
 
 - (UIView *)getMainView;
-
+- (void)clear;
 - (void)willSee;
 @end
 

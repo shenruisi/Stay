@@ -24,9 +24,12 @@
 }
 
 + (nullable MainTabBarController *)primaryController{
-    UISplitViewController *splitViewController = [self splitController];
-    if (splitViewController){
-        return splitViewController.viewControllers[0];
+    UIViewController *splitViewController = [self splitController];
+    if ([splitViewController isKindOfClass:[UISplitViewController class]]){
+        return ((UISplitViewController *)splitViewController).viewControllers[0];
+    }
+    else if ([splitViewController isKindOfClass:[MainTabBarController class]]){
+        return (MainTabBarController *)splitViewController;
     }
     return nil;
 }

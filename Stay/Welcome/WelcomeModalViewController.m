@@ -21,6 +21,9 @@
 #import "Stay-Swift.h"
 #endif
 
+#import "SharedStorageManager.h"
+#import "QuickAccess.h"
+
 
 @interface WelcomeModalViewController()<
  UITableViewDelegate,
@@ -62,13 +65,37 @@
 
 - (void)viewWillAppear{
     [super viewWillAppear];
-//    self.enableStayElemnt.accessoryEntity.animation = YES;
-//    self.installUserscriptElement.enable = NO;
-    self.doneElement.enable = NO;
+    [SharedStorageManager shared].userDefaults = nil;
+    BOOL safariExtensionEnabled = [SharedStorageManager shared].userDefaults.safariExtensionEnabled;
+    self.enableStayElemnt.accessoryEntity.animation = !safariExtensionEnabled;
+    self.enableStayElemnt.accessoryEntity.checkmark = safariExtensionEnabled;
+    self.enableStayElemnt.enable = YES;
     
-    [self.tableView reloadData];
+    NSArray *datas =  [[DataManager shareManager] findScript:1];
+    BOOL userscriptInstalled = datas.count > 0;
+    self.installUserscriptElement.accessoryEntity.animation = safariExtensionEnabled && !userscriptInstalled;
+    self.installUserscriptElement.enable = safariExtensionEnabled;
+    self.installUserscriptElement.accessoryEntity.checkmark = userscriptInstalled;
     
     
+    
+    if (safariExtensionEnabled && userscriptInstalled){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            [[self congratulationsLottieView] playWithCompletion:^(BOOL complete) {
+                [self.congratulationsLottieView removeFromSuperview];
+                self.congratulationsLottieView = nil;
+                self.doneElement.enable = safariExtensionEnabled && userscriptInstalled;
+                self.doneElement.accessoryEntity.animation = safariExtensionEnabled && userscriptInstalled;
+                [self.tableView reloadData];
+            }];
+        });
+    }
+    else{
+        self.doneElement.enable = safariExtensionEnabled && userscriptInstalled;
+        self.doneElement.accessoryEntity.animation = safariExtensionEnabled && userscriptInstalled;
+        [self.tableView reloadData];
+    }
 }
 
 
@@ -321,6 +348,7 @@
 - (ModalItemElement *)doneElement{
     if (nil == _doneElement){
         _doneElement = [[ModalItemElement alloc] init];
+        __weak WelcomeModalViewController *weakSelf = (WelcomeModalViewController *)self;
         _doneElement.shadowRound = YES;
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         general.title = NSLocalizedString(@"DoneStep3", @"");
@@ -331,6 +359,13 @@
         _doneElement.accessoryEntity = accessory;
         _doneElement.renderMode = ModalItemElementRenderModeSingle;
         _doneElement.type = ModalItemElementTypeAccessory;
+        _doneElement.action = ^(ModalItemElement * _Nonnull element) {
+            if (element.enable){
+                [[QuickAccess primaryController].fcTabBar selectIndex:1];
+                [weakSelf.navigationController.slideController dismiss];
+            }
+        };
+        
     }
     
     return _doneElement;
@@ -364,8 +399,7 @@
 }
 
 - (void)skipAction:(id)sender{
-    [[self congratulationsLottieView] play];
-    return;
+    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Stay"
                                                                    message:NSLocalizedString(@"WelcomeSkipAlert", @"")
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -386,14 +420,14 @@
 
 - (LottieView *)congratulationsLottieView{
     if (nil == _congratulationsLottieView){
-        _congratulationsLottieView = [[LottieView alloc] initWithAnimationName:@"congratulations"];
+        _congratulationsLottieView = [[LottieView alloc] initWithAnimationName:@"congratulation"];
         _congratulationsLottieView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:_congratulationsLottieView];
         [NSLayoutConstraint activateConstraints:@[
             [_congratulationsLottieView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_congratulationsLottieView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-            [_congratulationsLottieView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-80],
-            [_congratulationsLottieView.heightAnchor constraintEqualToConstant:300]
+            [_congratulationsLottieView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+            [_congratulationsLottieView.topAnchor constraintEqualToAnchor:self.view.topAnchor]
         ]];
     }
     

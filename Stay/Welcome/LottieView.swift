@@ -23,8 +23,8 @@ import Lottie
         lottieView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true;
     }
     
-    func play(){
-        lottieView.play()
+    func play(completion: LottieCompletionBlock? = nil){
+        lottieView.play(completion: completion)
     }
     
     func stop(){

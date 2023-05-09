@@ -112,8 +112,32 @@
   
     });
     
+#ifdef FC_MAC
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onBecomeActive:)
+                                                 name:SVCDidBecomeActiveNotification
+                                               object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+#endif
+    
 }
 
+- (void)clear{
+#ifdef FC_MAC
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SVCDidBecomeActiveNotification object:nil];
+#else
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+#endif
+}
+
+- (void)onBecomeActive:(NSNotification *)note{
+    NSArray *datas =  [[DataManager shareManager] findScript:1];
+    BOOL userscriptInstalled = datas.count > 0;
+    if (userscriptInstalled){
+        [self.navigationController popModalViewController];
+    }
+}
 
 - (void)getDetail:(UIButton *)sender {
     NSString *url = self.scriptDic[@"hosting_url"];

@@ -97,4 +97,5 @@
 - (void)viewDisappearIntermediate{}
 - (void)viewDidDisappear{}
 - (void)viewDidLoad{}
+- (void)clear{}
 @end

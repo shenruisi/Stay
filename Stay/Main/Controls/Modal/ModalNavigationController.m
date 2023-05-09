@@ -218,6 +218,7 @@
         if (toRoot){
             for (int i = 1; i < self.controllers.count; i++){
                 [[[self.controllers objectAtIndex:i] getMainView] removeFromSuperview];
+                [[self.controllers objectAtIndex:i] clear];
             }
             [self.controllers removeObjectsInRange:NSMakeRange(1, self.controllers.count-1)];
         }
