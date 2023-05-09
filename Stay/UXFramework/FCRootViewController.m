@@ -126,10 +126,18 @@
 }
 
 - (void)startHeadLoading{
+    if (![[NSThread currentThread] isMainThread]){
+        [self performSelectorOnMainThread:@selector(startHeadLoading) withObject:nil waitUntilDone:YES];
+        return;
+    }
     [self.indicatorView startAnimating];
 }
 
 - (void)stopHeadLoading{
+    if (![[NSThread currentThread] isMainThread]){
+        [self performSelectorOnMainThread:@selector(stopHeadLoading) withObject:nil waitUntilDone:YES];
+        return;
+    }
     [self.indicatorView stopAnimating];
 }
 

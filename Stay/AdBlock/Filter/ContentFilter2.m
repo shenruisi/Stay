@@ -13,7 +13,7 @@
 #import "DataManager.h"
 #import "SYVersionUtils.h"
 
-static NSUInteger MAX_RULE_COUNT = 100000;
+static NSUInteger MAX_RULE_COUNT = 50000;
 
 NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
 
@@ -90,165 +90,168 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
     updateFilterInfo:(BOOL)updateFilterInfo
          writeOnDisk:(BOOL)writeOnDisk
           completion:(void(^)(NSError *))completion{
-    NSError *error;
-    NSMutableArray<ContentBlockerRule *> *contentBlockerRules = [[NSMutableArray alloc] init];
-    NSMutableDictionary *ruleMergeDict = [[NSMutableDictionary alloc] init];
-    ContentBlockerRule *universalRule;
-    NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
-    for (NSString *line in lines){
-        NSString *newLine = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
-        if (newLine.length > 0){
-            BOOL isSepcialComment;
-            ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:newLine isSpecialComment:&isSepcialComment];
-//            contentBlockerRule.originRule = newLine;
-            if (nil == universalRule && [contentBlockerRule.key isEqualToString:@".*[SEL]"]){
-                universalRule = contentBlockerRule;
-            }
-            
-            if (contentBlockerRule && !isSepcialComment){
-                ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.key];
-                if (existContentBlockerRule){
-                    if ([contentBlockerRule isEqual:existContentBlockerRule]){
-                    }
-                    else if ([contentBlockerRule.action.type isEqualToString:@"ignore-previous-rules"]){
-                        [ruleMergeDict removeObjectForKey:contentBlockerRule.key];
-                        [contentBlockerRules removeObject:existContentBlockerRule];
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+        NSError *error;
+        NSMutableArray<ContentBlockerRule *> *contentBlockerRules = [[NSMutableArray alloc] init];
+        NSMutableDictionary *ruleMergeDict = [[NSMutableDictionary alloc] init];
+        ContentBlockerRule *universalRule;
+        NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
+        for (NSString *line in lines){
+            NSString *newLine = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+            if (newLine.length > 0){
+                BOOL isSepcialComment;
+                ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:newLine isSpecialComment:&isSepcialComment];
+    //            contentBlockerRule.originRule = newLine;
+                if (nil == universalRule && [contentBlockerRule.key isEqualToString:@".*[SEL]"]){
+                    universalRule = contentBlockerRule;
+                }
+                
+                if (contentBlockerRule && !isSepcialComment){
+                    ContentBlockerRule *existContentBlockerRule = [ruleMergeDict objectForKey:contentBlockerRule.key];
+                    if (existContentBlockerRule){
+                        if ([contentBlockerRule isEqual:existContentBlockerRule]){
+                        }
+                        else if ([contentBlockerRule.action.type isEqualToString:@"ignore-previous-rules"]){
+                            [ruleMergeDict removeObjectForKey:contentBlockerRule.key];
+                            [contentBlockerRules removeObject:existContentBlockerRule];
+                        }
+                        else{
+                            if (![existContentBlockerRule mergeRule:contentBlockerRule]){
+                                [contentBlockerRules addObject:contentBlockerRule];
+                            }
+                        }
                     }
                     else{
-                        if (![existContentBlockerRule mergeRule:contentBlockerRule]){
+                        [ruleMergeDict setObject:contentBlockerRule forKey:contentBlockerRule.key];
+                        if (universalRule != contentBlockerRule){
                             [contentBlockerRules addObject:contentBlockerRule];
                         }
                     }
                 }
-                else{
-                    [ruleMergeDict setObject:contentBlockerRule forKey:contentBlockerRule.key];
-                    if (universalRule != contentBlockerRule){
-                        [contentBlockerRules addObject:contentBlockerRule];
-                    }
-                }
-            }
-            else if (isSepcialComment){
-                if (updateFilterInfo){
-                    NSDictionary *specialComment = contentBlockerRule.specialComment;
-                    if (specialComment[@"Homepage"]){
-                        [[DataManager shareManager]
-                         updateContentFilterHomepage:specialComment[@"Homepage"] uuid:self.uuid];
-                    }
-                    else if (specialComment[@"Version"]){
-                        [[DataManager shareManager]
-                         updateContentFilterVersion:specialComment[@"Version"] uuid:self.uuid];
-                    }
-                    else if (specialComment[@"Expires"]){
-                        [[DataManager shareManager]
-                         updateContentFilterExpires:specialComment[@"Expires"] uuid:self.uuid];
-                    }
-                    else if (specialComment[@"Redirect"]){
-                        [[DataManager shareManager]
-                         updateContentFilterRedirect:specialComment[@"Redirect"] uuid:self.uuid];
+                else if (isSepcialComment){
+                    if (updateFilterInfo){
+                        NSDictionary *specialComment = contentBlockerRule.specialComment;
+                        if (specialComment[@"Homepage"]){
+                            [[DataManager shareManager]
+                             updateContentFilterHomepage:specialComment[@"Homepage"] uuid:self.uuid];
+                        }
+                        else if (specialComment[@"Version"]){
+                            [[DataManager shareManager]
+                             updateContentFilterVersion:specialComment[@"Version"] uuid:self.uuid];
+                        }
+                        else if (specialComment[@"Expires"]){
+                            [[DataManager shareManager]
+                             updateContentFilterExpires:specialComment[@"Expires"] uuid:self.uuid];
+                        }
+                        else if (specialComment[@"Redirect"]){
+                            [[DataManager shareManager]
+                             updateContentFilterRedirect:specialComment[@"Redirect"] uuid:self.uuid];
+                        }
                     }
                 }
             }
         }
-    }
-    
-    if (updateFilterInfo){
-        [[DataManager shareManager]
-         updateContentFilterUpdateTime:[NSDate date] uuid:self.uuid];
-    }
-    
-    if (universalRule && universalRule.action.selectors.count > 0){
-        NSMutableString *selectorConnector = [[NSMutableString alloc] init];
-        NSUInteger splictCount = 100;
-        NSUInteger counter = 0;
-        for (NSString *selector in universalRule.action.selectors){
-            if (counter < splictCount){
-                [selectorConnector appendFormat:@"%@, ",selector];
-                counter++;
+        
+        if (updateFilterInfo){
+            [[DataManager shareManager]
+             updateContentFilterUpdateTime:[NSDate date] uuid:self.uuid];
+        }
+        
+        if (universalRule && universalRule.action.selectors.count > 0){
+            NSMutableString *selectorConnector = [[NSMutableString alloc] init];
+            NSUInteger splictCount = 100;
+            NSUInteger counter = 0;
+            for (NSString *selector in universalRule.action.selectors){
+                if (counter < splictCount){
+                    [selectorConnector appendFormat:@"%@, ",selector];
+                    counter++;
+                }
+                else{
+                    [selectorConnector appendString:selector];
+                    ContentBlockerRule *rule = [[ContentBlockerRule alloc] init];
+                    rule.trigger.urlFilter = @".*";
+                    rule.action.type = @"css-display-none";
+                    rule.action.selector = [selectorConnector copy];
+                    [contentBlockerRules addObject:rule];
+                    counter = 0;
+                    [selectorConnector deleteCharactersInRange:NSMakeRange(0, selectorConnector.length)];
+                }
             }
-            else{
-                [selectorConnector appendString:selector];
+            
+            if (selectorConnector.length > 0){
+                [selectorConnector deleteCharactersInRange:NSMakeRange(selectorConnector.length - 2, 2)];
                 ContentBlockerRule *rule = [[ContentBlockerRule alloc] init];
                 rule.trigger.urlFilter = @".*";
                 rule.action.type = @"css-display-none";
                 rule.action.selector = [selectorConnector copy];
                 [contentBlockerRules addObject:rule];
-                counter = 0;
-                [selectorConnector deleteCharactersInRange:NSMakeRange(0, selectorConnector.length)];
             }
         }
+        else if (universalRule && universalRule.action.selectors.count == 0){
+            [contentBlockerRules addObject:universalRule];
+        }
         
-        if (selectorConnector.length > 0){
-            [selectorConnector deleteCharactersInRange:NSMakeRange(selectorConnector.length - 2, 2)];
-            ContentBlockerRule *rule = [[ContentBlockerRule alloc] init];
-            rule.trigger.urlFilter = @".*";
-            rule.action.type = @"css-display-none";
-            rule.action.selector = [selectorConnector copy];
-            [contentBlockerRules addObject:rule];
-        }
-    }
-    else if (universalRule && universalRule.action.selectors.count == 0){
-        [contentBlockerRules addObject:universalRule];
-    }
-    
-    if (writeOnDisk){
-        NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
-        for (ContentBlockerRule *rule in contentBlockerRules){
-            [jsonRules addObject:[rule toDictionary]];
-        }
-       
-        [jsonRules addObject:@{
-            @"trigger" : @{
-                @"url-filter" : @"webkit.svg"
-            },
-            @"action" : @{
-                @"type" : @"block"
+        if (writeOnDisk){
+            NSMutableArray *jsonRules = [[NSMutableArray alloc] init];
+            for (ContentBlockerRule *rule in contentBlockerRules){
+                [jsonRules addObject:[rule toDictionary]];
             }
-        }];
-        
-        NSError *maxRuleCountError;
-        if (jsonRules.count > MAX_RULE_COUNT){
-//            int start = 0;
-//            int end = 60000;
-//            int length = end - start;
-            
-            jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];
-            maxRuleCountError = [[NSError alloc] initWithDomain:@"Content Filter Error" code:-500 userInfo:
-                @{NSLocalizedDescriptionKey:NSLocalizedString(@"RuleMaxCountError", @"")}
-            ];
-        }
-        NSData *data = [NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error];
-        
-        NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        
-        if (error){
-            if (completion){
-                completion(error);
-            }
-            return;
-        }
-
-        [[ContentFilterManager shared] writeJSONToFileName:self.rulePath data:data error:&error];
-        
-        if (error){
-            if (completion){
-                completion(error);
-            }
-            return;
-        }
-        
-        [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-            if (completion){
-                if (maxRuleCountError){
-                    completion(maxRuleCountError);
+           
+            [jsonRules addObject:@{
+                @"trigger" : @{
+                    @"url-filter" : @"webkit.svg"
+                },
+                @"action" : @{
+                    @"type" : @"block"
                 }
-                else{
+            }];
+            
+            NSError *maxRuleCountError;
+            if (jsonRules.count > MAX_RULE_COUNT){
+    //            int start = 0;
+    //            int end = 60000;
+    //            int length = end - start;
+                
+                jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];
+                maxRuleCountError = [[NSError alloc] initWithDomain:@"Content Filter Error" code:-500 userInfo:
+                    @{NSLocalizedDescriptionKey:NSLocalizedString(@"RuleMaxCountError", @"")}
+                ];
+            }
+            NSData *data = [NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error];
+            
+            NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            
+            if (error){
+                if (completion){
                     completion(error);
                 }
-                
+                return;
             }
-            NSLog(@"Update&reloadContentBlockerWithIdentifier:%@ error:%@",self.contentBlockerIdentifier, error);
-        }];
-    }
+
+            [[ContentFilterManager shared] writeJSONToFileName:self.rulePath data:data error:&error];
+            
+            if (error){
+                if (completion){
+                    completion(error);
+                }
+                return;
+            }
+            
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                if (completion){
+                    if (maxRuleCountError){
+                        completion(maxRuleCountError);
+                    }
+                    else{
+                        completion(error);
+                    }
+                    
+                }
+                NSLog(@"Update&reloadContentBlockerWithIdentifier:%@ error:%@",self.contentBlockerIdentifier, error);
+            }];
+        }
+    });
+    
     
 }
 

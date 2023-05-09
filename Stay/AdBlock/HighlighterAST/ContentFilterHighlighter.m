@@ -18,6 +18,8 @@
 #import "NewLineHighlighterAST.h"
 #import "SeparatorHighlighterAST.h"
 #import "PipeHighlighterAST.h"
+#import "JSAPIHighlighterAST.h"
+#import "JSAPIExceptionHighlighterAST.h"
 
 @implementation ContentFilterHighlighter
 
@@ -76,6 +78,16 @@
         
         if ([parser isPipe]){
             ast = [[PipeHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        if ([parser isJSAPI]){
+            ast = [[JSAPIHighlighterAST alloc] initWithParser:parser args:nil];
+            [ret appendAttributedString:ast.attributedString];
+        }
+        
+        if ([parser isJSAPIException]){
+            ast = [[JSAPIExceptionHighlighterAST alloc] initWithParser:parser args:nil];
             [ret appendAttributedString:ast.attributedString];
         }
         

@@ -88,10 +88,6 @@
         
     }while(!parser.isEOF);
     
-//    if (contentBlockerRule.trigger.urlFilters.count > 0){
-//        return nil;
-//    }
-    
     if (contentBlockerRule.trigger.urlFilter.length == 0){
         contentBlockerRule.trigger.urlFilter = @".*";
     }

@@ -280,7 +280,9 @@
         UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                           style:UIAlertActionStyleDefault
                                                         handler:^(UIAlertAction * _Nonnull action) {
+            [self startHeadLoading];
             [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
+                [self stopHeadLoading];
                 NSLog(@"reloadContentBlockerWithCompletion %@",error);
             }];
             completionHandler(YES);
