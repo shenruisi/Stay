@@ -48,7 +48,7 @@
                     && contentFilter.type != ContentFilterTypeTag){
                     if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
-                            NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                            NSLog(@"init load content %@ %@",contentFilter.title,error);
                         }];
                     }
                 }
@@ -59,7 +59,7 @@
                     && contentFilter.type != ContentFilterTypeTag){
                     if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
-                            NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                            NSLog(@"init load content %@ %@",contentFilter.title,error);
                         }];
                     }
                 }
@@ -101,6 +101,18 @@
                 if (state.enabled){
                     contentFilter.enable = 1;
                     [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                    if (0 == contentFilter.load){
+                        [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                            if (nil == error){
+                                contentFilter.load = 1;
+                                [[DataManager shareManager] updateContentFilterLoad:1 uuid:contentFilter.uuid];
+                                NSLog(@"load content %@ successful",contentFilter.title);
+                            }
+                            else{
+                                NSLog(@"load content %@ failure",contentFilter.title);
+                            }
+                        }];
+                    }
                 }
                 else{
                     contentFilter.enable = 0;

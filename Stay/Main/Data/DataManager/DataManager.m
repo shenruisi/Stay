@@ -136,6 +136,7 @@
         basic.enable = 0;
         basic.status = 1;
         basic.sort = 1;
+        basic.load = 0;
         basic.expires = @"4 days (update frequency)";
         basic.version = @"202304190559";
         basic.homepage = @"https://easylist.to/";
@@ -153,6 +154,7 @@
         privacy.enable = 0;
         privacy.status = 1;
         privacy.sort = 2;
+        privacy.load = 0;
         privacy.expires = @"4 days (update frequency)";
         privacy.version = @"202304120535";
         privacy.homepage = @"https://easylist.to/";
@@ -170,6 +172,7 @@
         region.enable = 0;
         region.status = 1;
         region.sort = 3;
+        region.load = 0;
         region.expires = @"4 days (update frequency)";
         region.version = @"202304070640";
         region.homepage = @"https://github.com/easylist/easylistchina/";
@@ -187,6 +190,7 @@
         custom.enable = 0;
         custom.status = 1;
         custom.sort = 4;
+        custom.load = 0;
         custom.uuid = [@"My Filters" md5];
         custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom";
         custom.type = ContentFilterTypeCustom;
@@ -201,6 +205,7 @@
         tag.enable = 0;
         tag.status = 1;
         tag.sort = 5;
+        tag.load = 0;
         tag.uuid = [@"Webpage Tagging Rules" md5];
         tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
         tag.type = ContentFilterTypeTag;
@@ -281,7 +286,7 @@
         return;
     }
     
-    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT, 'rule_path' TEXT,'default_title' TEXT, 'default_url' TEXT, 'enable' INTEGER, 'redirect' TEXT)";
+    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT, 'rule_path' TEXT,'default_title' TEXT, 'default_url' TEXT, 'enable' INTEGER, 'redirect' TEXT, 'load' INTEGER)";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -326,7 +331,7 @@
         return nil;
     }
     
-    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect FROM content_filter order by sort asc";
+    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect,load FROM content_filter order by sort asc";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -373,6 +378,7 @@
         contentFilter.defaultUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
         contentFilter.defaultTitle = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
         contentFilter.redirect = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        contentFilter.load = sqlite3_column_int(stmt, 21);
         
         [ret addObject:contentFilter];
     }
@@ -390,7 +396,7 @@
         return NO;
     }
     
-    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect,load) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     sqlite3_stmt *statement;
     
@@ -442,6 +448,7 @@
         sqlite3_bind_text(statement, 19, contentFilter.defaultUrl ? [contentFilter.defaultUrl UTF8String] : NULL, -1,NULL);
         sqlite3_bind_text(statement, 20, contentFilter.defaultTitle ? [contentFilter.defaultTitle UTF8String] : NULL, -1,NULL);
         sqlite3_bind_text(statement, 21, contentFilter.redirect ? [contentFilter.redirect UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_int64(statement, 22, contentFilter.load);
     }
     
     NSInteger resultCode = sqlite3_step(statement);
@@ -469,6 +476,33 @@
     }
 //    绑定占位符
     sqlite3_bind_int(stmt, 1, (int)status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterLoad:(NSUInteger)load uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET load = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_int(stmt, 1, (int)load);
     sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
     sqlite3_step(stmt);
 //    if (sqlite3_step(stmt) != SQLITE_DONE) {

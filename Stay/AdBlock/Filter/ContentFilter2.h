@@ -42,6 +42,7 @@ typedef enum {
 @property (nonatomic, assign) ContentFilterType type;
 @property (nonatomic, strong) NSString *contentBlockerIdentifier;
 @property (nonatomic, strong) NSString *redirect;
+@property (nonatomic, assign) NSInteger load;
 
 @property (nonatomic, readonly) BOOL active;
 
