@@ -44,6 +44,7 @@
 #import "FCTableViewCell.h"
 #import "DownloadScriptSlideController.h"
 #import "DefaultIcon.h"
+#import "FCShared.h"
 
 
 @interface _FeaturedBannerTableViewCell<ElementType> : FCTableViewCell<ElementType>
@@ -1235,6 +1236,8 @@ UIPopoverPresentationControllerDelegate
     self.loadingSlideController.originMainText = name;
     self.loadingSlideController.iconUrl = iconUrl;
     [self.loadingSlideController show];
+    [self startHeadLoading];
+    [self.loadingSlideController startLoading];
 
 
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -1247,6 +1250,8 @@ UIPopoverPresentationControllerDelegate
             if(userScript.errorCode >= 1000) {
                 dispatch_async(dispatch_get_main_queue(),^{
                     if (self.loadingSlideController.isShown){
+                        [self stopHeadLoading];
+                        [self.loadingSlideController stopLoading];
                         [self.loadingSlideController dismiss];
                         self.loadingSlideController = nil;
                     }
@@ -1268,6 +1273,8 @@ UIPopoverPresentationControllerDelegate
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                                dispatch_get_main_queue(), ^{
                     if (self.loadingSlideController.isShown){
+                        [self stopHeadLoading];
+                        [self.loadingSlideController stopLoading];
                         [self.loadingSlideController dismiss];
                         self.loadingSlideController = nil;
                     }
@@ -1293,6 +1300,8 @@ UIPopoverPresentationControllerDelegate
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
             dispatch_get_main_queue(), ^{
                 if (self.loadingSlideController.isShown){
+                    [self stopHeadLoading];
+                    [self.loadingSlideController stopLoading];
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
@@ -1323,17 +1332,19 @@ UIPopoverPresentationControllerDelegate
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
         dispatch_get_main_queue(), ^{
             if (self.loadingSlideController.isShown){
+                [self stopHeadLoading];
+                [self.loadingSlideController stopLoading];
                 [self.loadingSlideController dismiss];
                 self.loadingSlideController = nil;
             }
             [self initScrpitContent];
-            NSString *content =  NSLocalizedString(@"Created", @"");
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                }];
-            [alert addAction:conform];
-            [self presentViewController:alert animated:YES completion:nil];
-        
+            UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+            image = [image imageWithTintColor:FCStyle.fcBlack
+                                renderingMode:UIImageRenderingModeAlwaysOriginal];
+            [FCShared.toastCenter show:image
+                             mainTitle:NSLocalizedString(@"Userscripts",@"")
+                        secondaryTitle:NSLocalizedString(@"Created", @"")];
             [self reloadAllTableview];
         });
     });
@@ -1598,7 +1609,6 @@ UIPopoverPresentationControllerDelegate
 - (DownloadScriptSlideController *)loadingSlideController{
     if (nil == _loadingSlideController){
         _loadingSlideController = [[DownloadScriptSlideController alloc] init];
-//        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
     }
     
     return _loadingSlideController;

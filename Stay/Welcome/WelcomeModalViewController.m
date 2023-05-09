@@ -88,6 +88,11 @@
                 self.doneElement.enable = safariExtensionEnabled && userscriptInstalled;
                 self.doneElement.accessoryEntity.animation = safariExtensionEnabled && userscriptInstalled;
                 [self.tableView reloadData];
+                
+                NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+                [groupUserDefaults setObject:@(YES) forKey:@"tips"];
+                [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
+                [groupUserDefaults synchronize];
             }];
         });
     }

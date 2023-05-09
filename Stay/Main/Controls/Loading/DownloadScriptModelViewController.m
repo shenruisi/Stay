@@ -37,10 +37,10 @@
 
 - (UILabel *)mainLabel{
     if (nil == _mainLabel){
-        _mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, self.view.frame.size.width, 19)];
+        _mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 45, self.view.frame.size.width - 30, 19)];
         _mainLabel.textAlignment = NSTextAlignmentCenter;
         _mainLabel.text = self.originMainText;
-        _mainLabel.font = FCStyle.body;
+        _mainLabel.font = FCStyle.bodyBold;
         _mainLabel.textColor = FCStyle.fcBlack;
         [self.view addSubview:_mainLabel];
     }
@@ -48,18 +48,6 @@
     return _mainLabel;
 }
 
-- (UILabel *)downloadLabel{
-    if (nil == _downloadLabel){
-        _downloadLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 16, self.view.frame.size.width, 21)];
-        _downloadLabel.textAlignment = NSTextAlignmentLeft;
-        _downloadLabel.text = NSLocalizedString(@"Download Userscript", @"");
-        _downloadLabel.font = FCStyle.headlineBold;
-        _downloadLabel.textColor = FCStyle.fcBlack;
-        [self.view addSubview:_downloadLabel];
-    }
-    
-    return _downloadLabel;
-}
 
 - (UIImageView *)iconView {
     if(nil == _iconView) {
