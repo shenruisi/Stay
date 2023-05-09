@@ -43,11 +43,16 @@
     if(nil == _confirmBtn) {
         _confirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _confirmBtn.frame = CGRectMake(10, 210, self.mainViewSize.width - 20, 48);
-        _confirmBtn.backgroundColor = FCStyle.accent;
-        [_confirmBtn setTitle:NSLocalizedString(@"settings.save","Save") forState:UIControlStateNormal];
+        _confirmBtn.backgroundColor = UIColor.clearColor;
+        [_confirmBtn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"settings.save","Save")
+                                                                attributes:@{
+            NSForegroundColorAttributeName : FCStyle.accent,
+            NSFontAttributeName : FCStyle.bodyBold
+        }] forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        _confirmBtn.titleLabel.font = FCStyle.headlineBold;
-        _confirmBtn.layer.cornerRadius = 8;
+        _confirmBtn.layer.cornerRadius = 10;
+        _confirmBtn.layer.borderColor = FCStyle.accent.CGColor;
+        _confirmBtn.layer.borderWidth = 1;
         [_confirmBtn addTarget:self action:@selector(addBlackSite) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_confirmBtn];
     }
