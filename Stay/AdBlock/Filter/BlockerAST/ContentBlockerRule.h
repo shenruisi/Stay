@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ContentBlockerTrigger : NSObject
+@interface ContentBlockerTrigger : NSObject<NSCopying>
 
 @property (nonatomic, strong) NSString *urlFilter;
 @property (nonatomic, assign) BOOL urlFilterIsCaseSensitive;
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)toDictionary;
 @end
 
-@interface ContentBlockerAction : NSObject
+@interface ContentBlockerAction : NSObject<NSCopying>
 
 @property (nonatomic, strong) NSString *type;
 @property (nonatomic, strong) NSString *selector;
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)toDictionary;
 @end
 
-@interface ContentBlockerRule : NSObject
+@interface ContentBlockerRule : NSObject<NSCopying>
 
 @property (nonatomic, strong) ContentBlockerTrigger *trigger;
 @property (nonatomic, strong) ContentBlockerAction *action;
@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)mergeRule:(ContentBlockerRule *)other;
 - (NSDictionary *)toDictionary;
 - (NSString *)key;
+- (BOOL)canUrlFilterWildcard;
 @end
 
 NS_ASSUME_NONNULL_END

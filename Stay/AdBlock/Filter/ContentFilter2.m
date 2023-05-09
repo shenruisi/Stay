@@ -13,7 +13,7 @@
 #import "DataManager.h"
 #import "SYVersionUtils.h"
 
-static NSUInteger MAX_RULE_COUNT = 10000;
+static NSUInteger MAX_RULE_COUNT = 100000;
 
 NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
 
@@ -100,7 +100,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         if (newLine.length > 0){
             BOOL isSepcialComment;
             ContentBlockerRule *contentBlockerRule = [ContentFilterBlocker rule:newLine isSpecialComment:&isSepcialComment];
-            contentBlockerRule.originRule = newLine;
+//            contentBlockerRule.originRule = newLine;
             if (nil == universalRule && [contentBlockerRule.key isEqualToString:@".*[SEL]"]){
                 universalRule = contentBlockerRule;
             }
@@ -150,8 +150,6 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             }
         }
     }
-    
-    ContentBlockerRule *contentBlockerRule = [ruleMergeDict objectForKey:@".*"];
     
     if (updateFilterInfo){
         [[DataManager shareManager]
@@ -209,11 +207,11 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         
         NSError *maxRuleCountError;
         if (jsonRules.count > MAX_RULE_COUNT){
-            int start = 14000;
-            int end = 15000;
-            int length = end - start;
+//            int start = 0;
+//            int end = 60000;
+//            int length = end - start;
             
-            jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(start, length)]];
+            jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];
             maxRuleCountError = [[NSError alloc] initWithDomain:@"Content Filter Error" code:-500 userInfo:
                 @{NSLocalizedDescriptionKey:NSLocalizedString(@"RuleMaxCountError", @"")}
             ];

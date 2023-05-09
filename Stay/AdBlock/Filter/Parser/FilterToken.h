@@ -71,7 +71,9 @@ typedef enum{
     FilterTokenTypeAddress,
     FilterTokenTypeJSAPI,
     FilterTokenTypeJSAPIException,
-    FilterTokenTypeElementCSSRule
+    FilterTokenTypeElementCSSRule,
+    FilterTokenTypeHtmlFilterScript,
+    FilterTokenTypeHtmlFilterIframe
 } FilterTokenType;
 
 @interface FilterToken : NSObject
@@ -103,6 +105,8 @@ typedef enum{
 + (instancetype)address;
 + (instancetype)jsAPI:(NSString *)js;
 + (instancetype)jsAPIException:(NSString *)js;
++ (instancetype)htmlFilterScript:(NSString *)attributes;
++ (instancetype)htmlFilterIframe:(NSString *)attributes;
 
 + (NSString *)stringOfType:(FilterTokenType)type;
 - (NSString *)toString;

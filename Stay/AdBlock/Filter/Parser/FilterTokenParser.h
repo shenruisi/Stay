@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isDefineEnd;
 @property (nonatomic, readonly) BOOL isCSSRule;
 @property (nonatomic, readonly) BOOL isJSAPIException;
+@property (nonatomic, readonly) BOOL isHtmlFilterScript;
+@property (nonatomic, readonly) BOOL isHtmlFilterIframe;
+@property (nonatomic, readonly) BOOL isUndefined;
 - (instancetype)initWithChars:(NSString *)chars;
 
 - (void)nextToken;

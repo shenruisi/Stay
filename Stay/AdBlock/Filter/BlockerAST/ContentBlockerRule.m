@@ -9,6 +9,20 @@
 
 @implementation ContentBlockerTrigger
 
+- (id)copyWithZone:(nullable NSZone *)zone{
+    ContentBlockerTrigger *copied = [[[self class] allocWithZone:zone] init];
+    copied.urlFilter = [self.urlFilter copy];
+    copied.urlFilterIsCaseSensitive = self.urlFilterIsCaseSensitive;
+    copied.ifDomain = [self.ifDomain copy];
+    copied.unlessDomain = [self.unlessDomain copy];
+    copied.resourceType = [self.resourceType copy];
+    copied.loadType = [self.loadType copy];
+    copied.ifTopUrl = [self.ifTopUrl copy];
+    copied.unlessTopUrl = [self.unlessTopUrl copy];
+    copied.loadContext = [self.loadContext copy];
+    return copied;
+}
+
 - (void)appendUrlFilter:(NSString *)str{
     NSString *existUrlFilter = self.urlFilter;
     self.urlFilter = [NSString stringWithFormat:@"%@%@",existUrlFilter ? existUrlFilter : @"",str];
@@ -133,6 +147,13 @@
 
 @implementation ContentBlockerAction
 
+- (id)copyWithZone:(nullable NSZone *)zone{
+    ContentBlockerAction *copied = [[[self class] allocWithZone:zone] init];
+    copied.type = [self.type copy];
+    copied.selector = [self.selector copy];
+    return copied;
+}
+
 - (NSMutableSet *)selectors{
     if (nil == _selectors){
         _selectors = [[NSMutableSet alloc] init];
@@ -175,6 +196,13 @@
 @end
 
 @implementation ContentBlockerRule
+
+- (id)copyWithZone:(nullable NSZone *)zone{
+    ContentBlockerRule *copied = [[[self class] allocWithZone:zone] init];
+    copied.trigger = [self.trigger copy];
+    copied.action = [self.action copy];
+    return copied;
+}
 
 - (instancetype)init{
     if (self = [super init]){
@@ -258,6 +286,12 @@
 //        return YES;
 //    }
     
+    return NO;
+}
+
+- (BOOL)canUrlFilterWildcard{
+    if (self.action.selector.length > 0) return YES;
+    if (self.trigger.ifDomain.count > 0) return YES;
     return NO;
 }
 

@@ -28,15 +28,22 @@
         BlockerAST *ast;
         [parser nextToken];
         
-        if ([parser isJSAPI] || [parser isJSAPI]){
+        if ([parser isUndefined]){
+            return nil;
+        }
+        
+        if ([parser isJSAPI]
+            || [parser isJSAPIException]
+            || [parser isDefineStart]
+            || [parser isDefineEnd]
+            || [parser isCSSRule]
+            || [parser isHtmlFilterScript]
+            || [parser isHtmlFilterIframe]){
             return nil;
         }
         
         if ([parser isInfo]
-            || [parser isComment]
-            || [parser isDefineStart]
-            || [parser isDefineEnd]
-            || [parser isCSSRule]){
+            || [parser isComment]){
             if ([parser isSepcialComment]){
                 *isSpecialComment = YES;
                 ast = [[SpecialCommentBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
@@ -81,8 +88,26 @@
         
     }while(!parser.isEOF);
     
+//    if (contentBlockerRule.trigger.urlFilters.count > 0){
+//        return nil;
+//    }
+    
     if (contentBlockerRule.trigger.urlFilter.length == 0){
         contentBlockerRule.trigger.urlFilter = @".*";
+    }
+    
+    if ([contentBlockerRule.trigger.urlFilter isEqualToString:@".*"]){
+        if (![contentBlockerRule canUrlFilterWildcard]){
+            return nil;
+        }
+    }
+    
+    if ([contentBlockerRule.trigger.urlFilter isEqualToString:@"/.*/.*/.*/.*/.*"]){
+        return nil;
+    }
+    
+    if (contentBlockerRule.trigger.urlFilter.length > 80){
+        return nil;
     }
 
     return contentBlockerRule;

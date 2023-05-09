@@ -126,13 +126,36 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
     }
     
     if ([self isOptionsStart:self.lastChars]){
-        NSMutableString *options = [[NSMutableString alloc] init];
-        while(![self isEnd:(self.lastChars = [self getChars])]){
-            [options appendString:self.lastChars];
+        NSString *probChars7 = [self probGetChars:7];
+        if ([probChars7 isEqualToString:@"$script"]){
+            [self forward:7];
+            NSMutableString *atrributes = [[NSMutableString alloc] init];
+            while(![self isEnd:(self.lastChars = [self getChars])]){
+                [atrributes appendString:self.lastChars];
+            }
+            
+            [self backward];
+            return [FilterToken htmlFilterScript:atrributes];
         }
-        
-        [self backward];
-        return [FilterToken options:options];
+        else if ([probChars7 isEqualToString:@"$iframe"]){
+            [self forward:7];
+            NSMutableString *atrributes = [[NSMutableString alloc] init];
+            while(![self isEnd:(self.lastChars = [self getChars])]){
+                [atrributes appendString:self.lastChars];
+            }
+            
+            [self backward];
+            return [FilterToken htmlFilterIframe:atrributes];
+        }
+        else{
+            NSMutableString *options = [[NSMutableString alloc] init];
+            while(![self isEnd:(self.lastChars = [self getChars])]){
+                [options appendString:self.lastChars];
+            }
+            
+            [self backward];
+            return [FilterToken options:options];
+        }
     }
     
     if ([self isSelectorStart:self.lastChars]){
@@ -472,6 +495,18 @@ static NSString *SPECIAL_COMMENT = @"\\s*(Homepage|Title|Expires|Redirect|Versio
 
 - (BOOL)isCSSRule{
     return self.opaqueCurToken.type == FilterTokenTypeElementCSSRule;
+}
+
+- (BOOL)isHtmlFilterScript{
+    return self.opaqueCurToken.type == FilterTokenTypeHtmlFilterScript;
+}
+
+- (BOOL)isHtmlFilterIframe{
+    return self.opaqueCurToken.type == FilterTokenTypeHtmlFilterIframe;
+}
+
+- (BOOL)isUndefined{
+    return self.opaqueCurToken.type == FilterTokenTypeUndefined;
 }
 
 @end

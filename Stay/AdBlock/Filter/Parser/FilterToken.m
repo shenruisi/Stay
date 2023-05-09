@@ -301,6 +301,20 @@
     return jsAPIException;
 }
 
++ (instancetype)htmlFilterScript:(NSString *)attributes{
+    FilterToken *script = [[FilterToken alloc] init];
+    script.type = FilterTokenTypeHtmlFilterScript;
+    script.value = attributes;
+    return script;
+}
+
++ (instancetype)htmlFilterIframe:(NSString *)attributes{
+    FilterToken *iframe = [[FilterToken alloc] init];
+    iframe.type = FilterTokenTypeHtmlFilterScript;
+    iframe.value = attributes;
+    return iframe;
+}
+
 - (NSString *)toString{
     if (self.type == FilterTokenTypeComment){
         return [NSString stringWithFormat:@"!%@",self.value];

@@ -71,8 +71,10 @@
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\?" withString:@"\\?"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"." withString:@"\\."];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
-        //issue ×
+        //issue × х
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"×" withString:@"\\U00d"];
+        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"х" withString:@"\\U044"];
+        
         
         [self.contentBlockerRule.trigger appendUrlFilter:urlFilter];
     }
