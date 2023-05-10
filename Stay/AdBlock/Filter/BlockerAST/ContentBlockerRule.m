@@ -292,6 +292,7 @@
 - (BOOL)canUrlFilterWildcard{
     if (self.action.selector.length > 0) return YES;
     if (self.trigger.ifDomain.count > 0) return YES;
+    if (self.trigger.unlessDomain.count > 0) return YES;
     return NO;
 }
 
