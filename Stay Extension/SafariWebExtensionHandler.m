@@ -403,9 +403,11 @@
     }
     else if ([message[@"type"] isEqualToString:@"p"]){
         [SharedStorageManager shared].userDefaultsExRO = nil;
+        body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
+    }
+    else if ([message[@"type"] isEqualToString:@"config"]){
         [SharedStorageManager shared].extensionConfig = nil;
         body = @{
-            @"c":[SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b",
             @"backgroundColorType" : [SharedStorageManager shared].extensionConfig.backgroundColorType
         };
     }
