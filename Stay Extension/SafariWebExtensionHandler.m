@@ -403,7 +403,11 @@
     }
     else if ([message[@"type"] isEqualToString:@"p"]){
         [SharedStorageManager shared].userDefaultsExRO = nil;
-        body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
+        [SharedStorageManager shared].extensionConfig = nil;
+        body = @{
+            @"c":[SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b",
+            @"backgroundColorType" : [SharedStorageManager shared].extensionConfig.backgroundColorType
+        };
     }
     else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
         NSDictionary *details = message[@"details"];

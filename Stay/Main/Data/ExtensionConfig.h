@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL showBadge;
 @property (nonatomic, strong) NSNumber *tagStatus;
+@property (nonatomic, strong) NSString *backgroundColorType;
 @end
 
 NS_ASSUME_NONNULL_END
