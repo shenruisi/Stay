@@ -208,9 +208,9 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             
             NSError *maxRuleCountError;
             if (jsonRules.count > MAX_RULE_COUNT){
-    //            int start = 0;
-    //            int end = 60000;
-    //            int length = end - start;
+//                int start = 16200;
+//                int end = 16250;
+//                int length = end - start;
                 
                 jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];
                 maxRuleCountError = [[NSError alloc] initWithDomain:@"Content Filter Error" code:-500 userInfo:
@@ -219,7 +219,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             }
             NSData *data = [NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error];
             
-            NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//            NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             
             if (error){
                 if (completion){

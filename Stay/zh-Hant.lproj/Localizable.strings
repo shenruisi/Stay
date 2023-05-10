@@ -334,4 +334,4 @@ settings.addScriptDesc="在編輯器中編寫新的腳本";
 settings.addScriptFromUrlDesc="添加用戶腳本的下載鏈接";
 settings.addScriptFromWebDesc="在greasyfork.org上下載用戶腳本";
 settings.importFromFileDesc="安裝在我手機上的用戶腳本";
-
+NEWFOLDER="新建文件夾";

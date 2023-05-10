@@ -336,3 +336,4 @@ settings.addScriptDesc="在编辑器中编写新的脚本";
 settings.addScriptFromUrlDesc="添加用户脚本的下载链接";
 settings.addScriptFromWebDesc="在greasyfork.org上下载用户脚本";
 settings.importFromFileDesc="安装在我手机上的用户脚本";
+NEWFOLDER="新建文件夹";

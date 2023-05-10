@@ -33,8 +33,11 @@
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\S" withString:@"."];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\W" withString:@"[^A-Za-z0-9_]"];
         urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\d" withString:@"[0-9]"];
-        NSRegularExpression *replaceRegex = [NSRegularExpression regularExpressionWithPattern:@"\\{\\d+,\\d*\\}" options:0 error:nil];
-        urlFilter = [replaceRegex stringByReplacingMatchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length) withTemplate:@"+"];
+        NSRegularExpression *replaceRegex1 = [NSRegularExpression regularExpressionWithPattern:@"\\{\\d+,\\d*\\}" options:0 error:nil];
+        urlFilter = [replaceRegex1 stringByReplacingMatchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length) withTemplate:@"+"];
+        
+        NSRegularExpression *replaceRegex2 = [NSRegularExpression regularExpressionWithPattern:@"\\{\\d+\\}" options:0 error:nil];
+        urlFilter = [replaceRegex2 stringByReplacingMatchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length) withTemplate:@"+"];
         
         NSArray<NSTextCheckingResult *> *capResults;
         do{
@@ -67,17 +70,50 @@
             self.unsupported = YES;
             return;
         }
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\d" withString:@"[0-9]"];
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\?" withString:@"\\?"];
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"." withString:@"\\."];
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
-        //issue × х
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"×" withString:@"\\U00d"];
-        urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"х" withString:@"\\U044"];
         
+        if (self.contentBlockerRule.trigger.urlFilter.length == 0){
+            if ([urlFilter containsString:@","]){
+                NSRegularExpression *domainRegex = [NSRegularExpression regularExpressionWithPattern:@"([a-zA-Z0-9\\-]*\\.?[a-zA-Z0-9\\-]+\\.[a-zA-Z]{2,},?)+" options:0 error:nil];
+                NSArray<NSTextCheckingResult *> *results = [domainRegex matchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length)];
+                if (results.count == 1){
+                    NSInteger n = results[0].numberOfRanges;
+                    if (n > 0){
+                        NSRange range = [results[0] rangeAtIndex:0];
+                        if (NSMaxRange(range) == urlFilter.length){
+                            NSArray<NSString *> *domainList = [urlFilter componentsSeparatedByString:@","];
+                            BOOL unless = [self.contentBlockerRule.action.type isEqualToString:@"ignore-previous-rules"];
+                            for (NSString *domain in domainList){
+                                if (domain.length > 0){
+                                    if (unless){
+                                        [self.contentBlockerRule.trigger.unlessDomain addObject:domain];
+                                    }
+                                    else{
+                                        [self.contentBlockerRule.trigger.ifDomain addObject:domain];
+                                    }
+                                }
+                            }
+                            self.contentBlockerRule.trigger.urlFilter = @"^https?://.*";
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         
-        [self.contentBlockerRule.trigger appendUrlFilter:urlFilter];
+        [self.contentBlockerRule.trigger appendUrlFilter:[self rebuildUrlFilter:urlFilter]];
     }
+}
+
+- (NSString *)rebuildUrlFilter:(NSString *)urlFilter{
+    NSString *parsedUrlFilter = [urlFilter copy];
+    parsedUrlFilter = [parsedUrlFilter stringByReplacingOccurrencesOfString:@"\\d" withString:@"[0-9]"];
+    parsedUrlFilter = [parsedUrlFilter stringByReplacingOccurrencesOfString:@"\?" withString:@"\\?"];
+    parsedUrlFilter = [parsedUrlFilter stringByReplacingOccurrencesOfString:@"." withString:@"\\."];
+    parsedUrlFilter = [parsedUrlFilter stringByReplacingOccurrencesOfString:@"*" withString:@".*"];
+    //issue × х
+    parsedUrlFilter = [parsedUrlFilter stringByReplacingOccurrencesOfString:@"×" withString:@"\\U00d"];
+    parsedUrlFilter = [parsedUrlFilter stringByReplacingOccurrencesOfString:@"х" withString:@"\\U044"];
+    return parsedUrlFilter;
 }
 
 @end
