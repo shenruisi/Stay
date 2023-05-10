@@ -11,7 +11,7 @@
         </div>
         <div class="blocker-enabled" v-if="!blockerEnabled">
           <div class="blocker-info">{{  t('blocker_info') }}</div>
-          <div class="enable-btn" @click="tagToEnableClick">{{  t('blocker_enable') }}</div>
+          <a class="enable-btn" href="https://www.craft.do/s/Zmlkwi42U4r5N0" target="_blank">{{  t('blocker_enable') }}</a>
         </div>
       </div>
       <div class="taging-status" @click="tagingStatusClick">{{  t('taging_status_btn') }}</div>
@@ -27,8 +27,8 @@
           <div class="web-rule " ><span class="over-hidden" v-html="unHtmlTag(item.selector)"></span></div>
           <div class="delete-icon" @click="deleteRuleClick(item.uuid)"></div>
         </div>
-        <div class="rule-note">{{ t('rule_note') }}</div>
       </template>
+      <div class="rule-note">{{ t('rule_note') }}</div>
     </div>
   </div>
 </template>
@@ -163,7 +163,7 @@ export default {
     }
 
     const tagToManageClick = () => {
-      if(!this.blockerEnabled){
+      if(!state.blockerEnabled){
         return;
       }
       let openUrl = 'stay://x-callback-url/adblock?type=tag';
@@ -175,6 +175,11 @@ export default {
         deleteWebTagRule(uuid)
       }
     }
+
+    const tagToEnableClick = () => {
+      let openUrl = 'https://www.craft.do/s/Zmlkwi42U4r5N0';
+      global.openUrlInSafariPopup(openUrl);
+    }
     
     return {
       ...toRefs(state),
@@ -183,7 +188,8 @@ export default {
       tagingStatusClick,
       tagToManageClick,
       deleteRuleClick,
-      unHtmlTag
+      unHtmlTag,
+      tagToEnableClick
     };
   }
 }
@@ -292,6 +298,7 @@ export default {
             border: 1px solid var(--s-main);
             font-size: 13px;
             color: var(--s-main);
+            text-decoration: none;
           }
         }
       }
@@ -378,7 +385,7 @@ export default {
         border: 1px solid var(--dm-bd);
         background-color: var(--dm-bg);
         border-radius: 10px;
-        padding: 10px 50px 10px 10px;
+        padding: 8px 50px 8px 10px;
         position: relative;
         margin-bottom: 10px;
         display: flex;

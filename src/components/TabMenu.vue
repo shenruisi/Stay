@@ -47,7 +47,7 @@ export default {
         fotterRef.value.style = '-webkit-backdrop-filter: blur(16px) saturate(150%)';
         clearTimeout(mountedTimer);
         mountedTimer = null;
-      }, 300)
+      }, 800)
     })
 
     const tabClickAction = (tabId) => {
