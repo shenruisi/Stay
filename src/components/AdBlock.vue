@@ -24,7 +24,7 @@
       <template v-if="webRuleList && webRuleList.length">
         <div class="rule-item" v-for="(item, index) in webRuleList" :key="index">
           <div class="web-title over-hidden">{{ item['url-filter'] }}</div>
-          <div class="web-rule over-hidden">{{ item.selector }}</div>
+          <div class="web-rule " ><span class="over-hidden" v-html="unHtmlTag(item.selector)"></span></div>
           <div class="delete-icon" @click="deleteRuleClick(item.uuid)"></div>
         </div>
         <div class="rule-note">{{ t('rule_note') }}</div>
@@ -33,8 +33,8 @@
   </div>
 </template>
 <script>
-import { reactive, inject, toRefs,watch } from 'vue'
-import { isMobileOrIpad } from '../utils/util'
+import { reactive, inject, toRefs, watch, computed } from 'vue'
+import { isMobileOrIpad, unhtml } from '../utils/util'
 import { useI18n } from 'vue-i18n';
     
     
@@ -72,6 +72,10 @@ export default {
       },
       { immediate: true, deep: true }
     );
+
+    const unHtmlTag = computed(()=>(s)=>{ //计算属性传递参数
+      return unhtml(s)
+    })
     const threeFingerSwitchClick = () => {
       // console.log('threeFingerSwitchClick====')
       if(state.threeFingerTapStatus == 'on'){
@@ -179,6 +183,7 @@ export default {
       tagingStatusClick,
       tagToManageClick,
       deleteRuleClick,
+      unHtmlTag
     };
   }
 }
@@ -383,9 +388,20 @@ export default {
         .delete-icon{
           position: absolute;
           right: 0;
+          top: 0;
           width: 50px;
           height: 100%;
-
+          &::after{
+            content:'';
+            background: url('../assets/images/rule-delete.png') 50% 50% no-repeat;
+            width: 20px;
+            height: 40px;
+            background-size: 100%;
+            position: absolute;
+            top:50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
 
         }
         .over-hidden{
@@ -405,7 +421,15 @@ export default {
           width: 100%;
           font-size: 13px;
           color: var(--dm-font-2);
-          height: 18px;
+          height: 30px;
+          line-height: 15px;
+          display: flex;
+          justify-content: start;
+          align-items: end;
+          position: relative;
+          span{
+            -webkit-line-clamp: 2;
+          }
         }
         
       }

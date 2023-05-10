@@ -185,3 +185,14 @@ export function isMobileOrIpad(){
   return getArr.length ? true : false;
 }
 
+export function unhtml(str) {
+  return str ? str.replace(/[<">']/g, (a) => {
+    return {
+      '<': '&lt;',
+      '"': '&quot;',
+      '>': '&gt;',
+      '\'': '&#39;'
+    }[a]
+  }) : '';
+}
+
