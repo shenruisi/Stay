@@ -408,7 +408,7 @@
     else if ([message[@"type"] isEqualToString:@"config"]){
         [SharedStorageManager shared].extensionConfig = nil;
         body = @{
-            @"backgroundColorType" : [SharedStorageManager shared].extensionConfig.backgroundColorType
+            @"background_color_type" : [SharedStorageManager shared].extensionConfig.backgroundColorType
         };
     }
     else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
