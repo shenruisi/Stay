@@ -153,7 +153,10 @@
 }
 
 - (FCNavigationBar *)fcNavigationBar{
-    return  (FCNavigationBar *)self.navigationController.navigationBar;
+    if ([self.navigationController.navigationBar isKindOfClass:[FCNavigationBar class]]){
+        return (FCNavigationBar *)self.navigationController.navigationBar;
+    }
+    return nil;
 }
 
 - (FCNavigationTabItem *)navigationTabItem{

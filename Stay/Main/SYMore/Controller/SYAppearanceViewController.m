@@ -234,6 +234,7 @@ UITableViewDataSource
 #if FC_MAC
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -433,11 +433,6 @@ static CGFloat OneStageMovingLength = 50;
 }
 
 
-- (void)layoutSubviews{
-    [super layoutSubviews];
-   
-}
-
 - (void)rightItemClick:(FCTabButtonItem *)item{
     if (item == self.searchTabItem){
         [self.searchBar setFrame:CGRectMake(self.frame.size.width, 0, self.frame.size.width, self.navigationTabItem.size.height)];
