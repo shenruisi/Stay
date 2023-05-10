@@ -188,6 +188,7 @@ UIDocumentPickerDelegate
 
 - (void)changeDownloading {
     self.selectedIdx = 1;
+    [self.navigationTabItem activeItem:self.downloadingBtn];
     dispatch_async(dispatch_get_main_queue(),^{
         [self.videoArray removeAllObjects];
         [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
@@ -715,7 +716,7 @@ UIDocumentPickerDelegate
                 
                 UIButton *addDocBtn =  [[UIButton alloc] init];
                 [addDocBtn setImage:[ImageHelper sfNamed:@"folder.badge.plus" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
-                [addDocBtn setTitle:NSLocalizedString(@"SAVETOFILES", @"") forState:UIControlStateNormal];
+                [addDocBtn setTitle:NSLocalizedString(@"NEWFOLDER", @"") forState:UIControlStateNormal];
                 [addDocBtn setTitleColor:FCStyle.fcSecondaryBlack forState:UIControlStateNormal];
                 addDocBtn.titleLabel.font = FCStyle.footnoteBold;
         //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];

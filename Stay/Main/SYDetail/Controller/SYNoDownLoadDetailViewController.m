@@ -207,6 +207,7 @@
     imageBox.layer.borderWidth = 1;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     imageBox.backgroundColor = FCStyle.fcWhite;
+    imageBox.clipsToBounds = YES;
 
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
     imageView.clipsToBounds = YES;

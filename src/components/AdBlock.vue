@@ -1,23 +1,34 @@
 <template>
   <div class="popup-adblock-wrapper">
-    <div class="adblock-manage-box">
-
-      <div class="adblock-manage">
-        <div class="manage-info">
-          <div class="title">{{  t('taging_manage_title') }}</div>
-          <div class="block-status" :class="blockStatus=='on'?'block-on':'block-off'">{{ blockStatusText }}</div>
+    <div class="web-tagging-box" v-if="showTab == 'webTag'">
+      <div class="adblock-manage-box">
+        <div class="adblock-manage">
+          <div class="manage-info">
+            <div class="title">{{  t('taging_manage_title') }}</div>
+            <div class="block-status" :class="blockStatus==1?'block-on':'block-off'">{{ blockStatusText }}</div>
+          </div>
+          <div class="manage-btn" :class="blockerEnabled?'enabled':'disabled'" @click="tagToManageClick">{{  t('taging_manage_btn') }}</div>
         </div>
-        <div class="manage-btn" @click="tagToManageClick">{{  t('taging_manage_btn') }}</div>
+        <div class="blocker-enabled" v-if="!blockerEnabled">
+          <div class="blocker-info">{{  t('blocker_info') }}</div>
+          <div class="enable-btn" @click="tagToEnableClick">{{  t('blocker_enable') }}</div>
+        </div>
       </div>
-      <div class="blocker-enabled">
-        <div class="blocker-info">{{  t('blocker_info') }}</div>
-        <div class="enable-btn" @click="tagToEnableClick">{{  t('blocker_enable') }}</div>
+      <div class="taging-status" @click="tagingStatusClick">{{  t('taging_status_btn') }}</div>
+      <div class="three-finger-switch"  v-if="isMobileOrIpad">
+        <div class="switch-text">{{  t('taging') }}</div>
+        <div class="switch" :class="threeFingerTapStatus=='on'?'switch-on':'switch-off'" @click="threeFingerSwitchClick">{{ threeFingerTapSwitch }}</div>
       </div>
     </div>
-    <div class="taging-status" @click="tagingStatusClick">{{  t('taging_status_btn') }}</div>
-    <div class="three-finger-switch"  v-if="isMobileOrIpad">
-      <div class="switch-text">{{  t('taging') }}</div>
-      <div class="switch" :class="threeFingerTapStatus=='on'?'switch-on':'switch-off'" @click="threeFingerSwitchClick">{{ threeFingerTapSwitch }}</div>
+    <div class="tagging-rules-box" v-if="showTab == 'tagRules'">
+      <template v-if="webRuleList && webRuleList.length">
+        <div class="rule-item" v-for="(item, index) in webRuleList" :key="index">
+          <div class="web-title over-hidden">{{ item['url-filter'] }}</div>
+          <div class="web-rule over-hidden">{{ item.selector }}</div>
+          <div class="delete-icon" @click="deleteRuleClick(item.uuid)"></div>
+        </div>
+        <div class="rule-note">{{ t('rule_note') }}</div>
+      </template>
     </div>
   </div>
 </template>
@@ -39,12 +50,12 @@ export default {
       browserUrl: '',
       blockerEnabled: store.state.blockerEnabled,
       blockStatus: store.state.blockStatus,
-      blockStatusText: store.state.blockStatus == 'on' ? t('state_actived'):t('state_stopped'),
+      blockStatusText: store.state.blockStatus == 1 ? t('state_actived'):t('state_stopped'),
       isMobileOrIpad: isMobileOrIpad(),
-      tagingStatus: '',
       threeFingerTapStatus: store.state.threeFingerTapStatus,
       threeFingerTapSwitch: store.state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off'),
       showTab: props.currentTab && 'tab_1'== props.currentTab ? 'webTag':'tagRules',
+      webRuleList: []
     });
 
     watch(
@@ -54,9 +65,10 @@ export default {
         let showTab = props.currentTab && 'tab_1'== props.currentTab ? 'webTag':'tagRules';
         if(state.showTab != showTab){
           state.showTab = showTab;
-          // spliteActivatedScript();
+          if(state.showTab == 'tagRules'){
+            fetchWebTagRules();
+          }
         }
-
       },
       { immediate: true, deep: true }
     );
@@ -79,9 +91,6 @@ export default {
           console.log('setThreeFingerTapStatus====',response);
         })
       })
-
-      
-     
     }
 
     const fetchTagingStatus = () => {
@@ -90,18 +99,18 @@ export default {
         let threeFingerTapStatus = response.threeFingerTapStatus ? response.threeFingerTapStatus : 'on';
         state.threeFingerTapStatus = threeFingerTapStatus;
         state.threeFingerTapSwitch = threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
-        store.commit('setThreeFingerTapStatus', state.blockStatus);
+        store.commit('setThreeFingerTapStatus', state.threeFingerTapStatus);
       })
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchTagStatus'}, (response) => {
         console.log('fetchTagStatus====',response);
         // tag_status
         // enabled
-        let blockStatus = response&&response.tag_status ? response.tag_status : 'on';
+        let blockStatus = response&&response.tag_status ? response.tag_status : 1;
         state.blockStatus = blockStatus;
-        state.blockStatusText = blockStatus == 'on' ? t('state_actived'):t('state_stopped');
-        state.blockerEnabled = response.enable;
+        state.blockStatusText = blockStatus == 1 ? t('state_actived'):t('state_stopped');
+        state.blockerEnabled = response.enabled;
         store.commit('setBlockStatus', state.blockStatus);
-        store.commit('setBlockerEnable', state.blockerEnabled);
+        store.commit('setBlockerEnabled', state.blockerEnabled);
       })
     }
 
@@ -112,13 +121,23 @@ export default {
         store.commit('setBrowserUrl', tab.url);
         global.browser.runtime.sendMessage({ from: 'popup', operate: 'fetchTagRules', url: state.browserUrl}, (response) => {
           console.log('fetchTagRules====',response);
+          state.webRuleList = response.rules;
         })
       })
       
     }
 
+    const deleteWebTagRule = (uuid) => {
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'deleteTagRule', uuid}, (response) => {
+        console.log('deleteTagRule====',response);
+        state.webRuleList = state.webRuleList.filter(item=>{item.uuid!=uuid});
+      })
+    }
+
     fetchTagingStatus();
-    fetchWebTagRules();
+    if(state.showTab == 'tagRules'){
+      fetchWebTagRules();
+    }
 
     const tagingStatusClick = () => {
       global.browser.tabs.query({
@@ -140,11 +159,18 @@ export default {
     }
 
     const tagToManageClick = () => {
+      if(!this.blockerEnabled){
+        return;
+      }
       let openUrl = 'stay://x-callback-url/adblock?type=tag';
       global.openUrlInSafariPopup(openUrl);
     }
     
-    
+    const deleteRuleClick = (uuid) => {
+      if(uuid){
+        deleteWebTagRule(uuid)
+      }
+    }
     
     return {
       ...toRefs(state),
@@ -152,6 +178,7 @@ export default {
       threeFingerSwitchClick,
       tagingStatusClick,
       tagToManageClick,
+      deleteRuleClick,
     };
   }
 }
@@ -162,164 +189,240 @@ export default {
     width: 100%;
     height: 100%;
     padding: 10px;
-    .adblock-manage-box{
+    .web-tagging-box{
       width: 100%;
-      padding: 8px 13px 10px 13px;
-      border: 1px solid var(--dm-bd);
-      border-radius: 10px;
-      background-color: var(--dm-bg);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-      margin-bottom: 15px;
-      margin-top: 5px;
-      .adblock-manage{
+      height: 100%;
+      .adblock-manage-box{
         width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 4px;
-        height: 48px;
-        .manage-info{
+        padding: 8px 13px;
+        border: 1px solid var(--dm-bd);
+        border-radius: 10px;
+        background-color: var(--dm-bg);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 15px;
+        margin-top: 5px;
+        .adblock-manage{
+          width: 100%;
           display: flex;
-          flex-direction: column;
           justify-content: space-between;
-          align-items: flex-start;
-          height: 44px;
-          .title{
-            color: var(--dm-font);
-            font-size: 16px;
-            font-weight: 400;
+          align-items: center;
+          // padding-bottom: 4px;
+          height: 48px;
+          .manage-info{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 44px;
+            .title{
+              color: var(--dm-font);
+              font-size: 16px;
+              font-weight: 400;
+            }
+            .block-status{
+              font-size: 13px;
+              position: relative;
+              padding-left: 20px;
+              &::after{
+                content: '';
+                position: absolute;
+                left: 0px;
+                width: 10px;
+                height: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                object-fit: contain;
+                border-radius: 50%;
+              }
+            }
+            .block-on{
+              &::after{
+                background: var(--s-main);
+              }
+            }
+            .block-off{
+              &::after{
+              background: var(--dm-bd);
+              }
+            }
           }
-          .block-status{
+          .manage-btn{
+            width: 90px;
+            height: 25px;
+            line-height: 23px;
+            border-radius: 8px;
+            font-weight: 500;
             font-size: 13px;
-            position: relative;
-            padding-left: 20px;
-            &::after{
-              content: '';
-              position: absolute;
-              left: 0px;
-              width: 10px;
-              height: 10px;
-              top: 50%;
-              transform: translateY(-50%);
-              object-fit: contain;
-              border-radius: 50%;
+            &.disabled{
+              border: 1px solid var(--dm-bd);
+              color: var(--dm-bd);
+              opacity: 0.7;
             }
-          }
-          .block-on{
-            &::after{
-              background: var(--s-main);
-            }
-          }
-          .block-off{
-            &::after{
-            background: var(--dm-bd);
+            &.enabled{
+              color: var(--s-main);
+              border: 1px solid var(--s-main);
             }
           }
         }
-        .manage-btn{
-          width: 90px;
-          height: 25px;
-          line-height: 23px;
-          border-radius: 8px;
-          border: 1px solid var(--s-main);
-          font-size: 13px;
-          color: var(--s-main);
+        .blocker-enabled{
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 2px 0;
+          .blocker-info{
+            height: 25px;
+            background-color: rgba(182, 31, 224, 0.1);
+            color: var(--s-main);
+            border-radius: 8px;
+            font-size: 13px;
+            padding: 0 8px;
+            line-height: 25px;
+          }
+          .enable-btn{
+            width: 90px;
+            height: 25px;
+            line-height: 23px;
+            border-radius: 8px;
+            border: 1px solid var(--s-main);
+            font-size: 13px;
+            color: var(--s-main);
+          }
         }
       }
-      .blocker-enabled{
+      .taging-status{
         width: 100%;
+        height: 45px;
+        line-height: 45px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 10px;
+        color: var(--s-main);
+        border: 1px solid var(--s-main);
+        margin-bottom: 18px;
+      }
+      .three-finger-switch{
+        width: 95%;
+        position: fixed;
+        z-index: 999;
+        bottom: 90px;
+        height: 42px;
+        border-radius: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 1px solid var(--dm-bd);
+        background-color: var(--dm-bg-f7);
         display: flex;
+        padding: 0 20px;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        user-select: none;
+        .switch-text{
+          width: 80%;
+          text-align: left;
+          color: var(--dm-font);
+          height: 100%;
+          display: flex;
+          align-items: center;
+          user-select: none;
+        }
+        .switch{
+          width: 20%;
+          color: var(--dm-font-2);
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+          position: relative;
+          &::after{
+            content: '';
+            position: absolute;
+            right: 0px;
+            /* background: url(../img/option.png) 50% 50% no-repeat; */
+            /* background-size: 50%; */
+            width: 10px;
+            height: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            object-fit: contain;
+            border-radius: 50%;
+          }
+        }
+        .switch-on{
+          &::after{
+            background: var(--s-main);
+          }
+        }
+        .switch-off{
+          &::after{
+            background: var(--dm-bd);
+          }
+        }
+      }
+    }
+    .tagging-rules-box{
+      width: 100%;
+      height: 100%;
+      .rule-item{
+        width: 100%;
+        height: 70px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--dm-bd);
+        background-color: var(--dm-bg);
+        border-radius: 10px;
+        padding: 10px 50px 10px 10px;
+        position: relative;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        .blocker-info{
-          height: 25px;
-          background-color: rgba(182, 31, 224, 0.1);
-          color: var(--s-main);
-          border-radius: 8px;
-          font-size: 13px;
-          padding: 0 8px;
-          line-height: 25px;
-        }
-        .enable-btn{
-          width: 90px;
-          height: 25px;
-          line-height: 23px;
-          border-radius: 8px;
-          border: 1px solid var(--s-main);
-          font-size: 13px;
-          color: var(--s-main);
-        }
-      }
-    }
-    .taging-status{
-      width: 100%;
-      height: 45px;
-      line-height: 45px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: 700;
-      border-radius: 10px;
-      color: var(--s-main);
-      border: 1px solid var(--s-main);
-      margin-bottom: 18px;
-    }
-    .three-finger-switch{
-      width: 90%;
-      position: fixed;
-      z-index: 999;
-      bottom: 90px;
-      height: 42px;
-      border-radius: 8px;
-      left: 5%;
-      border: 1px solid var(--dm-bd);
-      background-color: var(--dm-bg-f7);
-      display: flex;
-      padding: 0 20px;
-      justify-content: center;
-      justify-items: center;
-      align-items: center;
-      user-select: none;
-      .switch-text{
-        width: 80%;
-        text-align: left;
-        color: var(--dm-font);
-        height: 100%;
-        display: flex;
-        align-items: center;
-        user-select: none;
-      }
-      .switch{
-        width: 20%;
-        color: var(--dm-font-2);
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        position: relative;
-        &::after{
-          content: '';
+        .delete-icon{
           position: absolute;
-          right: 0px;
-          /* background: url(../img/option.png) 50% 50% no-repeat; */
-          /* background-size: 50%; */
-          width: 10px;
-          height: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          object-fit: contain;
-          border-radius: 50%;
+          right: 0;
+          width: 50px;
+          height: 100%;
+
+
         }
+        .over-hidden{
+          text-align: left;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+        }
+        .web-title{
+          width: 100%;
+          font-size: 16px;
+          color: var(--dm-font);
+          height: 20px;
+        }
+        .web-rule{
+          width: 100%;
+          font-size: 13px;
+          color: var(--dm-font-2);
+          height: 18px;
+        }
+        
       }
-      .switch-on{
-        &::after{
-          background: var(--s-main);
-        }
-      }
-      .switch-off{
-        &::after{
-          background: var(--dm-bd);
-        }
+      .rule-note{
+        width: 95%;
+        height: 25px;
+        border-radius: 8px;
+        background-color: var(--s-main-f10);
+        color: var(--s-main);
+        line-height: 25px;
+        text-align: center;
+        font-size: 13px;
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
       }
     }
   }

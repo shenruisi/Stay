@@ -42,9 +42,11 @@ export default {
     'taging': 'Three finger tap to start tagging',
     'taging_manage_title': 'Webpage tagging rules',
     'taging_manage_btn': 'Manage',
-    'web_tag': 'Web Tag',
+    'web_tag': 'Webpage Tagging',
+    'tag_rules': 'Tagging Rules',
     'blocker_enable': 'Enable',
-    'blocker_info': 'Tag Content Blocker is not enabled'
+    'blocker_info': 'Tag Content Blocker is not enabled',
+    'rule_note': 'Tagging rules  that take effect on the currrent webpage',
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -89,7 +91,10 @@ export default {
     'taging_manage_title': '网页标记规则',
     'taging_manage_btn': '管理',
     'blocker_enable': '开启',
-    'blocker_info': '标记内容拦截器未开启'
+    'blocker_info': '标记内容拦截器未开启',
+    'web_tag': '网页标记',
+    'tag_rules': '标记规则',
+    'rule_note': '在当前网页上生效的标记规则'
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -134,7 +139,10 @@ export default {
     'taging_manage_title': '網頁標記規則',
     'taging_manage_btn': '管理',
     'blocker_enable': '開啟',
-    'blocker_info': '標記內容攔截器未開啟'
+    'blocker_info': '標記內容攔截器未開啟',
+    'web_tag': '網頁標記',
+    'tag_rules': '標記規則',
+    'rule_note': '在當前網頁上生效的標記規則'
   }
 }
 /* eslint-disable */

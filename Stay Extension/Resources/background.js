@@ -1080,22 +1080,25 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const url = request.url;
             console.log('fetchTagRules----request', request)
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTagRules", url }, function (response) {
-                console.log("fetchTagRules-------response=",response);
-                sendResponse({ body: response.body })
+                // console.log("fetchTagRules-------response=",response);
+                let body = response&&response.body?response.body:{};
+                sendResponse(body)
             });
         }
         else if('deleteTagRule' == requestOperate){
             const uuid = request.uuid;
             browser.runtime.sendNativeMessage("application.id", { type: "deleteTagRule", uuid }, function (response) {
-                console.log("deleteTagRule-------response=",response);
-                sendResponse({ body: response.body })
+                // console.log("deleteTagRule-------response=",response);
+                let body = response&&response.body?response.body:{};
+                sendResponse(body)
             });
         }
         else if('fetchTagStatus' == requestOperate){
             console.log("fetchTagStatus-------request=",request);
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTagStatus" }, function (response) {
                 console.log("fetchTagStatus-------response=",response);
-                sendResponse({ body: response.body })
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
             });
         }
         return true;

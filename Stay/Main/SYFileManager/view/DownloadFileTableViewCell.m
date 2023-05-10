@@ -33,7 +33,7 @@
 
 - (void)createFileCell:(FCTab *)fCTab {
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 21, 27, 20)];
-    [imageView setImage:[ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:26] color: [ColorHelper colorFromHex:fCTab.config.hexColor]]];
+    [imageView setImage:[ImageHelper sfNamed:@"folder" font:[UIFont systemFontOfSize:22] color: [ColorHelper colorFromHex:fCTab.config.hexColor]]];
     imageView.contentMode = UIViewContentModeBottom;
     [self.contentView addSubview:imageView];
 

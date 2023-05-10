@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-fotter-wrapper" :class="isMobile?'mobile':'mac'">
+  <div class="popup-fotter-wrapper" ref="fotterRef" :class="isMobile?'mobile':'mac'">
     <div class="fotter-box">
       <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="tabClickAction(item.id)">
         <div class="tab-img" :key="item.name" v-if="item.name == 'matched_scripts_tab'">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, ref, onMounted } from 'vue'
 import { isMobile } from '../utils/util'
 export default {
   name: 'DarkModeComp',
@@ -40,6 +40,15 @@ export default {
       selectedTabId: props.tabId,
       isMobile: isMobile()
     });
+    const fotterRef = ref(null);
+
+    onMounted(()=>{
+      let mountedTimer = setTimeout(() => {
+        fotterRef.value.style = '-webkit-backdrop-filter: blur(16px) saturate(150%)';
+        clearTimeout(mountedTimer);
+        mountedTimer = null;
+      }, 300)
+    })
 
     const tabClickAction = (tabId) => {
       if (!tabId) {
@@ -54,6 +63,7 @@ export default {
     }
 
     return {
+      fotterRef,
       ...toRefs(state),
       tabClickAction
       
@@ -71,15 +81,15 @@ export default {
 }
 .popup-fotter-wrapper{
   width: 100%;
+  background-color: var(--dm-bg-f6drop);
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--dm-bg-f6);
-  border-top: 1px solid var(--dm-bd);
   z-index: 999;
   transform: translateZ(0px);
   -webkit-transform: translateZ(0px);
+  border-top: 1px solid var(--dm-bd);
   .fotter-box{
     position: relative;
     width: 100%;

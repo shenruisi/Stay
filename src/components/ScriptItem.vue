@@ -14,7 +14,7 @@
         <div class="author overflow">{{script.author+"@"+script.name}}</div>
         <div class="desc overflow">{{script.description}}</div>
       </div>
-      <div class="website-cell">
+      <div class="website-cell" :class="script.active?'activated':'stopped'">
         <div class="check-box" :class="{ active: script.disableChecked}" >
           <input :ref="script.uuid" v-model="script.disableChecked" 
           @change='changeWebsiteDisabled(script.uuid, $event)' type="checkbox" class="allow" />
@@ -210,6 +210,9 @@ export default {
         }
       }
     }
+    .stopped{
+      opacity: 0.6;
+    }
     .script-info{
       width: 100%;
       height: 48px;
@@ -263,14 +266,14 @@ export default {
           }
         }
       }
-      &.stopped{
-        .author{
-          opacity: 0.7;
-        }
-        .desc{
-          opacity: 0.7;
-        }
-      }
+      // &.stopped{
+      //   .author{
+      //     opacity: 0.7;
+      //   }
+      //   .desc{
+      //     opacity: 0.7;
+      //   }
+      // }
       .author{
         font-size: 16px;
         font-weight: 700;
@@ -423,8 +426,8 @@ export default {
       height: 24px;
       line-height: 22px;
       margin-right: 4px;
-      padding-left: 30px;
-      padding-right: 8px;
+      padding-left: 27px;
+      padding-right: 5px;
       font-family: Helvetica Neue;
       font-size: 13px;
       color: var(--s-main);
@@ -437,7 +440,7 @@ export default {
     .menu{
       &::before{
         position:absolute;
-        left: 6px;
+        left: 4px;
         top: 50%;
         transform: translate(0, -50%);
         content: "";
