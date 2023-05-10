@@ -169,11 +169,11 @@ export default {
     }
     &.adblock{
       .tab-text::after{
-        width: 80px;
+        width: 50px;
       }
     }
     .tab{
-      padding: 0 10px;
+      padding: 2px 10px 0 10px;
       text-align: center;
       height: 100%;
       cursor: pointer;

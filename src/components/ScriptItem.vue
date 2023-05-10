@@ -1,7 +1,7 @@
 <template>
   <div class="script-item-box" >
     <div class="script-item" :class="{disabled: script.disableChecked}">
-      <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'60px':'0px'}">
+      <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'48px':'0px'}">
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
         </div>
@@ -17,12 +17,12 @@
       <div class="website-cell" :class="script.active?'activated':'stopped'">
         <div class="check-box" :class="{ active: script.disableChecked}" >
           <input :ref="script.uuid" v-model="script.disableChecked" 
-          @change='changeWebsiteDisabled(script.uuid, $event)' type="checkbox" class="allow" />
+          @change='changeWebsiteDisabled(script.uuid, script.active, $event)' type="checkbox" class="allow" :disabled="!script.active"/>
         </div>
-        <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
+        <div class="website"  @click="disabledUrlClick(script.uuid, script.active)">{{t("disable_website")}}</div>
         <div class="select-options">
           <div class="selected-text">{{website}}</div>
-          <select class="select-container" v-model="script.disabledUrl" @change='changeSelectWebsite(script.uuid, $event)' >
+          <select class="select-container" v-model="script.disabledUrl" @change='changeSelectWebsite(script.uuid, script.active, $event)' :disabled="!script.active">
             <option v-for="(item, i) in websiteList" :key="i" :value="item.disabledUrl">{{item.website}}</option>
           </select>
         </div>
@@ -93,11 +93,15 @@ export default {
     const refreshTargetTabs = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
     }
-    const disabledUrlClick = (refId) => {
-      // console.log('disabledUrlClick----', refId, proxy.$refs);
-      proxy.$refs[refId].dispatchEvent(new MouseEvent('click'));
+    const disabledUrlClick = (refId, active) => {
+      if(active){
+        proxy.$refs[refId].dispatchEvent(new MouseEvent('click'));
+      }
     }
-    const changeSelectWebsite = (uuid, event) => {
+    const changeSelectWebsite = (uuid, active, event) => {
+      if(!active){
+        return;
+      }
       const selectOpt = event.target;
       const website = selectOpt.value;
       state.script.disabledUrl = website;
@@ -108,12 +112,16 @@ export default {
       // console.log('website------',website);
       emit('handleWebsite', uuid, website);
     }
-    const changeWebsiteDisabled = (uuid, event) => {
-      const disabled = event.target.checked;
-      state.script.disableChecked = disabled;
-      disabledUrlToReq(uuid);
-      // console.log('------website---enabled------',event, websiteReq, disabled);
-      emit('handleWebsiteDisabled', uuid, disabled);
+    const changeWebsiteDisabled = (uuid, active, event) => {
+      console.log("changeWebsiteDisabled----", active)
+      if(active){
+        console.log('changeWebsiteDisabled-----2--2-2-2-2-2-2-active=',active)
+        const disabled = event.target.checked;
+        state.script.disableChecked = disabled;
+        disabledUrlToReq(uuid);
+        // console.log('------website---enabled------',event, websiteReq, disabled);
+        emit('handleWebsiteDisabled', uuid, disabled);
+      }
     }
 
     const disabledUrlToReq = (uuid) => {
@@ -210,14 +218,12 @@ export default {
         }
       }
     }
-    .stopped{
-      opacity: 0.6;
-    }
     .script-info{
       width: 100%;
       height: 48px;
-      padding-left: 60px;
+      padding-left: 48px;
       padding-right: 60px;
+      padding-top: 4px;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -227,12 +233,10 @@ export default {
       .script-icon{
         position: absolute;
         left: 0;
-        top: 0;
-        width: 48px;
-        height: 48px;
+        top: 6px;width: 40px;height: 40px;
         border: 0.5px solid var(--dm-bd);
         border-radius: 8px;
-        padding: 8px;
+        padding: 6px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -266,14 +270,12 @@ export default {
           }
         }
       }
-      // &.stopped{
-      //   .author{
-      //     opacity: 0.7;
-      //   }
-      //   .desc{
-      //     opacity: 0.7;
-      //   }
-      // }
+      &.stopped{
+        .author,.desc{
+          // opacity: 0.7;
+          color: var(--dm-bd);
+        }
+      }
       .author{
         font-size: 16px;
         font-weight: 700;
@@ -311,7 +313,19 @@ export default {
       justify-content: flex-start;
       align-items: center;
       position: relative;
-      padding: 1px 0 5px 0;
+      padding: 0px 0 2px 0;
+      &.stopped{
+        .website,.select-text{
+          // opacity: 0.7;
+          color: var(--dm-bd);
+        }
+        .select-options{
+          opacity: 0.2;
+        }
+        .check-box{
+          opacity: 0.4;
+        }
+      }
       .check-box{
         width: 16px;
         height: 16px;

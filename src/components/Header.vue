@@ -27,7 +27,6 @@ export default {
       title: props.titleInfo
     })
     const headerRef = ref(null);
-    // headerRef.value.style.backdropFilter = 'blur(16px)';
 
     onMounted(() => {
       console.log(headerRef.value);
@@ -35,7 +34,7 @@ export default {
         headerRef.value.style = '-webkit-backdrop-filter: blur(16px) saturate(150%)';
         clearTimeout(timer);
         timer = null;
-      }, 200)
+      }, 800)
     })
     const clickStayAction = () => {
       // window.open('stay://');
