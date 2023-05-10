@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel *saveToLabel;
 @property (nonatomic, strong) UIImageView *docImageView;
 //@property (nonatomic, strong) SYProgress *progress;
-@property (nonatomic, strong) UIProgressView *progressView;
+
 @property (nonatomic ,assign) CGFloat progress;
 
 @end

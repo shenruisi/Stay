@@ -14,9 +14,63 @@
 #import "ColorHelper.h"
 #import "DeviceHelper.h"
 
+@interface SmoothProcessView : FCView
+
+@property (nonatomic, strong) UIColor *progressTintColor;
+@property (nonatomic, strong) UIColor *trackTintColor;
+
+@property (nonatomic, strong) UIView *movingView;
+@property (nonatomic, assign) CGFloat progress;
+@end
+
+@implementation SmoothProcessView
+
+- (instancetype)init{
+    if (self = [super init]){
+        [self movingView];
+    }
+    
+    return self;
+}
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    [self.movingView setFrame:CGRectMake(0, 0, self.width * self.progress, self.height)];
+}
+
+- (void)setProgress:(CGFloat)progress{
+    if (progress <= _progress) return;
+    CGFloat lastProgress = _progress;
+    _progress = progress;
+    [self.movingView setFrame:CGRectMake(0, 0, self.width * lastProgress, self.height)];
+    [UIView animateWithDuration:0.5 animations:^{
+        [self.movingView setFrame:CGRectMake(0, 0, self.width * progress, self.height)];
+    }];
+}
+
+- (UIView *)movingView{
+    if (nil == _movingView){
+        _movingView = [[UIView alloc] init];
+        [self addSubview:_movingView];
+    }
+    
+    return _movingView;
+}
+
+- (void)setTrackTintColor:(UIColor *)trackTintColor{
+    self.backgroundColor = trackTintColor;
+}
+
+- (void)setProgressTintColor:(UIColor *)progressTintColor{
+    self.movingView.backgroundColor = progressTintColor;
+}
+
+@end
+
 @interface SYTaskTableViewCell()
 
 @property (nonatomic, strong) NSMutableArray *speedArray;
+@property (nonatomic, strong) SmoothProcessView *progressView;
 
 @end
 @implementation SYTaskTableViewCell
@@ -325,14 +379,13 @@
     return _downloadSpeedLabel;
 }
 
-- (UIProgressView *)progressView {
+- (SmoothProcessView *)progressView {
     if(_progressView == nil) {
-        _progressView = [[UIProgressView alloc] init];
+        _progressView = [[SmoothProcessView alloc] init];
         _progressView.progressTintColor = [FCStyle.accent colorWithAlphaComponent:0.1];
-        _progressView.progressViewStyle= UIProgressViewStyleDefault;
         _progressView.trackTintColor= [UIColor clearColor];
         _progressView.translatesAutoresizingMaskIntoConstraints = NO;
-//        _progressView.layer.cornerRadius = 10;
+        _progressView.layer.cornerRadius = 10;
         _progressView.clipsToBounds = YES;
         [self.fcContentView addSubview:_progressView];
         [NSLayoutConstraint activateConstraints:@[
