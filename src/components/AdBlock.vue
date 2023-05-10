@@ -27,8 +27,8 @@
           <div class="web-rule " ><span class="over-hidden" v-html="unHtmlTag(item.selector)"></span></div>
           <div class="delete-icon" @click="deleteRuleClick(item.uuid)"></div>
         </div>
-        <div class="rule-note">{{ t('rule_note') }}</div>
       </template>
+      <div class="rule-note">{{ t('rule_note') }}</div>
     </div>
   </div>
 </template>
