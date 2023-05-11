@@ -123,9 +123,7 @@ static VideoParser *_kVideoParser;
                 NSString *code = response[@"biz"][@"code"] ? response[@"biz"][@"code"] : @"";
                 NSString *nCode = response[@"biz"][@"n_code"] ? response[@"biz"][@"n_code"] : @"";
                 
-                NSString *method = [NSString stringWithFormat:@"fetchRandomStr('%@','%@');",[[[code stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]
-                    stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"],[[[nCode stringByReplacingOccurrencesOfString:@"\r" withString:@""] stringByReplacingOccurrencesOfString:@"\n" withString:@""]
-                         stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"]];
+                NSString *method = [NSString stringWithFormat:@"fetchRandomStr('%@','%@');",[self escapeJSStr:code],[self escapeJSStr:nCode]];
                 [self.webView evaluateJavaScript:method completionHandler:^(id ret, NSError * _Nullable error) {
                     NSLog(@"%@",error);
                 }];
@@ -135,6 +133,12 @@ static VideoParser *_kVideoParser;
     if ([message.name isEqualToString:@"log"]){
         NSLog(@"userContentController log: %@",message.body);
     }
+}
+
+- (NSString *)escapeJSStr:(NSString *)code{
+    NSString *newCode = [[code stringByReplacingOccurrencesOfString:@"\r" withString:@""]
+                         stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    return [[newCode dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
 }
 
 - (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation{
