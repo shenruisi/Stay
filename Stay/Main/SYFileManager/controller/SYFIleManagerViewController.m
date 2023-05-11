@@ -1019,7 +1019,6 @@ UIDocumentPickerDelegate
     [self emptyTipsView];
     self.tabBarController.tabBar.hidden = NO;
 
-
     
 #ifdef FC_MAC
         self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
@@ -1031,6 +1030,7 @@ UIDocumentPickerDelegate
     [self.emptyTipsView movePart];
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
     self.emptyTipsView.hidden = isPro;
+    self.tableView.hidden = !isPro;
     
     
 #ifndef FC_MAC
@@ -1174,7 +1174,7 @@ UIDocumentPickerDelegate
         
         _emptyTipsView.hidden = isPro;
         [_emptyTipsView.addButton addTarget:self action:@selector(buyStay:) forControlEvents:UIControlEventTouchUpInside];
-        _emptyTipsView.backgroundColor = FCStyle.secondaryBackground;
+        _emptyTipsView.backgroundColor = UIColor.clearColor;
         [self.view addSubview:_emptyTipsView];
     }
     

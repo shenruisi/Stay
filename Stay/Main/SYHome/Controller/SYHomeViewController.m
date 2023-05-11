@@ -1990,7 +1990,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
         _emptyTipsView.hidden = YES;
         [_emptyTipsView.addButton addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        _emptyTipsView.backgroundColor = FCStyle.secondaryBackground;
+        _emptyTipsView.backgroundColor = UIColor.clearColor;
         [self.view addSubview:_emptyTipsView];
     }
     

@@ -411,6 +411,10 @@
     UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                       style:UIAlertActionStyleDefault
                                                     handler:^(UIAlertAction * _Nonnull action) {
+        NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+        [groupUserDefaults setObject:@(YES) forKey:@"tips"];
+        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
+        [groupUserDefaults synchronize];
         [self.navigationController.slideController dismiss];
     }];
     [alert addAction:confirm];
