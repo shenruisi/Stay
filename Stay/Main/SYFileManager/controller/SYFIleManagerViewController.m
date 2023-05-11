@@ -396,6 +396,7 @@ UIDocumentPickerDelegate
 //    }
 //}
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if([tableView isEqual:self.searchTableView]) {
         DownloadResource *downloadResource = self.searchData[indexPath.row];

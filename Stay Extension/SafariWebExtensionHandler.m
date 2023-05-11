@@ -405,6 +405,12 @@
         [SharedStorageManager shared].userDefaultsExRO = nil;
         body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
     }
+    else if ([message[@"type"] isEqualToString:@"config"]){
+        [SharedStorageManager shared].extensionConfig = nil;
+        body = @{
+            @"background_color_type" : [SharedStorageManager shared].extensionConfig.backgroundColorType
+        };
+    }
     else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
         NSDictionary *details = message[@"details"];
         body = [self xmlHttpRequestProxy:details];

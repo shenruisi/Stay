@@ -18,6 +18,8 @@
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
 
+#import "SharedStorageManager.h"
+
 NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @"app.stay.notification.AppearanceDidChangeAccentColorNotification";
 
 
@@ -232,6 +234,7 @@ UITableViewDataSource
 #if FC_MAC
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -331,10 +334,12 @@ UITableViewDataSource
     }
     else if ([@"gradient" isEqualToString:type]){
         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType value:@"gradient"];
+        [SharedStorageManager shared].extensionConfig.backgroundColorType = @"gradient";
         [[NSNotificationCenter defaultCenter] postNotificationName:@"BackgroundColorDidChange" object:nil];
     }
     else if ([@"solid" isEqualToString:type]){
         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType value:@"solid"];
+        [SharedStorageManager shared].extensionConfig.backgroundColorType = @"solid";
         [[NSNotificationCenter defaultCenter] postNotificationName:@"BackgroundColorDidChange" object:nil];
     }
     
