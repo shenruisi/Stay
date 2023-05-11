@@ -471,11 +471,13 @@
         [self.emptyView setHidden:NO];
         [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Quit", @"")
                                                                                  attributes:@{
-                             NSForegroundColorAttributeName : UIColor.whiteColor,
+                             NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
                                         forState:UIControlStateNormal];
         [self.startButton setEnabled:YES];
-        self.startButton.backgroundColor = FCStyle.accent;
+        self.startButton.backgroundColor = UIColor.clearColor;
+        self.startButton.layer.borderColor = FCStyle.accent.CGColor;
+        self.startButton.layer.borderWidth = 1;
         [self.tableView setHidden:YES];
         [self.tableView reloadData];
     } else {
@@ -554,7 +556,7 @@
         [self.emptyView setHidden:YES];
         [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
                                                                                  attributes:@{
-                             NSForegroundColorAttributeName : UIColor.whiteColor,
+                             NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
                                         forState:UIControlStateNormal];
         [self.tableView setHidden:NO];
@@ -574,13 +576,15 @@
         _startButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
         [_startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Quit", @"")
                                                                                  attributes:@{
-                             NSForegroundColorAttributeName : UIColor.whiteColor,
+                             NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
                                         forState:UIControlStateNormal];
         [_startButton addTarget:self
                                  action:@selector(startAction:)
                        forControlEvents:UIControlEventTouchUpInside];
-        _startButton.backgroundColor = FCStyle.accent;
+        _startButton.backgroundColor = UIColor.clearColor;
+        _startButton.layer.borderColor = FCStyle.accent.CGColor;
+        _startButton.layer.borderWidth = 1;
         _startButton.layer.cornerRadius = 10;
         _startButton.layer.masksToBounds = YES;
         [self.view addSubview:_startButton];

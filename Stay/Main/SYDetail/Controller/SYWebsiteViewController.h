@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SYSecondaryViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYWebsiteViewController : UIViewController
+@interface SYWebsiteViewController : SYSecondaryViewController
 @property (nonatomic, copy) NSDictionary *scriptDic;
 @property (nonatomic, copy) NSString *type;
 @end
