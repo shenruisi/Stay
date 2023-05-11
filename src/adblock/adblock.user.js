@@ -903,26 +903,28 @@ const browser = __b;
       let durationTimer = setTimeout(()=>{
         finishTaggedDom.style.animation = 'dropOut 0.5s forwards';
         clearTimeout(durationTimer);
-        durationTimer = 0;
+        durationTimer = null;
       }, 2000);
+      console.log('handleSelectedTag-----to---send');
       sendSelectedTagToHandler();
     }
 
     async function sendSelectedTagToHandler(){
       return new Promise((resolve, reject)=>{
         // console.log(selectedDom);
-        const selector = getSelector(selectedDom);
-        let localUrl = window.location.href;
-        let url = localUrl;
+        let selector = getSelector(selectedDom);
         let selDom = document.querySelector(selector);
         if(selDom){
-          // url = url + '#tag=yes123123123123123';
-          // console.log('selDom----------',selDom);
           selDom.style.display = 'none';
         }else{
-          // url = url + '#tag=nonononononono';
-          // console.log('selDom----null------',selDom);
+          selector = getSelector(selectedDom, 'useClass');
+          selDom = document.querySelector(selector);
+          if(selDom){
+            selDom.style.display = 'none';
+          }
         }
+        let localUrl = window.location.href;
+        let url = localUrl;
         // selectedDom.style.display = 'none';
         selectedDom = null;
         console.log('sendSelectedTagToHandler----------------', selector, url);
@@ -972,14 +974,14 @@ const browser = __b;
     }
 
     function handleMoveAndSelecteDom(event){
-      console.log('touchmove------handleMoveAndSelecteDom', event);
+      console.log('touchmove------handleMoveAndSelecteDom-------------', event);
       if(event.touches && event.touches.length>1){
         return;
       }
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
-      // console.log('moveDoms-----',moveDoms);
+      console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let selectePositionDom = moveDoms[0];
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
@@ -1107,34 +1109,42 @@ const browser = __b;
       return polygon;
     }
   
-    function getSelector(el) {
+    function getSelector(el, useClass) {
       if (!(el instanceof Element)) return;
       let path = [];
-      while (el.nodeType === Node.ELEMENT_NODE) {
-        let selector = el.nodeName.toLowerCase();
-        if(selector == 'body'){
-          path.unshift(selector);
-          break;
-        }
-        if (el.id && checkStaticSelectorId(el.id)) {
-          selector += '#' + el.id;
-          path.unshift(selector);
-          break;
-        }else if(el.className){
-          selector += `.${el.className.replace(/\s+/g, '.')}`
-        }else {
-          // let sib = el,nth = 1;
-          // while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++);
-          // selector += ':nth-child(' + nth + ')';
-          const siblings = Array.from(el.parentNode.children).filter(sibling => sibling.nodeName === el.nodeName);
-          if (siblings.length > 1) {
-            const index = siblings.indexOf(el);
-            selector += `:nth-child(${index + 1})`;
+      try {
+        while (el.nodeType === Node.ELEMENT_NODE) {
+          console.log('getSelector---el.id---',el.id)
+          let selector = el.nodeName.toLowerCase();
+          if(selector == 'body'){
+            path.unshift(selector);
+            break;
           }
+          if (el.id && checkStaticSelectorId(el.id)) {
+            selector += '#' + el.id;
+            path.unshift(selector);
+            break;
+          }
+          else if(el.className && useClass){
+            selector += `.${el.className.replace(/\s+/g, '.')}`
+          }
+          else {
+            // let sib = el,nth = 1;
+            // while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++);
+            // selector += ':nth-child(' + nth + ')';
+            const siblings = Array.from(el.parentNode.children).filter(sibling => sibling.nodeName === el.nodeName);
+            if (siblings.length > 1) {
+              const index = siblings.indexOf(el);
+              selector += `:nth-child(${index + 1})`;
+            }
+          }
+          path.unshift(selector);
+          el = el.parentNode;
         }
-        path.unshift(selector);
-        el = el.parentNode;
+      } catch (error) {
+        console.log(error)
       }
+      
       return path.join(' > ');
     }
     // "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)" 
@@ -1247,10 +1257,11 @@ const browser = __b;
       let pid = e.data.pid;
       let selector = e.data.selector;
       let url = e.data.url;
+      console.log('sendSelectedTagToHandler--------selector-----',selector, url);
       browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url}, (response) => {
         console.log('sendSelectedTagToHandler---------',response)
       });
-      const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
+      // const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
       
       // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       //   console.log("request.executeScript------", code);

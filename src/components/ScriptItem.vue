@@ -113,7 +113,7 @@ export default {
       emit('handleWebsite', uuid, website);
     }
     const changeWebsiteDisabled = (uuid, active, event) => {
-      console.log("changeWebsiteDisabled----", active)
+      console.log('changeWebsiteDisabled----', active)
       if(active){
         console.log('changeWebsiteDisabled-----2--2-2-2-2-2-2-active=',active)
         const disabled = event.target.checked;

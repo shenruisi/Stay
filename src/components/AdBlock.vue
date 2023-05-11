@@ -133,8 +133,10 @@ export default {
 
     const deleteWebTagRule = (uuid) => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'deleteTagRule', uuid}, (response) => {
-        console.log('deleteTagRule====',response);
-        state.webRuleList = state.webRuleList.filter(item=>{item.uuid!=uuid});
+        console.log('deleteTagRule====',response, state.webRuleList);
+        state.webRuleList = state.webRuleList.filter(item=>{if(item.uuid!=uuid){return item;}});
+        console.log('state.webRuleList====', state.webRuleList);
+        global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
       })
     }
 
