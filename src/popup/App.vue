@@ -30,7 +30,9 @@
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
-        <UpgradePro :tabId="selectedTab.id" v-else><a class="what-it" :href="selectedTab.id == 2?'https://www.craft.do/s/PHKJvkZL92BTep':'https://www.craft.do/s/sYLNHtYc0n2rrV'" target="_blank">{{ selectedTab.id == 2 ? t('what_darkmode') : t('what_downloader') }}</a></UpgradePro>
+        <UpgradePro :tabId="selectedTab.id" v-else>
+          <a class="what-it" :href="selectedTab.whatisurl" target="_blank">{{ t(selectedTab.whatistitle) }}</a>
+        </UpgradePro>
       </template>
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>

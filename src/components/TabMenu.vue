@@ -32,10 +32,10 @@ export default {
   setup (props, {emit, expose}) {
     const state = reactive({
       tabList: [
-        {id: 1, selected: 1, name: 'matched_scripts_tab'},
-        {id: 2, selected: 0, name: 'darkmode_tab'},
-        {id: 3, selected: 0, name: 'downloader_tab'},
-        {id: 4, selected: 0, name: 'adblock_tab'}
+        {id: 1, selected: 1, name: 'matched_scripts_tab', whatisurl: '', whatistitle:''},
+        {id: 2, selected: 0, name: 'darkmode_tab', whatisurl: 'https://www.craft.do/s/PHKJvkZL92BTep', whatistitle:'what_darkmode'},
+        {id: 3, selected: 0, name: 'downloader_tab', whatisurl: 'https://www.craft.do/s/sYLNHtYc0n2rrV', whatistitle:'what_downloader'},
+        {id: 4, selected: 0, name: 'adblock_tab', whatisurl: 'https://www.craft.do/s/nmtd0ZD3a9Z48w', whatistitle:'what_adblock'}
       ],
       selectedTabId: props.tabId,
       isMobile: isMobile()

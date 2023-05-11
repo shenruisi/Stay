@@ -1,7 +1,8 @@
 <template>
     <div class="upgrade-pro-warpper" >
-      <div class="upgrade-download-img" v-if="tabId==3"></div>
-      <div class="upgrade-darkmode-img" v-else></div>
+      <div class="upgrade-img download" v-if="tabId==3"></div>
+      <div class="upgrade-img darkmode" v-if="tabId==2"></div>
+      <div class="upgrade-img adblocker" v-if="tabId==4"></div>
       <div class="upgrade-btn" @click="upgradeAction">{{t('upgrade_pro')}}</div>
       <div class="what-con"><slot></slot></div>
     </div>
@@ -43,17 +44,20 @@ export default {
   justify-content: center;
   align-items: center;
   flex:1;
-  .upgrade-download-img{
+  .upgrade-img{
     width: 120px;
     height: 120px;
+  }
+  .download{
     background: url("../assets/images/upload-pro.png") no-repeat 50% 50%;
     background-size: contain;
-
   }
-  .upgrade-darkmode-img{
-    width: 120px;
-    height: 120px;
+  .darkmode{
     background: url("../assets/images/darkmode.png") no-repeat 50% 50%;
+    background-size: contain;
+  }
+  .adblocker{
+    background: url("../assets/images/adblocker.png") no-repeat 50% 50%;
     background-size: contain;
   }
   .upgrade-btn{

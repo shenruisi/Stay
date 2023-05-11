@@ -134,6 +134,11 @@ const browser = __b;
         let url = 'https;//stap.app?'+path;
         return this.queryURLParams(url, name);
       },
+      getLastPathParameter: function(url) {
+        const path = new URL(url).pathname;
+        const segments = path.split('/').filter(segment => segment !== '');
+        return segments[segments.length - 1];
+      },
       matchUrlInString: function(imgText){
         const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
         const imgMatchs = imgText.match(urlReg);
@@ -2855,7 +2860,7 @@ const browser = __b;
     function handleYoutubeVideoInfo(videoSnifferDom){
       let videoInfo = {};
       const ytplayer = window.ytplayer;
-      let videoId = Utils.queryURLParams(hostUrl, 'v');
+      let videoId = Utils.queryURLParams(hostUrl, 'v') || Utils.getLastPathParameter(hostUrl);
       if(!videoId){
         // console.log('videoId-------',videoId);
         let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
