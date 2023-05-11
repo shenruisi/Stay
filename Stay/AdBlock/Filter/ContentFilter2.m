@@ -208,8 +208,8 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             
             NSError *maxRuleCountError;
             if (jsonRules.count > MAX_RULE_COUNT){
-//                int start = 16200;
-//                int end = 16250;
+//                int start = 15725;
+//                int end = 15750;
 //                int length = end - start;
                 
                 jsonRules = [NSMutableArray arrayWithArray:[jsonRules subarrayWithRange:NSMakeRange(0, MAX_RULE_COUNT)]];

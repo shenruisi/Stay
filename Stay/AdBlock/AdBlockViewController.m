@@ -20,6 +20,8 @@
 #import "UIColor+Convert.h"
 #import "ImageHelper.h"
 #import "SharedStorageManager.h"
+#import "DeviceHelper.h"
+#import "QuickAccess.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -203,10 +205,17 @@
             }
         }
         
-        
         AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
         cer.contentFilter = contentFilter;
-        [self.navigationController pushViewController:cer animated:YES];
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && self.splitViewController.viewControllers.count >= 2){
+            [[QuickAccess secondaryController] pushViewController:cer];
+        }
+        else{
+            [self.navigationController pushViewController:cer animated:YES];
+        }
+        
+       
     };
     
     __weak AdBlockViewController *weakSelf = (AdBlockViewController *)self;

@@ -10,7 +10,7 @@
 #import "SYSecondaryViewController.h"
 #import "FCViewController.h"
 
-@interface SYDetailViewController : FCViewController
+@interface SYDetailViewController : SYSecondaryViewController
 
 @property (nonatomic, strong) UserScript *script;
 @property (nonatomic, assign) BOOL isSearch;

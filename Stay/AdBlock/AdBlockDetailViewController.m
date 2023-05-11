@@ -12,6 +12,7 @@
 #import "ContentFilterEditSlideController.h"
 #import "ContentFilterManager.h"
 #import "FCShared.h"
+#import "DeviceHelper.h"
 
 @interface AdBlockDetailViewController ()
 
@@ -28,10 +29,20 @@
     self.hidesBottomBarWhenPushed = YES;
     if (ContentFilterTypeCustom == self.contentFilter.type
         ||ContentFilterTypeTag == self.contentFilter.type){
-        self.navigationItem.rightBarButtonItems = @[self.saveItem];
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+             self.rightBarButtonItems = @[self.saveItem];
+        }
+        else{
+            self.navigationItem.rightBarButtonItems = @[self.saveItem];
+        }
     }
     else{
-        self.navigationItem.rightBarButtonItems = @[self.moreItem];
+        if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
+            self.rightBarButtonItems = @[self.moreItem];
+        }
+        else{
+            self.navigationItem.rightBarButtonItems = @[self.moreItem];
+        }
     }
     self.title = self.contentFilter.title;
     [self editorView];

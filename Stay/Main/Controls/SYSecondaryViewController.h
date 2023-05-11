@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYSecondaryViewController : UIViewController
+@interface SYSecondaryViewController : FCViewController
 
 @property (nonatomic, strong) UINavigationController *stNavigationController;
 @property (nonatomic, strong) NSArray<UIBarButtonItem *> *rightBarButtonItems;

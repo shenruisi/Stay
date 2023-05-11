@@ -66,7 +66,7 @@ static ContentFilterManager *instance = nil;
 }
 
 - (void)writeJSONToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error{
-    if ([content isEqualToString:@"[]"]){
+    if (content.length == 0 || [content isEqualToString:@"[]"]){
         content = @"[{\"trigger\":{\"url-filter\":\"webkit.svg\"},\"action\":{\"type\":\"block\"}}]";
     }
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
@@ -75,6 +75,18 @@ static ContentFilterManager *instance = nil;
 }
 
 - (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error{
+    if (array.count == 0){
+        array = @[
+            @{
+                @"trigger" : @{
+                    @"url-filter" : @"webkit.svg"
+                },
+                @"action" : @{
+                    @"type" : @"block"
+                }
+            }
+        ];
+    }
     NSData *data = [NSJSONSerialization dataWithJSONObject:array options:NSJSONWritingWithoutEscapingSlashes error:error];
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     if (error) return;

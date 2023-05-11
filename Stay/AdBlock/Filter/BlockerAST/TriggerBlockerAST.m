@@ -73,6 +73,10 @@
         
         if (self.contentBlockerRule.trigger.urlFilter.length == 0){
             if ([urlFilter containsString:@","]){
+                if ([urlFilter hasSuffix:@","]){
+                    self.unsupported = YES;
+                    return;
+                }
                 NSRegularExpression *domainRegex = [NSRegularExpression regularExpressionWithPattern:@"([a-zA-Z0-9\\-]*\\.?[a-zA-Z0-9\\-]+\\.[a-zA-Z]{2,},?)+" options:0 error:nil];
                 NSArray<NSTextCheckingResult *> *results = [domainRegex matchesInString:urlFilter options:0 range:NSMakeRange(0, urlFilter.length)];
                 if (results.count == 1){
