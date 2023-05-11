@@ -656,7 +656,7 @@ UIDocumentPickerDelegate
                 [cell.contentView addSubview:imageView];
 
                 
-                UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 71, self.self.view.width - 100, 18)];
+                UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, self.self.view.width - 100, 18)];
                 name.text = NSLocalizedString(@"Undefined","");
                 if (dic != NULL) {
                     name.text = dic[@"fileName"];
@@ -678,8 +678,8 @@ UIDocumentPickerDelegate
                 subTitle.font = FCStyle.footnoteBold;
                 subTitle.textColor = FCStyle.subtitleColor;
                 [subTitle sizeToFit];
-                subTitle.centerY = name.centerY;
-                subTitle.left = name.right + 2;
+                subTitle.left = name.left;
+                subTitle.top = name.bottom;
                 [cell.contentView addSubview:subTitle];
                 
                 
