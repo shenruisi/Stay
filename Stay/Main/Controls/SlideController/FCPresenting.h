@@ -32,6 +32,7 @@ typedef enum {
 - (CGFloat)maxHeight;
 - (UIView *)parentView;
 - (CGFloat)offsetX;
+- (CGFloat)offsetY;
 @end
 
 NS_ASSUME_NONNULL_END
