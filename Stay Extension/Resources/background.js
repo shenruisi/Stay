@@ -1078,7 +1078,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if('fetchTagRules' == requestOperate){
             const url = request.url;
-            console.log('fetchTagRules----request', request)
+            // console.log('fetchTagRules----request', request)
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTagRules", url }, function (response) {
                 // console.log("fetchTagRules-------response=",response);
                 let body = response&&response.body?response.body:{};
@@ -1094,9 +1094,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         }
         else if('fetchTagStatus' == requestOperate){
-            console.log("fetchTagStatus-------request=",request);
+            // console.log("fetchTagStatus-------request=",request);
             browser.runtime.sendNativeMessage("application.id", { type: "fetchTagStatus" }, function (response) {
-                console.log("fetchTagStatus-------response=",response);
+                // console.log("fetchTagStatus-------response=",response);
                 let body = response&&response.body?response.body:{}
                 sendResponse(body)
             });
@@ -1113,7 +1113,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         else if("getThreeFingerTapStatus" == request.operate){
             let threeFingerTapStatus = 'on';
             browser.storage.local.get("three_finger_tap_status", (res) => {
-                console.log("getThreeFingerTapStatus-------three_finger_tap_status--------res=",res)
+                // console.log("getThreeFingerTapStatus-------three_finger_tap_status--------res=",res)
                 if(res && res["three_finger_tap_status"]){
                     threeFingerTapStatus = res["three_finger_tap_status"]
                 }
@@ -1122,6 +1122,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("setThreeFingerTapStatus" == request.operate){
             let threeFingerTapStatus = request.threeFingerTapStatus;
+            // console.log('setThreeFingerTapStatus-------', threeFingerTapStatus);
             let type = request.type;
             if(threeFingerTapStatus){
                 let statusMap = {}

@@ -73,13 +73,14 @@ const browser = __b;
   function injectSelectedAdTagJS(isContent){
     let showMakeupTagPanel = false;
     let showMakeupTagMenu = false;
-    let makeupTagListenerObj = {};
+    let makeupTagListenerObj = {threeFingerTapStatus: ''};
     let moveWrapperDom = null;
     let closeTagingDom = null;
     let preselectedTargetDom = null;
     let threeFingerMoveStart = null;
     let threeFingerMoveEnd = null;
     let selectedDom = null;
+    let notShowTagNameList = ['STYLE','SCRIPT','#text','LINK', 'META'];
     let i18nProp = {};
     let cssSelectorSet = new Set();
     const AdLangMessage = {
@@ -539,9 +540,9 @@ const browser = __b;
      */
     function add3FingerEventListener(){
       // console.log('add3FingerEventListener---------')
-      const threeFingerGesturestart = document.addEventListener('gesturestart', handleGesturestartEvent);
-      const threeFingerGesturechange =  document.addEventListener('gesturechange', handleGesturechangeEvent);
-      const threeFingerGestureend =  document.addEventListener('gestureend', handleGestureendEvent);
+      const threeFingerGesturestart = document.addEventListener('touchstart', handleTouchstartEvent);
+      const threeFingerGesturechange =  document.addEventListener('touchmove', handleTouchmoveEvent);
+      const threeFingerGestureend =  document.addEventListener('touchend', handleTouchendEvent);
     }
 
     /**
@@ -549,13 +550,15 @@ const browser = __b;
      */
     function remove3FingerEventListener(){
       // console.log('remove3FingerEventListener---------')
-      document.removeEventListener('gesturestart', handleGesturestartEvent);
-      document.removeEventListener('gesturechange', handleGesturechangeEvent);
-      document.removeEventListener('gestureend', handleGestureendEvent);
+      document.removeEventListener('touchstart', handleTouchstartEvent);
+      document.removeEventListener('touchmove', handleTouchmoveEvent);
+      document.removeEventListener('touchend', handleTouchendEvent);
     }
 
-    function handleGesturestartEvent(event){
-      if (event.scale === 1 && event.rotation === 0) {
+    function handleTouchstartEvent(event){
+      // console.log('handleTouchstartEvent-------', event)
+      if (event.touches.length === 3) {
+        event.preventDefault();
         threeFingerMoveStart = event.pageX;
         if(!showMakeupTagPanel){
           if('on' == makeupTagListenerObj.makeupStatus){
@@ -565,11 +568,13 @@ const browser = __b;
           }
         }
       }
-      event.preventDefault();
+      
     }
 
-    function handleGesturechangeEvent(event){
-      if (event.scale === 1 && event.rotation === 0) {
+    function handleTouchmoveEvent(event){
+      // console.log('handleTouchmoveEvent-------', event)
+      if ( event.touches.length === 3) {
+        event.preventDefault();
         threeFingerMoveEnd = event.pageX;
         let moveDistance = Math.abs(Utils.sub(threeFingerMoveEnd, threeFingerMoveStart));
         if(moveDistance <= distance && !showMakeupTagPanel){
@@ -581,11 +586,11 @@ const browser = __b;
         }
       }
       // 阻止默认事件
-      event.preventDefault();
+      
     }
 
-    function handleGestureendEvent(event){
-      event.preventDefault();
+    function handleTouchendEvent(event){
+      // event.preventDefault();
       threeFingerMoveStart = null;
       threeFingerMoveEnd = null;
     }
@@ -597,18 +602,18 @@ const browser = __b;
     async function asyncFetchMakeupTagStatus(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          console.log('asyncFetchMakeupTagStatus---isContent--true');
+          // console.log('asyncFetchMakeupTagStatus---isContent--true');
           browser.runtime.sendMessage({from: 'popup', operate: 'getMakeupTagStatus'}, (response) => {
-            console.log('asyncFetchMakeupTagStatus---------',response)
+            // console.log('asyncFetchMakeupTagStatus---------',response)
             let makeupTagStatus = response&&response.makeupTagStatus?response.makeupTagStatus:'on';
             makeupTagListenerObj.makeupStatus = makeupTagStatus;
           });
         }else{
-          console.log('asyncFetchMakeupTagStatus---isContent--false');
+          // console.log('asyncFetchMakeupTagStatus---isContent--false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_MAKEUP_TAG_STATUS_RESP') return;
-            console.log('asyncFetchMakeupTagStatus---------',e.data.makeupTagStatus)
+            // console.log('asyncFetchMakeupTagStatus---------',e.data.makeupTagStatus)
             window.removeEventListener('message', callback);
             let makeupStatus = e.data.makeupTagStatus
             makeupTagListenerObj.makeupStatus = makeupStatus;
@@ -627,21 +632,21 @@ const browser = __b;
     async function asyncFetchThreeFingerTapStatus(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          console.log('asyncFetchThreeFingerTapStatus---isContent--true');
+          // console.log('asyncFetchThreeFingerTapStatus---isContent--true');
           browser.runtime.sendMessage({from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
-            console.log('getThreeFingerTapStatus---------',response)
+            // console.log('getThreeFingerTapStatus---------',response)
             let threeFingerTapStatus = response&&response.threeFingerTapStatus?response.threeFingerTapStatus:'on';
             makeupTagListenerObj.shouldSetThreeFingerTapStatus = false;
             makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
           });
           resolve(true);
         }else{
-          console.log('getThreeFingerTapStatus--isContent---false');
+          // console.log('getThreeFingerTapStatus--isContent---false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_THREE_FINGER_TAG_STATUS_RESP') return;
             let threeFingerTapStatus = e.data.threeFingerTapStatus
-            console.log('getThreeFingerTapStatus---------', threeFingerTapStatus)
+            // console.log('asyncFetchThreeFingerTapStatus-----getThreeFingerTapStatus---------', threeFingerTapStatus)
             //监听到content发过来的消息就不需要再set
             makeupTagListenerObj.shouldSetThreeFingerTapStatus = false;
             makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
@@ -660,15 +665,16 @@ const browser = __b;
           resolve(false);
           return;
         }
+        // console.log('asyncSetThreeFingerTapStatus-----threeFingerTapStatus----', threeFingerTapStatus);
         if(isContent){
-          console.log('asyncSetThreeFingerTapStatus-----true');
-          browser.runtime.sendMessage({from: 'content_script', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type: 'content'}, (response) => {
+          // console.log('asyncSetThreeFingerTapStatus-----true');
+          browser.runtime.sendMessage({from: 'content_script', operate: 'setThreeFingerTapStatus', threeFingerTapStatus}, (response) => {
             console.log('asyncSetThreeFingerTapStatus---------',response)
           });
         }else{
-          console.log('asyncSetThreeFingerTapStatus-----false');
+          // console.log('asyncSetThreeFingerTapStatus-----false');
           const pid = Math.random().toString(36).substring(2, 9);
-          window.postMessage({pid: pid, name: 'SET_THREE_FINGER_TAG_STATUS',  threeFingerTapStatus, type: 'content'});
+          window.postMessage({pid: pid, name: 'SET_THREE_FINGER_TAG_STATUS',  threeFingerTapStatus});
         }
         resolve(true);
       })
@@ -681,15 +687,15 @@ const browser = __b;
         if (!e.data.pid) return;
         if(name == 'pushMakeupTagStatus'){
           let makeupStatus = e.data.makeupTagStatus
-          console.log('pushMakeupTagStatus---------',makeupStatus)
+          // console.log('listenerMakeupStatusFromPopup----pushMakeupTagStatus---------',makeupStatus)
           makeupTagListenerObj.makeupStatus = makeupStatus;
         }
         else if(name == 'pushThreeFingerTapStatus'){
           let threeFingerTapStatus = e.data.threeFingerTapStatus
+          // console.log('listenerMakeupStatusFromPopup-----threeFingerTapStatus----',threeFingerTapStatus)
           if(threeFingerTapStatus == makeupTagListenerObj.threeFingerTapStatus){
             return;
           }
-          console.log('pushThreeFingerTapStatus---------',threeFingerTapStatus)
           makeupTagListenerObj.shouldSetThreeFingerTapStatus = true;
           makeupTagListenerObj.threeFingerTapStatus = threeFingerTapStatus;
         }
@@ -766,8 +772,7 @@ const browser = __b;
     function handleCloseTagingPanel(event){
       event.stopPropagation(); 
       event.preventDefault();
-      console.log('closeTagingDom addListener click---------------');
-      // makeupTagListenerObj.shouldSetMakeupStatus = true;
+      // console.log('closeTagingDom addListener click---------------');
       makeupTagListenerObj.makeupStatus = 'off';
       hideSelectTagNoteToast();
     }
@@ -806,9 +811,9 @@ const browser = __b;
       if(event){
         event.stopPropagation();
       }
-      console.log('addListener click---------------');
+      // console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu);
       if(showMakeupTagMenu){
-        console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
+        // console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
         return;
       }
       hideSelectTagNoteToast();
@@ -836,8 +841,8 @@ const browser = __b;
 
       let hasExpand = getValidParentNode()?true:false;
       let hasNarrowDown = getValidFirstChildNode()?true:false;
-      let hasPreviousSibling = getValidPreviousSiblingNode()?true:false;
-      let hasNextSibling = getValidNextSiblingNode()?true:false;
+      let hasPreviousSibling = getValidPreviousSiblingNode(selectedDom)?true:false;
+      let hasNextSibling = getValidNextSiblingNode(selectedDom)?true:false;
       const tagMenuDomStr = [
         '<div class="__stay_makeup_menu_item_box">',
         `<div class="__stay_menu_item" id="__stay_menu_tag" type="tag" node='true'><div class="__stay_weight">${i18nProp['tag_as_ad']}</div><img src="https://res.stayfork.app/scripts/92F21CD62874A8A6EFAF6A57618224D6/icon.png"></div>`,
@@ -918,6 +923,7 @@ const browser = __b;
         }
         return parentNodeDom;
       } catch (error) {
+        console.log('parentNode is exception---------', error)
         return null;
       }
     }
@@ -928,7 +934,7 @@ const browser = __b;
         let firstChildNode = selectedDom;
         // let parentNode
         while(firstChildNode){
-          firstChildNode = firstChildNode.firstChild;
+          firstChildNode = getFirstChild(firstChildNode);
           if(firstChildNode && firstChildNode.nodeName != '#text' && firstChildNode.getBoundingClientRect().width>0){
             break;
           }
@@ -942,21 +948,34 @@ const browser = __b;
       }
     }
 
-    function getValidPreviousSiblingNode(){
+    function getFirstChild(parentElement){
+      if(!parentElement){
+        return null
+      }
+      // 获取所有子节点
+      let childNodes = parentElement.childNodes;
+
+      // 过滤子节点，排除 <style> 和 <script> 标签
+      let filteredChildNodes = Array.prototype.filter.call(childNodes, function(node) {
+        return node.nodeType !== Node.ELEMENT_NODE || !(notShowTagNameList.includes(node.tagName));
+      });
+      if(filteredChildNodes && filteredChildNodes.length){
+        return filteredChildNodes[0];
+      }
+      return null;
+    }
+
+    function getValidPreviousSiblingNode(tempDom){
       try {
-        let previousSiblingNode = selectedDom;
+        let previousSiblingNode = tempDom;
         // let parentNode
         while(previousSiblingNode){
           previousSiblingNode = previousSiblingNode.previousSibling
           if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0){
             break;
           }
-          if(['SCRIPT','STYLE','LINK'].includes(previousSiblingNode.nodeName)){
-            previousSiblingNode = null;
-            break;
-          }
         }
-        if(!previousSiblingNode || previousSiblingNode.nodeName == '#text'){
+        if(notShowTagNameList.includes(previousSiblingNode.nodeName)){
           return null;
         }
         return previousSiblingNode;
@@ -966,24 +985,17 @@ const browser = __b;
       
     }
 
-    function getValidNextSiblingNode(){
+    function getValidNextSiblingNode(tempDom){
       try {
-        let nextSiblingNode = selectedDom;
+        let nextSiblingNode = tempDom;
         // let parentNode
         while(nextSiblingNode){
           nextSiblingNode = nextSiblingNode.nextSibling
           if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0){
             break;
           }
-          if(['SCRIPT','STYLE','LINK'].includes(nextSiblingNode.nodeName)){
-            nextSiblingNode = null;
-            break;
-          }
         }
-        if(!nextSiblingNode){
-          return null;
-        }
-        if(nextSiblingNode.nodeName == '#text'){
+        if(notShowTagNameList.includes(nextSiblingNode.nodeName)){
           return null;
         }
         return nextSiblingNode;
@@ -1021,15 +1033,16 @@ const browser = __b;
           handleSelectedTag();
           showSelectTagNoteToast(i18nProp['select_note']);
         }else if('expand' === menuItemType){
+          // console.log('expand--------', getValidParentNode());
           handleSelecteTagPosition(getValidParentNode(), true);
         }else if('narrowDown' === menuItemType){
           handleSelecteTagPosition(getValidFirstChildNode(), true);
         }else if('previousSibling' === menuItemType){
-          handleSelecteTagPosition(getValidPreviousSiblingNode(), true);
+          handleSelecteTagPosition(getValidPreviousSiblingNode(selectedDom), true);
         }else if('nextSibling' === menuItemType){
-          handleSelecteTagPosition(getValidNextSiblingNode(), true);
+          handleSelecteTagPosition(getValidNextSiblingNode(selectedDom), true);
         }else{
-          console.log('menu----cancel-----',menuItemType)
+          // console.log('menu----cancel-----',menuItemType)
           showSelectTagNoteToast(i18nProp['select_note']);
         }
         
@@ -1078,14 +1091,38 @@ const browser = __b;
         clearTimeout(durationTimer);
         durationTimer = null;
       }, 2000);
-      console.log('handleSelectedTag-----to---send');
+      // console.log('handleSelectedTag-----to---send');
       sendSelectedTagToHandler();
+    }
+
+    function checkWebSiteUseFullPath(){
+      let url = window.location.href;
+      if(url.indexOf('')){
+
+      }
     }
 
     async function sendSelectedTagToHandler(){
       return new Promise((resolve, reject)=>{
         // console.log(selectedDom);
+        let styles = window.getComputedStyle(selectedDom);
+        if(styles.position == 'fixed'){
+          let fixedParentDom = getValidParentNode();
+          while(fixedParentDom){
+            if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
+              break;
+            }
+            fixedParentDom = fixedParentDom.parentNode;
+          }
+          console.log('fixedParentDom------',fixedParentDom)
+          if(fixedParentDom){
+            selectedDom = fixedParentDom;
+          }
+          
+        }
+        
         let selector = getSelector(selectedDom);
+        console.log('selector-----selector--------',selector)
         let selDom = document.querySelector(selector);
         if(!selDom){
           selector = getSelector(selectedDom, 'useClass');
@@ -1105,14 +1142,14 @@ const browser = __b;
         
         // selectedDom.style.display = 'none';
         selectedDom = null;
-        console.log('sendSelectedTagToHandler----------------', selector, url);
+        // console.log('sendSelectedTagToHandler----------------', selector, url);
         if(isContent){
-          console.log('sendSelectedTagToHandler-----true');
+          // console.log('sendSelectedTagToHandler-----true');
           browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url}, (response) => {
             console.log('sendSelectedTagToHandler---------',response)
           });
         }else{
-          console.log('sendSelectedTagToHandler-----false');
+          // console.log('sendSelectedTagToHandler-----false');
           const pid = Math.random().toString(36).substring(2, 9);
           window.postMessage({pid: pid, name: 'SEND_SELECTOR_TO_HANDLER',  selector, url});
         }
@@ -1151,8 +1188,13 @@ const browser = __b;
       }
     }
 
+    /**
+     * Tagging
+     * @param {*} event 
+     * @returns 
+     */
     function handleMoveAndSelecteDom(event){
-      console.log('touchmove------handleMoveAndSelecteDom-------------', event);
+      // console.log('touchmove------handleMoveAndSelecteDom-------------', event);
       if(event.touches && event.touches.length>1){
         return;
       }
@@ -1163,19 +1205,25 @@ const browser = __b;
       let selectePositionDom = moveDoms[0];
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
-        if(moveDoms.length<3){
+        if(moveDoms.length<=4){
           selectePositionDom = moveDoms[1];
-        }else if(moveDoms.length > 5){
-          let i = 3;
-          selectePositionDom = moveDoms[i];
-          while(moveDomRect.height >= document.documentElement.clientHeight){
-            i = i - 1;
+        }else if(moveDoms.length > 4){
+          selectePositionDom = moveDoms[1];
+          let styles = window.getComputedStyle(selectePositionDom);
+          // console.log('styles.position---------',styles.position)
+          // 判断节点是否具有绝对定位
+          if (styles.position !== 'fixed') {
+            let i = 3;
             selectePositionDom = moveDoms[i];
-            moveDomRect = selectePositionDom.getBoundingClientRect();
-            if(i == 1){
-              break;
+            while(moveDomRect.height >= document.documentElement.clientHeight){
+              i = i - 1;
+              selectePositionDom = moveDoms[i];
+              moveDomRect = selectePositionDom.getBoundingClientRect();
+              if(i == 1){
+                break;
+              }
             }
-          }
+          } 
         }
       }else{
         return;
@@ -1191,7 +1239,8 @@ const browser = __b;
      * @returns 
      */
     function handleSelecteTagPosition(selectePositionDom, showMenu){
-      if(!selectePositionDom){
+      // console.log('handleSelecteTagPosition------', selectePositionDom);
+      if(!selectePositionDom || selectePositionDom == ''){
         console.log('handleSelecteTagPosition---selectePositionDom is null');
         return;
       }
@@ -1204,17 +1253,19 @@ const browser = __b;
       if(!showMenu){
         showSelectTagNoteToast(i18nProp['select_confirm']);
       }
+
       
-      let targetWidth = moveDomRect.width;
+      let targetWidth = getMoveDomWidth(moveDomRect.width);
       // console.log('handleSelecteTagPosition------selectedDom----',selectedDom)
-      let targetHeight = moveDomRect.height;
-      let targetX = moveDomRect.left;
-      let targetY = moveDomRect.top;
+      let targetHeight = getMoveDomHeight(moveDomRect.height);
+      // console.log('moveDomRect-----',moveDomRect,'targetWidth====',targetWidth,'targetHeight=====',targetHeight);
+      let targetX = getMoveDomLeft(moveDomRect.left);
+      let targetY = getMoveDomTop(moveDomRect.top);
   
       if(targetX == 0){
         targetX = selectedDom.offsetLeft;
         if(targetX<0){
-          targetX = targetX*(-1);
+          targetX = 0;
         }
       }
       preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
@@ -1236,6 +1287,66 @@ const browser = __b;
       if(showMenu){
         showTagingOperateMenu();
       }
+    }
+
+    function getMoveDomHeight(domHeight){
+      if(domHeight>0){
+        return domHeight
+      }
+      let height = domHeight;
+      let selectedChild = selectedDom;
+      while(height==0 && selectedChild){
+        selectedChild = getFirstChild(selectedChild);
+        if(selectedChild){
+          height = selectedChild.offsetHeight;
+        }
+      }
+      return height;
+    }
+
+    function getMoveDomWidth(domWidth){
+      if(domWidth>0){
+        return domWidth
+      }
+      let width = domWidth;
+      let selectedChild = selectedDom;
+      while(width==0 && selectedChild){
+        selectedChild = getFirstChild(selectedChild);
+        if(selectedChild){
+          width = selectedChild.offsetWidth;
+        }
+      }
+      return width;
+    }
+    function getMoveDomLeft(domLeft){
+      const clientWidth = document.documentElement.clientWidth;
+      if(domLeft<clientWidth){
+        return domLeft
+      }
+      let left = domLeft;
+      let selectedChild = selectedDom;
+      while(domLeft>clientWidth && selectedChild){
+        selectedChild = getFirstChild(selectedChild);
+        if(selectedChild){
+          left = selectedChild.getBoundingClientRect().left;
+        }
+      }
+      return left;
+    }
+    function getMoveDomTop(domTop){
+      const clientHeight = document.documentElement.clientHeight;
+      if(domTop<clientHeight){
+        return domTop
+      }
+      let top = domTop;
+      let selectedChild = selectedDom;
+      while(top>clientHeight && selectedChild){
+        selectedChild = getFirstChild(selectedChild);
+        if(selectedChild){
+          top = selectedChild.getBoundingClientRect().top;
+        }
+      }
+      return top;
     }
 
     function showSelectTagNoteToast(note){
@@ -1292,7 +1403,7 @@ const browser = __b;
       let path = [];
       try {
         while (el.nodeType === Node.ELEMENT_NODE) {
-          console.log('getSelector---el.id---',el.id)
+          // console.log('getSelector---el.id---',el.id)
           let selector = el.nodeName.toLowerCase();
           if(selector == 'body'){
             path.unshift(selector);
@@ -1307,9 +1418,6 @@ const browser = __b;
             selector += `.${el.className.replace(/\s+/g, '.')}`
           }
           else {
-            // let sib = el,nth = 1;
-            // while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousSibling) && nth++);
-            // selector += ':nth-child(' + nth + ')';
             const siblings = Array.from(el.parentNode.children).filter(sibling => sibling.nodeName === el.nodeName);
             if (siblings.length > 1) {
               const index = siblings.indexOf(el);
@@ -1353,7 +1461,7 @@ const browser = __b;
       },
       set:function(newValue){
         makeupStatus = newValue;
-        console.log('makeupTagListenerObj---makeupStatus-----',newValue);
+        // console.log('makeupTagListenerObj---makeupStatus-----',newValue);
         //监听makeupStatus, 如果发生变化, 则需要触发状态方法
         handleStartMakeupStatus(newValue)
       }
@@ -1366,7 +1474,7 @@ const browser = __b;
       },
       set:function(newValue){
         threeFingerTapStatus = newValue;
-        console.log('makeupTagListenerObj-----threeFingerTapStatus-----',newValue);
+        // console.log('makeupTagListenerObj-----threeFingerTapStatus-----',newValue);
         handleThreeFingerEvent(newValue)
       }
     });
@@ -1406,47 +1514,32 @@ const browser = __b;
     }
     else if(name === 'GET_THREE_FINGER_TAG_STATUS'){
       let pid = e.data.pid;
-      browser.runtime.sendMessage({from: 'popup', operate: 'getThreeFingerTapStatus'}, (response) => {
-        // console.log(response);
+      browser.runtime.sendMessage({from: 'content_script', operate: 'getThreeFingerTapStatus'}, (response) => {
+        // console.log('GET_THREE_FINGER_TAG_STATUS-----',response);
         let threeFingerTapStatus = response&&response.threeFingerTapStatus?response.threeFingerTapStatus:'on';
         window.postMessage({pid:pid, name: 'GET_THREE_FINGER_TAG_STATUS_RESP', threeFingerTapStatus});
       });
     }
     else if(name === 'SET_THREE_FINGER_TAG_STATUS'){
       let threeFingerTapStatus = e.data.threeFingerTapStatus;
+      // console.log('SET_THREE_FINGER_TAG_STATUS-----', threeFingerTapStatus)
       let type = e.data.type;
       browser.runtime.sendMessage({from: 'content_script', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type}, (response) => {
       });
     }
-    // else if(name === 'pushMakeupTagStatus'){
-    //   let pid = e.data.pid;
-    //   let makeupTagStatus = e.data.makeupTagStatus
-    //   window.postMessage({pid:pid, name: 'pushMakeupTagStatus', makeupTagStatus});
-    // }
     // else if(name === 'pushThreeFingerTapStatus'){
     //   let pid = e.data.pid;
     //   let threeFingerTapStatus = e.data.threeFingerTapStatus
     //   window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
     // }
-
-    // [Log] sendSelectedTagToHandler---------------- – "div#app > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)" – "http://172.16.4.103:4000/#tag=nonononononono" (172.16.4.103, line 847)
-
     else if(name === 'SEND_SELECTOR_TO_HANDLER'){
       let pid = e.data.pid;
       let selector = e.data.selector;
       let url = e.data.url;
-      console.log('sendSelectedTagToHandler--------selector-----',selector, url);
+      // console.log('sendSelectedTagToHandler--------selector-----',selector, url);
       browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url}, (response) => {
-        console.log('sendSelectedTagToHandler---------',response)
+        // console.log('sendSelectedTagToHandler---------',response)
       });
-      // const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
-      
-      // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      //   console.log("request.executeScript------", code);
-      //   browser.tabs.executeScript(tabs[0].id, { code: code}, (res)=>{
-      //       console.log("response.executeScript------", res);
-      //   })
-      // });
     }
   })
 
@@ -1455,16 +1548,6 @@ const browser = __b;
     const requestFrom = request.from;
     const operate = request.operate;
     if('popup' === requestFrom){
-      // if("getMakeupTagStatus" == request.operate){
-      //   let makeupTagStatus = 'on';
-      //   browser.storage.local.get("stay_makeup_tag_status", (res) => {
-      //       console.log("getMakeupTagStatus-------stay_makeup_tag_status,--------res=",res)
-      //       if(res && res["stay_makeup_tag_status"]){
-      //           makeupTagStatus = res["stay_makeup_tag_status"]
-      //       }
-      //       sendResponse({makeupTagStatus});
-      //   });
-      // }
       if('startMakeupTagStatus' == operate){
         let makeupTagStatus = request.makeupTagStatus;
         // console.log('startMakeupTagStatus------', makeupTagStatus)
