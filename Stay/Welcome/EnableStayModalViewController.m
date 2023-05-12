@@ -12,6 +12,7 @@
 #import "Tampermonkey.h"
 #import "DataManager.h"
 #import "SharedStorageManager.h"
+#import "DeviceHelper.h"
 
 @interface EnableStayModalViewController()
 
@@ -560,7 +561,12 @@
 }
 
 - (CGSize)mainViewSize{
-    return FCApp.keyWindow.size;
+    if (FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type]){
+        return CGSizeMake(500, 700);
+    }
+    else{
+        return FCApp.keyWindow.size;
+    }
 }
 
 

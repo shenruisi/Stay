@@ -696,81 +696,6 @@
 
 @end
 
-@interface BroSimpleLoadingView : UIView
-
-@property (nonatomic, strong) UIActivityIndicatorView *indicator;
-@property (nonatomic, strong) UILabel *label;
-- (void)start;
-- (void)stop;
-@end
-
-@implementation BroSimpleLoadingView
-
-- (instancetype)initWithFrame:(CGRect)frame{
-    if (self = [super initWithFrame:frame]){
-        [self indicator];
-        [self label];
-    }
-
-    return self;
-}
-
-- (void)start{
-    [self.superview bringSubviewToFront:self];
-    self.hidden = NO;
-    [self.indicator startAnimating];
-}
-
-- (void)stop{
-    [self.superview sendSubviewToBack:self];
-    self.hidden = YES;
-    [self.indicator stopAnimating];
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    [super willMoveToSuperview:newSuperview];
-    [self.label sizeToFit];
-    CGFloat width = self.indicator.frame.size.width + self.label.frame.size.width;
-    CGFloat left = (self.frame.size.width - width) / 2;
-    [self.indicator setFrame:CGRectMake(left,
-                                        (self.frame.size.height - self.indicator.frame.size.height)/2,
-                                        self.indicator.frame.size.width,
-                                        self.indicator.frame.size.height)];
-    [self.label setFrame:CGRectMake(self.indicator.frame.origin.x + self.indicator.frame.size.width + 15,
-                                    (self.frame.size.height - self.label.frame.size.height)/2,
-                                    self.label.frame.size.width,
-                                    self.label.frame.size.height)];
-    [self.indicator startAnimating];
-}
-
-- (UIActivityIndicatorView *)indicator{
-    if (nil == _indicator){
-        _indicator = [[UIActivityIndicatorView alloc] init];
-        [self addSubview:_indicator];
-    }
-    return _indicator;
-}
-
-- (UILabel *)label{
-    if (nil == _label){
-        _label = [[UILabel alloc] initWithFrame:CGRectZero];
-        _label.font = FCStyle.body;
-        _label.textColor = FCStyle.fcBlack;
-        _label.text = NSLocalizedString(@"Loading", @"");
-        [self addSubview:_label];
-    }
-
-    return _label;
-}
-
-
-- (void)setHidden:(BOOL)hidden{
-    [super setHidden:hidden];
-
-}
-
-@end
-
 @interface SYBrowseViewController ()<
 UITableViewDelegate,
 UITableViewDataSource,
@@ -782,13 +707,10 @@ UIPopoverPresentationControllerDelegate
 @property (nonatomic, strong) NSMutableArray *datas; //featuredata
 @property (nonatomic, strong) NSMutableArray *allDatas;
 @property (nonatomic, strong) NSMutableArray *searchDatas;
-//@property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UITableView *allTableView;
 @property (nonatomic, strong) UITableView *searchTableView;
 
-
-@property (nonatomic, strong) BroSimpleLoadingView *simpleLoadingView;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, assign) NSInteger pageNo;
 @property (nonatomic, assign) NSInteger searchPageNo;
@@ -816,26 +738,11 @@ UIPopoverPresentationControllerDelegate
     self.enableSearchTabItem = YES;
     self.searchUpdating = self;
     self.navigationTabItem.leftTabButtonItems = @[self.featuredTabItem, self.allTabItem];
-    self.leftTitle  = NSLocalizedString(@"Store","");//    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
-       // 设置结果更新代理
-//    search.searchResultsUpdater = self;
-//    search.searchBar.placeholder = NSLocalizedString(@"SearchUserscripts", @"");
-//    self.navigationItem.searchController = search;
-//    self.navigationItem.searchController.delegate = self;
-//    self.navigationItem.searchController.searchBar.delegate = self;
-//    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
-//    self.navigationItem.hidesSearchBarWhenScrolling = false;
-//
-//    self.searchController = search;
-//    self.searchController.delegate = self;
-//    self.searchController.searchBar.delegate = self;
-//    [self.searchController.searchBar setTintColor:FCStyle.accent];
+    self.leftTitle  = NSLocalizedString(@"Store","");
     
     FCViewController *search = [[FCViewController alloc]init];
     self.searchViewController = search;
 
-//    [self tableView];
-//    [self queryData];
     [self.navigationTabItem activeItem:self.featuredTabItem];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:@"changeTab" object:nil];
@@ -877,10 +784,17 @@ UIPopoverPresentationControllerDelegate
 
 - (void)reloadAllTableview {
     dispatch_async(dispatch_get_main_queue(),^{
-
-        [self.tableView reloadData];
-        [self.searchTableView reloadData];
-        [self.allTableView reloadData];
+        if (self->_tableView && !self->_tableView.hidden){
+            [self.tableView reloadData];
+        }
+        
+        if (self->_searchTableView && !self->_searchTableView.hidden){
+            [self.searchTableView reloadData];
+        }
+        
+        if (self->_allTableView && !self->_allTableView.hidden){
+            [self.allTableView reloadData];
+        }
     });
 }
 
@@ -953,11 +867,11 @@ UIPopoverPresentationControllerDelegate
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         return self.searchDatas.count;
-    } else if([tableView isEqual:self.allTableView]) {
+    } else if([tableView isEqual:_allTableView]) {
         return  self.allDatas.count;
-    } else if([tableView isEqual:self.tableView]){
+    } else if([tableView isEqual:_tableView]){
         return  self.datas.count;
     }
     
@@ -965,7 +879,7 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if([tableView isEqual:self.tableView]) {
+    if([tableView isEqual:_tableView]) {
         NSDictionary *dic = self.datas[indexPath.row];
         if([dic[@"type"] isEqualToString:@"banner"]) {
             _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -1019,7 +933,7 @@ UIPopoverPresentationControllerDelegate
 //            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }
-    } else if ([tableView isEqual:self.searchTableView]) {
+    } else if ([tableView isEqual:_searchTableView]) {
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
         if (cell == nil) {
             cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
@@ -1032,7 +946,7 @@ UIPopoverPresentationControllerDelegate
         cell.entity = self.searchDatas[indexPath.row];
         
         return cell;
-    } else  if([tableView isEqual:self.allTableView]){
+    } else  if([tableView isEqual:_allTableView]){
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
         if (cell == nil) {
             cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
@@ -1058,9 +972,9 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         return 138.0f;
-    }else if([tableView isEqual:self.allTableView]) {
+    }else if([tableView isEqual:_allTableView]) {
         return 138.0f;
     } else {
         NSDictionary *dic = self.datas[indexPath.row];
@@ -1396,13 +1310,13 @@ UIPopoverPresentationControllerDelegate
 //        [self.searchController.searchBar.searchTextField resignFirstResponder];
 //    }
      if(y > h + reload_distance) {
-        if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:self.allTableView]) {
+        if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:_allTableView]) {
              if(_allDataQuerying) {
                      return;
              }
              _pageNo++;
             [self queryAllData];
-        } else if([scrollView isEqual:self.searchTableView] && !_searchDataEnd  && self.fcNavigationBar.searchBar.textField.text.length > 0) {
+        } else if([scrollView isEqual:_searchTableView] && !_searchDataEnd  && self.fcNavigationBar.searchBar.textField.text.length > 0) {
             if(_searchDataQuerying) {
                 return;
             }
@@ -1426,38 +1340,19 @@ UIPopoverPresentationControllerDelegate
                 [self queryAllData];
             }
         }
+        
         self.allTableView.hidden = NO;
-        self.tableView.hidden = YES;
-    } else {
-        [self queryData];
-        _selectedIdx = 0;
-        self.tableView.hidden = NO;
-        self.allTableView.hidden = YES;
-        [self.tableView reloadData];
-    }
-}
-
-- (void)segmentControllerAction:(UISegmentedControl *)segment
-{
-    NSInteger index = segment.selectedSegmentIndex;
-    if(index == 1) {
-        _selectedIdx = 1;
-        if(self.allDatas.count > 0) {
-            _pageNo = 1;
-            [self queryAllData];
-        } else {
-            if(_allDatas.count == 0) {
-                _pageNo = 1;
-                [self queryAllData];
-            }
+        if (_tableView){
+            self.tableView.hidden = YES;
         }
-        self.allTableView.hidden = NO;
-        self.tableView.hidden = YES;
     } else {
         [self queryData];
         _selectedIdx = 0;
         self.tableView.hidden = NO;
-        self.allTableView.hidden = YES;
+        
+        if (_allTableView){
+            self.allTableView.hidden = YES;
+        }
         [self.tableView reloadData];
     }
 }
@@ -1525,7 +1420,6 @@ UIPopoverPresentationControllerDelegate
 
 - (UITableView *)searchTableView {
     if (_searchTableView == nil) {
-//        _searchTableView = [[UITableView alloc]initWithFrame:self.searchViewController.view.bounds style:UITableViewStylePlain];
         _searchTableView = [[UITableView alloc]init];
 
         _searchTableView.delegate = self;
@@ -1540,29 +1434,17 @@ UIPopoverPresentationControllerDelegate
         _searchTableView.sectionFooterHeight = 0;
         
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.searchViewController.view addSubview:self.searchTableView];
+        [self.searchViewController.view addSubview:_searchTableView];
 
 //        _searchTableView.backgroundColor = FCStyle.background;
         [NSLayoutConstraint activateConstraints:@[
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
-            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
-            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
+            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
         ]];
     }
     return _searchTableView;
-}
-
-- (BroSimpleLoadingView *)simpleLoadingView{
-    if (nil == _simpleLoadingView){
-        _simpleLoadingView = [[BroSimpleLoadingView alloc] initWithFrame:CGRectMake(0,
-                                                                                 (self.view.frame.size.height - 50) / 2,
-                                                                                 self.view.frame.size.width, 50)];
-        
-//        [self.view addSubview:_simpleLoadingView];
-    }
-    
-    return _simpleLoadingView;
 }
 
 - (NSMutableArray *)datas {

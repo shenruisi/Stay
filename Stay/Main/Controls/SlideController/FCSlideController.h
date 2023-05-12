@@ -26,6 +26,7 @@ extern NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification
 - (void)layoutSubviews;
 - (void)startLoading;
 - (void)stopLoading;
+- (void)touched;
 @end
 
 NS_ASSUME_NONNULL_END

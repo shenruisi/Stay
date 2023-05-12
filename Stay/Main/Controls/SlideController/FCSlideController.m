@@ -70,7 +70,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
     
     CGSize parentViewSize = parentView.frame.size;
     if ([self blockAction]){
-        [[self blockView] setFrame:CGRectMake([self offsetX], 0, parentView.frame.size.width - [self offsetX], parentView.frame.size.height)];
+        [[self blockView] setFrame:CGRectMake(0, 0, parentView.frame.size.width, parentView.frame.size.height)];
         [parentView addSubview:self.blockView];
     }
     
@@ -96,7 +96,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
         self.navView.alpha = 0;
     }
     else if ([self from] == FCPresentingFromFixedOrigin){
-        [self.navView setFrame:CGRectMake([self offsetX],0,self.navView.frame.size.width,navViewHeight)];
+        [self.navView setFrame:CGRectMake([self offsetX],[self offsetY],self.navView.frame.size.width,navViewHeight)];
     }
     
     
@@ -376,6 +376,10 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
 }
 
 - (CGFloat)offsetX{
+    return 0;
+}
+
+- (CGFloat)offsetY{
     return 0;
 }
 

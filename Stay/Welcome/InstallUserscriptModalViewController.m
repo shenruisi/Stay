@@ -19,6 +19,8 @@
 #import "UserscriptUpdateManager.h"
 #import "SharedStorageManager.h"
 #import "ScriptMananger.h"
+#import "DeviceHelper.h"
+
 @interface InstallUserscriptModalViewController()
 
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
@@ -478,7 +480,12 @@
 }
 
 - (CGSize)mainViewSize{
-    return FCApp.keyWindow.size;
+    if (FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type]){
+        return CGSizeMake(500, 700);
+    }
+    else{
+        return FCApp.keyWindow.size;
+    }
 }
 
 

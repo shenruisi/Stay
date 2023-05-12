@@ -24,6 +24,8 @@
 #import "SharedStorageManager.h"
 #import "QuickAccess.h"
 
+#import "DeviceHelper.h"
+
 
 @interface WelcomeModalViewController()<
  UITableViewDelegate,
@@ -444,7 +446,13 @@
 }
 
 - (CGSize)mainViewSize{
-    return FCApp.keyWindow.size;
+    if (FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type]){
+        return CGSizeMake(500, 700);
+    }
+    else{
+        return FCApp.keyWindow.size;
+    }
+    
 }
 
 @end

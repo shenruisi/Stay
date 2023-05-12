@@ -55,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshReceipt;
 - (FCPlan *)getPlan:(BOOL)refresh;
 - (BOOL)subscribed:(NSString *)productIdentifier;
+@property (nonatomic, assign) BOOL testingProFlag;
 @end
 
 NS_ASSUME_NONNULL_END
