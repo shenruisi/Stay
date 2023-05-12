@@ -234,14 +234,6 @@
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
         [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
-        [self.activatedSource removeObject:contentFilter];
-        [self.stoppedSource addObject:contentFilter];
-        
-        [self.stoppedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
-            if (obj1.sort < obj2.sort) return NSOrderedAscending;
-            else if (obj1.sort > obj2.sort) return NSOrderedDescending;
-            return NSOrderedSame;
-        }];
     }
     else{
         contentFilter.status = 1;
@@ -249,14 +241,6 @@
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
         [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
-        [self.stoppedSource removeObject:contentFilter];
-        [self.activatedSource addObject:contentFilter];
-        
-        [self.activatedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
-            if (obj1.sort < obj2.sort) return NSOrderedAscending;
-            else if (obj1.sort > obj2.sort) return NSOrderedDescending;
-            return NSOrderedSame;
-        }];
     }
 }
 
@@ -398,6 +382,44 @@
 //}
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
+    NSMutableArray *newActivatedSource = [[NSMutableArray alloc] init];
+    NSMutableArray *newStoppedSource = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < self.activatedSource.count; i++){
+        ContentFilter *contentFilter = self.activatedSource[i];
+        if (contentFilter.active){
+            [newActivatedSource addObject:contentFilter];
+        }
+        else{
+            [newStoppedSource addObject:contentFilter];
+        }
+    }
+    
+    for (int i = 0; i < self.stoppedSource.count; i++){
+        ContentFilter *contentFilter = self.stoppedSource[i];
+        if (contentFilter.active){
+            [newActivatedSource addObject:contentFilter];
+        }
+        else{
+            [newStoppedSource addObject:contentFilter];
+        }
+    }
+    
+    [newActivatedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
+        if (obj1.sort < obj2.sort) return NSOrderedAscending;
+        else if (obj1.sort > obj2.sort) return NSOrderedDescending;
+        return NSOrderedSame;
+    }];
+    
+    [newStoppedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
+        if (obj1.sort < obj2.sort) return NSOrderedAscending;
+        else if (obj1.sort > obj2.sort) return NSOrderedDescending;
+        return NSOrderedSame;
+    }];
+    
+    self.activatedSource = newActivatedSource;
+    self.stoppedSource = newStoppedSource;
+    
     if (item == self.activatedTabItem){
         self.selectedDataSource = self.activatedSource;
     }

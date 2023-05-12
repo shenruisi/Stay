@@ -132,8 +132,11 @@
         }
 #else
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-            [((FCTabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).fcTabBar selectIndex:4];
-            [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+            FCTabBar *maybeTabBar = ((FCTabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).fcTabBar;
+            if (maybeTabBar && [maybeTabBar respondsToSelector:@selector(selectIndex:)]){
+                [maybeTabBar selectIndex:4];
+                [((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedViewController  pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+            }
         }
 #endif
         
