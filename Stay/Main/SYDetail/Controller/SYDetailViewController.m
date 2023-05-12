@@ -1242,7 +1242,7 @@
           },
           @{
               @"name":NSLocalizedString(@"AUTHOR", @""),
-              @"desc":self.script.author,
+              @"desc":self.script.author ? self.script.author : @"",
               @"color":FCStyle.grayNoteColor,
           },
           @{

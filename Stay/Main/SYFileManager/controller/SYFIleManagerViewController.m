@@ -41,13 +41,12 @@ static CGFloat kMacToolbar = 50.0;
 @property (nonatomic, strong) UIImageView *part1Img;
 @property (nonatomic, strong) UIButton *addButton;
 @property (nonatomic, strong) UIViewController *controller;
-- (void)movePart;
 @end
 
 @implementation _FileEmptyTipsView
 
-- (instancetype)initWithFrame:(CGRect)frame{
-    if (self = [super initWithFrame:frame]){
+- (instancetype)init{
+    if (self = [super init]){
         [self part1Img];
         [self addButton];
     }
@@ -55,29 +54,19 @@ static CGFloat kMacToolbar = 50.0;
     return self;
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    [super willMoveToSuperview:newSuperview];
-    self.part1Img.centerX = self.width / 2;
-    self.part1Img.bottom = self.height / 2;
-    self.addButton.top = self.part1Img.bottom + 29;
-    self.addButton.centerX = self.width / 2;
-
-//    self.addButton.frame = CGRectMake(self.part1Label.right, y, self.addButton.width, self.addButton.height);
-//    self.part2Label.frame = CGRectMake(self.addButton.right, y, self.part2Label.width, self.part2Label.height);
-}
-
-- (void)movePart {
-    self.part1Img.centerX = self.width / 2;
-    self.part1Img.bottom = self.height / 2;
-    self.addButton.top = self.part1Img.bottom + 29;
-    self.addButton.centerX = self.width / 2;
-}
 
 - (UIImageView *)part1Img{
     if (nil == _part1Img){
-        _part1Img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 88, 95)];
+        _part1Img = [[UIImageView alloc] init];
         _part1Img.image = [ImageHelper sfNamed:@"square.and.arrow.down.fill" font:[UIFont systemFontOfSize:80] color:RGB(138, 138, 138)];
+        _part1Img.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_part1Img];
+        [NSLayoutConstraint activateConstraints:@[
+            [_part1Img.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+            [_part1Img.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+            [_part1Img.widthAnchor constraintEqualToConstant:88],
+            [_part1Img.widthAnchor constraintEqualToConstant:95]
+        ]];
     }
     return _part1Img;
 }
@@ -85,6 +74,7 @@ static CGFloat kMacToolbar = 50.0;
 - (UIButton *)addButton{
     if (nil == _addButton){
         _addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 175, 29)];
+        _addButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_addButton setTitle:NSLocalizedString(@"UpgradeTo", @"") forState:UIControlStateNormal];
         _addButton.layer.borderColor = FCStyle.borderGolden.CGColor;
         _addButton.layer.borderWidth = 1;
@@ -93,6 +83,12 @@ static CGFloat kMacToolbar = 50.0;
         _addButton.font = FCStyle.subHeadline;
         _addButton.layer.cornerRadius = 10;
         [self addSubview:_addButton];
+        [NSLayoutConstraint activateConstraints:@[
+            [_addButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+            [_addButton.topAnchor constraintEqualToAnchor:self.part1Img.bottomAnchor constant:10],
+            [_addButton.widthAnchor constraintEqualToConstant:175],
+            [_addButton.heightAnchor constraintEqualToConstant:29]
+        ]];
     }
     
     return _addButton;
@@ -134,9 +130,6 @@ UIDocumentPickerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
-    self.navigationItem.standardAppearance = self.appearance;
-    self.navigationItem.scrollEdgeAppearance = self.appearance;
     self.enableTabItem = YES;
     self.enableSearchTabItem = YES;
     self.searchUpdating = self;
@@ -159,20 +152,17 @@ UIDocumentPickerDelegate
                                                  name:@"changeDownloading"
                                                object:nil];
 
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-
+    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
     if(isPro) {
         self.navigationItem.rightBarButtonItems = @[[self addItem]];
     }
-
-    [self emptyTipsView];
-
     
     [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
     if(self.videoArray.count > 0) {
       self.downloadingBtn.title  = [NSString stringWithFormat:@"%@(%ld)",NSLocalizedString(@"Downloading","Downloading"),self.videoArray.count];
     }
     self.selectedIdx = 0;
+    [self.navigationTabItem activeItem:self.downloadBtn];
 }
 
 - (void)showUpgrade {
@@ -353,7 +343,7 @@ UIDocumentPickerDelegate
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         return self.searchData.count;
     } else {
         if(self.selectedIdx == 1) {
@@ -365,7 +355,7 @@ UIDocumentPickerDelegate
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         return 160;
     } else {
         if(self.selectedIdx == 1) {
@@ -396,9 +386,8 @@ UIDocumentPickerDelegate
 //    }
 //}
 
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         DownloadResource *downloadResource = self.searchData[indexPath.row];
         if(downloadResource.status == 2){
             NSArray<DownloadResource *> *resources = [[DataManager shareManager] selectDownloadComplete:downloadResource.firstPath];
@@ -461,7 +450,7 @@ UIDocumentPickerDelegate
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([tableView isEqual:self.searchTableView]) {
+    if ([tableView isEqual:_searchTableView]) {
         SYDownloadedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SYDownloadedViewCell"];
         
         DownloadResource *resource= self.searchData[indexPath.row];
@@ -784,7 +773,7 @@ UIDocumentPickerDelegate
     __weak SYFIleManagerViewController *weakSelf = self;
     
     
-    if ([tableView isEqual:self.tableView] && indexPath.row > 0 && self.selectedIdx == 0) {
+    if ([tableView isEqual:_tableView] && indexPath.row > 0 && self.selectedIdx == 0) {
         
     
     
@@ -1016,20 +1005,18 @@ UIDocumentPickerDelegate
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self emptyTipsView];
-    self.tabBarController.tabBar.hidden = NO;
-
     
-#ifdef FC_MAC
-        self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
-#else
-        self.emptyTipsView.frame = self.view.bounds;
-#endif
-    
-    
-    [self.emptyTipsView movePart];
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-    self.emptyTipsView.hidden = isPro;
+    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+    if (isPro){
+        if (_emptyTipsView){
+            [_emptyTipsView removeFromSuperview];
+            _emptyTipsView = nil;
+        }
+    }
+    else{
+        [self emptyTipsView];
+    }
+        
     self.tableView.hidden = !isPro;
     
     
@@ -1078,25 +1065,7 @@ UIDocumentPickerDelegate
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-#ifdef FC_MAC
-    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-#else
-        self.tableView.frame = self.view.bounds;
-#endif
-    
-    
-#ifdef FC_MAC
-        self.emptyTipsView.frame =CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar);
-#else
-        self.emptyTipsView.frame = self.view.bounds;
-#endif
-    
-    [self.emptyTipsView movePart];
-
-    
-        [self.tableView reloadData];
-    
-
+    [self.tableView reloadData];
 }
 
 
@@ -1143,14 +1112,14 @@ UIDocumentPickerDelegate
             _searchTableView.sectionHeaderTopPadding = 0;
         }
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.searchViewController.view addSubview:self.searchTableView];
+        [self.searchViewController.view addSubview:_searchTableView];
 
         _searchTableView.backgroundColor = [UIColor clearColor];
         [NSLayoutConstraint activateConstraints:@[
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
-            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor],
-            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
+            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
         ]];
     }
     return _searchTableView;
@@ -1165,17 +1134,17 @@ UIDocumentPickerDelegate
 
 - (_FileEmptyTipsView *)emptyTipsView{
     if (nil == _emptyTipsView){
-#ifdef FC_MAC
-        _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar, self.view.width, self.view.height - kMacToolbar)];
-#else
-        _emptyTipsView = [[_FileEmptyTipsView alloc] initWithFrame:self.view.bounds];
-#endif
-        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-        
-        _emptyTipsView.hidden = isPro;
+        _emptyTipsView = [[_FileEmptyTipsView alloc] init];
+        _emptyTipsView.translatesAutoresizingMaskIntoConstraints = NO;
         [_emptyTipsView.addButton addTarget:self action:@selector(buyStay:) forControlEvents:UIControlEventTouchUpInside];
         _emptyTipsView.backgroundColor = UIColor.clearColor;
         [self.view addSubview:_emptyTipsView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_emptyTipsView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_emptyTipsView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_emptyTipsView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_emptyTipsView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+        ]];
     }
     
     return _emptyTipsView;
