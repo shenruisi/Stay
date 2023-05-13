@@ -23,7 +23,6 @@ class SYSubscribeController: FCViewController {
         
         self.hidesBottomBarWhenPushed = true
         navigationItem.largeTitleDisplayMode = .never
-        view.backgroundColor = FCStyle.background
         self.title = NSLocalizedString("Upgrade", comment: "")
         #if FC_MAC
         let barItem = UIBarButtonItem(title:NSLocalizedString("settings.close", comment: "") , style: .plain, target: self, action: #selector(cancelAction))
