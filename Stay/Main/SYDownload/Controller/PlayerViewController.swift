@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 
 @objc
-class PlayerViewController: FCViewController, UITableViewDataSource, UITableViewDelegate {
+class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UITableViewDelegate {
     
     private static var shared: PlayerViewController?
     

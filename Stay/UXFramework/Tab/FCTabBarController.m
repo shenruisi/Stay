@@ -35,6 +35,7 @@ NSNotificationName const _Nonnull FCUITabBarControllerShouldShowTabBar = @"app.f
                                              selector:@selector(tabBarShouldShow:)
                                                  name:FCUITabBarControllerShouldShowTabBar
                                                object:nil];
+    
 }
 
 - (void)tabBarShouldHide:(NSNotification *)note{
@@ -49,6 +50,7 @@ NSNotificationName const _Nonnull FCUITabBarControllerShouldShowTabBar = @"app.f
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    [self.fcTabBar selectIndex:0];
     
 }
 
@@ -70,7 +72,7 @@ NSNotificationName const _Nonnull FCUITabBarControllerShouldShowTabBar = @"app.f
 - (void)viewSafeAreaInsetsDidChange{
     [super viewSafeAreaInsetsDidChange];
     [self layout];
-    [self.fcTabBar selectIndex:0];
+//    [self.fcTabBar selectIndex:0];
 }
 
 - (void)viewWillLayoutSubviews{
