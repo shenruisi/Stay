@@ -1114,15 +1114,14 @@ const browser = __b;
             }
             fixedParentDom = fixedParentDom.parentNode;
           }
-          console.log('fixedParentDom------',fixedParentDom)
-          if(fixedParentDom){
+          // console.log('fixedParentDom------',fixedParentDom)
+          if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
             selectedDom = fixedParentDom;
           }
-          
         }
         
         let selector = getSelector(selectedDom);
-        console.log('selector-----selector--------',selector)
+        // console.log('selector-----selector--------',selector)
         let selDom = document.querySelector(selector);
         if(!selDom){
           selector = getSelector(selectedDom, 'useClass');
