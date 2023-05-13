@@ -226,6 +226,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
      
+     [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
      cell.contentView.backgroundColor = [UIColor clearColor];
      cell.backgroundColor = [UIColor clearColor];
      CGFloat left = 15;
