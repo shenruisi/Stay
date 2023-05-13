@@ -75,13 +75,16 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         super.viewDidLoad()
         
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+        if let bgLayer = view.layer.sublayers?[0] as? CAGradientLayer {
+            bgLayer.removeFromSuperlayer()
+            container.layer.insertSublayer(bgLayer, at: 0)
+        }
         view.backgroundColor = .black
         self.hidesBottomBarWhenPushed = true
         videoView = VideoPlayerView(resources: resources, controller: self)
         videoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(videoView)
         
-        container.backgroundColor = UIColor.clear
         container.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(container)
         
