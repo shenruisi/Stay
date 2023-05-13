@@ -811,7 +811,7 @@ const browser = __b;
       if(event){
         event.stopPropagation();
       }
-      // console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu);
+      console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu, selectedDom);
       if(showMakeupTagMenu){
         // console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
         return;
@@ -956,8 +956,12 @@ const browser = __b;
       let childNodes = parentElement.childNodes;
 
       // 过滤子节点，排除 <style> 和 <script> 标签
+      // Node.ELEMENT_NODE (1)：表示元素节点。
+      // Node.TEXT_NODE (3)：表示文本节点。
+      // Node.COMMENT_NODE (8)：表示注释节点。
+      // Node.DOCUMENT_NODE (9)：表示文档节点。
       let filteredChildNodes = Array.prototype.filter.call(childNodes, function(node) {
-        return node.nodeType !== Node.ELEMENT_NODE || !(notShowTagNameList.includes(node.tagName));
+        return node.nodeType == Node.ELEMENT_NODE || !(notShowTagNameList.includes(node.nodeName));
       });
       if(filteredChildNodes && filteredChildNodes.length){
         return filteredChildNodes[0];
@@ -1565,6 +1569,9 @@ const browser = __b;
           const pid = Math.random().toString(36).substring(2, 9);
           window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
         }
+      }else if('refreshTargetTabs' == operate){
+        window.location.reload(true);
+        sendResponse({ok:'ok'})
       }
     }
 
