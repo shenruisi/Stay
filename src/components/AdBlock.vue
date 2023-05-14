@@ -136,7 +136,15 @@ export default {
         console.log('deleteTagRule====',response, state.webRuleList);
         state.webRuleList = state.webRuleList.filter(item=>{if(item.uuid!=uuid){return item;}});
         console.log('state.webRuleList====', state.webRuleList);
-        global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
+        global.browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+          const message = { from: 'popup', operate: 'refreshTargetTabs'};
+          global.browser.tabs.sendMessage(tabs[0].id, message, response => {
+            global.browser.tabs.reload(tabs[0].id, { bypassCache: true });
+          })
+          
+
+        });
+        // global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
       })
     }
 

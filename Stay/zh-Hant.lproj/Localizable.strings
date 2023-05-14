@@ -117,6 +117,8 @@ LifetimeSubscription="永久";
 OneTimePayment="一次性購買";
 
 Upgrade="升級";
+AdblockFeature="內容攔截";
+AdblockFeatureDesc="Custom內容攔截 & Tag內容攔截";
 DownloaderFeature="下載器";
 DownloaderFeatureDesc="下載Safari瀏覽器中的視頻";
 iCloudFeature="iCloud同步";

@@ -121,6 +121,8 @@ LifetimeSubscription="Lifetime";
 OneTimePayment="One-time payment";
 
 Upgrade="Upgrade";
+AdblockFeature="Content Blocker";
+AdblockFeatureDesc="Custom content blocker & Tag content blocker";
 DownloaderFeature="Downloader";
 DownloaderFeatureDesc="Download videos in Safari";
 iCloudFeature="iCloud Sync";

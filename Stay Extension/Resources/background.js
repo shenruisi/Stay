@@ -1048,7 +1048,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("refreshTargetTabs" == request.operate){
             // console.log("background---refreshTargetTabs--", request);
-            browser.tabs.reload();
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.reload(tabs[0].id);
+            });
         }
         else if("fetchFolders" == request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
