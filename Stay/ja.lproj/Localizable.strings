@@ -122,7 +122,7 @@ OneTimePayment="One-time payment";
 
 Upgrade="Upgrade";
 AdblockFeature="Content Blocker";
-AdblockFeatureDesc="Custom content blocker & Tag content blocker";
+AdblockFeatureDesc="Write custom filtering rules and webpage ad tags";
 DownloaderFeature="Downloader";
 DownloaderFeatureDesc="Download videos in Safari";
 iCloudFeature="iCloud Sync";
@@ -338,3 +338,8 @@ settings.addScriptFromUrlDesc="Add a download link for a userscript file";
 settings.addScriptFromWebDesc="Install userscripts on greasyfork.org";
 settings.importFromFileDesc="Install userscripts on my phone";
 NEWFOLDER="New Folder";
+TrustedSites="Trusted Sites";
+SharedRules="Shared Rules";
+NewSite="New Site";
+Domain="Domain";
+DomainFormatError="The domain name format is incorrect."

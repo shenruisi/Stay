@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TruestedSite.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)ruleJSONArray:(NSString *)fileName error:(NSError **)error;
 - (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error;
 - (void)writeJSONToFileName:(NSString *)fileName data:(NSData *)data error:(NSError **)error;
+- (NSArray<TruestedSite *> *)truestSites;
 @end
 
 NS_ASSUME_NONNULL_END

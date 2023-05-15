@@ -105,15 +105,12 @@
 		5805D95B2A04E28D00F46709 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
 		5805D95E2A0632B800F46709 /* DefaultIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D95D2A0632B800F46709 /* DefaultIcon.m */; };
 		5805D95F2A0632B800F46709 /* DefaultIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D95D2A0632B800F46709 /* DefaultIcon.m */; };
-		581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811063429E695FF0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811063329E695FF0073E9CF /* blockerList.json */; };
 		5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811063629E695FF0073E9CF /* ContentBlockerRequestHandler.m */; };
 		5811063B29E695FF0073E9CF /* Stay Content Basic.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811063129E695FF0073E9CF /* Stay Content Basic.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5811064629E6961A0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811064529E6961A0073E9CF /* blockerList.json */; };
 		5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811064829E6961A0073E9CF /* ContentBlockerRequestHandler.m */; };
 		5811064D29E6961A0073E9CF /* Stay Content Privacy.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811064329E6961A0073E9CF /* Stay Content Privacy.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		5811065329E696A50073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		5811065429E696A50073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811065C29E697D30073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811065B29E697D30073E9CF /* blockerList.json */; };
 		5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811065E29E697D30073E9CF /* ContentBlockerRequestHandler.m */; };
 		5811066329E697D30073E9CF /* Stay Content Region.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811065929E697D20073E9CF /* Stay Content Region.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -123,19 +120,12 @@
 		5811068029E698790073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811067F29E698790073E9CF /* blockerList.json */; };
 		5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5811068229E698790073E9CF /* ContentBlockerRequestHandler.m */; };
 		5811068729E698790073E9CF /* Stay Content Tag.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 5811067D29E698790073E9CF /* Stay Content Tag.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
 		5811069229E6A1260073E9CF /* Privacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* Privacy.txt */; };
 		5811069329E6A1260073E9CF /* Privacy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069129E6A1260073E9CF /* Privacy.txt */; };
 		5811069529E6A15D0073E9CF /* Region.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* Region.txt */; };
 		5811069629E6A15D0073E9CF /* Region.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5811069429E6A15D0073E9CF /* Region.txt */; };
 		58172BE3289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
 		58172BE4289C23ED0004D6BF /* noActIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58172BE2289C23ED0004D6BF /* noActIcon@3x.png */; };
-		581C2FF729E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */; };
-		581C2FF829E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */; };
-		581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */; };
-		581C300029E3E59400B46C10 /* PipeHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */; };
 		581F8D6E287D657A00774E2A /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 581F8D6D287D657A00774E2A /* jquery.min.js */; };
 		582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */; };
 		582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */; };
@@ -185,10 +175,6 @@
 		582062032950675900A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
 		582062042950696E00A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
 		582062052950696F00A32D0C /* DisabledWebsites.m in Sources */ = {isa = PBXBuildFile; fileRef = 582062012950675900A32D0C /* DisabledWebsites.m */; };
-		5821E7DA2A0A2953000642A6 /* JSAPIHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5821E7D92A0A2953000642A6 /* JSAPIHighlighterAST.m */; };
-		5821E7DB2A0A2953000642A6 /* JSAPIHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5821E7D92A0A2953000642A6 /* JSAPIHighlighterAST.m */; };
-		5821E7DE2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5821E7DD2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m */; };
-		5821E7DF2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5821E7DD2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m */; };
 		5821E7E42A0A37E8000642A6 /* congratulation.json in Resources */ = {isa = PBXBuildFile; fileRef = 5821E7E32A0A37E8000642A6 /* congratulation.json */; };
 		5821E7E52A0A37E8000642A6 /* congratulation.json in Resources */ = {isa = PBXBuildFile; fileRef = 5821E7E32A0A37E8000642A6 /* congratulation.json */; };
 		582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B3F828757B9E002A0C1B /* SYTextInputViewController.m */; };
@@ -207,26 +193,8 @@
 		5839C32129305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */; };
 		583B53C329DAC01A00CB292A /* Basic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* Basic.txt */; };
 		583B53C429DAC01A00CB292A /* Basic.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B53C229DAC01A00CB292A /* Basic.txt */; };
-		583B53DF29DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
-		583B53E029DBF9A100CB292A /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D429DBF9A000CB292A /* StateView.m */; };
-		583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
-		583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53D529DBF9A000CB292A /* ContentFilter2.m */; };
-		583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DB29DBF9A000CB292A /* FilterTokenParser.m */; };
-		583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DB29DBF9A000CB292A /* FilterTokenParser.m */; };
-		583B53E529DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
-		583B53E629DBF9A100CB292A /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DC29DBF9A000CB292A /* FilterToken.m */; };
-		583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
-		583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */; };
-		583B53FD29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		583B53FE29DC19D400CB292A /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B53FC29DC19D400CB292A /* ContentFilterManager.m */; };
-		583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540129DC330500CB292A /* ContentFilterMainLoop.m */; };
-		583B540329DC330500CB292A /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540129DC330500CB292A /* ContentFilterMainLoop.m */; };
-		583B540629DD4AF200CB292A /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540529DD4AF200CB292A /* ContentFilterEditorView.m */; };
-		583B540729DD4AF200CB292A /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540529DD4AF200CB292A /* ContentFilterEditorView.m */; };
 		583B540A29DD4DFA00CB292A /* UIFont+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540929DD4DFA00CB292A /* UIFont+Convert.m */; };
 		583B540B29DD4DFA00CB292A /* UIFont+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540929DD4DFA00CB292A /* UIFont+Convert.m */; };
-		583B540E29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */; };
-		583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */; };
 		583B541529DD504500CB292A /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541129DD504500CB292A /* FCNavigationBar.m */; };
 		583B541629DD504500CB292A /* FCNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541129DD504500CB292A /* FCNavigationBar.m */; };
 		583B541729DD504500CB292A /* FCNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B541429DD504500CB292A /* FCNavigationController.m */; };
@@ -235,22 +203,6 @@
 		583B542529DD558D00CB292A /* AdBlockDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542329DD558D00CB292A /* AdBlockDetailViewController.m */; };
 		583B542829DD671E00CB292A /* NSAttributedString+Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542729DD671E00CB292A /* NSAttributedString+Style.m */; };
 		583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542729DD671E00CB292A /* NSAttributedString+Style.m */; };
-		583B543C29DD71A500CB292A /* HighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543429DD71A400CB292A /* HighlighterAST.m */; };
-		583B543D29DD71A500CB292A /* HighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543429DD71A400CB292A /* HighlighterAST.m */; };
-		583B543E29DD71A500CB292A /* InfoHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543729DD71A400CB292A /* InfoHighlighterAST.m */; };
-		583B543F29DD71A500CB292A /* InfoHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543729DD71A400CB292A /* InfoHighlighterAST.m */; };
-		583B544029DD71A500CB292A /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543929DD71A400CB292A /* TiggerHighlighterAST.m */; };
-		583B544129DD71A500CB292A /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543929DD71A400CB292A /* TiggerHighlighterAST.m */; };
-		583B544229DD71A500CB292A /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543A29DD71A400CB292A /* CommentHighlighterAST.m */; };
-		583B544329DD71A500CB292A /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B543A29DD71A400CB292A /* CommentHighlighterAST.m */; };
-		583B544629DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */; };
-		583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */; };
-		583B544A29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */; };
-		583B544B29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */; };
-		583B544E29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
-		583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */; };
-		583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
-		583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */; };
 		583B545629DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
 		583B545729DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
@@ -440,8 +392,6 @@
 		588402CA295D3272002CA227 /* ToastCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 588402C8295D3272002CA227 /* ToastCenter.m */; };
 		5884031C29667079002CA227 /* UIColor+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 5884031B29667078002CA227 /* UIColor+Convert.m */; };
 		5884031D29667079002CA227 /* UIColor+Convert.m in Sources */ = {isa = PBXBuildFile; fileRef = 5884031B29667078002CA227 /* UIColor+Convert.m */; };
-		5888894529DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */; };
-		5888894629DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */; };
 		5889731A27213C8300BE123E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5889731C27213C8300BE123E /* Localizable.strings */; };
 		58897320272156C900BE123E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5889731F272156C900BE123E /* LaunchScreen.storyboard */; };
 		588B831C2845F7BF00AB2D73 /* FCDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B831B2845F7BF00AB2D73 /* FCDisk.m */; };
@@ -493,34 +443,12 @@
 		58ADADE229E7FA0700C00332 /* FCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE029E7FA0700C00332 /* FCTextField.m */; };
 		58ADADE529E800D000C00332 /* FCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE429E800CF00C00332 /* FCButton.m */; };
 		58ADADE629E800D000C00332 /* FCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE429E800CF00C00332 /* FCButton.m */; };
-		58ADADFA29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */; };
-		58ADADFB29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */; };
-		58ADADFC29E801CF00C00332 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEA29E801CF00C00332 /* BlockerAST.m */; };
-		58ADADFD29E801CF00C00332 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEA29E801CF00C00332 /* BlockerAST.m */; };
-		58ADADFE29E801CF00C00332 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */; };
-		58ADADFF29E801CF00C00332 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */; };
-		58ADAE0029E801CF00C00332 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */; };
-		58ADAE0129E801CF00C00332 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */; };
-		58ADAE0229E801CF00C00332 /* TriggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */; };
-		58ADAE0329E801CF00C00332 /* TriggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */; };
-		58ADAE0429E801CF00C00332 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF029E801CF00C00332 /* AddressBlockerAST.m */; };
-		58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF029E801CF00C00332 /* AddressBlockerAST.m */; };
-		58ADAE0629E801CF00C00332 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */; };
-		58ADAE0729E801CF00C00332 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */; };
-		58ADAE0829E801CF00C00332 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */; };
-		58ADAE0929E801CF00C00332 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */; };
-		58ADAE0A29E801CF00C00332 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF629E801CF00C00332 /* PipeBlockerAST.m */; };
-		58ADAE0B29E801CF00C00332 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADADF629E801CF00C00332 /* PipeBlockerAST.m */; };
 		58ADAE0F29E8F82400C00332 /* UpgradeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */; };
 		58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */; };
 		58ADAE1329E8F8A100C00332 /* UpgradeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */; };
 		58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */; };
-		58ADAE1729ED2BF800C00332 /* SpecialCommentBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */; };
-		58ADAE1829ED2BF800C00332 /* SpecialCommentBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */; };
 		58AFD76329A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
-		58BC3D7829F10D2B005CEE5B /* ContentBlockerRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */; };
-		58BC3D7929F10D2B005CEE5B /* ContentBlockerRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
@@ -565,6 +493,100 @@
 		58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */; };
 		58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4460286C368800BD6C4D /* ContentRecord.m */; };
 		58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4460286C368800BD6C4D /* ContentRecord.m */; };
+		58F196042A11E3D000B88F39 /* FCTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196032A11E3D000B88F39 /* FCTableViewHeadCell.m */; };
+		58F196052A11E3D000B88F39 /* FCTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196032A11E3D000B88F39 /* FCTableViewHeadCell.m */; };
+		58F1962F2A11FD2F00B88F39 /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196072A11FD2F00B88F39 /* ContentFilterEditorView.m */; };
+		58F196302A11FD2F00B88F39 /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196072A11FD2F00B88F39 /* ContentFilterEditorView.m */; };
+		58F196312A11FD2F00B88F39 /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196082A11FD2F00B88F39 /* ContentFilterTableVewCell.m */; };
+		58F196322A11FD2F00B88F39 /* ContentFilterTableVewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196082A11FD2F00B88F39 /* ContentFilterTableVewCell.m */; };
+		58F196332A11FD2F00B88F39 /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196092A11FD2F00B88F39 /* ContentFilter2.m */; };
+		58F196342A11FD2F00B88F39 /* ContentFilter2.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196092A11FD2F00B88F39 /* ContentFilter2.m */; };
+		58F196352A11FD2F00B88F39 /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1960B2A11FD2F00B88F39 /* ContentFilterMainLoop.m */; };
+		58F196362A11FD2F00B88F39 /* ContentFilterMainLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1960B2A11FD2F00B88F39 /* ContentFilterMainLoop.m */; };
+		58F196372A11FD2F00B88F39 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196102A11FD2F00B88F39 /* FilterTokenParser.m */; };
+		58F196382A11FD2F00B88F39 /* FilterTokenParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196102A11FD2F00B88F39 /* FilterTokenParser.m */; };
+		58F196392A11FD2F00B88F39 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196112A11FD2F00B88F39 /* FilterToken.m */; };
+		58F1963A2A11FD2F00B88F39 /* FilterToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196112A11FD2F00B88F39 /* FilterToken.m */; };
+		58F1963B2A11FD2F00B88F39 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196142A11FD2F00B88F39 /* ExceptionBlockerAST.m */; };
+		58F1963C2A11FD2F00B88F39 /* ExceptionBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196142A11FD2F00B88F39 /* ExceptionBlockerAST.m */; };
+		58F1963D2A11FD2F00B88F39 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196172A11FD2F00B88F39 /* BlockerAST.m */; };
+		58F1963E2A11FD2F00B88F39 /* BlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196172A11FD2F00B88F39 /* BlockerAST.m */; };
+		58F1963F2A11FD2F00B88F39 /* ContentBlockerRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961A2A11FD2F00B88F39 /* ContentBlockerRule.m */; };
+		58F196402A11FD2F00B88F39 /* ContentBlockerRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961A2A11FD2F00B88F39 /* ContentBlockerRule.m */; };
+		58F196412A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961B2A11FD2F00B88F39 /* SelectorBlockerAST.m */; };
+		58F196422A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961B2A11FD2F00B88F39 /* SelectorBlockerAST.m */; };
+		58F196432A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961C2A11FD2F00B88F39 /* OptionsBlockerAST.m */; };
+		58F196442A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961C2A11FD2F00B88F39 /* OptionsBlockerAST.m */; };
+		58F196452A11FD3000B88F39 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961E2A11FD2F00B88F39 /* AddressBlockerAST.m */; };
+		58F196462A11FD3000B88F39 /* AddressBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961E2A11FD2F00B88F39 /* AddressBlockerAST.m */; };
+		58F196472A11FD3000B88F39 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961F2A11FD2F00B88F39 /* ContentFilterBlocker.m */; };
+		58F196482A11FD3000B88F39 /* ContentFilterBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1961F2A11FD2F00B88F39 /* ContentFilterBlocker.m */; };
+		58F196492A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196212A11FD2F00B88F39 /* TriggerBlockerAST.m */; };
+		58F1964A2A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196212A11FD2F00B88F39 /* TriggerBlockerAST.m */; };
+		58F1964B2A11FD3000B88F39 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196222A11FD2F00B88F39 /* SeparatorBlockerAST.m */; };
+		58F1964C2A11FD3000B88F39 /* SeparatorBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196222A11FD2F00B88F39 /* SeparatorBlockerAST.m */; };
+		58F1964D2A11FD3000B88F39 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196262A11FD2F00B88F39 /* PipeBlockerAST.m */; };
+		58F1964E2A11FD3000B88F39 /* PipeBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196262A11FD2F00B88F39 /* PipeBlockerAST.m */; };
+		58F1964F2A11FD3000B88F39 /* SpecialCommentBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196292A11FD2F00B88F39 /* SpecialCommentBlockerAST.m */; };
+		58F196502A11FD3000B88F39 /* SpecialCommentBlockerAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196292A11FD2F00B88F39 /* SpecialCommentBlockerAST.m */; };
+		58F196512A11FD3000B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196522A11FD3000B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196532A11FD3000B88F39 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962E2A11FD2F00B88F39 /* StateView.m */; };
+		58F196542A11FD3000B88F39 /* StateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962E2A11FD2F00B88F39 /* StateView.m */; };
+		58F196572A11FD9600B88F39 /* TrustedSitesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196562A11FD9600B88F39 /* TrustedSitesTableViewCell.m */; };
+		58F196582A11FD9600B88F39 /* TrustedSitesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196562A11FD9600B88F39 /* TrustedSitesTableViewCell.m */; };
+		58F1967A2A11FE3100B88F39 /* HighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1965E2A11FE3100B88F39 /* HighlighterAST.m */; };
+		58F1967B2A11FE3100B88F39 /* HighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1965E2A11FE3100B88F39 /* HighlighterAST.m */; };
+		58F1967C2A11FE3100B88F39 /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1965F2A11FE3100B88F39 /* AddressHighlighterAST.m */; };
+		58F1967D2A11FE3100B88F39 /* AddressHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1965F2A11FE3100B88F39 /* AddressHighlighterAST.m */; };
+		58F1967E2A11FE3100B88F39 /* ExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196632A11FE3100B88F39 /* ExceptionHighlighterAST.m */; };
+		58F1967F2A11FE3100B88F39 /* ExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196632A11FE3100B88F39 /* ExceptionHighlighterAST.m */; };
+		58F196802A11FE3100B88F39 /* PipeHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196692A11FE3100B88F39 /* PipeHighlighterAST.m */; };
+		58F196812A11FE3100B88F39 /* PipeHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196692A11FE3100B88F39 /* PipeHighlighterAST.m */; };
+		58F196822A11FE3100B88F39 /* InfoHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966A2A11FE3100B88F39 /* InfoHighlighterAST.m */; };
+		58F196832A11FE3100B88F39 /* InfoHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966A2A11FE3100B88F39 /* InfoHighlighterAST.m */; };
+		58F196842A11FE3100B88F39 /* SeparatorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966B2A11FE3100B88F39 /* SeparatorHighlighterAST.m */; };
+		58F196852A11FE3100B88F39 /* SeparatorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966B2A11FE3100B88F39 /* SeparatorHighlighterAST.m */; };
+		58F196862A11FE3200B88F39 /* JSAPIHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966C2A11FE3100B88F39 /* JSAPIHighlighterAST.m */; };
+		58F196872A11FE3200B88F39 /* JSAPIHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966C2A11FE3100B88F39 /* JSAPIHighlighterAST.m */; };
+		58F196882A11FE3200B88F39 /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966D2A11FE3100B88F39 /* SelectorHighlighterAST.m */; };
+		58F196892A11FE3200B88F39 /* SelectorHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1966D2A11FE3100B88F39 /* SelectorHighlighterAST.m */; };
+		58F1968A2A11FE3200B88F39 /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196702A11FE3100B88F39 /* TiggerHighlighterAST.m */; };
+		58F1968B2A11FE3200B88F39 /* TiggerHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196702A11FE3100B88F39 /* TiggerHighlighterAST.m */; };
+		58F1968C2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196722A11FE3100B88F39 /* OptionsHighlighterAST.m */; };
+		58F1968D2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196722A11FE3100B88F39 /* OptionsHighlighterAST.m */; };
+		58F1968E2A11FE3200B88F39 /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196732A11FE3100B88F39 /* CommentHighlighterAST.m */; };
+		58F1968F2A11FE3200B88F39 /* CommentHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196732A11FE3100B88F39 /* CommentHighlighterAST.m */; };
+		58F196902A11FE3200B88F39 /* NewLineHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196742A11FE3100B88F39 /* NewLineHighlighterAST.m */; };
+		58F196912A11FE3200B88F39 /* NewLineHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196742A11FE3100B88F39 /* NewLineHighlighterAST.m */; };
+		58F196922A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196752A11FE3100B88F39 /* JSAPIExceptionHighlighterAST.m */; };
+		58F196932A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196752A11FE3100B88F39 /* JSAPIExceptionHighlighterAST.m */; };
+		58F196942A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196792A11FE3100B88F39 /* ContentFilterHighlighter.m */; };
+		58F196952A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196792A11FE3100B88F39 /* ContentFilterHighlighter.m */; };
+		58F196982A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */; };
+		58F196992A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */; };
+		58F1969C2A11FE9F00B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F1969D2A11FE9F00B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F1969E2A1201A600B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F1969F2A1201A900B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F196A02A1201D500B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F196A12A1201D500B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F196A22A1201D600B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F196A32A1201D600B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F196A42A1201D700B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F196A52A1201F400B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196A62A1201F500B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196A72A1201F600B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196A82A1201F600B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196A92A1201F700B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196AA2A1201F700B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196AB2A1201F800B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58F196AE2A120BA800B88F39 /* FCTapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196AD2A120BA800B88F39 /* FCTapView.m */; };
+		58F196AF2A120BA800B88F39 /* FCTapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196AD2A120BA800B88F39 /* FCTapView.m */; };
+		58F196B22A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */; };
+		58F196B32A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */; };
+		58F196B62A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */; };
+		58F196B72A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */; };
 		58F7F4B827438CB000270873 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4B727438CB000270873 /* bootstrap.js */; };
 		58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4BA2743A93E00270873 /* parse-user-script.js */; };
 		58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */; };
@@ -937,10 +959,6 @@
 		5811069129E6A1260073E9CF /* Privacy.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Privacy.txt; sourceTree = "<group>"; };
 		5811069429E6A15D0073E9CF /* Region.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Region.txt; sourceTree = "<group>"; };
 		58172BE2289C23ED0004D6BF /* noActIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noActIcon@3x.png"; sourceTree = "<group>"; };
-		581C2FF529E3DFC600B46C10 /* SeparatorHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SeparatorHighlighterAST.h; sourceTree = "<group>"; };
-		581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeparatorHighlighterAST.m; sourceTree = "<group>"; };
-		581C2FFD29E3E59400B46C10 /* PipeHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PipeHighlighterAST.h; sourceTree = "<group>"; };
-		581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PipeHighlighterAST.m; sourceTree = "<group>"; };
 		581F8D6D287D657A00774E2A /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 		582061A8294C4C0D00A32D0C /* ModalItemSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalItemSwitchView.m; sourceTree = "<group>"; };
 		582061A9294C4C0D00A32D0C /* ModalItemSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalItemSplitView.h; sourceTree = "<group>"; };
@@ -988,10 +1006,6 @@
 		582061FD294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadFolderChooseModalViewController.m; sourceTree = "<group>"; };
 		582062002950675900A32D0C /* DisabledWebsites.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisabledWebsites.h; sourceTree = "<group>"; };
 		582062012950675900A32D0C /* DisabledWebsites.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisabledWebsites.m; sourceTree = "<group>"; };
-		5821E7D82A0A2953000642A6 /* JSAPIHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSAPIHighlighterAST.h; sourceTree = "<group>"; };
-		5821E7D92A0A2953000642A6 /* JSAPIHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSAPIHighlighterAST.m; sourceTree = "<group>"; };
-		5821E7DC2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSAPIExceptionHighlighterAST.h; sourceTree = "<group>"; };
-		5821E7DD2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSAPIExceptionHighlighterAST.m; sourceTree = "<group>"; };
 		5821E7E32A0A37E8000642A6 /* congratulation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = congratulation.json; sourceTree = "<group>"; };
 		582F9DE1276F329800C88135 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
 		582F9DE3276F32B900C88135 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
@@ -1006,26 +1020,8 @@
 		5839C31E29305D0200CCBAE5 /* FCTopToastModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTopToastModalViewController.h; sourceTree = "<group>"; };
 		5839C31F29305D0200CCBAE5 /* FCTopToastModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTopToastModalViewController.m; sourceTree = "<group>"; };
 		583B53C229DAC01A00CB292A /* Basic.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Basic.txt; sourceTree = "<group>"; };
-		583B53D429DBF9A000CB292A /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StateView.m; path = Stay/AdBlock/Filter/StateView.m; sourceTree = SOURCE_ROOT; };
-		583B53D529DBF9A000CB292A /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilter2.m; path = Stay/AdBlock/Filter/ContentFilter2.m; sourceTree = SOURCE_ROOT; };
-		583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilterTableVewCell.h; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.h; sourceTree = SOURCE_ROOT; };
-		583B53D729DBF9A000CB292A /* ContentFilter2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContentFilter2.h; path = Stay/AdBlock/Filter/ContentFilter2.h; sourceTree = SOURCE_ROOT; };
-		583B53D929DBF9A000CB292A /* FilterTokenParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
-		583B53DA29DBF9A000CB292A /* FilterToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
-		583B53DB29DBF9A000CB292A /* FilterTokenParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
-		583B53DC29DBF9A000CB292A /* FilterToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
-		583B53DD29DBF9A000CB292A /* StateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateView.h; path = Stay/AdBlock/Filter/StateView.h; sourceTree = SOURCE_ROOT; };
-		583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentFilterTableVewCell.m; path = Stay/AdBlock/Filter/ContentFilterTableVewCell.m; sourceTree = SOURCE_ROOT; };
-		583B53FB29DC19D400CB292A /* ContentFilterManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterManager.h; path = Stay/AdBlock/Filter/ContentFilterManager.h; sourceTree = SOURCE_ROOT; };
-		583B53FC29DC19D400CB292A /* ContentFilterManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterManager.m; path = Stay/AdBlock/Filter/ContentFilterManager.m; sourceTree = SOURCE_ROOT; };
-		583B540029DC330500CB292A /* ContentFilterMainLoop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterMainLoop.h; path = Stay/AdBlock/Filter/ContentFilterMainLoop.h; sourceTree = SOURCE_ROOT; };
-		583B540129DC330500CB292A /* ContentFilterMainLoop.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterMainLoop.m; path = Stay/AdBlock/Filter/ContentFilterMainLoop.m; sourceTree = SOURCE_ROOT; };
-		583B540429DD4AF200CB292A /* ContentFilterEditorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterEditorView.h; path = Stay/AdBlock/Filter/ContentFilterEditorView.h; sourceTree = SOURCE_ROOT; };
-		583B540529DD4AF200CB292A /* ContentFilterEditorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterEditorView.m; path = Stay/AdBlock/Filter/ContentFilterEditorView.m; sourceTree = SOURCE_ROOT; };
 		583B540829DD4DFA00CB292A /* UIFont+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIFont+Convert.h"; sourceTree = "<group>"; };
 		583B540929DD4DFA00CB292A /* UIFont+Convert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIFont+Convert.m"; sourceTree = "<group>"; };
-		583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContentFilterHighlighter.h; path = Stay/AdBlock/HighlighterAST/ContentFilterHighlighter.h; sourceTree = SOURCE_ROOT; };
-		583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContentFilterHighlighter.m; path = Stay/AdBlock/HighlighterAST/ContentFilterHighlighter.m; sourceTree = SOURCE_ROOT; };
 		583B541129DD504500CB292A /* FCNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCNavigationBar.m; sourceTree = "<group>"; };
 		583B541229DD504500CB292A /* FCNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCNavigationController.h; sourceTree = "<group>"; };
 		583B541329DD504500CB292A /* FCNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCNavigationBar.h; sourceTree = "<group>"; };
@@ -1034,22 +1030,6 @@
 		583B542329DD558D00CB292A /* AdBlockDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdBlockDetailViewController.m; sourceTree = "<group>"; };
 		583B542629DD671E00CB292A /* NSAttributedString+Style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Style.h"; sourceTree = "<group>"; };
 		583B542729DD671E00CB292A /* NSAttributedString+Style.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Style.m"; sourceTree = "<group>"; };
-		583B543429DD71A400CB292A /* HighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HighlighterAST.m; sourceTree = "<group>"; };
-		583B543529DD71A400CB292A /* TiggerHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiggerHighlighterAST.h; sourceTree = "<group>"; };
-		583B543629DD71A400CB292A /* CommentHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentHighlighterAST.h; sourceTree = "<group>"; };
-		583B543729DD71A400CB292A /* InfoHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoHighlighterAST.m; sourceTree = "<group>"; };
-		583B543829DD71A400CB292A /* HighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighlighterAST.h; sourceTree = "<group>"; };
-		583B543929DD71A400CB292A /* TiggerHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiggerHighlighterAST.m; sourceTree = "<group>"; };
-		583B543A29DD71A400CB292A /* CommentHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentHighlighterAST.m; sourceTree = "<group>"; };
-		583B543B29DD71A400CB292A /* InfoHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoHighlighterAST.h; sourceTree = "<group>"; };
-		583B544429DEA4DC00CB292A /* ExceptionHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionHighlighterAST.h; sourceTree = "<group>"; };
-		583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionHighlighterAST.m; sourceTree = "<group>"; };
-		583B544829DEAB6F00CB292A /* AddressHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddressHighlighterAST.h; sourceTree = "<group>"; };
-		583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddressHighlighterAST.m; sourceTree = "<group>"; };
-		583B544C29DEAD5D00CB292A /* OptionsHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptionsHighlighterAST.h; sourceTree = "<group>"; };
-		583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptionsHighlighterAST.m; sourceTree = "<group>"; };
-		583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorHighlighterAST.h; sourceTree = "<group>"; };
-		583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectorHighlighterAST.m; sourceTree = "<group>"; };
 		583B545529DEDDE700CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
@@ -1161,8 +1141,6 @@
 		588402C8295D3272002CA227 /* ToastCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToastCenter.m; sourceTree = "<group>"; };
 		5884031A29667078002CA227 /* UIColor+Convert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Convert.h"; sourceTree = "<group>"; };
 		5884031B29667078002CA227 /* UIColor+Convert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Convert.m"; sourceTree = "<group>"; };
-		5888894329DFCB950033CCF5 /* NewLineHighlighterAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewLineHighlighterAST.h; sourceTree = "<group>"; };
-		5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewLineHighlighterAST.m; sourceTree = "<group>"; };
 		5889731427213BC200BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = en; path = ../en.lproj/Main.html; sourceTree = "<group>"; };
 		5889731B27213C8300BE123E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5889731E27213CB100BE123E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1217,33 +1195,11 @@
 		58ADADE029E7FA0700C00332 /* FCTextField.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTextField.m; sourceTree = "<group>"; };
 		58ADADE329E800CF00C00332 /* FCButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCButton.h; sourceTree = "<group>"; };
 		58ADADE429E800CF00C00332 /* FCButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCButton.m; sourceTree = "<group>"; };
-		58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExceptionBlockerAST.m; sourceTree = "<group>"; };
-		58ADADE929E801CF00C00332 /* SeparatorBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeparatorBlockerAST.h; sourceTree = "<group>"; };
-		58ADADEA29E801CF00C00332 /* BlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockerAST.m; sourceTree = "<group>"; };
-		58ADADEB29E801CF00C00332 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
-		58ADADEC29E801CF00C00332 /* PipeBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeBlockerAST.h; sourceTree = "<group>"; };
-		58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorBlockerAST.m; sourceTree = "<group>"; };
-		58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsBlockerAST.m; sourceTree = "<group>"; };
-		58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriggerBlockerAST.m; sourceTree = "<group>"; };
-		58ADADF029E801CF00C00332 /* AddressBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBlockerAST.m; sourceTree = "<group>"; };
-		58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
-		58ADADF229E801CF00C00332 /* BlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
-		58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeparatorBlockerAST.m; sourceTree = "<group>"; };
-		58ADADF429E801CF00C00332 /* ExceptionBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExceptionBlockerAST.h; sourceTree = "<group>"; };
-		58ADADF529E801CF00C00332 /* SelectorBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectorBlockerAST.h; sourceTree = "<group>"; };
-		58ADADF629E801CF00C00332 /* PipeBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeBlockerAST.m; sourceTree = "<group>"; };
-		58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsBlockerAST.h; sourceTree = "<group>"; };
-		58ADADF829E801CF00C00332 /* AddressBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBlockerAST.h; sourceTree = "<group>"; };
-		58ADADF929E801CF00C00332 /* TriggerBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerBlockerAST.h; sourceTree = "<group>"; };
 		58ADAE0D29E8F82400C00332 /* UpgradeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeSlideController.h; sourceTree = "<group>"; };
 		58ADAE0E29E8F82400C00332 /* UpgradeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeSlideController.m; sourceTree = "<group>"; };
 		58ADAE1129E8F8A100C00332 /* UpgradeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpgradeModalViewController.h; sourceTree = "<group>"; };
 		58ADAE1229E8F8A100C00332 /* UpgradeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpgradeModalViewController.m; sourceTree = "<group>"; };
-		58ADAE1529ED2BF800C00332 /* SpecialCommentBlockerAST.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpecialCommentBlockerAST.h; sourceTree = "<group>"; };
-		58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpecialCommentBlockerAST.m; sourceTree = "<group>"; };
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
-		58BC3D7629F10D2B005CEE5B /* ContentBlockerRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRule.h; sourceTree = "<group>"; };
-		58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRule.m; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
@@ -1284,6 +1240,86 @@
 		58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserscriptRecord.m; sourceTree = "<group>"; };
 		58EA445F286C368800BD6C4D /* ContentRecord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentRecord.h; sourceTree = "<group>"; };
 		58EA4460286C368800BD6C4D /* ContentRecord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentRecord.m; sourceTree = "<group>"; };
+		58F196022A11E3D000B88F39 /* FCTableViewHeadCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTableViewHeadCell.h; sourceTree = "<group>"; };
+		58F196032A11E3D000B88F39 /* FCTableViewHeadCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTableViewHeadCell.m; sourceTree = "<group>"; };
+		58F196072A11FD2F00B88F39 /* ContentFilterEditorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterEditorView.m; sourceTree = "<group>"; };
+		58F196082A11FD2F00B88F39 /* ContentFilterTableVewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterTableVewCell.m; sourceTree = "<group>"; };
+		58F196092A11FD2F00B88F39 /* ContentFilter2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilter2.m; sourceTree = "<group>"; };
+		58F1960A2A11FD2F00B88F39 /* ContentFilterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterManager.h; sourceTree = "<group>"; };
+		58F1960B2A11FD2F00B88F39 /* ContentFilterMainLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterMainLoop.m; sourceTree = "<group>"; };
+		58F1960C2A11FD2F00B88F39 /* StateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StateView.h; sourceTree = "<group>"; };
+		58F1960E2A11FD2F00B88F39 /* FilterTokenParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterTokenParser.h; sourceTree = "<group>"; };
+		58F1960F2A11FD2F00B88F39 /* FilterToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterToken.h; sourceTree = "<group>"; };
+		58F196102A11FD2F00B88F39 /* FilterTokenParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterTokenParser.m; sourceTree = "<group>"; };
+		58F196112A11FD2F00B88F39 /* FilterToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterToken.m; sourceTree = "<group>"; };
+		58F196122A11FD2F00B88F39 /* ContentFilterEditorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterEditorView.h; sourceTree = "<group>"; };
+		58F196142A11FD2F00B88F39 /* ExceptionBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExceptionBlockerAST.m; sourceTree = "<group>"; };
+		58F196152A11FD2F00B88F39 /* SeparatorBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeparatorBlockerAST.h; sourceTree = "<group>"; };
+		58F196162A11FD2F00B88F39 /* TriggerBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerBlockerAST.h; sourceTree = "<group>"; };
+		58F196172A11FD2F00B88F39 /* BlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockerAST.m; sourceTree = "<group>"; };
+		58F196182A11FD2F00B88F39 /* ContentFilterBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterBlocker.h; sourceTree = "<group>"; };
+		58F196192A11FD2F00B88F39 /* PipeBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeBlockerAST.h; sourceTree = "<group>"; };
+		58F1961A2A11FD2F00B88F39 /* ContentBlockerRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRule.m; sourceTree = "<group>"; };
+		58F1961B2A11FD2F00B88F39 /* SelectorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorBlockerAST.m; sourceTree = "<group>"; };
+		58F1961C2A11FD2F00B88F39 /* OptionsBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsBlockerAST.m; sourceTree = "<group>"; };
+		58F1961D2A11FD2F00B88F39 /* SpecialCommentBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecialCommentBlockerAST.h; sourceTree = "<group>"; };
+		58F1961E2A11FD2F00B88F39 /* AddressBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBlockerAST.m; sourceTree = "<group>"; };
+		58F1961F2A11FD2F00B88F39 /* ContentFilterBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterBlocker.m; sourceTree = "<group>"; };
+		58F196202A11FD2F00B88F39 /* BlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockerAST.h; sourceTree = "<group>"; };
+		58F196212A11FD2F00B88F39 /* TriggerBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriggerBlockerAST.m; sourceTree = "<group>"; };
+		58F196222A11FD2F00B88F39 /* SeparatorBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeparatorBlockerAST.m; sourceTree = "<group>"; };
+		58F196232A11FD2F00B88F39 /* ExceptionBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExceptionBlockerAST.h; sourceTree = "<group>"; };
+		58F196242A11FD2F00B88F39 /* SelectorBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectorBlockerAST.h; sourceTree = "<group>"; };
+		58F196252A11FD2F00B88F39 /* ContentBlockerRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRule.h; sourceTree = "<group>"; };
+		58F196262A11FD2F00B88F39 /* PipeBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeBlockerAST.m; sourceTree = "<group>"; };
+		58F196272A11FD2F00B88F39 /* OptionsBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsBlockerAST.h; sourceTree = "<group>"; };
+		58F196282A11FD2F00B88F39 /* AddressBlockerAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBlockerAST.h; sourceTree = "<group>"; };
+		58F196292A11FD2F00B88F39 /* SpecialCommentBlockerAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecialCommentBlockerAST.m; sourceTree = "<group>"; };
+		58F1962A2A11FD2F00B88F39 /* ContentFilterMainLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterMainLoop.h; sourceTree = "<group>"; };
+		58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterManager.m; sourceTree = "<group>"; };
+		58F1962C2A11FD2F00B88F39 /* ContentFilter2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilter2.h; sourceTree = "<group>"; };
+		58F1962D2A11FD2F00B88F39 /* ContentFilterTableVewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterTableVewCell.h; sourceTree = "<group>"; };
+		58F1962E2A11FD2F00B88F39 /* StateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StateView.m; sourceTree = "<group>"; };
+		58F196552A11FD9600B88F39 /* TrustedSitesTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustedSitesTableViewCell.h; sourceTree = "<group>"; };
+		58F196562A11FD9600B88F39 /* TrustedSitesTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrustedSitesTableViewCell.m; sourceTree = "<group>"; };
+		58F196592A11FDB800B88F39 /* TrustedSitesTableViewHeadCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustedSitesTableViewHeadCell.h; sourceTree = "<group>"; };
+		58F1965E2A11FE3100B88F39 /* HighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HighlighterAST.m; sourceTree = "<group>"; };
+		58F1965F2A11FE3100B88F39 /* AddressHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressHighlighterAST.m; sourceTree = "<group>"; };
+		58F196602A11FE3100B88F39 /* SelectorHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectorHighlighterAST.h; sourceTree = "<group>"; };
+		58F196612A11FE3100B88F39 /* JSAPIHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSAPIHighlighterAST.h; sourceTree = "<group>"; };
+		58F196622A11FE3100B88F39 /* OptionsHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsHighlighterAST.h; sourceTree = "<group>"; };
+		58F196632A11FE3100B88F39 /* ExceptionHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExceptionHighlighterAST.m; sourceTree = "<group>"; };
+		58F196642A11FE3100B88F39 /* TiggerHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiggerHighlighterAST.h; sourceTree = "<group>"; };
+		58F196652A11FE3100B88F39 /* JSAPIExceptionHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSAPIExceptionHighlighterAST.h; sourceTree = "<group>"; };
+		58F196662A11FE3100B88F39 /* NewLineHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLineHighlighterAST.h; sourceTree = "<group>"; };
+		58F196672A11FE3100B88F39 /* CommentHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentHighlighterAST.h; sourceTree = "<group>"; };
+		58F196682A11FE3100B88F39 /* ContentFilterHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentFilterHighlighter.h; sourceTree = "<group>"; };
+		58F196692A11FE3100B88F39 /* PipeHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PipeHighlighterAST.m; sourceTree = "<group>"; };
+		58F1966A2A11FE3100B88F39 /* InfoHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoHighlighterAST.m; sourceTree = "<group>"; };
+		58F1966B2A11FE3100B88F39 /* SeparatorHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeparatorHighlighterAST.m; sourceTree = "<group>"; };
+		58F1966C2A11FE3100B88F39 /* JSAPIHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAPIHighlighterAST.m; sourceTree = "<group>"; };
+		58F1966D2A11FE3100B88F39 /* SelectorHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorHighlighterAST.m; sourceTree = "<group>"; };
+		58F1966E2A11FE3100B88F39 /* AddressHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressHighlighterAST.h; sourceTree = "<group>"; };
+		58F1966F2A11FE3100B88F39 /* HighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighlighterAST.h; sourceTree = "<group>"; };
+		58F196702A11FE3100B88F39 /* TiggerHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiggerHighlighterAST.m; sourceTree = "<group>"; };
+		58F196712A11FE3100B88F39 /* ExceptionHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExceptionHighlighterAST.h; sourceTree = "<group>"; };
+		58F196722A11FE3100B88F39 /* OptionsHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsHighlighterAST.m; sourceTree = "<group>"; };
+		58F196732A11FE3100B88F39 /* CommentHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentHighlighterAST.m; sourceTree = "<group>"; };
+		58F196742A11FE3100B88F39 /* NewLineHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewLineHighlighterAST.m; sourceTree = "<group>"; };
+		58F196752A11FE3100B88F39 /* JSAPIExceptionHighlighterAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAPIExceptionHighlighterAST.m; sourceTree = "<group>"; };
+		58F196762A11FE3100B88F39 /* SeparatorHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeparatorHighlighterAST.h; sourceTree = "<group>"; };
+		58F196772A11FE3100B88F39 /* InfoHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoHighlighterAST.h; sourceTree = "<group>"; };
+		58F196782A11FE3100B88F39 /* PipeHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeHighlighterAST.h; sourceTree = "<group>"; };
+		58F196792A11FE3100B88F39 /* ContentFilterHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterHighlighter.m; sourceTree = "<group>"; };
+		58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrustedSitesTableViewHeadCell.m; sourceTree = "<group>"; };
+		58F1969A2A11FE9F00B88F39 /* TruestedSite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TruestedSite.h; sourceTree = "<group>"; };
+		58F1969B2A11FE9F00B88F39 /* TruestedSite.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TruestedSite.m; sourceTree = "<group>"; };
+		58F196AC2A120BA800B88F39 /* FCTapView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTapView.h; sourceTree = "<group>"; };
+		58F196AD2A120BA800B88F39 /* FCTapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTapView.m; sourceTree = "<group>"; };
+		58F196B02A12102500B88F39 /* AddTruestedSiteSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTruestedSiteSlideController.h; sourceTree = "<group>"; };
+		58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTruestedSiteSlideController.m; sourceTree = "<group>"; };
+		58F196B42A12104000B88F39 /* AddTruestedSiteModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTruestedSiteModalViewController.h; sourceTree = "<group>"; };
+		58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTruestedSiteModalViewController.m; sourceTree = "<group>"; };
 		58F7F4B727438CB000270873 /* bootstrap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58F7F4BA2743A93E00270873 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -1779,34 +1815,13 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		583178FA29CBF04800135D8D /* Filter */ = {
-			isa = PBXGroup;
-			children = (
-				58ADADE729E801CF00C00332 /* BlockerAST */,
-				583B543329DD71A400CB292A /* HighlighterAST */,
-				583B53FB29DC19D400CB292A /* ContentFilterManager.h */,
-				583B53FC29DC19D400CB292A /* ContentFilterManager.m */,
-				583B53D729DBF9A000CB292A /* ContentFilter2.h */,
-				583B53D529DBF9A000CB292A /* ContentFilter2.m */,
-				583B540429DD4AF200CB292A /* ContentFilterEditorView.h */,
-				583B540529DD4AF200CB292A /* ContentFilterEditorView.m */,
-				583B540029DC330500CB292A /* ContentFilterMainLoop.h */,
-				583B540129DC330500CB292A /* ContentFilterMainLoop.m */,
-				583B53D629DBF9A000CB292A /* ContentFilterTableVewCell.h */,
-				583B53DE29DBF9A000CB292A /* ContentFilterTableVewCell.m */,
-				583B53D829DBF9A000CB292A /* Parser */,
-				583B53DD29DBF9A000CB292A /* StateView.h */,
-				583B53D429DBF9A000CB292A /* StateView.m */,
-			);
-			name = Filter;
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		5831790329CBFC2600135D8D /* TableView */ = {
 			isa = PBXGroup;
 			children = (
 				5831790429CBFC5700135D8D /* FCTableViewCell.h */,
 				5831790529CBFC5700135D8D /* FCTableViewCell.m */,
+				58F196022A11E3D000B88F39 /* FCTableViewHeadCell.h */,
+				58F196032A11E3D000B88F39 /* FCTableViewHeadCell.m */,
 			);
 			path = TableView;
 			sourceTree = "<group>";
@@ -1829,8 +1844,9 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
+				58F196962A11FE3900B88F39 /* TruestedSites */,
+				58F196062A11FD2F00B88F39 /* Filter */,
 				583B53C129DABFE400CB292A /* Resources */,
-				583178FA29CBF04800135D8D /* Filter */,
 				58A3618D29C0502400080465 /* AdBlockViewController.h */,
 				58A3618E29C0502400080465 /* AdBlockViewController.m */,
 				58ADADDA29E7F6E000C00332 /* ContentFilterEditModalViewController.h */,
@@ -1854,18 +1870,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		583B53D829DBF9A000CB292A /* Parser */ = {
-			isa = PBXGroup;
-			children = (
-				583B53D929DBF9A000CB292A /* FilterTokenParser.h */,
-				583B53DB29DBF9A000CB292A /* FilterTokenParser.m */,
-				583B53DA29DBF9A000CB292A /* FilterToken.h */,
-				583B53DC29DBF9A000CB292A /* FilterToken.m */,
-			);
-			name = Parser;
-			path = Stay/AdBlock/Filter/Parser;
-			sourceTree = SOURCE_ROOT;
-		};
 		583B541029DD504500CB292A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1876,42 +1880,6 @@
 			);
 			path = Navigation;
 			sourceTree = "<group>";
-		};
-		583B543329DD71A400CB292A /* HighlighterAST */ = {
-			isa = PBXGroup;
-			children = (
-				583B540C29DD4FF300CB292A /* ContentFilterHighlighter.h */,
-				583B540D29DD4FF300CB292A /* ContentFilterHighlighter.m */,
-				583B543529DD71A400CB292A /* TiggerHighlighterAST.h */,
-				583B543929DD71A400CB292A /* TiggerHighlighterAST.m */,
-				583B543629DD71A400CB292A /* CommentHighlighterAST.h */,
-				583B543A29DD71A400CB292A /* CommentHighlighterAST.m */,
-				583B543B29DD71A400CB292A /* InfoHighlighterAST.h */,
-				583B543729DD71A400CB292A /* InfoHighlighterAST.m */,
-				583B543829DD71A400CB292A /* HighlighterAST.h */,
-				583B543429DD71A400CB292A /* HighlighterAST.m */,
-				583B544429DEA4DC00CB292A /* ExceptionHighlighterAST.h */,
-				583B544529DEA4DC00CB292A /* ExceptionHighlighterAST.m */,
-				583B544829DEAB6F00CB292A /* AddressHighlighterAST.h */,
-				583B544929DEAB6F00CB292A /* AddressHighlighterAST.m */,
-				583B544C29DEAD5D00CB292A /* OptionsHighlighterAST.h */,
-				583B544D29DEAD5D00CB292A /* OptionsHighlighterAST.m */,
-				583B545029DEB4E900CB292A /* SelectorHighlighterAST.h */,
-				583B545129DEB4E900CB292A /* SelectorHighlighterAST.m */,
-				5888894329DFCB950033CCF5 /* NewLineHighlighterAST.h */,
-				5888894429DFCB950033CCF5 /* NewLineHighlighterAST.m */,
-				581C2FF529E3DFC600B46C10 /* SeparatorHighlighterAST.h */,
-				581C2FF629E3DFC600B46C10 /* SeparatorHighlighterAST.m */,
-				581C2FFD29E3E59400B46C10 /* PipeHighlighterAST.h */,
-				581C2FFE29E3E59400B46C10 /* PipeHighlighterAST.m */,
-				5821E7D82A0A2953000642A6 /* JSAPIHighlighterAST.h */,
-				5821E7D92A0A2953000642A6 /* JSAPIHighlighterAST.m */,
-				5821E7DC2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.h */,
-				5821E7DD2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m */,
-			);
-			name = HighlighterAST;
-			path = Stay/AdBlock/HighlighterAST;
-			sourceTree = SOURCE_ROOT;
 		};
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
@@ -2315,39 +2283,11 @@
 				58ADADE029E7FA0700C00332 /* FCTextField.m */,
 				58ADADE329E800CF00C00332 /* FCButton.h */,
 				58ADADE429E800CF00C00332 /* FCButton.m */,
+				58F196AC2A120BA800B88F39 /* FCTapView.h */,
+				58F196AD2A120BA800B88F39 /* FCTapView.m */,
 			);
 			path = UXControl;
 			sourceTree = "<group>";
-		};
-		58ADADE729E801CF00C00332 /* BlockerAST */ = {
-			isa = PBXGroup;
-			children = (
-				58BC3D7629F10D2B005CEE5B /* ContentBlockerRule.h */,
-				58BC3D7729F10D2B005CEE5B /* ContentBlockerRule.m */,
-				58ADADF229E801CF00C00332 /* BlockerAST.h */,
-				58ADADEA29E801CF00C00332 /* BlockerAST.m */,
-				58ADADEB29E801CF00C00332 /* ContentFilterBlocker.h */,
-				58ADADF129E801CF00C00332 /* ContentFilterBlocker.m */,
-				58ADADEC29E801CF00C00332 /* PipeBlockerAST.h */,
-				58ADADF629E801CF00C00332 /* PipeBlockerAST.m */,
-				58ADADF829E801CF00C00332 /* AddressBlockerAST.h */,
-				58ADADF029E801CF00C00332 /* AddressBlockerAST.m */,
-				58ADADE929E801CF00C00332 /* SeparatorBlockerAST.h */,
-				58ADADF329E801CF00C00332 /* SeparatorBlockerAST.m */,
-				58ADADF429E801CF00C00332 /* ExceptionBlockerAST.h */,
-				58ADADE829E801CF00C00332 /* ExceptionBlockerAST.m */,
-				58ADADF529E801CF00C00332 /* SelectorBlockerAST.h */,
-				58ADADED29E801CF00C00332 /* SelectorBlockerAST.m */,
-				58ADADF729E801CF00C00332 /* OptionsBlockerAST.h */,
-				58ADADEE29E801CF00C00332 /* OptionsBlockerAST.m */,
-				58ADADF929E801CF00C00332 /* TriggerBlockerAST.h */,
-				58ADADEF29E801CF00C00332 /* TriggerBlockerAST.m */,
-				58ADAE1529ED2BF800C00332 /* SpecialCommentBlockerAST.h */,
-				58ADAE1629ED2BF800C00332 /* SpecialCommentBlockerAST.m */,
-			);
-			name = BlockerAST;
-			path = Stay/AdBlock/Filter/BlockerAST;
-			sourceTree = SOURCE_ROOT;
 		};
 		58ADAE0C29E8F50E00C00332 /* Controls */ = {
 			isa = PBXGroup;
@@ -2418,6 +2358,120 @@
 				58D1B441288697F3009BD608 /* BaseRecord.m */,
 			);
 			path = RecordTypes;
+			sourceTree = "<group>";
+		};
+		58F196062A11FD2F00B88F39 /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				58F1965D2A11FE3100B88F39 /* HighlighterAST */,
+				58F196122A11FD2F00B88F39 /* ContentFilterEditorView.h */,
+				58F196072A11FD2F00B88F39 /* ContentFilterEditorView.m */,
+				58F1962D2A11FD2F00B88F39 /* ContentFilterTableVewCell.h */,
+				58F196082A11FD2F00B88F39 /* ContentFilterTableVewCell.m */,
+				58F1962C2A11FD2F00B88F39 /* ContentFilter2.h */,
+				58F196092A11FD2F00B88F39 /* ContentFilter2.m */,
+				58F1960A2A11FD2F00B88F39 /* ContentFilterManager.h */,
+				58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */,
+				58F1962A2A11FD2F00B88F39 /* ContentFilterMainLoop.h */,
+				58F1960B2A11FD2F00B88F39 /* ContentFilterMainLoop.m */,
+				58F1960C2A11FD2F00B88F39 /* StateView.h */,
+				58F1962E2A11FD2F00B88F39 /* StateView.m */,
+				58F1960D2A11FD2F00B88F39 /* Parser */,
+				58F196132A11FD2F00B88F39 /* BlockerAST */,
+			);
+			path = Filter;
+			sourceTree = "<group>";
+		};
+		58F1960D2A11FD2F00B88F39 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				58F1960E2A11FD2F00B88F39 /* FilterTokenParser.h */,
+				58F1960F2A11FD2F00B88F39 /* FilterToken.h */,
+				58F196102A11FD2F00B88F39 /* FilterTokenParser.m */,
+				58F196112A11FD2F00B88F39 /* FilterToken.m */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		58F196132A11FD2F00B88F39 /* BlockerAST */ = {
+			isa = PBXGroup;
+			children = (
+				58F196142A11FD2F00B88F39 /* ExceptionBlockerAST.m */,
+				58F196152A11FD2F00B88F39 /* SeparatorBlockerAST.h */,
+				58F196162A11FD2F00B88F39 /* TriggerBlockerAST.h */,
+				58F196172A11FD2F00B88F39 /* BlockerAST.m */,
+				58F196182A11FD2F00B88F39 /* ContentFilterBlocker.h */,
+				58F196192A11FD2F00B88F39 /* PipeBlockerAST.h */,
+				58F1961A2A11FD2F00B88F39 /* ContentBlockerRule.m */,
+				58F1961B2A11FD2F00B88F39 /* SelectorBlockerAST.m */,
+				58F1961C2A11FD2F00B88F39 /* OptionsBlockerAST.m */,
+				58F1961D2A11FD2F00B88F39 /* SpecialCommentBlockerAST.h */,
+				58F1961E2A11FD2F00B88F39 /* AddressBlockerAST.m */,
+				58F1961F2A11FD2F00B88F39 /* ContentFilterBlocker.m */,
+				58F196202A11FD2F00B88F39 /* BlockerAST.h */,
+				58F196212A11FD2F00B88F39 /* TriggerBlockerAST.m */,
+				58F196222A11FD2F00B88F39 /* SeparatorBlockerAST.m */,
+				58F196232A11FD2F00B88F39 /* ExceptionBlockerAST.h */,
+				58F196242A11FD2F00B88F39 /* SelectorBlockerAST.h */,
+				58F196252A11FD2F00B88F39 /* ContentBlockerRule.h */,
+				58F196262A11FD2F00B88F39 /* PipeBlockerAST.m */,
+				58F196272A11FD2F00B88F39 /* OptionsBlockerAST.h */,
+				58F196282A11FD2F00B88F39 /* AddressBlockerAST.h */,
+				58F196292A11FD2F00B88F39 /* SpecialCommentBlockerAST.m */,
+			);
+			path = BlockerAST;
+			sourceTree = "<group>";
+		};
+		58F1965D2A11FE3100B88F39 /* HighlighterAST */ = {
+			isa = PBXGroup;
+			children = (
+				58F1965E2A11FE3100B88F39 /* HighlighterAST.m */,
+				58F1965F2A11FE3100B88F39 /* AddressHighlighterAST.m */,
+				58F196602A11FE3100B88F39 /* SelectorHighlighterAST.h */,
+				58F196612A11FE3100B88F39 /* JSAPIHighlighterAST.h */,
+				58F196622A11FE3100B88F39 /* OptionsHighlighterAST.h */,
+				58F196632A11FE3100B88F39 /* ExceptionHighlighterAST.m */,
+				58F196642A11FE3100B88F39 /* TiggerHighlighterAST.h */,
+				58F196652A11FE3100B88F39 /* JSAPIExceptionHighlighterAST.h */,
+				58F196662A11FE3100B88F39 /* NewLineHighlighterAST.h */,
+				58F196672A11FE3100B88F39 /* CommentHighlighterAST.h */,
+				58F196682A11FE3100B88F39 /* ContentFilterHighlighter.h */,
+				58F196692A11FE3100B88F39 /* PipeHighlighterAST.m */,
+				58F1966A2A11FE3100B88F39 /* InfoHighlighterAST.m */,
+				58F1966B2A11FE3100B88F39 /* SeparatorHighlighterAST.m */,
+				58F1966C2A11FE3100B88F39 /* JSAPIHighlighterAST.m */,
+				58F1966D2A11FE3100B88F39 /* SelectorHighlighterAST.m */,
+				58F1966E2A11FE3100B88F39 /* AddressHighlighterAST.h */,
+				58F1966F2A11FE3100B88F39 /* HighlighterAST.h */,
+				58F196702A11FE3100B88F39 /* TiggerHighlighterAST.m */,
+				58F196712A11FE3100B88F39 /* ExceptionHighlighterAST.h */,
+				58F196722A11FE3100B88F39 /* OptionsHighlighterAST.m */,
+				58F196732A11FE3100B88F39 /* CommentHighlighterAST.m */,
+				58F196742A11FE3100B88F39 /* NewLineHighlighterAST.m */,
+				58F196752A11FE3100B88F39 /* JSAPIExceptionHighlighterAST.m */,
+				58F196762A11FE3100B88F39 /* SeparatorHighlighterAST.h */,
+				58F196772A11FE3100B88F39 /* InfoHighlighterAST.h */,
+				58F196782A11FE3100B88F39 /* PipeHighlighterAST.h */,
+				58F196792A11FE3100B88F39 /* ContentFilterHighlighter.m */,
+			);
+			path = HighlighterAST;
+			sourceTree = "<group>";
+		};
+		58F196962A11FE3900B88F39 /* TruestedSites */ = {
+			isa = PBXGroup;
+			children = (
+				58F196592A11FDB800B88F39 /* TrustedSitesTableViewHeadCell.h */,
+				58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */,
+				58F196552A11FD9600B88F39 /* TrustedSitesTableViewCell.h */,
+				58F196562A11FD9600B88F39 /* TrustedSitesTableViewCell.m */,
+				58F1969A2A11FE9F00B88F39 /* TruestedSite.h */,
+				58F1969B2A11FE9F00B88F39 /* TruestedSite.m */,
+				58F196B02A12102500B88F39 /* AddTruestedSiteSlideController.h */,
+				58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */,
+				58F196B42A12104000B88F39 /* AddTruestedSiteModalViewController.h */,
+				58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */,
+			);
+			path = TruestedSites;
 			sourceTree = "<group>";
 		};
 		58F7F4B92743A92A00270873 /* lib */ = {
@@ -3670,8 +3724,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F196A02A1201D500B88F39 /* TruestedSite.m in Sources */,
 				5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				5811065329E696A50073E9CF /* ContentFilterManager.m in Sources */,
+				58F196A72A1201F600B88F39 /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3679,8 +3734,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F196A12A1201D500B88F39 /* TruestedSite.m in Sources */,
 				5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				5811065429E696A50073E9CF /* ContentFilterManager.m in Sources */,
+				58F196A82A1201F600B88F39 /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3688,8 +3744,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F196A22A1201D600B88F39 /* TruestedSite.m in Sources */,
 				5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				5811068B29E698A70073E9CF /* ContentFilterManager.m in Sources */,
+				58F196A92A1201F700B88F39 /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3697,8 +3754,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F196A32A1201D600B88F39 /* TruestedSite.m in Sources */,
 				5811067129E697F70073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				5811068D29E698A80073E9CF /* ContentFilterManager.m in Sources */,
+				58F196AA2A1201F700B88F39 /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3706,8 +3764,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F196A42A1201D700B88F39 /* TruestedSite.m in Sources */,
 				5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */,
-				5811068C29E698A80073E9CF /* ContentFilterManager.m in Sources */,
+				58F196AB2A1201F800B88F39 /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3720,7 +3779,9 @@
 				58561F5828E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
 				3C8388DA2933563E007563E6 /* FCTabManager.m in Sources */,
+				58F1969E2A1201A600B88F39 /* TruestedSite.m in Sources */,
 				58724A3528FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
+				58F196A62A1201F500B88F39 /* ContentFilterManager.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
 				3C8388D829335636007563E6 /* FCTab.m in Sources */,
 				58639D1A28644CF400AA80D5 /* UserscriptHeaders.m in Sources */,
@@ -3751,12 +3812,17 @@
 				84CC9B6128D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				3CA742AC29A2180100AB9F12 /* MySlider.swift in Sources */,
 				849E77E4293E0E9200AD83D7 /* DownloadResource.m in Sources */,
+				58F1967C2A11FE3100B88F39 /* AddressHighlighterAST.m in Sources */,
+				58F1968A2A11FE3200B88F39 /* TiggerHighlighterAST.m in Sources */,
 				5805D9522A037FCF00F46709 /* InstallUserscriptModalViewController.m in Sources */,
 				58FEB1EB283B57BB00BC2A92 /* FCStyle.m in Sources */,
 				3C8388D3293355F9007563E6 /* FolderSlideController.swift in Sources */,
+				58F1963F2A11FD2F00B88F39 /* ContentBlockerRule.m in Sources */,
 				8460E4782993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
 				58724A2B28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
+				58F196392A11FD2F00B88F39 /* FilterToken.m in Sources */,
+				58F196B62A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */,
 				58ADADD829E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */,
 				582061C6294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
 				582061FA294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
@@ -3769,19 +3835,22 @@
 				84DB5FED29F7AA7400526857 /* DownloadScriptSlideController.m in Sources */,
 				84C54CFC2753BDAF00A9F14C /* SYDetailViewController.m in Sources */,
 				5867D14C288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
+				58F1964D2A11FD3000B88F39 /* PipeBlockerAST.m in Sources */,
 				84BA56F62944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58AC12F428607B3400875D6D /* FCConfig.m in Sources */,
 				8460E47029925A66008BC7D0 /* SYSubmitScriptViewController.m in Sources */,
+				58F196042A11E3D000B88F39 /* FCTableViewHeadCell.m in Sources */,
 				3C8388E82934E7D5007563E6 /* MyAdditions.m in Sources */,
 				3C949BB22971813E0068231A /* NSURL+m3u8.m in Sources */,
 				582061F6294C516700A32D0C /* SYDownloadModalViewController.m in Sources */,
 				3C949B98297029F50068231A /* M3U8LineReader.m in Sources */,
 				582061EA294C4CC800A32D0C /* UIView+Layout.m in Sources */,
+				58F1969C2A11FE9F00B88F39 /* TruestedSite.m in Sources */,
 				582061C0294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
+				58F196492A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */,
 				5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
-				58ADAE0A29E801CF00C00332 /* PipeBlockerAST.m in Sources */,
+				58F196432A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
-				581C2FF729E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */,
 				3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
 				3C949BB12971813E0068231A /* NSArray+m3u8.m in Sources */,
 				84BDC843274BB820005367C6 /* DataManager.m in Sources */,
@@ -3792,7 +3861,6 @@
 				3C358D4F297394F500118063 /* FWEncryptorAES.m in Sources */,
 				8457A84927FEF0670010A387 /* SYWebScriptViewController.m in Sources */,
 				84FD4286285B72E500B25A17 /* SYExpandViewController.m in Sources */,
-				583B543E29DD71A500CB292A /* InfoHighlighterAST.m in Sources */,
 				84BDC849274BC5AD005367C6 /* ScriptDetailModel.m in Sources */,
 				84A15E0B282DF0D2002E121D /* ScriptEntity.m in Sources */,
 				58EA4450286B00B500BD6C4D /* iCloudService.m in Sources */,
@@ -3806,25 +3874,25 @@
 				84DB5FE929F6990600526857 /* SYDownloadedViewCell.m in Sources */,
 				3C949BA0297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				5882258629F914F6004CDBF7 /* InputToolbarItem.m in Sources */,
-				581C2FFF29E3E59400B46C10 /* PipeHighlighterAST.m in Sources */,
+				58F196802A11FE3100B88F39 /* PipeHighlighterAST.m in Sources */,
 				588B8324284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
-				58ADAE0229E801CF00C00332 /* TriggerBlockerAST.m in Sources */,
+				58F1967E2A11FE3100B88F39 /* ExceptionHighlighterAST.m in Sources */,
 				58FEB1F8283B5B3E00BC2A92 /* ModalNavigationBar.m in Sources */,
 				58D1B442288697F3009BD608 /* BaseRecord.m in Sources */,
 				58FEB1FB283B5B3E00BC2A92 /* ModalNavigationController.m in Sources */,
 				84B635162978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */,
+				58F196312A11FD2F00B88F39 /* ContentFilterTableVewCell.m in Sources */,
 				3C8388C82931ADC5007563E6 /* FCTabConfig.m in Sources */,
 				58FEB1E4283B561B00BC2A92 /* FCView.m in Sources */,
+				58F196942A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */,
 				3C8388E229335C68007563E6 /* RoundedBorderView.swift in Sources */,
 				5867D154288F88FC00EC822B /* AlertHelper.m in Sources */,
 				3C949BB02971813E0068231A /* M3U8SegmentInfoList.m in Sources */,
-				583B544629DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
+				58F196352A11FD2F00B88F39 /* ContentFilterMainLoop.m in Sources */,
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
 				5805D94E2A037FB600F46709 /* EnableStayModalViewController.m in Sources */,
-				583B53E329DBF9A100CB292A /* FilterTokenParser.m in Sources */,
-				583B53E729DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				582061D2294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
 				5867D150288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
@@ -3832,22 +3900,25 @@
 				848A48B6279A4C7900D55FFD /* SYNetworkUtils.m in Sources */,
 				582061E4294C4CA400A32D0C /* FCLayoutImageView.m in Sources */,
 				58724A2D28FE4CCD00A894D8 /* SYNavigationController.m in Sources */,
+				58F196472A11FD3000B88F39 /* ContentFilterBlocker.m in Sources */,
+				58F1968E2A11FE3200B88F39 /* CommentHighlighterAST.m in Sources */,
 				582061E0294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
-				583B544A29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */,
 				582061D0294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
 				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				849E77D7293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
 				5884031C29667079002CA227 /* UIColor+Convert.m in Sources */,
-				58ADAE0029E801CF00C00332 /* OptionsBlockerAST.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				84BA9D17292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
+				58F196372A11FD2F00B88F39 /* FilterTokenParser.m in Sources */,
 				84BDC83C2745575E005367C6 /* UIViewExt.m in Sources */,
 				849E77D3293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
+				58F1967A2A11FE3100B88F39 /* HighlighterAST.m in Sources */,
 				58EA44452869BB5300BD6C4D /* ImportSlideController.m in Sources */,
-				583B544E29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */,
+				58F196532A11FD3000B88F39 /* StateView.m in Sources */,
 				84CC9B5D28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
+				58F196572A11FD9600B88F39 /* TrustedSitesTableViewCell.m in Sources */,
 				5839C32029305D0200CCBAE5 /* FCTopToastModalViewController.m in Sources */,
 				583B540A29DD4DFA00CB292A /* UIFont+Convert.m in Sources */,
 				84A15E01282A4FFF002E121D /* BrowseView.m in Sources */,
@@ -3867,7 +3938,6 @@
 				84F48324273ACAD400217BB3 /* SYSearchViewController.m in Sources */,
 				84F48318273A739800217BB3 /* MainTabBarController.m in Sources */,
 				5882258229F90F8F004CDBF7 /* InputToolbar.m in Sources */,
-				583B543C29DD71A500CB292A /* HighlighterAST.m in Sources */,
 				3C8388BE292E55B9007563E6 /* DownloadManager.m in Sources */,
 				582061CA294C4C0E00A32D0C /* ModalItemClickWithIconView.m in Sources */,
 				84F4833A273B964900217BB3 /* JSDetailEntity.m in Sources */,
@@ -3875,12 +3945,9 @@
 				587689402720064D00F834A4 /* NavigationController.m in Sources */,
 				84F48337273B709500217BB3 /* JSDetailCell.m in Sources */,
 				84E8EA09295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
-				58ADAE1729ED2BF800C00332 /* SpecialCommentBlockerAST.m in Sources */,
-				583B544029DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
 				8460E47429925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				582061F2294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
-				58ADAE0829E801CF00C00332 /* SeparatorBlockerAST.m in Sources */,
-				5888894529DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */,
+				58F196982A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */,
 				58A3617D29C048CE00080465 /* FCTabBar.m in Sources */,
 				848A48B9279A5BA000D55FFD /* SYVersionUtils.m in Sources */,
 				58EA445D286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
@@ -3889,11 +3956,10 @@
 				582061CE294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				3C949B9E297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				58ADADE529E800D000C00332 /* FCButton.m in Sources */,
-				58ADADFE29E801CF00C00332 /* SelectorBlockerAST.m in Sources */,
 				58A3616E29BF11F100080465 /* RC4.m in Sources */,
+				58F196332A11FD2F00B88F39 /* ContentFilter2.m in Sources */,
 				582061E2294C4CA400A32D0C /* FCLayoutLabel.m in Sources */,
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
-				58ADAE0629E801CF00C00332 /* ContentFilterBlocker.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */,
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
@@ -3901,71 +3967,68 @@
 				58A3617929C023BC00080465 /* FCRootViewController.m in Sources */,
 				588B831F2845FBFC00AB2D73 /* SharedStorageManager.m in Sources */,
 				5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */,
+				58F1963B2A11FD2F00B88F39 /* ExceptionBlockerAST.m in Sources */,
 				58A3618229C049C500080465 /* FCTabBarItem.m in Sources */,
 				58ADADDC29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */,
+				58F196862A11FE3200B88F39 /* JSAPIHighlighterAST.m in Sources */,
 				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
 				587CFA1B29CD811800578981 /* UIView+Duplicate.m in Sources */,
-				58ADAE0429E801CF00C00332 /* AddressBlockerAST.m in Sources */,
 				5805D9552A04A3FE00F46709 /* LottieView.swift in Sources */,
 				8457A84327FD398D0010A387 /* SYAddScriptController.m in Sources */,
 				58561F5528E6E50400D0913A /* RunsRecord.m in Sources */,
 				84FE418429FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */,
 				582061C2294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
 				8496DFC32759CADC0075ABD5 /* SYEditViewController.m in Sources */,
-				58ADADFC29E801CF00C00332 /* BlockerAST.m in Sources */,
 				84F48321273ACAC000217BB3 /* SYHomeViewController.m in Sources */,
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
-				58BC3D7829F10D2B005CEE5B /* ContentBlockerRule.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
-				583B545229DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
-				583B53E129DBF9A100CB292A /* ContentFilter2.m in Sources */,
+				58F196512A11FD3000B88F39 /* ContentFilterManager.m in Sources */,
+				58F196922A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
+				58F196B22A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */,
 				8481963529EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
+				58F196842A11FE3100B88F39 /* SeparatorHighlighterAST.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
 				84C2B3F928757B9E002A0C1B /* SYTextInputViewController.m in Sources */,
 				84932DDD292F50A9004A1EEC /* SYBigImageViewController.m in Sources */,
-				5821E7DE2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m in Sources */,
-				5821E7DA2A0A2953000642A6 /* JSAPIHighlighterAST.m in Sources */,
 				58724A2F28FE4D0900A894D8 /* QuickAccess.m in Sources */,
 				582061E6294C4CA400A32D0C /* FCLayoutTextField.m in Sources */,
 				84C2B3F628757B7D002A0C1B /* SYTextInputModelViewController.m in Sources */,
-				583B540629DD4AF200CB292A /* ContentFilterEditorView.m in Sources */,
+				58F1962F2A11FD2F00B88F39 /* ContentFilterEditorView.m in Sources */,
+				58F1964F2A11FD3000B88F39 /* SpecialCommentBlockerAST.m in Sources */,
 				84AA932528A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				58A3617529C0218800080465 /* FCViewController.m in Sources */,
-				583B544229DD71A500CB292A /* CommentHighlighterAST.m in Sources */,
 				58F7F4C52745336100270873 /* Tampermonkey.m in Sources */,
 				5882258A29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */,
 				582062022950675900A32D0C /* DisabledWebsites.m in Sources */,
 				582061BE294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
 				582061FE294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
-				583B540229DC330500CB292A /* ContentFilterMainLoop.m in Sources */,
-				583B53DF29DBF9A100CB292A /* StateView.m in Sources */,
 				3C358D51297394F500118063 /* NSData+Base64.m in Sources */,
 				58ADAE1329E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
-				58ADADFA29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */,
-				583B53E529DBF9A100CB292A /* FilterToken.m in Sources */,
-				583B540E29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				849E203527B0AF7C000E5C02 /* UserscriptUpdateManager.m in Sources */,
 				3CEDDDBD2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				3C949B94297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				58724A3228FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
-				583B53FD29DC19D400CB292A /* ContentFilterManager.m in Sources */,
 				8460E47C2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
 				3C949BAE2971813E0068231A /* NSString+m3u8.m in Sources */,
+				58F196412A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */,
 				583B541529DD504500CB292A /* FCNavigationBar.m in Sources */,
 				5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
 				583B541729DD504500CB292A /* FCNavigationController.m in Sources */,
+				58F1963D2A11FD2F00B88F39 /* BlockerAST.m in Sources */,
 				84A15E08282DEB2D002E121D /* ScriptMananger.m in Sources */,
 				3C8388DE2933594A007563E6 /* FolderModalController.swift in Sources */,
+				58F1964B2A11FD3000B88F39 /* SeparatorBlockerAST.m in Sources */,
 				5882257E29F90D6F004CDBF7 /* InputMenu.m in Sources */,
 				5882259A29FF6C1B004CDBF7 /* WelcomeModalViewController.m in Sources */,
+				58F196AE2A120BA800B88F39 /* FCTapView.m in Sources */,
 				5882259629FF6BF8004CDBF7 /* WelcomeSlideController.m in Sources */,
 				58D1B45428893D4B009BD608 /* FCStore.m in Sources */,
 				8457A84627FE8CA50010A387 /* SYScriptAddViewController.m in Sources */,
@@ -3975,12 +4038,17 @@
 				58ADAE0F29E8F82400C00332 /* UpgradeSlideController.m in Sources */,
 				3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
+				58F196882A11FE3200B88F39 /* SelectorHighlighterAST.m in Sources */,
 				84E8EA112962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
+				58F196452A11FD3000B88F39 /* AddressBlockerAST.m in Sources */,
 				582061C4294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				582061EE294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
+				58F196902A11FE3200B88F39 /* NewLineHighlighterAST.m in Sources */,
 				84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
+				58F196822A11FE3100B88F39 /* InfoHighlighterAST.m in Sources */,
 				58724A2728FE366700A894D8 /* PadSplitViewController.m in Sources */,
+				58F1968C2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4013,8 +4081,10 @@
 				58724A3328FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				3C8388D529335624007563E6 /* FCTab.m in Sources */,
+				58F1969F2A1201A900B88F39 /* TruestedSite.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				5805D95A2A04E28C00F46709 /* MyAdditions.m in Sources */,
+				58F196A52A1201F400B88F39 /* ContentFilterManager.m in Sources */,
 				3C81E717293EF56400AB4B3F /* FCShared.m in Sources */,
 				588B83212845FC0C00AB2D73 /* FCDisk.m in Sources */,
 				58A3616F29BF11F100080465 /* RC4.m in Sources */,
@@ -4026,7 +4096,6 @@
 				582062042950696E00A32D0C /* DisabledWebsites.m in Sources */,
 				58F7F4E9274776AB00270873 /* Stroge.m in Sources */,
 				588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */,
-				581105FF29E564290073E9CF /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4035,12 +4104,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5882258B29F91692004CDBF7 /* InputToolbarItemSeperator.m in Sources */,
-				58ADAE0529E801CF00C00332 /* AddressBlockerAST.m in Sources */,
 				58ADADE629E800D000C00332 /* FCButton.m in Sources */,
+				58F196832A11FE3100B88F39 /* InfoHighlighterAST.m in Sources */,
 				58ADAE1029E8F82400C00332 /* UpgradeSlideController.m in Sources */,
-				583B540F29DD4FF300CB292A /* ContentFilterHighlighter.m in Sources */,
 				84E8EA0E2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
-				5821E7DF2A0A2A2C000642A6 /* JSAPIExceptionHighlighterAST.m in Sources */,
 				5882259729FF6BF8004CDBF7 /* WelcomeSlideController.m in Sources */,
 				5882024A2859E73900B2721A /* SYSelectBarModalViewController.m in Sources */,
 				3C358D52297394F500118063 /* NSData+Base64.m in Sources */,
@@ -4051,6 +4118,7 @@
 				583B542529DD558D00CB292A /* AdBlockDetailViewController.m in Sources */,
 				583B541829DD504500CB292A /* FCNavigationController.m in Sources */,
 				588402CA295D3272002CA227 /* ToastCenter.m in Sources */,
+				58F196892A11FE3200B88F39 /* SelectorHighlighterAST.m in Sources */,
 				3CEDDDBE2995ED92001D13CD /* SYParseModalViewController.m in Sources */,
 				58A3618729C04BBC00080465 /* FCTabBarController.m in Sources */,
 				5882024C2859E73900B2721A /* FCApp.m in Sources */,
@@ -4063,42 +4131,42 @@
 				84FE418529FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
+				58F196B32A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */,
 				3C949B99297029F50068231A /* M3U8LineReader.m in Sources */,
 				582061CD294C4C0E00A32D0C /* ModalSectionView.m in Sources */,
+				58F1963C2A11FD2F00B88F39 /* ExceptionBlockerAST.m in Sources */,
 				582061CB294C4C0E00A32D0C /* ModalItemClickWithIconView.m in Sources */,
 				3C358D5A2973E5B000118063 /* M3U8PlaylistModel.m in Sources */,
+				58F196362A11FD2F00B88F39 /* ContentFilterMainLoop.m in Sources */,
 				5867D151288E8C0C00EC822B /* ICloudSwitchViewController.m in Sources */,
 				58D1B45528893D4B009BD608 /* FCStore.m in Sources */,
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
+				58F196932A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */,
 				582061E5294C4CA400A32D0C /* FCLayoutImageView.m in Sources */,
+				58F196B72A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */,
 				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				849E77DC293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				3C358D562973E57C00118063 /* M3U8SegmentInfoList.m in Sources */,
 				84DB5FF229F7AB2C00526857 /* DownloadScriptModelViewController.m in Sources */,
+				58F1964C2A11FD3000B88F39 /* SeparatorBlockerAST.m in Sources */,
 				582061E1294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
 				8460E47529925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
-				583B544329DD71A500CB292A /* CommentHighlighterAST.m in Sources */,
-				583B543D29DD71A500CB292A /* HighlighterAST.m in Sources */,
 				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
-				58ADAE0B29E801CF00C00332 /* PipeBlockerAST.m in Sources */,
+				58F196952A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
-				58ADAE0929E801CF00C00332 /* SeparatorBlockerAST.m in Sources */,
 				58A3617A29C023BC00080465 /* FCRootViewController.m in Sources */,
 				588202512859E73900B2721A /* DataManager.m in Sources */,
 				3C949B9B297029F50068231A /* M3U8ExtXMedia.m in Sources */,
 				3C358D54297394F500118063 /* NSData+CommonCrypto.m in Sources */,
 				3C8388BF292E55B9007563E6 /* DownloadManager.m in Sources */,
 				3CA742AD29A2180100AB9F12 /* MySlider.swift in Sources */,
-				583B53E629DBF9A100CB292A /* FilterToken.m in Sources */,
 				588202522859E73900B2721A /* LoadingSlideController.m in Sources */,
-				583B540729DD4AF200CB292A /* ContentFilterEditorView.m in Sources */,
+				58F196872A11FE3200B88F39 /* JSAPIHighlighterAST.m in Sources */,
 				5882257F29F90D6F004CDBF7 /* InputMenu.m in Sources */,
-				581C2FF829E3DFC600B46C10 /* SeparatorHighlighterAST.m in Sources */,
-				583B53E829DBF9A100CB292A /* ContentFilterTableVewCell.m in Sources */,
 				84C2B403288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
 				588202532859E73900B2721A /* SYSelectTabViewController.m in Sources */,
 				588202542859E73900B2721A /* SYWebScriptViewController.m in Sources */,
@@ -4107,15 +4175,19 @@
 				3C358D552973E57800118063 /* M3U8SegmentInfo.m in Sources */,
 				5867D155288F88FC00EC822B /* AlertHelper.m in Sources */,
 				582061C1294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
+				58F1963A2A11FD2F00B88F39 /* FilterToken.m in Sources */,
 				3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
+				58F196502A11FD3000B88F39 /* SpecialCommentBlockerAST.m in Sources */,
 				58724A2C28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				582061FB294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
 				582061FF294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
+				58F196912A11FE3200B88F39 /* NewLineHighlighterAST.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
-				583B543F29DD71A500CB292A /* InfoHighlighterAST.m in Sources */,
 				3C949B9D297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58AC12F528607B3400875D6D /* FCConfig.m in Sources */,
+				58F196542A11FD3000B88F39 /* StateView.m in Sources */,
+				58F196582A11FD9600B88F39 /* TrustedSitesTableViewCell.m in Sources */,
 				8481963629EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
 				5805D95F2A0632B800F46709 /* DefaultIcon.m in Sources */,
 				582061C3294C4C0E00A32D0C /* ModalItemClickView.m in Sources */,
@@ -4123,25 +4195,24 @@
 				588202562859E73900B2721A /* ScriptEntity.m in Sources */,
 				58A3617029BF11F100080465 /* RC4.m in Sources */,
 				84E8EA0A295C7C95003846AD /* SYVideoCellTableViewCell.m in Sources */,
-				58ADAE1829ED2BF800C00332 /* SpecialCommentBlockerAST.m in Sources */,
+				58F196462A11FD3000B88F39 /* AddressBlockerAST.m in Sources */,
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				849E77CF293C7F5A00AD83D7 /* SYFIleManagerViewController.m in Sources */,
-				58ADAE0729E801CF00C00332 /* ContentFilterBlocker.m in Sources */,
+				58F196992A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				84E8EA122962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				582441CD28781DF1003DF4F7 /* SYTextInputViewController.m in Sources */,
-				58ADADFF29E801CF00C00332 /* SelectorBlockerAST.m in Sources */,
 				58561F3228E4888A00D0913A /* SYBrowseViewController.m in Sources */,
 				84B635172978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */,
 				3C8388DF2933594A007563E6 /* FolderModalController.swift in Sources */,
-				58BC3D7929F10D2B005CEE5B /* ContentBlockerRule.m in Sources */,
 				588202592859E73900B2721A /* ModalNavigationController.m in Sources */,
 				582062032950675900A32D0C /* DisabledWebsites.m in Sources */,
 				8460E47129925A66008BC7D0 /* SYSubmitScriptViewController.m in Sources */,
 				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
 				3C949B9F297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
+				58F1968D2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */,
 				3C358D572973E58800118063 /* NSArray+m3u8.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
 				3C358D582973E58B00118063 /* NSString+m3u8.m in Sources */,
@@ -4154,8 +4225,9 @@
 				582441CE28781E0D003DF4F7 /* SYTextInputModelViewController.m in Sources */,
 				588202B42859F99000B2721A /* FCSplitViewController.m in Sources */,
 				5882025D2859E73900B2721A /* AppDelegate.m in Sources */,
+				58F196AF2A120BA800B88F39 /* FCTapView.m in Sources */,
 				5882025E2859E73900B2721A /* UIViewExt.m in Sources */,
-				583B544F29DEAD5D00CB292A /* OptionsHighlighterAST.m in Sources */,
+				58F1968F2A11FE3200B88F39 /* CommentHighlighterAST.m in Sources */,
 				5882025F2859E73900B2721A /* BrowseView.m in Sources */,
 				58A3617629C0218800080465 /* FCViewController.m in Sources */,
 				588202602859E73900B2721A /* ModalViewController.m in Sources */,
@@ -4164,6 +4236,8 @@
 				84AA932228A5F5F2003E3967 /* SYAboutViewController.m in Sources */,
 				58ADADDD29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */,
 				5882258729F914F6004CDBF7 /* InputToolbarItem.m in Sources */,
+				58F196322A11FD2F00B88F39 /* ContentFilterTableVewCell.m in Sources */,
+				58F196852A11FE3100B88F39 /* SeparatorHighlighterAST.m in Sources */,
 				588202632859E73900B2721A /* MainTabBarController.m in Sources */,
 				582061CF294C4C0E00A32D0C /* ModalSectionElement.m in Sources */,
 				582061D3294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
@@ -4172,6 +4246,8 @@
 				588202642859E73900B2721A /* JSDetailEntity.m in Sources */,
 				84CC9B6228D1C290002EB493 /* SYNoDownLoadDetailViewController.m in Sources */,
 				84CC9B5E28D1ADFA002EB493 /* HomeDetailCell.m in Sources */,
+				58F196052A11E3D000B88F39 /* FCTableViewHeadCell.m in Sources */,
+				58F196812A11FE3100B88F39 /* PipeHighlighterAST.m in Sources */,
 				58ADADE229E7FA0700C00332 /* FCTextField.m in Sources */,
 				582061F7294C516700A32D0C /* SYDownloadModalViewController.m in Sources */,
 				58CFA5D228F426F9004C5140 /* SYSecondaryViewController.m in Sources */,
@@ -4184,7 +4260,6 @@
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
 				588202672859E73900B2721A /* SYVersionUtils.m in Sources */,
 				588202682859E73900B2721A /* SYNotesViewController.m in Sources */,
-				583B544B29DEAB6F00CB292A /* AddressHighlighterAST.m in Sources */,
 				58DF3FF62898D4820029E1AA /* API.m in Sources */,
 				588202692859E73900B2721A /* SharedStorageManager.m in Sources */,
 				58AC12E82860752800875D6D /* Plugin.m in Sources */,
@@ -4194,7 +4269,6 @@
 				587CFA1C29CD811800578981 /* UIView+Duplicate.m in Sources */,
 				5882026B2859E73900B2721A /* SYEditViewController.m in Sources */,
 				5882258329F90F8F004CDBF7 /* InputToolbar.m in Sources */,
-				583B544729DEA4DC00CB292A /* ExceptionHighlighterAST.m in Sources */,
 				58639C322862E6DA00AA80D5 /* SegmentViewController.m in Sources */,
 				58ADAE1429E8F8A100C00332 /* UpgradeModalViewController.m in Sources */,
 				8460E4792993ACC8008BC7D0 /* SYReportSlideController.m in Sources */,
@@ -4202,18 +4276,21 @@
 				588202B82859F9FD00B2721A /* SceneCenter.m in Sources */,
 				5882026C2859E73900B2721A /* SYHomeViewController.m in Sources */,
 				58CFA5D328F42C23004C5140 /* UIView+Rotate.m in Sources */,
+				58F196522A11FD3000B88F39 /* ContentFilterManager.m in Sources */,
 				5882026D2859E73900B2721A /* FCSlideController.m in Sources */,
+				58F1963E2A11FD2F00B88F39 /* BlockerAST.m in Sources */,
 				5839C31D29305CA100CCBAE5 /* FCTopToast.m in Sources */,
-				583B53E229DBF9A100CB292A /* ContentFilter2.m in Sources */,
 				5882026E2859E73900B2721A /* main.m in Sources */,
 				5882026F2859E73900B2721A /* FCBlockView.m in Sources */,
-				583B544129DD71A500CB292A /* TiggerHighlighterAST.m in Sources */,
+				58F1967B2A11FE3100B88F39 /* HighlighterAST.m in Sources */,
+				58F1964E2A11FD3000B88F39 /* PipeBlockerAST.m in Sources */,
 				588202702859E73900B2721A /* SceneDelegate.m in Sources */,
 				588202712859E73900B2721A /* LoadingStatusModalViewController.m in Sources */,
+				58F196382A11FD2F00B88F39 /* FilterTokenParser.m in Sources */,
 				5867D14D288E8B6A00EC822B /* ICloudSyncSlideController.m in Sources */,
 				3C8388CB2931ADC5007563E6 /* FCTabManager.m in Sources */,
-				58ADAE0129E801CF00C00332 /* OptionsBlockerAST.m in Sources */,
 				5867D16428920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
+				58F1967F2A11FE3100B88F39 /* ExceptionHighlighterAST.m in Sources */,
 				5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				58A3619029C0502500080465 /* AdBlockViewController.m in Sources */,
@@ -4221,47 +4298,44 @@
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
 				58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */,
-				5821E7DB2A0A2953000642A6 /* JSAPIHighlighterAST.m in Sources */,
+				58F196482A11FD3000B88F39 /* ContentFilterBlocker.m in Sources */,
 				3C949B97297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				58EA4456286C1E4F00BD6C4D /* StatusRecord.m in Sources */,
 				584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */,
 				58ADADD929E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */,
-				583B53FE29DC19D400CB292A /* ContentFilterManager.m in Sources */,
 				588202732859E73900B2721A /* UserscriptUpdateManager.m in Sources */,
 				58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */,
 				58D1B45928893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				3C949BA1297029F50068231A /* M3U8ExtXMediaList.m in Sources */,
 				3C8B05912949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
+				58F196402A11FD2F00B88F39 /* ContentBlockerRule.m in Sources */,
 				58C6637D2990E05F00B00110 /* VideoParser.m in Sources */,
 				58EA444A286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
 				3C358D592973E59500118063 /* NSURL+m3u8.m in Sources */,
-				583B540329DC330500CB292A /* ContentFilterMainLoop.m in Sources */,
 				588202742859E73900B2721A /* FCRoundedShadowView.m in Sources */,
 				5831791729CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
 				582061D7294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
-				583B53E429DBF9A100CB292A /* FilterTokenParser.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
 				3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				5805D94F2A037FB600F46709 /* EnableStayModalViewController.m in Sources */,
+				58F1967D2A11FE3100B88F39 /* AddressHighlighterAST.m in Sources */,
 				58D1B44A2888EBB3009BD608 /* UserDefaults.m in Sources */,
+				58F1968B2A11FE3200B88F39 /* TiggerHighlighterAST.m in Sources */,
 				588202762859E73900B2721A /* SYScriptAddViewController.m in Sources */,
 				583B540B29DD4DFA00CB292A /* UIFont+Convert.m in Sources */,
 				5805D9562A04A3FE00F46709 /* LottieView.swift in Sources */,
+				58F196442A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */,
 				583B541629DD504500CB292A /* FCNavigationBar.m in Sources */,
-				581C300029E3E59400B46C10 /* PipeHighlighterAST.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
 				849E77D8293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
-				583B545329DEB4E900CB292A /* SelectorHighlighterAST.m in Sources */,
-				583B53E029DBF9A100CB292A /* StateView.m in Sources */,
 				849E77D4293D8F3300AD83D7 /* DownloadFileTableViewCell.m in Sources */,
 				84AA932628A63440003E3967 /* SYAppearanceViewController.m in Sources */,
 				582061C7294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
-				58ADAE0329E801CF00C00332 /* TriggerBlockerAST.m in Sources */,
 				84BA9D18292C6CEE00BB28A7 /* SYScanImage.m in Sources */,
 				588202772859E73900B2721A /* ActivateChanged.m in Sources */,
 				5884031D29667079002CA227 /* UIColor+Convert.m in Sources */,
@@ -4269,16 +4343,18 @@
 				582061F3294C4F2600A32D0C /* SYDownloadSlideController.m in Sources */,
 				582061C9294C4C0E00A32D0C /* ModalItemView.m in Sources */,
 				3C8388C92931ADC5007563E6 /* FCTabConfig.m in Sources */,
+				58F1964A2A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */,
 				58A3618329C049C500080465 /* FCTabBarItem.m in Sources */,
 				582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
+				58F1969D2A11FE9F00B88F39 /* TruestedSite.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
-				5888894629DFCB950033CCF5 /* NewLineHighlighterAST.m in Sources */,
+				58F196342A11FD2F00B88F39 /* ContentFilter2.m in Sources */,
+				58F196422A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */,
 				8460E47D2993ACF0008BC7D0 /* SYReportModalViewController.m in Sources */,
-				58ADADFD29E801CF00C00332 /* BlockerAST.m in Sources */,
 				588202792859E73900B2721A /* UserScript.m in Sources */,
-				58ADADFB29E801CF00C00332 /* ExceptionBlockerAST.m in Sources */,
 				582061EB294C4CC800A32D0C /* UIView+Layout.m in Sources */,
+				58F196302A11FD2F00B88F39 /* ContentFilterEditorView.m in Sources */,
 				3C8B05942949AC87003CE0A7 /* VideoPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

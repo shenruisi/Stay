@@ -117,7 +117,7 @@ OneTimePayment="一次性购买";
 
 Upgrade="升级";
 AdblockFeature="内容拦截";
-AdblockFeatureDesc="Custom内容拦截 & Tag内容拦截";
+AdblockFeatureDesc="编写自定义过滤规则和网页广告标记";
 DownloaderFeature="下载器";
 DownloaderFeatureDesc="下载Safari浏览器中的视频";
 iCloudFeature="iCloud同步";
@@ -339,3 +339,8 @@ settings.addScriptFromUrlDesc="添加用户脚本的下载链接";
 settings.addScriptFromWebDesc="在greasyfork.org上下载用户脚本";
 settings.importFromFileDesc="安装在我手机上的用户脚本";
 NEWFOLDER="新建文件夹";
+TrustedSites="可信任站点";
+SharedRules="共享规则";
+NewSite="新建站点";
+Domain="域名";
+DomainFormatError="域名格式不正确。";

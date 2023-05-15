@@ -11,6 +11,7 @@
 
 @property (nonatomic, strong) NSString *ruleJSONPath;
 @property (nonatomic, strong) NSString *ruleTextPath;
+@property (nonatomic, strong) NSString *truestSitesPath;
 @end
 
 @implementation ContentFilterManager
@@ -35,6 +36,10 @@ static ContentFilterManager *instance = nil;
                        containerURLForSecurityApplicationGroupIdentifier:
                            @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterText"];
         
+        self.truestSitesPath = [[[[NSFileManager defaultManager]
+                       containerURLForSecurityApplicationGroupIdentifier:
+                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".TruestSites"];
+        
         if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleJSONPath]){
             [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleJSONPath
                                       withIntermediateDirectories:YES
@@ -44,6 +49,13 @@ static ContentFilterManager *instance = nil;
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleTextPath]){
             [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleTextPath
+                                      withIntermediateDirectories:YES
+                                                       attributes:nil
+                                                            error:nil];
+        }
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:self.truestSitesPath]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:self.truestSitesPath
                                       withIntermediateDirectories:YES
                                                        attributes:nil
                                                             error:nil];
@@ -140,6 +152,18 @@ static ContentFilterManager *instance = nil;
 - (NSURL *)ruleJSONURLOfFileName:(NSString *)fileName{
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     return [NSURL fileURLWithPath:filePath];
+}
+
+- (NSArray<TruestedSite *> *)truestSites{
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    if (nil == jsonData) return @[];
+    NSError *error;
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+    if (error) return @[];
+    
+    NSArray *domains = jsonDictionary[@"trigger"][@"if-domain"];
+    return domains;
 }
 
 @end

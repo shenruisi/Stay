@@ -66,6 +66,8 @@ static CGFloat OneStageMovingLength = 50;
 @property (nonatomic, strong) _TabButton *selectedButton;
 @property (nonatomic, strong) NSLayoutConstraint *activatedLineCenterConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *activatedLineWidthConstraint;
+@property (nonatomic, strong) UIScrollView *leftContainer;
+@property (nonatomic, strong) NSLayoutConstraint *leftContainerTrailingConstraint;
 @end
 
 @implementation FCNavigationTabItem
@@ -74,25 +76,54 @@ static CGFloat OneStageMovingLength = 50;
     if (self = [super init]){
         self.backgroundColor = [UIColor clearColor];
         [self line];
+        [self leftContainer];
         [self activatedLine];
     }
     
     return self;
 }
 
+- (UIScrollView *)leftContainer{
+    if (nil == _leftContainer){
+        _leftContainer = [[UIScrollView alloc] init];
+        _leftContainer.showsHorizontalScrollIndicator = NO;
+        _leftContainer.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:_leftContainer];
+        self.leftContainerTrailingConstraint = [_leftContainer.trailingAnchor constraintEqualToAnchor:self.trailingAnchor];
+        [NSLayoutConstraint activateConstraints:@[
+            [_leftContainer.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+            self.leftContainerTrailingConstraint,
+            [_leftContainer.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [_leftContainer.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
+        ]];
+    }
+    
+    return _leftContainer;
+}
+
+- (void)safeAreaInsetsDidChange{
+    UIEdgeInsets edge = _leftContainer.safeAreaInsets;
+    NSLog(@"edge %@",NSStringFromUIEdgeInsets(edge));
+}
+
 - (void)alphaSubItems:(CGFloat)alpha{
     self.activatedLine.alpha = alpha;
     
+    for (UIView *view in self.leftContainer.subviews){
+        if (view.tag == FCNavigationTabItemLeft){
+            view.alpha = alpha;
+        }
+    }
+    
     for (UIView *view in self.subviews){
-        if (view.tag == FCNavigationTabItemLeft
-            || view.tag == FCNavigationTabItemRight){
+        if (view.tag == FCNavigationTabItemRight){
             view.alpha = alpha;
         }
     }
 }
 
 - (void)activeItem:(FCTabButtonItem *)targetItem{
-    for (UIView *view in self.subviews){
+    for (UIView *view in self.leftContainer.subviews){
         if (view.tag == FCNavigationTabItemLeft){
             _TabButton *button = (_TabButton *)view;
             if (button.item == targetItem){
@@ -103,7 +134,7 @@ static CGFloat OneStageMovingLength = 50;
 }
 
 - (void)setLeftTabButtonItems:(NSArray<FCTabButtonItem *> *)leftTabButtonItems{
-    for (UIView *view in self.subviews){
+    for (UIView *view in self.leftContainer.subviews){
         if (view.tag == FCNavigationTabItemLeft){
             [view removeFromSuperview];
         }
@@ -112,6 +143,8 @@ static CGFloat OneStageMovingLength = 50;
     _leftTabButtonItems = leftTabButtonItems;
     
     _TabButton *prevButton;
+    
+    NSUInteger width = 0;
     for (NSUInteger i = 0; i < _leftTabButtonItems.count; i++){
         FCTabButtonItem *item = [_leftTabButtonItems objectAtIndex:i];
         CGRect rect = [item.title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, FCStyle.headlineBold.pointSize)
@@ -126,23 +159,27 @@ static CGFloat OneStageMovingLength = 50;
         button.tag = FCNavigationTabItemLeft;
         [button addTarget:self
                    action:@selector(leftTabButtonItemDidClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:button];
+        [self.leftContainer addSubview:button];
         
         if (!prevButton){
             [NSLayoutConstraint activateConstraints:@[
-                [button.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:15],
-                [button.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-12],
+                [button.leadingAnchor constraintEqualToAnchor:self.leftContainer.leadingAnchor constant:15],
+                [button.bottomAnchor constraintEqualToAnchor:self.leftContainer.safeAreaLayoutGuide.bottomAnchor constant:-12],
                 [button.heightAnchor constraintEqualToConstant:rect.size.height],
                 [button.widthAnchor constraintEqualToConstant:rect.size.width + TabItemExtendLength]
             ]];
+            
+            width += 15 + rect.size.width + TabItemExtendLength;
         }
         else{
             [NSLayoutConstraint activateConstraints:@[
                 [button.leadingAnchor constraintEqualToAnchor:prevButton.trailingAnchor constant:10],
-                [button.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-12],
+                [button.bottomAnchor constraintEqualToAnchor:self.leftContainer.safeAreaLayoutGuide.bottomAnchor constant:-12],
                 [button.heightAnchor constraintEqualToConstant:rect.size.height],
                 [button.widthAnchor constraintEqualToConstant:rect.size.width + TabItemExtendLength]
             ]];
+            
+            width += 10 + rect.size.width + TabItemExtendLength;
         }
         
         if (i == 0){
@@ -154,7 +191,7 @@ static CGFloat OneStageMovingLength = 50;
             [self.activatedLineWidthConstraint setActive:YES];
             
         }
-        
+        self.leftContainer.contentSize = CGSizeMake(width + 15, 44);
         prevButton = button;
     }
     
@@ -188,6 +225,7 @@ static CGFloat OneStageMovingLength = 50;
         
         [UIView animateWithDuration:0.1 animations:^{
             self.activatedLineWidthConstraint.constant = MIN(40, button.frame.size.width - TabItemExtendLength);
+            [self.leftContainer setContentOffset:CGPointMake(MAX(0,button.right - self.width + 15), 0)];
             [self layoutIfNeeded];
         } completion:^(BOOL finished) {
             
@@ -206,6 +244,7 @@ static CGFloat OneStageMovingLength = 50;
     _rightTabButtonItems = rightTabButtonItems;
     
     _TabButton *prevButton;
+    NSUInteger width = 0;
     for (NSInteger i = _rightTabButtonItems.count - 1; i >= 0; i--){
         FCTabButtonItem *item = [_rightTabButtonItems objectAtIndex:i];
         CGRect rect = CGRectMake(0, 0, 23, 23);
@@ -226,6 +265,7 @@ static CGFloat OneStageMovingLength = 50;
                 [button.heightAnchor constraintEqualToConstant:rect.size.height],
                 [button.widthAnchor constraintEqualToConstant:rect.size.width + TabItemExtendLength]
             ]];
+            width += 15 + rect.size.width + TabItemExtendLength;
         }
         else{
             [NSLayoutConstraint activateConstraints:@[
@@ -234,10 +274,15 @@ static CGFloat OneStageMovingLength = 50;
                 [button.heightAnchor constraintEqualToConstant:rect.size.height],
                 [button.widthAnchor constraintEqualToConstant:rect.size.width + TabItemExtendLength]
             ]];
+            width += 10 + rect.size.width + TabItemExtendLength;
         }
     
         prevButton = button;
     }
+    
+    [self.leftContainerTrailingConstraint setActive:NO];
+    self.leftContainerTrailingConstraint = [self.leftContainer.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-width];
+    [self.leftContainerTrailingConstraint setActive:YES];
     
     [self layoutIfNeeded];
     
@@ -278,10 +323,10 @@ static CGFloat OneStageMovingLength = 50;
         _activatedLine.translatesAutoresizingMaskIntoConstraints = NO;
         _activatedLine.layer.cornerRadius = 2;
         _activatedLine.backgroundColor = FCStyle.accent;
-        [self addSubview:_activatedLine];
+        [self.leftContainer addSubview:_activatedLine];
         
         [NSLayoutConstraint activateConstraints:@[
-            [_activatedLine.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+            [_activatedLine.bottomAnchor constraintEqualToAnchor:self.leftContainer.safeAreaLayoutGuide.bottomAnchor],
             [_activatedLine.heightAnchor constraintEqualToConstant:2]
         ]];
     }

@@ -22,6 +22,9 @@
 #import "SharedStorageManager.h"
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
+#import "TruestedSite.h"
+#import "TrustedSitesTableViewHeadCell.h"
+#import "AddTruestedSiteSlideController.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -31,12 +34,19 @@
 @property (nonatomic, strong) UIBarButtonItem *addItem;
 @property (nonatomic, strong) FCTabButtonItem *activatedTabItem;
 @property (nonatomic, strong) FCTabButtonItem *stoppedTabItem;
+@property (nonatomic, strong) FCTabButtonItem *trustedSitesTabItem;
+@property (nonatomic, strong) FCTabButtonItem *sharedRulesTabItem;
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UITableView *trustedSitesTableView;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *activatedSource;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *stoppedSource;
+@property (nonatomic, strong) NSMutableArray<TruestedSite *> *truestedSitesSource;
 @property (nonatomic, strong) NSArray<ContentFilter *> *selectedDataSource;
 @property (nonatomic, strong) UpgradeSlideController *upgradeSlideController;
+@property (nonatomic, strong) FCTableViewHeadMenuItem *truestedSiteMenuItem;
+
+@property (nonatomic, strong) AddTruestedSiteSlideController *addTruestedSiteSlideController;
 @end
 
 @implementation AdBlockViewController
@@ -75,8 +85,11 @@
     [super viewDidLoad];
     self.leftTitle = NSLocalizedString(@"AdBlock", @"");
     self.enableTabItem = YES;
-//    self.enableSearchTabItem = YES;
-    self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
+    self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem,
+                                                  self.stoppedTabItem,
+                                                  self.trustedSitesTabItem,
+                                                  self.sharedRulesTabItem
+    ];
     [self tableView];
     
     [self.navigationTabItem activeItem:self.activatedTabItem];
@@ -180,51 +193,8 @@
             [self.stoppedSource addObject:contentFilter];
         }
     }
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
-    ContentFilterTableVewCell<ContentFilter *> *cell = [tableView dequeueReusableCellWithIdentifier:[ContentFilterTableVewCell identifier]];
-    if (nil == cell){
-        cell = [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-    }
-    cell.cer = self;
-    cell.element = contentFilter;
-    cell.tapAction = ^(id element) {
-        ContentFilter *contentFilter = (ContentFilter *)element;
-        if (contentFilter.type == ContentFilterTypeCustom
-            ||contentFilter.type == ContentFilterTypeTag){
-            if ([[FCStore shared] getPlan:NO] == FCPlan.None){
-                if (self.upgradeSlideController){
-                    [self.upgradeSlideController dismiss];
-                }
-                
-                self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
-                [self.upgradeSlideController show];
-                return;
-            }
-        }
-        
-        AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
-        cer.contentFilter = contentFilter;
-        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-            && self.splitViewController.viewControllers.count >= 2){
-            [[QuickAccess secondaryController] pushViewController:cer];
-        }
-        else{
-            [self.navigationController pushViewController:cer animated:YES];
-        }
-        
-       
-    };
     
-    __weak AdBlockViewController *weakSelf = (AdBlockViewController *)self;
-    cell.doubleTapAction = ^(id element) {
-        ContentFilter *contentFilter = (ContentFilter *)element;
-        [weakSelf updateStatus:contentFilter];
-    };
-    
-    return cell;
+    self.truestedSitesSource = [[NSMutableArray alloc] initWithArray:[[ContentFilterManager shared] truestSites]];
 }
 
 - (void)updateStatus:(ContentFilter *)contentFilter{
@@ -244,13 +214,95 @@
     }
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (_tableView == tableView){
+        ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
+        ContentFilterTableVewCell<ContentFilter *> *cell = [tableView dequeueReusableCellWithIdentifier:[ContentFilterTableVewCell identifier]];
+        if (nil == cell){
+            cell = [[ContentFilterTableVewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        }
+        cell.cer = self;
+        cell.element = contentFilter;
+        cell.tapAction = ^(id element) {
+            ContentFilter *contentFilter = (ContentFilter *)element;
+            if (contentFilter.type == ContentFilterTypeCustom
+                ||contentFilter.type == ContentFilterTypeTag){
+                if ([[FCStore shared] getPlan:NO] == FCPlan.None){
+                    if (self.upgradeSlideController){
+                        [self.upgradeSlideController dismiss];
+                    }
+                    
+                    self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
+                    [self.upgradeSlideController show];
+                    return;
+                }
+            }
+            
+            AdBlockDetailViewController *cer = [[AdBlockDetailViewController alloc] init];
+            cer.contentFilter = contentFilter;
+            if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                && self.splitViewController.viewControllers.count >= 2){
+                [[QuickAccess secondaryController] pushViewController:cer];
+            }
+            else{
+                [self.navigationController pushViewController:cer animated:YES];
+            }
+            
+           
+        };
+        
+        __weak AdBlockViewController *weakSelf = (AdBlockViewController *)self;
+        cell.doubleTapAction = ^(id element) {
+            ContentFilter *contentFilter = (ContentFilter *)element;
+            [weakSelf updateStatus:contentFilter];
+        };
+        
+        return cell;
+    }
+    else if (_trustedSitesTableView == tableView){
+        if (0 == indexPath.row){
+            TrustedSitesTableViewHeadCell *cell = [[TrustedSitesTableViewHeadCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+            cell.menus = @[self.truestedSiteMenuItem];
+            return cell;
+        }
+        else{
+            return nil;
+        }
+        
+    }
+    else{
+        return [[UITableViewCell alloc] init];
+    }
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
-    return (contentFilter.enable ? 70 : 90) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+    if (_tableView == tableView){
+        ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
+        return (contentFilter.enable ? 70 : 90) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+    }
+    else if (_trustedSitesTableView == tableView){
+        if (0 == indexPath.row){
+            return 40 + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+        }
+        else{
+            return 45 + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+        }
+    }
+    else{
+        return 0;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.selectedDataSource.count;
+    if (_tableView == tableView){
+        return self.selectedDataSource.count;
+    }
+    else if (_trustedSitesTableView == tableView){
+        return self.truestedSitesSource.count + 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -362,6 +414,24 @@
     return _stoppedTabItem;
 }
 
+- (FCTabButtonItem *)trustedSitesTabItem{
+    if (nil == _trustedSitesTabItem){
+        _trustedSitesTabItem = [[FCTabButtonItem alloc] init];
+        _trustedSitesTabItem.title = NSLocalizedString(@"TrustedSites", @"");
+    }
+    
+    return _trustedSitesTabItem;
+}
+
+- (FCTabButtonItem *)sharedRulesTabItem{
+    if (nil == _sharedRulesTabItem){
+        _sharedRulesTabItem = [[FCTabButtonItem alloc] init];
+        _sharedRulesTabItem.title = NSLocalizedString(@"SharedRules", @"");
+    }
+    
+    return _sharedRulesTabItem;
+}
+
 - (void)addAction:(id)sender{
     
 }
@@ -382,56 +452,66 @@
 //}
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
-    NSMutableArray *newActivatedSource = [[NSMutableArray alloc] init];
-    NSMutableArray *newStoppedSource = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < self.activatedSource.count; i++){
-        ContentFilter *contentFilter = self.activatedSource[i];
-        if (contentFilter.active){
-            [newActivatedSource addObject:contentFilter];
+    if (item == self.activatedTabItem || item == self.stoppedTabItem){
+        NSMutableArray *newActivatedSource = [[NSMutableArray alloc] init];
+        NSMutableArray *newStoppedSource = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < self.activatedSource.count; i++){
+            ContentFilter *contentFilter = self.activatedSource[i];
+            if (contentFilter.active){
+                [newActivatedSource addObject:contentFilter];
+            }
+            else{
+                [newStoppedSource addObject:contentFilter];
+            }
         }
-        else{
-            [newStoppedSource addObject:contentFilter];
+        
+        for (int i = 0; i < self.stoppedSource.count; i++){
+            ContentFilter *contentFilter = self.stoppedSource[i];
+            if (contentFilter.active){
+                [newActivatedSource addObject:contentFilter];
+            }
+            else{
+                [newStoppedSource addObject:contentFilter];
+            }
+        }
+        
+        [newActivatedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
+            if (obj1.sort < obj2.sort) return NSOrderedAscending;
+            else if (obj1.sort > obj2.sort) return NSOrderedDescending;
+            return NSOrderedSame;
+        }];
+        
+        [newStoppedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
+            if (obj1.sort < obj2.sort) return NSOrderedAscending;
+            else if (obj1.sort > obj2.sort) return NSOrderedDescending;
+            return NSOrderedSame;
+        }];
+        
+        self.activatedSource = newActivatedSource;
+        self.stoppedSource = newStoppedSource;
+        
+        if (item == self.activatedTabItem){
+            self.selectedDataSource = self.activatedSource;
+        }
+        else if (item == self.stoppedTabItem){
+            self.selectedDataSource = self.stoppedSource;
+        }
+        
+        _trustedSitesTableView.hidden = YES;
+        self.tableView.hidden = NO;
+        if (!refresh){
+            [self.tableView reloadData];
         }
     }
     
-    for (int i = 0; i < self.stoppedSource.count; i++){
-        ContentFilter *contentFilter = self.stoppedSource[i];
-        if (contentFilter.active){
-            [newActivatedSource addObject:contentFilter];
-        }
-        else{
-            [newStoppedSource addObject:contentFilter];
+    else if (item == self.trustedSitesTabItem){
+        _tableView.hidden = YES;
+        self.trustedSitesTableView.hidden = NO;
+        if (!refresh){
+            [self.trustedSitesTableView reloadData];
         }
     }
-    
-    [newActivatedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
-        if (obj1.sort < obj2.sort) return NSOrderedAscending;
-        else if (obj1.sort > obj2.sort) return NSOrderedDescending;
-        return NSOrderedSame;
-    }];
-    
-    [newStoppedSource sortUsingComparator:^NSComparisonResult(ContentFilter *obj1, ContentFilter *obj2) {
-        if (obj1.sort < obj2.sort) return NSOrderedAscending;
-        else if (obj1.sort > obj2.sort) return NSOrderedDescending;
-        return NSOrderedSame;
-    }];
-    
-    self.activatedSource = newActivatedSource;
-    self.stoppedSource = newStoppedSource;
-    
-    if (item == self.activatedTabItem){
-        self.selectedDataSource = self.activatedSource;
-    }
-    else{
-        self.selectedDataSource = self.stoppedSource;
-    }
-    
-    if (!refresh){
-        [self.tableView reloadData];
-    }
-    
-    
 }
 
 - (NSMutableArray<ContentFilter *> *)activatedSource{
@@ -476,6 +556,50 @@
     }
     
     return _tableView;
+}
+
+- (UITableView *)trustedSitesTableView{
+    if (nil == _trustedSitesTableView){
+        _trustedSitesTableView = [[UITableView alloc] init];
+        _trustedSitesTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _trustedSitesTableView.delegate = self;
+        _trustedSitesTableView.dataSource = self;
+        _trustedSitesTableView.showsVerticalScrollIndicator = YES;
+        _trustedSitesTableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        //TODO:
+        if (@available(iOS 15.0, *)){
+            _trustedSitesTableView.sectionHeaderTopPadding = 0;
+        }
+        _trustedSitesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _trustedSitesTableView.sectionFooterHeight = 0;
+        _trustedSitesTableView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:_trustedSitesTableView];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_trustedSitesTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_trustedSitesTableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_trustedSitesTableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_trustedSitesTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
+    }
+    
+    return _trustedSitesTableView;
+}
+
+- (FCTableViewHeadMenuItem *)truestedSiteMenuItem{
+    if (nil == _truestedSiteMenuItem){
+        _truestedSiteMenuItem = [[FCTableViewHeadMenuItem alloc] init];
+        _truestedSiteMenuItem.title = NSLocalizedString(@"NewSite", @"");
+        _truestedSiteMenuItem.image = [ImageHelper sfNamed:@"note.text.badge.plus" font:FCStyle.body color:FCStyle.accent];
+        __weak AdBlockViewController *weakSelf = self;
+        _truestedSiteMenuItem.action = ^{
+            weakSelf.addTruestedSiteSlideController = [[AddTruestedSiteSlideController alloc] init];
+            weakSelf.addTruestedSiteSlideController.baseCer = weakSelf;
+            [weakSelf.addTruestedSiteSlideController show];
+        };
+    }
+    
+    return _truestedSiteMenuItem;
 }
 
 - (UpgradeSlideController *)upgradeSlideController{
