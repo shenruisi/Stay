@@ -68,6 +68,9 @@ typedef enum {
 @property (nonatomic, strong) NSString *placeholder;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, assign) UIKeyboardType keyboardType;
+@property(nonatomic) UITextAutocapitalizationType autocapitalizationType; 
+@property(nonatomic) UITextAutocorrectionType autocorrectionType;
+@property(nonatomic) UITextSpellCheckingType spellCheckingType;
 @property (nonatomic, weak) UITextField *textField;
 @property (nonatomic, copy) void(^textChanged)(NSString *text);
 @end

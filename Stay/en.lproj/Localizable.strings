@@ -343,7 +343,7 @@ TrustedSites="Trusted Sites";
 SharedRules="Shared Rules";
 NewSite="New Site";
 Domain="Domain";
-DomainFormatError="The domain name format is incorrect."
+DomainFormatError="The domain name format is incorrect.";
 
 
 

@@ -146,6 +146,9 @@
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         ModalItemDataEntityInput *input = [[ModalItemDataEntityInput alloc] init];
         input.placeholder = NSLocalizedString(@"Domain", @"");
+        input.autocorrectionType = UITextAutocorrectionTypeNo;
+        input.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        input.spellCheckingType = UITextSpellCheckingTypeNo;
         _domianElement.generalEntity = general;
         _domianElement.inputEntity = input;
         __weak AddTruestedSiteModalViewController *weakSelf = self;
@@ -191,6 +194,7 @@
         if (n > 0){
             NSRange range = [results[0] rangeAtIndex:0];
             if (NSMaxRange(range) == text.length){
+                [self.navigationController.slideController dismiss];
                 return;
             }
         }

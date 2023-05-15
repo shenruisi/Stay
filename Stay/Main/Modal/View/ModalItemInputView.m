@@ -42,6 +42,9 @@
         };
         _textField.keyboardType = self.element.inputEntity.keyboardType;
         _textField.placeholder = self.element.inputEntity.placeholder;
+        _textField.autocorrectionType = self.element.inputEntity.autocorrectionType;
+        _textField.autocapitalizationType = self.element.inputEntity.autocapitalizationType;
+        _textField.spellCheckingType = self.element.inputEntity.spellCheckingType;
         _textField.textColor = self.element.enable ? FCStyle.fcBlack : FCStyle.fcSeparator;
         _textField.backgroundColor = UIColor.clearColor;
         _textField.delegate = self;
