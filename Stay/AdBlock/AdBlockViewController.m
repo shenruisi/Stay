@@ -28,6 +28,7 @@
 #import "AddTruestedSiteSlideController.h"
 #import "AddTruestedSiteModalViewController.h"
 #import "UIColor+Convert.h"
+#import <WebKit/WebKit.h>
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -42,6 +43,7 @@
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UITableView *trustedSitesTableView;
+@property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *activatedSource;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *stoppedSource;
 @property (nonatomic, strong) NSMutableArray<TruestedSite *> *truestedSitesSource;
@@ -588,18 +590,25 @@
         }
         
         _trustedSitesTableView.hidden = YES;
+        _webView.hidden = YES;
         self.tableView.hidden = NO;
         if (!refresh){
             [self.tableView reloadData];
         }
     }
-    
     else if (item == self.trustedSitesTabItem){
         _tableView.hidden = YES;
+        _webView.hidden = YES;
         self.trustedSitesTableView.hidden = NO;
         if (!refresh){
             [self.trustedSitesTableView reloadData];
         }
+    }
+    else if (item == self.sharedRulesTabItem){
+        _tableView.hidden = YES;
+        _trustedSitesTableView.hidden = YES;
+        self.webView.hidden = NO;
+        [self reloadSharedRules];
     }
 }
 
@@ -673,6 +682,37 @@
     }
     
     return _trustedSitesTableView;
+}
+
+- (void)reloadSharedRules{
+    if (_webView){
+        NSURL *url = [NSURL URLWithString:@"https://www.craft.do/s/S24KRmdGZ9RuDw"];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        [_webView loadRequest:request];
+    }
+}
+
+- (WKWebView *)webView{
+    if (nil == _webView){
+        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+        WKPreferences *preferences = [[WKPreferences alloc] init];
+        preferences.javaScriptEnabled = true;
+        [preferences setValue:@YES forKey:@"allowFileAccessFromFileURLs"];
+        [config setPreferences:preferences];
+        config.applicationNameForUserAgent = @"Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1";
+        _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
+        _webView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:_webView];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_webView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_webView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
+    }
+    
+    return _webView;
 }
 
 - (FCTableViewHeadMenuItem *)truestedSiteMenuItem{
