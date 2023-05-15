@@ -342,3 +342,5 @@ SharedRules="共享規則";
 NewSite="新建站點";
 Domain="域名";
 DomainFormatError="域名格式不正確。";
+TrustedSiteDeleteAlert="你確認要刪除該信任站點嗎？";
+DomainExistError="該域名已存在。";

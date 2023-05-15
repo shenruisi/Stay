@@ -33,6 +33,7 @@
 #import "SYDownloadSlideController.h"
 #import "SYTaskTableViewCell.h"
 #import "SYDownloadedViewCell.h"
+#import "UIColor+Convert.h"
 
 static CGFloat kMacToolbar = 50.0;
 
@@ -757,7 +758,7 @@ UIDocumentPickerDelegate
                         if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
                             for (UIView *targetView in buttonView.subviews){
                                 if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
-                                    targetView.backgroundColor = [UIColor clearColor];
+                                    targetView.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
                                 }
                             }
                         }

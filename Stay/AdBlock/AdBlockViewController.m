@@ -372,7 +372,7 @@
             
         }];
         reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
-        reloadAction.backgroundColor = [UIColor clearColor];
+        reloadAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         if (isActivatedSelected){
             [actions addObject:reloadAction];
         }
@@ -382,7 +382,7 @@
             completionHandler(YES);
         }];
         activeOrStopAction.image = [ImageHelper sfNamed: isActivatedSelected ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
-        activeOrStopAction.backgroundColor = [UIColor clearColor];
+        activeOrStopAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         [actions addObject:activeOrStopAction];
         
         UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
@@ -390,18 +390,43 @@
         return configuration;
     }
     else if (_trustedSitesTableView == tableView){
-        NSMutableArray *actions = [[NSMutableArray alloc] init];
-        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-//            [cell doubleTap:cell.fcContentView.center];
-            completionHandler(YES);
-        }];
-        deleteAction.image = [ImageHelper sfNamed:@"trash" font:FCStyle.headline color:UIColor.redColor];
-        deleteAction.backgroundColor = [UIColor clearColor];
-        [actions addObject:deleteAction];
-        
-        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
-        
-        return configuration;
+        if (0 == indexPath.row){
+            return nil;
+        }
+        else{
+            TruestedSite *site = self.truestedSitesSource[indexPath.row - 1];
+            NSMutableArray *actions = [[NSMutableArray alloc] init];
+            UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock",@"")
+                                                                               message:NSLocalizedString(@"TrustedSiteDeleteAlert", @"")
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    [[ContentFilterManager shared] deleteTruestSiteWithDomain:site.domain];
+                    self.truestedSitesSource = nil;
+                    [self.trustedSitesTableView reloadData];
+                    completionHandler(YES);
+                }];
+                [alert addAction:confirm];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                     style:UIAlertActionStyleCancel
+                     handler:^(UIAlertAction * _Nonnull action) {
+                    completionHandler(YES);
+                 }];
+                 [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+                
+            }];
+            deleteAction.image = [ImageHelper sfNamed:@"trash" font:FCStyle.headline color:UIColor.redColor];
+            deleteAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+            [actions addObject:deleteAction];
+            
+            UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
+            
+            return configuration;
+        }
     }
     else{
         return nil;

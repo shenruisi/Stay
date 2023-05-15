@@ -344,8 +344,8 @@ SharedRules="Shared Rules";
 NewSite="New Site";
 Domain="Domain";
 DomainFormatError="The domain name format is incorrect.";
-
-
+TrustedSiteDeleteAlert="Are you sure you want to delete this trusted site?";
+DomainExistError="This domain name already exists.";
 
 
 

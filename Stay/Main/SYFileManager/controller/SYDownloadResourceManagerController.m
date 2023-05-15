@@ -25,6 +25,8 @@
 #else
 #import "Stay-Swift.h"
 #endif
+#import "UIColor+Convert.h"
+
 @interface SYDownloadResourceManagerController ()<
  UITableViewDelegate,
  UITableViewDataSource,
@@ -100,7 +102,7 @@
                         if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
                             for (UIView *targetView in buttonView.subviews){
                                 if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
-                                    targetView.backgroundColor = [UIColor clearColor];
+                                    targetView.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
                                 }
                             }
                         }

@@ -172,7 +172,7 @@ static ContentFilterManager *instance = nil;
     return ret;
 }
 
-- (void)addTruestSite:(NSString *)truestSite error:(NSError **)error{
+- (void)addTruestSiteWithDomain:(NSString *)domain error:(NSError **)error{
     NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     NSMutableDictionary *dic;
@@ -180,7 +180,7 @@ static ContentFilterManager *instance = nil;
         dic = [NSMutableDictionary dictionaryWithDictionary:@{
             @"trigger" : @{
                 @"url-filter" : @".*",
-                @"if-domain" : @[truestSite]
+                @"if-domain" : @[domain]
             },
             @"action" : @{
                 @"type" : @"ignore-previous-rules"
@@ -191,12 +191,48 @@ static ContentFilterManager *instance = nil;
         dic = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
         if (error) return;
         NSMutableArray *existDomains = [[NSMutableArray alloc] initWithArray:dic[@"trigger"][@"if-domian"]];
-        [existDomains addObject:truestSite];
+        [existDomains addObject:domain];
         dic[@"trigger"][@"if-domian"] = existDomains;
     }
     
     NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:error];
     if (error) return;
+    [newData writeToFile:filePath atomically:YES];
+}
+
+- (BOOL)existTruestSiteWithDomain:(NSString *)domain{
+    NSArray<TruestedSite *> *truestSites = [self truestSites];
+    for (TruestedSite *truestSite in truestSites){
+        if ([truestSite.domain isEqualToString:domain]){
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (void)deleteTruestSiteWithDomain:(NSString *)domain{
+    NSMutableArray<TruestedSite *> *truestSites = [[NSMutableArray alloc] initWithArray:[self truestSites]];
+    NSMutableArray *domains = [[NSMutableArray alloc] init];
+    for (int i = 0; i < truestSites.count; i++){
+        TruestedSite *truestSite = truestSites[i];
+        if (![truestSite.domain isEqualToString:domain]){
+            [domains addObject:truestSite.domain];
+        }
+    }
+    
+    NSDictionary *dic = @{
+        @"trigger" : @{
+            @"url-filter" : @".*",
+            @"if-domain" : domains
+        },
+        @"action" : @{
+            @"type" : @"ignore-previous-rules"
+        }
+    };
+    
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:nil];
     [newData writeToFile:filePath atomically:YES];
 }
 

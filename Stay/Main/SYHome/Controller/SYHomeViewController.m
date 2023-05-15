@@ -64,6 +64,7 @@
 //#import <Bugsnag/Bugsnag.h>
 
 #import "WelcomeSlideController.h"
+#import "UIColor+Convert.h"
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -1361,7 +1362,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                         if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
                             for (UIView *targetView in buttonView.subviews){
                                 if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
-                                    targetView.backgroundColor = [UIColor clearColor];
+                                    targetView.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
                                 }
                             }
                         }

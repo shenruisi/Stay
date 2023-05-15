@@ -197,7 +197,21 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
         if (n > 0){
             NSRange range = [results[0] rangeAtIndex:0];
             if (NSMaxRange(range) == text.length){
-                [[ContentFilterManager shared] addTruestSite:text error:nil];
+                
+                if ([[ContentFilterManager shared] existTruestSiteWithDomain:text]){
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
+                                                                                   message:NSLocalizedString(@"DomainExistError", @"")
+                                                                            preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction * _Nonnull action) {
+                        }];
+                    [alert addAction:confirm];
+                    [self.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
+                    return;
+                }
+                
+                [[ContentFilterManager shared] addTruestSiteWithDomain:text error:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:TruestedSiteDidAddNotification object:nil];
                 [self.navigationController.slideController dismiss];
                 return;
