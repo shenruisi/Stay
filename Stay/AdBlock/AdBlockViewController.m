@@ -112,6 +112,7 @@
 
 - (void)truestedSiteDidAddHandler:(NSNotification *)note{
     if (_trustedSitesTableView){
+        self.truestedSitesSource = nil;
         [self.trustedSitesTableView reloadData];
     }
 }

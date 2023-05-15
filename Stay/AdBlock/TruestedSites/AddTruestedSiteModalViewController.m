@@ -23,7 +23,7 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
-@property (nonatomic, strong) ModalItemElement *domianElement;
+@property (nonatomic, strong) ModalItemElement *domainElement;
 @property (nonatomic, strong) FCButton *addButton;
 @end
 
@@ -78,7 +78,7 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
         _dataSource = @[
             @{
                 @"sectionElement" : [ModalSectionElement ofTitle:NSLocalizedString(@"Domain", @"")],
-                @"itemElements" : @[self.domianElement]
+                @"itemElements" : @[self.domainElement]
             },
         ];
     }
@@ -143,19 +143,19 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
 }
 
 
-- (ModalItemElement *)domianElement{
-    if (nil == _domianElement){
-        _domianElement = [[ModalItemElement alloc] init];
+- (ModalItemElement *)domainElement{
+    if (nil == _domainElement){
+        _domainElement = [[ModalItemElement alloc] init];
         ModalItemDataEntityGeneral *general = [[ModalItemDataEntityGeneral alloc] init];
         ModalItemDataEntityInput *input = [[ModalItemDataEntityInput alloc] init];
         input.placeholder = NSLocalizedString(@"Domain", @"");
         input.autocorrectionType = UITextAutocorrectionTypeNo;
         input.autocapitalizationType = UITextAutocapitalizationTypeNone;
         input.spellCheckingType = UITextSpellCheckingTypeNo;
-        _domianElement.generalEntity = general;
-        _domianElement.inputEntity = input;
+        _domainElement.generalEntity = general;
+        _domainElement.inputEntity = input;
         __weak AddTruestedSiteModalViewController *weakSelf = self;
-        _domianElement.inputEntity.textChanged = ^(NSString * _Nonnull text) {
+        _domainElement.inputEntity.textChanged = ^(NSString * _Nonnull text) {
             if (text.length > 0){
                 [weakSelf.addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Add", @"")
                                                                         attributes:@{
@@ -177,15 +177,15 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
                 weakSelf.addButton.layer.borderWidth = 1;
             }
         };
-        _domianElement.renderMode = ModalItemElementRenderModeSingle;
-        _domianElement.type = ModalItemElementTypeInput;
+        _domainElement.renderMode = ModalItemElementRenderModeSingle;
+        _domainElement.type = ModalItemElementTypeInput;
     }
     
-    return _domianElement;
+    return _domainElement;
 }
 
 - (void)addAction:(id)sender{
-    NSString *text = self.domianElement.inputEntity.textField.text;
+    NSString *text = self.domainElement.inputEntity.textField.text;
     if (0 == text.length){
         return;
     }

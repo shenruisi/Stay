@@ -167,7 +167,7 @@ static ContentFilterManager *instance = nil;
 }
 
 - (NSArray<TruestedSite *> *)truestSites{
-    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     if (nil == jsonData) return @[];
     NSError *error;
@@ -185,7 +185,7 @@ static ContentFilterManager *instance = nil;
 }
 
 - (void)addTruestSiteWithDomain:(NSString *)domain error:(NSError **)error{
-    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     NSMutableDictionary *dic;
     if (nil == jsonData){
@@ -202,9 +202,9 @@ static ContentFilterManager *instance = nil;
     else{
         dic = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
         if (error) return;
-        NSMutableArray *existDomains = [[NSMutableArray alloc] initWithArray:dic[@"trigger"][@"if-domian"]];
+        NSMutableArray *existDomains = [[NSMutableArray alloc] initWithArray:dic[@"trigger"][@"if-domain"]];
         [existDomains addObject:domain];
-        dic[@"trigger"][@"if-domian"] = existDomains;
+        dic[@"trigger"][@"if-domain"] = existDomains;
     }
     
     NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:error];
@@ -233,19 +233,23 @@ static ContentFilterManager *instance = nil;
         }
     }
     
-    NSDictionary *dic = @{
-        @"trigger" : @{
-            @"url-filter" : @".*",
-            @"if-domain" : domains
-        },
-        @"action" : @{
-            @"type" : @"ignore-previous-rules"
-        }
-    };
-    
-    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
-    NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:nil];
-    [newData writeToFile:filePath atomically:YES];
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule"];
+    if (domains.count > 0){
+        NSDictionary *dic = @{
+            @"trigger" : @{
+                @"url-filter" : @".*",
+                @"if-domain" : domains
+            },
+            @"action" : @{
+                @"type" : @"ignore-previous-rules"
+            }
+        };
+        NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:nil];
+        [newData writeToFile:filePath atomically:YES];
+    }
+    else{
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+    }
 }
 
 - (BOOL)ruleJSONStopped:(NSString *)fileName{

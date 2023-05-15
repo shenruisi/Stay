@@ -217,6 +217,23 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                     @{NSLocalizedDescriptionKey:NSLocalizedString(@"RuleMaxCountError", @"")}
                 ];
             }
+            
+            NSArray<TruestedSite *> *truestSites = [[ContentFilterManager shared] truestSites];
+            NSMutableArray *domains = [[NSMutableArray alloc] init];
+            for (TruestedSite *truestedSite in truestSites){
+                [domains addObject:truestedSite.domain];
+            }
+            
+            [jsonRules addObject:@{
+                @"trigger" : @{
+                    @"url-filter" : @".*",
+                    @"if-domain" : domains
+                },
+                @"action" : @{
+                    @"type" : @"ignore-previous-rules"
+                }
+            }];
+            
             NSData *data = [NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error];
             
 //            NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
