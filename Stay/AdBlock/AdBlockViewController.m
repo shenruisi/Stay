@@ -115,6 +115,21 @@
         self.truestedSitesSource = nil;
         [self.trustedSitesTableView reloadData];
     }
+    
+    [self startHeadLoading];
+    NSUInteger totalReload = self.activatedSource.count;
+    __block NSUInteger completionCount = 0;
+    for (ContentFilter *contentFilter in  self.activatedSource){
+        [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
+            completionCount++;
+            if (completionCount == totalReload){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self stopHeadLoading];
+                });
+            }
+        }];
+    }
+    
 }
 
 - (void)onBecomeActive:(NSNotification *)note{
@@ -205,7 +220,16 @@
         }
     }
     
-    self.truestedSitesSource = [[NSMutableArray alloc] initWithArray:[[ContentFilterManager shared] truestSites]];
+    [self truestedSitesSource];
+}
+
+
+- (NSMutableArray<TruestedSite *> *)truestedSitesSource{
+    if (nil == _truestedSitesSource){
+        _truestedSitesSource = [[NSMutableArray alloc] initWithArray:[[ContentFilterManager shared] truestSites]];
+    }
+    
+    return _truestedSitesSource;
 }
 
 - (void)updateStatus:(ContentFilter *)contentFilter{
@@ -410,8 +434,7 @@
                                                                   style:UIAlertActionStyleDefault
                                                                 handler:^(UIAlertAction * _Nonnull action) {
                     [[ContentFilterManager shared] deleteTruestSiteWithDomain:site.domain];
-                    self.truestedSitesSource = nil;
-                    [self.trustedSitesTableView reloadData];
+                    [self truestedSiteDidAddHandler:nil];
                     completionHandler(YES);
                 }];
                 [alert addAction:confirm];

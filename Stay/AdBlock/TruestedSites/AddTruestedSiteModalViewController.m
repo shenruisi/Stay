@@ -205,13 +205,14 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
                     UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                                       style:UIAlertActionStyleDefault
                                                                     handler:^(UIAlertAction * _Nonnull action) {
-                        }];
+                    }];
                     [alert addAction:confirm];
                     [self.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
                     return;
                 }
                 
                 [[ContentFilterManager shared] addTruestSiteWithDomain:text error:nil];
+                
                 [[NSNotificationCenter defaultCenter] postNotificationName:TruestedSiteDidAddNotification object:nil];
                 [self.navigationController.slideController dismiss];
                 return;

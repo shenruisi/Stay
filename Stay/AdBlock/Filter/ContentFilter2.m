@@ -224,15 +224,17 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                 [domains addObject:truestedSite.domain];
             }
             
-            [jsonRules addObject:@{
-                @"trigger" : @{
-                    @"url-filter" : @".*",
-                    @"if-domain" : domains
-                },
-                @"action" : @{
-                    @"type" : @"ignore-previous-rules"
-                }
-            }];
+            if (domains.count > 0){
+                [jsonRules addObject:@{
+                    @"trigger" : @{
+                        @"url-filter" : @".*",
+                        @"if-domain" : domains
+                    },
+                    @"action" : @{
+                        @"type" : @"ignore-previous-rules"
+                    }
+                }];
+            }
             
             NSData *data = [NSJSONSerialization dataWithJSONObject:jsonRules options:NSJSONWritingWithoutEscapingSlashes error:&error];
             

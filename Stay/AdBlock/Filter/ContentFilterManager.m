@@ -167,7 +167,7 @@ static ContentFilterManager *instance = nil;
 }
 
 - (NSArray<TruestedSite *> *)truestSites{
-    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule"];
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule1"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     if (nil == jsonData) return @[];
     NSError *error;
@@ -185,11 +185,11 @@ static ContentFilterManager *instance = nil;
 }
 
 - (void)addTruestSiteWithDomain:(NSString *)domain error:(NSError **)error{
-    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule"];
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule1"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
-    NSMutableDictionary *dic;
+    NSDictionary *dic;
     if (nil == jsonData){
-        dic = [NSMutableDictionary dictionaryWithDictionary:@{
+        dic = @{
             @"trigger" : @{
                 @"url-filter" : @".*",
                 @"if-domain" : @[domain]
@@ -197,14 +197,22 @@ static ContentFilterManager *instance = nil;
             @"action" : @{
                 @"type" : @"ignore-previous-rules"
             }
-        }];
+        };
     }
     else{
-        dic = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
+        NSMutableDictionary *mutableDic = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
         if (error) return;
-        NSMutableArray *existDomains = [[NSMutableArray alloc] initWithArray:dic[@"trigger"][@"if-domain"]];
+        NSMutableArray *existDomains = [[NSMutableArray alloc] initWithArray:mutableDic[@"trigger"][@"if-domain"]];
         [existDomains addObject:domain];
-        dic[@"trigger"][@"if-domain"] = existDomains;
+        dic = @{
+            @"trigger" : @{
+                @"url-filter" : @".*",
+                @"if-domain" : existDomains
+            },
+            @"action" : @{
+                @"type" : @"ignore-previous-rules"
+            }
+        };
     }
     
     NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:error];
@@ -233,7 +241,7 @@ static ContentFilterManager *instance = nil;
         }
     }
     
-    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule"];
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule1"];
     if (domains.count > 0){
         NSDictionary *dic = @{
             @"trigger" : @{
