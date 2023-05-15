@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addTruestSiteWithDomain:(NSString *)domain error:(NSError **)error;
 - (BOOL)existTruestSiteWithDomain:(NSString *)domain;
 - (void)deleteTruestSiteWithDomain:(NSString *)domain;
+- (BOOL)ruleJSONStopped:(NSString *)fileName;
+- (void)updateRuleJSON:(NSString *)fileName status:(NSUInteger)status;
 @end
 
 NS_ASSUME_NONNULL_END

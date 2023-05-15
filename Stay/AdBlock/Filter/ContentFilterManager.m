@@ -12,6 +12,7 @@
 @property (nonatomic, strong) NSString *ruleJSONPath;
 @property (nonatomic, strong) NSString *ruleTextPath;
 @property (nonatomic, strong) NSString *truestSitesPath;
+@property (nonatomic, strong) NSString *ruleJSONStoppedPath;
 @end
 
 @implementation ContentFilterManager
@@ -40,6 +41,10 @@ static ContentFilterManager *instance = nil;
                        containerURLForSecurityApplicationGroupIdentifier:
                            @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".TruestSites"];
         
+        self.ruleJSONStoppedPath = [[[[NSFileManager defaultManager]
+                       containerURLForSecurityApplicationGroupIdentifier:
+                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterJSONStopped"];
+        
         if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleJSONPath]){
             [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleJSONPath
                                       withIntermediateDirectories:YES
@@ -56,6 +61,13 @@ static ContentFilterManager *instance = nil;
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:self.truestSitesPath]){
             [[NSFileManager defaultManager] createDirectoryAtPath:self.truestSitesPath
+                                      withIntermediateDirectories:YES
+                                                       attributes:nil
+                                                            error:nil];
+        }
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleJSONStoppedPath]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleJSONStoppedPath
                                       withIntermediateDirectories:YES
                                                        attributes:nil
                                                             error:nil];
@@ -234,6 +246,21 @@ static ContentFilterManager *instance = nil;
     NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
     NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:nil];
     [newData writeToFile:filePath atomically:YES];
+}
+
+- (BOOL)ruleJSONStopped:(NSString *)fileName{
+    NSString *filePath = [self.ruleJSONStoppedPath stringByAppendingPathComponent:fileName];
+    return [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+}
+
+- (void)updateRuleJSON:(NSString *)fileName status:(NSUInteger)status{
+    NSString *filePath = [self.ruleJSONStoppedPath stringByAppendingPathComponent:fileName];
+    if (0 == status){
+        [@"0" writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    }
+    else{
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+    }
 }
 
 @end

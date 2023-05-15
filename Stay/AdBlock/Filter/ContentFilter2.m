@@ -251,7 +251,9 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             }];
         }
     });
-    
+}
+
+- (void)stopRulesWithCompletion:(void(^)(NSError *error))completion{
     
 }
 

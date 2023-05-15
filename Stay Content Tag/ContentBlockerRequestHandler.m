@@ -16,7 +16,8 @@
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context {
     NSURL *url = [[ContentFilterManager shared] ruleJSONURLOfFileName:@"Tag.json"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]){
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]
+        || [[ContentFilterManager shared] ruleJSONStopped:@"Tag.json"]){
         url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
     }
 //    NSURL *url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
