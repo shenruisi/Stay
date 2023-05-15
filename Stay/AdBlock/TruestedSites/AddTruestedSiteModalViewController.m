@@ -12,6 +12,9 @@
 #import "ModalSectionView.h"
 #import "ModalItemViewFactory.h"
 #import "FCStyle.h"
+#import "ContentFilterManager.h"
+
+NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notification.TruestedSiteDidAddNotification";
 
 @interface AddTruestedSiteModalViewController()<
  UITableViewDelegate,
@@ -194,6 +197,8 @@
         if (n > 0){
             NSRange range = [results[0] rangeAtIndex:0];
             if (NSMaxRange(range) == text.length){
+                [[ContentFilterManager shared] addTruestSite:text error:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:TruestedSiteDidAddNotification object:nil];
                 [self.navigationController.slideController dismiss];
                 return;
             }

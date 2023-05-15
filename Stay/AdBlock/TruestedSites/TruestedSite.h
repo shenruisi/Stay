@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TruestedSite : NSObject
 
-
+@property (nonatomic, strong) NSString *domain;
 @end
 
 NS_ASSUME_NONNULL_END

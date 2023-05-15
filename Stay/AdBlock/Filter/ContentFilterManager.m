@@ -163,7 +163,41 @@ static ContentFilterManager *instance = nil;
     if (error) return @[];
     
     NSArray *domains = jsonDictionary[@"trigger"][@"if-domain"];
-    return domains;
+    NSMutableArray *ret = [[NSMutableArray alloc] init];
+    for (NSString *domain in domains){
+        TruestedSite *truestedSite = [[TruestedSite alloc] init];
+        truestedSite.domain = domain;
+        [ret addObject:truestedSite];
+    }
+    return ret;
+}
+
+- (void)addTruestSite:(NSString *)truestSite error:(NSError **)error{
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domianRule"];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    NSMutableDictionary *dic;
+    if (nil == jsonData){
+        dic = [NSMutableDictionary dictionaryWithDictionary:@{
+            @"trigger" : @{
+                @"url-filter" : @".*",
+                @"if-domain" : @[truestSite]
+            },
+            @"action" : @{
+                @"type" : @"ignore-previous-rules"
+            }
+        }];
+    }
+    else{
+        dic = [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
+        if (error) return;
+        NSMutableArray *existDomains = [[NSMutableArray alloc] initWithArray:dic[@"trigger"][@"if-domian"]];
+        [existDomains addObject:truestSite];
+        dic[@"trigger"][@"if-domian"] = existDomains;
+    }
+    
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingWithoutEscapingSlashes error:error];
+    if (error) return;
+    [newData writeToFile:filePath atomically:YES];
 }
 
 @end

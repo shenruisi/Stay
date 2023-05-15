@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error;
 - (void)writeJSONToFileName:(NSString *)fileName data:(NSData *)data error:(NSError **)error;
 - (NSArray<TruestedSite *> *)truestSites;
+- (void)addTruestSite:(NSString *)truestSite error:(NSError **)error;
 @end
 
 NS_ASSUME_NONNULL_END

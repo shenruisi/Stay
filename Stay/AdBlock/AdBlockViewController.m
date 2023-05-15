@@ -23,8 +23,11 @@
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
 #import "TruestedSite.h"
+#import "TrustedSitesTableViewCell.h"
 #import "TrustedSitesTableViewHeadCell.h"
 #import "AddTruestedSiteSlideController.h"
+#import "AddTruestedSiteModalViewController.h"
+#import "UIColor+Convert.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -104,6 +107,13 @@
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(truestedSiteDidAddHandler:) name:TruestedSiteDidAddNotification object:nil];
+}
+
+- (void)truestedSiteDidAddHandler:(NSNotification *)note{
+    if (_trustedSitesTableView){
+        [self.trustedSitesTableView reloadData];
+    }
 }
 
 - (void)onBecomeActive:(NSNotification *)note{
@@ -266,7 +276,13 @@
             return cell;
         }
         else{
-            return nil;
+            TrustedSitesTableViewCell<TruestedSite *> *cell = [tableView dequeueReusableCellWithIdentifier:[TrustedSitesTableViewCell identifier]];
+            if (nil == cell){
+                cell = [[TrustedSitesTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+            }
+            
+            cell.element = self.truestedSitesSource[indexPath.row - 1];
+            return cell;
         }
         
     }
@@ -314,7 +330,7 @@
                         if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
                             for (UIView *targetView in buttonView.subviews){
                                 if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
-                                    targetView.backgroundColor = [UIColor clearColor];
+                                    targetView.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
                                 }
                             }
                         }
@@ -326,51 +342,71 @@
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
-    BOOL isActivatedSelected = self.selectedDataSource == self.activatedSource;
-    ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
-    FCTableViewCell *cell = (FCTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    NSMutableArray *actions = [[NSMutableArray alloc] init];
-    UIContextualAction *reloadAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock", @"")
-                                                                       message:NSLocalizedString(@"ReloadRulesMessage", @"")
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction * _Nonnull action) {
-            [self startHeadLoading];
-            [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
-                [self stopHeadLoading];
-                NSLog(@"reloadContentBlockerWithCompletion %@",error);
+    if (_tableView == tableView){
+        BOOL isActivatedSelected = self.selectedDataSource == self.activatedSource;
+        ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
+        FCTableViewCell *cell = (FCTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+        NSMutableArray *actions = [[NSMutableArray alloc] init];
+        UIContextualAction *reloadAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"AdBlock", @"")
+                                                                           message:NSLocalizedString(@"ReloadRulesMessage", @"")
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                [self startHeadLoading];
+                [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
+                    [self stopHeadLoading];
+                    NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                }];
+                completionHandler(YES);
             }];
+            [alert addAction:confirm];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                 style:UIAlertActionStyleCancel
+                 handler:^(UIAlertAction * _Nonnull action) {
+                completionHandler(YES);
+             }];
+             [alert addAction:cancel];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+        }];
+        reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
+        reloadAction.backgroundColor = [UIColor clearColor];
+        if (isActivatedSelected){
+            [actions addObject:reloadAction];
+        }
+        
+        UIContextualAction *activeOrStopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+            [cell doubleTap:cell.fcContentView.center];
             completionHandler(YES);
         }];
-        [alert addAction:confirm];
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
-             style:UIAlertActionStyleCancel
-             handler:^(UIAlertAction * _Nonnull action) {
-            completionHandler(YES);
-         }];
-         [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
+        activeOrStopAction.image = [ImageHelper sfNamed: isActivatedSelected ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
+        activeOrStopAction.backgroundColor = [UIColor clearColor];
+        [actions addObject:activeOrStopAction];
         
-    }];
-    reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
-    reloadAction.backgroundColor = [UIColor clearColor];
-    if (isActivatedSelected){
-        [actions addObject:reloadAction];
+        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
+        
+        return configuration;
+    }
+    else if (_trustedSitesTableView == tableView){
+        NSMutableArray *actions = [[NSMutableArray alloc] init];
+        UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+//            [cell doubleTap:cell.fcContentView.center];
+            completionHandler(YES);
+        }];
+        deleteAction.image = [ImageHelper sfNamed:@"trash" font:FCStyle.headline color:UIColor.redColor];
+        deleteAction.backgroundColor = [UIColor clearColor];
+        [actions addObject:deleteAction];
+        
+        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
+        
+        return configuration;
+    }
+    else{
+        return nil;
     }
     
-    UIContextualAction *activeOrStopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        [cell doubleTap:cell.fcContentView.center];
-        completionHandler(YES);
-    }];
-    activeOrStopAction.image = [ImageHelper sfNamed: isActivatedSelected ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
-    activeOrStopAction.backgroundColor = [UIColor clearColor];
-    [actions addObject:activeOrStopAction];
-    
-    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
-    
-    return configuration;
 }
 
 //- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

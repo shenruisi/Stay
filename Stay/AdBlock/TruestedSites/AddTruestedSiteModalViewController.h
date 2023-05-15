@@ -9,6 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName const _Nonnull TruestedSiteDidAddNotification;
+
 @interface AddTruestedSiteModalViewController : ModalViewController
 
 @end
