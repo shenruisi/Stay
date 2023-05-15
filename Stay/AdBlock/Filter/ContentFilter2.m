@@ -281,7 +281,6 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                writeOnDisk:YES
                 completion:completion];
     });
-    
 }
 
 - (void)reloadContentBlockerWithCompletion:(void(^)(NSError *error))completion{
@@ -295,6 +294,12 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
       updateFilterInfo:NO
            writeOnDisk:YES
             completion:completion];
+}
+
+- (void)reloadContentBlockerWihtoutRebuild{
+    [SFContentBlockerManager reloadContentBlockerWithIdentifier:self.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+        NSLog(@"Update&reloadContentBlockerWithIdentifier:%@ error:%@",self.contentBlockerIdentifier, error);
+    }];
 }
 
 - (BOOL)active{

@@ -51,7 +51,7 @@ typedef enum {
 - (NSString *)fetchRules:(NSError **)error;
 - (void)checkUpdatingIfNeeded:(BOOL)focus completion:(nullable void(^)(NSError *error))completion;
 + (NSString *)stringOfType:(ContentFilterType)type;
-- (void)stopRulesWithCompletion:(void(^)(NSError *error))completion;
+- (void)reloadContentBlockerWihtoutRebuild;
 
 @end
 

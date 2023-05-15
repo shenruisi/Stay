@@ -214,6 +214,8 @@
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
         [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+        [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:0];
+        [contentFilter reloadContentBlockerWihtoutRebuild];
     }
     else{
         contentFilter.status = 1;
@@ -221,6 +223,8 @@
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
         [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+        [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:1];
+        [contentFilter reloadContentBlockerWihtoutRebuild];
     }
 }
 
