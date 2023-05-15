@@ -568,6 +568,9 @@
                 i--;
             }
             else{
+                if ([urlFilter isEqualToString:@"webkit.svg"] && [rule[@"action"][@"type"] isEqualToString:@"block"]){
+                    continue;
+                }
                 NSString *textRule = [NSString stringWithFormat:@"%@##%@\n",[urlFilter stringByReplacingOccurrencesOfString:@"^https?://" withString:@"||"],selector];
                 [content appendString:textRule];
             }

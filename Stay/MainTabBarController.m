@@ -142,7 +142,6 @@
 
 
 
-
 //-(void)createTabbar
 //{
 //    NSArray *titleArray = @[NSLocalizedString(@"settings.library","Library"),NSLocalizedString(@"settings.search","search"),NSLocalizedString(@"Downloader","Downloader"),NSLocalizedString(@"settings.more","more")];

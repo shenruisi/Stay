@@ -50,7 +50,6 @@ NSNotificationName const _Nonnull FCUITabBarControllerShouldShowTabBar = @"app.f
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [self.fcTabBar selectIndex:0];
     
 }
 

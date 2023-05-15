@@ -434,6 +434,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
 //    self.tableView.sectionHeaderTopPadding = 0;
 //    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    
+    [((MainTabBarController *)self.tabBarController).fcTabBar selectIndex:0];
 
 }
 

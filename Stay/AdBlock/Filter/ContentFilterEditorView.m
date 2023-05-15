@@ -272,6 +272,23 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         }
     }
     
+    if (line.length > 0){
+        lineCount++;
+        NSMutableAttributedString *lineAttributedString = [ContentFilterHighlighter rule:line];
+        [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
+            NSFontAttributeName : [FCStyle.caption toHelvetica:0],
+            NSForegroundColorAttributeName : FCStyle.fcBlack,
+            NSParagraphStyleAttributeName : paragraphStyle,
+        }]];
+        
+        [lineAttributedString addAttributes:@{
+            CFLineNoAttributeName : @(lineCount)
+        } range:NSMakeRange(0, lineAttributedString.length)];
+        
+        [line deleteCharactersInRange:NSMakeRange(0, line.length)];
+        [newAttributedString appendAttributedString:lineAttributedString];
+    }
+    
     return newAttributedString;
 }
 
