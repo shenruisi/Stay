@@ -177,7 +177,7 @@ InputMenuHosting
 }
 
 - (BOOL)canClear{
-    return self.syCodeMirrorView.content.length > 0;
+    return self.content.length > 0;
 }
 
 - (void)resignFirstResponder{
@@ -192,7 +192,7 @@ InputMenuHosting
 }
 
 - (void)clear{
-    [self.syCodeMirrorView clearAll];
+    [self.syCodeMirrorView changeContent:@""];
 }
 
 - (void)keyboardShowAction:(NSNotification*)sender{
