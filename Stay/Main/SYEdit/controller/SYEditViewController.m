@@ -167,13 +167,48 @@ InputMenuHosting
     [self.syCodeMirrorView clearAll];
 }
 
+
+- (BOOL)canUndo{
+    return true;
+}
+
+- (BOOL)canRedo{
+    return true;
+}
+
+- (BOOL)canClear{
+    return self.syCodeMirrorView.content.length > 0;
+}
+
+- (void)resignFirstResponder{
+//    [self.textView resignFirstResponder];
+}
+
+- (void)undo{
+    [self.syCodeMirrorView undo];
+}
+- (void)redo{
+    [self.syCodeMirrorView redo];
+}
+
+- (void)clear{
+    [self.syCodeMirrorView clearAll];
+}
+
 - (void)keyboardShowAction:(NSNotification*)sender{
 //    NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
 //    CGRect endFrame = [endFrameValue CGRectValue];
 //    self.componetView.bottom = endFrame.origin.y - 10;
+    
+    
+    [self.inputMenu show];
+
+    
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
 //    self.componetView.bottom = kScreenHeight - 20;
+    [self.inputMenu dismiss];
+
 }
 
 - (void)saveSuccess:(NSNotification*) sender{
@@ -353,21 +388,6 @@ InputMenuHosting
 */
 
 - (void)initScrpitContent{
-//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-//    NSMutableArray *array =  [[NSMutableArray alloc] init];
-//    NSArray *datas =  [[DataManager shareManager] findScript:1];
-//    if(datas != NULL && datas.count > 0) {
-//        for(int i = 0; i < datas.count; i++) {
-//            UserScript *scrpit = datas[i];
-//            [groupUserDefaults setObject:[scrpit toDictionary] forKey:[NSString stringWithFormat:@"STAY_SCRIPTS_%@",scrpit.uuid]];
-//            scrpit.parsedContent = @"";
-//            scrpit.icon = @"";
-//            [array addObject: [scrpit toDictionary]];
-//        }
-//        [groupUserDefaults setObject:array forKey:@"STAY_SCRIPTS"];
-//        [groupUserDefaults synchronize];
-//        [[ScriptMananger shareManager] buildData];
-//    }
     
     NSMutableArray *array =  [[NSMutableArray alloc] init];
     NSArray *datas =  [[DataManager shareManager] findScript:1];
