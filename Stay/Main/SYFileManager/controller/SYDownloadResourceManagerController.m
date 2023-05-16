@@ -81,6 +81,30 @@
         cell.contentView.width = self.view.width;
         cell.downloadResource = self.array[indexPath.row];
         cell.controller = self;
+        __weak SYDownloadResourceManagerController *weakSelf = (SYDownloadResourceManagerController *)self;
+
+        cell.tapAction = ^(id element) {
+            DownloadResource *downloadResource = weakSelf.array[indexPath.row];
+            if(downloadResource.status == 2){
+                NSArray<DownloadResource *> *resources = [[DataManager shareManager] selectDownloadComplete:weakSelf.pathUuid];
+                int currIndex = 0;
+                for (int i = 0; i < resources.count; i++) {
+                    if ([downloadResource.downloadUuid isEqualToString:resources[i].downloadUuid]) {
+                        currIndex = i;
+                        break;
+                    }
+                }
+                PlayerViewController *playerController = [PlayerViewController controllerWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:weakSelf.pathUuid] initIndex:currIndex];
+                playerController.modalPresentationStyle = UIModalPresentationFullScreen;
+                if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+                    && [QuickAccess splitController].viewControllers.count >= 2){
+                    [[QuickAccess secondaryController] pushViewController:playerController];
+                } else {
+                    [weakSelf.navigationController pushViewController:playerController animated:YES];
+                }
+            }
+            
+        };
         return cell;
     } else {
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
@@ -181,28 +205,28 @@
     
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DownloadResource *downloadResource = self.array[indexPath.row];
-    if(downloadResource.status == 2){
-        NSArray<DownloadResource *> *resources = [[DataManager shareManager] selectDownloadComplete:self.pathUuid];
-        int currIndex = 0;
-        for (int i = 0; i < resources.count; i++) {
-            if ([downloadResource.downloadUuid isEqualToString:resources[i].downloadUuid]) {
-                currIndex = i;
-                break;
-            }
-        }
-        PlayerViewController *playerController = [PlayerViewController controllerWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:self.pathUuid] initIndex:currIndex];
-        playerController.modalPresentationStyle = UIModalPresentationFullScreen;
-        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-                      && [QuickAccess splitController].viewControllers.count >= 2){
-            [[QuickAccess secondaryController] pushViewController:playerController];
-        } else {
-            [self.navigationController pushViewController:playerController animated:YES];
-        }
-
-    }
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    DownloadResource *downloadResource = self.array[indexPath.row];
+//    if(downloadResource.status == 2){
+//        NSArray<DownloadResource *> *resources = [[DataManager shareManager] selectDownloadComplete:self.pathUuid];
+//        int currIndex = 0;
+//        for (int i = 0; i < resources.count; i++) {
+//            if ([downloadResource.downloadUuid isEqualToString:resources[i].downloadUuid]) {
+//                currIndex = i;
+//                break;
+//            }
+//        }
+//        PlayerViewController *playerController = [PlayerViewController controllerWithResources:resources folderName:[FCShared.tabManager tabNameWithUUID:self.pathUuid] initIndex:currIndex];
+//        playerController.modalPresentationStyle = UIModalPresentationFullScreen;
+//        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+//                      && [QuickAccess splitController].viewControllers.count >= 2){
+//            [[QuickAccess secondaryController] pushViewController:playerController];
+//        } else {
+//            [self.navigationController pushViewController:playerController animated:YES];
+//        }
+//
+//    }
+//}
 
 #pragma cellClickEvent
 

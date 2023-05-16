@@ -64,6 +64,8 @@
         _savePhotoBtn.layer.borderColor = FCStyle.fcSeparator.CGColor;
         _saveFileBtn.layer.borderColor = FCStyle.fcSeparator.CGColor;
     } else {
+        _saveFileBtn.enabled = true;
+        _savePhotoBtn.enabled = true;
         [_savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [_savePhotoBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
@@ -72,8 +74,6 @@
         _saveFileBtn.layer.borderColor = FCStyle.accent.CGColor;
     }
  
-    [_savePhotoBtn addTarget:self.controller action:@selector(saveToPhoto:) forControlEvents:UIControlEventTouchUpInside];
-    [_saveFileBtn addTarget:self.controller action:@selector(saveToFile:) forControlEvents:UIControlEventTouchUpInside];
 
     objc_setAssociatedObject(_savePhotoBtn , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
     objc_setAssociatedObject(_saveFileBtn , @"resource", _downloadResource, OBJC_ASSOCIATION_COPY_NONATOMIC);
@@ -183,7 +183,7 @@
 //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
 //        _savePhotoBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
         _savePhotoBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
-
+        [_savePhotoBtn addTarget:self.controller action:@selector(saveToPhoto:) forControlEvents:UIControlEventTouchUpInside];
         _savePhotoBtn.translatesAutoresizingMaskIntoConstraints = NO;
         _savePhotoBtn.layer.borderColor = FCStyle.accent.CGColor;
         _savePhotoBtn.layer.borderWidth = 1;
@@ -214,6 +214,8 @@
         _saveFileBtn.layer.borderColor = FCStyle.accent.CGColor;
         _saveFileBtn.layer.borderWidth = 1;
         _saveFileBtn.layer.cornerRadius = 8;
+        [_saveFileBtn addTarget:self.controller action:@selector(saveToFile:) forControlEvents:UIControlEventTouchUpInside];
+
 //        [_savePhotoBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 8)];
         _saveFileBtn.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 8);
         _saveFileBtn.translatesAutoresizingMaskIntoConstraints = NO;
