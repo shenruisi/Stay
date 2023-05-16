@@ -16,8 +16,11 @@
 #import "QuickAccess.h"
 #import "FCStyle.h"
 #import "DeviceHelper.h"
+#import "InputMenu.h"
 
-@interface SYEditViewController ()
+@interface SYEditViewController ()<
+InputMenuHosting
+>
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
 //@property (nonatomic, strong) UIView *componetView;
 @property (nonatomic, strong) UIButton *backBtn;
@@ -28,7 +31,7 @@
 @property (nonatomic, assign) int resourceCount;
 @property (nonatomic, assign) int sumCount;
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
-
+@property (nonatomic, strong) InputMenu *inputMenu;
 
 @end
 
@@ -382,7 +385,15 @@
         [[SharedStorageManager shared].userscriptHeaders flush];
         [[ScriptMananger shareManager] buildData];
     }
-    
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    [self.inputMenu show];
+    return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    [self.inputMenu dismiss];
 }
 
 - (UIColor *)createBgColor {
@@ -449,6 +460,18 @@
     return  btn;
 }
 
+- (InputMenu *)inputMenu{
+#ifdef FC_MAC
+        return nil;
+#else
+        if (nil == _inputMenu){
+            _inputMenu = [[InputMenu alloc] init];
+            _inputMenu.hosting = self;
+        }
+        
+        return _inputMenu;
+#endif
+}
 
 - (LoadingSlideController *)loadingSlideController{
     if (nil == _loadingSlideController){
