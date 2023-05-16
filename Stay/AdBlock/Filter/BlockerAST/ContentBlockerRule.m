@@ -243,8 +243,12 @@
 - (BOOL)mergeRule:(ContentBlockerRule *)other{
     if (![self.action.type isEqualToString:other.action.type]) return NO;
     if (self.action.selector.length > 0 && other.action.selector.length > 0){
-        [self.action.selectors addObject:other.action.selector];
-//        self.action.selector = [NSString stringWithFormat:@"%@, %@",self.action.selector,other.action.selector];
+        if ([self.key isEqualToString:@".*[SEL]"]){
+            [self.action.selectors addObject:other.action.selector];
+        }
+        else{
+            self.action.selector = [NSString stringWithFormat:@"%@, %@",self.action.selector,other.action.selector];
+        }
     }
     
     //Try to Merge

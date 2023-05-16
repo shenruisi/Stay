@@ -94,6 +94,9 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         NSError *error;
         NSMutableArray<ContentBlockerRule *> *contentBlockerRules = [[NSMutableArray alloc] init];
         NSMutableDictionary *ruleMergeDict = [[NSMutableDictionary alloc] init];
+        if (ContentFilterTypeTag == self.type || ContentFilterTypeCustom == self.type){
+            ruleMergeDict = nil;
+        }
         ContentBlockerRule *universalRule;
         NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
         for (NSString *line in lines){

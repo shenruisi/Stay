@@ -172,8 +172,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         CGRect rect1 = [NSLocalizedString(@"HomeEmptyTips1", @"") boundingRectWithSize:CGSizeMake(MAXFLOAT, FCStyle.body.pointSize) options:0 attributes:@{
             NSFontAttributeName:FCStyle.body
         } context:nil];
-        [self addButton];
+        NSUInteger width = rect1.size.width;
+        CGRect rect2 = [NSLocalizedString(@"HomeEmptyTips2", @"") boundingRectWithSize:CGSizeMake(MAXFLOAT, FCStyle.body.pointSize) options:0 attributes:@{
+            NSFontAttributeName:FCStyle.body
+        } context:nil];
+        width += rect2.size.width;
+        width += 16;
+        self.left = ([QuickAccess primaryController].view.size.width - width)/2;
         [self part1Label];
+        [self addButton];
         [self part2Label];
     }
     
@@ -194,7 +201,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _part1Label.attributedText = builder;
         [self addSubview:_part1Label];
         [NSLayoutConstraint activateConstraints:@[
-            [_part1Label.trailingAnchor constraintEqualToAnchor:self.addButton.leadingAnchor],
+            [_part1Label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:self.left],
             [_part1Label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor]
         ]];
     }
@@ -208,8 +215,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _addButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_addButton setImage:[ImageHelper sfNamed:@"plus" font:[UIFont boldSystemFontOfSize:16] color:FCStyle.accent] forState:UIControlStateNormal];
         [self addSubview:_addButton];
+        
         [NSLayoutConstraint activateConstraints:@[
-            [_addButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+            [_addButton.leadingAnchor constraintEqualToAnchor:self.part1Label.trailingAnchor],
             [_addButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
             [_addButton.widthAnchor constraintEqualToConstant:16],
             [_addButton.heightAnchor constraintEqualToConstant:16]
