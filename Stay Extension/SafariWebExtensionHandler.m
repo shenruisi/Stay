@@ -606,6 +606,9 @@
                                 [newContent appendFormat:@"%@\n",newLine];
                             }
                         }
+                        else{
+                            [newContent appendFormat:@"%@\n",newLine];
+                        }
                     }
                 }
             }

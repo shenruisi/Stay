@@ -196,11 +196,11 @@ InputMenuHosting
 }
 
 - (void)keyboardShowAction:(NSNotification*)sender{
-//    NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
-//    CGRect endFrame = [endFrameValue CGRectValue];
+    NSValue *endFrameValue = sender.userInfo[UIKeyboardFrameEndUserInfoKey];
+    CGRect endFrame = [endFrameValue CGRectValue];
 //    self.componetView.bottom = endFrame.origin.y - 10;
     
-    
+    self.inputMenu.keyboardSize = endFrame.size;
     [self.inputMenu show];
 
     

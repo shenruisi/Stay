@@ -59,7 +59,7 @@
 }
 
 - (void)unarchiveData:(NSData * _Nullable)data {
-    NSSet *classesSet = [NSSet setWithObjects:[self class],[NSString class],nil];
+    NSSet *classesSet = [NSSet setWithObjects:[self class],[NSString class],[NSNumber class],nil];
     ExtensionConfig *extensionConfig = [NSKeyedUnarchiver unarchivedObjectOfClasses:classesSet
                                                                      fromData:data
                                                                         error:nil];
