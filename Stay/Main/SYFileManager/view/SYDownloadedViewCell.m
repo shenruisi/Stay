@@ -61,12 +61,15 @@
         [_savePhotoBtn setTitleColor:FCStyle.fcSeparator forState:UIControlStateNormal];
         [_saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.fcSeparator] forState:UIControlStateNormal];
         [_saveFileBtn setTitleColor:FCStyle.fcSeparator forState:UIControlStateNormal];
-
+        _savePhotoBtn.layer.borderColor = FCStyle.fcSeparator.CGColor;
+        _saveFileBtn.layer.borderColor = FCStyle.fcSeparator.CGColor;
     } else {
         [_savePhotoBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [_savePhotoBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_saveFileBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [_saveFileBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+        _savePhotoBtn.layer.borderColor = FCStyle.accent.CGColor;
+        _saveFileBtn.layer.borderColor = FCStyle.accent.CGColor;
     }
  
     [_savePhotoBtn addTarget:self.controller action:@selector(saveToPhoto:) forControlEvents:UIControlEventTouchUpInside];
