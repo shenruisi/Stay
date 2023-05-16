@@ -11,7 +11,7 @@
 #import "FCViewController.h"
 
 
-@interface SYEditViewController : FCViewController
+@interface SYEditViewController : SYSecondaryViewController
 
 @property (nonatomic, strong) NSString *content;
 @property (nonatomic, strong) NSString *uuid;
