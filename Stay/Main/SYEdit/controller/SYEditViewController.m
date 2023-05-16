@@ -16,10 +16,13 @@
 #import "QuickAccess.h"
 #import "FCStyle.h"
 #import "DeviceHelper.h"
+#import "InputMenu.h"
 
-@interface SYEditViewController ()
+@interface SYEditViewController ()<
+InputMenuHosting
+>
 @property (nonatomic, strong) UIBarButtonItem *rightIcon;
-@property (nonatomic, strong) UIView *componetView;
+//@property (nonatomic, strong) UIView *componetView;
 @property (nonatomic, strong) UIButton *backBtn;
 @property (nonatomic, strong) UIButton *onBtn;
 @property (nonatomic, strong) SYCodeMirrorView *syCodeMirrorView;
@@ -28,7 +31,7 @@
 @property (nonatomic, assign) int resourceCount;
 @property (nonatomic, assign) int sumCount;
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
-
+@property (nonatomic, strong) InputMenu *inputMenu;
 
 @end
 
@@ -71,11 +74,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShowAction:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHideAction:) name:UIKeyboardWillHideNotification object:nil];
     
-    [self.view addSubview:self.syCodeMirrorView];
     self.syCodeMirrorView.downloadUrl = self.downloadUrl;
     self.syCodeMirrorView.platforms = self.platforms;
-    [self.view addSubview:self.componetView];
-    self.componetView.bottom = kScreenHeight - 20;
+//    [self.view addSubview:self.componetView];
+//    self.componetView.bottom = kScreenHeight - 20;
     if(!self.isSearch) {
         if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
             self.rightBarButtonItems = @[[self rightIcon]];
@@ -92,7 +94,7 @@
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef FC_MAC
-    self.syCodeMirrorView.frame = self.view.bounds;
+//    self.syCodeMirrorView.frame = self.view.bounds;
 //    [self.syCodeMirrorView setFrame:CGRectMake(0, [QuickAccess splitController].toolbar.height, self.view.frame.size.width, self.view.frame.size.height - [QuickAccess splitController].toolbar.height)];
 //    [self.syCodeMirrorView reload];
 //    NSLog(@"self.syCodeMirrorView %@",NSStringFromCGRect(self.syCodeMirrorView.frame));
@@ -171,7 +173,7 @@
 //    self.componetView.bottom = endFrame.origin.y - 10;
 }
 - (void)keyboardHideAction:(NSNotification*)sender{
-    self.componetView.bottom = kScreenHeight - 20;
+//    self.componetView.bottom = kScreenHeight - 20;
 }
 
 - (void)saveSuccess:(NSNotification*) sender{
@@ -226,7 +228,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    self.componetView.bottom = kScreenHeight - 20;
+//    self.componetView.bottom = kScreenHeight - 20;
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
 }
 
@@ -257,69 +259,69 @@
     return _rightIcon;
 }
 
-- (UIView *)componetView {
-    if (nil == _componetView){
-        _componetView = [[UIView alloc] initWithFrame:CGRectMake(0,0.0,kScreenWidth,60)];
-        _componetView.backgroundColor = DynamicColor([UIColor blackColor],[UIColor whiteColor]);
-//        _componetView.layer.cornerRadius = 12;
-        _componetView.layer.borderWidth = 0.5;
-        UIColor *borderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
-                if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
-                    return RGB(216, 216, 216);
-                }
-                else {
-                    return RGB(37, 37, 40);
-                }
-            }];
-        _componetView.layer.borderColor = [borderColor CGColor];
-        CGFloat width = (kScreenWidth - 57 - 56 * 4) / 3;
-        
-        UIImage *image =  [UIImage systemImageNamed:@"arrow.uturn.backward"
-                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
-        image = [image imageWithTintColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
-        
-        _backBtn = [self createBtn:image text:NSLocalizedString(@"Undo", @"")];
-        _backBtn.enabled = false;
-        [_backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
-        _backBtn.centerY = 30;
-        _backBtn.left = 28.5;
-        [_componetView addSubview:_backBtn];
-
-        UIImage *onImage =  [UIImage systemImageNamed:@"arrow.uturn.forward"
-                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
-        onImage = [onImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
-        
-        _onBtn = [self createBtn:onImage text:NSLocalizedString(@"Redo", @"")];
-        _onBtn.enabled = false;
-        [_onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
-        _onBtn.centerY = 30;
-        _onBtn.left = 56 + width + 28.5;
-        [_componetView addSubview:_onBtn];
-        
-        UIImage *clearImage = [UIImage systemImageNamed:@"trash"
-                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
-        clearImage = [clearImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
-        
-        UIButton *clearBtn = [self createBtn:clearImage text:NSLocalizedString(@"Clear", @"")];
-        [clearBtn addTarget:self action:@selector(clearContext:) forControlEvents:UIControlEventTouchUpInside];
-        clearBtn.centerY = 30;
-        clearBtn.left = 56 * 2  + width * 2 + 28.5;
-        [_componetView addSubview:clearBtn];
-
-        UIImage *pasteImage =  [UIImage systemImageNamed:@"arrow.up.doc.on.clipboard"
-                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
-        pasteImage = [pasteImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
-        
-        UIButton *pasteLabelBtn = [self createBtn:pasteImage text:NSLocalizedString(@"Clipboard", @"")];
-    
-        [pasteLabelBtn addTarget:self action:@selector(copyPasteBoard:) forControlEvents:UIControlEventTouchUpInside];
-        pasteLabelBtn.centerY = 30;
-        pasteLabelBtn.left = 56 * 3  + width * 3 + 28.5;
-        [_componetView addSubview:pasteLabelBtn];
-        
-    }
-    return _componetView;
-}
+//- (UIView *)componetView {
+//    if (nil == _componetView){
+//        _componetView = [[UIView alloc] initWithFrame:CGRectMake(0,0.0,kScreenWidth,60)];
+//        _componetView.backgroundColor = DynamicColor([UIColor blackColor],[UIColor whiteColor]);
+////        _componetView.layer.cornerRadius = 12;
+//        _componetView.layer.borderWidth = 0.5;
+//        UIColor *borderColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull trainCollection) {
+//                if ([trainCollection userInterfaceStyle] == UIUserInterfaceStyleLight) {
+//                    return RGB(216, 216, 216);
+//                }
+//                else {
+//                    return RGB(37, 37, 40);
+//                }
+//            }];
+//        _componetView.layer.borderColor = [borderColor CGColor];
+//        CGFloat width = (kScreenWidth - 57 - 56 * 4) / 3;
+//
+//        UIImage *image =  [UIImage systemImageNamed:@"arrow.uturn.backward"
+//                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+//        image = [image imageWithTintColor:DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+//
+//        _backBtn = [self createBtn:image text:NSLocalizedString(@"Undo", @"")];
+//        _backBtn.enabled = false;
+//        [_backBtn addTarget:self action:@selector(editerCancel:) forControlEvents:UIControlEventTouchUpInside];
+//        _backBtn.centerY = 30;
+//        _backBtn.left = 28.5;
+//        [_componetView addSubview:_backBtn];
+//
+//        UIImage *onImage =  [UIImage systemImageNamed:@"arrow.uturn.forward"
+//                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+//        onImage = [onImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+//
+//        _onBtn = [self createBtn:onImage text:NSLocalizedString(@"Redo", @"")];
+//        _onBtn.enabled = false;
+//        [_onBtn addTarget:self action:@selector(editerOn:) forControlEvents:UIControlEventTouchUpInside];
+//        _onBtn.centerY = 30;
+//        _onBtn.left = 56 + width + 28.5;
+//        [_componetView addSubview:_onBtn];
+//
+//        UIImage *clearImage = [UIImage systemImageNamed:@"trash"
+//                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+//        clearImage = [clearImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+//
+//        UIButton *clearBtn = [self createBtn:clearImage text:NSLocalizedString(@"Clear", @"")];
+//        [clearBtn addTarget:self action:@selector(clearContext:) forControlEvents:UIControlEventTouchUpInside];
+//        clearBtn.centerY = 30;
+//        clearBtn.left = 56 * 2  + width * 2 + 28.5;
+//        [_componetView addSubview:clearBtn];
+//
+//        UIImage *pasteImage =  [UIImage systemImageNamed:@"arrow.up.doc.on.clipboard"
+//                                     withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:23]]];
+//        pasteImage = [pasteImage imageWithTintColor: DynamicColor([UIColor whiteColor],[UIColor blackColor]) renderingMode:UIImageRenderingModeAlwaysOriginal];
+//
+//        UIButton *pasteLabelBtn = [self createBtn:pasteImage text:NSLocalizedString(@"Clipboard", @"")];
+//
+//        [pasteLabelBtn addTarget:self action:@selector(copyPasteBoard:) forControlEvents:UIControlEventTouchUpInside];
+//        pasteLabelBtn.centerY = 30;
+//        pasteLabelBtn.left = 56 * 3  + width * 3 + 28.5;
+//        [_componetView addSubview:pasteLabelBtn];
+//
+//    }
+//    return _componetView;
+//}
 
 
 - (void)editerCancel:(id)sender {
@@ -383,7 +385,15 @@
         [[SharedStorageManager shared].userscriptHeaders flush];
         [[ScriptMananger shareManager] buildData];
     }
-    
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    [self.inputMenu show];
+    return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView{
+    [self.inputMenu dismiss];
 }
 
 - (UIColor *)createBgColor {
@@ -402,7 +412,17 @@
 
 - (SYCodeMirrorView *)syCodeMirrorView {
     if (_syCodeMirrorView == nil) {
-        _syCodeMirrorView = [[SYCodeMirrorView alloc] initWithFrame:CGRectMake(0, StatusBarHeight, self.view.frame.size.width, self.view.frame.size.height - StatusBarHeight - 70)];
+        _syCodeMirrorView = [[SYCodeMirrorView alloc] init];
+        _syCodeMirrorView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.view addSubview:_syCodeMirrorView];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [_syCodeMirrorView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_syCodeMirrorView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_syCodeMirrorView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_syCodeMirrorView.heightAnchor constraintEqualToAnchor: self.view.heightAnchor]
+        ]];
+        
     }
     return _syCodeMirrorView;
 }
@@ -440,6 +460,18 @@
     return  btn;
 }
 
+- (InputMenu *)inputMenu{
+#ifdef FC_MAC
+        return nil;
+#else
+        if (nil == _inputMenu){
+            _inputMenu = [[InputMenu alloc] init];
+            _inputMenu.hosting = self;
+        }
+        
+        return _inputMenu;
+#endif
+}
 
 - (LoadingSlideController *)loadingSlideController{
     if (nil == _loadingSlideController){
