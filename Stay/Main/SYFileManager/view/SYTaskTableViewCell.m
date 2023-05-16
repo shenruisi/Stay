@@ -118,6 +118,11 @@
     if(self.downloadResource.downloadProcess > 0) {
         self.progress = _downloadResource.downloadProcess / 100;
     }
+    
+    
+    [_stopBtn removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
+    
+    
     if(_downloadResource.status == 0) {
         _downloadSpeedLabel.hidden = NO;
         _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
