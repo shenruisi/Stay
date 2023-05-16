@@ -6,7 +6,7 @@
 //
 
 #import "TrustedSitesTableViewCell.h"
-#import "TruestedSite.h"
+#import "TrustedSite.h"
 #import "FCStyle.h"
 
 @interface TrustedSitesTableViewCell()
@@ -25,7 +25,7 @@
 }
 
 
-- (void)buildWithElement:(TruestedSite *)element{
+- (void)buildWithElement:(TrustedSite *)element{
     self.domainLabel.text = element.domain;
 }
 

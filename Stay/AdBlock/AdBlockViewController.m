@@ -22,11 +22,11 @@
 #import "SharedStorageManager.h"
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
-#import "TruestedSite.h"
+#import "TrustedSite.h"
 #import "TrustedSitesTableViewCell.h"
 #import "TrustedSitesTableViewHeadCell.h"
-#import "AddTruestedSiteSlideController.h"
-#import "AddTruestedSiteModalViewController.h"
+#import "AddTrustedSiteSlideController.h"
+#import "AddTrustedSiteModalViewController.h"
 #import "UIColor+Convert.h"
 #import <WebKit/WebKit.h>
 
@@ -46,12 +46,12 @@
 @property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *activatedSource;
 @property (nonatomic, strong) NSMutableArray<ContentFilter *> *stoppedSource;
-@property (nonatomic, strong) NSMutableArray<TruestedSite *> *truestedSitesSource;
+@property (nonatomic, strong) NSMutableArray<TrustedSite *> *trustedSitesSource;
 @property (nonatomic, strong) NSArray<ContentFilter *> *selectedDataSource;
 @property (nonatomic, strong) UpgradeSlideController *upgradeSlideController;
-@property (nonatomic, strong) FCTableViewHeadMenuItem *truestedSiteMenuItem;
+@property (nonatomic, strong) FCTableViewHeadMenuItem *trustedSiteMenuItem;
 
-@property (nonatomic, strong) AddTruestedSiteSlideController *addTruestedSiteSlideController;
+@property (nonatomic, strong) AddTrustedSiteSlideController *addTrustedSiteSlideController;
 @end
 
 @implementation AdBlockViewController
@@ -109,12 +109,12 @@
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(truestedSiteDidAddHandler:) name:TruestedSiteDidAddNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trustedSiteDidAddHandler:) name:TrustedSiteDidAddNotification object:nil];
 }
 
-- (void)truestedSiteDidAddHandler:(NSNotification *)note{
+- (void)trustedSiteDidAddHandler:(NSNotification *)note{
     if (_trustedSitesTableView){
-        self.truestedSitesSource = nil;
+        self.trustedSitesSource = nil;
         [self.trustedSitesTableView reloadData];
     }
     
@@ -222,16 +222,16 @@
         }
     }
     
-    [self truestedSitesSource];
+    [self trustedSitesSource];
 }
 
 
-- (NSMutableArray<TruestedSite *> *)truestedSitesSource{
-    if (nil == _truestedSitesSource){
-        _truestedSitesSource = [[NSMutableArray alloc] initWithArray:[[ContentFilterManager shared] truestSites]];
+- (NSMutableArray<TrustedSite *> *)trustedSitesSource{
+    if (nil == _trustedSitesSource){
+        _trustedSitesSource = [[NSMutableArray alloc] initWithArray:[[ContentFilterManager shared] trustedSites]];
     }
     
-    return _truestedSitesSource;
+    return _trustedSitesSource;
 }
 
 - (void)updateStatus:(ContentFilter *)contentFilter{
@@ -303,16 +303,16 @@
     else if (_trustedSitesTableView == tableView){
         if (0 == indexPath.row){
             TrustedSitesTableViewHeadCell *cell = [[TrustedSitesTableViewHeadCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-            cell.menus = @[self.truestedSiteMenuItem];
+            cell.menus = @[self.trustedSiteMenuItem];
             return cell;
         }
         else{
-            TrustedSitesTableViewCell<TruestedSite *> *cell = [tableView dequeueReusableCellWithIdentifier:[TrustedSitesTableViewCell identifier]];
+            TrustedSitesTableViewCell<TrustedSite *> *cell = [tableView dequeueReusableCellWithIdentifier:[TrustedSitesTableViewCell identifier]];
             if (nil == cell){
                 cell = [[TrustedSitesTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             }
             
-            cell.element = self.truestedSitesSource[indexPath.row - 1];
+            cell.element = self.trustedSitesSource[indexPath.row - 1];
             return cell;
         }
         
@@ -345,7 +345,7 @@
         return self.selectedDataSource.count;
     }
     else if (_trustedSitesTableView == tableView){
-        return self.truestedSitesSource.count + 1;
+        return self.trustedSitesSource.count + 1;
     }
     else{
         return 0;
@@ -425,7 +425,7 @@
             return nil;
         }
         else{
-            TruestedSite *site = self.truestedSitesSource[indexPath.row - 1];
+            TrustedSite *site = self.trustedSitesSource[indexPath.row - 1];
             NSMutableArray *actions = [[NSMutableArray alloc] init];
             UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
                 
@@ -435,8 +435,8 @@
                 UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                                   style:UIAlertActionStyleDefault
                                                                 handler:^(UIAlertAction * _Nonnull action) {
-                    [[ContentFilterManager shared] deleteTruestSiteWithDomain:site.domain];
-                    [self truestedSiteDidAddHandler:nil];
+                    [[ContentFilterManager shared] deleteTrustSiteWithDomain:site.domain];
+                    [self trustedSiteDidAddHandler:nil];
                     completionHandler(YES);
                 }];
                 [alert addAction:confirm];
@@ -715,20 +715,20 @@
     return _webView;
 }
 
-- (FCTableViewHeadMenuItem *)truestedSiteMenuItem{
-    if (nil == _truestedSiteMenuItem){
-        _truestedSiteMenuItem = [[FCTableViewHeadMenuItem alloc] init];
-        _truestedSiteMenuItem.title = NSLocalizedString(@"NewSite", @"");
-        _truestedSiteMenuItem.image = [ImageHelper sfNamed:@"note.text.badge.plus" font:FCStyle.body color:FCStyle.accent];
+- (FCTableViewHeadMenuItem *)trustedSiteMenuItem{
+    if (nil == _trustedSiteMenuItem){
+        _trustedSiteMenuItem = [[FCTableViewHeadMenuItem alloc] init];
+        _trustedSiteMenuItem.title = NSLocalizedString(@"NewSite", @"");
+        _trustedSiteMenuItem.image = [ImageHelper sfNamed:@"note.text.badge.plus" font:FCStyle.body color:FCStyle.accent];
         __weak AdBlockViewController *weakSelf = self;
-        _truestedSiteMenuItem.action = ^{
-            weakSelf.addTruestedSiteSlideController = [[AddTruestedSiteSlideController alloc] init];
-            weakSelf.addTruestedSiteSlideController.baseCer = weakSelf;
-            [weakSelf.addTruestedSiteSlideController show];
+        _trustedSiteMenuItem.action = ^{
+            weakSelf.addTrustedSiteSlideController = [[AddTrustedSiteSlideController alloc] init];
+            weakSelf.addTrustedSiteSlideController.baseCer = weakSelf;
+            [weakSelf.addTrustedSiteSlideController show];
         };
     }
     
-    return _truestedSiteMenuItem;
+    return _trustedSiteMenuItem;
 }
 
 - (UpgradeSlideController *)upgradeSlideController{

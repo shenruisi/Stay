@@ -1,24 +1,24 @@
 //
-//  AddTruestedSiteSlideController.m
+//  AddTrustedSiteSlideController.m
 //  Stay
 //
 //  Created by ris on 2023/5/15.
 //
 
-#import "AddTruestedSiteSlideController.h"
-#import "AddTruestedSiteModalViewController.h"
+#import "AddTrustedSiteSlideController.h"
+#import "AddTrustedSiteModalViewController.h"
 
-@interface AddTruestedSiteSlideController()
+@interface AddTrustedSiteSlideController()
 
 @property (nonatomic, strong) ModalNavigationController *navController;
 @end
 
-@implementation AddTruestedSiteSlideController
+@implementation AddTrustedSiteSlideController
 
 
 - (ModalNavigationController *)navController{
     if (nil == _navController){
-        AddTruestedSiteModalViewController *cer = [[AddTruestedSiteModalViewController alloc] init];
+        AddTrustedSiteModalViewController *cer = [[AddTrustedSiteModalViewController alloc] init];
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer slideController:self];
         _navController.slideController = self;
     }

@@ -196,7 +196,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
 @property (nonatomic, strong) NSTextStorage *textStorage;
 @property (nonatomic, strong) InputMenu *inputMenu;
 @property (nonatomic, strong) NSLayoutConstraint *textViewBottomConstraint;
-@property (nonatomic, assign) NSUInteger nextLineCount;
+@property (nonatomic, assign) NSUInteger curMaxLineCount;
 @end
 
 @implementation ContentFilterEditorView
@@ -254,6 +254,9 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         if ([character isEqualToString:@"\n"]){
             lineCount++;
             NSMutableAttributedString *lineAttributedString = [ContentFilterHighlighter rule:line];
+            if (lineAttributedString.length == 0){
+                lineAttributedString = [[NSMutableAttributedString alloc] initWithString:@""];
+            }
             [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
                 NSFontAttributeName : [FCStyle.caption toHelvetica:0],
                 NSForegroundColorAttributeName : FCStyle.fcBlack,
@@ -275,12 +278,6 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
     if (line.length > 0){
         lineCount++;
         NSMutableAttributedString *lineAttributedString = [ContentFilterHighlighter rule:line];
-        [lineAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:@{
-            NSFontAttributeName : [FCStyle.caption toHelvetica:0],
-            NSForegroundColorAttributeName : FCStyle.fcBlack,
-            NSParagraphStyleAttributeName : paragraphStyle,
-        }]];
-        
         [lineAttributedString addAttributes:@{
             CFLineNoAttributeName : @(lineCount)
         } range:NSMakeRange(0, lineAttributedString.length)];
@@ -288,7 +285,7 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         [line deleteCharactersInRange:NSMakeRange(0, line.length)];
         [newAttributedString appendAttributedString:lineAttributedString];
     }
-    
+    self.curMaxLineCount = lineCount;
     return newAttributedString;
 }
 
@@ -303,12 +300,6 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
         textView.textShouldChangeRange = NSMakeRange(range.location, text.length);
     }
     textView.willTypingText = text.length > 0 ? text : @"\aDelete";
-    if ([textView isTypingEnter]){
-        NSRange lineRange;
-        NSAttributedString *lineAttributedString = [textView activateLineAttributedString:&lineRange];
-        NSNumber *lineNo = [lineAttributedString attribute:CFLineNoAttributeName atIndex:0 effectiveRange:nil];
-        self.nextLineCount = [lineNo integerValue];
-    }
     
     return YES;
 }
@@ -354,13 +345,14 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
             if (lineNo) break;
         }
         NSString *ruleString = lineAttributedText.string;
-        
         NSMutableAttributedString *newLineAttributedString = [ContentFilterHighlighter rule:ruleString];
-        if (lineNo){
-            [newLineAttributedString addAttributes:@{
-                CFLineNoAttributeName : lineNo
-            } range:NSMakeRange(0, newLineAttributedString.length)];
+        if (nil == lineNo){
+            lineNo = @(self.curMaxLineCount+1);
         }
+        
+        [newLineAttributedString addAttributes:@{
+            CFLineNoAttributeName : lineNo
+        } range:NSMakeRange(0, newLineAttributedString.length)];
         
         [textView.textStorage replaceCharactersInRange:activateLineRange withAttributedString:newLineAttributedString];
         
@@ -370,6 +362,8 @@ static const NSAttributedStringKey CFLineNoAttributeName = @"_CFLineNoAttributeN
             
             [textView.textStorage replaceCharactersInRange:NSMakeRange(0, newAttributedString.length) withAttributedString:newAttributedString];
         }
+        
+        [textView setNeedsDisplay];
     }
 }
 

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TruestedSite.h"
+#import "TrustedSite.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,10 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)ruleJSONArray:(NSString *)fileName error:(NSError **)error;
 - (void)writeJSONToFileName:(NSString *)fileName array:(NSArray *)array error:(NSError **)error;
 - (void)writeJSONToFileName:(NSString *)fileName data:(NSData *)data error:(NSError **)error;
-- (NSArray<TruestedSite *> *)truestSites;
-- (void)addTruestSiteWithDomain:(NSString *)domain error:(NSError **)error;
-- (BOOL)existTruestSiteWithDomain:(NSString *)domain;
-- (void)deleteTruestSiteWithDomain:(NSString *)domain;
+- (NSArray<TrustedSite *> *)trustedSites;
+- (void)addTrustSiteWithDomain:(NSString *)domain error:(NSError **)error;
+- (BOOL)existTrustSiteWithDomain:(NSString *)domain;
+- (void)deleteTrustSiteWithDomain:(NSString *)domain;
 - (BOOL)ruleJSONStopped:(NSString *)fileName;
 - (void)updateRuleJSON:(NSString *)fileName status:(NSUInteger)status;
 @end

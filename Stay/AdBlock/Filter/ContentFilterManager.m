@@ -166,7 +166,7 @@ static ContentFilterManager *instance = nil;
     return [NSURL fileURLWithPath:filePath];
 }
 
-- (NSArray<TruestedSite *> *)truestSites{
+- (NSArray<TrustedSite *> *)trustedSites{
     NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule1"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     if (nil == jsonData) return @[];
@@ -177,14 +177,14 @@ static ContentFilterManager *instance = nil;
     NSArray *domains = jsonDictionary[@"trigger"][@"if-domain"];
     NSMutableArray *ret = [[NSMutableArray alloc] init];
     for (NSString *domain in domains){
-        TruestedSite *truestedSite = [[TruestedSite alloc] init];
-        truestedSite.domain = domain;
-        [ret addObject:truestedSite];
+        TrustedSite *trustedSite = [[TrustedSite alloc] init];
+        trustedSite.domain = domain;
+        [ret addObject:trustedSite];
     }
     return ret;
 }
 
-- (void)addTruestSiteWithDomain:(NSString *)domain error:(NSError **)error{
+- (void)addTrustSiteWithDomain:(NSString *)domain error:(NSError **)error{
     NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule1"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     NSDictionary *dic;
@@ -220,10 +220,10 @@ static ContentFilterManager *instance = nil;
     [newData writeToFile:filePath atomically:YES];
 }
 
-- (BOOL)existTruestSiteWithDomain:(NSString *)domain{
-    NSArray<TruestedSite *> *truestSites = [self truestSites];
-    for (TruestedSite *truestSite in truestSites){
-        if ([truestSite.domain isEqualToString:domain]){
+- (BOOL)existTrustSiteWithDomain:(NSString *)domain{
+    NSArray<TrustedSite *> *trustSites = [self trustedSites];
+    for (TrustedSite *trustSite in trustSites){
+        if ([trustSite.domain isEqualToString:domain]){
             return YES;
         }
     }
@@ -231,13 +231,13 @@ static ContentFilterManager *instance = nil;
     return NO;
 }
 
-- (void)deleteTruestSiteWithDomain:(NSString *)domain{
-    NSMutableArray<TruestedSite *> *truestSites = [[NSMutableArray alloc] initWithArray:[self truestSites]];
+- (void)deleteTrustSiteWithDomain:(NSString *)domain{
+    NSMutableArray<TrustedSite *> *trustSites = [[NSMutableArray alloc] initWithArray:[self trustedSites]];
     NSMutableArray *domains = [[NSMutableArray alloc] init];
-    for (int i = 0; i < truestSites.count; i++){
-        TruestedSite *truestSite = truestSites[i];
-        if (![truestSite.domain isEqualToString:domain]){
-            [domains addObject:truestSite.domain];
+    for (int i = 0; i < trustSites.count; i++){
+        TrustedSite *trustSite = trustSites[i];
+        if (![trustSite.domain isEqualToString:domain]){
+            [domains addObject:trustSite.domain];
         }
     }
     
