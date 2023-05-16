@@ -162,36 +162,28 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, strong) UILabel *part1Label;
 @property (nonatomic, strong) UIButton *addButton;
 @property (nonatomic, strong) UILabel *part2Label;
+@property (nonatomic, assign) CGFloat left;
 @end
 
 @implementation _EmptyTipsView
 
-- (instancetype)initWithFrame:(CGRect)frame{
-    if (self = [super initWithFrame:frame]){
-        [self part1Label];
-        [self.part1Label sizeToFit];
+- (instancetype)init{
+    if (self = [super init]){
+        CGRect rect1 = [NSLocalizedString(@"HomeEmptyTips1", @"") boundingRectWithSize:CGSizeMake(MAXFLOAT, FCStyle.body.pointSize) options:0 attributes:@{
+            NSFontAttributeName:FCStyle.body
+        } context:nil];
         [self addButton];
+        [self part1Label];
         [self part2Label];
-        [self.part2Label sizeToFit];
     }
     
     return self;
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    [super willMoveToSuperview:newSuperview];
-    CGFloat width = self.part1Label.width + self.part2Label.width + self.addButton.width;
-    CGFloat left = (self.width - width) / 2;
-    CGFloat y = (self.height - self.addButton.height) / 2;
-    self.part1Label.frame = CGRectMake(left, y, self.part1Label.width, self.part1Label.height);
-    self.addButton.frame = CGRectMake(self.part1Label.right, y, self.addButton.width, self.addButton.height);
-    self.part2Label.frame = CGRectMake(self.addButton.right, y, self.part2Label.width, self.part2Label.height);
-}
-
 - (UILabel *)part1Label{
     if (nil == _part1Label){
         _part1Label = [[UILabel alloc] init];
-
+        _part1Label.translatesAutoresizingMaskIntoConstraints = NO;
         NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"HomeEmptyTips1", @"") attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
@@ -201,6 +193,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }]];
         _part1Label.attributedText = builder;
         [self addSubview:_part1Label];
+        [NSLayoutConstraint activateConstraints:@[
+            [_part1Label.trailingAnchor constraintEqualToAnchor:self.addButton.leadingAnchor],
+            [_part1Label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor]
+        ]];
     }
     
     return _part1Label;
@@ -208,9 +204,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (UIButton *)addButton{
     if (nil == _addButton){
-        _addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 16, 16)];
+        _addButton = [[UIButton alloc] init];
+        _addButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_addButton setImage:[ImageHelper sfNamed:@"plus" font:[UIFont boldSystemFontOfSize:16] color:FCStyle.accent] forState:UIControlStateNormal];
         [self addSubview:_addButton];
+        [NSLayoutConstraint activateConstraints:@[
+            [_addButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+            [_addButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+            [_addButton.widthAnchor constraintEqualToConstant:16],
+            [_addButton.heightAnchor constraintEqualToConstant:16]
+        ]];
     }
     
     return _addButton;
@@ -219,7 +222,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (UILabel *)part2Label{
     if (nil == _part2Label){
         _part2Label = [[UILabel alloc] init];
-
+        _part2Label.translatesAutoresizingMaskIntoConstraints = NO;
         NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"HomeEmptyTips2", @"") attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
@@ -229,6 +232,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }]];
         _part2Label.attributedText = builder;
         [self addSubview:_part2Label];
+        [NSLayoutConstraint activateConstraints:@[
+            [_part2Label.leadingAnchor constraintEqualToAnchor:self.addButton.trailingAnchor],
+            [_part2Label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        ]];
     }
     
     return _part2Label;
@@ -1633,7 +1640,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #endif
         [self.tableView reloadData];
     });
-    [self emptyTipsView];
     
 }
 
@@ -1985,16 +1991,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (_EmptyTipsView *)emptyTipsView{
     if (nil == _emptyTipsView){
-#ifdef FC_MAC
-        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar + 50, self.view.width, self.view.height - kMacToolbar)];
-#else
-        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:self.view.bounds];
-        _emptyTipsView.top = self.view.top + 50;
-#endif
+        _emptyTipsView = [[_EmptyTipsView alloc] init];
+        _emptyTipsView.translatesAutoresizingMaskIntoConstraints = NO;
         _emptyTipsView.hidden = YES;
         [_emptyTipsView.addButton addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _emptyTipsView.backgroundColor = UIColor.clearColor;
         [self.view addSubview:_emptyTipsView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_emptyTipsView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_emptyTipsView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_emptyTipsView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_emptyTipsView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
     }
     
     return _emptyTipsView;
