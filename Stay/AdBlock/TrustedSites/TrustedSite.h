@@ -1,5 +1,5 @@
 //
-//  TruestedSite.h
+//  TrustedSite.h
 //  Stay
 //
 //  Created by ris on 2023/5/15.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TruestedSite : NSObject
+@interface TrustedSite : NSObject
 
 @property (nonatomic, strong) NSString *domain;
 @end

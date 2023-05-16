@@ -1,5 +1,5 @@
 //
-//  AddTruestedSiteSlideController.h
+//  AddTrustedSiteSlideController.h
 //  Stay
 //
 //  Created by ris on 2023/5/15.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AddTruestedSiteSlideController : FCSlideController
+@interface AddTrustedSiteSlideController : FCSlideController
 
 @end
 

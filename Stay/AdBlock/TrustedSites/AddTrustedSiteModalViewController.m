@@ -1,11 +1,11 @@
 //
-//  AddTruestedSiteModalViewController.m
+//  AddTrustedSiteModalViewController.m
 //  Stay
 //
 //  Created by ris on 2023/5/15.
 //
 
-#import "AddTruestedSiteModalViewController.h"
+#import "AddTrustedSiteModalViewController.h"
 #import "FCApp.h"
 #import "ModalItemView.h"
 #import "FCButton.h"
@@ -14,9 +14,9 @@
 #import "FCStyle.h"
 #import "ContentFilterManager.h"
 
-NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notification.TruestedSiteDidAddNotification";
+NSNotificationName const _Nonnull TrustedSiteDidAddNotification = @"app.notification.TrustedSiteDidAddNotification";
 
-@interface AddTruestedSiteModalViewController()<
+@interface AddTrustedSiteModalViewController()<
  UITableViewDelegate,
  UITableViewDataSource
 >
@@ -27,7 +27,7 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
 @property (nonatomic, strong) FCButton *addButton;
 @end
 
-@implementation AddTruestedSiteModalViewController
+@implementation AddTrustedSiteModalViewController
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -154,7 +154,7 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
         input.spellCheckingType = UITextSpellCheckingTypeNo;
         _domainElement.generalEntity = general;
         _domainElement.inputEntity = input;
-        __weak AddTruestedSiteModalViewController *weakSelf = self;
+        __weak AddTrustedSiteModalViewController *weakSelf = self;
         _domainElement.inputEntity.textChanged = ^(NSString * _Nonnull text) {
             if (text.length > 0){
                 [weakSelf.addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Add", @"")
@@ -198,7 +198,7 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
             NSRange range = [results[0] rangeAtIndex:0];
             if (NSMaxRange(range) == text.length){
                 
-                if ([[ContentFilterManager shared] existTruestSiteWithDomain:text]){
+                if ([[ContentFilterManager shared] existTrustSiteWithDomain:text]){
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
                                                                                    message:NSLocalizedString(@"DomainExistError", @"")
                                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -211,9 +211,9 @@ NSNotificationName const _Nonnull TruestedSiteDidAddNotification = @"app.notific
                     return;
                 }
                 
-                [[ContentFilterManager shared] addTruestSiteWithDomain:text error:nil];
+                [[ContentFilterManager shared] addTrustSiteWithDomain:text error:nil];
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:TruestedSiteDidAddNotification object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:TrustedSiteDidAddNotification object:nil];
                 [self.navigationController.slideController dismiss];
                 return;
             }

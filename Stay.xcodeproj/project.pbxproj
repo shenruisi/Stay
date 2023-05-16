@@ -565,15 +565,15 @@
 		58F196952A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196792A11FE3100B88F39 /* ContentFilterHighlighter.m */; };
 		58F196982A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */; };
 		58F196992A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */; };
-		58F1969C2A11FE9F00B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F1969D2A11FE9F00B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F1969E2A1201A600B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F1969F2A1201A900B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F196A02A1201D500B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F196A12A1201D500B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F196A22A1201D600B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F196A32A1201D600B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
-		58F196A42A1201D700B88F39 /* TruestedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TruestedSite.m */; };
+		58F1969C2A11FE9F00B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F1969D2A11FE9F00B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F1969E2A1201A600B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F1969F2A1201A900B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F196A02A1201D500B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F196A12A1201D500B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F196A22A1201D600B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F196A32A1201D600B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58F196A42A1201D700B88F39 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
 		58F196A52A1201F400B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
 		58F196A62A1201F500B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
 		58F196A72A1201F600B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
@@ -583,10 +583,10 @@
 		58F196AB2A1201F800B88F39 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
 		58F196AE2A120BA800B88F39 /* FCTapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196AD2A120BA800B88F39 /* FCTapView.m */; };
 		58F196AF2A120BA800B88F39 /* FCTapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196AD2A120BA800B88F39 /* FCTapView.m */; };
-		58F196B22A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */; };
-		58F196B32A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */; };
-		58F196B62A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */; };
-		58F196B72A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */; };
+		58F196B22A12102500B88F39 /* AddTrustedSiteSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B12A12102500B88F39 /* AddTrustedSiteSlideController.m */; };
+		58F196B32A12102500B88F39 /* AddTrustedSiteSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B12A12102500B88F39 /* AddTrustedSiteSlideController.m */; };
+		58F196B62A12104000B88F39 /* AddTrustedSiteModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B52A12104000B88F39 /* AddTrustedSiteModalViewController.m */; };
+		58F196B72A12104000B88F39 /* AddTrustedSiteModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196B52A12104000B88F39 /* AddTrustedSiteModalViewController.m */; };
 		58F7F4B827438CB000270873 /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4B727438CB000270873 /* bootstrap.js */; };
 		58F7F4BB2743A93E00270873 /* parse-user-script.js in Resources */ = {isa = PBXBuildFile; fileRef = 58F7F4BA2743A93E00270873 /* parse-user-script.js */; };
 		58F7F4BE2743AABE00270873 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */; };
@@ -1312,14 +1312,14 @@
 		58F196782A11FE3100B88F39 /* PipeHighlighterAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PipeHighlighterAST.h; sourceTree = "<group>"; };
 		58F196792A11FE3100B88F39 /* ContentFilterHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentFilterHighlighter.m; sourceTree = "<group>"; };
 		58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrustedSitesTableViewHeadCell.m; sourceTree = "<group>"; };
-		58F1969A2A11FE9F00B88F39 /* TruestedSite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TruestedSite.h; sourceTree = "<group>"; };
-		58F1969B2A11FE9F00B88F39 /* TruestedSite.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TruestedSite.m; sourceTree = "<group>"; };
+		58F1969A2A11FE9F00B88F39 /* TrustedSite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustedSite.h; sourceTree = "<group>"; };
+		58F1969B2A11FE9F00B88F39 /* TrustedSite.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrustedSite.m; sourceTree = "<group>"; };
 		58F196AC2A120BA800B88F39 /* FCTapView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCTapView.h; sourceTree = "<group>"; };
 		58F196AD2A120BA800B88F39 /* FCTapView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCTapView.m; sourceTree = "<group>"; };
-		58F196B02A12102500B88F39 /* AddTruestedSiteSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTruestedSiteSlideController.h; sourceTree = "<group>"; };
-		58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTruestedSiteSlideController.m; sourceTree = "<group>"; };
-		58F196B42A12104000B88F39 /* AddTruestedSiteModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTruestedSiteModalViewController.h; sourceTree = "<group>"; };
-		58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTruestedSiteModalViewController.m; sourceTree = "<group>"; };
+		58F196B02A12102500B88F39 /* AddTrustedSiteSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTrustedSiteSlideController.h; sourceTree = "<group>"; };
+		58F196B12A12102500B88F39 /* AddTrustedSiteSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTrustedSiteSlideController.m; sourceTree = "<group>"; };
+		58F196B42A12104000B88F39 /* AddTrustedSiteModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTrustedSiteModalViewController.h; sourceTree = "<group>"; };
+		58F196B52A12104000B88F39 /* AddTrustedSiteModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTrustedSiteModalViewController.m; sourceTree = "<group>"; };
 		58F7F4B727438CB000270873 /* bootstrap.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
 		58F7F4BA2743A93E00270873 /* parse-user-script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "parse-user-script.js"; sourceTree = "<group>"; };
 		58F7F4BD2743AABE00270873 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -1844,7 +1844,7 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
-				58F196962A11FE3900B88F39 /* TruestedSites */,
+				58F196962A11FE3900B88F39 /* TrustedSites */,
 				58F196062A11FD2F00B88F39 /* Filter */,
 				583B53C129DABFE400CB292A /* Resources */,
 				58A3618D29C0502400080465 /* AdBlockViewController.h */,
@@ -2457,21 +2457,21 @@
 			path = HighlighterAST;
 			sourceTree = "<group>";
 		};
-		58F196962A11FE3900B88F39 /* TruestedSites */ = {
+		58F196962A11FE3900B88F39 /* TrustedSites */ = {
 			isa = PBXGroup;
 			children = (
 				58F196592A11FDB800B88F39 /* TrustedSitesTableViewHeadCell.h */,
 				58F196972A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m */,
 				58F196552A11FD9600B88F39 /* TrustedSitesTableViewCell.h */,
 				58F196562A11FD9600B88F39 /* TrustedSitesTableViewCell.m */,
-				58F1969A2A11FE9F00B88F39 /* TruestedSite.h */,
-				58F1969B2A11FE9F00B88F39 /* TruestedSite.m */,
-				58F196B02A12102500B88F39 /* AddTruestedSiteSlideController.h */,
-				58F196B12A12102500B88F39 /* AddTruestedSiteSlideController.m */,
-				58F196B42A12104000B88F39 /* AddTruestedSiteModalViewController.h */,
-				58F196B52A12104000B88F39 /* AddTruestedSiteModalViewController.m */,
+				58F1969A2A11FE9F00B88F39 /* TrustedSite.h */,
+				58F1969B2A11FE9F00B88F39 /* TrustedSite.m */,
+				58F196B02A12102500B88F39 /* AddTrustedSiteSlideController.h */,
+				58F196B12A12102500B88F39 /* AddTrustedSiteSlideController.m */,
+				58F196B42A12104000B88F39 /* AddTrustedSiteModalViewController.h */,
+				58F196B52A12104000B88F39 /* AddTrustedSiteModalViewController.m */,
 			);
-			path = TruestedSites;
+			path = TrustedSites;
 			sourceTree = "<group>";
 		};
 		58F7F4B92743A92A00270873 /* lib */ = {
@@ -3724,7 +3724,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58F196A02A1201D500B88F39 /* TruestedSite.m in Sources */,
+				58F196A02A1201D500B88F39 /* TrustedSite.m in Sources */,
 				5811063729E695FF0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
 				58F196A72A1201F600B88F39 /* ContentFilterManager.m in Sources */,
 			);
@@ -3734,7 +3734,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58F196A12A1201D500B88F39 /* TruestedSite.m in Sources */,
+				58F196A12A1201D500B88F39 /* TrustedSite.m in Sources */,
 				5811064929E6961A0073E9CF /* ContentBlockerRequestHandler.m in Sources */,
 				58F196A82A1201F600B88F39 /* ContentFilterManager.m in Sources */,
 			);
@@ -3744,7 +3744,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58F196A22A1201D600B88F39 /* TruestedSite.m in Sources */,
+				58F196A22A1201D600B88F39 /* TrustedSite.m in Sources */,
 				5811065F29E697D30073E9CF /* ContentBlockerRequestHandler.m in Sources */,
 				58F196A92A1201F700B88F39 /* ContentFilterManager.m in Sources */,
 			);
@@ -3754,7 +3754,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58F196A32A1201D600B88F39 /* TruestedSite.m in Sources */,
+				58F196A32A1201D600B88F39 /* TrustedSite.m in Sources */,
 				5811067129E697F70073E9CF /* ContentBlockerRequestHandler.m in Sources */,
 				58F196AA2A1201F700B88F39 /* ContentFilterManager.m in Sources */,
 			);
@@ -3764,7 +3764,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58F196A42A1201D700B88F39 /* TruestedSite.m in Sources */,
+				58F196A42A1201D700B88F39 /* TrustedSite.m in Sources */,
 				5811068329E698790073E9CF /* ContentBlockerRequestHandler.m in Sources */,
 				58F196AB2A1201F800B88F39 /* ContentFilterManager.m in Sources */,
 			);
@@ -3779,7 +3779,7 @@
 				58561F5828E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44B2888ED30009BD608 /* UserDefaults.m in Sources */,
 				3C8388DA2933563E007563E6 /* FCTabManager.m in Sources */,
-				58F1969E2A1201A600B88F39 /* TruestedSite.m in Sources */,
+				58F1969E2A1201A600B88F39 /* TrustedSite.m in Sources */,
 				58724A3528FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				58F196A62A1201F500B88F39 /* ContentFilterManager.m in Sources */,
 				58639D1928644CDA00AA80D5 /* SharedStorageManager.m in Sources */,
@@ -3822,7 +3822,7 @@
 				58724A2B28FE43E500A894D8 /* DeviceHelper.m in Sources */,
 				58FEB1EE283B5AE100BC2A92 /* FCApp.m in Sources */,
 				58F196392A11FD2F00B88F39 /* FilterToken.m in Sources */,
-				58F196B62A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */,
+				58F196B62A12104000B88F39 /* AddTrustedSiteModalViewController.m in Sources */,
 				58ADADD829E7F5B700C00332 /* ContentFilterEditSlideController.m in Sources */,
 				582061C6294C4C0E00A32D0C /* ModalItemSplitView.m in Sources */,
 				582061FA294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
@@ -3845,7 +3845,7 @@
 				582061F6294C516700A32D0C /* SYDownloadModalViewController.m in Sources */,
 				3C949B98297029F50068231A /* M3U8LineReader.m in Sources */,
 				582061EA294C4CC800A32D0C /* UIView+Layout.m in Sources */,
-				58F1969C2A11FE9F00B88F39 /* TruestedSite.m in Sources */,
+				58F1969C2A11FE9F00B88F39 /* TrustedSite.m in Sources */,
 				582061C0294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
 				58F196492A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */,
 				5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
@@ -3986,7 +3986,7 @@
 				58F196512A11FD3000B88F39 /* ContentFilterManager.m in Sources */,
 				58F196922A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
-				58F196B22A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */,
+				58F196B22A12102500B88F39 /* AddTrustedSiteSlideController.m in Sources */,
 				8481963529EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
@@ -4081,7 +4081,7 @@
 				58724A3328FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
 				3C8388D529335624007563E6 /* FCTab.m in Sources */,
-				58F1969F2A1201A900B88F39 /* TruestedSite.m in Sources */,
+				58F1969F2A1201A900B88F39 /* TrustedSite.m in Sources */,
 				588B8325284603FF00AB2D73 /* UserscriptHeaders.m in Sources */,
 				5805D95A2A04E28C00F46709 /* MyAdditions.m in Sources */,
 				58F196A52A1201F400B88F39 /* ContentFilterManager.m in Sources */,
@@ -4131,7 +4131,7 @@
 				84FE418529FB9CFF00D7EDED /* SYDownloadingCircleView.m in Sources */,
 				84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */,
 				58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */,
-				58F196B32A12102500B88F39 /* AddTruestedSiteSlideController.m in Sources */,
+				58F196B32A12102500B88F39 /* AddTrustedSiteSlideController.m in Sources */,
 				3C949B99297029F50068231A /* M3U8LineReader.m in Sources */,
 				582061CD294C4C0E00A32D0C /* ModalSectionView.m in Sources */,
 				58F1963C2A11FD2F00B88F39 /* ExceptionBlockerAST.m in Sources */,
@@ -4143,7 +4143,7 @@
 				5882024E2859E73900B2721A /* SYMoreViewController.m in Sources */,
 				58F196932A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */,
 				582061E5294C4CA400A32D0C /* FCLayoutImageView.m in Sources */,
-				58F196B72A12104000B88F39 /* AddTruestedSiteModalViewController.m in Sources */,
+				58F196B72A12104000B88F39 /* AddTrustedSiteModalViewController.m in Sources */,
 				84BA9D14292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */,
 				849E77DC293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				3C358D562973E57C00118063 /* M3U8SegmentInfoList.m in Sources */,
@@ -4346,7 +4346,7 @@
 				58F1964A2A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */,
 				58A3618329C049C500080465 /* FCTabBarItem.m in Sources */,
 				582061BF294C4C0E00A32D0C /* ModalItemSwitchView.m in Sources */,
-				58F1969D2A11FE9F00B88F39 /* TruestedSite.m in Sources */,
+				58F1969D2A11FE9F00B88F39 /* TrustedSite.m in Sources */,
 				588202782859E73900B2721A /* ModalNavigationItem.m in Sources */,
 				84CC9B5A28D17DF5002EB493 /* BrowseDetailTableViewCell.m in Sources */,
 				58F196342A11FD2F00B88F39 /* ContentFilter2.m in Sources */,
@@ -4950,7 +4950,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 145;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -4986,7 +4986,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 145;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -5027,7 +5027,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 145;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -5083,7 +5083,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 145;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";

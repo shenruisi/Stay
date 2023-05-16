@@ -218,10 +218,10 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                 ];
             }
             
-            NSArray<TruestedSite *> *truestSites = [[ContentFilterManager shared] truestSites];
+            NSArray<TrustedSite *> *trustSites = [[ContentFilterManager shared] trustedSites];
             NSMutableArray *domains = [[NSMutableArray alloc] init];
-            for (TruestedSite *truestedSite in truestSites){
-                [domains addObject:truestedSite.domain];
+            for (TrustedSite *trustedSite in trustSites){
+                [domains addObject:trustedSite.domain];
             }
             
             if (domains.count > 0){
