@@ -177,7 +177,7 @@ InputMenuHosting
 }
 
 - (BOOL)canClear{
-    return self.content.length > 0;
+    return true;
 }
 
 - (void)resignFirstResponder{
