@@ -75,10 +75,10 @@
     [self feedbackBtn];
     
 #ifdef FC_MAC
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onBecomeActive:)
-                                                 name:SVCDidBecomeActiveNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(onBecomeActive:)
+//                                                 name:SVCDidBecomeActiveNotification
+//                                               object:nil];
 #else
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 #endif
@@ -86,7 +86,7 @@
 
 - (void)clear{
 #ifdef FC_MAC
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:SVCDidBecomeActiveNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:SVCDidBecomeActiveNotification object:nil];
 #else
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 #endif

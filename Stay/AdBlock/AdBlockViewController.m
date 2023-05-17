@@ -30,6 +30,10 @@
 #import "UIColor+Convert.h"
 #import <WebKit/WebKit.h>
 
+#ifdef FC_MAC
+#import "FCSplitViewController.h"
+#endif
+
 @interface AdBlockViewController ()<
  UITableViewDelegate,
  UITableViewDataSource

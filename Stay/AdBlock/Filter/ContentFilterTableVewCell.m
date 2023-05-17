@@ -12,6 +12,8 @@
 #import "UIView+Duplicate.h"
 #import "FCStore.h"
 #import <SafariServices/SafariServices.h>
+#import "FCShared.h"
+#import "Plugin.h"
 
 @interface ContentFilterTableVewCell()
 

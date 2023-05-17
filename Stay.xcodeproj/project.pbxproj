@@ -5260,7 +5260,7 @@
 				);
 				MARKETING_VERSION = 2.3.8;
 				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_MAC";
+				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_MAC $(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = Stay;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5317,7 +5317,7 @@
 				);
 				MARKETING_VERSION = 2.3.8;
 				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_MAC";
+				OTHER_SWIFT_FLAGS = "-D COCOAPODS -D FC_MAC $(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dajiu.stay.pro;
 				PRODUCT_NAME = Stay;
 				PROVISIONING_PROFILE_SPECIFIER = "";
