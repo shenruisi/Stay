@@ -1309,6 +1309,7 @@ UIPopoverPresentationControllerDelegate
 //
 //        [self.searchController.searchBar.searchTextField resignFirstResponder];
 //    }
+    
      if(y > h + reload_distance) {
         if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:_allTableView]) {
              if(_allDataQuerying) {
@@ -1317,6 +1318,8 @@ UIPopoverPresentationControllerDelegate
              _pageNo++;
             [self queryAllData];
         } else if([scrollView isEqual:_searchTableView] && !_searchDataEnd  && self.fcNavigationBar.searchBar.textField.text.length > 0) {
+            
+            
             if(_searchDataQuerying) {
                 return;
             }
@@ -1430,9 +1433,8 @@ UIPopoverPresentationControllerDelegate
         if (@available(iOS 15.0, *)){
             _searchTableView.sectionHeaderTopPadding = 0;
         }
-        _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _searchTableView.sectionFooterHeight = 0;
-        
+        _searchTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.searchViewController.view addSubview:_searchTableView];
 

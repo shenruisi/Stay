@@ -1805,6 +1805,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
 
 
         [self.view addSubview:_tableView];
