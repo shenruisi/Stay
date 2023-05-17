@@ -117,6 +117,18 @@ const browser = __b;
     }
     const distance = 10;
     const Utils = {
+      checkExternalMouseConnected(){
+        const gamepads = navigator.getGamepads();
+        for (let i = 0; i < gamepads.length; i++) {
+          const gamepad = gamepads[i];
+          // 判断是否为鼠标类型
+          if (gamepad && gamepad.mapping === 'standard' && gamepad.buttons.length >= 3) {
+            return true;
+          }
+        }
+        
+        return false;
+      },
       parseToDOM(str){
         let divDom = document.createElement('template');
         if(typeof str == 'string'){
@@ -130,6 +142,24 @@ const browser = __b;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
         return getArr.length ? true : false;
+      },
+      isMobile: function(){
+        const userAgentInfo = navigator.userAgent;
+        let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod'];
+        let getArr = Agents.filter(i => userAgentInfo.includes(i));
+        return getArr.length ? true : false;
+      },
+      useTouchEvent: function(){
+        if(this.isMobile()){
+          return true;
+        }else{
+          const hasMouse = this.checkExternalMouseConnected()
+          if(hasMouse){
+            return false;
+          }else{
+            return true;
+          }
+        }
       },
       isDark() {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -373,6 +403,10 @@ const browser = __b;
         closePopup = 'https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png';
         closeBg = '#1C1C1C';
       }
+      let borderColor = '#ffffff';
+      if(!Utils.isMobileOrIpad()){
+        borderColor = '#B620E0';
+      }
       
       if(!document.querySelector('#__stay_select_style')){
         const styleDom = document.createElement('style');
@@ -402,7 +436,7 @@ const browser = __b;
                       background-color: ${closeBg};
                       border-radius:50%;
                     }
-                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid #ffffff; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
                     .__stay_makeup_menu_wrapper{
                       width:187px;
                       position:absolute;
@@ -524,9 +558,6 @@ const browser = __b;
     }
 
     function handleThreeFingerEvent(threeFingerTapStatus){
-      if(!Utils.isMobileOrIpad()){
-        return;
-      }
       if(threeFingerTapStatus == 'on'){
         add3FingerEventListener();
       }else{
@@ -1253,7 +1284,7 @@ const browser = __b;
         console.log('handleSelecteTagPosition---moveDomRect is null');
         return;
       }
-      if(!showMenu){
+      if(!showMenu && Utils.isMobileOrIpad()){
         showSelectTagNoteToast(i18nProp['select_confirm']);
       }
 
