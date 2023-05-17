@@ -41,6 +41,8 @@
 @property (nonatomic, strong) FCTabButtonItem *trustedSitesTabItem;
 @property (nonatomic, strong) FCTabButtonItem *sharedRulesTabItem;
 
+@property (nonatomic, strong) FCTabButtonItem *reloadTabItem;
+
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UITableView *trustedSitesTableView;
 @property (nonatomic, strong) WKWebView *webView;
@@ -95,6 +97,9 @@
                                                   self.trustedSitesTabItem,
                                                   self.sharedRulesTabItem
     ];
+    
+//    self.navigationTabItem.rightTabButtonItems = @[self.reloadTabItem];
+    
     [self tableView];
     
     [self.navigationTabItem activeItem:self.activatedTabItem];
@@ -274,6 +279,7 @@
                     }
                     
                     self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
+                    self.upgradeSlideController.baseCer = self;
                     [self.upgradeSlideController show];
                     return;
                 }
@@ -523,6 +529,15 @@
     return _sharedRulesTabItem;
 }
 
+- (FCTabButtonItem *)reloadTabItem{
+    if (nil == _reloadTabItem){
+        _reloadTabItem = [[FCTabButtonItem alloc] init];
+        _reloadTabItem.image = [ImageHelper sfNamed:@"arrow.clockwise" font:FCStyle.headline color:FCStyle.fcBlack];
+    }
+    
+    return _reloadTabItem;
+}
+
 - (void)addAction:(id)sender{
     
 }
@@ -544,6 +559,7 @@
 
 - (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
     if (item == self.activatedTabItem || item == self.stoppedTabItem){
+        self.reloadTabItem.button.hidden = YES;
         NSMutableArray *newActivatedSource = [[NSMutableArray alloc] init];
         NSMutableArray *newStoppedSource = [[NSMutableArray alloc] init];
         
@@ -597,6 +613,7 @@
         }
     }
     else if (item == self.trustedSitesTabItem){
+        self.reloadTabItem.button.hidden = YES;
         _tableView.hidden = YES;
         _webView.hidden = YES;
         self.trustedSitesTableView.hidden = NO;
@@ -605,9 +622,15 @@
         }
     }
     else if (item == self.sharedRulesTabItem){
+        self.reloadTabItem.button.hidden = NO;
         _tableView.hidden = YES;
         _trustedSitesTableView.hidden = YES;
         self.webView.hidden = NO;
+        if (refresh){
+            [self reloadSharedRules];
+        }
+    }
+    else if (item == self.reloadTabItem){
         [self reloadSharedRules];
     }
 }
@@ -703,7 +726,7 @@
         _webView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:config];
         _webView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:_webView];
-        
+        [self reloadSharedRules];
         [NSLayoutConstraint activateConstraints:@[
             [_webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
@@ -729,14 +752,6 @@
     }
     
     return _trustedSiteMenuItem;
-}
-
-- (UpgradeSlideController *)upgradeSlideController{
-    if (nil == _upgradeSlideController){
-        _upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:@""];
-    }
-    
-    return _upgradeSlideController;
 }
 
 @end

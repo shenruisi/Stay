@@ -189,7 +189,7 @@
                                              attributes:@{NSFontAttributeName : FCStyle.footnote}
                                                 context:nil];
         self.alertLabel.text = enableAlert;
-        self.alertLabelWidth.constant = MIN(rect.size.width + 20,200);
+        self.alertLabelWidth.constant = MIN(rect.size.width + 20,250);
     }
     
     [NSLayoutConstraint deactivateConstraints:self.statusViewConstraints];

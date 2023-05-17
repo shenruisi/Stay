@@ -68,6 +68,10 @@
     return _gradientLayer;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+//    self.gradientLayer.frame = CGRectMake(0, 0, size.width, size.height);
+}
+
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [self backgrundColorTypeDidChange:nil];

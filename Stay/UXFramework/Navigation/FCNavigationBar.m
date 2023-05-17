@@ -53,7 +53,6 @@ static CGFloat OneStageMovingLength = 50;
 
 @interface FCTabButtonItem()
 
-@property (nonatomic, weak) _TabButton *button;
 @end
 
 @implementation FCTabButtonItem
@@ -490,6 +489,12 @@ static CGFloat OneStageMovingLength = 50;
         } completion:^(BOOL finished) {
             [self searchBarAppearSecondStage];
         }];
+    }
+    else{
+        if ([self.delegate isKindOfClass:[FCNavigationController class]]){
+            FCViewController *cer = (FCViewController *)((FCNavigationController *)self.delegate).topViewController;
+            [cer tabItemDidClick:item refresh:YES];
+        }
     }
 }
 

@@ -9,6 +9,11 @@
 #import "FCApp.h"
 #import "FCStyle.h"
 #import "FCButton.h"
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
 
 @interface UpgradeModalViewController()
 
@@ -35,10 +40,19 @@
     CGRect rect = [self.message boundingRectWithSize:CGSizeMake(self.view.size.width - 30, CGFLOAT_MAX) options:0 attributes:@{
         NSFontAttributeName : FCStyle.body
     } context:nil];
-    self.messageLabelHeight.constant = rect.size.height;
+    self.messageLabelHeight.constant = rect.size.height+10;
 }
 
 - (void)upgradeAction:(id)sender{
+    [self.navigationController.slideController dismiss];
+    
+#ifdef FC_MAC
+            [self.navigationController.slideController.baseCer presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController.slideController.baseCer.navigationController pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+#endif
     
 }
 
