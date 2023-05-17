@@ -1383,7 +1383,8 @@ UIPopoverPresentationControllerDelegate
             [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+//            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
         
     ;
@@ -1415,7 +1416,8 @@ UIPopoverPresentationControllerDelegate
             [_allTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_allTableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_allTableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_allTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+//            [_allTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_allTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
     }
     return _allTableView;
@@ -1443,7 +1445,8 @@ UIPopoverPresentationControllerDelegate
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
             [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
-            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+//            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+            [_searchTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
         ]];
     }
     return _searchTableView;

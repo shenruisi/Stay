@@ -1814,7 +1814,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+//            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height],
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
         
     
