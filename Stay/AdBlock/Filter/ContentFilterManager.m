@@ -145,8 +145,17 @@ static ContentFilterManager *instance = nil;
             return;
         }
     }
-    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
-    [fileHandle seekToEndOfFile];
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
+    unsigned long long fileSize = [fileHandle seekToEndOfFile];
+    if (fileSize > 0){
+        [fileHandle seekToFileOffset:fileSize - 1];
+        NSData *lastCharData = [fileHandle readDataOfLength:1];
+        NSString *lastChar = [[NSString alloc] initWithData:lastCharData encoding:NSUTF8StringEncoding];
+        if (![lastChar isEqualToString:@"\n"]){
+            content = [NSString stringWithFormat:@"\n%@",content];
+        }
+        [fileHandle seekToEndOfFile];
+    }
     NSData *data = [content dataUsingEncoding:NSUTF8StringEncoding];
     [fileHandle writeData:data];
     [fileHandle closeFile];
@@ -158,6 +167,12 @@ static ContentFilterManager *instance = nil;
     if (nil == jsonData) return @[];
     NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error];
     return jsonArray;
+}
+
+- (NSString *)ruleText:(NSString *)fileName error:(NSError **)error{
+    NSString *filePath = [self.ruleTextPath stringByAppendingPathComponent:fileName];
+    NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:error];
+    return content;
 }
 
 

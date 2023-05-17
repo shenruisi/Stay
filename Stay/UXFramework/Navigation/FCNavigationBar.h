@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, weak) UIButton *button;
 @end
 
 @interface FCNavigationTabItem : FCView

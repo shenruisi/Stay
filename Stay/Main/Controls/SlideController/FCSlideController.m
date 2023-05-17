@@ -83,7 +83,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
     
     if ([self from] == FCPresentingFromBottom){
         [self.navView setFrame:CGRectMake([self offsetX] + (parentViewSize.width - [self offsetX] - self.navView.frame.size.width)/2,
-                                          parentViewSize.height + navViewHeight,
+                                          parentViewSize.height + navViewHeight ,
                                           self.navView.frame.size.width,
                                           navViewHeight)];
         self.navView.alpha = 0;
@@ -117,7 +117,7 @@ NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification = @"ap
                 self.navView.alpha = 1.0;
                 if ([self from] == FCPresentingFromBottom){
                     CGRect frame = self.navView.frame;
-                    frame.origin.y = parentViewSize.height - frame.size.height - [self marginToFrom];
+                    frame.origin.y = parentViewSize.height - frame.size.height - [self marginToFrom] - self.keyboardSize.height;;
                     self.navView.frame = frame;
                 }
                 else if ([self from] == FCPresentingFromTop){

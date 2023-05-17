@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteTrustSiteWithDomain:(NSString *)domain;
 - (BOOL)ruleJSONStopped:(NSString *)fileName;
 - (void)updateRuleJSON:(NSString *)fileName status:(NSUInteger)status;
+- (NSString *)ruleText:(NSString *)fileName error:(NSError **)error;
 @end
 
 NS_ASSUME_NONNULL_END

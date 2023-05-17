@@ -68,6 +68,16 @@
     return _gradientLayer;
 }
 
+//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
+//    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+//    self.gradientLayer.frame = CGRectMake(0, 0, size.width, size.height);
+//}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    self.gradientLayer.frame = self.view.bounds;
+}
+
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [self backgrundColorTypeDidChange:nil];

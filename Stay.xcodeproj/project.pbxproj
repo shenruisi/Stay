@@ -102,7 +102,6 @@
 		5805D9552A04A3FE00F46709 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5805D9542A04A3FE00F46709 /* LottieView.swift */; };
 		5805D9562A04A3FE00F46709 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5805D9542A04A3FE00F46709 /* LottieView.swift */; };
 		5805D95A2A04E28C00F46709 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
-		5805D95B2A04E28D00F46709 /* MyAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8388E62934E7D5007563E6 /* MyAdditions.m */; };
 		5805D95E2A0632B800F46709 /* DefaultIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D95D2A0632B800F46709 /* DefaultIcon.m */; };
 		5805D95F2A0632B800F46709 /* DefaultIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5805D95D2A0632B800F46709 /* DefaultIcon.m */; };
 		5811063429E695FF0073E9CF /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 5811063329E695FF0073E9CF /* blockerList.json */; };
@@ -3793,7 +3792,6 @@
 				582062052950696F00A32D0C /* DisabledWebsites.m in Sources */,
 				3C8388D92933563B007563E6 /* FCTabConfig.m in Sources */,
 				58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */,
-				5805D95B2A04E28D00F46709 /* MyAdditions.m in Sources */,
 				58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */,
 				58639D1D28644D8800AA80D5 /* FCDisk.m in Sources */,
 			);
@@ -4950,7 +4948,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 145;
+				CURRENT_PROJECT_VERSION = 147;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -4986,7 +4984,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = "Stay Extension/Stay Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 145;
+				CURRENT_PROJECT_VERSION = 147;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Stay Extension/Info.plist";
@@ -5027,7 +5025,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 145;
+				CURRENT_PROJECT_VERSION = 147;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";
@@ -5083,7 +5081,7 @@
 				CODE_SIGN_ENTITLEMENTS = Stay/Stay.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_HEADERS_RUN_UNIFDEF = NO;
-				CURRENT_PROJECT_VERSION = 145;
+				CURRENT_PROJECT_VERSION = 147;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = J25G7D7AL3;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Stay/PrefixHeader.pch";

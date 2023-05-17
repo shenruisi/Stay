@@ -1309,6 +1309,7 @@ UIPopoverPresentationControllerDelegate
 //
 //        [self.searchController.searchBar.searchTextField resignFirstResponder];
 //    }
+    
      if(y > h + reload_distance) {
         if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:_allTableView]) {
              if(_allDataQuerying) {
@@ -1317,6 +1318,8 @@ UIPopoverPresentationControllerDelegate
              _pageNo++;
             [self queryAllData];
         } else if([scrollView isEqual:_searchTableView] && !_searchDataEnd  && self.fcNavigationBar.searchBar.textField.text.length > 0) {
+            
+            
             if(_searchDataQuerying) {
                 return;
             }
@@ -1380,7 +1383,8 @@ UIPopoverPresentationControllerDelegate
             [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+//            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
         
     ;
@@ -1412,7 +1416,8 @@ UIPopoverPresentationControllerDelegate
             [_allTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_allTableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_allTableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_allTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+//            [_allTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_allTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
     }
     return _allTableView;
@@ -1430,9 +1435,8 @@ UIPopoverPresentationControllerDelegate
         if (@available(iOS 15.0, *)){
             _searchTableView.sectionHeaderTopPadding = 0;
         }
-        _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _searchTableView.sectionFooterHeight = 0;
-        
+        _searchTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.searchViewController.view addSubview:_searchTableView];
 
@@ -1441,7 +1445,8 @@ UIPopoverPresentationControllerDelegate
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
             [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
-            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+//            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+            [_searchTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
         ]];
     }
     return _searchTableView;

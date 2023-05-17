@@ -536,16 +536,19 @@
         NSArray *jsonArray = [[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error];
         for (NSDictionary *rule in jsonArray){
             NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+            urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
             NSRegularExpression *expression = [[NSRegularExpression alloc] initWithPattern:urlFilter options:0 error:nil];
             NSArray *results = [expression matchesInString:url options:0 range:NSMakeRange(0, urlLength)];
             if (results.count > 0){
                 NSString *selector = rule[@"action"][@"selector"];
-                NSString *urlAndSelector = [NSString stringWithFormat:@"%@%@",urlFilter,selector];
-                [rules addObject:@{
-                    @"uuid":[urlAndSelector md5],
-                    @"url-filter": urlFilter,
-                    @"selector": selector
-                }];
+                if (selector.length > 0){
+                    NSString *urlAndSelector = [NSString stringWithFormat:@"%@%@",urlFilter,selector];
+                    [rules addObject:@{
+                        @"uuid":[urlAndSelector md5],
+                        @"url-filter": urlFilter,
+                        @"selector": selector
+                    }];
+                }
             }
         }
         
@@ -555,34 +558,85 @@
     }
     else if ([message[@"type"] isEqualToString:@"deleteTagRule"]){
         NSString *targetUUID = message[@"uuid"];
-        NSError *error;
-        NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error]];
-        NSMutableString *content = [[NSMutableString alloc] init];
-        for (int i = 0; i < jsonArray.count; i++){
-            NSDictionary *rule = jsonArray[i];
-            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
-            NSString *selector = rule[@"action"][@"selector"];
-            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
-            if ([targetUUID isEqualToString:uuid]){
-                [jsonArray removeObjectAtIndex:i];
-                i--;
-            }
-            else{
-                if ([urlFilter isEqualToString:@"webkit.svg"] && [rule[@"action"][@"type"] isEqualToString:@"block"]){
-                    continue;
+//        NSError *error;
+//        NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error]];
+//        NSMutableString *content = [[NSMutableString alloc] init];
+//        for (int i = 0; i < jsonArray.count; i++){
+//            NSDictionary *rule = jsonArray[i];
+//            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+//            urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+//            NSString *selector = rule[@"action"][@"selector"];
+//            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+//            if ([targetUUID isEqualToString:uuid]){
+//                [jsonArray removeObjectAtIndex:i];
+//                i--;
+//            }
+//            else{
+//                if ([urlFilter isEqualToString:@"webkit.svg"] && [rule[@"action"][@"type"] isEqualToString:@"block"]){
+//                    continue;
+//                }
+//                else if ([urlFilter isEqualToString:@".*"] && [rule[@"action"][@"type"] isEqualToString:@"ignore-previous-rules"]){
+//                    continue;
+//                }
+//                NSString *textRule = [NSString stringWithFormat:@"%@##%@\n",[urlFilter stringByReplacingOccurrencesOfString:@"^https?://" withString:@"||"],selector];
+//                [content appendString:textRule];
+//            }
+//        }
+//
+//        [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:content error:nil];
+//        [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
+        
+        NSString *content = [[ContentFilterManager shared] ruleText:@"Tag.txt" error:nil];
+        NSMutableString *newContent = [[NSMutableString alloc] init];
+        if (content.length > 0){
+            NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
+            for (NSString *line in lines){
+                NSString *newLine = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+                if (newLine.length > 0){
+                    if ([newLine hasPrefix:@"!"]){
+                        [newContent appendFormat:@"%@\n",newLine];
+                    }
+                    else{
+                        NSArray<NSString *> *urlFilterAndSelector = [newLine componentsSeparatedByString:@"##"];
+                        if (urlFilterAndSelector.count == 2){
+                            NSString *urlFilter = [urlFilterAndSelector[0] stringByReplacingOccurrencesOfString:@"||" withString:@"^https?://"];
+                            NSString *selector = urlFilterAndSelector[1];
+                            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+                            if (![uuid isEqualToString:targetUUID]){
+                                [newContent appendFormat:@"%@\n",newLine];
+                            }
+                        }
+                        else{
+                            [newContent appendFormat:@"%@\n",newLine];
+                        }
+                    }
                 }
-                NSString *textRule = [NSString stringWithFormat:@"%@##%@\n",[urlFilter stringByReplacingOccurrencesOfString:@"^https?://" withString:@"||"],selector];
-                [content appendString:textRule];
             }
+            
+            NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:nil]];
+            
+            for (int i = 0; i < jsonArray.count; i++){
+                NSDictionary *rule = jsonArray[i];
+                NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+                urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+                NSString *selector = rule[@"action"][@"selector"];
+                NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+                if ([targetUUID isEqualToString:uuid]){
+                    [jsonArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+            
+            [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:newContent error:nil];
+            [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+            }];
         }
         
-        [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:content error:nil];
-        [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
         
-        NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
-        [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-            NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
-        }];
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],

@@ -1112,6 +1112,7 @@ UIDocumentPickerDelegate
         if (@available(iOS 15.0, *)){
             _searchTableView.sectionHeaderTopPadding = 0;
         }
+        _searchTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
         _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.searchViewController.view addSubview:_searchTableView];
 
