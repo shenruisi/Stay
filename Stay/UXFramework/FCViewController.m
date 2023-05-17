@@ -69,7 +69,7 @@
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
-//    self.gradientLayer.frame = CGRectMake(0, 0, size.width, size.height);
+    self.gradientLayer.frame = CGRectMake(0, 0, size.width, size.height);
 }
 
 
