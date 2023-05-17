@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="taging-status" @click="tagingStatusClick">{{  t('taging_status_btn') }}</div>
-      <div class="three-finger-switch"  v-if="isMobileOrIpad">
+      <div class="three-finger-switch" >
         <div class="switch-text">{{  t('taging') }}</div>
         <div class="switch" :class="threeFingerTapStatus=='on'?'switch-on':'switch-off'" @click="threeFingerSwitchClick">{{ threeFingerTapSwitch }}</div>
       </div>
