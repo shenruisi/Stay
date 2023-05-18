@@ -286,8 +286,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
 
-@property (nonatomic, strong) UIView *line;
-
 @property (nonatomic, copy) NSString *selectedUUID;
 
 @property (nonatomic, strong) ImportSlideController *importSlideController;
@@ -367,7 +365,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     [self initScrpitContent];
     
 #ifdef FC_MAC
-    [self line];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigateViewDidShow:)
                                                  name:@"app.stay.notification.NCCDidShowViewControllerNotification"
@@ -2037,16 +2034,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
     NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
     return timeString;
-}
-
-- (UIView *)line{
-    if (nil == _line){
-        _line = [[UIView alloc] initWithFrame:CGRectMake(0, kMacToolbar-1, self.view.frame.size.width, 1)];
-        _line.backgroundColor = FCStyle.fcSeparator;
-        [self.view addSubview:_line];
-    }
-    
-    return _line;
 }
 
 - (SYSelectTabViewController *)sYSelectTabViewController {

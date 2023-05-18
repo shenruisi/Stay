@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "MyAdditions.h"
 #import <CommonCrypto/CommonDigest.h> // Need to import for CC_MD5 access
 

@@ -141,7 +141,11 @@
         basic.version = @"202304190559";
         basic.homepage = @"https://easylist.to/";
         basic.uuid = [@"Basic" md5];
+#ifdef FC_MAC
+        basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic-Mac";
+#else
         basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic";
+#endif
         basic.type = ContentFilterTypeBasic;
         
         ContentFilter *privacy = [[ContentFilter alloc] init];
@@ -159,7 +163,11 @@
         privacy.version = @"202304120535";
         privacy.homepage = @"https://easylist.to/";
         privacy.uuid = [@"Privacy" md5];
+#ifdef FC_MAC
+        privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy-Mac";
+#else
         privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy";
+#endif
         privacy.type = ContentFilterTypePrivacy;
         
         ContentFilter *region = [[ContentFilter alloc] init];
@@ -177,7 +185,11 @@
         region.version = @"202304070640";
         region.homepage = @"https://github.com/easylist/easylistchina/";
         region.uuid = [@"Region" md5];
+#ifdef FC_MAC
+        region.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Region-Mac";
+#else
         region.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Region";
+#endif
         region.type = ContentFilterTypeRegion;
         
         ContentFilter *custom = [[ContentFilter alloc] init];
@@ -192,7 +204,11 @@
         custom.sort = 4;
         custom.load = 0;
         custom.uuid = [@"My Filters" md5];
+#ifdef FC_MAC
+        custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom-Mac";
+#else
         custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom";
+#endif
         custom.type = ContentFilterTypeCustom;
         
         ContentFilter *tag = [[ContentFilter alloc] init];
@@ -207,7 +223,11 @@
         tag.sort = 5;
         tag.load = 0;
         tag.uuid = [@"Webpage Tagging Rules" md5];
+#ifdef FC_MAC
+        tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
+#else
         tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+#endif
         tag.type = ContentFilterTypeTag;
         
         [self insertContentFilter:basic error:nil];
