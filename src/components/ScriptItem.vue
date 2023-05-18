@@ -443,7 +443,7 @@ export default {
       padding-left: 27px;
       padding-right: 5px;
       font-family: Helvetica Neue;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--s-main);
       font-weight: 700;
       border-radius: 8px;

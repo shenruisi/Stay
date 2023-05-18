@@ -381,6 +381,10 @@ const browser = __b;
       }
     }
     const clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
+    let borderColor = '#ffffff';
+    if(!Utils.isMobileOrIpad()){
+      borderColor = '#B620E0';
+    }
     const borderSize = 2;
     function languageCode() {
       let lang = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0]
@@ -403,10 +407,7 @@ const browser = __b;
         closePopup = 'https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png';
         closeBg = '#1C1C1C';
       }
-      let borderColor = '#ffffff';
-      if(!Utils.isMobileOrIpad()){
-        borderColor = '#B620E0';
-      }
+     
       
       if(!document.querySelector('#__stay_select_style')){
         const styleDom = document.createElement('style');
@@ -424,6 +425,8 @@ const browser = __b;
                       height:100%;
                       background-color:rgba(0,0,0,0.4);
                       box-sizing: border-box;
+                      user-select: none;
+                      cursor: default;
                     }
                     .__stay_close_con{
                       position:absolute;
@@ -435,12 +438,14 @@ const browser = __b;
                       background-size: 40%;
                       background-color: ${closeBg};
                       border-radius:50%;
+                      cursor: default;
+                      user-select: none;
                     }
                     .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
                     .__stay_makeup_menu_wrapper{
-                      width:187px;
-                      position:absolute;
-                      padding: 8px 0;
+                      width:192px;
+                      position:fixed;
+                      padding: 8px 5px;
                       box-sizing: border-box;
                     }
                     .__stay_makeup_menu_item_box{
@@ -450,6 +455,8 @@ const browser = __b;
                       padding-left: 12px;
                       border-radius: 5px;
                       box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+                      user-select: none;
+                      cursor: default;
                     }
                     .__stay_menu_item{
                       color: #212121;
@@ -465,6 +472,8 @@ const browser = __b;
                       font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
                       -webkit-font-smoothing: antialiased;
                       -moz-osx-font-smoothing: grayscale;
+                      cursor: default;
+                      user-select: none;
                     }
                     .__item_disabled div,.__item_disabled img{
                       opacity: 0.3;
@@ -500,6 +509,7 @@ const browser = __b;
                       left: 50%;
                       transform: translate(-50%);
                       top: -60px;
+                      user-select: none;
                     }
                     .__stay_tagged_wrapper{
                       font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -522,6 +532,7 @@ const browser = __b;
                       left: 50%;
                       transform: translate(-50%, -50%);
                       top: -68px;
+                      user-select: none;
                     }
                     .__stay_tagged_wrapper::before{
                       content: '';
@@ -806,6 +817,7 @@ const browser = __b;
       // console.log('closeTagingDom addListener click---------------');
       makeupTagListenerObj.makeupStatus = 'off';
       hideSelectTagNoteToast();
+      stopListenerMove();
     }
 
 
@@ -887,50 +899,68 @@ const browser = __b;
       tagMenuDom.appendChild(Utils.parseToDOM(tagMenuDomStr.join('')));
 
       const clientHeight = document.documentElement.clientHeight;
-      const tagMenuDomHeight = 40*6 + 20;
-      const tagMenuDomWidth = 187;
+      const tagMenuDomHeight = 40*6 + 21;
+      const tagMenuDomWidth = 192;
       const selectedDomRect = preselectedTargetDom.getBoundingClientRect();
       // console.log('selectedDomRect-----',selectedDomRect, ',tagMenuDomWidth--',tagMenuDomWidth,',tagMenuDomHeight---',tagMenuDomHeight);
-      
       const clientWidth = document.documentElement.clientWidth;
-      const selectedRightX = Utils.add(selectedDomRect.x,  selectedDomRect.width);
-      // 选中区域的left+宽度大于菜单宽度，或者right小于等于0，则与选中区域右边对齐 
-      if(selectedRightX >= tagMenuDomWidth){
-        if(selectedRightX <= clientWidth){
-          tagMenuDom.style.right = `-${borderSize}px`;
-        }else{
-          tagMenuDom.style.right = Utils.sub(selectedDomRect.right, clientWidth)+'px';
-        }
+
+      const leftWidth = selectedDomRect.x < 0 ? 0 : selectedDomRect.x;
+      const rightToLeftWidth = Utils.add(leftWidth,  selectedDomRect.width);
+      const rightWidth = Utils.sub(clientWidth, rightToLeftWidth);
+
+      let onRight = false;
+      let onLeft = false;
+      // 优先在选中位置右边
+      if(tagMenuDomWidth <= rightWidth){
+        // 在选中区域右边
+        tagMenuDom.style.left = `${rightToLeftWidth}px`;
+        onRight = true;
       }else{
-        if(((selectedDomRect.left + selectedDomRect.width) <= tagMenuDomWidth && selectedDomRect.left < clientWidth/2) || selectedDomRect.left <= 0){
-          tagMenuDom.style.left = `-${borderSize}px`;
+        if(tagMenuDomWidth <= leftWidth){
+          // 在选中区域左边
+          tagMenuDom.style.left = `${ Utils.sub(leftWidth, tagMenuDomWidth)}px`;
+          onLeft = true;
         }else{
-          tagMenuDom.style.left = Utils.sub(clientWidth, selectedDomRect.left)+'px';
+          if(rightWidth <= leftWidth){
+            // 与选中区域的右边对齐
+            tagMenuDom.style.right = `${Utils.sub(rightWidth, 5)}px`;
+            // tagMenuDom.style.left = `${ Utils.sub(rightToLeftWidth, tagMenuDomWidth)}px`;
+          }else{
+            // 与选中区域左边对齐
+            tagMenuDom.style.left = `${Utils.sub(leftWidth, 5)}px`;
+          }
         }
       }
 
-      const selectedBottomY = Utils.add(selectedDomRect.y,  selectedDomRect.height);
-      const selectedBottomHeight = Utils.sub(clientHeight, selectedBottomY);
-      // 选中区域的selectedBottomHeight距离大于菜单高度，菜单放在选中区域下方；
-      if(selectedBottomHeight >= tagMenuDomHeight){
-        tagMenuDom.style.top = '100%';
-      }else{
-        // 选中区域的top距离大于菜单高度，菜单放在选中区域上方；
-        if(selectedDomRect.y >= tagMenuDomHeight){
-          tagMenuDom.style.bottom = '100%';
+      const topHeight = selectedDomRect.y < 0 ? 0 : selectedDomRect.y;
+      const bottomToTopHeight = Utils.add(topHeight,  selectedDomRect.height);
+      const bottomHeight = Utils.sub(clientHeight, bottomToTopHeight);
+      if(tagMenuDomHeight <= bottomHeight){
+        if(onRight || onLeft){
+          tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
         }else{
-          // 均不符合上要求，则在选中区域上方或下方靠border展示
-          tagMenuDom.style.position = 'fixed';
-          // 选中区域上方大于下方
-          if(selectedBottomY > selectedBottomHeight){
-            tagMenuDom.style.top = '0';
+          tagMenuDom.style.top = `${bottomToTopHeight}px`;
+        }
+      }else{
+        if(tagMenuDomHeight <= topHeight){
+          if(onRight || onLeft){
+            tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
           }else{
-            tagMenuDom.style.bottom = '0';
+            tagMenuDom.style.top = `${Utils.sub(topHeight, tagMenuDomHeight)}px`;
           }
-          // tagMenuDom.style.left = '50%';
-          // tagMenuDom.style.transform = 'translate(-50%, -50%)';
+        }else{
+          if(topHeight <= bottomHeight){
+            tagMenuDom.style.bottom = '0px';
+          }else{
+            tagMenuDom.style.top = '0px';
+          }
         }
       }
+      
+      
+
+      
       preselectedTargetDom.appendChild(tagMenuDom);
       const menuItemEvent = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box').addEventListener(clickEvent, handleMenuItemClick);
     }
@@ -1006,7 +1036,7 @@ const browser = __b;
         // let parentNode
         while(previousSiblingNode){
           previousSiblingNode = previousSiblingNode.previousSibling
-          if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0){
+          if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0 && previousSiblingNode.getBoundingClientRect().height>0){
             break;
           }
         }
@@ -1026,7 +1056,7 @@ const browser = __b;
         // let parentNode
         while(nextSiblingNode){
           nextSiblingNode = nextSiblingNode.nextSibling
-          if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0){
+          if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0 && nextSiblingNode.getBoundingClientRect().height>0){
             break;
           }
         }
@@ -1142,16 +1172,28 @@ const browser = __b;
         // console.log(selectedDom);
         let styles = window.getComputedStyle(selectedDom);
         if(styles.position == 'fixed'){
-          let fixedParentDom = getValidParentNode();
-          while(fixedParentDom){
-            if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
-              break;
+          let shouldExpand = false;
+          let selectedDomSibling = getValidPreviousSiblingNode(selectedDom) || getValidNextSiblingNode(selectedDom);
+          if(selectedDomSibling){
+            let selectedDomSiblingStyles = window.getComputedStyle(selectedDomSibling);
+            if(selectedDomSiblingStyles.position == 'fixed'){
+              shouldExpand = true;
             }
-            fixedParentDom = fixedParentDom.parentNode;
+          }else{
+            shouldExpand = true;
           }
-          // console.log('fixedParentDom------',fixedParentDom)
-          if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
-            selectedDom = fixedParentDom;
+          if(shouldExpand){
+            let fixedParentDom = getValidParentNode();
+            while(fixedParentDom){
+              if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
+                break;
+              }
+              fixedParentDom = fixedParentDom.parentNode;
+            }
+            // console.log('fixedParentDom------',fixedParentDom)
+            if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
+              selectedDom = fixedParentDom;
+            }
           }
         }
         
@@ -1202,7 +1244,7 @@ const browser = __b;
         preselectedTargetDom.style.left = '0px';
         preselectedTargetDom.style.top = '0px';
         preselectedTargetDom.style.display = 'none';
-        preselectedTargetDom.style.borderColor = '#ffffff';
+        preselectedTargetDom.style.borderColor = borderColor;
       }
       if(moveWrapperDom!=null){
         moveWrapperDom.style.clipPath = 'none';
