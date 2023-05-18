@@ -10,6 +10,6 @@
 		<string>ContentBlockerRequestHandler</string>
 	</dict>
 	<key>NSHumanReadableDescription</key>
-	<string>Add a description of what your extension does here.</string>
+	<string>Content blocker extension from Stay that contains your basic rules for Safari.</string>
 </dict>
 </plist>
