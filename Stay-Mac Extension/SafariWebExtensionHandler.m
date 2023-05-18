@@ -13,6 +13,8 @@
 #import "SharedStorageManager.h"
 #import "API.h"
 #import "FCShared.h"
+#import "ContentFilterManager.h"
+#import "MyAdditions.h"
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < 110000
 NSString * const SFExtensionMessageKey = @"message";
@@ -384,6 +386,144 @@ NSString * const SFExtensionMessageKey = @"message";
         NSString *nCode = message[@"n_code"];
         if (path.length > 0 && code.length > 0){
             [[API shared] commitYoutbe:path code:code nCode:nCode];
+        }
+    }
+    else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
+        NSString *url = message[@"url"];
+        NSString *selector = message[@"selector"];
+        
+        if (url.length > 0 && selector.length > 0){
+            NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+            [set addCharactersInString:@"#"];
+            NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+            NSString *host = uri.host;
+            NSString *path = uri.path;
+            if ([path isEqualToString:@"/"]){
+                path = @"";
+            }
+            path = path ? path : @"";
+//            NSString *fragment = uri.fragment ?  uri.fragment : @"";
+            
+            NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
+            
+            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:rule error:nil];
+            NSDictionary *dictionary = @{
+                @"trigger" : @{
+                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
+                },
+                @"action" : @{
+                    @"type" : @"css-display-none",
+                    @"selector" : selector
+                }
+            };
+            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" dictionary:dictionary error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+            }];
+        }
+        
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){
+        dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
+        __block BOOL enabled;
+        [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+            enabled = state.enabled;
+            dispatch_semaphore_signal(semaphore);
+        }];
+        
+        dispatch_semaphore_wait(semaphore, deadline);
+        
+        [SharedStorageManager shared].extensionConfig = nil;
+        NSNumber *tagStatus = [SharedStorageManager shared].extensionConfig.tagStatus;
+            
+        body = @{
+            @"enabled" : @(enabled),
+            @"tag_status" : tagStatus
+        };
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchTagRules"]){
+        NSString *url = message[@"url"];
+        NSUInteger urlLength = url.length;
+        NSError *error;
+        NSMutableArray *rules = [[NSMutableArray alloc] init];
+        NSArray *jsonArray = [[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error];
+        for (NSDictionary *rule in jsonArray){
+            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+            urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+            NSRegularExpression *expression = [[NSRegularExpression alloc] initWithPattern:urlFilter options:0 error:nil];
+            NSArray *results = [expression matchesInString:url options:0 range:NSMakeRange(0, urlLength)];
+            if (results.count > 0){
+                NSString *selector = rule[@"action"][@"selector"];
+                if (selector.length > 0){
+                    NSString *urlAndSelector = [NSString stringWithFormat:@"%@%@",urlFilter,selector];
+                    [rules addObject:@{
+                        @"uuid":[urlAndSelector md5],
+                        @"url-filter": urlFilter,
+                        @"selector": selector
+                    }];
+                }
+            }
+        }
+        
+        body = @{
+            @"rules":rules
+        };
+    }
+    else if ([message[@"type"] isEqualToString:@"deleteTagRule"]){
+        NSString *targetUUID = message[@"uuid"];
+        
+        NSString *content = [[ContentFilterManager shared] ruleText:@"Tag.txt" error:nil];
+        NSMutableString *newContent = [[NSMutableString alloc] init];
+        if (content.length > 0){
+            NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
+            for (NSString *line in lines){
+                NSString *newLine = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+                if (newLine.length > 0){
+                    if ([newLine hasPrefix:@"!"]){
+                        [newContent appendFormat:@"%@\n",newLine];
+                    }
+                    else{
+                        NSArray<NSString *> *urlFilterAndSelector = [newLine componentsSeparatedByString:@"##"];
+                        if (urlFilterAndSelector.count == 2){
+                            NSString *urlFilter = [urlFilterAndSelector[0] stringByReplacingOccurrencesOfString:@"||" withString:@"^https?://"];
+                            NSString *selector = urlFilterAndSelector[1];
+                            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+                            if (![uuid isEqualToString:targetUUID]){
+                                [newContent appendFormat:@"%@\n",newLine];
+                            }
+                        }
+                        else{
+                            [newContent appendFormat:@"%@\n",newLine];
+                        }
+                    }
+                }
+            }
+            
+            NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:nil]];
+            
+            for (int i = 0; i < jsonArray.count; i++){
+                NSDictionary *rule = jsonArray[i];
+                NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+                urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+                NSString *selector = rule[@"action"][@"selector"];
+                NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+                if ([targetUUID isEqualToString:uuid]){
+                    [jsonArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+            
+            [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:newContent error:nil];
+            [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+            }];
         }
     }
 

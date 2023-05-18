@@ -558,33 +558,6 @@
     }
     else if ([message[@"type"] isEqualToString:@"deleteTagRule"]){
         NSString *targetUUID = message[@"uuid"];
-//        NSError *error;
-//        NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error]];
-//        NSMutableString *content = [[NSMutableString alloc] init];
-//        for (int i = 0; i < jsonArray.count; i++){
-//            NSDictionary *rule = jsonArray[i];
-//            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
-//            urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
-//            NSString *selector = rule[@"action"][@"selector"];
-//            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
-//            if ([targetUUID isEqualToString:uuid]){
-//                [jsonArray removeObjectAtIndex:i];
-//                i--;
-//            }
-//            else{
-//                if ([urlFilter isEqualToString:@"webkit.svg"] && [rule[@"action"][@"type"] isEqualToString:@"block"]){
-//                    continue;
-//                }
-//                else if ([urlFilter isEqualToString:@".*"] && [rule[@"action"][@"type"] isEqualToString:@"ignore-previous-rules"]){
-//                    continue;
-//                }
-//                NSString *textRule = [NSString stringWithFormat:@"%@##%@\n",[urlFilter stringByReplacingOccurrencesOfString:@"^https?://" withString:@"||"],selector];
-//                [content appendString:textRule];
-//            }
-//        }
-//
-//        [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:content error:nil];
-//        [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
         
         NSString *content = [[ContentFilterManager shared] ruleText:@"Tag.txt" error:nil];
         NSMutableString *newContent = [[NSMutableString alloc] init];
@@ -635,8 +608,6 @@
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
         }
-        
-        
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
