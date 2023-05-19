@@ -12,13 +12,13 @@
 
 + (UIImage *)iconWithTitle:(NSString *)title size:(CGSize)size{
     NSString *firstChar = [self getFirstChar:title];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width * [UIScreen mainScreen].scale, size.height * [UIScreen mainScreen].scale)];
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.frame = label.bounds;
     NSArray<UIColor *> *colors = FCStyle.accentGradient;
     gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
 //    [label.layer insertSublayer:gradientLayer atIndex:0];
-    label.font = [UIFont boldSystemFontOfSize:size.width/2.5];
+    label.font = [UIFont boldSystemFontOfSize:size.width* [UIScreen mainScreen].scale/2.5];
     label.textColor = FCStyle.fcSecondaryBlack;
     label.textAlignment = NSTextAlignmentCenter;
     label.text = firstChar;
