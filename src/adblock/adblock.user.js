@@ -382,9 +382,9 @@ const browser = __b;
     }
     const clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
     let borderColor = '#ffffff';
-    if(!Utils.isMobileOrIpad()){
-      borderColor = '#B620E0';
-    }
+    // if(!Utils.isMobileOrIpad()){
+    //   borderColor = '#B620E0';
+    // }
     const borderSize = 2;
     function languageCode() {
       let lang = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0]
@@ -420,7 +420,7 @@ const browser = __b;
                       right:0;
                       top:0;
                       bottom:0;
-                      z-index:2147483600;
+                      z-index:2147483640;
                       width:100%;
                       height:100%;
                       background-color:rgba(0,0,0,0.4);
@@ -429,7 +429,8 @@ const browser = __b;
                       cursor: default;
                     }
                     .__stay_close_con{
-                      position:absolute;
+                      position:fixed;
+                      z-index:2147483647;
                       right: 20px;
                       top: 20px;
                       width:26px;
@@ -441,7 +442,7 @@ const browser = __b;
                       cursor: default;
                       user-select: none;
                     }
-                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483642; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
                     .__stay_makeup_menu_wrapper{
                       width:192px;
                       position:fixed;
@@ -760,12 +761,28 @@ const browser = __b;
       createOrShowSeleteTagPanelWithModal();
 
       startListenerMove();
+      if(!Utils.isMobileOrIpad()){
+        console.log('startSelecteTagAndMakeupAd-------addEventListener----keyup-----');
+        // document.removeEventListener('keyup', handleKeyUpEvent, { passive: true });
+        const keyupEvent = document.addEventListener('keyup', handleKeyUpEvent);
+      }
+    }
+
+    function handleKeyUpEvent(event){
+      console.log('keyup------keyup----', event)
+      if (event.key === 'Escape') {
+        // 在这里执行您的操作
+        handleCloseTagingPanel(event);
+      }
     }
 
     function stopSelecteTagAndMakeupAd(){
       stopListenerMove();
       hideSeletedTagContentModal();
       hideSeletedTagPanel();
+      if(!Utils.isMobileOrIpad()){
+        document.removeEventListener('keyup', handleKeyUpEvent);
+      }
     }
 
     /**
@@ -780,18 +797,22 @@ const browser = __b;
         closeTagingDom = document.createElement('div');
         closeTagingDom.id='__stay_close';
         closeTagingDom.classList.add('__stay_close_con');
-        moveWrapperDom.appendChild(closeTagingDom);
+        document.body.appendChild(closeTagingDom);
         document.body.appendChild(moveWrapperDom);
+
         window.addEventListener('scroll', () => {
-          hideSeletedTagContentModal();
-          if(showMakeupTagMenu){
-            showMakeupTagMenu = false;
-            document.querySelector('#__stay_makeup_menu').remove();
+          if(makeupTagListenerObj.makeupStatus == 'on'){
+            hideSeletedTagContentModal();
+            if(showMakeupTagMenu){
+              showMakeupTagMenu = false;
+              document.querySelector('#__stay_makeup_menu').remove();
+            }
+            startListenerMove();
           }
-          startListenerMove();
         });
       }else{
         moveWrapperDom.style.display = 'block';
+        closeTagingDom.style.display = 'block';
       }
       addListenerClosePanelEvent();
       if(!document.querySelector('#__stay_selected_tag')){
@@ -829,7 +850,7 @@ const browser = __b;
       if(Utils.isMobileOrIpad()){
         const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
       }else{
-        const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
+        const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
       }
       
     }
@@ -843,7 +864,7 @@ const browser = __b;
           moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
         }
       }else{
-        document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
+        document.body.removeEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
       }
     }
 
@@ -863,7 +884,9 @@ const browser = __b;
       showMakeupTagMenu = true;
       stopListenerMove();
       stopWindowScroll();
-      preselectedTargetDom.style.borderColor = '#B620E0';
+      if(Utils.isMobileOrIpad()){
+        preselectedTargetDom.style.borderColor = '#B620E0';
+      }
       // todo
       let closeMenu = 'https://res.stayfork.app/scripts/95CF6156C3CCD94629AF09F81A6CD5FF/icon.png';
       let expand = 'https://res.stayfork.app/scripts/0D45496300EC4B6360E44B69B92D1132/icon.png';
@@ -906,8 +929,14 @@ const browser = __b;
       const clientWidth = document.documentElement.clientWidth;
 
       const leftWidth = selectedDomRect.x < 0 ? 0 : selectedDomRect.x;
-      const rightToLeftWidth = Utils.add(leftWidth,  selectedDomRect.width);
-      const rightWidth = Utils.sub(clientWidth, rightToLeftWidth);
+      let rightToLeftWidth = Utils.add(leftWidth,  selectedDomRect.width);
+      if(rightToLeftWidth>clientWidth){
+        rightToLeftWidth = clientWidth;
+      }
+      let rightWidth = Utils.sub(clientWidth, rightToLeftWidth);
+      if(clientWidth<=rightToLeftWidth){
+        rightWidth = 0;
+      }
 
       let onRight = false;
       let onLeft = false;
@@ -934,8 +963,12 @@ const browser = __b;
       }
 
       const topHeight = selectedDomRect.y < 0 ? 0 : selectedDomRect.y;
-      const bottomToTopHeight = Utils.add(topHeight,  selectedDomRect.height);
-      const bottomHeight = Utils.sub(clientHeight, bottomToTopHeight);
+      let bottomToTopHeight = Utils.add(topHeight,  selectedDomRect.height);
+      if(bottomToTopHeight>clientHeight){
+        bottomToTopHeight = clientHeight
+      }
+      let bottomHeight = Utils.sub(clientHeight, bottomToTopHeight);
+  
       if(tagMenuDomHeight <= bottomHeight){
         if(onRight || onLeft){
           tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
@@ -950,11 +983,24 @@ const browser = __b;
             tagMenuDom.style.top = `${Utils.sub(topHeight, tagMenuDomHeight)}px`;
           }
         }else{
+
+          
           if(topHeight <= bottomHeight){
-            tagMenuDom.style.bottom = '0px';
+
+            if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= (Utils.sub(clientHeight, topHeight))){
+              tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+            }else{
+              tagMenuDom.style.bottom = '-8px';
+            }
+            
           }else{
-            tagMenuDom.style.top = '0px';
+            if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= bottomToTopHeight){
+              tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+            }else{
+              tagMenuDom.style.top = '-8px';
+            }
           }
+          
         }
       }
       
@@ -1121,7 +1167,7 @@ const browser = __b;
         moveWrapperDom.addEventListener('touchmove', handleStopScroll);
         moveWrapperDom.addEventListener('touchend', handleStopScroll);
       }else{
-        document.body.addEventListener('mousemove', handleStopScroll);
+        document.body.addEventListener('mousemove', handleStopScroll, { passive: true });
       }
     }
 
@@ -1131,7 +1177,7 @@ const browser = __b;
         moveWrapperDom.removeEventListener('touchmove', handleStopScroll);
         moveWrapperDom.removeEventListener('touchend', handleStopScroll);
       }else{
-        document.body.removeEventListener('mousemove', handleStopScroll);
+        document.body.removeEventListener('mousemove', handleStopScroll, { passive: true });
       }
     }
     function handleStopScroll(event){
@@ -1262,6 +1308,9 @@ const browser = __b;
         moveWrapperDom.style.display = 'none';
         showMakeupTagPanel = false;
       }
+      if(closeTagingDom != null){
+        closeTagingDom.style.display = 'none';
+      }
     }
 
     /**
@@ -1281,25 +1330,29 @@ const browser = __b;
       let selectePositionDom = moveDoms[0];
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
-        if(moveDoms.length<=4){
-          selectePositionDom = moveDoms[1];
-        }else if(moveDoms.length > 4){
-          selectePositionDom = moveDoms[1];
-          let styles = window.getComputedStyle(selectePositionDom);
-          // console.log('styles.position---------',styles.position)
-          // 判断节点是否具有绝对定位
-          if (styles.position !== 'fixed') {
-            let i = 3;
-            selectePositionDom = moveDoms[i];
-            while(moveDomRect.height >= document.documentElement.clientHeight){
-              i = i - 1;
+        if(Utils.isMobileOrIpad()){
+          if(moveDoms.length<=4){
+            selectePositionDom = moveDoms[1];
+          }else if(moveDoms.length > 4){
+            selectePositionDom = moveDoms[1];
+            let styles = window.getComputedStyle(selectePositionDom);
+            // console.log('styles.position---------',styles.position)
+            // 判断节点是否具有绝对定位
+            if (styles.position !== 'fixed') {
+              let i = 3;
               selectePositionDom = moveDoms[i];
-              moveDomRect = selectePositionDom.getBoundingClientRect();
-              if(i == 1){
-                break;
+              while(moveDomRect.height >= document.documentElement.clientHeight){
+                i = i - 1;
+                selectePositionDom = moveDoms[i];
+                moveDomRect = selectePositionDom.getBoundingClientRect();
+                if(i == 1){
+                  break;
+                }
               }
-            }
-          } 
+            } 
+          }
+        }else{
+          selectePositionDom = moveDoms[1];
         }
       }else{
         return;
