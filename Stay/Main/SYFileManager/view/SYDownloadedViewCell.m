@@ -158,16 +158,30 @@
     if(_progressView == nil) {
         _progressView = [[UIProgressView alloc] init];
         _progressView.progressTintColor = FCStyle.accent;
-        _progressView.progressViewStyle= UIProgressViewStyleDefault;
+        _progressView.progressViewStyle= UIProgressViewStyleBar;
         _progressView.trackTintColor= FCStyle.fcShadowLine;
         _progressView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.fcContentView addSubview:_progressView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_progressView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor],
+            [_progressView.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor],
+        ]];
+        
+      #ifdef FC_MAC
+        [NSLayoutConstraint activateConstraints:@[
+            [_progressView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor],
+            [_progressView.topAnchor constraintEqualToAnchor:self.avatorView.bottomAnchor constant:1],
+            [_progressView.heightAnchor constraintEqualToConstant:2],
+            [_progressView.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor],
+        ]];
+    #else
         [NSLayoutConstraint activateConstraints:@[
             [_progressView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor],
             [_progressView.topAnchor constraintEqualToAnchor:self.avatorView.bottomAnchor constant:9],
             [_progressView.heightAnchor constraintEqualToConstant:2],
             [_progressView.widthAnchor constraintEqualToAnchor:self.fcContentView.widthAnchor],
         ]];
+    #endif
     }
     return _progressView;
 }
