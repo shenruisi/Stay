@@ -733,7 +733,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
     let n = Utils.queryURLParams(sourceUrl, 'n');
     // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---n-----'+n);
     if(!n){
-      console.log('decodeYoutubeSpeedFun---n-is-null---',n);
+      // console.log('decodeYoutubeSpeedFun---n-is-null---',n);
       return sourceUrl;
     }
     // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---ytParam_N_Obj--1---'+JSON.stringify(ytParam_N_Obj)+n);
@@ -2002,7 +2002,13 @@ function fetchRandomStr(randomStr, speedRandomStr){
     },
     set:function(newValue){
       randomStr = newValue;
-      decodeFunStr = randomStr;
+      try {
+        decodeFunStr = Utils.decodeBase64(randomStr);
+      } catch (error) {
+        decodeFunStr = '';
+      }
+      // decodeFunStr = randomStr;
+
       console.log('set randomStr:',newValue);
       //需要触发的渲染函数可以写在这...
       handleDecodeSignatureAndPush();
@@ -2017,7 +2023,11 @@ function fetchRandomStr(randomStr, speedRandomStr){
     set:function(newValue){
       speedRandomStr = newValue;
       console.log('set speedRandomStr:',newValue);
-      decodeSpeedFunStr = speedRandomStr;
+      try {
+        decodeSpeedFunStr = Utils.decodeBase64(speedRandomStr);
+      } catch (error) {
+        decodeSpeedFunStr = '';
+      }
     }
   });
 
