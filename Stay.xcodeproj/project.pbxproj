@@ -491,6 +491,16 @@
 		58EA445E286C2C9800BD6C4D /* UserscriptRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA445C286C2C9800BD6C4D /* UserscriptRecord.m */; };
 		58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4460286C368800BD6C4D /* ContentRecord.m */; };
 		58EA4462286C368800BD6C4D /* ContentRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EA4460286C368800BD6C4D /* ContentRecord.m */; };
+		58EB940C2A1718A70020B6EC /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58EB940D2A1718A70020B6EC /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58EB940E2A1718A80020B6EC /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58EB940F2A1718A80020B6EC /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58EB94102A1718A90020B6EC /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58EB94112A1719D00020B6EC /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58EB94122A1719D10020B6EC /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58EB94132A1719D10020B6EC /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58EB94142A1719D20020B6EC /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58EB94152A1719D20020B6EC /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
 		58F196042A11E3D000B88F39 /* FCTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196032A11E3D000B88F39 /* FCTableViewHeadCell.m */; };
 		58F196052A11E3D000B88F39 /* FCTableViewHeadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196032A11E3D000B88F39 /* FCTableViewHeadCell.m */; };
 		58F1962F2A11FD2F00B88F39 /* ContentFilterEditorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F196072A11FD2F00B88F39 /* ContentFilterEditorView.m */; };
@@ -4717,6 +4727,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F196EA2A15F8B400B88F39 /* ContentBlockerRequestHandler.m in Sources */,
+				58EB94112A1719D00020B6EC /* TrustedSite.m in Sources */,
+				58EB94102A1718A90020B6EC /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4725,6 +4737,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F196FB2A15F91200B88F39 /* ContentBlockerRequestHandler.m in Sources */,
+				58EB94122A1719D10020B6EC /* TrustedSite.m in Sources */,
+				58EB940F2A1718A80020B6EC /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4733,6 +4747,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F1970C2A15F93300B88F39 /* ContentBlockerRequestHandler.m in Sources */,
+				58EB94132A1719D10020B6EC /* TrustedSite.m in Sources */,
+				58EB940C2A1718A70020B6EC /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4741,6 +4757,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F1971D2A15F98A00B88F39 /* ContentBlockerRequestHandler.m in Sources */,
+				58EB94142A1719D20020B6EC /* TrustedSite.m in Sources */,
+				58EB940D2A1718A70020B6EC /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4749,6 +4767,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F1972E2A15F99A00B88F39 /* ContentBlockerRequestHandler.m in Sources */,
+				58EB94152A1719D20020B6EC /* TrustedSite.m in Sources */,
+				58EB940E2A1718A80020B6EC /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
