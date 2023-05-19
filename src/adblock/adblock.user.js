@@ -762,6 +762,9 @@ const browser = __b;
 
       startListenerMove();
       if(!Utils.isMobileOrIpad()){
+        document.addEventListener('DOMContentLoaded', function() {
+          document.focus();
+        });
         console.log('startSelecteTagAndMakeupAd-------addEventListener----keyup-----');
         // document.removeEventListener('keyup', handleKeyUpEvent, { passive: true });
         const keyupEvent = document.addEventListener('keyup', handleKeyUpEvent);
@@ -884,9 +887,9 @@ const browser = __b;
       showMakeupTagMenu = true;
       stopListenerMove();
       stopWindowScroll();
-      if(Utils.isMobileOrIpad()){
-        preselectedTargetDom.style.borderColor = '#B620E0';
-      }
+      // if(Utils.isMobileOrIpad()){
+      // }
+      preselectedTargetDom.style.borderColor = '#B620E0';
       // todo
       let closeMenu = 'https://res.stayfork.app/scripts/95CF6156C3CCD94629AF09F81A6CD5FF/icon.png';
       let expand = 'https://res.stayfork.app/scripts/0D45496300EC4B6360E44B69B92D1132/icon.png';
@@ -1076,18 +1079,28 @@ const browser = __b;
       return null;
     }
 
+    function getAllSiblingNode(tempDom){
+      let siblings = [];
+      let parentNode = tempDom.parentNode;
+      let childNodes = parentNode.childNodes;
+
+      for (let i = 0; i < childNodes.length; i++) {
+        let node = childNodes[i];
+        if (node.nodeType === Node.ELEMENT_NODE && !(notShowTagNameList.includes(node.nodeName)) && node !== tempDom) {
+          siblings.push(node);
+        }
+      }
+    }
+
     function getValidPreviousSiblingNode(tempDom){
       try {
         let previousSiblingNode = tempDom;
         // let parentNode
         while(previousSiblingNode){
           previousSiblingNode = previousSiblingNode.previousSibling
-          if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0 && previousSiblingNode.getBoundingClientRect().height>0){
+          if(previousSiblingNode && previousSiblingNode.nodeType === Node.ELEMENT_NODE && !(notShowTagNameList.includes(previousSiblingNode.nodeName)) && previousSiblingNode.getBoundingClientRect().width>0 && previousSiblingNode.getBoundingClientRect().height>0){
             break;
           }
-        }
-        if(notShowTagNameList.includes(previousSiblingNode.nodeName)){
-          return null;
         }
         return previousSiblingNode;
       } catch (error) {
@@ -1102,12 +1115,9 @@ const browser = __b;
         // let parentNode
         while(nextSiblingNode){
           nextSiblingNode = nextSiblingNode.nextSibling
-          if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0 && nextSiblingNode.getBoundingClientRect().height>0){
+          if(nextSiblingNode && nextSiblingNode.nodeType === Node.ELEMENT_NODE && !(notShowTagNameList.includes(nextSiblingNode.nodeName)) && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0 && nextSiblingNode.getBoundingClientRect().height>0){
             break;
           }
-        }
-        if(notShowTagNameList.includes(nextSiblingNode.nodeName)){
-          return null;
         }
         return nextSiblingNode;
       } catch (error) {
@@ -1215,26 +1225,33 @@ const browser = __b;
 
     async function sendSelectedTagToHandler(){
       return new Promise((resolve, reject)=>{
-        // console.log(selectedDom);
+        console.log('before----',selectedDom);
         let styles = window.getComputedStyle(selectedDom);
         if(styles.position == 'fixed'){
           let shouldExpand = false;
           let selectedDomSibling = getValidPreviousSiblingNode(selectedDom) || getValidNextSiblingNode(selectedDom);
           if(selectedDomSibling){
+            // console.log('selectedDomSibling-----',selectedDomSibling);
             let selectedDomSiblingStyles = window.getComputedStyle(selectedDomSibling);
             if(selectedDomSiblingStyles.position == 'fixed'){
               shouldExpand = true;
+            }else{
+              // console.log('selectedDomSiblingStyles----not-----fixed-----');
             }
           }else{
             shouldExpand = true;
+            // console.log('selectedDomSibling----null-');
           }
           if(shouldExpand){
             let fixedParentDom = getValidParentNode();
+            // console.log('fixedParentDom--------',fixedParentDom)
             while(fixedParentDom){
               if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
+                // console.log('fixedParentDom-----subling-------yes---');
                 break;
               }
               fixedParentDom = fixedParentDom.parentNode;
+              // console.log('fixedParentDom------parentNode------',fixedParentDom)
             }
             // console.log('fixedParentDom------',fixedParentDom)
             if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
@@ -1242,23 +1259,27 @@ const browser = __b;
             }
           }
         }
-        
+        // console.log('after----', selectedDom);
         let selector = getSelector(selectedDom);
-        // console.log('selector-----selector--------',selector)
+        // console.log('selector-----selector---before----',selector)
         let selDom = document.querySelector(selector);
         if(!selDom){
           selector = getSelector(selectedDom, 'useClass');
           selDom = document.querySelector(selector);
         }
+        // console.log('selector-----selector---after-----',selector)
         let url = window.location.href;
         if(selDom){
           const uuid = Utils.hexMD5(`${url}${selector}`);
           if(cssSelectorSet.has(uuid)){
+            selDom.style.display = 'none';
             resolve(true);
             return;
           }else{
             cssSelectorSet.add(uuid);
+            // console.log('selDom-------',selDom)
             selDom.style.display = 'none';
+            selectedDom.style.display = 'none';
           }
         }
         
