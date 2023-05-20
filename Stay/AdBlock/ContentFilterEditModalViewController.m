@@ -16,6 +16,7 @@
 #import "AlertHelper.h"
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
+#import "FCShared.h"
 
 @interface ContentFilterEditModalViewController()<
  UITableViewDelegate,
@@ -217,6 +218,18 @@
                         [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
                     });
                 }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf.navigationController.slideController stopLoading];
+                        UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+                        image = [image imageWithTintColor:FCStyle.fcBlack
+                                            renderingMode:UIImageRenderingModeAlwaysOriginal];
+                        [FCShared.toastCenter show:image
+                                         mainTitle:weakSelf.contentFilter.title
+                                    secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+                    });
+                }
             }
             else{
                 self.contentFilter.downloadUrl = originDownloadUrl;
@@ -299,6 +312,13 @@
                 AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
                 [cer refreshRules];
                 [self.tableView reloadData];
+                UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                          withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+                image = [image imageWithTintColor:FCStyle.fcBlack
+                                    renderingMode:UIImageRenderingModeAlwaysOriginal];
+                [FCShared.toastCenter show:image
+                                 mainTitle:self.contentFilter.title
+                            secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
                 [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidUpdateNotification object:nil];
             });
         }];
