@@ -658,16 +658,16 @@ static DownloadManager *instance = nil;
     
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
-    NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c:v mpeg4 -c:a aac '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
+    NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c:v mpeg4 -qscale:v 4 -c:a aac '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
     if (task.normalState.audioUrl.length > 0) {
-        NSString *videoCodec = [task.normalState.videoType isEqualToString:@"mp4"] ? @"copy" : @"mpeg4";
+        NSString *videoCodec = [task.normalState.videoType isEqualToString:@"mp4"] ? @"copy" : @"mpeg4 -qscale:v 4 ";
         if ([task.normalState.videoType isEqualToString:@"mp4"]) {
             MediaInformationSession *mediaInformationSession = [FFprobeKit getMediaInformation:[NSString stringWithFormat:@"%@.%@", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType]];
             MediaInformation *mediaInformation =[mediaInformationSession getMediaInformation];
             if (mediaInformation.getStreams.count > 0) {
                 StreamInformation *streamInformation = [mediaInformation getStreams][0];
                 if ([[streamInformation getCodec] isEqualToString:@"av1"]) {
-                    videoCodec = @"mpeg4";
+                    videoCodec = @"mpeg4 -qscale:v 4 ";
                 }
             }
 //            NSLog(@"media info : %@", [mediaInformation getAllProperties]);
