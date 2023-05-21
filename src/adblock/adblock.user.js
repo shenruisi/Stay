@@ -72,6 +72,7 @@ const browser = __b;
    */
   function injectSelectedAdTagJS(isContent){
     let showMakeupTagPanel = false;
+    let checkZindexFlag = false;
     let showMakeupTagMenu = false;
     let makeupTagListenerObj = {threeFingerTapStatus: ''};
     let moveWrapperDom = null;
@@ -420,7 +421,7 @@ const browser = __b;
                       right:0;
                       top:0;
                       bottom:0;
-                      z-index:2147483640;
+                      z-index:2147483645;
                       width:100%;
                       height:100%;
                       background-color:rgba(0,0,0,0.4);
@@ -430,7 +431,7 @@ const browser = __b;
                     }
                     .__stay_close_con{
                       position:fixed;
-                      z-index:2147483647;
+                      z-index:2147483646;
                       right: 20px;
                       top: 20px;
                       width:26px;
@@ -442,12 +443,13 @@ const browser = __b;
                       cursor: default;
                       user-select: none;
                     }
-                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483642; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
                     .__stay_makeup_menu_wrapper{
                       width:192px;
                       position:fixed;
                       padding: 8px 5px;
                       box-sizing: border-box;
+                      z-index: 2147483647;
                     }
                     .__stay_makeup_menu_item_box{
                       width:100%;
@@ -764,6 +766,7 @@ const browser = __b;
       showMakeupTagPanel = true;
       createOrShowSeleteTagPanelWithModal();
       startListenerMove();
+      checkZindexDom();
       if(!Utils.isMobileOrIpad()){
         // document.addEventListener('DOMContentLoaded', function() {
         //   document.focus();
@@ -1608,8 +1611,6 @@ const browser = __b;
                 throw e
               }
             }
-            
-            // console.log('siblings------', siblings, indexNode);
             if (siblings.length > 1) {
               // const index = siblings.indexOf(el);
               selector += `:nth-child(${indexNode + 1})`;
@@ -1669,6 +1670,7 @@ const browser = __b;
     });
 
     function startMakeupTag(){
+      
       let browserLangurage = languageCode()
       i18nProp = AdLangMessage[browserLangurage] || AdLangMessage['en_US'];
       makeupTagListenerObj.makeupStatus = 'off';
@@ -1676,7 +1678,24 @@ const browser = __b;
       // asyncFetchMakeupTagStatus();
       listenerMakeupStatusFromPopup();
     }
-  
+    
+    async function checkZindexDom(){
+      if(!checkZindexFlag){
+        setTimeout(()=>{
+          const zIndexDoms = document.querySelectorAll("[style*='z-index']");
+          const nodeList = Array.from(zIndexDoms);
+          if(nodeList && nodeList.length){
+            nodeList.forEach((node, i)=>{
+              const zIndex = node.style.zIndex;
+              if(zIndex>2147483600){
+                node.style.zIndex = 2147483500;
+              }
+            });
+          }
+        }, 100)
+      }
+    }
+
     startMakeupTag();
 
   }
