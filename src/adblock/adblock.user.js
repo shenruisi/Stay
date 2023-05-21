@@ -757,15 +757,20 @@ const browser = __b;
     }
 
     function startSelecteTagAndMakeupAd(){
+      // document.addEventListener('DOMContentLoaded', function() {
+      //   document.body.focus();
+      // });
+      // document.body.focus();
       showMakeupTagPanel = true;
       createOrShowSeleteTagPanelWithModal();
-
       startListenerMove();
       if(!Utils.isMobileOrIpad()){
-        document.addEventListener('DOMContentLoaded', function() {
-          document.focus();
-        });
-        console.log('startSelecteTagAndMakeupAd-------addEventListener----keyup-----');
+        // document.addEventListener('DOMContentLoaded', function() {
+        //   document.focus();
+        // });
+        
+        
+        // console.log('startSelecteTagAndMakeupAd-------addEventListener----keyup-----');
         // document.removeEventListener('keyup', handleKeyUpEvent, { passive: true });
         const keyupEvent = document.addEventListener('keyup', handleKeyUpEvent);
       }
@@ -796,13 +801,14 @@ const browser = __b;
       if(!document.querySelector('#__stay_wrapper')){
         moveWrapperDom = document.createElement('div');
         moveWrapperDom.id='__stay_wrapper';
+        moveWrapperDom.setAttribute('tabindex', 'true');
         moveWrapperDom.classList.add('__stay_move_wrapper');
         closeTagingDom = document.createElement('div');
         closeTagingDom.id='__stay_close';
         closeTagingDom.classList.add('__stay_close_con');
         document.body.appendChild(closeTagingDom);
         document.body.appendChild(moveWrapperDom);
-
+        moveWrapperDom.focus();
         window.addEventListener('scroll', () => {
           if(makeupTagListenerObj.makeupStatus == 'on'){
             hideSeletedTagContentModal();
@@ -813,9 +819,11 @@ const browser = __b;
             startListenerMove();
           }
         });
+
       }else{
         moveWrapperDom.style.display = 'block';
         closeTagingDom.style.display = 'block';
+        moveWrapperDom.focus();
       }
       addListenerClosePanelEvent();
       if(!document.querySelector('#__stay_selected_tag')){
@@ -972,39 +980,48 @@ const browser = __b;
       }
       let bottomHeight = Utils.sub(clientHeight, bottomToTopHeight);
   
-      if(tagMenuDomHeight <= bottomHeight){
+      if(tagMenuDomHeight <= topHeight){
         if(onRight || onLeft){
-          tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+          if(Utils.sub(clientHeight, topHeight) >= tagMenuDomHeight){
+            tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
+          }else{
+            tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 6)}px`;
+          }
+          // tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+          // tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
         }else{
-          tagMenuDom.style.top = `${bottomToTopHeight}px`;
+          tagMenuDom.style.top = `${Utils.sub(topHeight, tagMenuDomHeight)}px`;
         }
       }else{
-        if(tagMenuDomHeight <= topHeight){
+        if(tagMenuDomHeight <= bottomHeight){
           if(onRight || onLeft){
-            tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+            tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
           }else{
-            tagMenuDom.style.top = `${Utils.sub(topHeight, tagMenuDomHeight)}px`;
+            tagMenuDom.style.top = `${bottomToTopHeight}px`;
           }
         }else{
-
-          
           if(topHeight <= bottomHeight){
 
             if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= (Utils.sub(clientHeight, topHeight))){
-              tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+              tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
             }else{
               tagMenuDom.style.bottom = '-8px';
             }
             
           }else{
             if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= bottomToTopHeight){
-              tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+              if(Utils.sub(clientHeight, topHeight) >= tagMenuDomHeight){
+                tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
+              }else{
+                tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+              }
+              
             }else{
               tagMenuDom.style.top = '-8px';
             }
           }
-          
         }
+          
       }
       
       
@@ -1263,25 +1280,32 @@ const browser = __b;
         let selector = getSelector(selectedDom);
         // console.log('selector-----selector---before----',selector)
         let selDom = document.querySelector(selector);
-        if(!selDom){
+        // console.log('selDom-------',selDom);
+        if(!selDom || selDom == null || selDom == 'null'){
+          // console.log('selDom--22222222-----',selDom);
           selector = getSelector(selectedDom, 'useClass');
           selDom = document.querySelector(selector);
         }
-        // console.log('selector-----selector---after-----',selector)
+        console.log('selector-----selector---after-----',selector,selDom)
         let url = window.location.href;
-        if(selDom){
-          const uuid = Utils.hexMD5(`${url}${selector}`);
-          if(cssSelectorSet.has(uuid)){
-            selDom.style.display = 'none';
-            resolve(true);
-            return;
-          }else{
-            cssSelectorSet.add(uuid);
-            // console.log('selDom-------',selDom)
-            selDom.style.display = 'none';
-            selectedDom.style.display = 'none';
+
+        try {
+          if(selDom){
+            const uuid = Utils.hexMD5(`${url}${selector}`);
+            if(cssSelectorSet.has(uuid)){
+              selDom.style.display = 'none';
+              resolve(true);
+              return;
+            }else{
+              selDom.style.display = 'none';
+              selectedDom.style.display = 'none';
+              cssSelectorSet.add(uuid);
+            }
           }
+        } catch (error) {
+          console.log('error------',error)
         }
+        
         
         // selectedDom.style.display = 'none';
         selectedDom = null;
@@ -1568,10 +1592,27 @@ const browser = __b;
             selector += `.${el.className.replace(/\s+/g, '.')}`
           }
           else {
-            const siblings = Array.from(el.parentNode.children).filter(sibling => sibling.nodeName === el.nodeName);
+            const siblings = Array.from(el.parentNode.children);
+            let indexNode = 0;
+            try {
+              siblings.forEach((node, index)=>{
+                if(node == el){
+                  indexNode = index;
+                  throw new Error('endloop');
+                }
+              })
+            } catch (e) {
+              if(e.message === 'endloop') {
+                // 终止循环
+              }else{
+                throw e
+              }
+            }
+            
+            // console.log('siblings------', siblings, indexNode);
             if (siblings.length > 1) {
-              const index = siblings.indexOf(el);
-              selector += `:nth-child(${index + 1})`;
+              // const index = siblings.indexOf(el);
+              selector += `:nth-child(${indexNode + 1})`;
             }
           }
           path.unshift(selector);
@@ -1580,10 +1621,8 @@ const browser = __b;
       } catch (error) {
         console.log(error)
       }
-      
       return path.join(' > ');
     }
-    // "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)" 
 
     /**
      * 判断id是否是随机生成
@@ -1597,7 +1636,7 @@ const browser = __b;
       if(!idStr){
         return false;
       }
-      if(/^[0-9a-zA-Z]*$/.test(idStr) && idStr.length>10){
+      if(/^[0-9a-zA-Z-_]*$/.test(idStr) && idStr.length>10){
         return false;
       }
       return true;

@@ -1820,7 +1820,10 @@ function fetchRandomStr(randomStr, speedRandomStr){
       398: '720p',
       397: '480p',
       396: '360p',
-      395: '240p'
+      395: '240p',
+      313: '2160p',
+      
+      337: '2160p HDR',
     };
   
     return resolutions[itag];
