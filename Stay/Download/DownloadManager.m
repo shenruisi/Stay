@@ -424,7 +424,11 @@ static DownloadManager *instance = nil;
                 if (i == 0 && segInfo.xKey != nil) {
                     m3u8State.keyURL = segInfo.xKey.url;
                     if (![m3u8State.keyURL hasPrefix:@"http"]) {
-                        m3u8State.keyURL = [NSURL URLWithString:m3u8State.keyURL relativeToURL:[[NSURL URLWithString:segInfo.urlString] URLByDeletingLastPathComponent]].absoluteString;
+                        NSURL *baseURL = segInfo.baseURL;
+                        if (!baseURL.scheme) {
+                            baseURL = [[NSURL URLWithString:segInfo.urlString] URLByDeletingLastPathComponent];
+                        }
+                        m3u8State.keyURL = [NSURL URLWithString:m3u8State.keyURL relativeToURL:baseURL].absoluteString;
                     }
                     m3u8State.keyIV = segInfo.xKey.iV;
                     if (m3u8State.keyIV == nil) {
