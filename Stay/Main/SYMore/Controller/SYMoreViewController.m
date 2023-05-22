@@ -556,6 +556,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 //        self.tableView.frame = self.view.bounds;
         [self.tableView reloadData];
     });
+    
 //    [FCStore shared].testingProFlag = YES;
 }
 
