@@ -502,7 +502,7 @@ UIDocumentPickerDelegate
                 
                 resource.downloadProcess = task.progress * 100;
                 
-                task.block = ^(float progress, NSString *speed, DMStatus status) {
+                task.block = ^(float progress, NSString *speed, DMStatus status) {               
                     if(status == DMStatusFailed) {
                         [[DataManager shareManager]updateDownloadResourceStatus:3 uuid:resource.downloadUuid];
                         cell.downloadResource.status = 3;
@@ -517,7 +517,7 @@ UIDocumentPickerDelegate
                             cell.progress = progress;
                             cell.downloadRateLabel.text =  [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),progress * 100];
                             [cell.downloadRateLabel sizeToFit];
-                            cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+//                            cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
                             cell.downloadSpeedLabel.text = speed;
                         });
                         
@@ -587,8 +587,17 @@ UIDocumentPickerDelegate
                         }
                         dispatch_async(dispatch_get_main_queue(),^{
         //                    cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
-                            cell.downloadSpeedLabel.text = speed;
-                            cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
+                            
+                            NSString *str2 = [NSString stringWithFormat: @"%@: %@",NSLocalizedString(@"Transcoding",""),speed];
+                            NSMutableAttributedString *noteStr = [[NSMutableAttributedString alloc] initWithString:str2];
+
+                            NSRange range = [str2 rangeOfString:speed];
+                           
+                            [noteStr addAttribute:NSForegroundColorAttributeName value:FCStyle.titleGrayColor range:range];
+                            [noteStr addAttribute:NSFontAttributeName value:FCStyle.footnote range:range];
+                            cell.downloadRateLabel.attributedText = noteStr;
+//                            cell.downloadSpeedLabel.text = speed;
+//                            cell.downloadSpeedLabel.left = cell.downloadRateLabel.right + 10;
                         });
                         resource.status = 4;
                         if(speed != nil && speed.length > 0) {
