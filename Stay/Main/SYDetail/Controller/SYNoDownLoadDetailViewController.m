@@ -258,7 +258,7 @@
     NSArray *plafroms = self.scriptDic[@"platforms"];
 
     if (plafroms != NULL && ![plafroms containsObject:[[API shared] queryDeviceType]] ) {
-        [self.actBtn setTitle:NSLocalizedString(@"Not supported on this device", @"")  forState:UIControlStateNormal];
+        [self.actBtn setTitle:NSLocalizedString(@"NotSupportedOnThisDevice", @"")  forState:UIControlStateNormal];
         [self.actBtn setTitleColor:FCStyle.fcSecondaryBlack forState:UIControlStateNormal];
         [self.actBtn sizeToFit];
         self.actBtn.userInteractionEnabled = NO;
