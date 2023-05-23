@@ -346,3 +346,4 @@ Domain="域名";
 DomainFormatError="域名格式不正确。";
 TrustedSiteDeleteAlert="你确认要删除该信任站点吗？";
 DomainExistError="该域名已存在。";
+NotSupportedOnThisDevice="暂不支持该设备";
