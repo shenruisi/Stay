@@ -75,6 +75,17 @@
                         }];
                     }
                 }
+                
+                [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                    if (state.enabled){
+                        contentFilter.enable = 1;
+                        [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                    }
+                    else{
+                        contentFilter.enable = 0;
+                        [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                    }
+                }];
             }
             
             for (ContentFilter *contentFilter in self.stoppedSource){
@@ -86,6 +97,17 @@
                         }];
                     }
                 }
+                
+                [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                    if (state.enabled){
+                        contentFilter.enable = 1;
+                        [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                    }
+                    else{
+                        contentFilter.enable = 0;
+                        [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                    }
+                }];
             }
         });
     }
