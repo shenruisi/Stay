@@ -119,6 +119,47 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trustedSiteDidAddHandler:) name:TrustedSiteDidAddNotification object:nil];
+    
+    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT), ^{
+        for (ContentFilter *contentFilter in self.activatedSource){
+            dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                if (state.enabled){
+                    contentFilter.enable = 1;
+                    [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                }
+                else{
+                    contentFilter.enable = 0;
+                    [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            dispatch_semaphore_wait(semaphore, deadline);
+        }
+        
+        for (ContentFilter *contentFilter in self.stoppedSource){
+            dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+                if (state.enabled){
+                    contentFilter.enable = 1;
+                    [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                }
+                else{
+                    contentFilter.enable = 0;
+                    [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                }
+                dispatch_semaphore_signal(semaphore);
+            }];
+            dispatch_semaphore_wait(semaphore, deadline);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    });
+    
 }
 
 - (void)trustedSiteDidAddHandler:(NSNotification *)note{
