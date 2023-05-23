@@ -632,14 +632,14 @@ const browser = __b;
       if (event.touches.length === 3) {
         event.preventDefault();
         threeFingerMoveStart = event.pageX;
-        if(!showMakeupTagPanel){
-          if('on' == makeupTagListenerObj.makeupStatus){
-            console.log('handleTouchstartEvent.makeupStatus------')
-            // startSelecteTagAndMakeupAd()
-            makeupTagListenerObj.makeupStatus = 'off';
-          }else{
-            makeupTagListenerObj.makeupStatus = 'on';
-          }
+        // if(!showMakeupTagPanel){
+        // }
+        if('on' == makeupTagListenerObj.makeupStatus){
+          console.log('handleTouchstartEvent.makeupStatus------')
+          // startSelecteTagAndMakeupAd()
+          makeupTagListenerObj.makeupStatus = 'off';
+        }else{
+          makeupTagListenerObj.makeupStatus = 'on';
         }
       }
       
@@ -651,7 +651,7 @@ const browser = __b;
         event.preventDefault();
         threeFingerMoveEnd = event.pageX;
         let moveDistance = Math.abs(Utils.sub(threeFingerMoveEnd, threeFingerMoveStart));
-        if(moveDistance <= distance && !showMakeupTagPanel){
+        if(moveDistance <= distance ){ // && !showMakeupTagPanel
           if('on' == makeupTagListenerObj.makeupStatus){
             // startSelecteTagAndMakeupAd()
             console.log('handleTouchmoveEvent.makeupStatus------')
@@ -1400,6 +1400,7 @@ const browser = __b;
       if(closeTagingDom != null){
         closeTagingDom.style.display = 'none';
       }
+      hideSelectTagNoteToast();
     }
 
     /**
