@@ -301,6 +301,7 @@
     [self.subTitleConstraints removeAllObjects];
     [self.imageViewConstraints removeAllObjects];
     
+    self.iconImageView.image = nil;
     
     if(dic.icon.length > 0) {
         [self.iconImageView sd_setImageWithURL:[NSURL URLWithString: dic.icon]];
