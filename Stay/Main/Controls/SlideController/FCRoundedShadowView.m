@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) FCView *containerView;
 @property (nonatomic, assign) CGFloat radius;
+@property (nonatomic, assign) CGFloat borderWidth;
+@property (nonatomic, assign) CACornerMask cornerMask;
 @end
 
 @implementation FCRoundedShadowView
@@ -19,6 +21,7 @@
 - (instancetype)initWithRadius:(CGFloat)radius{
     if (self = [super init]){
         self.radius = radius;
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         self.layer.backgroundColor = [UIColor clearColor].CGColor;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
         self.layer.shadowOffset = CGSizeMake(0, 1.0);
@@ -32,28 +35,56 @@
     return self;
 }
 
-- (instancetype)init{
+- (instancetype)initWithRadius:(CGFloat)radius
+                    borderWith:(CGFloat)borderWith
+                    cornerMask:(CACornerMask)cornerMask{
     if (self = [super init]){
+        self.radius = radius;
+        self.borderWidth = borderWith;
+        self.cornerMask = cornerMask;
+        self.layer.backgroundColor = [UIColor clearColor].CGColor;
+        self.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.layer.shadowOffset = CGSizeMake(0, 1.0);
+        self.layer.shadowOpacity = 0.1;
+        self.layer.shadowRadius = MAX(10,self.radius);
         [self containerView];
-        self.containerView.layer.cornerRadius = 0;
-        self.containerView.layer.borderWidth = 0;
+        self.containerView.layer.cornerRadius = MAX(10,self.radius);
     }
     
     return self;
 }
 
+- (instancetype)initWithNoShadowRadius:(CGFloat)radius
+                            borderWith:(CGFloat)borderWith
+                            cornerMask:(CACornerMask)cornerMask{
+    if (self = [super init]){
+        self.radius = radius;
+        self.borderWidth = borderWith;
+        self.cornerMask = cornerMask;
+        [self containerView];
+        self.containerView.layer.cornerRadius = MAX(10,self.radius);
+    }
+    
+    return self;
+}
+
+
 - (void)setFrame:(CGRect)frame{
     [super setFrame:frame];
-    [self.containerView setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+    if (_containerView){
+        [self.containerView setFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+    }
+    
 }
 
 - (FCView *)containerView{
     if (nil == _containerView){
         _containerView = [[FCView alloc] init];
         _containerView.backgroundColor = FCStyle.popup;
+        _containerView.layer.maskedCorners = self.cornerMask;
         _containerView.layer.cornerRadius = MAX(10,self.radius);
         _containerView.layer.borderColor = FCStyle.fcSeparator.CGColor;
-        _containerView.layer.borderWidth = 0.5;
+        _containerView.layer.borderWidth = self.borderWidth;
         _containerView.clipsToBounds = YES;
         [self addSubview:_containerView];
     }

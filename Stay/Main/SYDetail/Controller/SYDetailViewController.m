@@ -24,6 +24,7 @@
 #import "SYWebsiteViewController.h"
 #import "SYSubmitScriptSlideController.h"
 #import "SYReportSlideController.h"
+#import "DefaultIcon.h"
 
 #import "QuickAccess.h"
 
@@ -55,6 +56,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = FCStyle.popup;
 
+     self.hidesBottomBarWhenPushed = YES;
+     
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(scriptSaveSuccess:) name:@"scriptSaveSuccess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(deleteScript:) name:@"deleteDetail" object:nil];
@@ -100,23 +103,11 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.tabBarController.tabBar.hidden = YES;
-     
-     UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
-     appperance.backgroundColor = FCStyle.fcWhite;
-     [appperance setShadowColor:FCStyle.fcWhite];
-     self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
-
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-     
-     UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-     [appearance configureWithOpaqueBackground];
-     appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-     self.navigationController.navigationBar.standardAppearance = appearance;
-     self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 - (void)scriptSaveSuccess:(id)sender{
@@ -235,30 +226,37 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
      
-     for (UIView *subView in cell.contentView.subviews) {
-         [subView removeFromSuperview];
-     }
-
+     [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+     cell.contentView.backgroundColor = [UIColor clearColor];
+     cell.backgroundColor = [UIColor clearColor];
      CGFloat left = 15;
      CGFloat titleLabelLeftSize = 0;
-     if(self.script.icon != NULL && self.script.icon.length > 0) {
-          UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
-          imageBox.layer.cornerRadius = 30;
-          imageBox.layer.borderWidth = 1;
-          imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-          
-          UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
-      //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-          [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
+     UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
+     imageBox.layer.cornerRadius = 30;
+     imageBox.layer.borderWidth = 1;
+     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+     imageBox.backgroundColor = FCStyle.fcWhite;
+     imageBox.clipsToBounds = YES;
+     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
+ //    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
 
-          imageView.clipsToBounds = YES;
-          imageView.centerX = 59;
-          imageView.centerY = 59;
-          imageView.contentMode = UIViewContentModeScaleAspectFit;
-          [imageBox addSubview:imageView];
-          [cell.contentView addSubview:imageBox];
-         titleLabelLeftSize = 15 + 118;
+     if( self.script.icon.length <= 0) {
+         [imageView setImage:[DefaultIcon iconWithTitle: self.script.name size:CGSizeMake(118, 118)]];
+          imageView.size = CGSizeMake(118, 118);
+     } else {
+          [imageView sd_setImageWithURL:[NSURL URLWithString:self.script.icon]];
      }
+     
+     imageView.clipsToBounds = YES;
+     imageView.centerX = 59;
+     imageView.centerY = 59;
+     imageView.contentMode = UIViewContentModeScaleAspectFit;
+     [imageBox addSubview:imageView];
+     [cell.contentView addSubview:imageBox];
+    titleLabelLeftSize = 15 + 118;
+
+     
+  
      
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 15, self.view.width - titleLabelLeftSize - left * 2, 21)];
      titleLabel.font = FCStyle.title3Bold;
@@ -281,11 +279,13 @@
      
      if(self.script.active) {
          [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
-         self.actBtn.backgroundColor = FCStyle.accent;
-         [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
+         [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
      } else {
          [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
-          self.actBtn.backgroundColor = FCStyle.background;
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.fcBlack.CGColor;
           [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
      }
      
@@ -796,15 +796,17 @@
 - (void) switchAction:(id)sender {
     self.script.active = !self.script.active;
     
-    if(self.script.active) {
-        [self.actBtn setTitle:NSLocalizedString(@"Activated", @"")  forState:UIControlStateNormal];
-        self.actBtn.backgroundColor = FCStyle.accent;
-        [self.actBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    } else {
-        [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"") forState:UIControlStateNormal];
-         self.actBtn.backgroundColor = FCStyle.background;
-         [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
-    }
+     if(self.script.active) {
+         [self.actBtn setTitle:NSLocalizedString(@"Activated", @"") forState:UIControlStateNormal];
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
+         [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+     } else {
+         [self.actBtn setTitle:NSLocalizedString(@"Stopped", @"")  forState:UIControlStateNormal];
+          self.actBtn.layer.borderWidth = 1;
+          self.actBtn.layer.borderColor = FCStyle.fcBlack.CGColor;
+          [self.actBtn setTitleColor:FCStyle.fcBlack forState:UIControlStateNormal];
+     }
     
     if (self.script.active) {
         [[DataManager shareManager] updateScrpitStatus:1 numberId:self.script.uuid];
@@ -1241,7 +1243,7 @@
           },
           @{
               @"name":NSLocalizedString(@"AUTHOR", @""),
-              @"desc":self.script.author,
+              @"desc":self.script.author ? self.script.author : @"",
               @"color":FCStyle.grayNoteColor,
           },
           @{
@@ -1467,8 +1469,8 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-        [self.view addSubview:_tableView];
+         _tableView.backgroundColor = [UIColor clearColor];
+         [self.view addSubview:_tableView];
     }
     
     return _tableView;

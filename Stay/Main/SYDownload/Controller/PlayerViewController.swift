@@ -75,13 +75,16 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         super.viewDidLoad()
         
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+        if let bgLayer = view.layer.sublayers?[0] as? CAGradientLayer {
+            bgLayer.removeFromSuperlayer()
+            container.layer.insertSublayer(bgLayer, at: 0)
+        }
         view.backgroundColor = .black
-        
+        self.hidesBottomBarWhenPushed = true
         videoView = VideoPlayerView(resources: resources, controller: self)
         videoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(videoView)
         
-        container.backgroundColor = FCStyle.secondaryBackground
         container.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(container)
         
@@ -106,7 +109,7 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.rowHeight = 104.5
-        tableView.backgroundColor = FCStyle.secondaryBackground
+        tableView.backgroundColor = UIColor.clear
         tableView.register(SYVideoCellTableViewCell.self, forCellReuseIdentifier: "SYVideoCellTableViewCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(tableView)
@@ -164,9 +167,11 @@ class PlayerViewController: SYSecondaryViewController, UITableViewDataSource, UI
             let airBtn = AVRoutePickerView()
             airBtn.prioritizesVideoDevices = true
             airBtn.delegate = videoView
-            rightBarButtonItems = [UIBarButtonItem(customView: airBtn)]
+            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: airBtn)]
+        
+            
         } else {
-            rightBarButtonItems = []
+            self.navigationItem.rightBarButtonItems = []
         }
     }
     

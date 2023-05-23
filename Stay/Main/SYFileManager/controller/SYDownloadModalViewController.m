@@ -253,13 +253,15 @@
         _startDownloadButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
         [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
                                                                                  attributes:@{
-                             NSForegroundColorAttributeName : UIColor.whiteColor,
+                             NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
                                         forState:UIControlStateNormal];
         [_startDownloadButton addTarget:self
                                  action:@selector(startDownloadAction:)
                        forControlEvents:UIControlEventTouchUpInside];
-        _startDownloadButton.backgroundColor = FCStyle.accent;
+        _startDownloadButton.backgroundColor = UIColor.clearColor;
+        _startDownloadButton.layer.borderColor = FCStyle.accent.CGColor;
+        _startDownloadButton.layer.borderWidth = 1;
         _startDownloadButton.layer.cornerRadius = 10;
         _startDownloadButton.layer.masksToBounds = YES;
         [self.view addSubview:_startDownloadButton];
@@ -378,7 +380,7 @@
 #else
     if (FCDeviceTypeIPhone == [DeviceHelper type]){
         if([UIApplication sharedApplication].keyWindow.rootViewController != nil) {
-            ((UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).selectedIndex = 2;
+            [((FCTabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController).fcTabBar selectIndex:3];
         }
     }
 #endif

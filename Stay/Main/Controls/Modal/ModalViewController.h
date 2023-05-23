@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Set on create to hide the navigation bar or not.
 @property (nonatomic, assign) BOOL hideNavigationBar;
 
+@property (nonatomic, assign) BOOL fullScreen;
+
 - (void)viewDidLoad;
 - (void)viewWillAppear;
 - (void)viewDidAppear;
@@ -35,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGFloat)maxViewWidth;
 
 - (UIView *)getMainView;
-
+- (void)clear;
 - (void)willSee;
 @end
 

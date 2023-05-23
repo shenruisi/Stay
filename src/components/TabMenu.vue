@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-fotter-wrapper" :class="isMobile?'mobile':'mac'">
+  <div class="popup-fotter-wrapper" ref="fotterRef" :class="isMobile?'mobile':'mac'">
     <div class="fotter-box">
       <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="tabClickAction(item.id)">
         <div class="tab-img" :key="item.name" v-if="item.name == 'matched_scripts_tab'">
@@ -14,9 +14,9 @@
           <img src="../assets/images/download-sel.png" v-if="item.id == selectedTabId" />
           <img class="unselected"  src="../assets/images/download.png" v-else/>
         </div>
-        <div class="tab-img" :key="item.name" v-if="item.name == 'console_tab'">
-          <img src="../assets/images/console-sel.png" v-if="item.id == selectedTabId" />
-          <img class="unselected" src="../assets/images/console.png" v-else/>
+        <div class="tab-img" :key="item.name" v-if="item.name == 'adblock_tab'">
+          <img src="../assets/images/block-sel.png" v-if="item.id == selectedTabId" />
+          <img class="unselected" src="../assets/images/block.png" v-else/>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, ref, onMounted } from 'vue'
 import { isMobile } from '../utils/util'
 export default {
   name: 'DarkModeComp',
@@ -32,14 +32,23 @@ export default {
   setup (props, {emit, expose}) {
     const state = reactive({
       tabList: [
-        {id: 1, selected: 1, name: 'matched_scripts_tab'},
-        {id: 2, selected: 0, name: 'darkmode_tab'},
-        {id: 3, selected: 0, name: 'downloader_tab'},
-        {id: 4, selected: 0, name: 'console_tab'}
+        {id: 1, selected: 1, name: 'matched_scripts_tab', whatisurl: '', whatistitle:''},
+        {id: 2, selected: 0, name: 'darkmode_tab', whatisurl: 'https://www.craft.do/s/PHKJvkZL92BTep', whatistitle:'what_darkmode'},
+        {id: 3, selected: 0, name: 'downloader_tab', whatisurl: 'https://www.craft.do/s/sYLNHtYc0n2rrV', whatistitle:'what_downloader'},
+        {id: 4, selected: 0, name: 'adblock_tab', whatisurl: 'https://www.craft.do/s/nmtd0ZD3a9Z48w', whatistitle:'what_adblock'}
       ],
       selectedTabId: props.tabId,
       isMobile: isMobile()
     });
+    const fotterRef = ref(null);
+
+    onMounted(()=>{
+      let mountedTimer = setTimeout(() => {
+        fotterRef.value.style = '-webkit-backdrop-filter: blur(16px) saturate(150%)';
+        clearTimeout(mountedTimer);
+        mountedTimer = null;
+      }, 800)
+    })
 
     const tabClickAction = (tabId) => {
       if (!tabId) {
@@ -54,6 +63,7 @@ export default {
     }
 
     return {
+      fotterRef,
       ...toRefs(state),
       tabClickAction
       
@@ -71,15 +81,15 @@ export default {
 }
 .popup-fotter-wrapper{
   width: 100%;
+  background-color: var(--dm-bg-f6drop);
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: var(--dm-bg-f6);
-  border-top: 1px solid var(--dm-bd);
   z-index: 999;
   transform: translateZ(0px);
   -webkit-transform: translateZ(0px);
+  border-top: 1px solid var(--dm-bd);
   .fotter-box{
     position: relative;
     width: 100%;

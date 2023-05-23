@@ -1048,7 +1048,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if ("refreshTargetTabs" == request.operate){
             // console.log("background---refreshTargetTabs--", request);
-            browser.tabs.reload();
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.reload(tabs[0].id);
+            });
         }
         else if("fetchFolders" == request.operate){
             browser.runtime.sendNativeMessage("application.id", { type: "fetchFolders"}, function (response) {
@@ -1073,6 +1075,62 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 statusMap.long_press_status = longPressStatus;
                 browser.storage.local.set(statusMap, (res) => {
                     sendResponse(longPressStatus);
+                });
+            }
+        }
+        else if('fetchTagRules' == requestOperate){
+            const url = request.url;
+            // console.log('fetchTagRules----request', request)
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchTagRules", url }, function (response) {
+                // console.log("fetchTagRules-------response=",response);
+                let body = response&&response.body?response.body:{};
+                sendResponse(body)
+            });
+        }
+        else if('deleteTagRule' == requestOperate){
+            const uuid = request.uuid;
+            browser.runtime.sendNativeMessage("application.id", { type: "deleteTagRule", uuid }, function (response) {
+                // console.log("deleteTagRule-------response=",response);
+                let body = response&&response.body?response.body:{};
+                sendResponse(body)
+            });
+        }
+        else if('fetchTagStatus' == requestOperate){
+            // console.log("fetchTagStatus-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "fetchTagStatus" }, function (response) {
+                // console.log("fetchTagStatus-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
+        return true;
+    }else if ("content_script" == request.from){
+        // console.log("content_script-------request=", request)
+        if ("GET_STAY_AROUND" === request.operate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                // console.log("content_script-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
+        else if("getThreeFingerTapStatus" == request.operate){
+            let threeFingerTapStatus = 'on';
+            browser.storage.local.get("three_finger_tap_status", (res) => {
+                // console.log("getThreeFingerTapStatus-------three_finger_tap_status--------res=",res)
+                if(res && res["three_finger_tap_status"]){
+                    threeFingerTapStatus = res["three_finger_tap_status"]
+                }
+                sendResponse({threeFingerTapStatus});
+            });
+        }
+        else if("setThreeFingerTapStatus" == request.operate){
+            let threeFingerTapStatus = request.threeFingerTapStatus;
+            // console.log('setThreeFingerTapStatus-------', threeFingerTapStatus);
+            let type = request.type;
+            if(threeFingerTapStatus){
+                let statusMap = {}
+                statusMap.three_finger_tap_status = threeFingerTapStatus;
+                browser.storage.local.set(statusMap, (res) => {
+                    sendResponse(threeFingerTapStatus);
                 });
             }
         }
@@ -1129,11 +1187,29 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         else if("POST_AUDIO_RECORD" === requestOperate){
             let recording = request.recording;
-            // console.log('POST_AUDIO_RECORD----path=',path, ",location=",location)
             browser.runtime.sendNativeMessage("application.id", { type: "ST_speechToText", data: recording}, function (response) {
                 // console.log('POST_AUDIO_RECORD----', response)
                 sendResponse({ text: response.body })
             });
+        }
+        return true;
+    }else if ("adblock" == request.from){
+        // console.log("content_script-------request=", request)
+        if ("sendSelectorToHandler" === request.operate){
+            const selector = request.selector;
+            const url = request.url;
+            console.log("adblock-------request-----",selector, url);
+            browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, url }, function (response) {
+                console.log("adblock-------response=",response);
+                sendResponse({ body: response.body })
+            });
+            const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
+            // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            //     console.log("request.executeScript------", code);
+            //     browser.tabs.executeScript(tabs[0].id, { code: code}, (res)=>{
+            //         console.log("response.executeScript------", res);
+            //     })
+            // });
         }
         return true;
     }

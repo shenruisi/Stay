@@ -4,7 +4,7 @@ let randomYTObj = {};
 function fetchRandomStr(randomStr, speedRandomStr){
   // window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
   // window.webkit.messageHandlers.log.postMessage('fetchRandomStr---randomStr--'+randomStr);
-  // window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
+  window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
   randomYTObj.randomStr = randomStr;
   randomYTObj.speedRandomStr = speedRandomStr;
 }
@@ -88,6 +88,11 @@ function fetchRandomStr(randomStr, speedRandomStr){
       }
       let url = 'https;//stap.app?'+path;
       return this.queryURLParams(url, name);
+    },
+    getLastPathParameter: function(url) {
+      const path = new URL(url).pathname;
+      const segments = path.split('/').filter(segment => segment !== '');
+      return segments[segments.length - 1];
     },
     matchUrlInString: function(imgText){
       const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
@@ -726,17 +731,19 @@ function fetchRandomStr(randomStr, speedRandomStr){
     // }
 
     let n = Utils.queryURLParams(sourceUrl, 'n');
+    // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---n-----'+n);
     if(!n){
       // console.log('decodeYoutubeSpeedFun---n-is-null---',n);
       return sourceUrl;
     }
-    // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---ytParam_N_Obj--1---'+JSON.stringify(ytParam_N_Obj));
+    // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---ytParam_N_Obj--1---'+JSON.stringify(ytParam_N_Obj)+n);
     if(!ytParam_N_Obj[n]){
       ytParam_N_Obj[n] = getYoutubeNParam(n);
     }
 
     if(!ytParam_N_Obj[n]){
-      // console.log('decodeYoutubeSpeedFun---ytParam_N_Obj[n]-is-null---',n);
+      console.log('decodeYoutubeSpeedFun---ytParam_N_Obj[n]-is-null---',n);
+      // window.webkit.messageHandlers.log.postMessage('decodeYoutubeSpeedFun---n--2---'+ytParam_N_Obj[n]);
       return sourceUrl
     }
     
@@ -752,7 +759,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
       const decodeSpeedFun = new Function('return '+decodeSpeedFunStr); 
       return decodeSpeedFun()(decodeURIComponent(n));
     } catch (error) {
-      // window.webkit.messageHandlers.log.postMessage('getYoutubeNParam---decodeSpeedFun--error---'+decodeSpeedFunStr);
+      window.webkit.messageHandlers.log.postMessage('getYoutubeNParam---decodeSpeedFun-is-error---'+n+ error);
       return '';
     }
   }
@@ -885,6 +892,9 @@ function fetchRandomStr(randomStr, speedRandomStr){
     // https://cn.pornhub.com/view_video.php?viewkey=ph61ab31f8a70fe
     else if(host.indexOf('pornhub.com')>-1){
       videoInfo = handlePornhubVideoInfo(videoSnifferDom);
+    }
+    else if(host.indexOf('91porn.com')>-1){
+      videoInfo = handle91PormVideoInfo(videoSnifferDom);
     }
     else if(host.indexOf('facebook.com')>-1){
       videoInfo = handleFacebookVideoInfo(videoSnifferDom);
@@ -1125,6 +1135,21 @@ function fetchRandomStr(randomStr, speedRandomStr){
     const titleDom = document.querySelector('shreddit-app shreddit-title');
     if(titleDom){
       videoInfo.title = titleDom.getAttribute('title');
+    }
+    return videoInfo;
+  }
+
+  function handle91PormVideoInfo(videoDom){
+    let videoInfo = {};
+    videoInfo.title = videoDom.getAttribute('title');
+    videoInfo.poster = videoDom.getAttribute('poster');
+    videoInfo.downloadUrl = videoDom.getAttribute('src');
+    if(!videoInfo.poster){
+      const posterDom = document.querySelector('#player_one');
+      if(posterDom){
+        videoInfo.poster = posterDom.getAttribute('poster');
+      }
+
     }
     return videoInfo;
   }
@@ -1479,7 +1504,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
     // console.log('handleYoutubeVideoInfo---------------videoId-------------',videoId)
     let videoInfo = {};
 
-    let videoId = Utils.queryURLParams(hostUrl, 'v');
+    let videoId = Utils.queryURLParams(hostUrl, 'v') || Utils.getLastPathParameter(hostUrl);
     if(!videoId){
       let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
       if(videoIdDom){
@@ -1795,7 +1820,10 @@ function fetchRandomStr(randomStr, speedRandomStr){
       398: '720p',
       397: '480p',
       396: '360p',
-      395: '240p'
+      395: '240p',
+      313: '2160p',
+      
+      337: '2160p HDR',
     };
   
     return resolutions[itag];

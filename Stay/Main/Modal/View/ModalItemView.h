@@ -12,6 +12,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ModalItemContent : FCLayoutView
+
+- (void)appendBackgroundView;
+@end
+
+@interface ModalItemContentShadowRound : ModalItemContent
 @end
 
 @interface ModalItemView : FCLayoutView

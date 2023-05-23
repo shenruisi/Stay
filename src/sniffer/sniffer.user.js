@@ -134,6 +134,11 @@ const browser = __b;
         let url = 'https;//stap.app?'+path;
         return this.queryURLParams(url, name);
       },
+      getLastPathParameter: function(url) {
+        const path = new URL(url).pathname;
+        const segments = path.split('/').filter(segment => segment !== '');
+        return segments[segments.length - 1];
+      },
       matchUrlInString: function(imgText){
         const urlReg = new RegExp('(https?|http)?(:)?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]', 'g');
         const imgMatchs = imgText.match(urlReg);
@@ -768,7 +773,7 @@ const browser = __b;
           return false;
         });
         document.body.addEventListener('touchstart', function(event) {
-          console.log('touchstart-------',event);
+          // console.log('touchstart-------',event);
           self.handleTargetTouchend(event.target);
           self.handleTargetEvent(event, callback);
           return false;
@@ -796,7 +801,7 @@ const browser = __b;
         let target = event.changedTouches[0];
         const targetPageX = target.pageX;
         const targetPageY = target.pageY;
-        console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
+        // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
         if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
@@ -1403,7 +1408,7 @@ const browser = __b;
       if(vHeight<Utils.div(bodyClientHeight, 2)){
         posterHeight = vHeight;
       }
-      console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
+      // console.log('vWidth:',vWidth,',vHeight:',vHeight, ',posterHeight:', posterHeight, ',top:',top);
 
       let modalDom = document.querySelector('#__stay_sinffer_modal');
       if(!modalDom){
@@ -1549,10 +1554,13 @@ const browser = __b;
             transition: all 0.6s;
             box-sizing: border-box;
             visibility: hidden;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
           }
           .__stay-show-modal{
             ${bg}
-            -webkit-backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(10px); 
           }
           .__stay-sinffer-content{
             width:100%;
@@ -2194,6 +2202,13 @@ const browser = __b;
         }
         videoInfo = handlePornhubVideoInfo(videoSnifferDom);
       }
+      else if(host.indexOf('91porn.com')>-1){
+        const dom = document.querySelector('#videodetails .video-container');
+        if(dom){
+          longPressDom = dom;
+        }
+        videoInfo = handle91PormVideoInfo(videoSnifferDom);
+      }
       else if(host.indexOf('facebook.com')>-1){
         videoInfo = handleFacebookVideoInfo(videoSnifferDom);
       }// https://www.instagram.com
@@ -2446,6 +2461,21 @@ const browser = __b;
       const titleDom = document.querySelector('shreddit-app shreddit-title');
       if(titleDom){
         videoInfo.title = titleDom.getAttribute('title');
+      }
+      return videoInfo;
+    }
+
+    function handle91PormVideoInfo(videoDom){
+      let videoInfo = {};
+      videoInfo.title = videoDom.getAttribute('title');
+      videoInfo.poster = videoDom.getAttribute('poster');
+      videoInfo.downloadUrl = videoDom.getAttribute('src');
+      if(!videoInfo.poster){
+        const posterDom = document.querySelector('#player_one');
+        if(posterDom){
+          videoInfo.poster = posterDom.getAttribute('poster');
+        }
+
       }
       return videoInfo;
     }
@@ -2830,7 +2860,7 @@ const browser = __b;
     function handleYoutubeVideoInfo(videoSnifferDom){
       let videoInfo = {};
       const ytplayer = window.ytplayer;
-      let videoId = Utils.queryURLParams(hostUrl, 'v');
+      let videoId = Utils.queryURLParams(hostUrl, 'v') || Utils.getLastPathParameter(hostUrl);
       if(!videoId){
         // console.log('videoId-------',videoId);
         let videoIdDom = document.querySelector('#player-control-container > ytm-custom-control > div.inline-player-controls > a.inline-player-overlay');
@@ -3140,7 +3170,9 @@ const browser = __b;
         398: '720p',
         397: '480p',
         396: '360p',
-        395: '240p'
+        395: '240p',
+        313: '2160p',
+        337: '2160p HDR',
       };
     
       return resolutions[itag];
@@ -3428,7 +3460,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        let randomArr = jsText.match(/[a-zA-Z0-9]{3}\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
+        let randomArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
         console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
@@ -3442,7 +3474,7 @@ const browser = __b;
         }
         let subRandomStr = '';
         // eslint-disable-next-line no-useless-escape
-        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]{2}\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]+\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
         if(subRandomArr && subRandomArr.length){
           subRandomStr = subRandomArr[0];
           // console.log(subRandomStr);
@@ -3521,7 +3553,6 @@ const browser = __b;
       },
       set:function(newValue){
         randomPathUuid = newValue;
-        console.log('randomPathUuid---newValue-----',randomPathUuid);
         //监听ytBaseJSUuid如果发生变化，则需要从basejs中重新匹配解密方法
         if(newValue != ytBaseJSUuid){
           console.log('randomPathUuid--!==-newValue-----',randomPathUuid);

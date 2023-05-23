@@ -16,6 +16,7 @@
 #import "API.h"
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
+#import "DefaultIcon.h"
 @implementation BrowseDetailTableViewCell
 
 
@@ -53,6 +54,7 @@
     UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(15, 12, 48, 48)];
     imageBox.layer.cornerRadius = 8;
     imageBox.layer.borderWidth = 1;
+    imageBox.clipsToBounds = YES;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
@@ -69,12 +71,9 @@
     
     NSString *icon = dic[@"icon_url"];
     CGFloat left = 15;
-    if( icon != nil && icon.length > 0){
-        left = imageBox.right + 10;
-    } else {
-        imageBox.hidden = true;
-    }
-    
+    left = imageBox.right + 10;
+
+  
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.contentView.width - 15, 0.5)];
     line.backgroundColor = FCStyle.fcSeparator;
     line.top =  138;
@@ -112,13 +111,28 @@
             subLabel.text = localLanguage[@"description"];
         }
     }
+    
+    if(icon.length <= 0){
+        [imageView setImage:[DefaultIcon iconWithTitle:headerLabel.text size:CGSizeMake(48, 48)]];
+        imageView.size = CGSizeMake(48, 48);
+        imageView.centerX = 24;
+        imageView.centerY = 24;
+    }
+    
     NSString *uuid = dic[@"uuid"];
     
     ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 67, 25);
-    btn.backgroundColor = FCStyle.background;
+//    btn.backgroundColor = FCStyle.background;
+    btn.layer.cornerRadius = 10;
+    btn.layer.borderWidth = 1;
+    btn.layer.borderColor = FCStyle.accent.CGColor;
+    
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [self.contentView addSubview:indicatorView];
+    
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{
@@ -140,6 +154,12 @@
         
         if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
             btnName = NSLocalizedString(@"Downloading", @"");
+            btn.hidden = true;
+            indicatorView.hidden = false;
+            [indicatorView startAnimating];
+        } else {
+            btn.hidden = false;
+            indicatorView.hidden = true;
         }
         
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
@@ -150,7 +170,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
-        
+        objc_setAssociatedObject (btn , @"iconUrl", dic[@"icon_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+
         [btn sizeToFit];
         btn.width = btn.width + 20;
         if(btn.width < 67) {
@@ -169,6 +190,9 @@
     btn.right = self.contentView.width - 15;
     btn.layer.cornerRadius = 12.5;
     [self.contentView addSubview:btn];
+    indicatorView.center = btn.center;
+    
+    
     
     UILabel *installLabel = [[UILabel alloc] init];
     NSNumber *install = dic[@"installs"];

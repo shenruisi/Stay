@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYConcurrencyViewController : UIViewController
+@interface SYConcurrencyViewController : FCViewController
 
 @end
 

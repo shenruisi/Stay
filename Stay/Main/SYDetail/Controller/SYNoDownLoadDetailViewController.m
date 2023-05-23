@@ -29,8 +29,8 @@
 #import "SYWebsiteViewController.h"
 #import "SYScanImage.h"
 #import "SYBigImageViewController.h"
-
-
+#import "FCRoundedShadowView2.h";
+#import "DefaultIcon.h"
 #ifdef FC_MAC
 #import "FCShared.h"
 #import "Plugin.h"
@@ -66,7 +66,7 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = FCStyle.popup;
-
+    self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
  
     [self queryData];
@@ -159,23 +159,11 @@
     if(_saveSuceess) {
         [self.navigationController popViewControllerAnimated:TRUE];
     }
-    
-    UINavigationBarAppearance *appperance = [[UINavigationBarAppearance alloc]init];
-    appperance.backgroundColor = FCStyle.fcWhite;
-    [appperance setShadowColor:FCStyle.fcWhite];
-    self.navigationController.navigationBar.scrollEdgeAppearance = appperance;
-    
 }
  
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.tabBarController.tabBar.hidden = NO;
-    
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
 }
 
 
@@ -202,9 +190,13 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    for (UIView *subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
+    
+    [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = [UIColor clearColor];
+
+    
     
     if(self.scriptDic == nil) {
         return cell;
@@ -214,23 +206,30 @@
     CGFloat titleLabelLeftSize = 0;
     NSString *icon = self.scriptDic[@"icon_url"];
     
-    if(icon != NULL && icon.length > 0) {
-         UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
-         imageBox.layer.cornerRadius = 30;
-         imageBox.layer.borderWidth = 1;
-         imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
-         [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
-         imageView.clipsToBounds = YES;
-         imageView.centerX = 59;
-         imageView.centerY = 59;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-         [imageBox addSubview:imageView];
-         [cell.contentView addSubview:imageBox];
+    UIView *imageBox = [[UIView alloc] initWithFrame:CGRectMake(left, 15, 118, 118)];
+    imageBox.layer.cornerRadius = 30;
+    imageBox.layer.borderWidth = 1;
+    imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
+    imageBox.backgroundColor = FCStyle.fcWhite;
+    imageBox.clipsToBounds = YES;
 
-         titleLabelLeftSize = 15 + 118;
-     }
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 78, 78)];
+    imageView.clipsToBounds = YES;
+    if( icon.length <= 0) {
+        [imageView setImage:[DefaultIcon iconWithTitle: self.scriptDic[@"name"] size:CGSizeMake(118, 118)]];
+        imageView.size = CGSizeMake(118, 118);
+    } else {
+        [imageView sd_setImageWithURL:[NSURL URLWithString:icon]];
+    }
      
+    imageView.centerX = 59;
+    imageView.centerY = 59;
+   imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [imageBox addSubview:imageView];
+    [cell.contentView addSubview:imageBox];
+
+    titleLabelLeftSize = 15 + 118;
+ 
      UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(left + titleLabelLeftSize , 20, self.view.width - titleLabelLeftSize - left * 2, 21)];
      titleLabel.font = FCStyle.title3Bold;
      titleLabel.textColor = FCStyle.fcBlack;
@@ -252,6 +251,8 @@
    
      [self.actBtn setTitle:NSLocalizedString(@"Get", @"")  forState:UIControlStateNormal];
      self.actBtn.backgroundColor = FCStyle.background;
+     self.actBtn.layer.borderWidth = 1;
+     self.actBtn.layer.borderColor = FCStyle.accent.CGColor;
      [self.actBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
     
     NSArray *plafroms = self.scriptDic[@"platforms"];
@@ -371,15 +372,19 @@
         
         CGFloat imageleft = 15;
         for(int i = 0; i < picArray.count; i++) {
+            FCRoundedShadowView2 *imageBackView = [[FCRoundedShadowView2 alloc] initWithRadius:25
+                                                                                    borderWith:1 cornerMask:kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner];
+            imageBackView.frame = CGRectMake(0, 0, 250, 540);
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 250, 540)];
             [imageView sd_setImageWithURL:picArray[i]];
             imageView.layer.cornerRadius = 25;
-            imageView.layer.borderWidth = 1;
-            imageView.layer.borderColor = FCStyle.borderColor.CGColor;
+//            imageView.layer.borderWidth = 1;
             imageView.userInteractionEnabled = false;
             imageView.layer.masksToBounds = YES;
-            imageView.left = imageleft;
-            [imageScrollView addSubview:imageView];
+            imageBackView.left = imageleft;
+            [imageBackView addSubview:imageView];
+            [imageScrollView addSubview:imageBackView];
+
             imageleft += 27 + 250;
             imageScrollView.contentSize = CGSizeMake(imageleft + 15, 540);
             
@@ -922,6 +927,7 @@
     if (nil == _rightIcon){
         _rightIcon = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Get", @"")  style:UIBarButtonItemStylePlain target:self action:@selector(tryInstall:)];
         
+        _rightIcon.tintColor = FCStyle.accent;
     }
     return _rightIcon;
 }
@@ -1397,7 +1403,8 @@
     
     if(y >  reload_distance) {
         if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
-             self.rightBarButtonItems = @[[self rightIcon]];
+            self.navigationItem.rightBarButtonItems = @[[self rightIcon]];
+
         }
         else{
              self.navigationItem.rightBarButtonItem = [self rightIcon];
@@ -1406,7 +1413,7 @@
         self.navigationItem.titleView.hidden = false;
     } else {
         if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
-            self.rightBarButtonItems = nil;
+            self.navigationItem.rightBarButtonItems  = nil;
         }
         else{
             self.navigationItem.rightBarButtonItem = nil;
@@ -1431,7 +1438,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     

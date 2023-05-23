@@ -93,8 +93,15 @@ static FCStore *instance = nil;
 
 - (FCPlan *)getPlan:(BOOL)refresh{
 #ifdef DEBUG
-//    [SharedStorageManager shared].userDefaultsExRO.pro = NO;
-//    return FCPlan.None;
+//    if (self.testingProFlag){
+//        [SharedStorageManager shared].userDefaultsExRO.pro = YES;
+//        return [[FCPlan alloc] init];
+//    }
+//    else{
+//        [SharedStorageManager shared].userDefaultsExRO.pro = NO;
+//        return FCPlan.None;
+//    }
+    
 //    [SharedStorageManager shared].userDefaultsExRO.pro = YES;
 //    return [[FCPlan alloc] init];
 #endif

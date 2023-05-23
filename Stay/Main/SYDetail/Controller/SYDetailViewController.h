@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "UserScript.h"
 #import "SYSecondaryViewController.h"
+#import "FCViewController.h"
 
 @interface SYDetailViewController : SYSecondaryViewController
 

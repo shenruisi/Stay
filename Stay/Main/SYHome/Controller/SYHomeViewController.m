@@ -24,6 +24,7 @@
 #import "UIImageView+WebCache.h"
 #import "MatchPattern.h"
 #import "SYSelectTabViewController.h"
+#import "MainTabBarController.h"
 
 #import <UniformTypeIdentifiers/UTCoreTypes.h>
 
@@ -61,6 +62,9 @@
 #import "ToastDebugger.h"
 #import "VideoParser.h"
 //#import <Bugsnag/Bugsnag.h>
+
+#import "WelcomeSlideController.h"
+#import "UIColor+Convert.h"
 
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
@@ -158,36 +162,35 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 @property (nonatomic, strong) UILabel *part1Label;
 @property (nonatomic, strong) UIButton *addButton;
 @property (nonatomic, strong) UILabel *part2Label;
+@property (nonatomic, assign) CGFloat left;
 @end
 
 @implementation _EmptyTipsView
 
-- (instancetype)initWithFrame:(CGRect)frame{
-    if (self = [super initWithFrame:frame]){
+- (instancetype)init{
+    if (self = [super init]){
+        CGRect rect1 = [NSLocalizedString(@"HomeEmptyTips1", @"") boundingRectWithSize:CGSizeMake(MAXFLOAT, FCStyle.body.pointSize) options:0 attributes:@{
+            NSFontAttributeName:FCStyle.body
+        } context:nil];
+        NSUInteger width = rect1.size.width;
+        CGRect rect2 = [NSLocalizedString(@"HomeEmptyTips2", @"") boundingRectWithSize:CGSizeMake(MAXFLOAT, FCStyle.body.pointSize) options:0 attributes:@{
+            NSFontAttributeName:FCStyle.body
+        } context:nil];
+        width += rect2.size.width;
+        width += 16;
+        self.left = ([QuickAccess primaryController].view.size.width - width)/2;
         [self part1Label];
-        [self.part1Label sizeToFit];
         [self addButton];
         [self part2Label];
-        [self.part2Label sizeToFit];
     }
     
     return self;
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    [super willMoveToSuperview:newSuperview];
-    CGFloat width = self.part1Label.width + self.part2Label.width + self.addButton.width;
-    CGFloat left = (self.width - width) / 2;
-    CGFloat y = (self.height - self.addButton.height) / 2;
-    self.part1Label.frame = CGRectMake(left, y, self.part1Label.width, self.part1Label.height);
-    self.addButton.frame = CGRectMake(self.part1Label.right, y, self.addButton.width, self.addButton.height);
-    self.part2Label.frame = CGRectMake(self.addButton.right, y, self.part2Label.width, self.part2Label.height);
-}
-
 - (UILabel *)part1Label{
     if (nil == _part1Label){
         _part1Label = [[UILabel alloc] init];
-
+        _part1Label.translatesAutoresizingMaskIntoConstraints = NO;
         NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"HomeEmptyTips1", @"") attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
@@ -197,6 +200,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }]];
         _part1Label.attributedText = builder;
         [self addSubview:_part1Label];
+        [NSLayoutConstraint activateConstraints:@[
+            [_part1Label.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:self.left],
+            [_part1Label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor]
+        ]];
     }
     
     return _part1Label;
@@ -204,9 +211,17 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (UIButton *)addButton{
     if (nil == _addButton){
-        _addButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 16, 16)];
+        _addButton = [[UIButton alloc] init];
+        _addButton.translatesAutoresizingMaskIntoConstraints = NO;
         [_addButton setImage:[ImageHelper sfNamed:@"plus" font:[UIFont boldSystemFontOfSize:16] color:FCStyle.accent] forState:UIControlStateNormal];
         [self addSubview:_addButton];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_addButton.leadingAnchor constraintEqualToAnchor:self.part1Label.trailingAnchor],
+            [_addButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+            [_addButton.widthAnchor constraintEqualToConstant:16],
+            [_addButton.heightAnchor constraintEqualToConstant:16]
+        ]];
     }
     
     return _addButton;
@@ -215,7 +230,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (UILabel *)part2Label{
     if (nil == _part2Label){
         _part2Label = [[UILabel alloc] init];
-
+        _part2Label.translatesAutoresizingMaskIntoConstraints = NO;
         NSMutableAttributedString *builder = [[NSMutableAttributedString alloc] init];
         [builder appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"HomeEmptyTips2", @"") attributes:@{
             NSForegroundColorAttributeName:FCStyle.fcSecondaryBlack,
@@ -225,6 +240,10 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }]];
         _part2Label.attributedText = builder;
         [self addSubview:_part2Label];
+        [NSLayoutConstraint activateConstraints:@[
+            [_part2Label.leadingAnchor constraintEqualToAnchor:self.addButton.trailingAnchor],
+            [_part2Label.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        ]];
     }
     
     return _part2Label;
@@ -236,8 +255,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
  UITableViewDelegate,
  UITableViewDataSource,
  UISearchResultsUpdating,
- UISearchBarDelegate,
- UISearchControllerDelegate,
  UIPopoverPresentationControllerDelegate,
  UIDocumentPickerDelegate
 >
@@ -260,14 +277,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, strong) NSMutableArray *handActiveDatas;
 
+@property (nonatomic, strong) FCTabButtonItem *activatedTabItem;
+@property (nonatomic, strong) FCTabButtonItem *stoppedTabItem;
 
 @property (nonatomic, strong) NSMutableArray *results;
 
 @property (nonatomic, strong) SYSelectTabViewController *sYSelectTabViewController;
 
 @property (nonatomic, assign) CGFloat safeAreaInsetsLeft;
-
-@property (nonatomic, strong) UIView *line;
 
 @property (nonatomic, copy) NSString *selectedUUID;
 
@@ -284,63 +301,70 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 @property (nonatomic, assign) NSInteger selectedIdx;
 
+@property (nonatomic, assign) Boolean searchStatus;
+
+@property (nonatomic, strong) WelcomeSlideController *welcomeSlideController;
+
 @end
 
 @implementation SYHomeViewController
 
-- (void)loadView{
-#ifdef FC_MAC
-    ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
-//    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
-    self.view = view;
-#else
-    self.view = [[UIView alloc] init];
-#endif
-    
-    
-}
+//- (void)loadView{
+//#ifdef FC_MAC
+//    ToolbarTrackView *view = [[ToolbarTrackView alloc] init];
+////    view.toolbar = ((FCSplitViewController *)self.splitViewController).toolbar;
+//    self.view = view;
+//#else
+////    self.view = [[UIView alloc] init];
+//#endif
+//
+//
+//}
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
+    self.enableTabItem = YES;
+    self.enableSearchTabItem = YES;
+    self.searchUpdating = self;
+    self.navigationTabItem.leftTabButtonItems = @[self.activatedTabItem, self.stoppedTabItem];
+    self.leftTitle  = NSLocalizedString(@"Userscripts","Userscripts");
 
-    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
-    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
-    if([@"System" isEqual:type]) {
-        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
-    } else if([@"Dark" isEqual:type]){
-        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
-    }else if([@"Light" isEqual:type]){
-        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
-    }
+    
+//    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
+//    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyAppearanceMode];
+//    if([@"System" isEqual:type]) {
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleUnspecified];
+//    } else if([@"Dark" isEqual:type]){
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleDark];
+//    }else if([@"Light" isEqual:type]){
+//        [[UIApplication sharedApplication].keyWindow setOverrideUserInterfaceStyle:UIUserInterfaceStyleLight];
+//    }
     
     self.selectedRow = -1;
     self.selectedIdx = 0;
-    self.navigationItem.leftBarButtonItem = [self leftIcon];
     self.navigationItem.rightBarButtonItems = @[[self rightIcon],[self iCloudIcon]];
 //    self.view.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
+//    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
        // 设置结果更新代理
 //    search.searchResultsUpdater = self;
-    search.searchBar.placeholder = NSLocalizedString(@"SearchAddedUserscripts", @"");
-    self.navigationItem.searchController = search;
-    self.navigationItem.searchController.delegate = self;
-    self.navigationItem.searchController.searchBar.delegate = self;
-    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
-    self.searchController = search;
-    self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar setTintColor:FCStyle.accent];
+//    search.searchBar.placeholder = NSLocalizedString(@"SearchAddedUserscripts", @"");
+//    self.navigationItem.searchController = search;
+//    self.navigationItem.searchController.delegate = self;
+//    self.navigationItem.searchController.searchBar.delegate = self;
+//    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
+//    self.searchController = search;
+//    self.searchController.delegate = self;
+//    self.searchController.searchBar.delegate = self;
+//    [self.searchController.searchBar setTintColor:FCStyle.accent];
     
-    self.navigationItem.hidesSearchBarWhenScrolling = false;
+//    self.navigationItem.hidesSearchBarWhenScrolling = false;
    
     [self checkData];
     
     [self initScrpitContent];
     
 #ifdef FC_MAC
-    [self line];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigateViewDidShow:)
                                                  name:@"app.stay.notification.NCCDidShowViewControllerNotification"
@@ -404,37 +428,52 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                                              selector:@selector(userscriptDidUpdateHandler:)
                                                  name:@"app.stay.notification.userscriptDidUpdateNotification"
                                                object:nil];
-    
-    self.view.backgroundColor = FCStyle.background;
-    
+        
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tableDidSelected:) name:@"addScriptClick" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:@"needUpdate" object:nil];
-    
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeScriptStatus:) name:@"changeScriptStatus" object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(linkAction:) name:@"linkAction" object:nil];
 
 #ifndef FC_MAC
     NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
     if(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"]){
-        SYFlashViewController *cer = [[SYFlashViewController alloc] init];
-        if (!(FCDeviceTypeIPad == DeviceHelper.type)){
-            cer.modalPresentationStyle = 0;
-        } else {
-            cer.isMore = true;
-        }
-        [self presentViewController:cer animated:YES completion:nil];
-        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
+        [self.welcomeSlideController show];
     }
 #endif
     
-    self.tableView.sectionHeaderTopPadding = 0;
-    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+//    self.tableView.sectionHeaderTopPadding = 0;
+//    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+    
+    [((MainTabBarController *)self.tabBarController).fcTabBar selectIndex:0];
 
 }
 
+- (WelcomeSlideController *)welcomeSlideController{
+    if (nil == _welcomeSlideController){
+        _welcomeSlideController = [[WelcomeSlideController alloc] init];
+    }
+    
+    return _welcomeSlideController;
+}
+
+- (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
+//    NSInteger index = segment.selectedSegmentIndex;
+    [self.handStopDatas removeAllObjects];
+    [self.handActiveDatas removeAllObjects];
+    if([item isEqual:self.stoppedTabItem]) {
+        _selectedIdx = 1;
+        [self reloadTableView];
+        [self.tableView reloadData];
+    } else {
+        _selectedIdx = 0;
+        [self reloadTableView];
+        [self.tableView reloadData];
+    }
+}
 
 - (void)checkData {
     [_datas removeAllObjects];
@@ -453,15 +492,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }
     }
     
-    if(self.handActiveDatas.count > 0) {
-        [_stopDatas replaceObjectsInRange:NSMakeRange(0,0)
-                     withObjectsFromArray:self.handActiveDatas];
-    }
-    
-    if(self.handStopDatas.count > 0) {
-        [_activeDatas replaceObjectsInRange:NSMakeRange(0,0)
-                     withObjectsFromArray:self.handStopDatas];
-    }
+//    if(self.handActiveDatas.count > 0) {
+//        [_stopDatas replaceObjectsInRange:NSMakeRange(0,0)
+//                     withObjectsFromArray:self.handActiveDatas];
+//    }
+//
+//    if(self.handStopDatas.count > 0) {
+//        [_activeDatas replaceObjectsInRange:NSMakeRange(0,0)
+//                     withObjectsFromArray:self.handStopDatas];
+//    }
     
     
 }
@@ -771,9 +810,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)statusBarChange{
     dispatch_async(dispatch_get_main_queue(), ^{
 #ifdef FC_MAC
-        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+//        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
-        self.tableView.frame = self.view.bounds;
+//        self.tableView.frame = self.view.bounds;
 #endif
         [self.tableView reloadData];
     });
@@ -1106,6 +1145,27 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 #pragma mark -searchBarDelegate
 
+- (void)didBeganSearch {
+    self.searchStatus = YES;
+    [_results removeAllObjects];
+    [self.tableView reloadData];
+}
+
+- (void)searchTextDidChange:(NSString *)text {
+    [_results removeAllObjects];
+    if(text.length > 0) {
+        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:text]];
+    }
+    [self.tableView reloadData];
+}
+
+- (void)didEndSearch {
+    self.searchStatus = NO;
+    [_results removeAllObjects];
+    [self.tableView reloadData];
+}
+
+
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 //    [searchBar resignFirstResponder];
     [self.searchController setActive:NO];
@@ -1142,7 +1202,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
 #ifdef FC_MAC
-    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//    [self.tableView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 #endif
     
     if (FCDeviceTypeIPad == DeviceHelper.type || FCDeviceTypeMac == DeviceHelper.type){
@@ -1154,7 +1214,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 #pragma mark - UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.searchController.active) {
+    if (self.searchStatus) {
         return self.results.count;
     }
     
@@ -1166,25 +1226,25 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchController.view]) {
-        return nil;
-    } else {
-        return [self createTableHeaderView];
-    }
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    if([tableView isEqual:self.searchController.view]) {
+//        return nil;
+//    } else {
+//        return [self createTableHeaderView];
+//    }
 
-}
+//}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     HomeDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID"];
     if (cell == nil) {
         cell = [[HomeDetailCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
     }
-    for (UIView *subView in cell.contentView.subviews) {
-        [subView removeFromSuperview];
-    }
+//    for (UIView *subView in cell.fcContentView.subviews) {
+//        [subView removeFromSuperview];
+//    }
     // 这里通过searchController的active属性来区分展示数据源是哪个
     UserScript *model = nil;
-    if (self.searchController.active ) {
+    if (self.searchStatus) {
         model = _results[indexPath.row];
     } else {
         if(_selectedIdx == 1) {
@@ -1197,10 +1257,42 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             }
         }
     }
-    cell.contentView.backgroundColor = FCStyle.secondaryBackground;
-    cell.contentView.width = self.view.width;
+//    cell.contentView.width = self.view.width;
     cell.controller = self;
     cell.scrpit = model;
+    cell.element = model;
+    
+    
+    __weak SYHomeViewController *weakSelf = (SYHomeViewController *)self;
+
+    cell.tapAction = ^(id element) {
+        if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+            && weakSelf.splitViewController.viewControllers.count >= 2){
+            if (weakSelf.selectedRow != indexPath.row){
+                UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:weakSelf.selectedRow inSection:0]];
+                cell.selected = NO;
+            }
+            UserScript *userscript = element;
+            weakSelf.selectedRow = indexPath.row;
+            weakSelf.selectedUUID = userscript.uuid;
+            [[QuickAccess secondaryController] pushViewController:
+             [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
+        }
+        else{
+            if (weakSelf.searchStatus) {
+                SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+                cer.isSearch = false;
+                cer.script = element ;
+                [weakSelf.navigationController pushViewController:cer animated:true];
+            } else {
+                SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+                cer.script = element;
+                cer.isSearch = false;
+                [weakSelf.navigationController pushViewController:cer animated:true];
+            }
+        }
+        
+    };
 
     return cell;
 }
@@ -1222,61 +1314,81 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
-        && self.splitViewController.viewControllers.count >= 2){
-        if (self.selectedRow != indexPath.row){
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
-            cell.selected = NO;
-        }
-        UserScript *userscript;
-        if(_selectedIdx == 1) {
-            userscript = self.stopDatas[indexPath.row];
-        } else {
-            userscript = self.activeDatas[indexPath.row];
-        }
-        
-        self.selectedRow = indexPath.row;
-        self.selectedUUID = userscript.uuid;
-        [[QuickAccess secondaryController] pushViewController:
-         [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
-    }
-    else{
-        if (self.searchController.active) {
-            UserScript *model = _results[indexPath.row];
-            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-            cer.isSearch = false;
-            cer.script = model;
-            [self.navigationController pushViewController:cer animated:true];
-        } else {
-            UserScript *model;
-            if(_selectedIdx == 1) {
-                model = self.stopDatas[indexPath.row];
-            } else {
-                model = self.activeDatas[indexPath.row];
-            }
-            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
-            cer.script = model;
-            cer.isSearch = false;
-            [self.navigationController pushViewController:cer animated:true];
-        }
-    }
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if ((FCDeviceTypeIPad == [DeviceHelper type] || FCDeviceTypeMac == [DeviceHelper type])
+//        && self.splitViewController.viewControllers.count >= 2){
+//        if (self.selectedRow != indexPath.row){
+//            UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedRow inSection:0]];
+//            cell.selected = NO;
+//        }
+//        UserScript *userscript;
+//        if(_selectedIdx == 1) {
+//            userscript = self.stopDatas[indexPath.row];
+//        } else {
+//            userscript = self.activeDatas[indexPath.row];
+//        }
+//
+//        self.selectedRow = indexPath.row;
+//        self.selectedUUID = userscript.uuid;
+//        [[QuickAccess secondaryController] pushViewController:
+//         [[QuickAccess secondaryController] produceDetailViewControllerWithUserScript:userscript]];
+//    }
+//    else{
+//        if (self.searchStatus) {
+//            UserScript *model = _results[indexPath.row];
+//            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+//            cer.isSearch = false;
+//            cer.script = model;
+//            [self.navigationController pushViewController:cer animated:true];
+//        } else {
+//            UserScript *model;
+//            if(_selectedIdx == 1) {
+//                model = self.stopDatas[indexPath.row];
+//            } else {
+//                model = self.activeDatas[indexPath.row];
+//            }
+//            SYDetailViewController *cer = [[SYDetailViewController alloc] init];
+//            cer.script = model;
+//            cer.isSearch = false;
+//            [self.navigationController pushViewController:cer animated:true];
+//        }
+//    }
+//}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 100.f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchController.view]) {
+    if(self.searchStatus) {
         return 0.1;
     }
     return 50;
 }
 
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    for (UIView *view in tableView.subviews){
+        if ([view isKindOfClass:NSClassFromString(@"_UITableViewCellSwipeContainerView")]){
+            for (UIView *pullView in view.subviews){
+                if ([pullView isKindOfClass:NSClassFromString(@"UISwipeActionPullView")]) {
+                    for (UIView *buttonView in pullView.subviews){
+                        if ([buttonView isKindOfClass:NSClassFromString(@"UISwipeActionStandardButton")]) {
+                            for (UIView *targetView in buttonView.subviews){
+                                if (![targetView isKindOfClass:NSClassFromString(@"UIButtonLabel")]){
+                                    targetView.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     //Fixed retains self
     __weak SYHomeViewController *weakSelf = self;
-    if (self.searchController.active) {
+    if (self.searchStatus) {
         UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"needDelete", @"")
@@ -1327,8 +1439,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
              [alert addAction:cancel];
             [self presentViewController:alert animated:YES completion:nil];
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
+        deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
+        deleteAction.backgroundColor = [UIColor clearColor];
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
 
     } else {
@@ -1382,9 +1494,12 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self presentViewController:alert animated:YES completion:nil];
             
         }];
-        deleteAction.image = [UIImage imageNamed:@"delete"];
-        deleteAction.backgroundColor = RGB(224, 32, 32);
         
+        deleteAction.backgroundColor = [UIColor clearColor];
+
+        
+        
+        deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
         UIContextualAction *stopAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
                 UserScript *model;
                 if(weakSelf.selectedIdx == 1) {
@@ -1396,9 +1511,9 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                     [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
                     
                     model.active = 0;
-                    [weakSelf.handStopDatas addObject:model];
-                    [weakSelf.handActiveDatas removeObject:model];
-                    
+//                    [weakSelf.handStopDatas addObject:model];
+//                    [weakSelf.handActiveDatas removeObject:model];
+//
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
                         @"uuid":model.uuid
                     }];
@@ -1407,15 +1522,15 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
                     [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
                     
                     model.active = 1;
-                    [weakSelf.handActiveDatas addObject:model];
-                    [weakSelf.handStopDatas removeObject:model];
+//                    [weakSelf.handActiveDatas addObject:model];
+//                    [weakSelf.handStopDatas removeObject:model];
                     NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
                         @"uuid":model.uuid
                     }];
                     [[NSNotificationCenter defaultCenter]postNotification:notification];
                 }
                 [tableView setEditing:NO animated:YES];
-                [weakSelf reloadTableView];
+//                [weakSelf reloadTableView];
                 [weakSelf initScrpitContent];
                 [tableView reloadData];
         }];
@@ -1428,14 +1543,14 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
         }
         
         if (model.active) {
-            stopAction.image = [UIImage imageNamed:@"stop"];
-            stopAction.backgroundColor = FCStyle.accent;
+            stopAction.image = [[UIImage imageNamed:@"stop"] imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
         } else {
-            stopAction.image = [UIImage imageNamed:@"play"];
-            stopAction.backgroundColor = FCStyle.accent;
+            stopAction.image = [[UIImage imageNamed:@"play"] imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
         }
         
-        UIImage *image = [UIImage systemImageNamed:@"square.and.arrow.up" withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:15]]];
+        stopAction.backgroundColor = [UIColor clearColor];
+        
+        UIImage *image = [ImageHelper sfNamed:@"square.and.arrow.up"  font:FCStyle.subHeadline color:FCStyle.accent];
      
         UIContextualAction *shareAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             self.sYSelectTabViewController = nil;
@@ -1451,9 +1566,8 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
             [self.sYSelectTabViewController show];
         }];
         shareAction.image = image;
-        shareAction.backgroundColor = FCStyle.fcBlue;
+        shareAction.backgroundColor = [UIColor clearColor];
 
-        
         return [UISwipeActionsConfiguration configurationWithActions:@[deleteAction,shareAction,stopAction]];
     }
 }
@@ -1462,41 +1576,45 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     return YES;
 }
 
-- (UIView *)createTableHeaderView {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
-    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Activated", @""),NSLocalizedString(@"Stopped", @""),nil];
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
-    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
-    segmentedControl.backgroundColor = FCStyle.secondaryPopup;
-    segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
-    segmentedControl.selectedSegmentIndex = _selectedIdx;
-    CGFloat left = (self.view.width - 200) / 2;
-    segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
-    [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
-    [view addSubview:segmentedControl];
-    view.backgroundColor = FCStyle.background;
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 0.5)];
-    line.backgroundColor = FCStyle.fcSeparator;
-    line.top = 49.5;
-    [view addSubview:line];
-    return  view;
-}
 
-- (void)segmentControllerAction:(UISegmentedControl *)segment
-{
-    NSInteger index = segment.selectedSegmentIndex;
-    [self.handStopDatas removeAllObjects];
-    [self.handActiveDatas removeAllObjects];
-    if(index == 1) {
-        _selectedIdx = 1;
-        [self reloadTableView];
-        [self.tableView reloadData];
-    } else {
-        _selectedIdx = 0;
-        [self reloadTableView];
-        [self.tableView reloadData];
+- (void)changeScriptStatus:(NSNotification *)sender {
+    
+    UserScript *model = sender.object;
+
+    if (model.active == 1) {
+        [[DataManager shareManager] updateScrpitStatus:0 numberId:model.uuid];
+        
+        model.active = 0;
+//        [self.handStopDatas addObject:model];
+//        [self.handActiveDatas removeObject:model];
+        
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+            @"uuid":model.uuid
+        }];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
+    } else if (model.active == 0) {
+        [[DataManager shareManager] updateScrpitStatus:1 numberId:model.uuid];
+        
+        model.active = 1;
+//        [self.handActiveDatas addObject:model];
+//        [self.handStopDatas removeObject:model];
+        NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.userscriptDidUpdateNotification" object:nil userInfo:@{
+            @"uuid":model.uuid
+        }];
+        [[NSNotificationCenter defaultCenter]postNotification:notification];
     }
+    [_tableView setEditing:NO animated:YES];
+    int count = 0;
+    if(_selectedIdx == 1) {
+        count = self.stopDatas.count;
+    } else {
+        count = self.activeDatas.count;
+    }
+    
+    self.tableView.hidden = _datas.count == 0;
+    self.emptyTipsView.hidden = _datas.count > 0;
+    [self initScrpitContent];
+    [_tableView reloadData];
 }
 
 - (void)import{
@@ -1517,26 +1635,16 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
-    
     [self reloadTableView];
     [self initScrpitContent];
     dispatch_async(dispatch_get_main_queue(), ^{
 #ifdef FC_MAC
-        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
+//        self.tableView.frame =  CGRectMake(0, kMacToolbar, self.view.frame.size.width, self.view.frame.size.height - kMacToolbar);
 #else
-        self.tableView.frame = self.view.bounds;
+//        self.tableView.frame = self.view.bounds;
 #endif
         [self.tableView reloadData];
     });
-    [self emptyTipsView];
-    
-    NSLog(@"SYHomeViewController view %@",self.view);
     
 }
 
@@ -1672,13 +1780,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     self.tableView.hidden = _datas.count == 0;
     self.emptyTipsView.hidden = _datas.count > 0;
-
-    NSString *scriptCount = @"";
-    if (count > 0){
-        scriptCount = [NSString stringWithFormat:@"(%ld)",count];
-    }
-    self.navigationItem.title = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"settings.library","Library"),scriptCount];
-    
 }
 
 - (void)remoteSyncStart{
@@ -1695,13 +1796,26 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        _tableView.backgroundColor = DynamicColor(RGB(28, 28, 28),[UIColor whiteColor]);
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+
+
         [self.view addSubview:_tableView];
+                
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+//            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height],
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
+        ]];
+        
+    
     }
     
     return _tableView;
@@ -1884,16 +1998,18 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
 - (_EmptyTipsView *)emptyTipsView{
     if (nil == _emptyTipsView){
-#ifdef FC_MAC
-        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:CGRectMake(0, kMacToolbar + 50, self.view.width, self.view.height - kMacToolbar)];
-#else
-        _emptyTipsView = [[_EmptyTipsView alloc] initWithFrame:self.view.bounds];
-        _emptyTipsView.top = self.view.top + 50;
-#endif
+        _emptyTipsView = [[_EmptyTipsView alloc] init];
+        _emptyTipsView.translatesAutoresizingMaskIntoConstraints = NO;
         _emptyTipsView.hidden = YES;
         [_emptyTipsView.addButton addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        _emptyTipsView.backgroundColor = FCStyle.secondaryBackground;
+        _emptyTipsView.backgroundColor = UIColor.clearColor;
         [self.view addSubview:_emptyTipsView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_emptyTipsView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_emptyTipsView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_emptyTipsView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [_emptyTipsView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ]];
     }
     
     return _emptyTipsView;
@@ -1918,16 +2034,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     NSTimeInterval a=[date timeIntervalSince1970]*1000; // *1000 是精确到毫秒，不乘就是精确到秒
     NSString *timeString = [NSString stringWithFormat:@"%.0f", a];
     return timeString;
-}
-
-- (UIView *)line{
-    if (nil == _line){
-        _line = [[UIView alloc] initWithFrame:CGRectMake(0, kMacToolbar-1, self.view.frame.size.width, 1)];
-        _line.backgroundColor = FCStyle.fcSeparator;
-        [self.view addSubview:_line];
-    }
-    
-    return _line;
 }
 
 - (SYSelectTabViewController *)sYSelectTabViewController {
@@ -2008,6 +2114,25 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
     
     return _loadingSlideController;
 }
+
+- (FCTabButtonItem *)activatedTabItem{
+    if (nil == _activatedTabItem){
+        _activatedTabItem = [[FCTabButtonItem alloc] init];
+        _activatedTabItem.title = NSLocalizedString(@"Activated", @"");
+    }
+    
+    return _activatedTabItem;
+}
+
+- (FCTabButtonItem *)stoppedTabItem{
+    if (nil == _stoppedTabItem){
+        _stoppedTabItem = [[FCTabButtonItem alloc] init];
+        _stoppedTabItem.title = NSLocalizedString(@"Stopped", @"");
+    }
+    
+    return _stoppedTabItem;
+}
+
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self

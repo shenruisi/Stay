@@ -6,9 +6,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCViewController.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SYDownloadResourceManagerController : UIViewController
+@interface SYDownloadResourceManagerController : FCViewController
 
 @property(nonatomic,strong)NSString *pathUuid;
 @property(nonatomic,strong)NSMutableArray *array;

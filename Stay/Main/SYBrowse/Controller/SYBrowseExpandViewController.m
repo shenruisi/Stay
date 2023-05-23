@@ -119,6 +119,7 @@
     }
     
     [self.tableView reloadData];
+    self.hidesBottomBarWhenPushed = YES;
 //    self.title = self.titleName;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     // Do any additional setup after loading the view.
@@ -189,11 +190,6 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     self.tabBarController.tabBar.hidden = YES;
     [[ScriptMananger shareManager] refreshData];
     [self.tableView reloadData];
@@ -346,7 +342,7 @@
         _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.backgroundColor =  DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
+        _tableView.backgroundColor =  [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     

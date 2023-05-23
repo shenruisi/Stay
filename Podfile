@@ -10,7 +10,7 @@ target 'Stay' do
  pod 'SDWebImageSVGKitPlugin'
  pod 'Bugsnag'
  pod 'ffmpeg-kit-ios-full', '~> 5.1'
-
+ pod 'lottie-ios'
 end
 
 target 'Stay-Mac' do
@@ -19,4 +19,5 @@ target 'Stay-Mac' do
  pod 'SDWebImage'
  pod 'SDWebImageSVGKitPlugin'
  pod 'ffmpeg-kit-ios-full', '~> 5.1'
+ pod 'lottie-ios'
 end

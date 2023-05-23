@@ -6,11 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-#ifdef FC_MAC
-#import "NavigateViewController.h"
-@interface SYBrowseViewController : NavigateViewController
-#else
-@interface SYBrowseViewController : UIViewController
-#endif
+#import "FCRootViewController.h"
+//#ifdef FC_MAC
+//#import "NavigateViewController.h"
+//@interface SYBrowseViewController : NavigateViewController
+//#else
+@interface SYBrowseViewController : FCRootViewController
+//#endif
 @end

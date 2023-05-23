@@ -178,3 +178,21 @@ export function isMobile(){
   return getArr.length ? true : false;
 }
 
+export function isMobileOrIpad(){
+  const userAgentInfo = navigator.userAgent;
+  let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod', 'iPad'];
+  let getArr = Agents.filter(i => userAgentInfo.includes(i));
+  return getArr.length ? true : false;
+}
+
+export function unhtml(str) {
+  return str ? str.replace(/[<">']/g, (a) => {
+    return {
+      '<': '&lt;',
+      '"': '&quot;',
+      '>': '&gt;',
+      '\'': '&#39;'
+    }[a]
+  }) : '';
+}
+

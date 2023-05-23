@@ -18,11 +18,19 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
 
 @implementation SYCodeMirrorView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self addSubview:self.wkwebView];
-        self.backgroundColor = [self createBgColor];
+//- (instancetype)initWithFrame:(CGRect)frame {
+//    if (self = [super initWithFrame:frame]) {
+//        [self wkwebView];
+//        self.backgroundColor = [self createBgColor];
+//
+//    }
+//    return self;
+//}
 
+- (instancetype)init {
+    if (self = [super init]) {
+        [self wkwebView];
+        self.backgroundColor = [self createBgColor];
     }
     return self;
 }
@@ -50,12 +58,22 @@ NSNotificationName const _Nonnull CMVDidFinishContentNotification = @"app.stay.n
         WKUserContentController * wkUController = [[WKUserContentController alloc] init];
 
         config.userContentController = wkUController;
-#ifdef FC_MAC
-        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,self.width,self.height) configuration:config];
-#else
-        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.height) configuration:config];
-#endif
+//#ifdef FC_MAC
+//        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,self.width,self.height) configuration:config];
+//#else
+//        _wkwebView = [[WKWebView alloc] initWithFrame:CGRectMake(0.0,0.0,kScreenWidth,self.height) configuration:config];
+//#endif
+        _wkwebView = [[WKWebView alloc] init];
+        _wkwebView.translatesAutoresizingMaskIntoConstraints = NO;
+//        _wkwebView setPasteConfiguration:<#(UIPasteConfiguration * _Nullable)#>
         
+        [self addSubview:_wkwebView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_wkwebView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+            [_wkwebView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+            [_wkwebView.topAnchor constraintEqualToAnchor:self.topAnchor],
+            [_wkwebView.heightAnchor constraintEqualToAnchor: self.heightAnchor]
+        ]];
         _wkwebView.backgroundColor = [self createBgColor];
         _wkwebView.UIDelegate = self;
         _wkwebView.navigationDelegate = self;

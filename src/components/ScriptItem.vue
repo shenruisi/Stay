@@ -1,7 +1,7 @@
 <template>
   <div class="script-item-box" >
     <div class="script-item" :class="{disabled: script.disableChecked}">
-      <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'60px':'0px'}">
+      <div class="script-info" :class="script.active?'activated':'stopped'" :style="{paddingLeft: script.iconUrl?'48px':'0px'}">
         <div class="script-icon" v-if="script.iconUrl">
           <img :src="script.iconUrl" />
         </div>
@@ -14,24 +14,24 @@
         <div class="author overflow">{{script.author+"@"+script.name}}</div>
         <div class="desc overflow">{{script.description}}</div>
       </div>
-      <div class="website-cell">
+      <div class="website-cell" :class="script.active?'activated':'stopped'">
         <div class="check-box" :class="{ active: script.disableChecked}" >
           <input :ref="script.uuid" v-model="script.disableChecked" 
-          @change='changeWebsiteDisabled(script.uuid, $event)' type="checkbox" class="allow" />
+          @change='changeWebsiteDisabled(script.uuid, script.active, $event)' type="checkbox" class="allow" :disabled="!script.active"/>
         </div>
-        <div class="website"  @click="disabledUrlClick(script.uuid)">{{t("disable_website")}}</div>
+        <div class="website"  @click="disabledUrlClick(script.uuid, script.active)">{{t("disable_website")}}</div>
         <div class="select-options">
           <div class="selected-text">{{website}}</div>
-          <select class="select-container" v-model="script.disabledUrl" @change='changeSelectWebsite(script.uuid, $event)' >
+          <select class="select-container" v-model="script.disabledUrl" @change='changeSelectWebsite(script.uuid, script.active, $event)' :disabled="!script.active">
             <option v-for="(item, i) in websiteList" :key="i" :value="item.disabledUrl">{{item.website}}</option>
           </select>
         </div>
       </div>
-      <div class="action-cell">
-        <div class="cell-icon menu" v-if="script.grants.length && (script.grants.includes('GM.registerMenuCommand') || script.grants.includes('GM_registerMenuCommand'))" @click="showRegisterMenu(script.uuid, script.active)">{{t("menu")}}</div>
-        <div class="cell-icon open-app" @click="openInAPP(script.uuid)">{{t("open_app")}}</div>
-        <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
-      </div>
+    </div>
+    <div class="action-cell">
+      <div class="cell-icon menu" v-if="script.grants.length && (script.grants.includes('GM.registerMenuCommand') || script.grants.includes('GM_registerMenuCommand'))" @click="showRegisterMenu(script.uuid, script.active)">{{t("menu")}}</div>
+      <div class="cell-icon open-app" @click="openInAPP(script.uuid)">{{t("open_app")}}</div>
+      <div class="cell-icon manually" v-if="!script.active" @click="runManually(script.uuid, script.name)">{{t("run_manually")}}</div>
     </div>
     
   </div>
@@ -93,11 +93,15 @@ export default {
     const refreshTargetTabs = () => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
     }
-    const disabledUrlClick = (refId) => {
-      // console.log('disabledUrlClick----', refId, proxy.$refs);
-      proxy.$refs[refId].dispatchEvent(new MouseEvent('click'));
+    const disabledUrlClick = (refId, active) => {
+      if(active){
+        proxy.$refs[refId].dispatchEvent(new MouseEvent('click'));
+      }
     }
-    const changeSelectWebsite = (uuid, event) => {
+    const changeSelectWebsite = (uuid, active, event) => {
+      if(!active){
+        return;
+      }
       const selectOpt = event.target;
       const website = selectOpt.value;
       state.script.disabledUrl = website;
@@ -108,12 +112,16 @@ export default {
       // console.log('website------',website);
       emit('handleWebsite', uuid, website);
     }
-    const changeWebsiteDisabled = (uuid, event) => {
-      const disabled = event.target.checked;
-      state.script.disableChecked = disabled;
-      disabledUrlToReq(uuid);
-      // console.log('------website---enabled------',event, websiteReq, disabled);
-      emit('handleWebsiteDisabled', uuid, disabled);
+    const changeWebsiteDisabled = (uuid, active, event) => {
+      console.log('changeWebsiteDisabled----', active)
+      if(active){
+        console.log('changeWebsiteDisabled-----2--2-2-2-2-2-2-active=',active)
+        const disabled = event.target.checked;
+        state.script.disableChecked = disabled;
+        disabledUrlToReq(uuid);
+        // console.log('------website---enabled------',event, websiteReq, disabled);
+        emit('handleWebsiteDisabled', uuid, disabled);
+      }
     }
 
     const disabledUrlToReq = (uuid) => {
@@ -192,13 +200,17 @@ export default {
 <style lang="less" scoped>
 .script-item-box{
   width: 100%;
-  padding: 10px 0 0 10px;
+  // padding: 6px 0px;
+  background-color: var(--dm-bg);
+  border: 1px solid var(--dm-bd);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 10px;
   .script-item{
     width: 100%;
-    border-bottom: 1px solid var(--dm-bd);
-    background-color: var(--dm-bg);
     user-select: none;
-    padding-bottom: 6px;
+    padding-left: 10px;
+    // padding-bottom: 6px;
     &.disabled{
       .script-info{
         .state{
@@ -209,8 +221,9 @@ export default {
     .script-info{
       width: 100%;
       height: 48px;
-      padding-left: 60px;
+      padding-left: 48px;
       padding-right: 60px;
+      padding-top: 4px;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -220,12 +233,10 @@ export default {
       .script-icon{
         position: absolute;
         left: 0;
-        top: 0;
-        width: 48px;
-        height: 48px;
+        top: 6px;width: 40px;height: 40px;
         border: 0.5px solid var(--dm-bd);
         border-radius: 8px;
-        padding: 8px;
+        padding: 6px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -238,8 +249,8 @@ export default {
       }
       .active-state{
         position: absolute;
-        right: 0;
-        top: 0;
+        right: 10px;
+        top: 10px;
         width: 40px;
         height: 50px;
         overflow: hidden;
@@ -260,11 +271,9 @@ export default {
         }
       }
       &.stopped{
-        .author{
-          opacity: 0.7;
-        }
-        .desc{
-          opacity: 0.7;
+        .author,.desc{
+          // opacity: 0.7;
+          color: var(--dm-bd);
         }
       }
       .author{
@@ -304,7 +313,19 @@ export default {
       justify-content: flex-start;
       align-items: center;
       position: relative;
-      padding: 4px 0 2px 0;
+      padding: 0px 0 2px 0;
+      &.stopped{
+        .website,.select-text{
+          // opacity: 0.7;
+          color: var(--dm-bd);
+        }
+        .select-options{
+          opacity: 0.2;
+        }
+        .check-box{
+          opacity: 0.4;
+        }
+      }
       .check-box{
         width: 16px;
         height: 16px;
@@ -357,7 +378,7 @@ export default {
       }
       .select-options{
         height: 24px;
-        width: 200px;
+        width: 130px;
         position: relative;
         text-align: left;
         .selected-text{
@@ -404,66 +425,69 @@ export default {
       }
 
     }
-    .action-cell{
-      width: 100%;
-      padding: 2px 0;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
+    
+  }
+  .action-cell{
+    width: 100%;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    border-top: 1px solid var(--dm-bd);
+    .cell-icon{
       position: relative;
-      .cell-icon{
-        position: relative;
-        height: 24px;
-        line-height: 24px;
-        margin-right: 4px;
-        padding-left: 30px;
-        padding-right: 8px;
-        font-family: Helvetica Neue;
-        font-size: 13px;
-        color: var(--s-main);
-        font-weight: 700;
-        border-radius: 8px;
-        background-color: var(--dm-bg-f7);
-        cursor: default;
-      }
-      .menu{
-        &::before{
-          position:absolute;
-          left: 6px;
-          top: 50%;
-          transform: translate(0, -50%);
-          content: "";
-          width: 19px;
-          height: 19px;
-          background: url("../assets/images/menu.png") no-repeat 50% 50%;
-          background-size: contain;
-        }
-      }
-      .manually::after{
+      height: 24px;
+      line-height: 22px;
+      margin-right: 4px;
+      padding-left: 27px;
+      padding-right: 5px;
+      font-family: Helvetica Neue;
+      font-size: 12px;
+      color: var(--s-main);
+      font-weight: 700;
+      border-radius: 8px;
+      // background-color: var(--dm-bg-f7);
+      border: 1px solid var(--s-main);
+      cursor: default;
+    }
+    .menu{
+      &::before{
         position:absolute;
-        left: 6px;
+        left: 4px;
         top: 50%;
         transform: translate(0, -50%);
         content: "";
         width: 19px;
         height: 19px;
-        background: url("../assets/images/manaully.png") no-repeat 50% 50%;
+        background: url("../assets/images/menu.png") no-repeat 50% 50%;
         background-size: contain;
       }
-      .open-app::after{
-        position:absolute;
-        left: 6px;
-        top: 50%;
-        transform: translate(0, -50%);
-        content: "";
-        width: 19px;
-        height: 19px;
-        background: url("../assets/images/openinapp.png") no-repeat 50% 50%;
-        background-size: contain;
-
-      }
+    }
+    .manually::after{
+      position:absolute;
+      left: 6px;
+      top: 50%;
+      transform: translate(0, -50%);
+      content: "";
+      width: 19px;
+      height: 19px;
+      background: url("../assets/images/manaully.png") no-repeat 50% 50%;
+      background-size: contain;
+    }
+    .open-app::after{
+      position:absolute;
+      left: 6px;
+      top: 50%;
+      transform: translate(0, -50%);
+      content: "";
+      width: 19px;
+      height: 19px;
+      background: url("../assets/images/openinapp.png") no-repeat 50% 50%;
+      background-size: contain;
 
     }
+
   }
   
 }

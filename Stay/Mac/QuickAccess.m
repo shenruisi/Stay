@@ -24,9 +24,12 @@
 }
 
 + (nullable MainTabBarController *)primaryController{
-    UISplitViewController *splitViewController = [self splitController];
-    if (splitViewController){
-        return splitViewController.viewControllers[0];
+    UIViewController *splitViewController = [self splitController];
+    if ([splitViewController isKindOfClass:[UISplitViewController class]]){
+        return ((UISplitViewController *)splitViewController).viewControllers[0];
+    }
+    else if ([splitViewController isKindOfClass:[MainTabBarController class]]){
+        return (MainTabBarController *)splitViewController;
     }
     return nil;
 }
@@ -54,5 +57,22 @@
     return [FCApp keyWindow].rootViewController;
 }
 
++ (CGFloat)secondaryOffsetX{
+    UISplitViewController *splitViewController = [self splitController];
+    if (splitViewController){
+        if (splitViewController.displayMode == UISplitViewControllerDisplayModeSecondaryOnly){
+            return 0;
+        }
+        
+        return [self homeViewController].view.frame.size.width;
+    }
+    
+    return 0;
+}
+
++ (CGSize)secondarySize{
+    UIViewController *secondaryController = [self secondaryController];
+    return secondaryController.view.frame.size;
+}
 
 @end

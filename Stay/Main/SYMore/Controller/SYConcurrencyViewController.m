@@ -8,6 +8,7 @@
 #import "SYConcurrencyViewController.h"
 #import "FCStyle.h"
 #import "FCConfig.h"
+#import "ImageHelper.h"
 #import "DownloadManager.h"
 
 @interface _ConcurrencyTableViewCell : UITableViewCell
@@ -62,10 +63,8 @@
 
 - (UIImageView *)accessory{
     if (nil == _accessory){
-        _accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 17)];
-        UIImage *image = [UIImage systemImageNamed:@"checkmark"
-                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
-        image = [image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+        _accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+        UIImage *image = [ImageHelper sfNamed:@"checkmark.circle.fill" font:FCStyle.headline color:FCStyle.accent];
         [_accessory setImage:image];
         self.accessoryView =_accessory;
     }
@@ -90,7 +89,7 @@ UITableViewDataSource
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
+    
     [self tableView];
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.Concurrency",@"Concurrency");
@@ -207,7 +206,7 @@ UITableViewDataSource
         _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     

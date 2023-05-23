@@ -37,10 +37,11 @@ settings.create="Create";
 settings.newScript="New Script";
 settings.notes="notes";
 settings.uploadTips="Handling script resources";
-settings.addScript="Write script";
-settings.addScriptFromUrl="Import from link";
-settings.addScriptFromWeb="Import from GreasyFork";
-settings.importFromFile = "Import from file";
+settings.addScript="New Userscript";
+settings.addScriptFromUrl="Link";
+settings.addScriptFromWeb="On Greasy Fork";
+settings.importFromFile = "On My Phone";
+settings.addScriptTitle = "Install Userscript";
 settings.downloadScript = "Download script";
 settings.close = "Close";
 settings.scriptError = "script error";
@@ -119,6 +120,8 @@ LifetimeSubscription="Lifetime";
 OneTimePayment="One-time payment";
 
 Upgrade="Upgrade";
+AdblockFeature="Content Blocker";
+AdblockFeatureDesc="Write custom filtering rules and webpage ad tags";
 DownloaderFeature="Downloader";
 DownloaderFeatureDesc="Download videos in Safari";
 iCloudFeature="iCloud Sync";
@@ -286,6 +289,7 @@ Violationofuserpricacy="Violation Of User Pricacy";
 Donotknowhowtouse="Do Not Know How To Use";
 NOSPACEFAILED="Not enough space";
 UploadSuccess="Thanks for your submission, please pay attention to the contact email.";
+AdBlock="Content Blocker";
 Downloaded="Downloaded";
 OnMyiPhone="On My iPhone";
 OnMyMac="On My Mac";
@@ -294,48 +298,54 @@ ChangeDirectory="Change Directory";
 Undefined="Undefined";
 items="item(s)";
 StayEngineError="This userscript requires >= Stay %@ to install.";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Builtin="Bulit-in";
+ContentFilterBasic="EasyList";
+ContentFilterPrivacy="EasyList Privacy";
+ContentFilterRegion="EasyList China";
+ContentFilterCustom="My Rules";
+ContentFilterTag="Webpage Tagging Rules";
+ContentFilterBasicAlert="Basic content blocker is not enabled";
+ContentFilterPrivacyAlert="Privacy content blocker is not enabled";
+ContentFilterRegionAlert="Region content blocker is not enabled";
+ContentFilterCustomAlert="Custom content blocker is not enabled";
+ContentFilterTagAlert="Tag content blocker is not enabled";
+Enable="Enable";
+Save="Save";
+ContentFilterRestore="Restore Defaults";
+UpgradeMessage="Upgrade to Stay PRO to unlock %@";
+Dismiss="Dismiss";
+LatestVersion="Already the latest version";
+ContentFilterRestoreMessage="Are you sure you want to restore the default settings?";
+ReloadRulesMessage="Are you sure you want to reload the rules?";
+BackgroundColor="Background Color";
+GradientColor="Gradient Color";
+SolidColor="Solid Color";
+Store="Store";
+Userscripts="Userscripts";
+Settings="Settings";
+WelcomeTo="Welcome to";
+EnableStayStep1="1. Enable Stay Safari Extension.";
+InstallUserscriptStep2="2. Install My First Userscript.";
+DoneStep3="3. Done. Start My Stay Journey.";
+WelcomeSkip="I am an experienced user, skip for now.";
+WelcomeSkipAlert="Are you sure you want to skip now?";
+EnableStay="Enable Stay";
+InstallUserscript="Install Userscript";
+RuleMaxCountError="Too many rules, Stay will automatically truncate the rules. You can try to manually delete some rules to ensure that all rules take effect.";
+Task="Tasks";
+settings.addScriptTitle="Add Userscript";
+settings.addScriptDesc="Start writting a new userscript with Editor";
+settings.addScriptFromUrlDesc="Add with download link for a userscript file";
+settings.addScriptFromWebDesc="Install userscripts on greasyfork.org";
+settings.importFromFileDesc="Install userscripts on my phone";
+NEWFOLDER="New Folder";
+TrustedSites="Trusted Sites";
+SharedRules="Shared Rules";
+NewSite="New Site";
+Domain="Domain";
+DomainFormatError="The domain name format is incorrect.";
+TrustedSiteDeleteAlert="Are you sure you want to delete this trusted site?";
+DomainExistError="This domain name already exists.";
 
 
 

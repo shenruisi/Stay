@@ -6,6 +6,7 @@
 //
 
 #import "FCStyle.h"
+#import "FCConfig.h"
 
 @implementation FCStyle
 
@@ -19,6 +20,20 @@
         return [FCStyle colorWithHexString:themeColor alpha:1];
     }
     
+}
+
++ (UIColor *)lightAccent{
+    return [UIColor colorNamed: @"LightAccentColor"];
+}
+
++ (NSArray<UIColor *> *)accentGradient{
+    NSString *type = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType];
+    if ([type isEqualToString:@"gradient"]){
+        return  @[[UIColor colorNamed:@"AccentGradient1"],[UIColor colorNamed:@"AccentGradient2"]];
+    }
+    else{
+        return  @[[self background],[self background]];
+    }
 }
 
 + (NSString *)appearance{
@@ -128,6 +143,11 @@
     
 }
 
++ (UIColor *)fcHover{
+    return [UIColor colorNamed: @"FCHover"];
+}
+
+
 + (UIColor *)fcNavigationLineColor{
     return [UIColor colorNamed:@"FCNavigationLineColor"];
 }
@@ -142,6 +162,38 @@
 
 + (UIColor *)subtitleColor {
     return  [UIColor colorNamed:@"SubtitleColor"];
+}
+
++ (UIColor *)filterCommentColor{
+    return  [UIColor colorNamed:@"FilterCommentColor"];
+}
+
++ (UIColor *)filterExceptionColor{
+    return [UIColor colorNamed:@"FilterExceptionColor"];
+}
+
++ (UIColor *)filterAddressColor{
+    return [UIColor colorNamed:@"FilterAddressColor"];
+}
+
++ (UIColor *)filterSeparatorColor{
+    return [UIColor colorNamed:@"FilterSeparatorColor"];
+}
+
++ (UIColor *)filterModifierColor{
+    return [UIColor colorNamed:@"FilterModifierColor"];
+}
+
++ (UIColor *)filterOptionColor{
+    return [UIColor colorNamed:@"FilterOptionColor"];
+}
+
++ (UIColor *)filterCosmeticColor{
+    return [UIColor colorNamed:@"FilterCosmeticColor"];
+}
+
++ (UIColor *)filterSelectorColor{
+    return [UIColor colorNamed:@"FilterSelectorColor"];
 }
 
 + (UIFont *)title1{
@@ -216,6 +268,14 @@
 #endif
 }
 
++ (UIFont *)caption{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:14];
+#else
+    return [UIFont systemFontOfSize:12];
+#endif
+}
+
 + (UIFont *)bodyBold {
 #ifdef FC_IOS
     return [UIFont boldSystemFontOfSize:16];
@@ -272,11 +332,27 @@
 #endif
 }
 
++ (UIFont *)sfSecondaryIconBold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:15];
+#else
+    return [UIFont boldSystemFontOfSize:13];
+#endif
+}
+
 + (UIFont *)cellIcon{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:20];
 #else
     return [UIFont systemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)secondaryCellIcon{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:18];
+#else
+    return [UIFont systemFontOfSize:16];
 #endif
     
 }
@@ -289,6 +365,69 @@
 #endif
 }
 
++ (UIFont *)sfSymbolL1{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:22];
+#else
+    return [UIFont systemFontOfSize:20];
+#endif
+}
+
++ (UIFont *)sfSymbolL1Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:22];
+#else
+    return [UIFont boldSystemFontOfSize:20];
+#endif
+}
+
++ (UIFont *)sfSymbolL1d5{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:21];
+#else
+    return [UIFont systemFontOfSize:19];
+#endif
+}
+
++ (UIFont *)sfSymbolL1d5Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:21];
+#else
+    return [UIFont boldSystemFontOfSize:19];
+#endif
+}
+
++ (UIFont *)sfSymbolL2{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:20];
+#else
+    return [UIFont systemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)sfSymbolL2Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:20];
+#else
+    return [UIFont boldSystemFontOfSize:18];
+#endif
+}
+
++ (UIFont *)sfSymbolL3{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:18];
+#else
+    return [UIFont systemFontOfSize:16];
+#endif
+}
+
++ (UIFont *)sfSymbolL3Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:18];
+#else
+    return [UIFont boldSystemFontOfSize:16];
+#endif
+}
 
 + (UIColor *)colorWithHexString:(NSString *)string alpha:(CGFloat) alpha
 {

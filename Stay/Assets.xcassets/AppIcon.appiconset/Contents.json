@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "40-1.png",
+      "filename" : "40 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
@@ -13,13 +13,13 @@
       "size" : "20x20"
     },
     {
-      "filename" : "29-1.png",
+      "filename" : "29 1.png",
       "idiom" : "iphone",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "filename" : "58-1.png",
+      "filename" : "58 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
@@ -31,13 +31,13 @@
       "size" : "29x29"
     },
     {
-      "filename" : "80-1.png",
+      "filename" : "80 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "120-1.png",
+      "filename" : "120 1.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
@@ -73,7 +73,7 @@
       "size" : "20x20"
     },
     {
-      "filename" : "40-2.png",
+      "filename" : "40 2.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
@@ -151,67 +151,67 @@
       "size" : "1024x1024"
     },
     {
-      "filename" : "stay-mac-icon-16.png",
+      "filename" : "stay-mac-16.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "16x16"
     },
     {
-      "filename" : "stay-mac-icon-33.png",
+      "filename" : "stay-mac-32.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "16x16"
     },
     {
-      "filename" : "stay-mac-icon-32.png",
+      "filename" : "stay-mac-32 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "32x32"
     },
     {
-      "filename" : "stay-mac-icon-64.png",
+      "filename" : "stay-mac-64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
     },
     {
-      "filename" : "stay-mac-icon-128.png",
+      "filename" : "stay-mac-128.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "128x128"
     },
     {
-      "filename" : "stay-mac-icon-257.png",
+      "filename" : "stay-mac-256.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
-      "filename" : "stay-mac-icon-256.png",
+      "filename" : "stay-mac-256 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
     },
     {
-      "filename" : "stay-mac-icon-513.png",
+      "filename" : "stay-mac-512.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "256x256"
     },
     {
-      "filename" : "stay-mac-icon-512.png",
+      "filename" : "stay-mac-512 1.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "512x512"
     },
     {
-      "filename" : "stay-mac-icon-1025.png",
+      "filename" : "stay-mac-1024.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
     },
     {
-      "filename" : "stay-mac-icon-1024.png",
+      "filename" : "stay-mac-1024 1.png",
       "idiom" : "mac",
       "size" : "1024x1024"
     }

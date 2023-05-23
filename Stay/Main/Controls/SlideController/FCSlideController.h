@@ -19,7 +19,14 @@ extern NSNotificationName const _Nonnull FCSlideControllerDidDismissNotification
 
 @property (nonatomic, strong) FCBlockView *blockView;
 @property (nonatomic, weak) FCRoundedShadowView *navView;
+@property (nonatomic, weak) UIViewController *baseCer;
+@property (nonatomic, strong) UIView *specificParentView;
+@property (nonatomic) CGSize keyboardSize;
+@property (nonatomic, assign) BOOL relayoutByKeyboard;
 - (void)layoutSubviews;
+- (void)startLoading;
+- (void)stopLoading;
+- (void)touched;
 @end
 
 NS_ASSUME_NONNULL_END

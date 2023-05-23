@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef enum {
     FCPresentingFromBottom,
     FCPresentingFromTop,
+    FCPresentingFromFixedOrigin
 }FCPresentingFrom;
 
 @protocol  FCPresenting<NSObject>
@@ -29,6 +30,9 @@ typedef enum {
 - (BOOL)preventShortcuts;
 - (BOOL)dismissable;
 - (CGFloat)maxHeight;
+- (UIView *)parentView;
+- (CGFloat)offsetX;
+- (CGFloat)offsetY;
 @end
 
 NS_ASSUME_NONNULL_END

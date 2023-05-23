@@ -31,9 +31,12 @@ typedef enum {
 @interface ModalItemDataEntityGeneral : NSObject
 
 @property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) UIFont *titleFont;
 @property (nonatomic, strong) NSString *subtitle;
+@property (nonatomic, strong) UIFont *subtitleFont;
 @property (nonatomic, strong) NSString *tips;
 @property (nonatomic, strong) NSString *uuid;
+@property (nonatomic, strong) UIFont *accessoryFont;
 @end
 
 @interface ModalItemDataEntityIcon : NSObject
@@ -49,6 +52,8 @@ typedef enum {
 @interface ModalItemDataEntityAccessory : NSObject
 
 @property (nonatomic, strong) NSString *text;
+@property (nonatomic, assign) BOOL animation;
+@property (nonatomic, assign) BOOL checkmark;
 @end
 
 @interface ModalItemDataEntitySplit : NSObject
@@ -63,6 +68,9 @@ typedef enum {
 @property (nonatomic, strong) NSString *placeholder;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, assign) UIKeyboardType keyboardType;
+@property(nonatomic) UITextAutocapitalizationType autocapitalizationType; 
+@property(nonatomic) UITextAutocorrectionType autocorrectionType;
+@property(nonatomic) UITextSpellCheckingType spellCheckingType;
 @property (nonatomic, weak) UITextField *textField;
 @property (nonatomic, copy) void(^textChanged)(NSString *text);
 @end
@@ -95,6 +103,8 @@ typedef enum {
 @property (nonatomic, assign) ModalItemElementRenderMode renderMode;
 
 @property (nonatomic, copy) void(^action)(ModalItemElement *element);
+
+@property (nonatomic, assign) BOOL shadowRound;
 
 - (CGFloat)contentHeightWithWidth:(CGFloat)width;
 - (void)clear;

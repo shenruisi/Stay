@@ -12,8 +12,66 @@
 #import "SharedStorageManager.h"
 #import "API.h"
 #import "FCShared.h"
+#import <Speech/Speech.h>
+#import "ContentFilterManager.h"
+#import "MyAdditions.h"
+
+@interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
+
+@property (nonatomic, strong) SFSpeechRecognizer *speechRecognizer;
+@property (nonatomic, strong) SFSpeechURLRecognitionRequest *recognitionRequest;
+@property (nonatomic, strong) SFSpeechRecognitionTask *recognitionTask;
+@property (nonatomic, strong) AVSpeechSynthesizer *speechSynthesizer;
+@end
 
 @implementation SafariWebExtensionHandler
+
+- (instancetype)init{
+    if (self = [super init]){
+        self.speechRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en-US"]];
+        self.speechRecognizer.delegate = self;
+//        [self requestSpeechAuthorization];
+//        [self startRecognition];
+    }
+    
+    return self;
+}
+
+- (void)requestSpeechAuthorization:(NSData *)data{
+//    [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (status == SFSpeechRecognizerAuthorizationStatusAuthorized) {
+//                [self startRecognition:data];
+//            }
+//        });
+//    }];
+    
+    [self startRecognition:data];
+}
+
+- (void)startRecognition:(NSData *)data{
+    NSString * audioFilePath =[FCSharedDirectory() stringByAppendingPathComponent:@"gpt.m4a"];
+    NSError *error;
+    BOOL success = [data writeToFile:audioFilePath options:0 error:&error];
+    if (!success) {
+        NSLog(@"Failed to write audio data to disk");
+        return;
+    }
+    NSURL *audioFileURL = [NSURL fileURLWithPath:audioFilePath];
+    self.recognitionRequest = [[SFSpeechURLRecognitionRequest alloc] initWithURL:audioFileURL];
+    self.recognitionTask = [self.speechRecognizer recognitionTaskWithRequest:self.recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
+        if (result) {
+            NSString *result1 = result.bestTranscription.formattedString;
+            NSLog(@"Recognition result: %@", result.bestTranscription.formattedString);
+        }
+
+        if (error || result.isFinal) {
+            self.recognitionTask = nil;
+            self.recognitionRequest = nil;
+        }
+    }];
+}
+
 
 //https://wiki.greasespot.net/Include_and_exclude_rules
 - (NSRegularExpression *)convert2GlobsRegExp:(NSString *)str{
@@ -98,9 +156,26 @@
 {
     NSDictionary *message = (NSDictionary *)[context.inputItems.firstObject userInfo][SFExtensionMessageKey];
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
-    
+
     id body = [NSNull null];
     if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+        
+//        AVSpeechUtterance *speechUtterance = [[AVSpeechUtterance alloc] initWithString:@"Hello, World!"];
+//        speechUtterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"];
+//        speechUtterance.rate = 0.5;
+//
+//        self.speechSynthesizer = [[AVSpeechSynthesizer alloc] init];
+//        self.speechSynthesizer.delegate = self;
+//
+//        [self.speechSynthesizer writeUtterance:speechUtterance toBufferCallback:^(AVAudioBuffer * _Nonnull buffer) {
+//
+//            AVAudioPCMBuffer *pcmBuffer = (AVAudioPCMBuffer *)buffer;
+//            int16_t * audioData = (int16_t *)[pcmBuffer int16ChannelData][0];  // 从第一个音频通道获取数据
+//            UInt32 audioDataLength = pcmBuffer.frameLength * sizeof(int16_t); // 计算音频数据的长度
+//            NSData *audioDataAsNSData = [NSData dataWithBytes:audioData length:audioDataLength];
+//            NSLog(@"%@",audioDataAsNSData);
+//        }];
+    
         [SharedStorageManager shared].userDefaults.safariExtensionEnabled = YES;
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
@@ -330,6 +405,12 @@
         [SharedStorageManager shared].userDefaultsExRO = nil;
         body = [SharedStorageManager shared].userDefaultsExRO.pro ? @"a":@"b";
     }
+    else if ([message[@"type"] isEqualToString:@"config"]){
+        [SharedStorageManager shared].extensionConfig = nil;
+        body = @{
+            @"background_color_type" : [SharedStorageManager shared].extensionConfig.backgroundColorType
+        };
+    }
     else if ([message[@"type"] isEqualToString:@"GM_xmlhttpRequest"]){
         NSDictionary *details = message[@"details"];
         body = [self xmlHttpRequestProxy:details];
@@ -378,6 +459,154 @@
         NSString *nCode = message[@"n_code"];
         if (path.length > 0 && code.length > 0){
             [[API shared] commitYoutbe:path code:code nCode:nCode];
+        }
+    }
+    else if ([message[@"type"] isEqualToString:@"ST_speechToText"]){
+//        NSString *audioStr = message[@"data"];
+//        audioStr = [audioStr stringByReplacingOccurrencesOfString:@"data:audio/ogg; codecs=opus;base64," withString:@""];
+//        NSData *data = [[NSData alloc] initWithBase64EncodedString:audioStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+//        [self requestSpeechAuthorization:data];
+//        NSLog(@"%@",data);
+        
+        
+    }
+    else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
+        //
+        NSString *url = message[@"url"];
+        NSString *selector = message[@"selector"];
+        
+        if (url.length > 0 && selector.length > 0){
+            NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+            [set addCharactersInString:@"#"];
+            NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+            NSString *host = uri.host;
+            NSString *path = uri.path;
+            if ([path isEqualToString:@"/"]){
+                path = @"";
+            }
+            path = path ? path : @"";
+//            NSString *fragment = uri.fragment ?  uri.fragment : @"";
+            
+            NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
+            
+            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:rule error:nil];
+            NSDictionary *dictionary = @{
+                @"trigger" : @{
+                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
+                },
+                @"action" : @{
+                    @"type" : @"css-display-none",
+                    @"selector" : selector
+                }
+            };
+            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" dictionary:dictionary error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+            }];
+        }
+        
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){
+        dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+        __block BOOL enabled;
+        [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+            enabled = state.enabled;
+            dispatch_semaphore_signal(semaphore);
+        }];
+        
+        dispatch_semaphore_wait(semaphore, deadline);
+        
+        [SharedStorageManager shared].extensionConfig = nil;
+        NSNumber *tagStatus = [SharedStorageManager shared].extensionConfig.tagStatus;
+            
+        body = @{
+            @"enabled" : @(enabled),
+            @"tag_status" : tagStatus
+        };
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchTagRules"]){
+        NSString *url = message[@"url"];
+        NSUInteger urlLength = url.length;
+        NSError *error;
+        NSMutableArray *rules = [[NSMutableArray alloc] init];
+        NSArray *jsonArray = [[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:&error];
+        for (NSDictionary *rule in jsonArray){
+            NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+            urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+            NSRegularExpression *expression = [[NSRegularExpression alloc] initWithPattern:urlFilter options:0 error:nil];
+            NSArray *results = [expression matchesInString:url options:0 range:NSMakeRange(0, urlLength)];
+            if (results.count > 0){
+                NSString *selector = rule[@"action"][@"selector"];
+                if (selector.length > 0){
+                    NSString *urlAndSelector = [NSString stringWithFormat:@"%@%@",urlFilter,selector];
+                    [rules addObject:@{
+                        @"uuid":[urlAndSelector md5],
+                        @"url-filter": urlFilter,
+                        @"selector": selector
+                    }];
+                }
+            }
+        }
+        
+        body = @{
+            @"rules":rules
+        };
+    }
+    else if ([message[@"type"] isEqualToString:@"deleteTagRule"]){
+        NSString *targetUUID = message[@"uuid"];
+        
+        NSString *content = [[ContentFilterManager shared] ruleText:@"Tag.txt" error:nil];
+        NSMutableString *newContent = [[NSMutableString alloc] init];
+        if (content.length > 0){
+            NSArray<NSString *> *lines = [content componentsSeparatedByString:@"\n"];
+            for (NSString *line in lines){
+                NSString *newLine = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+                if (newLine.length > 0){
+                    if ([newLine hasPrefix:@"!"]){
+                        [newContent appendFormat:@"%@\n",newLine];
+                    }
+                    else{
+                        NSArray<NSString *> *urlFilterAndSelector = [newLine componentsSeparatedByString:@"##"];
+                        if (urlFilterAndSelector.count == 2){
+                            NSString *urlFilter = [urlFilterAndSelector[0] stringByReplacingOccurrencesOfString:@"||" withString:@"^https?://"];
+                            NSString *selector = urlFilterAndSelector[1];
+                            NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+                            if (![uuid isEqualToString:targetUUID]){
+                                [newContent appendFormat:@"%@\n",newLine];
+                            }
+                        }
+                        else{
+                            [newContent appendFormat:@"%@\n",newLine];
+                        }
+                    }
+                }
+            }
+            
+            NSMutableArray *jsonArray = [NSMutableArray arrayWithArray:[[ContentFilterManager shared] ruleJSONArray:@"Tag.json" error:nil]];
+            
+            for (int i = 0; i < jsonArray.count; i++){
+                NSDictionary *rule = jsonArray[i];
+                NSString *urlFilter = rule[@"trigger"][@"url-filter"];
+                urlFilter = [urlFilter stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+                NSString *selector = rule[@"action"][@"selector"];
+                NSString *uuid = [[NSString stringWithFormat:@"%@%@",urlFilter,selector] md5];
+                if ([targetUUID isEqualToString:uuid]){
+                    [jsonArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+            
+            [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:newContent error:nil];
+            [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
+            }];
         }
     }
 
@@ -548,6 +777,27 @@
     return dic;
 }
 
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance {
+    
+}
+
+- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance{
+    
+}
+
+- (void)speechRecognitionDidDetectSpeech:(SFSpeechRecognitionTask *)task{
+    
+}
+
+// Called for all recognitions, including non-final hypothesis
+- (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didHypothesizeTranscription:(SFTranscription *)transcription{
+    
+}
+
+// Called only for final recognitions of utterances. No more about the utterance will be reported
+- (void)speechRecognitionTask:(SFSpeechRecognitionTask *)task didFinishRecognition:(SFSpeechRecognitionResult *)recognitionResult{
+    
+}
 
 
 @end

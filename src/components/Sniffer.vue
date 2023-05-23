@@ -459,16 +459,16 @@ export default {
             user-select: none;
             .btn{
               width: 100px;
-              background-color: var(--dm-bg-f7);
+              // background-color: var(--dm-bg-f7);
               color: var(--s-main);
               font-size: 13px;
               font-weight: 700;
               height: 25px;
-              line-height: 25px;
-              // padding: 2px 0;
-              border-radius: 8px;
               user-select: none;
               cursor: default;
+              line-height: 23px;
+              border-radius: 13px;
+              border: 1px solid var(--s-main);
             }
           }
         }

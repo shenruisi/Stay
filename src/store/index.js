@@ -29,9 +29,13 @@ export default createStore({
     isStayPro: false,
     browserUrl: '',
     selectedTab: {id: 1, name: 'matched_scripts_tab'},
+    tabAction: {matched_scripts_tab: 'tab_1', adblock_tab: 'tab_1'},
     darkmodeToggleStatus: 'auto',
     siteEnabled: true,
-    longPressStatus: 'on'
+    longPressStatus: 'on',
+    threeFingerTapStatus: 'on',
+    blockStatus: 'on',
+    blockerEnabled: '',
   },
   getters: {
     localLanGetter: (state) => {
@@ -57,6 +61,18 @@ export default createStore({
     },
     longPressStatusGetter: (state) => {
       return state.longPressStatus;
+    },
+    threeFingerTapStatusGetter: (state) => {
+      return state.threeFingerTapStatus;
+    },
+    blockStatusGetter: (state) => {
+      return state.blockStatus;
+    },
+    tabActionGetter: (state) => {
+      return state.tabAction;
+    },
+    blockerEnabledGetter: (state) => {
+      return state.tabAction;
     }
   },
   // vuex的store状态更新的唯一方式：提交 mutation
@@ -84,6 +100,18 @@ export default createStore({
     },
     setLongPressStatus: (state, data) => {
       state.longPressStatus = data;
+    },
+    setThreeFingerTapStatus: (state, data) => {
+      state.threeFingerTapStatus = data;
+    },
+    setBlockStatus: (state, data) => {
+      state.blockStatus = data;
+    },
+    setTabAction: (state, data) => {
+      state.tabAction = data;
+    },
+    setBlockerEnabled: (state, data) => {
+      state.blockerEnabled = data;
     }
   },
   // 异步操作在action中进行，再传递到mutation
@@ -111,6 +139,18 @@ export default createStore({
     },
     setLongPressStatusAsync: ({ commit }, data) => {
       commit('setLongPressStatus', data);
+    },
+    setThreeFingerTapStatusAsync: ({ commit }, data) => {
+      commit('setThreeFingerTapStatus', data);
+    },
+    setBlockStatusAsync: ({ commit }, data) => {
+      commit('setBlockStatus', data);
+    },
+    setTabActionAsync: ({ commit }, data) => {
+      commit('setTabAction', data);
+    },
+    setBlockerEnabledAsync: ({ commit }, data) => {
+      commit('setBlockerEnabled', data);
     }
   },
   // 当应用变得复杂时，state中管理的变量变多，store对象就有可能变得相当臃肿。为了解决这个问题，
@@ -126,7 +166,7 @@ export default createStore({
       key: 'stay-popup-vuex-store-persistence',
       // paths是存储state中的那些数据，如果是模块下具体的数据需要加上模块名称，如moudleA.name
       // 修改state后触发才可以看到本地存储数据的的变化。
-      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro', 'darkmodeToggleStatus', 'siteEnabled', 'longPressStatus']
+      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro', 'darkmodeToggleStatus', 'siteEnabled', 'longPressStatus', 'threeFingerTapStatus', 'blockStatus', 'tabAction']
     })
   ]
 });

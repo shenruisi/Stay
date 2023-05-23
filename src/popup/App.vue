@@ -1,19 +1,39 @@
 <template>
   <div class="stay-popup-warpper" :class="isMobile?'mobile-bottom':'mac-bottom'">
-    <!-- <div class="hide-temp"></div> -->
-    <Header>{{t(selectedTab.name)}}</Header>
-    <div class="tab-content">
-      <MatchedScript v-if="selectedTab.id==1"></MatchedScript>
-      <template v-if="selectedTab.id==2 || selectedTab.id==3">
+    <Header :titleInfo="t(selectedTab.name)">
+      <!-- MatchedScript -->
+      <!-- adblock -->
+      <div class="tab-wrapper" :class="selectedTab.id==1?'script':'adblock'" v-if="selectedTab.id==1 || selectedTab.id==4">
+        <div
+          class="tab"
+          @click="tabActionClick('tab_1',selectedTab.name)"
+          :class="{ active: showTab == 'tab_1' }"
+        >
+          <div class="tab-text">{{ selectedTab.id==1 ? t("state_actived") :  t("web_tag")}}</div>
+        </div>
+        <div
+          class="tab"
+          @click="tabActionClick('tab_2', selectedTab.name)"
+          :class="{ active: showTab == 'tab_2' }"
+        >
+          <div class="tab-text">{{ selectedTab.id==1 ? t("state_stopped") :  t("tag_rules")}}</div>
+        </div>
+      </div>
+    </Header>
+    <div class="tab-content" :style="{paddingTop: (selectedTab.id == 1 || selectedTab.id == 4)?'32px':'0'}">
+      <MatchedScript v-if="selectedTab.id==1" ref="matchedScriptRef" :currentTab="showTab"></MatchedScript>
+      <template v-if="selectedTab.id==2 || selectedTab.id==3 || selectedTab.id==4">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
+          <AdBlock v-if="selectedTab.id==4" ref="adBlockRef" :currentTab="showTab"></AdBlock>
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
-        <UpgradePro :tabId="selectedTab.id" v-else><a class="what-it" :href="selectedTab.id == 2?'https://www.craft.do/s/PHKJvkZL92BTep':'https://www.craft.do/s/sYLNHtYc0n2rrV'" target="_blank">{{ selectedTab.id == 2 ? t('what_darkmode') : t('what_downloader') }}</a></UpgradePro>
+        <UpgradePro :tabId="selectedTab.id" v-else>
+          <a class="what-it" :href="selectedTab.whatisurl" target="_blank">{{ t(selectedTab.whatistitle) }}</a>
+        </UpgradePro>
       </template>
-      <ConsolePusher v-if="selectedTab.id==4"></ConsolePusher>
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>
   </div>
@@ -24,9 +44,9 @@ import Header from '../components/Header.vue';
 import TabMenu from '../components/TabMenu.vue';
 import DarkMode from '../components/DarkMode.vue';
 import Sniffer from '../components/Sniffer.vue';
-import ConsolePusher from '../components/ConsolePusher.vue';
 import UpgradePro from '../components/UpgradePro.vue';
 import MatchedScript from '../components/MatchedScript.vue';
+import AdBlock from '../components/AdBlock.vue';
 import { useI18n } from 'vue-i18n';
 import { isMobile } from '../utils/util'
 
@@ -36,7 +56,7 @@ export default {
   components: {
     Header,
     TabMenu,
-    ConsolePusher,
+    AdBlock,
     Sniffer,
     DarkMode,
     UpgradePro,
@@ -49,7 +69,7 @@ export default {
     const store = global.store;
     const localLan = store.state.localeLan;
     locale.value = store.state.localeLan;
-    console.log('localLan====', localLan, store.state.selectedTab);
+    // console.log('localLan====', localLan, store.state.selectedTab);
     // {id: 3, selected: 0, name: 'downloader_tab'},
     const state = reactive({
       selectedTab: store.state.selectedTab,
@@ -59,8 +79,17 @@ export default {
       darkmodeToggleStatus: store.state.darkmodeToggleStatus,
       siteEnabled: store.state.siteEnabled,
       longPressStatus: store.state.longPressStatus,
-      isMobile: isMobile()
+      isMobile: isMobile(),
+      showTab:  store.state.tabAction[store.state.selectedTab.name] || 'tab_1'
     })
+
+    const tabActionClick = (tabId, menuName) => {
+      state.showTab = tabId;
+      let tabAction = store.state.tabAction;
+      tabAction[menuName] = tabId;
+
+      store.commit('setTabAction', tabAction);
+    }
     
     const setTabName = (selectedTab) => {
       state.selectedTab = selectedTab;
@@ -107,7 +136,8 @@ export default {
       ...toRefs(state),
       t,
       tm,
-      setTabName
+      setTabName,
+      tabActionClick
     };
   }
 };
@@ -128,10 +158,51 @@ export default {
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  
-  .hide-temp{
-    height: 38px;
+  .tab-wrapper{
     width: 100%;
+    height: 32px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    &.script{
+      .tab-text::after{
+        width: 40px;
+      }
+    }
+    &.adblock{
+      .tab-text::after{
+        width: 50px;
+      }
+    }
+    .tab{
+      padding: 2px 10px 0 10px;
+      text-align: center;
+      height: 100%;
+      cursor: pointer;
+      position: relative;
+      color: var(--dm-font);
+      font-weight: 600;
+      .tab-text{
+        height: 100%;
+        font-size: 16px;
+        position: relative;
+      }
+      &.active{
+        // background-color: var(--dm-bg);
+        color: var(--s-main);
+        // border-radius: 8px;
+        .tab-text::after{
+          content: '';
+          height: 2px;
+          background-color: var(--s-main);
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+    }
+    
   }
   .tab-content{
     width: 100%;
@@ -140,7 +211,7 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: var(--dm-bg);
+    // background-color: var(--dm-bg);
     flex: 1;
     // padding-bottom: 52px;
     a.what-it{
@@ -159,7 +230,7 @@ export default {
     padding-bottom: 60px;
   }
   .mobile-bottom{
-    padding-bottom: 80px;
+    padding-bottom: 76px;
   }
 }
 </style>

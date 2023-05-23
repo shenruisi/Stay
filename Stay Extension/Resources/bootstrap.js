@@ -241,6 +241,18 @@ let injectedContentVendor = new Set();
             let menuId = request.id; 
             window.postMessage({ name: "execRegisterMenuCommand", menuId: menuId, uuid: uuid });
         }
+        // else if (request.from == "background" && "pushMakeupTagStatus" === operate) {
+        //     console.log("bootstrap--pushMakeupTagStatus---", request);
+        //     let makeupTagStatus = request.makeupTagStatus; 
+        //     const pid = Math.random().toString(36).substring(2, 9);
+        //     window.postMessage({ name: "pushMakeupTagStatus", makeupTagStatus, pid });
+        // }
+        // else if (request.from == "background" && "pushThreeFingerTapStatus" === operate) {
+        //     console.log("bootstrap--pushThreeFingerTapStatus---", request);
+        //     let threeFingerTapStatus = request.pushThreeFingerTapStatus; 
+        //     const pid = Math.random().toString(36).substring(2, 9);
+        //     window.postMessage({ name: "pushThreeFingerTapStatus", threeFingerTapStatus, pid });
+        // }
         else if (request.from == "background" && "RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP" === operate) {
             // console.log("bootstrap--RESP_HTTP_REQUEST_API_FROM_CREATE_TO_APP---", request);
             let xhrId = request.xhrId; 
@@ -704,6 +716,15 @@ let injectedContentVendor = new Set();
             message.uuid = __uuid
             browser.runtime.sendMessage(message);
         } 
+        else if(name === 'SAVE_YOUTUBE_DECODE_FUN_STR'){
+            let pid = e.data.pid;
+            let pathUuid = e.data.pathUuid;
+            let randomFunStr = e.data.randomFunStr;
+            browser.runtime.sendMessage({from: 'sniffer', operate: 'saveYoutubeDecodeFun', pathUuid, randomFunStr}, (response) => {
+              let decodeFun = '';
+              window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
+            });
+        }
     })
 
     // browser.runtime.sendMessage({from: "sniffer", operate: "GET_STAY_AROUND"}, (response) => {

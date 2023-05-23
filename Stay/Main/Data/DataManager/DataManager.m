@@ -11,6 +11,7 @@
 #import "ScriptDetailModel.h"
 #import "Tampermonkey.h"
 #import "SYVersionUtils.h"
+#import "MyAdditions.h"
 
 @implementation DataManager
 
@@ -122,9 +123,675 @@
         [self addColumn:@"download_resource" column:@"audioUrl"];
     }
     
+//    [self deleteTable:@"content_filter"];
+    if (![self existTable:@"content_filter" error:nil]){
+        [self createContentFilterTable];
+        ContentFilter *basic = [[ContentFilter alloc] init];
+        basic.defaultTitle = NSLocalizedString(@"ContentFilterBasic", @"");
+        basic.title = NSLocalizedString(@"ContentFilterBasic", @"");
+        basic.path = @"Basic.txt";
+        basic.rulePath = @"Basic.json";
+        basic.defaultUrl = @"https://easylist.to/easylist/easylist.txt";
+        basic.downloadUrl = @"https://easylist.to/easylist/easylist.txt";
+        basic.enable = 0;
+        basic.status = 1;
+        basic.sort = 1;
+        basic.load = 0;
+        basic.expires = @"4 days (update frequency)";
+        basic.version = @"202304190559";
+        basic.homepage = @"https://easylist.to/";
+        basic.uuid = [@"Basic" md5];
+#ifdef FC_MAC
+        basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic-Mac";
+#else
+        basic.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Basic";
+#endif
+        basic.type = ContentFilterTypeBasic;
+        
+        ContentFilter *privacy = [[ContentFilter alloc] init];
+        privacy.defaultTitle = NSLocalizedString(@"ContentFilterPrivacy", @"");
+        privacy.title = NSLocalizedString(@"ContentFilterPrivacy", @"");
+        privacy.path = @"Privacy.txt";
+        privacy.rulePath = @"Privacy.json";
+        privacy.defaultUrl = @"https://easylist.to/easylist/easyprivacy.txt";
+        privacy.downloadUrl = @"https://easylist.to/easylist/easyprivacy.txt";
+        privacy.enable = 0;
+        privacy.status = 1;
+        privacy.sort = 2;
+        privacy.load = 0;
+        privacy.expires = @"4 days (update frequency)";
+        privacy.version = @"202304120535";
+        privacy.homepage = @"https://easylist.to/";
+        privacy.uuid = [@"Privacy" md5];
+#ifdef FC_MAC
+        privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy-Mac";
+#else
+        privacy.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Privacy";
+#endif
+        privacy.type = ContentFilterTypePrivacy;
+        
+        ContentFilter *region = [[ContentFilter alloc] init];
+        region.defaultTitle = NSLocalizedString(@"ContentFilterRegion", @"");
+        region.title = NSLocalizedString(@"ContentFilterRegion", @"");
+        region.path = @"Region.txt";
+        region.rulePath = @"Region.json";
+        region.defaultUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
+        region.downloadUrl = @"https://easylist-downloads.adblockplus.org/easylistchina.txt";
+        region.enable = 0;
+        region.status = 1;
+        region.sort = 3;
+        region.load = 0;
+        region.expires = @"4 days (update frequency)";
+        region.version = @"202304070640";
+        region.homepage = @"https://github.com/easylist/easylistchina/";
+        region.uuid = [@"Region" md5];
+#ifdef FC_MAC
+        region.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Region-Mac";
+#else
+        region.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Region";
+#endif
+        region.type = ContentFilterTypeRegion;
+        
+        ContentFilter *custom = [[ContentFilter alloc] init];
+        custom.defaultTitle = NSLocalizedString(@"ContentFilterCustom", @"");
+        custom.title = NSLocalizedString(@"ContentFilterCustom", @"");
+        custom.rulePath = @"Custom.json";
+        custom.path = @"Custom.txt";
+        custom.defaultUrl = @"";
+        custom.downloadUrl = @"";
+        custom.enable = 0;
+        custom.status = 1;
+        custom.sort = 4;
+        custom.load = 0;
+        custom.uuid = [@"My Filters" md5];
+#ifdef FC_MAC
+        custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom-Mac";
+#else
+        custom.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Custom";
+#endif
+        custom.type = ContentFilterTypeCustom;
+        
+        ContentFilter *tag = [[ContentFilter alloc] init];
+        tag.defaultTitle = NSLocalizedString(@"ContentFilterTag", @"");
+        tag.title = NSLocalizedString(@"ContentFilterTag", @"");
+        tag.rulePath = @"Tag.json";
+        tag.path = @"Tag.txt";
+        tag.defaultUrl = @"";
+        tag.downloadUrl = @"";
+        tag.enable = 0;
+        tag.status = 1;
+        tag.sort = 5;
+        tag.load = 0;
+        tag.uuid = [@"Webpage Tagging Rules" md5];
+#ifdef FC_MAC
+        tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
+#else
+        tag.contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+#endif
+        tag.type = ContentFilterTypeTag;
+        
+        [self insertContentFilter:basic error:nil];
+        [self insertContentFilter:privacy error:nil];
+        [self insertContentFilter:region error:nil];
+        [self insertContentFilter:custom error:nil];
+        [self insertContentFilter:tag error:nil];
+        
+    }
+    
     return;
 }
 
+- (sqlite3 *)dbHandle{
+    sqlite3 *sqliteHandle = NULL;
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+    int result = sqlite3_open_v2([destPath UTF8String], &sqliteHandle, SQLITE_OPEN_READWRITE, NULL);
+    
+    if (result != SQLITE_OK) {
+        return NULL;
+    }
+    return sqliteHandle;
+}
+
+- (BOOL)existTable:(NSString *)tableName error:(NSError **)error{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        *error = [[NSError alloc] init];
+        return NO;
+    }
+    NSString *sql = [NSString stringWithFormat:@"select count(*) from sqlite_master where type='table' and name = '%@'",tableName];
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        sqlite3_close(sqliteHandle);
+        return YES;
+    }
+
+    int activite = 0;
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        activite = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return activite > 0;
+}
+
+- (void)deleteTable:(NSString *)tableName{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = [NSString stringWithFormat:@"DROP TABLE '%@'",tableName];
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        sqlite3_close(sqliteHandle);
+        return ;
+    }
+    
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return;
+}
+
+- (void)createContentFilterTable{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"CREATE TABLE 'content_filter' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'title' TEXT, 'expires' TEXT, 'tags' TEXT, 'download_url' TEXT, 'homepage' TEXT,'status' INTEGER,'path' TEXT, 'version' TEXT, 'update_time' DOUBLE,'create_time' DOUBLE,'sort' INTEGER,'user_info' TEXT, 'uuid' TEXT, 'iCloud_identifier' TEXT, 'type' INTEGER,'content_blocker_identifier' TEXT, 'rule_path' TEXT,'default_title' TEXT, 'default_url' TEXT, 'enable' INTEGER, 'redirect' TEXT, 'load' INTEGER)";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        sqlite3_close(sqliteHandle);
+        return ;
+    }
+    
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return;
+}
+
+- (BOOL)existContentFilter:(NSString *)uuid error:(NSError **)error{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        *error = [[NSError alloc] init];
+        return NO;
+    }
+    NSString *sql = [NSString stringWithFormat:@"select count(*) from content_filter where uuid='%@'",uuid];
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        sqlite3_close(sqliteHandle);
+        return YES;
+    }
+    
+    int activite = 0;
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        activite = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    return activite > 0;
+}
+
+- (NSArray<ContentFilter *> *)selectContentFilters{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return nil;
+    }
+    
+    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect,load FROM content_filter order by sort asc";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        sqlite3_close(sqliteHandle);
+        return nil;
+        
+    }
+    
+    NSMutableArray *ret = [[NSMutableArray alloc] init];
+    while(sqlite3_step(stmt) == SQLITE_ROW) {
+        
+        ContentFilter *contentFilter = [[ContentFilter alloc] init];
+        
+        contentFilter.uuid = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 0)== NULL?"":(const char *)sqlite3_column_text(stmt, 0)];
+        contentFilter.title = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 1)== NULL?"":(const char *)sqlite3_column_text(stmt, 1)];
+        contentFilter.expires = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 2)== NULL?"":(const char *)sqlite3_column_text(stmt, 2)];
+        NSString *tagsStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 3) == NULL?"":(const char *)sqlite3_column_text(stmt, 3)];
+        NSArray<NSString *> *tagsArr = [tagsStr componentsSeparatedByString:@","];
+        NSMutableArray *tags = [[NSMutableArray alloc] init];
+        for (NSString *tagStr in tagsArr){
+            [tags addObject:@([tagStr integerValue])];
+        }
+        contentFilter.tags = tags;
+        contentFilter.downloadUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 4)== NULL?"":(const char *)sqlite3_column_text(stmt, 4)];
+        contentFilter.homepage =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 5)== NULL?"":(const char *)sqlite3_column_text(stmt, 5)];
+        contentFilter.status = sqlite3_column_int(stmt, 6);
+        contentFilter.path =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 7)== NULL?"":(const char *)sqlite3_column_text(stmt, 7)];
+        contentFilter.version =  [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 8)== NULL?"":(const char *)sqlite3_column_text(stmt, 8)];
+        double createTime = sqlite3_column_double(stmt, 9);
+        contentFilter.createTime = [NSDate dateWithTimeIntervalSince1970:createTime/1000];
+        double updateTime = sqlite3_column_double(stmt, 10);
+        contentFilter.updateTime = [NSDate dateWithTimeIntervalSince1970:updateTime/1000];
+        contentFilter.sort = sqlite3_column_int(stmt, 11);
+        NSString *userInfoJsonStr = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 12)== NULL?"":(const char *)sqlite3_column_text(stmt, 12)];
+        if (userInfoJsonStr.length > 0){
+            contentFilter.userInfo = [NSJSONSerialization JSONObjectWithData:[userInfoJsonStr dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        }
+        contentFilter.iCloudIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 13)== NULL?"":(const char *)sqlite3_column_text(stmt, 13)];
+        contentFilter.type = sqlite3_column_int(stmt, 14);
+        contentFilter.contentBlockerIdentifier = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 15)== NULL?"":(const char *)sqlite3_column_text(stmt, 15)];
+        contentFilter.rulePath = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 16)== NULL?"":(const char *)sqlite3_column_text(stmt, 16)];
+        contentFilter.enable = sqlite3_column_int(stmt, 17);
+        contentFilter.defaultUrl = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 18)== NULL?"":(const char *)sqlite3_column_text(stmt, 18)];
+        contentFilter.defaultTitle = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 19)== NULL?"":(const char *)sqlite3_column_text(stmt, 19)];
+        contentFilter.redirect = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 20)== NULL?"":(const char *)sqlite3_column_text(stmt, 20)];
+        contentFilter.load = sqlite3_column_int(stmt, 21);
+        
+        [ret addObject:contentFilter];
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+    
+    return ret;
+}
+
+- (BOOL)insertContentFilter:(ContentFilter *)contentFilter error:(NSError **)error{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        *error = [[NSError alloc] init];
+        return NO;
+    }
+    
+    NSString *sql = @"INSERT INTO content_filter (uuid, title, download_url, expires, homepage, status, path, version, sort,user_info,create_time,update_time,iCloud_identifier,tags,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect,load) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    
+    sqlite3_stmt *statement;
+    
+    if (sqlite3_prepare_v2(sqliteHandle, [sql UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        sqlite3_bind_text(statement, 1,[contentFilter.uuid UTF8String], -1,NULL);
+        sqlite3_bind_text(statement, 2,contentFilter.title ? [contentFilter.title UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 3,contentFilter.downloadUrl ? [contentFilter.downloadUrl UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_text(statement, 4,contentFilter.expires ? [contentFilter.expires UTF8String]:NULL,-1,NULL);
+        sqlite3_bind_text(statement, 5,contentFilter.homepage ? [contentFilter.homepage UTF8String]:NULL, -1,NULL);
+        sqlite3_bind_int64(statement, 6, contentFilter.status);
+        sqlite3_bind_text(statement, 7, contentFilter.path ? [contentFilter.path UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_text(statement, 8, contentFilter.version ? [contentFilter.version UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_int64(statement, 9, contentFilter.sort);
+        
+        NSString *json = nil;
+        if (contentFilter.userInfo){
+            json = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:contentFilter.userInfo options:0 error:nil] encoding:NSUTF8StringEncoding];
+        }
+       
+        sqlite3_bind_text(statement, 10, json ? [json UTF8String] : NULL, -1,NULL);
+        
+        NSDate* now = [NSDate date];
+        NSString *createTimeStr = [NSString stringWithFormat:@"%.0f", [now timeIntervalSince1970]*1000];
+        NSString *updateTimeStr = [NSString stringWithFormat:@"%.0f", [now timeIntervalSince1970]*1000];
+        if (contentFilter.createTime){
+            createTimeStr = [NSString stringWithFormat:@"%.0f", [contentFilter.createTime timeIntervalSince1970]*1000];
+        }
+        sqlite3_bind_double(statement, 11, createTimeStr.doubleValue);
+        
+        if (contentFilter.updateTime){
+            updateTimeStr = [NSString stringWithFormat:@"%.0f", [contentFilter.updateTime timeIntervalSince1970]*1000];
+        }
+        sqlite3_bind_double(statement, 12, updateTimeStr.doubleValue);
+        
+        sqlite3_bind_text(statement, 13, contentFilter.iCloudIdentifier ? [contentFilter.iCloudIdentifier UTF8String] : NULL, -1,NULL);
+        NSMutableString *tags = [[NSMutableString alloc] init];
+        for (NSUInteger i = 0; i < contentFilter.tags.count; i++){
+            NSInteger tag = contentFilter.tags[i].integerValue;
+            [tags appendFormat:@"%ld",tag];
+            if (i != contentFilter.tags.count - 1){
+                [tags appendString:@","];
+            }
+        }
+        sqlite3_bind_text(statement, 14, [tags UTF8String], -1,NULL);
+        sqlite3_bind_int64(statement, 15, contentFilter.type);
+        sqlite3_bind_text(statement, 16, contentFilter.contentBlockerIdentifier ? [contentFilter.contentBlockerIdentifier UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_text(statement, 17, contentFilter.rulePath ? [contentFilter.rulePath UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_int64(statement, 18, contentFilter.enable);
+        sqlite3_bind_text(statement, 19, contentFilter.defaultUrl ? [contentFilter.defaultUrl UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_text(statement, 20, contentFilter.defaultTitle ? [contentFilter.defaultTitle UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_text(statement, 21, contentFilter.redirect ? [contentFilter.redirect UTF8String] : NULL, -1,NULL);
+        sqlite3_bind_int64(statement, 22, contentFilter.load);
+    }
+    
+    NSInteger resultCode = sqlite3_step(statement);
+    sqlite3_finalize(statement);
+    sqlite3_close(sqliteHandle);
+    return resultCode == SQLITE_DONE;
+}
+
+
+- (void)updateContentFilterStatus:(NSUInteger)status uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET status = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_int(stmt, 1, (int)status);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterLoad:(NSUInteger)load uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET load = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_int(stmt, 1, (int)load);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterEnable:(NSUInteger)enable uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET enable = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_int(stmt, 1, (int)enable);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterHomepage:(NSString *)homepage uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET homepage = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_text(stmt, 1, [homepage UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterTitle:(NSString *)title uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET title = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_text(stmt, 1, [title UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterRedirect:(NSString *)redirect uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET redirect = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_text(stmt, 1, [redirect UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterExpires:(NSString *)expires uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET expires = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_text(stmt, 1, [expires UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterVersion:(NSString *)version uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET version = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_text(stmt, 1, [version UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterUpdateTime:(NSDate *)updateTime uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET update_time = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    NSString *updateTimeStr = [NSString stringWithFormat:@"%.0f", [updateTime timeIntervalSince1970]*1000];
+    sqlite3_bind_double(stmt, 1, updateTimeStr.doubleValue);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)updateContentFilterDownloadUrl:(NSString *)downloadUrl uuid:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"UPDATE content_filter SET download_url = ? WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+
+    sqlite3_bind_text(stmt, 1, [downloadUrl UTF8String], -1, NULL);
+    sqlite3_bind_text(stmt, 2, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid{
+    //打开数据库
+    sqlite3 *sqliteHandle = NULL;
+    int result = 0;
+    
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString*documentsDirectory =[paths objectAtIndex:0];
+    
+    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+
+
+    result = sqlite3_open([destPath
+                           UTF8String], &sqliteHandle);
+    
+    if (result != SQLITE_OK) {
+        
+        NSLog(@"数据库文件打开失败");
+        
+        return;
+    }
+    
+    //构造SQL语句
+
+    NSString *sql = @"DELETE FROM user_config_script  WHERE uuid = ? ";
+    
+    sqlite3_stmt *stmt = NULL;
+    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+//    绑定占位符
+    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
+
+    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(sqliteHandle);
+    
+}
 
 - (void)addIntegerColumn:(NSString *)tableName column:(NSString *)columnName{
     //打开数据库
@@ -229,7 +896,9 @@
     
 }
 
-- (void)createTable {
+
+
+- (void)createTable{
     sqlite3 *sqliteHandle = NULL;
     int result = 0;
     
@@ -916,50 +1585,48 @@
 }
 
 
-
-
-- (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid{
-    //打开数据库
-    sqlite3 *sqliteHandle = NULL;
-    int result = 0;
-    
-    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-    NSString*documentsDirectory =[paths objectAtIndex:0];
-    
-    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
-
-
-    result = sqlite3_open([destPath
-                           UTF8String], &sqliteHandle);
-    
-    if (result != SQLITE_OK) {
-        
-        NSLog(@"数据库文件打开失败");
-        
-        return;
-    }
-    
-    //构造SQL语句
-
-    NSString *sql = @"DELETE FROM user_config_script  WHERE uuid = ? ";
-    
-    sqlite3_stmt *stmt = NULL;
-    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
-    if (result != SQLITE_OK) {
-        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
-        NSLog(@"编译sql失败");
-        sqlite3_close(sqliteHandle);
-        return;
-    }
-//    绑定占位符
-    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
-
-    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        sqlite3_finalize(stmt);
-    }
-    sqlite3_close(sqliteHandle);
-}
+//- (void)deleteScriptInUserScriptByNumberId:(NSString *)uuid{
+//    //打开数据库
+//    sqlite3 *sqliteHandle = NULL;
+//    int result = 0;
+//
+//    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+//    NSString*documentsDirectory =[paths objectAtIndex:0];
+//
+//    NSString *destPath =[documentsDirectory stringByAppendingPathComponent:@"syScript.sqlite"];
+//
+//
+//    result = sqlite3_open([destPath
+//                           UTF8String], &sqliteHandle);
+//
+//    if (result != SQLITE_OK) {
+//
+//        NSLog(@"数据库文件打开失败");
+//
+//        return;
+//    }
+//
+//    //构造SQL语句
+//
+//    NSString *sql = @"DELETE FROM user_config_script  WHERE uuid = ? ";
+//
+//    sqlite3_stmt *stmt = NULL;
+//    result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+//    if (result != SQLITE_OK) {
+//        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+//        NSLog(@"编译sql失败");
+//        sqlite3_close(sqliteHandle);
+//        return;
+//    }
+////    绑定占位符
+//    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
+//
+//    //执行SQL语句,代表找到一条符合条件的数据，如果有多条数据符合条件，则要循环调用
+//    if (sqlite3_step(stmt) != SQLITE_DONE) {
+//        sqlite3_finalize(stmt);
+//    }
+//    sqlite3_close(sqliteHandle);
+//}
 
 - (void)updateUserScript:(UserScript *)scrpitDetail {
     

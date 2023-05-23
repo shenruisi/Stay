@@ -7,8 +7,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SYSecondaryViewController.h"
+#import "FCViewController.h"
 
-@interface SYBrowseExpandViewController : SYSecondaryViewController
+@interface SYBrowseExpandViewController : FCViewController
 
 @property (nonatomic, strong) NSArray *data;
 @property (nonatomic, strong) NSString *url;

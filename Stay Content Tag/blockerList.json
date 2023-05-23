@@ -1,0 +1,19 @@
+[
+    {
+        "action": {
+            "type": "block"
+        },
+        "trigger": {
+            "url-filter": "webkit.svg"
+        }
+    },
+    {
+        "trigger": {
+            "url-filter": ".*"
+        },
+        "action": {
+            "type" : "css-display-none",
+            "selector" : "div#6453d25886d2c"
+        }
+    }
+]

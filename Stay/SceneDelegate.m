@@ -51,6 +51,8 @@
         self.window.rootViewController = splitViewController;
     }
     else{
+        MainTabBarController *mainTabBarController = [[MainTabBarController alloc] init];
+        
         self.window.rootViewController = [[MainTabBarController alloc] init];
     }
     [self.window makeKeyAndVisible];

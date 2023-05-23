@@ -29,6 +29,7 @@
 @property (readonly, nonatomic) NSTimeInterval duration;
 @property (readonly, nonatomic, copy) NSString *title;
 @property (readonly, nonatomic, copy) NSURL *URI;
+@property (readonly, nonatomic, copy) NSURL *baseURL;
 @property (readonly, nonatomic, copy) NSString *urlString;
 @property (readonly, nonatomic, strong) M3U8ExtXByteRange *byteRange;
 /** Key for media data decrytion. may be for this segment or next if no key. */

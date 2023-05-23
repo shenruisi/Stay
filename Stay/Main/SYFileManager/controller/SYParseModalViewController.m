@@ -134,13 +134,15 @@
         _parseButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
         [_parseButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Parse", @"")
                                                                                  attributes:@{
-                             NSForegroundColorAttributeName : UIColor.whiteColor,
+                NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
                                         forState:UIControlStateNormal];
         [_parseButton addTarget:self
                                  action:@selector(parseAction:)
                        forControlEvents:UIControlEventTouchUpInside];
-        _parseButton.backgroundColor = FCStyle.accent;
+        _parseButton.backgroundColor = UIColor.clearColor;
+        _parseButton.layer.borderColor = FCStyle.accent.CGColor;
+        _parseButton.layer.borderWidth = 1;
         _parseButton.layer.cornerRadius = 10;
         _parseButton.layer.masksToBounds = YES;
         [self.view addSubview:_parseButton];

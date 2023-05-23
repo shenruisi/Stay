@@ -19,6 +19,8 @@
 @property (nonatomic, strong) NSMutableArray<ModalViewController *> *controllers;
 @property (nonatomic, strong) FCRoundedShadowView *view;
 @property (nonatomic, assign) CGFloat radius;
+@property (nonatomic, assign) CGFloat borderWidth;
+@property (nonatomic, assign) CACornerMask cornerMask;
 @property (nonatomic, assign) BOOL noRoundShadow;
 @end
 
@@ -26,6 +28,7 @@
 
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController radius:(CGFloat)radius{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         self.radius = radius;
         [self view];
         self.rootModalViewController = modalViewController;
@@ -39,6 +42,7 @@
 
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         [self view];
         self.rootModalViewController = modalViewController;
         modalViewController.navigationController = self;
@@ -52,6 +56,7 @@
 - (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController
                                 slideController:(FCSlideController *)slideController{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         [self view];
         self.rootModalViewController = modalViewController;
         modalViewController.navigationController = self;
@@ -65,11 +70,36 @@
 
 - (instancetype)initWithRootModalViewControllerAndNoRoundShadow:(ModalViewController *)modalViewController{
     if (self = [super init]){
+        self.cornerMask = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner;
         self.noRoundShadow = YES;
         [self view];
         self.rootModalViewController = modalViewController;
         modalViewController.navigationController = self;
         modalViewController.isRoot = YES;
+        [self pushModalViewController:modalViewController];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithRootModalViewController:(ModalViewController *)modalViewController
+                                slideController:(FCSlideController *)slideController
+                                         radius:(CGFloat)radius
+                                     boderWidth:(CGFloat)borderWidth
+                                    contentMode:(ModalContentMode)contentMode
+                                  noShadowRound:(BOOL)noShadowRound
+                                     cornerMask:(CACornerMask)cornerMask{
+    if (self = [super init]){
+        self.contentMode = contentMode;
+        self.radius = radius;
+        self.borderWidth = borderWidth;
+        self.noRoundShadow = noShadowRound;
+        self.cornerMask = cornerMask;
+        [self view];
+        self.rootModalViewController = modalViewController;
+        modalViewController.navigationController = self;
+        modalViewController.isRoot = YES;
+        self.slideController = slideController;
         [self pushModalViewController:modalViewController];
     }
     
@@ -142,8 +172,14 @@
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
             pushedView.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-            CGPoint newOrigin = CGPointMake(oldFrame.origin.x - (newSize.width - oldFrame.size.width), oldFrame.origin.y - (newSize.height - oldFrame.size.height));
-            [self.view setFrame:CGRectMake(newOrigin.x, newOrigin.y, pushedView.frame.size.width, pushedView.frame.size.height)];
+            if (self.contentMode == ModalContentModeBottom){
+                CGPoint newOrigin = CGPointMake(oldFrame.origin.x - (newSize.width - oldFrame.size.width), oldFrame.origin.y - (newSize.height - oldFrame.size.height));
+                [self.view setFrame:CGRectMake(newOrigin.x, newOrigin.y, pushedView.frame.size.width, pushedView.frame.size.height)];
+            }
+            else if (self.contentMode == ModalContentModeLeft){
+                CGPoint newOrigin = CGPointMake(oldFrame.origin.x, oldFrame.origin.y - (newSize.height - oldFrame.size.height));
+                [self.view setFrame:CGRectMake(newOrigin.x, newOrigin.y, pushedView.frame.size.width, pushedView.frame.size.height)];
+            }
         }
                          completion:^(BOOL finished) {
                 [self.currentModalViewController viewDidDisappear];
@@ -182,6 +218,7 @@
         if (toRoot){
             for (int i = 1; i < self.controllers.count; i++){
                 [[[self.controllers objectAtIndex:i] getMainView] removeFromSuperview];
+                [[self.controllers objectAtIndex:i] clear];
             }
             [self.controllers removeObjectsInRange:NSMakeRange(1, self.controllers.count-1)];
         }
@@ -194,10 +231,14 @@
 - (FCRoundedShadowView *)view{
     if (nil == _view){
         if (self.noRoundShadow){
-            _view = [[FCRoundedShadowView alloc] init];
+            _view = [[FCRoundedShadowView alloc] initWithNoShadowRadius:self.radius
+                                                             borderWith:self.borderWidth
+                                                             cornerMask:self.cornerMask];
         }
         else{
-            _view = [[FCRoundedShadowView alloc] initWithRadius:self.radius];
+            _view = [[FCRoundedShadowView alloc] initWithRadius:self.radius
+                                                     borderWith:self.borderWidth
+                                                     cornerMask:self.cornerMask];
         }
         
     }

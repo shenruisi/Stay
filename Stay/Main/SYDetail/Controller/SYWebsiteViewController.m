@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = FCStyle.popup;
-
+    self.hidesBottomBarWhenPushed = YES;
     if ([self.type isEqualToString:@"grants"]) {
         [self.view addSubview:self.grantScrollView];
     } else if([self.type isEqualToString:@"disabledWebsites"]) {

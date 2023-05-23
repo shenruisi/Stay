@@ -30,14 +30,24 @@
 
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.showBadge forKey:@"showBadge"];
+    [coder encodeObject:self.tagStatus forKey:@"tagStatus"];
+    [coder encodeObject:self.backgroundColorType forKey:@"backgroundColorType"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _showBadge = [coder decodeBoolForKey:@"showBadge"];
+        _tagStatus = [coder decodeObjectForKey:@"tagStatus"];
+        _backgroundColorType = [coder decodeObjectForKey:@"backgroundColorType"];
     }
     
     return self;
+}
+
+- (void)initOnEmpty{
+    _showBadge = NO;
+    _tagStatus = @(1);
+    _backgroundColorType = @"gradient";
 }
 
 - (NSData * _Nullable)archiveData {
@@ -49,15 +59,27 @@
 }
 
 - (void)unarchiveData:(NSData * _Nullable)data {
-    NSSet *classesSet = [NSSet setWithObjects:[self class],[NSString class],nil];
+    NSSet *classesSet = [NSSet setWithObjects:[self class],[NSString class],[NSNumber class],nil];
     ExtensionConfig *extensionConfig = [NSKeyedUnarchiver unarchivedObjectOfClasses:classesSet
                                                                      fromData:data
                                                                         error:nil];
     _showBadge = extensionConfig.showBadge;
+    _tagStatus = extensionConfig.tagStatus ? extensionConfig.tagStatus : @(1);
+    _backgroundColorType = extensionConfig.backgroundColorType;
 }
 
 - (void)setShowBadge:(BOOL)showBadge{
     _showBadge = showBadge;
+    [self flush];
+}
+
+- (void)setTagStatus:(NSNumber *)tagStatus{
+    _tagStatus = tagStatus;
+    [self flush];
+}
+
+- (void)setBackgroundColorType:(NSString *)backgroundColorType{
+    _backgroundColorType = backgroundColorType;
     [self flush];
 }
 

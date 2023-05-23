@@ -18,6 +18,8 @@
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
 
+#import "SharedStorageManager.h"
+
 NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @"app.stay.notification.AppearanceDidChangeAccentColorNotification";
 
 
@@ -75,6 +77,16 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
         }
         
         if ([themeType isEqualToString:type]) {
+            [self accessory];
+        }
+        
+        NSString *backgroundType = [[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType];
+        
+        if (backgroundType == nil) {
+            themeType = @"gradient";
+        }
+        
+        if ([backgroundType isEqualToString:type]) {
             [self accessory];
         }
         
@@ -156,10 +168,8 @@ NSNotificationName const _Nonnull AppearanceDidChangeAccentColorNotification = @
 
 - (UIImageView *)accessory{
     if (nil == _accessory){
-        _accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 17)];
-        UIImage *image = [UIImage systemImageNamed:@"checkmark"
-                                 withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
-        image = [image imageWithTintColor:FCStyle.accent renderingMode:UIImageRenderingModeAlwaysOriginal];
+        _accessory = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+        UIImage *image = [ImageHelper sfNamed:@"checkmark.circle.fill" font:FCStyle.headline color:FCStyle.accent];
         [_accessory setImage:image];
         self.accessoryView =_accessory;
     }
@@ -213,8 +223,9 @@ UITableViewDataSource
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
+//    self.view.backgroundColor = FCStyle.background;
     [self tableView];
+    self.hidesBottomBarWhenPushed = YES;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"settings.appearance",@"Appearance");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -223,6 +234,7 @@ UITableViewDataSource
 #if FC_MAC
     self.navigationItem.leftBarButtonItem = self.closeBtn;
 #endif
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -320,6 +332,16 @@ UITableViewDataSource
 #endif
         [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyAppearanceMode value:@"Light"];
     }
+    else if ([@"gradient" isEqualToString:type]){
+        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType value:@"gradient"];
+        [SharedStorageManager shared].extensionConfig.backgroundColorType = @"gradient";
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BackgroundColorDidChange" object:nil];
+    }
+    else if ([@"solid" isEqualToString:type]){
+        [[FCConfig shared] setStringValueOfKey:GroupUserDefaultsKeyBackgroundColorType value:@"solid"];
+        [SharedStorageManager shared].extensionConfig.backgroundColorType = @"solid";
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BackgroundColorDidChange" object:nil];
+    }
     
     [self.tableView reloadData];
 }
@@ -350,14 +372,24 @@ UITableViewDataSource
                 ]
             },
             @{
+                @"section":NSLocalizedString(@"BackgroundColor",@""),
+                @"cells":@[
+                    @{@"title":NSLocalizedString(@"GradientColor",@""),
+                      @"type":@"gradient"
+                    },
+                    @{@"title":NSLocalizedString(@"SolidColor",@""),
+                      @"type":@"solid"
+
+                    }
+                ]
+            },
+            @{
                 @"section":NSLocalizedString(@"AccentColor",@"ACCENT COLOR"),
                 @"cells":@[
                     @{@"colorList":@"#B620E0,#0091FF,#D91D06,#FA6400,#F7B500,#6236FF,#6D7278"
                     },
                 ]
             },
-           
-        
         ];
     }
     
@@ -427,7 +459,7 @@ UITableViewDataSource
         _tableView.separatorColor = FCStyle.fcSeparator;
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
     }
     

@@ -10,7 +10,6 @@
 #import <Cocoa/Cocoa.h>
 #import <SafariServices/SafariServices.h>
 
-
 @interface FCCarbon()
 
 @property (nonatomic, strong) NSScreen *activeScreen;
@@ -52,9 +51,12 @@
 }
 
 - (void)enableExtension{
+//    [SFSafariApplication showPreferencesForExtensionWithIdentifier:@"com.dajiu.stay.pro.Mac-Extension" completionHandler:^(NSError * _Nullable error) {
+//
+//    }];
     NSWorkspaceOpenConfiguration *conf = [NSWorkspaceOpenConfiguration configuration];
     [[NSWorkspace sharedWorkspace] openApplicationAtURL:[NSURL fileURLWithPath:@"/Applications/Safari.app"] configuration:conf completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error) {
-        
+
     }];
 
 }

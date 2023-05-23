@@ -31,7 +31,7 @@
 #import "NSString+Urlencode.h"
 #import "SharedStorageManager.h"
 #import <CommonCrypto/CommonDigest.h>
-
+#import "SYDownloadingCircleView.h"
 #ifdef FC_MAC
 #import "ToolbarTrackView.h"
 #import "FCSplitViewController.h"
@@ -41,8 +41,13 @@
 
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
+#import "FCTableViewCell.h"
+#import "DownloadScriptSlideController.h"
+#import "DefaultIcon.h"
+#import "FCShared.h"
 
-@interface _FeaturedBannerTableViewCell : UITableViewCell
+
+@interface _FeaturedBannerTableViewCell<ElementType> : FCTableViewCell<ElementType>
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) UIScrollView *bannerView;
 @property (nonatomic, strong) UIViewController *controller;
@@ -54,8 +59,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
-        self.backgroundColor = FCStyle.secondaryBackground;
-        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+        self.contentView.backgroundColor = [UIColor clearColor];
     }
     
     return self;
@@ -71,7 +75,6 @@
     }
     _entity = entity;
     NSArray *blocks = entity;
-//    NSMutableArray *blocks = [NSMutableArray arrayWithObjects:entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0],entity[0], nil];
     if(blocks.count == 0 ) {
         return;
     }
@@ -81,7 +84,7 @@
     _bannerView.clipsToBounds = NO;
     _bannerView.showsVerticalScrollIndicator = false;
     _bannerView.showsHorizontalScrollIndicator = false;
-    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+//    _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 0;
     for (int i = 0; i < blocks.count; i++) {
         UIView *banner = [self createBlockView:blocks[i]];
@@ -143,7 +146,7 @@
     }
     
     [view addSubview:bannerImageView];
-    view.backgroundColor = FCStyle.secondaryBackground;
+//    view.backgroundColor = FCStyle.secondaryBackground;
     return view;
 }
 
@@ -231,7 +234,7 @@
 @end
 
 
-@interface _FeaturedPromotedTableViewCell : UITableViewCell
+@interface _FeaturedPromotedTableViewCell <ElementType> : FCTableViewCell<ElementType>
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) UIScrollView *bannerView;
 @property (nonatomic, strong) UIViewController *controller;
@@ -243,8 +246,8 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
-        self.backgroundColor = FCStyle.secondaryBackground;
-        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+//        self.backgroundColor = FCStyle.secondaryBackground;
+//        self.contentView.backgroundColor = FCStyle.secondaryBackground;
     }
     
     return self;
@@ -276,7 +279,7 @@
     _bannerView.clipsToBounds = NO;
     _bannerView.showsVerticalScrollIndicator = false;
     _bannerView.showsHorizontalScrollIndicator = false;
-    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+//    _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 20;
     for (int i = 0; i < blocks.count; i++) {
         
@@ -407,7 +410,7 @@
 
 
 
-@interface _FeaturedAlubmTableViewCell : UITableViewCell
+@interface _FeaturedAlubmTableViewCell <ElementType> : FCTableViewCell<ElementType>
 @property (nonatomic, strong) NSArray *entity;
 @property (nonatomic, strong) NSString *headTitle;
 @property (nonatomic, strong) UIScrollView *bannerView;
@@ -421,8 +424,8 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
-        self.backgroundColor = FCStyle.secondaryBackground;
-        self.contentView.backgroundColor = FCStyle.secondaryBackground;
+//        self.backgroundColor = FCStyle.secondaryBackground;
+//        self.contentView.backgroundColor = FCStyle.secondaryBackground;
     }
     
     return self;
@@ -483,7 +486,7 @@
     _bannerView.clipsToBounds = NO;
     _bannerView.showsVerticalScrollIndicator = false;
     _bannerView.showsHorizontalScrollIndicator = false;
-    _bannerView.backgroundColor = FCStyle.secondaryBackground;
+//    _bannerView.backgroundColor = FCStyle.secondaryBackground;
     CGFloat left = 0;
   
     for (int i = 0; i < blocks.count; i+=3) {
@@ -497,6 +500,7 @@
             cellView.top = j * 78;
             [blockView addSubview:cellView];
         }
+        blockView.backgroundColor = [UIColor clearColor];
         blockView.left = (blockView.width + 10) * (i / 3) + 20 ;
         [_bannerView addSubview:blockView];
         left = blockView.right;
@@ -512,25 +516,21 @@
     imageBox.layer.cornerRadius = 10;
     imageBox.layer.borderWidth = 1;
     imageBox.layer.borderColor = FCStyle.borderColor.CGColor;
-    
+    imageBox.clipsToBounds = YES;
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
     imageView.contentMode =  UIViewContentModeScaleAspectFit;
-    [imageView sd_setImageWithURL:[NSURL URLWithString: dic[@"icon_url"]]];
-
+    NSString *iconUrl = dic[@"icon_url"];
     imageView.clipsToBounds = YES;
+    imageView.layer.masksToBounds = YES;
     imageView.centerX = 24;
     imageView.centerY = 24;
     [imageBox addSubview:imageView];
     [view addSubview:imageBox];
-    view.backgroundColor = FCStyle.secondaryBackground;
+//    view.backgroundColor = FCStyle.secondaryBackground;
     
     CGFloat left = 0;
-    NSString *icon = dic[@"icon_url"];
-    if( icon != nil && icon.length > 0){
-        left = imageBox.right + 10;
-    } else {
-        imageBox.hidden = true;
-    }
+    left = imageBox.right + 10;
+   
     
     NSString *name = @"name";
     NSString *desc = @"desc";
@@ -549,10 +549,6 @@
     [view addSubview:subLabel];
     headerLabel.left = subLabel.left = left;
     subLabel.top = headerLabel.bottom + 5;
-    if( icon == nil || icon.length <= 0){
-        headerLabel.width = 260;
-        subLabel.width = 260;
-    }
         
     NSDictionary *locate = dic[@"locales"];
     if(locate != NULL  && locate.count > 0) {
@@ -561,6 +557,15 @@
             headerLabel.text = localLanguage[name];
             subLabel.text = localLanguage[@"description"];
         }
+    }
+    
+    if(iconUrl.length > 0) {
+        [imageView sd_setImageWithURL:[NSURL URLWithString: iconUrl]];
+    } else {
+        [imageView setImage:[DefaultIcon iconWithTitle: headerLabel.text size:CGSizeMake(48, 48)]];
+        imageView.size = CGSizeMake(48, 48);
+        imageView.centerX = 24;
+        imageView.centerY = 24;
     }
     
     
@@ -577,7 +582,14 @@
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 0, 67, 25);
-    btn.backgroundColor = FCStyle.background;
+    btn.layer.cornerRadius = 10;
+    btn.layer.borderWidth = 1;
+    btn.layer.borderColor = FCStyle.accent.CGColor;
+    
+    SYDownloadingCircleView *circleView = [[SYDownloadingCircleView alloc] initWithFrame:CGRectMake(0, 0, 48, 48)];
+    circleView.backgroundColor = [UIColor clearColor];
+    circleView.hidden = true;
+    [view addSubview:circleView];
     if(entity != nil) {
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Detail", @"")
                                                                 attributes:@{
@@ -597,7 +609,12 @@
         NSString *btnName = NSLocalizedString(@"Get", @"");
         
         if (self.selectedUrl != nil && self.selectedUrl.length > 0 && [self.selectedUrl isEqualToString:dic[@"hosting_url"]]) {
-            btnName = NSLocalizedString(@"Downloading", @"");
+//            btnName = NSLocalizedString(@"Downloading", @"");
+            btn.hidden = true;
+            circleView.hidden = false;
+        } else {
+            btn.hidden = false;
+            circleView.hidden = true;
         }
         
         [btn setAttributedTitle:[[NSAttributedString alloc] initWithString:btnName
@@ -608,6 +625,8 @@
         objc_setAssociatedObject (btn , @"downloadUrl", dic[@"hosting_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"name", dic[@"name"], OBJC_ASSOCIATION_COPY_NONATOMIC);
         objc_setAssociatedObject (btn , @"platforms", dic[@"platforms"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+        objc_setAssociatedObject (btn , @"iconUrl", dic[@"icon_url"], OBJC_ASSOCIATION_COPY_NONATOMIC);
+
         [btn sizeToFit];
         btn.width = btn.width + 20;
         if(btn.width < 67) {
@@ -628,6 +647,11 @@
     btn.layer.cornerRadius = 12.5;
     
     [view addSubview:btn];
+    circleView.center = btn.center;
+    
+
+    
+    
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(noDownloadDetail:)];
     if(entity != nil) {
         tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self.controller action:@selector(queryDetail:)];
@@ -672,81 +696,6 @@
 
 @end
 
-@interface BroSimpleLoadingView : UIView
-
-@property (nonatomic, strong) UIActivityIndicatorView *indicator;
-@property (nonatomic, strong) UILabel *label;
-- (void)start;
-- (void)stop;
-@end
-
-@implementation BroSimpleLoadingView
-
-- (instancetype)initWithFrame:(CGRect)frame{
-    if (self = [super initWithFrame:frame]){
-        [self indicator];
-        [self label];
-    }
-
-    return self;
-}
-
-- (void)start{
-    [self.superview bringSubviewToFront:self];
-    self.hidden = NO;
-    [self.indicator startAnimating];
-}
-
-- (void)stop{
-    [self.superview sendSubviewToBack:self];
-    self.hidden = YES;
-    [self.indicator stopAnimating];
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview{
-    [super willMoveToSuperview:newSuperview];
-    [self.label sizeToFit];
-    CGFloat width = self.indicator.frame.size.width + self.label.frame.size.width;
-    CGFloat left = (self.frame.size.width - width) / 2;
-    [self.indicator setFrame:CGRectMake(left,
-                                        (self.frame.size.height - self.indicator.frame.size.height)/2,
-                                        self.indicator.frame.size.width,
-                                        self.indicator.frame.size.height)];
-    [self.label setFrame:CGRectMake(self.indicator.frame.origin.x + self.indicator.frame.size.width + 15,
-                                    (self.frame.size.height - self.label.frame.size.height)/2,
-                                    self.label.frame.size.width,
-                                    self.label.frame.size.height)];
-    [self.indicator startAnimating];
-}
-
-- (UIActivityIndicatorView *)indicator{
-    if (nil == _indicator){
-        _indicator = [[UIActivityIndicatorView alloc] init];
-        [self addSubview:_indicator];
-    }
-    return _indicator;
-}
-
-- (UILabel *)label{
-    if (nil == _label){
-        _label = [[UILabel alloc] initWithFrame:CGRectZero];
-        _label.font = FCStyle.body;
-        _label.textColor = FCStyle.fcBlack;
-        _label.text = NSLocalizedString(@"Loading", @"");
-        [self addSubview:_label];
-    }
-
-    return _label;
-}
-
-
-- (void)setHidden:(BOOL)hidden{
-    [super setHidden:hidden];
-
-}
-
-@end
-
 @interface SYBrowseViewController ()<
 UITableViewDelegate,
 UITableViewDataSource,
@@ -755,28 +704,27 @@ UISearchBarDelegate,
 UISearchControllerDelegate,
 UIPopoverPresentationControllerDelegate
 >
-@property (nonatomic, strong) UISearchController *searchController;
 @property (nonatomic, strong) NSMutableArray *datas; //featuredata
 @property (nonatomic, strong) NSMutableArray *allDatas;
 @property (nonatomic, strong) NSMutableArray *searchDatas;
-//@property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UITableView *allTableView;
 @property (nonatomic, strong) UITableView *searchTableView;
 
-
-@property (nonatomic, strong) BroSimpleLoadingView *simpleLoadingView;
 @property (nonatomic, assign) NSInteger selectedIdx;
 @property (nonatomic, assign) NSInteger pageNo;
 @property (nonatomic, assign) NSInteger searchPageNo;
 
-@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
+@property (nonatomic, strong) DownloadScriptSlideController *loadingSlideController;
 @property (nonatomic, assign) bool inSearch;
 @property (nonatomic, assign) bool allDataEnd;
 @property (nonatomic, assign) bool allDataQuerying;
 @property (nonatomic, assign) bool searchDataEnd;
 @property (nonatomic, assign) bool searchDataQuerying;
 @property (nonatomic, strong) NSString  *selectedUrl;
+@property (nonatomic, strong) FCTabButtonItem *featuredTabItem;
+@property (nonatomic, strong) FCTabButtonItem *allTabItem;
+@property (nonatomic, assign) Boolean searchStatus;
 
 
 @end
@@ -785,30 +733,17 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = FCStyle.background;
     _selectedIdx = 0;
-    UISearchController *search = [[UISearchController alloc]initWithSearchResultsController:nil];
-       // 设置结果更新代理
-//    search.searchResultsUpdater = self;
-    search.searchBar.placeholder = NSLocalizedString(@"SearchUserscripts", @"");
-    self.navigationItem.searchController = search;
-    self.navigationItem.searchController.delegate = self;
-    self.navigationItem.searchController.searchBar.delegate = self;
-    self.navigationItem.searchController.obscuresBackgroundDuringPresentation = false;
-    self.navigationItem.hidesSearchBarWhenScrolling = false;
+    self.enableTabItem = YES;
+    self.enableSearchTabItem = YES;
+    self.searchUpdating = self;
+    self.navigationTabItem.leftTabButtonItems = @[self.featuredTabItem, self.allTabItem];
+    self.leftTitle  = NSLocalizedString(@"Store","");
+    
+    FCViewController *search = [[FCViewController alloc]init];
+    self.searchViewController = search;
 
-    self.searchController = search;
-    self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
-    [self.searchController.searchBar setTintColor:FCStyle.accent];
-    [self.searchController.view addSubview:self.searchTableView];
-    // Do any additional setup after loading the view.
-//    [self.view addSubview:self.segmentedControl];
-    [self tableView];
-    [self queryData];
-    self.tableView.sectionHeaderTopPadding = 0;
-    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-
+    [self.navigationTabItem activeItem:self.featuredTabItem];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:@"changeTab" object:nil];
     
@@ -816,9 +751,6 @@ UIPopoverPresentationControllerDelegate
                                              selector:@selector(userscriptDidAddHandler)
                                                  name:@"app.stay.notification.userscriptDidAddNotification"
                                                object:nil];
-    
-//
-//      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 }
 
@@ -844,111 +776,102 @@ UIPopoverPresentationControllerDelegate
             [self reloadAllTableview];
     });
 }
-                   
-
-//- (void)keyboardWillShow:(NSNotification *)notification{
-//
-// //会有人问为什么是tableview而不是view，因为tableview是最外层，你的textField也是加在tableview上
-//
-//   CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//获取键盘高度
-//   CGFloat keyboardTop = keyboardRect.size.height;//用于跟textField的y比较
-//
-//    self.searchTableView.height = self.searchTableView.height - keyboardTop;
-//}
-//
-//- (void)keyboardWillHide:(NSNotification *)notification{
-//    self.searchTableView.height = self.searchController.view.height;
-//}
-
-- (UIView *)createTableHeaderView {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 10+ 10 + 30)];
-    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:NSLocalizedString(@"Featured", @""),NSLocalizedString(@"All", @""),nil];
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.accent,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateSelected];
-    [segmentedControl setTitleTextAttributes:@{NSForegroundColorAttributeName:FCStyle.fcBlack,NSFontAttributeName:FCStyle.footnoteBold} forState:UIControlStateNormal];
-    segmentedControl.backgroundColor = FCStyle.secondaryPopup;
-    segmentedControl.selectedSegmentTintColor = FCStyle.fcWhite;
-    segmentedControl.selectedSegmentIndex = _selectedIdx;
-    CGFloat left = (self.view.width - 200) / 2;
-    segmentedControl.frame =  CGRectMake(left, 10, 200, 30);
-    [segmentedControl addTarget:self action:@selector(segmentControllerAction:) forControlEvents:UIControlEventValueChanged];
-    [view addSubview:segmentedControl];
-    view.backgroundColor = FCStyle.background;
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0,  0,  self.view.width, 0.5)];
-    line.backgroundColor = FCStyle.fcSeparator;
-    line.top = 49.5;
-    [view addSubview:line];
-    return  view;
-}
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
-    self.searchTableView.frame = self.view.bounds;
-    self.allTableView.frame = self.view.bounds;
     [self reloadAllTableview];
 }
 
 - (void)reloadAllTableview {
-    [self.tableView reloadData];
-    [self.searchTableView reloadData];
-    [self.allTableView reloadData];
+    dispatch_async(dispatch_get_main_queue(),^{
+        if (self->_tableView && !self->_tableView.hidden){
+            [self.tableView reloadData];
+        }
+        
+        if (self->_searchTableView && !self->_searchTableView.hidden){
+            [self.searchTableView reloadData];
+        }
+        
+        if (self->_allTableView && !self->_allTableView.hidden){
+            [self.allTableView reloadData];
+        }
+    });
 }
 
 #pragma mark - UISearchResultsUpdating
-- (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
-    NSString *inputStr = searchController.searchBar.text;
-    return;
-}
+//- (void)updateSearchResultsForSearchController:(nonnull UISearchController *)searchController {
+//    NSString *inputStr = searchController.searchBar.text;
+//    return;
+//}
 
 #pragma mark -searchBarDelegate
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-//    [searchBar resignFirstResponder];
-    [self.searchController setActive:NO];
-    _inSearch = false;
+
+#pragma mark -searchBarDelegate
+
+- (void)didBeganSearch {
+    self.searchStatus = YES;
     [_searchDatas removeAllObjects];
     [self.searchTableView reloadData];
-//    [self.tableView reloadData];
-
-}
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    [self.searchController setActive:YES];
-    _searchPageNo = 1;
-    _inSearch = true;
-    [self.searchTableView reloadData];
-    return YES;
 }
 
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchTextDidChange:(NSString *)text {
     [_searchDatas removeAllObjects];
-    if(searchText.length > 0) {
+    if(text.length > 0) {
         _searchPageNo = 1;
         _searchDataEnd = false;
-//        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
-       [self querySearchData:searchText];
+       [self querySearchData:text];
     }
     [self.searchTableView reloadData];
 }
+
+- (void)didEndSearch {
+    self.searchStatus = NO;
+    [_searchDatas removeAllObjects];
+    [self.searchTableView reloadData];
+}
+
+
+//- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+////    [searchBar resignFirstResponder];
+//    [self.searchController setActive:NO];
+//    _inSearch = false;
+//    [_searchDatas removeAllObjects];
+//    [self.searchTableView reloadData];
+////    [self.tableView reloadData];
+//
+//}
+//- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+//    [self.searchController setActive:YES];
+//    _searchPageNo = 1;
+//    _inSearch = true;
+//    [self.searchTableView reloadData];
+//    return YES;
+//}
+//
+//
+//- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+//    [_searchDatas removeAllObjects];
+//    if(searchText.length > 0) {
+//        _searchPageNo = 1;
+//        _searchDataEnd = false;
+////        [_results addObjectsFromArray:[[DataManager shareManager] selectScriptByKeywordByAdded:searchText]];
+//       [self querySearchData:searchText];
+//    }
+//    [self.searchTableView reloadData];
+//}
 
 
 #pragma mark - UITableViewDelegate
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
-        return nil;
-    } else {
-        return [self createTableHeaderView];
-    }
-}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         return self.searchDatas.count;
-    } else if([tableView isEqual:self.allTableView]) {
+    } else if([tableView isEqual:_allTableView]) {
         return  self.allDatas.count;
-    } else if([tableView isEqual:self.tableView]){
+    } else if([tableView isEqual:_tableView]){
         return  self.datas.count;
     }
     
@@ -956,7 +879,7 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if([tableView isEqual:self.tableView]) {
+    if([tableView isEqual:_tableView]) {
         NSDictionary *dic = self.datas[indexPath.row];
         if([dic[@"type"] isEqualToString:@"banner"]) {
             _FeaturedBannerTableViewCell *cell = [[_FeaturedBannerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -965,7 +888,7 @@ UIPopoverPresentationControllerDelegate
             cell.controller = self;
             cell.navigationController = self.navigationController;
             cell.entity = dic[@"blocks"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
             return cell;
         } else if([dic[@"type"] isEqualToString:@"album"]){
             _FeaturedAlubmTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellALBUM"];
@@ -985,7 +908,9 @@ UIPopoverPresentationControllerDelegate
             cell.headTitle = dic[title];
             cell.selectedUrl = _selectedUrl;
             cell.entity = dic[@"userscripts"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
+
+//            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         } else if([dic[@"type"] isEqualToString:@"promoted"]){
             _FeaturedPromotedTableViewCell *cell = [[_FeaturedPromotedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
@@ -994,7 +919,8 @@ UIPopoverPresentationControllerDelegate
             cell.controller = self;
             cell.navigationController = self.navigationController;
             cell.entity = dic[@"blocks"];
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
+//            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }else {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
@@ -1002,10 +928,12 @@ UIPopoverPresentationControllerDelegate
                 cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID3"];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
+            cell.contentView.backgroundColor = [UIColor clearColor];
+
+//            cell.contentView.backgroundColor = FCStyle.secondaryBackground;
             return cell;
         }
-    } else if ([tableView isEqual:self.searchTableView]) {
+    } else if ([tableView isEqual:_searchTableView]) {
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
         if (cell == nil) {
             cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
@@ -1016,8 +944,9 @@ UIPopoverPresentationControllerDelegate
         cell.selectedUrl = _selectedUrl;
         cell.navigationController = self.navigationController;
         cell.entity = self.searchDatas[indexPath.row];
+        
         return cell;
-    } else  if([tableView isEqual:self.allTableView]){
+    } else  if([tableView isEqual:_allTableView]){
         BrowseDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellIBD"];
         if (cell == nil) {
             cell = [[BrowseDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellIBD"];
@@ -1026,9 +955,10 @@ UIPopoverPresentationControllerDelegate
 
         cell.contentView.width = self.view.width;
         cell.controller = self;
-        cell.selectedUrl = _selectedUrl;
         cell.navigationController = self.navigationController;
         cell.entity = self.allDatas[indexPath.row];
+        cell.selectedUrl = _selectedUrl;
+        cell.contentView.backgroundColor = [UIColor clearColor];
         return cell;
     } else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cellID3"];
@@ -1042,9 +972,9 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if([tableView isEqual:self.searchTableView]) {
+    if([tableView isEqual:_searchTableView]) {
         return 138.0f;
-    }else if([tableView isEqual:self.allTableView]) {
+    }else if([tableView isEqual:_allTableView]) {
         return 138.0f;
     } else {
         NSDictionary *dic = self.datas[indexPath.row];
@@ -1075,18 +1005,13 @@ UIPopoverPresentationControllerDelegate
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    UINavigationBarAppearance *appearance =[UINavigationBarAppearance new];
-    [appearance configureWithOpaqueBackground];
-    appearance.backgroundColor = DynamicColor(RGB(20, 20, 20),RGB(246, 246, 246));
-    self.navigationController.navigationBar.standardAppearance = appearance;
-    self.navigationController.navigationBar.scrollEdgeAppearance = appearance;
     [[ScriptMananger shareManager] refreshData];
     [self reloadAllTableview];
 }
 
 - (void)queryData{
     if (self.datas.count == 0){
-        [self.simpleLoadingView start];
+        [self startHeadLoading];
     }
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
     
@@ -1098,12 +1023,12 @@ UIPopoverPresentationControllerDelegate
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
             options:NSJSONReadingMutableContainers
             error:nil];
-            
-            
+
+
             NSMutableArray *array = dic[@"biz"];
-            
+
             NSMutableArray *finalArray = [NSMutableArray array];
-            
+
             if(array != NULL && array.count > 0) {
                 for(int i = 0;i < array.count; i++){
                     NSDictionary *dic = array[i];
@@ -1114,15 +1039,15 @@ UIPopoverPresentationControllerDelegate
                     }
                 }
             }
-    
+
             self.datas = finalArray;
             dispatch_async(dispatch_get_main_queue(),^{
-                [self.simpleLoadingView stop];
+                [self stopHeadLoading];
                 [self.tableView reloadData];
             });
         } failBlock:^(NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(),^{
-                [self.simpleLoadingView stop];
+                [self stopHeadLoading];
                 [self.tableView reloadData];
             });
         }];
@@ -1130,17 +1055,9 @@ UIPopoverPresentationControllerDelegate
   
     });
 }
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if([tableView isEqual:self.searchTableView]) {
-        return 0.1;
-    }
-    return 50;
-}
-
 - (void)queryAllData{
     if (self.allDatas.count == 0){
-        [self.simpleLoadingView start];
+        [self startHeadLoading];
     }
     
     if(_allDataQuerying) {
@@ -1166,12 +1083,12 @@ UIPopoverPresentationControllerDelegate
             }
             [self.allDatas addObjectsFromArray:dic[@"biz"]];
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self.simpleLoadingView stop];
+                        [self stopHeadLoading];
                         [self.allTableView reloadData];
                     });
                 } failBlock:^(NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(),^{
-                        [self.simpleLoadingView stop];
+                        [self stopHeadLoading];
                         [self.allTableView reloadData];
                     });
                     _allDataQuerying = false;
@@ -1226,12 +1143,16 @@ UIPopoverPresentationControllerDelegate
     NSString *url = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
     NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
+    NSString *iconUrl = objc_getAssociatedObject(sender,@"iconUrl");
 
     _selectedUrl = url;
     [self reloadAllTableview];
-
-    self.loadingSlideController.originSubText = name;
+    self.loadingSlideController = nil;
+    self.loadingSlideController.originMainText = name;
+    self.loadingSlideController.iconUrl = iconUrl;
     [self.loadingSlideController show];
+    [self startHeadLoading];
+    [self.loadingSlideController startLoading];
 
 
     NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
@@ -1244,6 +1165,8 @@ UIPopoverPresentationControllerDelegate
             if(userScript.errorCode >= 1000) {
                 dispatch_async(dispatch_get_main_queue(),^{
                     if (self.loadingSlideController.isShown){
+                        [self stopHeadLoading];
+                        [self.loadingSlideController stopLoading];
                         [self.loadingSlideController dismiss];
                         self.loadingSlideController = nil;
                     }
@@ -1261,10 +1184,12 @@ UIPopoverPresentationControllerDelegate
                     [self reloadAllTableview];
                 });
             } else {
-                [self.loadingSlideController updateSubText:userScript.errorMessage];
+//                [self.loadingSlideController updateSubText:userScript.errorMessage];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                                dispatch_get_main_queue(), ^{
                     if (self.loadingSlideController.isShown){
+                        [self stopHeadLoading];
+                        [self.loadingSlideController stopLoading];
                         [self.loadingSlideController dismiss];
                         self.loadingSlideController = nil;
                     }
@@ -1286,10 +1211,12 @@ UIPopoverPresentationControllerDelegate
         BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
         BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
         if(!saveSuccess || !saveResourceSuccess) {
-            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
+//            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
             dispatch_get_main_queue(), ^{
                 if (self.loadingSlideController.isShown){
+                    [self stopHeadLoading];
+                    [self.loadingSlideController stopLoading];
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
@@ -1320,58 +1247,22 @@ UIPopoverPresentationControllerDelegate
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
         dispatch_get_main_queue(), ^{
             if (self.loadingSlideController.isShown){
+                [self stopHeadLoading];
+                [self.loadingSlideController stopLoading];
                 [self.loadingSlideController dismiss];
                 self.loadingSlideController = nil;
             }
             [self initScrpitContent];
-            NSString *content =  NSLocalizedString(@"Created", @"");
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:content preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                }];
-            [alert addAction:conform];
-            [self presentViewController:alert animated:YES completion:nil];
-        
+            UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                      withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+            image = [image imageWithTintColor:FCStyle.fcBlack
+                                renderingMode:UIImageRenderingModeAlwaysOriginal];
+            [FCShared.toastCenter show:image
+                             mainTitle:NSLocalizedString(@"Userscripts",@"")
+                        secondaryTitle:NSLocalizedString(@"Created", @"")];
             [self reloadAllTableview];
         });
     });
-    
-//    self.loadingSlideController.originSubText = name;
-//    [self.loadingSlideController show];
-//    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-//     [set addCharactersInString:@"#"];
-//    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
-//        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[downloadUrl stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-//        dispatch_async(dispatch_get_main_queue(),^{
-//            if(data != nil ) {
-//
-//                if (self.loadingSlideController.isShown){
-//                    [self.loadingSlideController dismiss];
-//                    self.loadingSlideController = nil;
-//                }
-//                NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//                SYEditViewController *cer = [[SYEditViewController alloc] init];
-//                cer.content = str;
-//                cer.downloadUrl = downloadUrl;
-//                cer.platforms = platforms;
-//#ifdef FC_MAC
-//                [[QuickAccess secondaryController] pushViewController:cer];
-//#else
-//                [self.navigationController pushViewController:cer animated:true];
-//#endif
-//
-//            }
-//            else{
-//                [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
-//                dispatch_get_main_queue(), ^{
-//                    if (self.loadingSlideController.isShown){
-//                        [self.loadingSlideController dismiss];
-//                        self.loadingSlideController = nil;
-//                    }
-//                });
-//            }
-//        });
-//    });
 }
 
 - (void)queryDetail:(id)sender {
@@ -1404,38 +1295,44 @@ UIPopoverPresentationControllerDelegate
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGPoint offset = scrollView.contentOffset;
+    [super scrollEffectHandle:scrollView];
+    [super searchEffectHanlde:scrollView];
+
+     CGPoint offset = scrollView.contentOffset;
      CGRect bounds = scrollView.bounds;
      CGSize size = scrollView.contentSize;
      UIEdgeInsets inset = scrollView.contentInset;
      float y = offset.y + bounds.size.height - inset.bottom;
      float h = size.height;
      float reload_distance = 10;
-    if ([scrollView isEqual:self.searchTableView] && self.searchController.searchBar.text.length > 0) {
-        
-        [self.searchController.searchBar.searchTextField resignFirstResponder];
-    }
+//    if ([scrollView isEqual:self.searchTableView] && self.searchController.searchBar.text.length > 0) {
+//
+//        [self.searchController.searchBar.searchTextField resignFirstResponder];
+//    }
+    
      if(y > h + reload_distance) {
-        if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:self.allTableView]) {
+        if(self.selectedIdx == 1 && !_allDataEnd && [scrollView isEqual:_allTableView]) {
              if(_allDataQuerying) {
                      return;
              }
              _pageNo++;
             [self queryAllData];
-        } else if([scrollView isEqual:self.searchTableView] && !_searchDataEnd  && self.searchController.searchBar.text.length > 0) {
+        } else if([scrollView isEqual:_searchTableView] && !_searchDataEnd  && self.fcNavigationBar.searchBar.textField.text.length > 0) {
+            
+            
             if(_searchDataQuerying) {
                 return;
             }
             _searchPageNo++;
-            [self querySearchData:self.searchController.searchBar.text];
+            [self querySearchData:self.fcNavigationBar.searchBar.textField.text];
         }
      }
 }
 
-- (void)segmentControllerAction:(UISegmentedControl *)segment
-{
-    NSInteger index = segment.selectedSegmentIndex;
-    if(index == 1) {
+
+- (void)tabItemDidClick:(FCTabButtonItem *)item refresh:(BOOL)refresh{
+   
+    if([item isEqual:self.allTabItem]) {
         _selectedIdx = 1;
         if(self.allDatas.count > 0) {
             _pageNo = 1;
@@ -1446,26 +1343,51 @@ UIPopoverPresentationControllerDelegate
                 [self queryAllData];
             }
         }
+        
         self.allTableView.hidden = NO;
-        self.tableView.hidden = YES;
+        if (_tableView){
+            self.tableView.hidden = YES;
+        }
     } else {
         [self queryData];
         _selectedIdx = 0;
         self.tableView.hidden = NO;
-        self.allTableView.hidden = YES;
+        
+        if (_allTableView){
+            self.allTableView.hidden = YES;
+        }
         [self.tableView reloadData];
     }
 }
 
-
 - (UITableView *)tableView {
     if (_tableView == nil) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] init];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = FCStyle.background;
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.showsVerticalScrollIndicator = YES;
+        _tableView.keyboardDismissMode =  UIScrollViewKeyboardDismissModeOnDrag;
+        //TODO:
+        if (@available(iOS 15.0, *)){
+           _tableView.sectionHeaderTopPadding = 0;
+        }
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.sectionFooterHeight = 0;
+        _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
+                
+        [NSLayoutConstraint activateConstraints:@[
+            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+//            [_tableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
+        ]];
+        
+    ;
     }
     
     return _tableView;
@@ -1473,40 +1395,61 @@ UIPopoverPresentationControllerDelegate
 
 - (UITableView *)allTableView {
     if (_allTableView == nil) {
-        _allTableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        _allTableView = [[UITableView alloc] init];
         _allTableView.delegate = self;
         _allTableView.dataSource = self;
         _allTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _allTableView.backgroundColor = FCStyle.background;
-        _allTableView.sectionHeaderTopPadding = 0;
         _allTableView.hidden = true;
+        _allTableView.backgroundColor = [UIColor clearColor];
+        _allTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _allTableView.showsVerticalScrollIndicator = YES;
+        //TODO:
+        if (@available(iOS 15.0, *)){
+            _allTableView.sectionHeaderTopPadding = 0;
+        }
+        _allTableView.sectionFooterHeight = 0;
+        _allTableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_allTableView];
+        
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_allTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [_allTableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [_allTableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+//            [_allTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height]
+            [_allTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
+        ]];
     }
     return _allTableView;
 }
 
 - (UITableView *)searchTableView {
     if (_searchTableView == nil) {
-        _searchTableView = [[UITableView alloc]initWithFrame:self.searchController.view.bounds style:UITableViewStylePlain];
+        _searchTableView = [[UITableView alloc]init];
+
         _searchTableView.delegate = self;
         _searchTableView.dataSource = self;
+        _searchTableView.showsVerticalScrollIndicator = YES;
         _searchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _searchTableView.sectionHeaderTopPadding = 0;
-        _searchTableView.backgroundColor = FCStyle.background;
+        _searchTableView.backgroundColor = [UIColor clearColor];
+        if (@available(iOS 15.0, *)){
+            _searchTableView.sectionHeaderTopPadding = 0;
+        }
+        _searchTableView.sectionFooterHeight = 0;
+        _searchTableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+        _searchTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.searchViewController.view addSubview:_searchTableView];
+
+//        _searchTableView.backgroundColor = FCStyle.background;
+        [NSLayoutConstraint activateConstraints:@[
+            [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
+            [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
+//            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+            [_searchTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+        ]];
     }
     return _searchTableView;
-}
-
-- (BroSimpleLoadingView *)simpleLoadingView{
-    if (nil == _simpleLoadingView){
-        _simpleLoadingView = [[BroSimpleLoadingView alloc] initWithFrame:CGRectMake(0,
-                                                                                 (self.view.frame.size.height - 50) / 2,
-                                                                                 self.view.frame.size.width, 50)];
-        
-        [self.view addSubview:_simpleLoadingView];
-    }
-    
-    return _simpleLoadingView;
 }
 
 - (NSMutableArray *)datas {
@@ -1533,10 +1476,27 @@ UIPopoverPresentationControllerDelegate
     return _searchDatas;
 }
 
-- (LoadingSlideController *)loadingSlideController{
+
+- (FCTabButtonItem *)featuredTabItem {
+    if(_featuredTabItem == nil) {
+        _featuredTabItem = [[FCTabButtonItem alloc] init];
+        _featuredTabItem.title = NSLocalizedString(@"Featured", @"");
+    }
+    return _featuredTabItem;
+}
+
+- (FCTabButtonItem *)allTabItem {
+    if(_allTabItem == nil) {
+        _allTabItem = [[FCTabButtonItem alloc] init];
+        _allTabItem.title = NSLocalizedString(@"All", @"");
+    }
+    
+    return _allTabItem;
+}
+
+- (DownloadScriptSlideController *)loadingSlideController{
     if (nil == _loadingSlideController){
-        _loadingSlideController = [[LoadingSlideController alloc] init];
-        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
+        _loadingSlideController = [[DownloadScriptSlideController alloc] init];
     }
     
     return _loadingSlideController;

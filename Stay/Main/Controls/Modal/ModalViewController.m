@@ -37,8 +37,8 @@
 - (void)willSee{
     CGSize size = [self mainViewSize];
     [self.mainView setFrame:CGRectMake(0, 0, size.width, size.height)];
-    [self.navigationBar setFrame:CGRectMake(0, 0, size.width, self.hideNavigationBar ? 0 : self.navigationBar.frame.size.height)];
-    [self.view setFrame:CGRectMake(0, self.navigationBar.frame.size.height, size.width,  size.height - self.navigationBar.frame.size.height)];
+    [self.navigationBar setFrame:CGRectMake(0, (self.fullScreen ? 60 : 0), size.width, self.hideNavigationBar ? 0 : self.navigationBar.frame.size.height)];
+    [self.view setFrame:CGRectMake(0, (self.fullScreen ? 60 : 0) + self.navigationBar.frame.size.height, size.width,  size.height - self.navigationBar.frame.size.height - (self.fullScreen ? 60 : 0))];
 }
 
 
@@ -97,4 +97,5 @@
 - (void)viewDisappearIntermediate{}
 - (void)viewDidDisappear{}
 - (void)viewDidLoad{}
+- (void)clear{}
 @end

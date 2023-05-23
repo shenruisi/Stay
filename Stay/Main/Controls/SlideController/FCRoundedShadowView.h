@@ -15,6 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (instancetype)initWithRadius:(CGFloat)radius;
+
+- (instancetype)initWithNoShadowRadius:(CGFloat)radius
+                            borderWith:(CGFloat)borderWith
+                            cornerMask:(CACornerMask)cornerMask;
+- (instancetype)initWithRadius:(CGFloat)radius
+                    borderWith:(CGFloat)borderWith
+                    cornerMask:(CACornerMask)cornerMask;
+
 @end
 
 NS_ASSUME_NONNULL_END

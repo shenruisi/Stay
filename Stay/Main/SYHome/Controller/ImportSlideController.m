@@ -18,7 +18,6 @@
 - (ModalNavigationController *)navController{
     if (nil == _navController){
         ImportMenuModalViewController *cer = [[ImportMenuModalViewController alloc] init];
-        cer.hideNavigationBar = YES;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer radius:15];
         _navController.slideController = self;
     }

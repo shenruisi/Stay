@@ -32,7 +32,6 @@ NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.st
 NSNotificationName const _Nonnull SVCDidBecomeActiveNotification = @"app.stay.notification.SVCDidBecomeActiveNotification";
 
 @interface FCSplitViewController ()<
- NSToolbarDelegate,
  UISplitViewControllerDelegate
 >
 
