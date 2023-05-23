@@ -3460,7 +3460,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        let randomArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
+        let randomArr = jsText.match(/[a-zA-Z0-9$]+\=function\(a\)\{[\r\n|a]\=a\.split\(\"\"\).*return\s+a\.join\(\"\"\)\};/g);
         console.log(randomArr)
         let randomFunStr = '';
         if(randomArr && randomArr.length){
@@ -3474,7 +3474,7 @@ const browser = __b;
         }
         let subRandomStr = '';
         // eslint-disable-next-line no-useless-escape
-        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9]+\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
+        let subRandomArr = jsText.match(/var\s+[a-zA-Z0-9$]{2}\=\{[a-zA-Z0-9]{2}\:function[\s\S]*(a\.reverse\(\)|splice\(0\,b\)|length\]\=c)\}\};/g);
         if(subRandomArr && subRandomArr.length){
           subRandomStr = subRandomArr[0];
           // console.log(subRandomStr);
@@ -3485,7 +3485,7 @@ const browser = __b;
           return;
         }
         // eslint-disable-next-line no-useless-escape
-        randomFunStr = randomFunStr.replace(/[a-zA-Z0-9]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
+        randomFunStr = randomFunStr.replace(/[a-zA-Z0-9$]+\=function\(a\)\{/g, 'function decodeFun(a){'+subRandomStr);
         if(!randomFunStr){
           setLocalYTRandomFunStr(pathUuid, '', '');
           console.log('handleFetchYoutubePlayer---2---randomFunStr is null')
@@ -3494,14 +3494,14 @@ const browser = __b;
         // console.log('randomFunStr-------',randomFunStr);
         let randomSpeedFunStr = '';
         // eslint-disable-next-line no-useless-escape
-        let randomSpeedArr = jsText.match(/[a-zA-Z0-9]+\=function\(a\)\{var\sb=a\.split\(\"\"\)[\s\S]*\}return\sb\.join\(\"\"\)\};/g);
+        let randomSpeedArr = jsText.match(/[a-zA-Z0-9$]+\=function\(a\)\{var\sb=a\.split\(\"\"\)[\s\S]*\}return\sb\.join\(\"\"\)\};/g);
         if(randomSpeedArr && randomSpeedArr.length){
           randomSpeedFunStr = randomSpeedArr[0];
           // console.log(randomSpeedFunStr);
         }
         if(randomSpeedFunStr){
           // eslint-disable-next-line no-useless-escape
-          randomSpeedFunStr = randomSpeedFunStr.replace(/^[a-zA-Z0-9]+\=function\(a\)\{/g, 'function decodeSpeedFun(a){');
+          randomSpeedFunStr = randomSpeedFunStr.replace(/^[a-zA-Z0-9$]+\=function\(a\)\{/g, 'function decodeSpeedFun(a){');
           // console.log('randomSpeedFunStr------',randomSpeedFunStr);
         }
         if(testYtDecodeFun(randomFunStr)){

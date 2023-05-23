@@ -1374,22 +1374,28 @@ const browser = __b;
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
-      console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
+      // console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let selectePositionDom = moveDoms[0];
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
         if(Utils.isMobileOrIpad()){
           if(moveDoms.length<=4){
             selectePositionDom = moveDoms[1];
+            if('__stay_close' == selectePositionDom.id){
+              selectePositionDom = moveDoms[2];
+            }
           }else if(moveDoms.length > 4){
             selectePositionDom = moveDoms[1];
+            if('__stay_close' == selectePositionDom.id){
+              selectePositionDom = moveDoms[2];
+            }
             let styles = window.getComputedStyle(selectePositionDom);
             // console.log('styles.position---------',styles.position)
             // 判断节点是否具有绝对定位
             if (styles.position !== 'fixed') {
               let i = 3;
               selectePositionDom = moveDoms[i];
-              while(moveDomRect.height >= document.documentElement.clientHeight){
+              while(moveDomRect.height > document.documentElement.clientHeight){
                 i = i - 1;
                 selectePositionDom = moveDoms[i];
                 moveDomRect = selectePositionDom.getBoundingClientRect();
@@ -1403,6 +1409,9 @@ const browser = __b;
           selectePositionDom = moveDoms[1];
         }
       }else{
+        return;
+      }
+      if('__stay_close' == selectePositionDom.id){
         return;
       }
       // console.log('moveDom-----',selectedDom);

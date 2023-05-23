@@ -258,11 +258,13 @@ export default {
               }
             }
             .block-on{
+              color: var(--s-main);
               &::after{
                 background: var(--s-main);
               }
             }
             .block-off{
+              color: var(--dm-bd);
               &::after{
               background: var(--dm-bd);
               }
