@@ -81,7 +81,9 @@ const browser = __b;
     let threeFingerMoveStart = null;
     let threeFingerMoveEnd = null;
     let selectedDom = null;
+    let moveTouched = 0;
     let notShowTagNameList = ['STYLE','SCRIPT','#text','LINK', 'META'];
+    let filterSelectTagNameList = ['HTML', 'BODY'];
     let i18nProp = {};
     let cssSelectorSet = new Set();
     const AdLangMessage = {
@@ -142,7 +144,15 @@ const browser = __b;
         const userAgentInfo = navigator.userAgent;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
-        return getArr.length ? true : false;
+        let isIphoneOrIpad = getArr.length ? true : false;
+        if(isIphoneOrIpad){
+          return isIphoneOrIpad
+        }else{
+          if (userAgentInfo.match(/Macintosh/) && navigator.maxTouchPoints > 1) {
+            return true;
+          } 
+        }
+        return isIphoneOrIpad;
       },
       isMobile: function(){
         const userAgentInfo = navigator.userAgent;
@@ -415,156 +425,173 @@ const browser = __b;
         styleDom.type = 'text/css';
         styleDom.id='__stay_select_style';
         const styleText = `
-                    .__stay_move_wrapper{
-                      position:fixed;
-                      left:0;
-                      right:0;
-                      top:0;
-                      bottom:0;
-                      z-index:2147483645;
-                      width:100%;
-                      height:100%;
-                      background-color:rgba(0,0,0,0.4);
-                      box-sizing: border-box;
-                      user-select: none;
-                      cursor: default;
-                    }
-                    .__stay_close_con{
-                      position:fixed;
-                      z-index:2147483646;
-                      right: 20px;
-                      top: 20px;
-                      width:26px;
-                      height:26px;
-                      background: url("${closePopup}") 50% 50% no-repeat;
-                      background-size: 40%;
-                      background-color: ${closeBg};
-                      border-radius:50%;
-                      cursor: default;
-                      user-select: none;
-                    }
-                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
-                    .__stay_makeup_menu_wrapper{
-                      width:192px;
-                      position:fixed;
-                      padding: 8px 5px;
-                      box-sizing: border-box;
-                      z-index: 2147483647;
-                    }
-                    .__stay_makeup_menu_item_box{
-                      width:100%;
-                      box-sizing: border-box;
-                      background-color: #ffffff;
-                      padding-left: 12px;
-                      border-radius: 5px;
-                      box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
-                      user-select: none;
-                      cursor: default;
-                    }
-                    .__stay_menu_item{
-                      color: #212121;
-                      -webkit-user-select: none;
-                      height:40px;
-                      border-bottom: 1px solid #e0e0e0;
-                      display:flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      padding-left: 2px;
-                      padding-right: 12px;
-                      font-size: 16px;
-                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
-                      -webkit-font-smoothing: antialiased;
-                      -moz-osx-font-smoothing: grayscale;
-                      cursor: default;
-                      user-select: none;
-                    }
-                    .__item_disabled div,.__item_disabled img{
-                      opacity: 0.3;
-                    }
-                    .__stay_weight{
-                      font-weight: 600;
-                    }
-                    .__stay_menu_item:last-child {
-                      border-bottom: none;
-                    }
-                    .__stay_menu_item img{
-                      width:15px;
-                    }
-                    .__stay_select_note_warpper{
-                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
-                      -webkit-font-smoothing: antialiased;
-                      -moz-osx-font-smoothing: grayscale;
-                      position:fixed; 
-                      z-index:2147483647;
-                      display: inline-block;
-                      word-break: keep-all;
-                      white-space: nowrap;
-                      height: 25px;
-                      border-radius: 10px;
-                      line-height: 25px;
-                      text-align: center;
-                      padding: 0 15px;
-                      box-sizing: border-box;
-                      background-color: #fff;
-                      color: #000;
-                      font-weight: 700;
-                      font-size: 13px;
-                      left: 50%;
-                      transform: translate(-50%);
-                      top: -60px;
-                      user-select: none;
-                    }
-                    .__stay_tagged_wrapper{
-                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
-                      -webkit-font-smoothing: antialiased;
-                      -moz-osx-font-smoothing: grayscale;
-                      position:fixed; 
-                      z-index:2147483647;
-                      width:160px;
-                      height: 44px;
-                      border-radius: 22px;
-                      line-height: 44px;
-                      text-align: center;
-                      padding-left: 15px;
-                      box-sizing: border-box;
-                      background-color: #fff;
-                      color: #000;
-                      font-weight: 700;
-                      font-size: 16px;
-                      animation: dropIn 0.5s forwards;
-                      left: 50%;
-                      transform: translate(-50%, -50%);
-                      top: -68px;
-                      user-select: none;
-                    }
-                    .__stay_tagged_wrapper::before{
-                      content: '';
-                      background: url("https://res.stayfork.app/scripts/63A0624BB9B6793A0F389D1800E403EA/icon.png") 50% 50% no-repeat;
-                      background-size: 20px;
-                      width: 20px;
-                      height: 20px;
-                      position: absolute;
-                      left: 20px;
-                      top: 50%;
-                      transform: translate(0, -50%);
-                    }
-                    @keyframes dropIn {
-                      0% {
-                        transform: translate(-50%, -100%);
-                      }
-                      100% {
-                        transform: translate(-50%, 80px);
-                      }
-                    }
-                    @keyframes dropOut {
-                      0% {
-                        transform: translate(-50%, 80px);
-                      }
-                      100% {
-                        transform: translate(-50%, -100%);
-                      }
-                    }
-                `;
+          :root {
+            --s-fff: #ffffff;
+            --s-bg-close-color: #ffffff;
+            --s-bg-close-icon: url("https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png");
+            --s-bg-repeat: no-repeat;
+            --s-bg-position: 50% 50%;
+            --s-bg-size: 40%;
+          }
+          @media (prefers-color-scheme: dark) {
+            :root {
+              --s-fff: #ffffff;
+              --s-bg-close-color: #1C1C1C;
+              --s-bg-close-icon: url("https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png");
+            }
+          }
+          .__stay_move_wrapper{
+            position:fixed;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            z-index:2147483645;
+            width:100%;
+            height:100%;
+            background-color:rgba(0,0,0,0.4);
+            box-sizing: border-box;
+            user-select: none;
+            cursor: default;
+          }
+          .__stay_close_con{
+            position:fixed;
+            z-index:2147483646;
+            right: 20px;
+            top: 20px;
+            width:26px;
+            height:26px;
+            background-image: var(--s-bg-close-icon);
+            background-repeat: var(--s-bg-repeat);
+            background-position: var(--s-bg-position);
+            background-size: var(--s-bg-size);
+            background-color: var(--s-bg-close-color);
+            border-radius:50%;
+            cursor: default;
+            user-select: none;
+          }
+          .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid var(--s-fff); border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+          .__stay_makeup_menu_wrapper{
+            width:192px;
+            position:fixed;
+            padding: 8px 5px;
+            box-sizing: border-box;
+            z-index: 2147483647;
+          }
+          .__stay_makeup_menu_item_box{
+            width:100%;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            padding-left: 12px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+            user-select: none;
+            cursor: default;
+          }
+          .__stay_menu_item{
+            color: #212121;
+            -webkit-user-select: none;
+            height:40px;
+            border-bottom: 1px solid #e0e0e0;
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 2px;
+            padding-right: 12px;
+            font-size: 16px;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: default;
+            user-select: none;
+          }
+          .__item_disabled div,.__item_disabled img{
+            opacity: 0.3;
+          }
+          .__stay_weight{
+            font-weight: 600;
+          }
+          .__stay_menu_item:last-child {
+            border-bottom: none;
+          }
+          .__stay_menu_item img{
+            width:15px;
+          }
+          .__stay_select_note_warpper{
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position:fixed; 
+            z-index:2147483647;
+            display: inline-block;
+            word-break: keep-all;
+            white-space: nowrap;
+            height: 25px;
+            border-radius: 10px;
+            line-height: 25px;
+            text-align: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+            font-weight: 700;
+            font-size: 13px;
+            left: 50%;
+            transform: translate(-50%);
+            top: -60px;
+            user-select: none;
+          }
+          .__stay_tagged_wrapper{
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position:fixed; 
+            z-index:2147483647;
+            width:160px;
+            height: 44px;
+            border-radius: 22px;
+            line-height: 44px;
+            text-align: center;
+            padding-left: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+            animation: dropIn 0.5s forwards;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            top: -68px;
+            user-select: none;
+          }
+          .__stay_tagged_wrapper::before{
+            content: '';
+            background: url("https://res.stayfork.app/scripts/63A0624BB9B6793A0F389D1800E403EA/icon.png") 50% 50% no-repeat;
+            background-size: 20px;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translate(0, -50%);
+          }
+          @keyframes dropIn {
+            0% {
+              transform: translate(-50%, -100%);
+            }
+            100% {
+              transform: translate(-50%, 80px);
+            }
+          }
+          @keyframes dropOut {
+            0% {
+              transform: translate(-50%, 80px);
+            }
+            100% {
+              transform: translate(-50%, -100%);
+            }
+          }
+        `;
         styleDom.appendChild(document.createTextNode(styleText));
         document.head.appendChild(styleDom);
       }
@@ -607,7 +634,9 @@ const browser = __b;
         threeFingerMoveStart = event.pageX;
         if(!showMakeupTagPanel){
           if('on' == makeupTagListenerObj.makeupStatus){
-            startSelecteTagAndMakeupAd()
+            console.log('handleTouchstartEvent.makeupStatus------')
+            // startSelecteTagAndMakeupAd()
+            makeupTagListenerObj.makeupStatus = 'off';
           }else{
             makeupTagListenerObj.makeupStatus = 'on';
           }
@@ -624,7 +653,9 @@ const browser = __b;
         let moveDistance = Math.abs(Utils.sub(threeFingerMoveEnd, threeFingerMoveStart));
         if(moveDistance <= distance && !showMakeupTagPanel){
           if('on' == makeupTagListenerObj.makeupStatus){
-            startSelecteTagAndMakeupAd()
+            // startSelecteTagAndMakeupAd()
+            console.log('handleTouchmoveEvent.makeupStatus------')
+            makeupTagListenerObj.makeupStatus = 'off';
           }else{
             makeupTagListenerObj.makeupStatus = 'on';
           }
@@ -765,6 +796,7 @@ const browser = __b;
       // document.body.focus();
       showMakeupTagPanel = true;
       createOrShowSeleteTagPanelWithModal();
+      stopListenerMove();
       startListenerMove();
       checkZindexDom();
       if(!Utils.isMobileOrIpad()){
@@ -819,6 +851,7 @@ const browser = __b;
               showMakeupTagMenu = false;
               document.querySelector('#__stay_makeup_menu').remove();
             }
+            stopListenerMove();
             startListenerMove();
           }
         });
@@ -834,6 +867,7 @@ const browser = __b;
         preselectedTargetDom.id='__stay_selected_tag';
         preselectedTargetDom.classList.add('__stay_select_target');
         document.body.appendChild(preselectedTargetDom);
+        const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
       }
       showSelectTagNoteToast(i18nProp['select_note']);
     }
@@ -861,41 +895,50 @@ const browser = __b;
      * 
      */
     function startListenerMove(){
-      if(Utils.isMobileOrIpad()){
-        const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
-      }else{
-        const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
+      if(moveWrapperDom){
+        let isBindMoveEvent = moveWrapperDom.getAttribute('movevent');
+        if(!isBindMoveEvent || (isBindMoveEvent && isBindMoveEvent == 'false')){
+          moveWrapperDom.setAttribute('movevent', 'true');
+          if(Utils.isMobileOrIpad()){
+            const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
+          }else{
+            const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
+          }
+        }
       }
-      
     }
 
     /**
      * 移除面板move（touchstart）事件
      */
     function stopListenerMove(){
-      if(Utils.isMobileOrIpad()){
-        if(moveWrapperDom){
+      if(moveWrapperDom){
+        moveWrapperDom.setAttribute('movevent', 'false');
+        if(Utils.isMobileOrIpad()){
           moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
+        }else{
+          document.body.removeEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
         }
-      }else{
-        document.body.removeEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
       }
+    }
+
+    function handleShowTagingOperateMenuEvent(event){
+      console.log('handleShowTagingOperateMenuEvent------',event)
+      event.stopPropagation();
+      event.preventDefault();
+      showTagingOperateMenu()
     }
 
     /**
      * 展示标记菜单
      */
-    function showTagingOperateMenu(event){
-      if(event){
-        event.stopPropagation();
-      }
+    function showTagingOperateMenu(){
       console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu, selectedDom);
       if(showMakeupTagMenu){
         // console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
         return;
       }
       hideSelectTagNoteToast();
-      showMakeupTagMenu = true;
       stopListenerMove();
       stopWindowScroll();
       // if(Utils.isMobileOrIpad()){
@@ -1026,10 +1069,7 @@ const browser = __b;
         }
           
       }
-      
-      
-
-      
+      showMakeupTagMenu = true;
       preselectedTargetDom.appendChild(tagMenuDom);
       const menuItemEvent = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box').addEventListener(clickEvent, handleMenuItemClick);
     }
@@ -1332,18 +1372,19 @@ const browser = __b;
      */
     function hideSeletedTagContentModal(){
       if(preselectedTargetDom !=null){
-        preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
+        preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
         preselectedTargetDom.style.width = '0px';
         preselectedTargetDom.style.height = '0px';
-        preselectedTargetDom.style.left = '0px';
-        preselectedTargetDom.style.top = '0px';
+        preselectedTargetDom.style.left = '-10px';
+        preselectedTargetDom.style.top = '-10px';
         preselectedTargetDom.style.display = 'none';
         preselectedTargetDom.style.borderColor = borderColor;
       }
       if(moveWrapperDom!=null){
         moveWrapperDom.style.clipPath = 'none';
       }
-      
+      moveTouched = 0;
+      showMakeupTagMenu = false;
     }
 
     /**
@@ -1367,44 +1408,65 @@ const browser = __b;
      * @returns 
      */
     function handleMoveAndSelecteDom(event){
-      // console.log('touchmove------handleMoveAndSelecteDom-------------', event);
+      // console.log('touchmove------handleMoveAndSelecteDom-------------', event, moveTouched);
       if(event.touches && event.touches.length>1){
         return;
       }
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
-      // console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let selectePositionDom = moveDoms[0];
+      if('__stay_selected_tag' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_select_target') ){
+        return;
+      }
+      console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
+        let moveDomList = Array.from(moveDoms);
+        // console.log('before----',moveDomList);
+        moveDomList = moveDomList.filter(item=>{
+          if('__stay_wrapper' == item.id || item.classList.contains('__stay_move_wrapper') 
+          || '__stay_close' == item.id || item.classList.contains('__stay_close_con') 
+          || '__stay_selected_tag' == item.id || item.classList.contains('__stay_select_target') 
+          || filterSelectTagNameList.includes(item.nodeName)){
+            
+          }else{
+            return item;
+          }
+        })
+        // console.log('after------',moveDomList);
         if(Utils.isMobileOrIpad()){
-          if(moveDoms.length<=4){
-            selectePositionDom = moveDoms[1];
-          }else if(moveDoms.length > 4){
-            selectePositionDom = moveDoms[1];
-            let styles = window.getComputedStyle(selectePositionDom);
-            // console.log('styles.position---------',styles.position)
-            // 判断节点是否具有绝对定位
-            if (styles.position !== 'fixed') {
-              let i = 3;
-              selectePositionDom = moveDoms[i];
-              while(moveDomRect.height > document.documentElement.clientHeight){
-                i = i - 1;
-                selectePositionDom = moveDoms[i];
-                moveDomRect = selectePositionDom.getBoundingClientRect();
-                if(i == 1){
-                  break;
+          if(moveDomList && moveDomList.length){
+            if(moveDomList.length<=3){
+              selectePositionDom = moveDomList[0];
+            }else if(moveDomList.length > 3){
+              selectePositionDom = moveDomList[0];
+              let styles = window.getComputedStyle(selectePositionDom);
+              // console.log('styles.position---------',styles.position)
+              // 判断节点是否具有绝对定位
+              if (styles.position !== 'fixed') {
+                let i = 2;
+                selectePositionDom = moveDomList[i];
+                while(moveDomRect.height > document.documentElement.clientHeight){
+                  i = i - 1;
+                  selectePositionDom = moveDomList[i];
+                  moveDomRect = selectePositionDom.getBoundingClientRect();
+                  if(i == 0){
+                    break;
+                  }
                 }
-              }
-            } 
+              } 
+            }
+          }else{
+            return;
           }
         }else{
-          selectePositionDom = moveDoms[1];
+          selectePositionDom = moveDomList[0];
         }
       }else{
         return;
       }
+      showMakeupTagMenu = false;
       handleSelecteTagPosition(selectePositionDom, false)
     }
 
@@ -1421,9 +1483,11 @@ const browser = __b;
         return;
       }
       if('__stay_wrapper' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_move_wrapper') 
-      || '__stay_close' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_close_con')){
+      || '__stay_close' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_close_con')
+      || '__stay_selected_tag' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_select_target') ){
         return;
       }
+      showMakeupTagMenu = false;
       selectedDom = selectePositionDom
       let moveDomRect = selectedDom.getBoundingClientRect();
       if(!moveDomRect || !Object.keys(moveDomRect)){
@@ -1434,7 +1498,6 @@ const browser = __b;
         showSelectTagNoteToast(i18nProp['select_confirm']);
       }
 
-      
       let targetWidth = getMoveDomWidth(moveDomRect.width);
       // console.log('handleSelecteTagPosition------selectedDom----',selectedDom)
       let targetHeight = getMoveDomHeight(moveDomRect.height);
@@ -1448,23 +1511,34 @@ const browser = __b;
           targetX = 0;
         }
       }
-      preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
+      
+      preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      showMakeupTagMenu = false;
       // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
       while(preselectedTargetDom.firstChild){
         preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
       }
-      preselectedTargetDom.style.display = 'block';
-      showMakeupTagMenu = false;
-      preselectedTargetDom.addEventListener(clickEvent, showTagingOperateMenu);
+      preselectedTargetDom.style.width = '1px';
+      preselectedTargetDom.style.height = '1px';
+      preselectedTargetDom.style.left = '-10px';
+      preselectedTargetDom.style.top = '-10px';
+      preselectedTargetDom.style.display = 'none';
+      
+     
       // 计算蒙层裁剪区域
-  
       moveWrapperDom.style.clipPath = calcPolygonPoints(targetX, targetY, targetWidth, targetHeight);
       preselectedTargetDom.style.width = targetWidth+'px';
       preselectedTargetDom.style.height = targetHeight+'px';
       preselectedTargetDom.style.left = targetX+'px';
       preselectedTargetDom.style.top = targetY+'px';
+      preselectedTargetDom.style.borderColor = borderColor+'!important';
+      preselectedTargetDom.style.display = 'block';
+      
+      const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
 
+      console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
+        console.log('showMenu---------------------',showMenu);
         showTagingOperateMenu();
       }
     }
