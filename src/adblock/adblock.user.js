@@ -986,9 +986,9 @@ const browser = __b;
       if(tagMenuDomHeight <= topHeight){
         if(onRight || onLeft){
           if(Utils.sub(clientHeight, topHeight) >= tagMenuDomHeight){
-            tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
+            tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
           }else{
-            tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 6)}px`;
+            tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
           }
           // tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
           // tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
@@ -998,7 +998,7 @@ const browser = __b;
       }else{
         if(tagMenuDomHeight <= bottomHeight){
           if(onRight || onLeft){
-            tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
+            tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
           }else{
             tagMenuDom.style.top = `${bottomToTopHeight}px`;
           }
@@ -1006,7 +1006,7 @@ const browser = __b;
           if(topHeight <= bottomHeight){
 
             if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= (Utils.sub(clientHeight, topHeight))){
-              tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
+              tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
             }else{
               tagMenuDom.style.bottom = '-8px';
             }
@@ -1014,7 +1014,7 @@ const browser = __b;
           }else{
             if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= bottomToTopHeight){
               if(Utils.sub(clientHeight, topHeight) >= tagMenuDomHeight){
-                tagMenuDom.style.top = `${Utils.sub(topHeight, 6)}px`;
+                tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
               }else{
                 tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
               }
@@ -1381,14 +1381,8 @@ const browser = __b;
         if(Utils.isMobileOrIpad()){
           if(moveDoms.length<=4){
             selectePositionDom = moveDoms[1];
-            if('__stay_close' == selectePositionDom.id){
-              selectePositionDom = moveDoms[2];
-            }
           }else if(moveDoms.length > 4){
             selectePositionDom = moveDoms[1];
-            if('__stay_close' == selectePositionDom.id){
-              selectePositionDom = moveDoms[2];
-            }
             let styles = window.getComputedStyle(selectePositionDom);
             // console.log('styles.position---------',styles.position)
             // 判断节点是否具有绝对定位
@@ -1411,10 +1405,6 @@ const browser = __b;
       }else{
         return;
       }
-      if('__stay_close' == selectePositionDom.id){
-        return;
-      }
-      // console.log('moveDom-----',selectedDom);
       handleSelecteTagPosition(selectePositionDom, false)
     }
 
@@ -1428,6 +1418,10 @@ const browser = __b;
       // console.log('handleSelecteTagPosition------', selectePositionDom);
       if(!selectePositionDom || selectePositionDom == ''){
         console.log('handleSelecteTagPosition---selectePositionDom is null');
+        return;
+      }
+      if('__stay_wrapper' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_move_wrapper') 
+      || '__stay_close' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_close_con')){
         return;
       }
       selectedDom = selectePositionDom
