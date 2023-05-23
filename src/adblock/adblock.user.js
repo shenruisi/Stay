@@ -924,6 +924,9 @@ const browser = __b;
 
     function handleShowTagingOperateMenuEvent(event){
       console.log('handleShowTagingOperateMenuEvent------',event)
+      if(event.touches && event.touches.length>1){
+        return;
+      }
       event.stopPropagation();
       event.preventDefault();
       showTagingOperateMenu()
