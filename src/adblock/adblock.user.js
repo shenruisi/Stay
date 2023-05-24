@@ -1306,15 +1306,27 @@ const browser = __b;
             // console.log('selectedDomSibling----null-');
           }
           if(shouldExpand){
-            let fixedParentDom = getValidParentNode();
-            // console.log('fixedParentDom--------',fixedParentDom)
+            const selectedDomReact = selectedDom.getBoundingClientRect();
+            let fixedParentDom = selectedDom; // getValidParentNode();
+            // https://m.ijjjxs.com/txt/chongshengxiaoshuo/
+            // https://youku.com
+            // https://juejin.cn
+            console.log('fixedParentDom--------',fixedParentDom)
             while(fixedParentDom){
+              let fixedParentDomTemp = fixedParentDom.parentNode;
+              let fixedParentReact = fixedParentDomTemp.getBoundingClientRect();
+              if((Math.abs(Utils.sub(fixedParentReact.width, selectedDomReact.width))>50 || 
+                Math.abs(Utils.sub(fixedParentReact.height, selectedDomReact.height))>50) && (fixedParentReact.width != 0 && fixedParentReact.height != 0)){
+                break;
+              }else{
+                fixedParentDom = fixedParentDomTemp
+              }
               if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
-                // console.log('fixedParentDom-----subling-------yes---');
+                console.log('fixedParentDom-----subling-------yes---');
                 break;
               }
-              fixedParentDom = fixedParentDom.parentNode;
-              // console.log('fixedParentDom------parentNode------',fixedParentDom)
+
+              console.log('fixedParentDom------parentNode------',fixedParentDom)
             }
             // console.log('fixedParentDom------',fixedParentDom)
             if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
@@ -1322,7 +1334,7 @@ const browser = __b;
             }
           }
         }
-        // console.log('after----', selectedDom);
+        console.log('after----', selectedDom);
         let selector = getSelector(selectedDom);
         // console.log('selector-----selector---before----',selector)
         let selDom = document.querySelector(selector);
