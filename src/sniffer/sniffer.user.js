@@ -51,6 +51,8 @@ const browser = __b;
     let definedObj = {};
     let videoListMd5 = '';
     let isStayAround = '';
+    let documentLongPressEvent = null;
+    let videoAreaLongPressEvent = null;
     let longPressStatus = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
@@ -679,6 +681,7 @@ const browser = __b;
           self.timer = 0;
         }
       }
+
     }
 
     function isHidden(el) {
@@ -724,12 +727,16 @@ const browser = __b;
        * @param {function} callback 长按触发的回调函数
        */
       constructor(dom, callback) {
+        this.callback = callback;
         this.dom = dom;
         // this.startTime = 0; // 触摸起始时间
         // this.endTime = 0; // 触摸终止时间
         this.stayLongPressTimer = 0; 
         this.distance = 10; // 触摸距离值
-        this.init(callback);
+        this.handleTouchStartEvent = this.handleTouchStartEvent.bind(this);
+        this.touchmoveCallback = this.touchmoveCallback.bind(this);
+        this.touchEndCallback = this.touchEndCallback.bind(this);
+        this.init();
       }
 
       getDomPageStartX(){
@@ -749,15 +756,31 @@ const browser = __b;
       }
 
       /**
-       * 初始化
+       * 初始化(监听长按事件)
        *
        * @private
        */
-      init(callback) {
-        this.touchstart(callback);
-        this.touchend();
+      init() {
+        this.stayLongPressTimer = 0; 
+        this.distance = 10; // 触摸距离值
+        this.touchstart();
         this.touchmove();
+        this.touchend();
         this.bindLongPressEventFlag();
+      }
+
+      /**
+       * 移除长按事件
+       */
+      removeEvent(){
+        // console.log('removeEvent------------------',this.stayLongPressTimer);
+        if(this.stayLongPressTimer){
+          clearTimeout(this.stayLongPressTimer)
+          this.stayLongPressTimer = 0;
+        }
+        this.removeTouchstart();
+        this.removeTouchmove();
+        this.removeTouchend();
       }
 
       /**
@@ -765,57 +788,41 @@ const browser = __b;
        */
       bindLongPressEventFlag(){
         this.dom.setAttribute('stay-long-press', 'yes');
-        // this.dom.eventList['stayLongPress'] = 'yes';
       }
 
       /**
        * 手指按下时开启定时器，700 毫秒后触发回调函数
        *
        * @private
-       * @param {function} callback 回调函数
        */
-      touchstart(callback) {
-        const self = this;
-        document.body.removeEventListener('touchstart', function(event){
-          self.handleTargetEvent(event, callback);
-          return false;
-        });
-        document.body.addEventListener('touchstart', function(event) {
-          // console.log('touchstart-------',event);
-          self.handleTargetTouchend(event.target);
-          self.handleTargetEvent(event, callback);
-          return false;
-        }, false);
+      touchstart() {
+        this.removeTouchstart();
+        document.body.addEventListener('touchstart', this.handleTouchStartEvent);
       }
 
-      handleTargetTouchend(target){
+      removeTouchstart(){
+        document.body.removeEventListener('touchstart', this.handleTouchStartEvent);
+      }
+
+      handleTouchStartEvent(event){
         const self = this;
+       
+        console.log(event);
+        let target = event.changedTouches[0];
         if(!target){
           return;
         }
-        // target.stopPropagation();
-        // target.stopPropagation();
-        target.addEventListener('touchend', (event)=>{
-          // event.stopPropagation();
-          self.touchEndCallback(event, target);
-          // clearTimeout(self.stayLongPressTimer);
-        })
-      }
-
-      handleTargetEvent(event, callback){
-        event.stopPropagation();
-        event.preventDefault();
-        const self = this;
-        let target = event.changedTouches[0];
         const targetPageX = target.pageX;
         const targetPageY = target.pageY;
+        // console.log('this.dom------------',this.dom.getBoundingClientRect());
         // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
         if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
+          event.stopPropagation();
+          event.preventDefault();
           // console.log('start-------', new Date().getTime());
-          this.stayLongPressTimer = window.setTimeout((curTarget, fun) => {
-            self.stayLongPressTimer = 0;
+          this.stayLongPressTimer = window.setTimeout((curTarget) => {
             try {
               let classList = curTarget.target.classList;
               // console.log('start----------event----',event);
@@ -825,22 +832,44 @@ const browser = __b;
               if(!classList.contains('__stay-touch-action')){
                 classList.add('__stay-touch-action');
               }
-              // console.log('end-------', new Date().getTime());
-              if (typeof fun === 'function') {
-                fun();
+              if (typeof this.callback === 'function') {
+                this.callback();
               } else {
                 console.error('callback is not a function!');
               }
-              // curTarget.target.click();
-              curTarget.target.addEventListener('contextmenu', function(e){
+              // console.log('end-------', new Date().getTime());
+              curTarget.target.addEventListener('contextmenu', handleContextmenuEvent);
+              // eslint-disable-next-line no-inner-declarations
+              function handleContextmenuEvent(e){
                 e.preventDefault();
-              });
+                curTarget.target.removeEventListener('contextmenu', handleContextmenuEvent);
+              }
+              
+              // this.removeEvent();
             } catch (error) {
               
+            }finally{
+              // this.removeEvent();
             }
-          }, 600, target, callback);
+          }, 600, target);
           // console.log('end.end-------', new Date().getTime());
         }
+        
+        self.handleTargetTouchend(event.target);
+      }
+
+      handleTargetTouchend(target){
+        const self = this;
+        if(!target){
+          return;
+        }
+        target.addEventListener('touchend', handleTargetEvent)
+        function handleTargetEvent(event){
+          self.touchEndCallback(event)
+          target.removeEventListener('touchend', handleTargetEvent)
+        }
+
+
       }
 
       /**
@@ -850,39 +879,26 @@ const browser = __b;
        */
       touchend() {
         // console.log('handle------touchend---' );
-        const self = this;
-        document.body.removeEventListener('touchend', function(event){
-          // event.stopPropagation();
-          self.touchEndCallback(event, null);
-          // return false;
-        })
-        document.body.addEventListener('touchend', function(event) {
-          // event.stopPropagation();
-          // event.preventDefault();
-          // console.log('touchend-------',event);
-          self.touchEndCallback(event, null)
-          return false;
-        });
+        this.removeTouchend()
+        document.body.addEventListener('touchend', this.touchEndCallback);
       }
 
+      removeTouchend(){
+        document.body.removeEventListener('touchend', this.touchEndCallback)
+      }
 
-      touchEndCallback(event, isTarget){
+      touchEndCallback(event){
         const self = this;
         // event.stopPropagation();
         if(isHidden(this.dom)){
           return;
         }
-        // console.log('touchEndCallback----event------isTarget-', isTarget, event);
-        // 清除定时器
-        clearTimeout(this.stayLongPressTimer);
+        // console.log('touchEndCallback----event-------', event);
         if(this.stayLongPressTimer!=0){
           try {
-            if(isTarget){
-              isTarget.removeEventListener('touchend', (event)=>{
-                // clearTimeout(this.stayLongPressTimer);
-                self.touchEndCallback(event, null)
-              })
-            }
+            clearTimeout(this.stayLongPressTimer);
+            // 清除定时器
+            this.stayLongPressTimer = 0;
           } catch (error) {
             
           }
@@ -893,35 +909,27 @@ const browser = __b;
        * 如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
        */
       touchmove() {
-        const self = this;
-        document.body.removeEventListener('touchmove', function(event){
-          event.preventDefault();
-          event.stopPropagation();
-          touchmoveCallback();
-        });
-        document.body.addEventListener('touchmove', function(event){
-          // console.log('touchmove-------',event);
-          event.preventDefault();
-          event.stopPropagation();
-          touchmoveCallback();
-          return false;
-        })
-        function touchmoveCallback(){
-          if(isHidden(self.dom)){
-            return;
-          }
-          window.clearTimeout(self.stayLongPressTimer);//清除定时器
-          self.stayLongPressTimer = 0;
-          return false;
-        }
+        this.removeTouchmove();
+        document.body.addEventListener('touchmove', this.touchmoveCallback, { passive: true })
       }
 
+      removeTouchmove(){
+        document.body.removeEventListener('touchmove', this.touchmoveCallback, { passive: true });
+      }
+
+      touchmoveCallback(event){
+        const self = this;
+        if(isHidden(self.dom)){
+          return;
+        }
+        window.clearTimeout(self.stayLongPressTimer);//清除定时器
+        self.stayLongPressTimer = 0;
+      }
 
     }
 
     function startFindVideoInfo(completed){
       observerVideo();
-      console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
       // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
@@ -1267,7 +1275,7 @@ const browser = __b;
             -webkit-touch-callout: none;
           }
           .__stay-touch-action{
-            touch-action: none!important;
+            touch-action: auto!important;
           }
         </style>`;
         document.body.append(Utils.parseToDOM(sinfferUnselect));
@@ -1297,7 +1305,7 @@ const browser = __b;
           }
         }
         // console.log('addLongPress--------LongPress=====',hostUrl)
-        new LongPress(posDom, ()=>{
+        videoAreaLongPressEvent = new LongPress(posDom, ()=>{
           addSinfferModal(videoDom, posDom, videoInfo);
         })
       }
@@ -1313,7 +1321,7 @@ const browser = __b;
             posDom.classList.add('__stay-unselect');
           }
         }
-        new LongPress(posDom, ()=>{
+        videoAreaLongPressEvent = new LongPress(posDom, ()=>{
           addSinfferModal(videoDom, posDom, videoInfo);
         })
       }
@@ -1324,7 +1332,7 @@ const browser = __b;
         }
         if(posterDom){
           // posDom = posterDom;
-          new LongPress(posterDom, ()=>{
+          videoAreaLongPressEvent = new LongPress(posterDom, ()=>{
             addSinfferModal(videoDom, posterDom, videoInfo);
           })
         }
@@ -1368,18 +1376,18 @@ const browser = __b;
     function getLongPressStatus(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          console.log('getLongPressStatus-----true');
+          // console.log('getLongPressStatus-----true');
           browser.runtime.sendMessage({from: 'popup', operate: 'getLongPressStatus'}, (response) => {
-            console.log('getLongPressStatus---------',response)
+            // console.log('getLongPressStatus---------',response)
             let longPressStatusRes = response&&response.longPressStatus?response.longPressStatus:'on';
             resolve(longPressStatusRes);
           });
         }else{
-          console.log('getLongPressStatus-----false');
+          // console.log('getLongPressStatus-----false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_LONG_PRESS_STATUS_RESP') return;
-            console.log('getLongPressStatus---------',e.data.longPressStatusRes)
+            // console.log('getLongPressStatus---------',e.data.longPressStatusRes)
             resolve(e.data.longPressStatusRes);
             window.removeEventListener('message', callback);
           };
@@ -1545,7 +1553,7 @@ const browser = __b;
           posterCon = `<div class="__stay-video-poster" style="background:url('${videoInfo.poster}') 50% 50% no-repeat;background-size: cover;"></div>`;
         }
         // console.log('videoDom----1--',videoDom);
-        const canvas = captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
+        // const canvas = captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
         
         // console.log('posterCon----3--',posterCon);
         
@@ -1817,40 +1825,46 @@ const browser = __b;
         return document.querySelector('#__stay_sinffer_modal');
       }
 
-      
+      function restartEventListener(){
 
-      modalDom.addEventListener('touchmove', e =>{ 
-        e.preventDefault();
-        e.stopPropagation();
-      }, false);
-      modalDom.addEventListener('touchstart', e =>{ 
-        e.preventDefault();
-        // e.stopPropagation();
+       
+      }
+
+      modalDom.addEventListener('touchstart', handleModalEvent);
+
+      function handleModalEvent(event){
+        event.preventDefault();
+        event.stopPropagation();
         // modalDom.style.display = 'none';
+        // removeModalMouseMoveEvent();
+        restartEventListener();
         modalDom.classList.remove('__stay-show-modal');
         popupDom.style.animation = 'fadeout .5s;';
-
+        
         let removeTimer = setTimeout(() => {
           if(modalDom){
+            modalDom.removeEventListener('touchstart', handleModalEvent);
             document.body.removeChild(modalDom);
           }
           document.body.removeChild(document.querySelector('#__style_sinffer_style'));
           clearTimeout(removeTimer);
           removeTimer = 0;
         }, 200);
-      }, false);
+      }
 
       const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-quality-item');
       if(downloadItems && downloadItems.length){
         for(let i=0; i<downloadItems.length; i++){
           (function(n){
-            downloadItems[i].addEventListener('touchstart', e=>{
-              // console.log('e---------',e);
+            downloadItems[i].addEventListener('touchstart', handleDownloadItemEvent);
+            function handleDownloadItemEvent(e){
               let openUrl = e.target.getAttribute('stay-download');
               let targetGun = document.createElement('a');
               targetGun.href = openUrl;
               targetGun.click();
-            })
+              downloadItems[i].removeEventListener('touchstart', handleDownloadItemEvent);
+              restartEventListener();
+            }
           })(i)
         }
       }
