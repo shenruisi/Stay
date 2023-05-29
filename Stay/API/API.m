@@ -31,15 +31,15 @@ uint8_t randomc[] = {0x6d, 0x54, 0x33, 0x1f, 0x35, 0x1a, 0x58, 0x31, 0x3e, 0x6b,
 @implementation API
 
 #ifdef DEBUG
-static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
-//static NSString *END_POINT = @"https://api.shenyin.name/stay/";
+//static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
+static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 #else
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 #endif
 
 #ifdef DEBUG
-static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
-//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
 #else
 static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
 #endif
