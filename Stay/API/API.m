@@ -30,10 +30,19 @@ uint8_t randomc[] = {0x6d, 0x54, 0x33, 0x1f, 0x35, 0x1a, 0x58, 0x31, 0x3e, 0x6b,
 
 @implementation API
 
+#ifdef DEBUG
+static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
+//static NSString *END_POINT = @"https://api.shenyin.name/stay/";
+#else
 static NSString *END_POINT = @"https://api.shenyin.name/stay/";
-//static NSString *END_POINT = @"http://127.0.0.1:10000/stay/";
+#endif
+
+#ifdef DEBUG
+static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+#else
 static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
-//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+#endif
 static API *instance = nil;
 
 + (instancetype)shared{
@@ -236,6 +245,79 @@ static API *instance = nil;
     
 #endif
     return type;
+}
+
+- (void)queryPath:(NSString *)path
+              pro:(BOOL)pro
+         deviceId:(NSString *)deviceId
+              biz:(nullable NSDictionary *)biz
+       completion:(void(^)(NSInteger statusCode,NSError *error,NSDictionary *server,NSDictionary *biz))completion{
+    NSLocale *locale = [NSLocale currentLocale];
+    NSMutableDictionary *requestBody = [[NSMutableDictionary alloc] initWithDictionary:@{
+        @"client":@{
+            @"os_version" : _osVersion ? _osVersion : @"",
+            @"version" : _appVersion ? _appVersion : @"",
+            @"pro" : @(pro),
+            @"country" : locale.countryCode.length > 0 ? locale.countryCode : @"CN",
+            @"deviceId" : deviceId
+        }
+    }];
+    
+    if (biz.count > 0){
+        [requestBody setValue:biz forKey:@"biz"];
+    }
+    
+    if ([path hasPrefix:@"/"]){
+        path = [path substringFromIndex:1];
+    }
+    NSString *reqUrl = [NSString stringWithFormat:@"%@%@",STAY_FORK_END_POINT,path];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqUrl]];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    
+    RC4 *rc4Encrypt = [[RC4 alloc] initWithKey:self.randomcData];
+    RC4 *rc4Decrypt = [[RC4 alloc] initWithKey:self.randomcData];
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:requestBody
+                                                   options:NSJSONWritingPrettyPrinted
+                                                     error:nil];
+    [request setHTTPBody:[rc4Encrypt encrypt:data]];
+    
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request
+                    completionHandler:^(NSData *data,
+                                        NSURLResponse *response,
+                                        NSError *error) {
+        if (error){
+            if (completion){
+                completion(500,error,nil,nil);
+            }
+        }
+        else{
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSInteger statusCode = [httpResponse statusCode];
+            if (statusCode >= 200 && statusCode < 300){
+                data = [rc4Decrypt decrypt:data];
+                NSError *error = nil;
+                NSDictionary *responseBody = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (error){
+                    if (completion){
+                        completion(500,error,nil,nil);
+                    }
+                    return;
+                }
+                
+                if (completion){
+                    completion(200,nil,responseBody[@"server"],responseBody[@"biz"]);
+                }
+            }
+            else{
+                if (completion){
+                    completion(statusCode,nil,nil,nil);
+                }
+            }
+        }
+    }] resume];
+
 }
 
 @end

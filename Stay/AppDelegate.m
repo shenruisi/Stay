@@ -71,6 +71,65 @@
     [Bugsnag start];
 #endif
     
+    NSString *deviceID = [[NSUUID UUID] UUIDString];
+    
+    //Self point
+//    [[API shared] queryPath:@"/self"
+//                        pro:[[FCStore shared] getPlan:NO]
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
+//    }];
+    
+    
+//    [[API shared] queryPath:@"/tasks"
+//                        pro:NO
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
+//    }];
+    
+    
+//        [[API shared]  queryPath:@"/invite-task/detail"
+//                            pro:NO
+//                       deviceId:DeviceHelper.uuid
+//                            biz:nil
+//                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//            NSLog(@"%@",biz);
+//        }];
+    
+//            [[API shared]  queryPath:@"/invite-task/init"
+//                                pro:NO
+//                           deviceId:DeviceHelper.uuid
+//                                 biz:@{
+//                @"name" : @"shen yin",
+//                @"cover" : @"https://res.stayfork.app/covers/hill.png"
+//            }
+//                         completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//                NSLog(@"%@",biz);
+//            }];
+    
+//    [[API shared]  queryPath:@"/gift-task/init"
+//                        pro:YES
+//                   deviceId:DeviceHelper.uuid
+//                         biz:@{
+//        @"name" : @"shen yin",
+//        @"cover" : @"https://res.stayfork.app/covers/hill.png"
+//    }
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
+//    }];
+    
+//    [[API shared]  queryPath:@"/gift-task/detail"
+//                        pro:YES
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
+//    }];
+    
     
     SDImageSVGKCoder *SVGCoder = [SDImageSVGKCoder sharedCoder];
     [[SDImageCodersManager sharedManager] addCoder:SVGCoder];
