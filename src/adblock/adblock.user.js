@@ -1290,7 +1290,7 @@ const browser = __b;
       return new Promise((resolve, reject)=>{
         console.log('before----',selectedDom);
         let styles = window.getComputedStyle(selectedDom);
-        if(styles.position == 'fixed'){
+        if(styles.position == 'fixed' && (selectedDom.id == '' || !checkStaticSelectorId(selectedDom.id))){
           let shouldExpand = false;
           let selectedDomSibling = getValidPreviousSiblingNode(selectedDom) || getValidNextSiblingNode(selectedDom);
           if(selectedDomSibling){
@@ -1321,7 +1321,7 @@ const browser = __b;
               }else{
                 fixedParentDom = fixedParentDomTemp
               }
-              if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
+              if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom) || (fixedParentDom.id!='' && checkStaticSelectorId(fixedParentDom.id))){
                 console.log('fixedParentDom-----subling-------yes---');
                 break;
               }
@@ -1359,6 +1359,12 @@ const browser = __b;
               selectedDom.style.display = 'none';
               cssSelectorSet.add(uuid);
             }
+            
+            while(selDom.firstChild){
+              selDom.removeChild(selDom.firstChild)
+            }
+            selDom.remove();
+            selectedDom.remove();
           }
         } catch (error) {
           console.log('error------',error)
@@ -1552,9 +1558,9 @@ const browser = __b;
       
       const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
 
-      console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
+      // console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
-        console.log('showMenu---------------------',showMenu);
+        // console.log('showMenu---------------------',showMenu);
         showTagingOperateMenu();
       }
     }
@@ -1681,6 +1687,12 @@ const browser = __b;
           }
           if (el.id && checkStaticSelectorId(el.id)) {
             selector += '#' + el.id;
+            if(checkDomOfIdSelectorSameToSelectedDom(el)){
+              path = [];
+              path.unshift(selector);
+              break;
+            }
+            
             path.unshift(selector);
             break;
           }
@@ -1716,6 +1728,20 @@ const browser = __b;
         console.log(error)
       }
       return path.join(' > ');
+    }
+
+    function checkDomOfIdSelectorSameToSelectedDom(eleDom){
+      if(!eleDom){
+        return false;
+      }
+      let eleDomReact = eleDom.getBoundingClientRect();
+      const selectedDomReact = selectedDom.getBoundingClientRect();
+      
+      if(((Math.abs(Utils.sub(eleDomReact.width, selectedDomReact.width))<20 && Math.abs(Utils.sub(eleDomReact.height, selectedDomReact.height))<20) 
+      && (eleDomReact.width != 0 && eleDomReact.height != 0)) || (eleDom.id != '' && checkStaticSelectorId(eleDom.id))){
+        return true;
+      }
+      return false;
     }
 
     /**
