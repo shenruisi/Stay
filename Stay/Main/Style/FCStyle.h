@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *titleGrayColor;
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
 @property(class, nonatomic, readonly) UIColor *subtitleColor;
-
+@property(class, nonatomic, readonly) UIColor *fcOrangeColor;
 
 @property(class, nonatomic, readonly) UIColor *filterCommentColor;
 @property(class, nonatomic, readonly) UIColor *filterExceptionColor;

@@ -134,6 +134,11 @@
     return [UIColor colorNamed:@"GrayNote"];
 }
 
++ (UIColor *)fcOrangeColor {
+    return [UIColor colorNamed:@"FCOrangeColor"];
+
+}
+
 + (UIColor *)fcMacIcon{
 #ifdef FC_IOS
     return [self accent];
@@ -157,7 +162,7 @@
 }
 
 + (UIColor *)progressBgColor {
-    return  [UIColor colorNamed:@"progressBgColor"];
+    return  [UIColor colorNamed:@"ProgressBGColor"];
 }
 
 + (UIColor *)subtitleColor {

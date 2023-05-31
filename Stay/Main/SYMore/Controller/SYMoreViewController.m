@@ -24,6 +24,7 @@
 #import "SYFlashViewController.h"
 #import "SharedStorageManager.h"
 #import "FCTableViewCell.h"
+#import "SYInviteViewController.h"
 
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
@@ -513,6 +514,10 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     NSString *type = entity[@"type"];
     if ([@"M3U8Concurrency" isEqualToString:type]) {
         self.noteLabel.text = [@([[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency]) stringValue];
+    } else if ([@"stayPoint" isEqualToString:type]){
+        Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+        self.noteLabel.text = isPro?NSLocalizedString(@"GetMorePoint", @""):NSLocalizedString(@"GiftPointToFriend", @"");
+
     } else {
         self.noteLabel.text = nil;
     }
@@ -633,6 +638,9 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     else if ([entity[@"type"] isEqualToString:@"M3U8Concurrency"]){
         cell = [[_MoreNoteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
+    else if ([entity[@"type"] isEqualToString:@"stayPoint"]) {
+        cell = [[_MoreNoteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
     else{
         cell = [[_MoreTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
@@ -697,6 +705,15 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 #else
             [self.navigationController pushViewController:[[SYConcurrencyViewController alloc] init] animated:YES];
 #endif
+        } else if([type isEqualToString:@"stayPoint"]) {
+#ifdef FC_MAC
+            [self presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+            [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
+#endif
+            
         }
     }
 }
@@ -859,6 +876,16 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"cells":@[
                     @{@"title":NSLocalizedString(@"UpgradeTo",@""),
                       @"type":@"subscription"
+                    }
+                ]
+            },
+            @{
+                @"section":NSLocalizedString(@"StayPoint",@""),
+                @"cells":@[
+                    @{
+                        @"title":@"100 Point(s)",
+                        @"icon":@"InviteImage",
+                      @"type":@"stayPoint",
                     }
                 ]
             },

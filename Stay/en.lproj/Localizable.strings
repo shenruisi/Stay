@@ -347,14 +347,14 @@ DomainFormatError="The domain name format is incorrect.";
 TrustedSiteDeleteAlert="Are you sure you want to delete this trusted site?";
 DomainExistError="This domain name already exists.";
 
+PointProgress="Point Progress";
+InviteFriend="Invite friends";
+InviteToGetPoint="Invite Your Friends To Get Point";
+InviteRule="Invite Rule";
+InviteRuleDesc="Share the link below with your friends. When your friend opens this link through a browser and clicks to download Stay to activate successfully, you will complete 1 invited user. After you activate 5 users successfully, you can got 200 stay points.";
 
-
-
-
-
-
-
-
+HowToInvite="How to invite?";
+HowToInviteDesc="Checkout online document";
 
 
 
