@@ -122,7 +122,7 @@
     headerLabel.text = dic[title];
     [view addSubview:headerLabel];
     
-    UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width- 40, 15)];
+    UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.contentView.width- 40, 17)];
     subLabel.font = FCStyle.subHeadline;
     subLabel.textColor = FCStyle.fcSecondaryBlack;
     subLabel.text = dic[subtitle];

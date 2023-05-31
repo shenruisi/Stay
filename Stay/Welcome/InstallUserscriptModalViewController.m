@@ -20,6 +20,7 @@
 #import "SharedStorageManager.h"
 #import "ScriptMananger.h"
 #import "DeviceHelper.h"
+#import "SYScanImage.h"
 
 @interface InstallUserscriptModalViewController()
 
@@ -473,6 +474,12 @@
     }
     
 }
+
+-(void)scanBigImageClick1:(UITapGestureRecognizer *)tap{
+    UIImageView *clickedImageView = (UIImageView *)tap.view;
+    [SYScanImage scanBigImageWithImageView:clickedImageView];
+}
+
 
     
 - (void)backAction{

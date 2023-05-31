@@ -16,6 +16,7 @@
 #import "AlertHelper.h"
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
+#import "FCShared.h"
 
 @interface ContentFilterEditModalViewController()<
  UITableViewDelegate,
@@ -191,8 +192,7 @@
     FCButton *button = (FCButton *)sender;
 
     NSString *originDownloadUrl = self.contentFilter.downloadUrl;
-    if (self.linkElement.inputEntity.text.length > 0
-        && ![self.linkElement.inputEntity.text isEqualToString:originDownloadUrl]){
+    if (self.linkElement.inputEntity.text.length > 0){
         [self.navigationController.slideController startLoading];
         [button startLoading];
         self.contentFilter.downloadUrl = self.linkElement.inputEntity.text;
@@ -215,6 +215,18 @@
                             }];
                         [alert addAction:confirm];
                         [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
+                    });
+                }
+                else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf.navigationController.slideController stopLoading];
+                        UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+                        image = [image imageWithTintColor:FCStyle.fcBlack
+                                            renderingMode:UIImageRenderingModeAlwaysOriginal];
+                        [FCShared.toastCenter show:image
+                                         mainTitle:weakSelf.contentFilter.title
+                                    secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
                     });
                 }
             }
@@ -285,6 +297,12 @@
                                                     handler:^(UIAlertAction * _Nonnull action) {
         self.contentFilter.downloadUrl = self.contentFilter.defaultUrl;
         self.contentFilter.title = self.contentFilter.defaultTitle;
+        NSString *restoreDateString = @"2023-05-20 00:00:00";
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *restoreDate = [dateFormatter dateFromString:restoreDateString];
+        self.contentFilter.updateTime = restoreDate;
+        [[DataManager shareManager] updateContentFilterUpdateTime:restoreDate uuid:self.contentFilter.uuid];
         [[DataManager shareManager] updateContentFilterDownloadUrl:self.contentFilter.defaultUrl uuid:self.contentFilter.uuid];
         [[DataManager shareManager] updateContentFilterTitle:self.contentFilter.defaultTitle uuid:self.contentFilter.uuid];
         [button startLoading];
@@ -298,7 +316,15 @@
                 [self.navigationController.slideController stopLoading];
                 AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
                 [cer refreshRules];
+                
                 [self.tableView reloadData];
+                UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                          withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+                image = [image imageWithTintColor:FCStyle.fcBlack
+                                    renderingMode:UIImageRenderingModeAlwaysOriginal];
+                [FCShared.toastCenter show:image
+                                 mainTitle:self.contentFilter.title
+                            secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
                 [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidUpdateNotification object:nil];
             });
         }];

@@ -122,7 +122,6 @@
     
     [_stopBtn removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
     
-    
     if(_downloadResource.status == 0) {
         _downloadSpeedLabel.hidden = NO;
         _downloadRateLabel.text = [NSString stringWithFormat:@"%@:%.1f%%",NSLocalizedString(@"Downloading",""),_downloadResource.downloadProcess];
@@ -159,7 +158,7 @@
         _downloadRateLabel.text = NSLocalizedString(@"Transcoding","");
         [NSLayoutConstraint deactivateConstraints:self.speedArray];
         [self.speedArray removeAllObjects];
-        [self.speedArray addObject:[_downloadRateLabel.rightAnchor constraintEqualToAnchor:self.downloadSpeedLabel.leftAnchor constant:-5]];
+        [self.speedArray addObject:[_downloadRateLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10]];
         [NSLayoutConstraint activateConstraints:self.speedArray];
     }  else if (_downloadResource.status == 5) {
         [_stopBtn setImage:[ImageHelper sfNamed:@"goforward" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
@@ -379,7 +378,6 @@
             [_downloadSpeedLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
             [_downloadSpeedLabel.centerYAnchor constraintEqualToAnchor:self.saveToLabel.centerYAnchor],
         ]];
-        
     }
     return _downloadSpeedLabel;
 }

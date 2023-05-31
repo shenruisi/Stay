@@ -13,7 +13,11 @@
 #import "DataManager.h"
 #import "SYVersionUtils.h"
 
+#ifdef FC_MAC
+static NSUInteger MAX_RULE_COUNT = 150000;
+#else
 static NSUInteger MAX_RULE_COUNT = 50000;
+#endif
 
 NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
 
@@ -57,6 +61,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
     NSInteger daysBetween = (NSInteger)(timeInterval / 86400);
 
     if (daysBetween >= days || focus) {
+        NSLog(@"Start update ContentBlockerWithIdentifier:%@",self.contentBlockerIdentifier);
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.downloadUrl]];
         [request setHTTPMethod:@"GET"];
         [[[NSURLSession sharedSession] dataTaskWithRequest:request
@@ -80,15 +85,20 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                 [self processRules:content
                   updateFilterInfo:YES
                        writeOnDisk:YES
+                           restore:NO
                         completion:completion];
             }
         }] resume];
+    }
+    else{
+        NSLog(@"No need update ContentBlockerWithIdentifier:%@",self.contentBlockerIdentifier);
     }
 }
 
 - (void)processRules:(NSString *)content
     updateFilterInfo:(BOOL)updateFilterInfo
          writeOnDisk:(BOOL)writeOnDisk
+             restore:(BOOL)restore
           completion:(void(^)(NSError *))completion{
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
         NSError *error;
@@ -155,9 +165,10 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
             }
         }
         
-        if (updateFilterInfo){
+        if (updateFilterInfo&&!restore){
+            self.updateTime = [NSDate date];
             [[DataManager shareManager]
-             updateContentFilterUpdateTime:[NSDate date] uuid:self.uuid];
+             updateContentFilterUpdateTime:self.updateTime uuid:self.uuid];
         }
         
         if (universalRule && universalRule.action.selectors.count > 0){
@@ -301,6 +312,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
         [self processRules:content
           updateFilterInfo:YES
                writeOnDisk:YES
+                   restore:YES
                 completion:completion];
     });
 }
@@ -315,6 +327,7 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
     [self processRules:content
       updateFilterInfo:NO
            writeOnDisk:YES
+               restore:NO
             completion:completion];
 }
 

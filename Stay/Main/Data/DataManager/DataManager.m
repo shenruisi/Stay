@@ -695,6 +695,7 @@
 }
 
 - (void)updateContentFilterUpdateTime:(NSDate *)updateTime uuid:(NSString *)uuid{
+    NSLog(@"updateContentFilterUpdateTime %@",updateTime);
     sqlite3 *sqliteHandle = [self dbHandle];
     if (NULL == sqliteHandle){
         return;

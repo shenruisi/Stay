@@ -102,8 +102,8 @@ static FCStore *instance = nil;
 //        return FCPlan.None;
 //    }
     
-//    [SharedStorageManager shared].userDefaultsExRO.pro = NO;
-//    return FCPlan.None;
+//    [SharedStorageManager shared].userDefaultsExRO.pro = YES;
+//    return [[FCPlan alloc] init];
 #endif
     RMAppReceipt *receipt = [RMAppReceipt bundleReceipt];
     FCPlan *plan = FCPlan.None;

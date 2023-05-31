@@ -72,6 +72,7 @@ const browser = __b;
    */
   function injectSelectedAdTagJS(isContent){
     let showMakeupTagPanel = false;
+    let checkZindexFlag = false;
     let showMakeupTagMenu = false;
     let makeupTagListenerObj = {threeFingerTapStatus: ''};
     let moveWrapperDom = null;
@@ -80,7 +81,9 @@ const browser = __b;
     let threeFingerMoveStart = null;
     let threeFingerMoveEnd = null;
     let selectedDom = null;
+    let moveTouched = 0;
     let notShowTagNameList = ['STYLE','SCRIPT','#text','LINK', 'META'];
+    let filterSelectTagNameList = ['HTML', 'BODY'];
     let i18nProp = {};
     let cssSelectorSet = new Set();
     const AdLangMessage = {
@@ -141,7 +144,15 @@ const browser = __b;
         const userAgentInfo = navigator.userAgent;
         let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
         let getArr = Agents.filter(i => userAgentInfo.includes(i));
-        return getArr.length ? true : false;
+        let isIphoneOrIpad = getArr.length ? true : false;
+        if(isIphoneOrIpad){
+          return isIphoneOrIpad
+        }else{
+          if (userAgentInfo.match(/Macintosh/) && navigator.maxTouchPoints > 1) {
+            return true;
+          } 
+        }
+        return isIphoneOrIpad;
       },
       isMobile: function(){
         const userAgentInfo = navigator.userAgent;
@@ -381,6 +392,10 @@ const browser = __b;
       }
     }
     const clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
+    let borderColor = '#ffffff';
+    // if(!Utils.isMobileOrIpad()){
+    //   borderColor = '#B620E0';
+    // }
     const borderSize = 2;
     function languageCode() {
       let lang = (navigator.languages && navigator.languages.length > 0) ? navigator.languages[0]
@@ -403,154 +418,180 @@ const browser = __b;
         closePopup = 'https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png';
         closeBg = '#1C1C1C';
       }
-      let borderColor = '#ffffff';
-      if(!Utils.isMobileOrIpad()){
-        borderColor = '#B620E0';
-      }
+     
       
       if(!document.querySelector('#__stay_select_style')){
         const styleDom = document.createElement('style');
         styleDom.type = 'text/css';
         styleDom.id='__stay_select_style';
         const styleText = `
-                    .__stay_move_wrapper{
-                      position:fixed;
-                      left:0;
-                      right:0;
-                      top:0;
-                      bottom:0;
-                      z-index:2147483600;
-                      width:100%;
-                      height:100%;
-                      background-color:rgba(0,0,0,0.4);
-                      box-sizing: border-box;
-                    }
-                    .__stay_close_con{
-                      position:absolute;
-                      right: 20px;
-                      top: 20px;
-                      width:26px;
-                      height:26px;
-                      background: url("${closePopup}") 50% 50% no-repeat;
-                      background-size: 40%;
-                      background-color: ${closeBg};
-                      border-radius:50%;
-                    }
-                    .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid ${borderColor}; border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
-                    .__stay_makeup_menu_wrapper{
-                      width:187px;
-                      position:absolute;
-                      padding: 8px 0;
-                      box-sizing: border-box;
-                    }
-                    .__stay_makeup_menu_item_box{
-                      width:100%;
-                      box-sizing: border-box;
-                      background-color: #ffffff;
-                      padding-left: 12px;
-                      border-radius: 5px;
-                      box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
-                    }
-                    .__stay_menu_item{
-                      color: #212121;
-                      -webkit-user-select: none;
-                      height:40px;
-                      border-bottom: 1px solid #e0e0e0;
-                      display:flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      padding-left: 2px;
-                      padding-right: 12px;
-                      font-size: 16px;
-                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
-                      -webkit-font-smoothing: antialiased;
-                      -moz-osx-font-smoothing: grayscale;
-                    }
-                    .__item_disabled div,.__item_disabled img{
-                      opacity: 0.3;
-                    }
-                    .__stay_weight{
-                      font-weight: 600;
-                    }
-                    .__stay_menu_item:last-child {
-                      border-bottom: none;
-                    }
-                    .__stay_menu_item img{
-                      width:15px;
-                    }
-                    .__stay_select_note_warpper{
-                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
-                      -webkit-font-smoothing: antialiased;
-                      -moz-osx-font-smoothing: grayscale;
-                      position:fixed; 
-                      z-index:2147483647;
-                      display: inline-block;
-                      word-break: keep-all;
-                      white-space: nowrap;
-                      height: 25px;
-                      border-radius: 10px;
-                      line-height: 25px;
-                      text-align: center;
-                      padding: 0 15px;
-                      box-sizing: border-box;
-                      background-color: #fff;
-                      color: #000;
-                      font-weight: 700;
-                      font-size: 13px;
-                      left: 50%;
-                      transform: translate(-50%);
-                      top: -60px;
-                    }
-                    .__stay_tagged_wrapper{
-                      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
-                      -webkit-font-smoothing: antialiased;
-                      -moz-osx-font-smoothing: grayscale;
-                      position:fixed; 
-                      z-index:2147483647;
-                      width:160px;
-                      height: 44px;
-                      border-radius: 22px;
-                      line-height: 44px;
-                      text-align: center;
-                      padding-left: 15px;
-                      box-sizing: border-box;
-                      background-color: #fff;
-                      color: #000;
-                      font-weight: 700;
-                      font-size: 16px;
-                      animation: dropIn 0.5s forwards;
-                      left: 50%;
-                      transform: translate(-50%, -50%);
-                      top: -68px;
-                    }
-                    .__stay_tagged_wrapper::before{
-                      content: '';
-                      background: url("https://res.stayfork.app/scripts/63A0624BB9B6793A0F389D1800E403EA/icon.png") 50% 50% no-repeat;
-                      background-size: 20px;
-                      width: 20px;
-                      height: 20px;
-                      position: absolute;
-                      left: 20px;
-                      top: 50%;
-                      transform: translate(0, -50%);
-                    }
-                    @keyframes dropIn {
-                      0% {
-                        transform: translate(-50%, -100%);
-                      }
-                      100% {
-                        transform: translate(-50%, 80px);
-                      }
-                    }
-                    @keyframes dropOut {
-                      0% {
-                        transform: translate(-50%, 80px);
-                      }
-                      100% {
-                        transform: translate(-50%, -100%);
-                      }
-                    }
-                `;
+          :root {
+            --s-fff: #ffffff;
+            --s-bg-close-color: #ffffff;
+            --s-bg-close-icon: url("https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png");
+            --s-bg-repeat: no-repeat;
+            --s-bg-position: 50% 50%;
+            --s-bg-size: 40%;
+          }
+          @media (prefers-color-scheme: dark) {
+            :root {
+              --s-fff: #ffffff;
+              --s-bg-close-color: #1C1C1C;
+              --s-bg-close-icon: url("https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png");
+            }
+          }
+          .__stay_move_wrapper{
+            position:fixed;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            z-index:2147483645;
+            width:100%;
+            height:100%;
+            background-color:rgba(0,0,0,0.4);
+            box-sizing: border-box;
+            user-select: none;
+            cursor: default;
+          }
+          .__stay_close_con{
+            position:fixed;
+            z-index:2147483646;
+            right: 20px;
+            top: 20px;
+            width:26px;
+            height:26px;
+            background-image: var(--s-bg-close-icon);
+            background-repeat: var(--s-bg-repeat);
+            background-position: var(--s-bg-position);
+            background-size: var(--s-bg-size);
+            background-color: var(--s-bg-close-color);
+            border-radius:50%;
+            cursor: default;
+            user-select: none;
+          }
+          .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid var(--s-fff); border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+          .__stay_makeup_menu_wrapper{
+            width:192px;
+            position:fixed;
+            padding: 8px 5px;
+            box-sizing: border-box;
+            z-index: 2147483647;
+          }
+          .__stay_makeup_menu_item_box{
+            width:100%;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            padding-left: 12px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+            user-select: none;
+            cursor: default;
+          }
+          .__stay_menu_item{
+            color: #212121;
+            -webkit-user-select: none;
+            height:40px;
+            border-bottom: 1px solid #e0e0e0;
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 2px;
+            padding-right: 12px;
+            font-size: 16px;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: default;
+            user-select: none;
+          }
+          .__item_disabled div,.__item_disabled img{
+            opacity: 0.3;
+          }
+          .__stay_weight{
+            font-weight: 600;
+          }
+          .__stay_menu_item:last-child {
+            border-bottom: none;
+          }
+          .__stay_menu_item img{
+            width:15px;
+          }
+          .__stay_select_note_warpper{
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position:fixed; 
+            z-index:2147483647;
+            display: inline-block;
+            word-break: keep-all;
+            white-space: nowrap;
+            height: 25px;
+            border-radius: 10px;
+            line-height: 25px;
+            text-align: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+            font-weight: 700;
+            font-size: 13px;
+            left: 50%;
+            transform: translate(-50%);
+            top: -60px;
+            user-select: none;
+          }
+          .__stay_tagged_wrapper{
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position:fixed; 
+            z-index:2147483647;
+            width:160px;
+            height: 44px;
+            border-radius: 22px;
+            line-height: 44px;
+            text-align: center;
+            padding-left: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+            animation: dropIn 0.5s forwards;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            top: -68px;
+            user-select: none;
+          }
+          .__stay_tagged_wrapper::before{
+            content: '';
+            background: url("https://res.stayfork.app/scripts/63A0624BB9B6793A0F389D1800E403EA/icon.png") 50% 50% no-repeat;
+            background-size: 20px;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translate(0, -50%);
+          }
+          @keyframes dropIn {
+            0% {
+              transform: translate(-50%, -100%);
+            }
+            100% {
+              transform: translate(-50%, 80px);
+            }
+          }
+          @keyframes dropOut {
+            0% {
+              transform: translate(-50%, 80px);
+            }
+            100% {
+              transform: translate(-50%, -100%);
+            }
+          }
+        `;
         styleDom.appendChild(document.createTextNode(styleText));
         document.head.appendChild(styleDom);
       }
@@ -591,12 +632,14 @@ const browser = __b;
       if (event.touches.length === 3) {
         event.preventDefault();
         threeFingerMoveStart = event.pageX;
-        if(!showMakeupTagPanel){
-          if('on' == makeupTagListenerObj.makeupStatus){
-            startSelecteTagAndMakeupAd()
-          }else{
-            makeupTagListenerObj.makeupStatus = 'on';
-          }
+        // if(!showMakeupTagPanel){
+        // }
+        if('on' == makeupTagListenerObj.makeupStatus){
+          console.log('handleTouchstartEvent.makeupStatus------')
+          // startSelecteTagAndMakeupAd()
+          makeupTagListenerObj.makeupStatus = 'off';
+        }else{
+          makeupTagListenerObj.makeupStatus = 'on';
         }
       }
       
@@ -608,9 +651,11 @@ const browser = __b;
         event.preventDefault();
         threeFingerMoveEnd = event.pageX;
         let moveDistance = Math.abs(Utils.sub(threeFingerMoveEnd, threeFingerMoveStart));
-        if(moveDistance <= distance && !showMakeupTagPanel){
+        if(moveDistance <= distance ){ // && !showMakeupTagPanel
           if('on' == makeupTagListenerObj.makeupStatus){
-            startSelecteTagAndMakeupAd()
+            // startSelecteTagAndMakeupAd()
+            console.log('handleTouchmoveEvent.makeupStatus------')
+            makeupTagListenerObj.makeupStatus = 'off';
           }else{
             makeupTagListenerObj.makeupStatus = 'on';
           }
@@ -745,16 +790,42 @@ const browser = __b;
     }
 
     function startSelecteTagAndMakeupAd(){
+      // document.addEventListener('DOMContentLoaded', function() {
+      //   document.body.focus();
+      // });
+      // document.body.focus();
       showMakeupTagPanel = true;
       createOrShowSeleteTagPanelWithModal();
-
+      stopListenerMove();
       startListenerMove();
+      checkZindexDom();
+      if(!Utils.isMobileOrIpad()){
+        // document.addEventListener('DOMContentLoaded', function() {
+        //   document.focus();
+        // });
+        
+        
+        // console.log('startSelecteTagAndMakeupAd-------addEventListener----keyup-----');
+        // document.removeEventListener('keyup', handleKeyUpEvent, { passive: true });
+        const keyupEvent = document.addEventListener('keyup', handleKeyUpEvent);
+      }
+    }
+
+    function handleKeyUpEvent(event){
+      console.log('keyup------keyup----', event)
+      if (event.key === 'Escape') {
+        // 在这里执行您的操作
+        handleCloseTagingPanel(event);
+      }
     }
 
     function stopSelecteTagAndMakeupAd(){
       stopListenerMove();
       hideSeletedTagContentModal();
       hideSeletedTagPanel();
+      if(!Utils.isMobileOrIpad()){
+        document.removeEventListener('keyup', handleKeyUpEvent);
+      }
     }
 
     /**
@@ -765,22 +836,30 @@ const browser = __b;
       if(!document.querySelector('#__stay_wrapper')){
         moveWrapperDom = document.createElement('div');
         moveWrapperDom.id='__stay_wrapper';
+        moveWrapperDom.setAttribute('tabindex', 'true');
         moveWrapperDom.classList.add('__stay_move_wrapper');
         closeTagingDom = document.createElement('div');
         closeTagingDom.id='__stay_close';
         closeTagingDom.classList.add('__stay_close_con');
-        moveWrapperDom.appendChild(closeTagingDom);
+        document.body.appendChild(closeTagingDom);
         document.body.appendChild(moveWrapperDom);
+        moveWrapperDom.focus();
         window.addEventListener('scroll', () => {
-          hideSeletedTagContentModal();
-          if(showMakeupTagMenu){
-            showMakeupTagMenu = false;
-            document.querySelector('#__stay_makeup_menu').remove();
+          if(makeupTagListenerObj.makeupStatus == 'on'){
+            hideSeletedTagContentModal();
+            if(showMakeupTagMenu){
+              showMakeupTagMenu = false;
+              document.querySelector('#__stay_makeup_menu').remove();
+            }
+            stopListenerMove();
+            startListenerMove();
           }
-          startListenerMove();
         });
+
       }else{
         moveWrapperDom.style.display = 'block';
+        closeTagingDom.style.display = 'block';
+        moveWrapperDom.focus();
       }
       addListenerClosePanelEvent();
       if(!document.querySelector('#__stay_selected_tag')){
@@ -788,6 +867,7 @@ const browser = __b;
         preselectedTargetDom.id='__stay_selected_tag';
         preselectedTargetDom.classList.add('__stay_select_target');
         document.body.appendChild(preselectedTargetDom);
+        const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
       }
       showSelectTagNoteToast(i18nProp['select_note']);
     }
@@ -806,6 +886,7 @@ const browser = __b;
       // console.log('closeTagingDom addListener click---------------');
       makeupTagListenerObj.makeupStatus = 'off';
       hideSelectTagNoteToast();
+      stopListenerMove();
     }
 
 
@@ -814,43 +895,57 @@ const browser = __b;
      * 
      */
     function startListenerMove(){
-      if(Utils.isMobileOrIpad()){
-        const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
-      }else{
-        const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
+      if(moveWrapperDom){
+        let isBindMoveEvent = moveWrapperDom.getAttribute('movevent');
+        if(!isBindMoveEvent || (isBindMoveEvent && isBindMoveEvent == 'false')){
+          moveWrapperDom.setAttribute('movevent', 'true');
+          if(Utils.isMobileOrIpad()){
+            const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
+          }else{
+            const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
+          }
+        }
       }
-      
     }
 
     /**
      * 移除面板move（touchstart）事件
      */
     function stopListenerMove(){
-      if(Utils.isMobileOrIpad()){
-        if(moveWrapperDom){
+      if(moveWrapperDom){
+        moveWrapperDom.setAttribute('movevent', 'false');
+        if(Utils.isMobileOrIpad()){
           moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
+        }else{
+          document.body.removeEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
         }
-      }else{
-        document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
       }
+    }
+
+    function handleShowTagingOperateMenuEvent(event){
+      console.log('handleShowTagingOperateMenuEvent------',event)
+      if(event.touches && event.touches.length>1){
+        return;
+      }
+      event.stopPropagation();
+      event.preventDefault();
+      showTagingOperateMenu()
     }
 
     /**
      * 展示标记菜单
      */
-    function showTagingOperateMenu(event){
-      if(event){
-        event.stopPropagation();
-      }
+    function showTagingOperateMenu(){
       console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu, selectedDom);
       if(showMakeupTagMenu){
         // console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
         return;
       }
       hideSelectTagNoteToast();
-      showMakeupTagMenu = true;
       stopListenerMove();
       stopWindowScroll();
+      // if(Utils.isMobileOrIpad()){
+      // }
       preselectedTargetDom.style.borderColor = '#B620E0';
       // todo
       let closeMenu = 'https://res.stayfork.app/scripts/95CF6156C3CCD94629AF09F81A6CD5FF/icon.png';
@@ -887,50 +982,97 @@ const browser = __b;
       tagMenuDom.appendChild(Utils.parseToDOM(tagMenuDomStr.join('')));
 
       const clientHeight = document.documentElement.clientHeight;
-      const tagMenuDomHeight = 40*6 + 20;
-      const tagMenuDomWidth = 187;
+      const tagMenuDomHeight = 40*6 + 21;
+      const tagMenuDomWidth = 192;
       const selectedDomRect = preselectedTargetDom.getBoundingClientRect();
       // console.log('selectedDomRect-----',selectedDomRect, ',tagMenuDomWidth--',tagMenuDomWidth,',tagMenuDomHeight---',tagMenuDomHeight);
-      
       const clientWidth = document.documentElement.clientWidth;
-      const selectedRightX = Utils.add(selectedDomRect.x,  selectedDomRect.width);
-      // 选中区域的left+宽度大于菜单宽度，或者right小于等于0，则与选中区域右边对齐 
-      if(selectedRightX >= tagMenuDomWidth){
-        if(selectedRightX <= clientWidth){
-          tagMenuDom.style.right = `-${borderSize}px`;
-        }else{
-          tagMenuDom.style.right = Utils.sub(selectedDomRect.right, clientWidth)+'px';
-        }
+
+      const leftWidth = selectedDomRect.x < 0 ? 0 : selectedDomRect.x;
+      let rightToLeftWidth = Utils.add(leftWidth,  selectedDomRect.width);
+      if(rightToLeftWidth>clientWidth){
+        rightToLeftWidth = clientWidth;
+      }
+      let rightWidth = Utils.sub(clientWidth, rightToLeftWidth);
+      if(clientWidth<=rightToLeftWidth){
+        rightWidth = 0;
+      }
+
+      let onRight = false;
+      let onLeft = false;
+      // 优先在选中位置右边
+      if(tagMenuDomWidth <= rightWidth){
+        // 在选中区域右边
+        tagMenuDom.style.left = `${rightToLeftWidth}px`;
+        onRight = true;
       }else{
-        if(((selectedDomRect.left + selectedDomRect.width) <= tagMenuDomWidth && selectedDomRect.left < clientWidth/2) || selectedDomRect.left <= 0){
-          tagMenuDom.style.left = `-${borderSize}px`;
+        if(tagMenuDomWidth <= leftWidth){
+          // 在选中区域左边
+          tagMenuDom.style.left = `${ Utils.sub(leftWidth, tagMenuDomWidth)}px`;
+          onLeft = true;
         }else{
-          tagMenuDom.style.left = Utils.sub(clientWidth, selectedDomRect.left)+'px';
+          if(rightWidth <= leftWidth){
+            // 与选中区域的右边对齐
+            tagMenuDom.style.right = `${Utils.sub(rightWidth, 5)}px`;
+            // tagMenuDom.style.left = `${ Utils.sub(rightToLeftWidth, tagMenuDomWidth)}px`;
+          }else{
+            // 与选中区域左边对齐
+            tagMenuDom.style.left = `${Utils.sub(leftWidth, 5)}px`;
+          }
         }
       }
 
-      const selectedBottomY = Utils.add(selectedDomRect.y,  selectedDomRect.height);
-      const selectedBottomHeight = Utils.sub(clientHeight, selectedBottomY);
-      // 选中区域的selectedBottomHeight距离大于菜单高度，菜单放在选中区域下方；
-      if(selectedBottomHeight >= tagMenuDomHeight){
-        tagMenuDom.style.top = '100%';
-      }else{
-        // 选中区域的top距离大于菜单高度，菜单放在选中区域上方；
-        if(selectedDomRect.y >= tagMenuDomHeight){
-          tagMenuDom.style.bottom = '100%';
-        }else{
-          // 均不符合上要求，则在选中区域上方或下方靠border展示
-          tagMenuDom.style.position = 'fixed';
-          // 选中区域上方大于下方
-          if(selectedBottomY > selectedBottomHeight){
-            tagMenuDom.style.top = '0';
-          }else{
-            tagMenuDom.style.bottom = '0';
-          }
-          // tagMenuDom.style.left = '50%';
-          // tagMenuDom.style.transform = 'translate(-50%, -50%)';
-        }
+      const topHeight = selectedDomRect.y < 0 ? 0 : selectedDomRect.y;
+      let bottomToTopHeight = Utils.add(topHeight,  selectedDomRect.height);
+      if(bottomToTopHeight>clientHeight){
+        bottomToTopHeight = clientHeight
       }
+      let bottomHeight = Utils.sub(clientHeight, bottomToTopHeight);
+  
+      if(tagMenuDomHeight <= topHeight){
+        if(onRight || onLeft){
+          if(Utils.sub(clientHeight, topHeight) >= tagMenuDomHeight){
+            tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+          }else{
+            tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+          }
+          // tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+          // tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+        }else{
+          tagMenuDom.style.top = `${Utils.sub(topHeight, tagMenuDomHeight)}px`;
+        }
+      }else{
+        if(tagMenuDomHeight <= bottomHeight){
+          if(onRight || onLeft){
+            tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+          }else{
+            tagMenuDom.style.top = `${bottomToTopHeight}px`;
+          }
+        }else{
+          if(topHeight <= bottomHeight){
+
+            if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= (Utils.sub(clientHeight, topHeight))){
+              tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+            }else{
+              tagMenuDom.style.bottom = '-8px';
+            }
+            
+          }else{
+            if((onRight || onLeft) && Utils.sub(tagMenuDomHeight, 16) <= bottomToTopHeight){
+              if(Utils.sub(clientHeight, topHeight) >= tagMenuDomHeight){
+                tagMenuDom.style.top = `${Utils.sub(topHeight, 8)}px`;
+              }else{
+                tagMenuDom.style.top = `${Utils.add(Utils.sub(bottomToTopHeight, tagMenuDomHeight), 8)}px`;
+              }
+              
+            }else{
+              tagMenuDom.style.top = '-8px';
+            }
+          }
+        }
+          
+      }
+      showMakeupTagMenu = true;
       preselectedTargetDom.appendChild(tagMenuDom);
       const menuItemEvent = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box').addEventListener(clickEvent, handleMenuItemClick);
     }
@@ -1000,18 +1142,28 @@ const browser = __b;
       return null;
     }
 
+    function getAllSiblingNode(tempDom){
+      let siblings = [];
+      let parentNode = tempDom.parentNode;
+      let childNodes = parentNode.childNodes;
+
+      for (let i = 0; i < childNodes.length; i++) {
+        let node = childNodes[i];
+        if (node.nodeType === Node.ELEMENT_NODE && !(notShowTagNameList.includes(node.nodeName)) && node !== tempDom) {
+          siblings.push(node);
+        }
+      }
+    }
+
     function getValidPreviousSiblingNode(tempDom){
       try {
         let previousSiblingNode = tempDom;
         // let parentNode
         while(previousSiblingNode){
           previousSiblingNode = previousSiblingNode.previousSibling
-          if(previousSiblingNode && previousSiblingNode.nodeName != '#text' && previousSiblingNode.getBoundingClientRect().width>0){
+          if(previousSiblingNode && previousSiblingNode.nodeType === Node.ELEMENT_NODE && !(notShowTagNameList.includes(previousSiblingNode.nodeName)) && previousSiblingNode.getBoundingClientRect().width>0 && previousSiblingNode.getBoundingClientRect().height>0){
             break;
           }
-        }
-        if(notShowTagNameList.includes(previousSiblingNode.nodeName)){
-          return null;
         }
         return previousSiblingNode;
       } catch (error) {
@@ -1026,12 +1178,9 @@ const browser = __b;
         // let parentNode
         while(nextSiblingNode){
           nextSiblingNode = nextSiblingNode.nextSibling
-          if(nextSiblingNode && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0){
+          if(nextSiblingNode && nextSiblingNode.nodeType === Node.ELEMENT_NODE && !(notShowTagNameList.includes(nextSiblingNode.nodeName)) && nextSiblingNode.nodeName != '#text' && nextSiblingNode.getBoundingClientRect().width>0 && nextSiblingNode.getBoundingClientRect().height>0){
             break;
           }
-        }
-        if(notShowTagNameList.includes(nextSiblingNode.nodeName)){
-          return null;
         }
         return nextSiblingNode;
       } catch (error) {
@@ -1091,7 +1240,7 @@ const browser = __b;
         moveWrapperDom.addEventListener('touchmove', handleStopScroll);
         moveWrapperDom.addEventListener('touchend', handleStopScroll);
       }else{
-        document.body.addEventListener('mousemove', handleStopScroll);
+        document.body.addEventListener('mousemove', handleStopScroll, { passive: true });
       }
     }
 
@@ -1101,7 +1250,7 @@ const browser = __b;
         moveWrapperDom.removeEventListener('touchmove', handleStopScroll);
         moveWrapperDom.removeEventListener('touchend', handleStopScroll);
       }else{
-        document.body.removeEventListener('mousemove', handleStopScroll);
+        document.body.removeEventListener('mousemove', handleStopScroll, { passive: true });
       }
     }
     function handleStopScroll(event){
@@ -1139,40 +1288,82 @@ const browser = __b;
 
     async function sendSelectedTagToHandler(){
       return new Promise((resolve, reject)=>{
-        // console.log(selectedDom);
+        console.log('before----',selectedDom);
         let styles = window.getComputedStyle(selectedDom);
         if(styles.position == 'fixed'){
-          let fixedParentDom = getValidParentNode();
-          while(fixedParentDom){
-            if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
-              break;
+          let shouldExpand = false;
+          let selectedDomSibling = getValidPreviousSiblingNode(selectedDom) || getValidNextSiblingNode(selectedDom);
+          if(selectedDomSibling){
+            // console.log('selectedDomSibling-----',selectedDomSibling);
+            let selectedDomSiblingStyles = window.getComputedStyle(selectedDomSibling);
+            if(selectedDomSiblingStyles.position == 'fixed'){
+              shouldExpand = true;
+            }else{
+              // console.log('selectedDomSiblingStyles----not-----fixed-----');
             }
-            fixedParentDom = fixedParentDom.parentNode;
+          }else{
+            shouldExpand = true;
+            // console.log('selectedDomSibling----null-');
           }
-          // console.log('fixedParentDom------',fixedParentDom)
-          if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
-            selectedDom = fixedParentDom;
+          if(shouldExpand){
+            const selectedDomReact = selectedDom.getBoundingClientRect();
+            let fixedParentDom = selectedDom; // getValidParentNode();
+            // https://m.ijjjxs.com/txt/chongshengxiaoshuo/
+            // https://youku.com
+            // https://juejin.cn
+            console.log('fixedParentDom--------',fixedParentDom)
+            while(fixedParentDom){
+              let fixedParentDomTemp = fixedParentDom.parentNode;
+              let fixedParentReact = fixedParentDomTemp.getBoundingClientRect();
+              if((Math.abs(Utils.sub(fixedParentReact.width, selectedDomReact.width))>50 || 
+                Math.abs(Utils.sub(fixedParentReact.height, selectedDomReact.height))>50) && (fixedParentReact.width != 0 && fixedParentReact.height != 0)){
+                break;
+              }else{
+                fixedParentDom = fixedParentDomTemp
+              }
+              if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
+                console.log('fixedParentDom-----subling-------yes---');
+                break;
+              }
+
+              console.log('fixedParentDom------parentNode------',fixedParentDom)
+            }
+            // console.log('fixedParentDom------',fixedParentDom)
+            if(fixedParentDom && fixedParentDom.nodeName != 'BODY'){
+              selectedDom = fixedParentDom;
+            }
           }
         }
-        
+        console.log('after----', selectedDom);
         let selector = getSelector(selectedDom);
-        // console.log('selector-----selector--------',selector)
+        // console.log('selector-----selector---before----',selector)
         let selDom = document.querySelector(selector);
-        if(!selDom){
+        // console.log('selDom-------',selDom);
+        if(!selDom || selDom == null || selDom == 'null'){
+          // console.log('selDom--22222222-----',selDom);
           selector = getSelector(selectedDom, 'useClass');
           selDom = document.querySelector(selector);
         }
+        console.log('selector-----selector---after-----',selector,selDom)
         let url = window.location.href;
-        if(selDom){
-          const uuid = Utils.hexMD5(`${url}${selector}`);
-          if(cssSelectorSet.has(uuid)){
-            resolve(true);
-            return;
-          }else{
-            cssSelectorSet.add(uuid);
-            selDom.style.display = 'none';
+
+        try {
+          if(selDom){
+            const uuid = Utils.hexMD5(`${url}${selector}`);
+            if(cssSelectorSet.has(uuid)){
+              selDom.style.display = 'none';
+              resolve(true);
+              return;
+            }else{
+              selDom.style.display = 'none';
+              selectedDom.style.display = 'none';
+              cssSelectorSet.add(uuid);
+            }
           }
+        } catch (error) {
+          console.log('error------',error)
         }
+        
         
         // selectedDom.style.display = 'none';
         selectedDom = null;
@@ -1196,18 +1387,19 @@ const browser = __b;
      */
     function hideSeletedTagContentModal(){
       if(preselectedTargetDom !=null){
-        preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
+        preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
         preselectedTargetDom.style.width = '0px';
         preselectedTargetDom.style.height = '0px';
-        preselectedTargetDom.style.left = '0px';
-        preselectedTargetDom.style.top = '0px';
+        preselectedTargetDom.style.left = '-10px';
+        preselectedTargetDom.style.top = '-10px';
         preselectedTargetDom.style.display = 'none';
-        preselectedTargetDom.style.borderColor = '#ffffff';
+        preselectedTargetDom.style.borderColor = borderColor;
       }
       if(moveWrapperDom!=null){
         moveWrapperDom.style.clipPath = 'none';
       }
-      
+      moveTouched = 0;
+      showMakeupTagMenu = false;
     }
 
     /**
@@ -1220,6 +1412,10 @@ const browser = __b;
         moveWrapperDom.style.display = 'none';
         showMakeupTagPanel = false;
       }
+      if(closeTagingDom != null){
+        closeTagingDom.style.display = 'none';
+      }
+      hideSelectTagNoteToast();
     }
 
     /**
@@ -1228,41 +1424,65 @@ const browser = __b;
      * @returns 
      */
     function handleMoveAndSelecteDom(event){
-      // console.log('touchmove------handleMoveAndSelecteDom-------------', event);
+      // console.log('touchmove------handleMoveAndSelecteDom-------------', event, moveTouched);
       if(event.touches && event.touches.length>1){
         return;
       }
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
-      console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let selectePositionDom = moveDoms[0];
+      if('__stay_selected_tag' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_select_target') ){
+        return;
+      }
+      console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
-        if(moveDoms.length<=4){
-          selectePositionDom = moveDoms[1];
-        }else if(moveDoms.length > 4){
-          selectePositionDom = moveDoms[1];
-          let styles = window.getComputedStyle(selectePositionDom);
-          // console.log('styles.position---------',styles.position)
-          // 判断节点是否具有绝对定位
-          if (styles.position !== 'fixed') {
-            let i = 3;
-            selectePositionDom = moveDoms[i];
-            while(moveDomRect.height >= document.documentElement.clientHeight){
-              i = i - 1;
-              selectePositionDom = moveDoms[i];
-              moveDomRect = selectePositionDom.getBoundingClientRect();
-              if(i == 1){
-                break;
-              }
+        let moveDomList = Array.from(moveDoms);
+        // console.log('before----',moveDomList);
+        moveDomList = moveDomList.filter(item=>{
+          if('__stay_wrapper' == item.id || item.classList.contains('__stay_move_wrapper') 
+          || '__stay_close' == item.id || item.classList.contains('__stay_close_con') 
+          || '__stay_selected_tag' == item.id || item.classList.contains('__stay_select_target') 
+          || filterSelectTagNameList.includes(item.nodeName)){
+            
+          }else{
+            return item;
+          }
+        })
+        // console.log('after------',moveDomList);
+        if(Utils.isMobileOrIpad()){
+          if(moveDomList && moveDomList.length){
+            if(moveDomList.length<=3){
+              selectePositionDom = moveDomList[0];
+            }else if(moveDomList.length > 3){
+              selectePositionDom = moveDomList[0];
+              let styles = window.getComputedStyle(selectePositionDom);
+              // console.log('styles.position---------',styles.position)
+              // 判断节点是否具有绝对定位
+              if (styles.position !== 'fixed') {
+                let i = 2;
+                selectePositionDom = moveDomList[i];
+                while(moveDomRect.height > document.documentElement.clientHeight){
+                  i = i - 1;
+                  selectePositionDom = moveDomList[i];
+                  moveDomRect = selectePositionDom.getBoundingClientRect();
+                  if(i == 0){
+                    break;
+                  }
+                }
+              } 
             }
-          } 
+          }else{
+            return;
+          }
+        }else{
+          selectePositionDom = moveDomList[0];
         }
       }else{
         return;
       }
-      // console.log('moveDom-----',selectedDom);
+      showMakeupTagMenu = false;
       handleSelecteTagPosition(selectePositionDom, false)
     }
 
@@ -1278,6 +1498,12 @@ const browser = __b;
         console.log('handleSelecteTagPosition---selectePositionDom is null');
         return;
       }
+      if('__stay_wrapper' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_move_wrapper') 
+      || '__stay_close' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_close_con')
+      || '__stay_selected_tag' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_select_target') ){
+        return;
+      }
+      showMakeupTagMenu = false;
       selectedDom = selectePositionDom
       let moveDomRect = selectedDom.getBoundingClientRect();
       if(!moveDomRect || !Object.keys(moveDomRect)){
@@ -1288,7 +1514,6 @@ const browser = __b;
         showSelectTagNoteToast(i18nProp['select_confirm']);
       }
 
-      
       let targetWidth = getMoveDomWidth(moveDomRect.width);
       // console.log('handleSelecteTagPosition------selectedDom----',selectedDom)
       let targetHeight = getMoveDomHeight(moveDomRect.height);
@@ -1302,23 +1527,34 @@ const browser = __b;
           targetX = 0;
         }
       }
-      preselectedTargetDom.removeEventListener(clickEvent, showTagingOperateMenu);
+      
+      preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      showMakeupTagMenu = false;
       // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
       while(preselectedTargetDom.firstChild){
         preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
       }
-      preselectedTargetDom.style.display = 'block';
-      showMakeupTagMenu = false;
-      preselectedTargetDom.addEventListener(clickEvent, showTagingOperateMenu);
+      preselectedTargetDom.style.width = '1px';
+      preselectedTargetDom.style.height = '1px';
+      preselectedTargetDom.style.left = '-10px';
+      preselectedTargetDom.style.top = '-10px';
+      preselectedTargetDom.style.display = 'none';
+      
+     
       // 计算蒙层裁剪区域
-  
       moveWrapperDom.style.clipPath = calcPolygonPoints(targetX, targetY, targetWidth, targetHeight);
       preselectedTargetDom.style.width = targetWidth+'px';
       preselectedTargetDom.style.height = targetHeight+'px';
       preselectedTargetDom.style.left = targetX+'px';
       preselectedTargetDom.style.top = targetY+'px';
+      preselectedTargetDom.style.borderColor = borderColor+'!important';
+      preselectedTargetDom.style.display = 'block';
+      
+      const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
 
+      console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
+        console.log('showMenu---------------------',showMenu);
         showTagingOperateMenu();
       }
     }
@@ -1452,10 +1688,25 @@ const browser = __b;
             selector += `.${el.className.replace(/\s+/g, '.')}`
           }
           else {
-            const siblings = Array.from(el.parentNode.children).filter(sibling => sibling.nodeName === el.nodeName);
+            const siblings = Array.from(el.parentNode.children);
+            let indexNode = 0;
+            try {
+              siblings.forEach((node, index)=>{
+                if(node == el){
+                  indexNode = index;
+                  throw new Error('endloop');
+                }
+              })
+            } catch (e) {
+              if(e.message === 'endloop') {
+                // 终止循环
+              }else{
+                throw e
+              }
+            }
             if (siblings.length > 1) {
-              const index = siblings.indexOf(el);
-              selector += `:nth-child(${index + 1})`;
+              // const index = siblings.indexOf(el);
+              selector += `:nth-child(${indexNode + 1})`;
             }
           }
           path.unshift(selector);
@@ -1464,10 +1715,8 @@ const browser = __b;
       } catch (error) {
         console.log(error)
       }
-      
       return path.join(' > ');
     }
-    // "body > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)" 
 
     /**
      * 判断id是否是随机生成
@@ -1481,7 +1730,7 @@ const browser = __b;
       if(!idStr){
         return false;
       }
-      if(/^[0-9a-zA-Z]*$/.test(idStr) && idStr.length>10){
+      if(/^[0-9a-zA-Z-_]*$/.test(idStr) && idStr.length>10){
         return false;
       }
       return true;
@@ -1514,6 +1763,7 @@ const browser = __b;
     });
 
     function startMakeupTag(){
+      
       let browserLangurage = languageCode()
       i18nProp = AdLangMessage[browserLangurage] || AdLangMessage['en_US'];
       makeupTagListenerObj.makeupStatus = 'off';
@@ -1521,7 +1771,24 @@ const browser = __b;
       // asyncFetchMakeupTagStatus();
       listenerMakeupStatusFromPopup();
     }
-  
+    
+    async function checkZindexDom(){
+      if(!checkZindexFlag){
+        setTimeout(()=>{
+          const zIndexDoms = document.querySelectorAll("[style*='z-index']");
+          const nodeList = Array.from(zIndexDoms);
+          if(nodeList && nodeList.length){
+            nodeList.forEach((node, i)=>{
+              const zIndex = node.style.zIndex;
+              if(zIndex>2147483600){
+                node.style.zIndex = 2147483500;
+              }
+            });
+          }
+        }, 100)
+      }
+    }
+
     startMakeupTag();
 
   }

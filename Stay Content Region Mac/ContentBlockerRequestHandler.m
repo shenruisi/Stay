@@ -6,6 +6,7 @@
 //
 
 #import "ContentBlockerRequestHandler.h"
+#import "ContentFilterManager.h"
 
 @interface ContentBlockerRequestHandler ()
 
@@ -14,7 +15,13 @@
 @implementation ContentBlockerRequestHandler
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context {
-    NSItemProvider *attachment = [[NSItemProvider alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"]];
+    NSURL *url = [[ContentFilterManager shared] ruleJSONURLOfFileName:@"Region.json"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[url path]]
+        || [[ContentFilterManager shared] ruleJSONStopped:@"Region.json"]){
+        url = [[NSBundle mainBundle] URLForResource:@"blockerList" withExtension:@"json"];
+    }
+    
+    NSItemProvider *attachment = [[NSItemProvider alloc] initWithContentsOfURL:url];
     
     NSExtensionItem *item = [[NSExtensionItem alloc] init];
     item.attachments = @[attachment];

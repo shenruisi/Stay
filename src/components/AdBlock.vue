@@ -229,6 +229,7 @@ export default {
           align-items: center;
           // padding-bottom: 4px;
           height: 48px;
+          cursor: default;
           .manage-info{
             display: flex;
             flex-direction: column;
@@ -257,11 +258,13 @@ export default {
               }
             }
             .block-on{
+              color: var(--s-main);
               &::after{
                 background: var(--s-main);
               }
             }
             .block-off{
+              color: var(--dm-bd);
               &::after{
               background: var(--dm-bd);
               }
@@ -291,6 +294,7 @@ export default {
           justify-content: space-between;
           align-items: center;
           padding: 2px 0;
+          cursor: default;
           .blocker-info{
             height: 25px;
             background-color: rgba(182, 31, 224, 0.1);
@@ -323,6 +327,8 @@ export default {
         color: var(--s-main);
         border: 1px solid var(--s-main);
         margin-bottom: 18px;
+        user-select: none;
+        cursor: default;
       }
       .three-finger-switch{
         width: 95%;
@@ -341,6 +347,7 @@ export default {
         justify-items: center;
         align-items: center;
         user-select: none;
+        cursor: default;
         .switch-text{
           width: 80%;
           text-align: left;
@@ -402,6 +409,7 @@ export default {
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        cursor: default;
         .delete-icon{
           position: absolute;
           right: 0;
@@ -464,6 +472,7 @@ export default {
         left: 50%;
         transform: translateX(-50%);
         z-index: 999;
+        user-select: none;
       }
     }
   }

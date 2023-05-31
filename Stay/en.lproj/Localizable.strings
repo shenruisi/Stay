@@ -346,7 +346,6 @@ Domain="Domain";
 DomainFormatError="The domain name format is incorrect.";
 TrustedSiteDeleteAlert="Are you sure you want to delete this trusted site?";
 DomainExistError="This domain name already exists.";
-
 PointProgress="Point Progress";
 InviteFriend="Invite friends";
 InviteToGetPoint="Invite Your Friends To Get Point";
@@ -355,7 +354,7 @@ InviteRuleDesc="Share the link below with your friends. When your friend opens t
 
 HowToInvite="How to invite?";
 HowToInviteDesc="Checkout online document";
-
+NotSupportedOnThisDevice="Not Supported";
 
 
 
