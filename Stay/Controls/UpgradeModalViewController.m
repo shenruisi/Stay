@@ -36,11 +36,19 @@
 
 - (void)viewWillAppear{
     [super viewWillAppear];
-    self.messageLabel.text = self.message;
-    CGRect rect = [self.message boundingRectWithSize:CGSizeMake(self.view.size.width - 30, CGFLOAT_MAX) options:0 attributes:@{
-        NSFontAttributeName : FCStyle.body
-    } context:nil];
-    self.messageLabelHeight.constant = rect.size.height+10;
+    NSMutableAttributedString *messageAttributed = [[NSMutableAttributedString alloc] init];
+    [messageAttributed appendAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"UpgradeMessage", @"") attributes:@{
+        NSFontAttributeName : FCStyle.body,
+        NSForegroundColorAttributeName : FCStyle.fcBlack
+    }]];
+    
+    [messageAttributed appendAttributedString:[[NSAttributedString alloc] initWithString:self.message attributes:@{
+        NSFontAttributeName : FCStyle.bodyBold,
+        NSForegroundColorAttributeName : FCStyle.fcGolden
+    }]];
+    
+
+    [self.messageLabel setAttributedText:messageAttributed];
 }
 
 - (void)upgradeAction:(id)sender{
@@ -64,14 +72,13 @@
     if (nil == _messageLabel){
         _messageLabel = [[UILabel alloc] init];
         _messageLabel.textAlignment = NSTextAlignmentCenter;
+        _messageLabel.numberOfLines = 2;
         _messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:_messageLabel];
-        self.messageLabelHeight = [_messageLabel.heightAnchor constraintEqualToConstant:0];
         [NSLayoutConstraint activateConstraints:@[
             [_messageLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:15],
             [_messageLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-15],
-            [_messageLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:30],
-            self.messageLabelHeight
+            [_messageLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:30]
             
         ]];
     }

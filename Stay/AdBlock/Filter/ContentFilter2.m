@@ -88,6 +88,11 @@ NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.not
                            restore:NO
                         completion:completion];
             }
+            else{
+                if (completion){
+                    completion(error);
+                }
+            }
         }] resume];
     }
     else{

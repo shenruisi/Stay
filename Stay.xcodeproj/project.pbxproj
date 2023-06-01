@@ -484,6 +484,15 @@
 		58DA848A2A27612B009E37E6 /* FCImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84882A27612B009E37E6 /* FCImageView.m */; };
 		58DA848D2A278AE7009E37E6 /* JumpCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA848C2A278AE7009E37E6 /* JumpCenter.m */; };
 		58DA848E2A278AE7009E37E6 /* JumpCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA848C2A278AE7009E37E6 /* JumpCenter.m */; };
+		58DA84962A288310009E37E6 /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 58DA84952A288310009E37E6 /* blockerList.json */; };
+		58DA84992A288310009E37E6 /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84982A288310009E37E6 /* ContentBlockerRequestHandler.m */; };
+		58DA849D2A288310009E37E6 /* Stay Content Subscribe.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58DA84932A288310009E37E6 /* Stay Content Subscribe.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		58DA84A22A288433009E37E6 /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58DA84A52A28848C009E37E6 /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
+		58DA84A92A2888FA009E37E6 /* AddSubscribeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84A82A2888FA009E37E6 /* AddSubscribeSlideController.m */; };
+		58DA84AA2A2888FA009E37E6 /* AddSubscribeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84A82A2888FA009E37E6 /* AddSubscribeSlideController.m */; };
+		58DA84AD2A288A89009E37E6 /* AddSubscribeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84AC2A288A89009E37E6 /* AddSubscribeModalViewController.m */; };
+		58DA84AE2A288A89009E37E6 /* AddSubscribeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84AC2A288A89009E37E6 /* AddSubscribeModalViewController.m */; };
 		58DF3FF52898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58DF3FF62898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58DF3FF8289A4C370029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
@@ -843,6 +852,20 @@
 			remoteGlobalIDString = 588202C6285A12B400B2721A;
 			remoteInfo = macOSNative;
 		};
+		58DA849B2A288310009E37E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 58DA84922A288310009E37E6;
+			remoteInfo = "Stay Content Subscribe";
+		};
+		58DA84A32A28846A009E37E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 58DA84922A288310009E37E6;
+			remoteInfo = "Stay Content Subscribe";
+		};
 		58F197352A15FA3300B88F39 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
@@ -889,6 +912,7 @@
 			files = (
 				5811063B29E695FF0073E9CF /* Stay Content Basic.appex in Embed App Extensions */,
 				5811066329E697D30073E9CF /* Stay Content Region.appex in Embed App Extensions */,
+				58DA849D2A288310009E37E6 /* Stay Content Subscribe.appex in Embed App Extensions */,
 				5811068729E698790073E9CF /* Stay Content Tag.appex in Embed App Extensions */,
 				5811067529E697F70073E9CF /* Stay Content Custom.appex in Embed App Extensions */,
 				5876890D2719238000F834A4 /* Stay Extension.appex in Embed App Extensions */,
@@ -1310,6 +1334,16 @@
 		58DA84882A27612B009E37E6 /* FCImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCImageView.m; sourceTree = "<group>"; };
 		58DA848B2A278AE7009E37E6 /* JumpCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JumpCenter.h; sourceTree = "<group>"; };
 		58DA848C2A278AE7009E37E6 /* JumpCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JumpCenter.m; sourceTree = "<group>"; };
+		58DA84932A288310009E37E6 /* Stay Content Subscribe.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Subscribe.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58DA84952A288310009E37E6 /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		58DA84972A288310009E37E6 /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		58DA84982A288310009E37E6 /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		58DA849A2A288310009E37E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58DA84A12A288382009E37E6 /* Stay Content Subscribe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Stay Content Subscribe.entitlements"; sourceTree = "<group>"; };
+		58DA84A72A2888FA009E37E6 /* AddSubscribeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddSubscribeSlideController.h; sourceTree = "<group>"; };
+		58DA84A82A2888FA009E37E6 /* AddSubscribeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddSubscribeSlideController.m; sourceTree = "<group>"; };
+		58DA84AB2A288A89009E37E6 /* AddSubscribeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddSubscribeModalViewController.h; sourceTree = "<group>"; };
+		58DA84AC2A288A89009E37E6 /* AddSubscribeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddSubscribeModalViewController.m; sourceTree = "<group>"; };
 		58DF3FF32898D4810029E1AA /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
 		58DF3FF42898D4820029E1AA /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		58EA44432869BB5200BD6C4D /* ImportSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportSlideController.h; sourceTree = "<group>"; };
@@ -1735,6 +1769,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		58DA84902A288310009E37E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58F196E02A15F8B300B88F39 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1996,6 +2037,7 @@
 		583A10B229B831CC00BA4A11 /* AdBlock */ = {
 			isa = PBXGroup;
 			children = (
+				58DA84A62A2888D6009E37E6 /* Subscribe */,
 				58F196962A11FE3900B88F39 /* TrustedSites */,
 				58F196062A11FD2F00B88F39 /* Filter */,
 				583B53C129DABFE400CB292A /* Resources */,
@@ -2125,6 +2167,7 @@
 				5811065A29E697D30073E9CF /* Stay Content Region */,
 				5811066C29E697F70073E9CF /* Stay Content Custom */,
 				5811067E29E698790073E9CF /* Stay Content Tag */,
+				58DA84942A288310009E37E6 /* Stay Content Subscribe */,
 				58F196E52A15F8B400B88F39 /* Stay Content Basic Mac */,
 				58F196F62A15F91200B88F39 /* Stay Content Privacy Mac */,
 				58F197072A15F93300B88F39 /* Stay Content Region Mac */,
@@ -2157,6 +2200,7 @@
 				58F197052A15F93200B88F39 /* Stay Content Region Mac.appex */,
 				58F197162A15F98900B88F39 /* Stay Content Custom Mac.appex */,
 				58F197272A15F99900B88F39 /* Stay Content Tag Mac.appex */,
+				58DA84932A288310009E37E6 /* Stay Content Subscribe.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2503,6 +2547,29 @@
 				58DA84842A2746EA009E37E6 /* PopupModalViewController.m */,
 			);
 			path = Popup;
+			sourceTree = "<group>";
+		};
+		58DA84942A288310009E37E6 /* Stay Content Subscribe */ = {
+			isa = PBXGroup;
+			children = (
+				58DA84A12A288382009E37E6 /* Stay Content Subscribe.entitlements */,
+				58DA84952A288310009E37E6 /* blockerList.json */,
+				58DA84972A288310009E37E6 /* ContentBlockerRequestHandler.h */,
+				58DA84982A288310009E37E6 /* ContentBlockerRequestHandler.m */,
+				58DA849A2A288310009E37E6 /* Info.plist */,
+			);
+			path = "Stay Content Subscribe";
+			sourceTree = "<group>";
+		};
+		58DA84A62A2888D6009E37E6 /* Subscribe */ = {
+			isa = PBXGroup;
+			children = (
+				58DA84A72A2888FA009E37E6 /* AddSubscribeSlideController.h */,
+				58DA84A82A2888FA009E37E6 /* AddSubscribeSlideController.m */,
+				58DA84AB2A288A89009E37E6 /* AddSubscribeModalViewController.h */,
+				58DA84AC2A288A89009E37E6 /* AddSubscribeModalViewController.m */,
+			);
+			path = Subscribe;
 			sourceTree = "<group>";
 		};
 		58DF3FF22898D4050029E1AA /* API */ = {
@@ -3469,6 +3536,8 @@
 				5811066229E697D30073E9CF /* PBXTargetDependency */,
 				5811067429E697F70073E9CF /* PBXTargetDependency */,
 				5811068629E698790073E9CF /* PBXTargetDependency */,
+				58DA849C2A288310009E37E6 /* PBXTargetDependency */,
+				58DA84A42A28846A009E37E6 /* PBXTargetDependency */,
 			);
 			name = Stay;
 			productName = Stay;
@@ -3571,6 +3640,23 @@
 			productName = macOSNative;
 			productReference = 588202C7285A12B400B2721A /* macOSNative.bundle */;
 			productType = "com.apple.product-type.bundle";
+		};
+		58DA84922A288310009E37E6 /* Stay Content Subscribe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58DA849E2A288311009E37E6 /* Build configuration list for PBXNativeTarget "Stay Content Subscribe" */;
+			buildPhases = (
+				58DA848F2A288310009E37E6 /* Sources */,
+				58DA84902A288310009E37E6 /* Frameworks */,
+				58DA84912A288310009E37E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Subscribe";
+			productName = "Stay Content Subscribe";
+			productReference = 58DA84932A288310009E37E6 /* Stay Content Subscribe.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		58F196E22A15F8B300B88F39 /* Stay Content Basic Mac */ = {
 			isa = PBXNativeTarget;
@@ -3702,6 +3788,9 @@
 					588202C6285A12B400B2721A = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
+					58DA84922A288310009E37E6 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					58F196E22A15F8B300B88F39 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -3747,6 +3836,7 @@
 				5811065829E697D20073E9CF /* Stay Content Region */,
 				5811066A29E697F70073E9CF /* Stay Content Custom */,
 				5811067C29E698790073E9CF /* Stay Content Tag */,
+				58DA84922A288310009E37E6 /* Stay Content Subscribe */,
 				58F196E22A15F8B300B88F39 /* Stay Content Basic Mac */,
 				58F196F32A15F91100B88F39 /* Stay Content Privacy Mac */,
 				58F197042A15F93200B88F39 /* Stay Content Region Mac */,
@@ -3985,6 +4075,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58DA84912A288310009E37E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58DA84962A288310009E37E6 /* blockerList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4243,6 +4341,7 @@
 				58F196492A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */,
 				58DA84852A2746EA009E37E6 /* PopupModalViewController.m in Sources */,
 				5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
+				58DA84A92A2888FA009E37E6 /* AddSubscribeSlideController.m in Sources */,
 				58F196432A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
 				3C8B05902949A54A003CE0A7 /* PlayerViewController.swift in Sources */,
@@ -4436,6 +4535,7 @@
 				3C949BAF2971813E0068231A /* M3U8SegmentInfo.m in Sources */,
 				58FEB1F9283B5B3E00BC2A92 /* ModalNavigationItem.m in Sources */,
 				58F196882A11FE3200B88F39 /* SelectorHighlighterAST.m in Sources */,
+				58DA84AD2A288A89009E37E6 /* AddSubscribeModalViewController.m in Sources */,
 				84E8EA112962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
 				58F196452A11FD3000B88F39 /* AddressBlockerAST.m in Sources */,
 				582061C4294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
@@ -4597,6 +4697,7 @@
 				588202572859E73900B2721A /* UserscriptHeaders.m in Sources */,
 				849E77CF293C7F5A00AD83D7 /* SYFIleManagerViewController.m in Sources */,
 				58F196992A11FE7700B88F39 /* TrustedSitesTableViewHeadCell.m in Sources */,
+				58DA84AA2A2888FA009E37E6 /* AddSubscribeSlideController.m in Sources */,
 				58D1B443288697F3009BD608 /* BaseRecord.m in Sources */,
 				588202582859E73900B2721A /* ModalNavigationBar.m in Sources */,
 				84E8EA122962C280003846AD /* SYChangeDocModelViewController.m in Sources */,
@@ -4728,6 +4829,7 @@
 				5805D9562A04A3FE00F46709 /* LottieView.swift in Sources */,
 				58F196442A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */,
 				583B541629DD504500CB292A /* FCNavigationBar.m in Sources */,
+				58DA84AE2A288A89009E37E6 /* AddSubscribeModalViewController.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
 				58DA847E2A26F847009E37E6 /* PopupManager.m in Sources */,
@@ -4767,6 +4869,16 @@
 			files = (
 				588202CB285A12C400B2721A /* FCAppKit.m in Sources */,
 				58AC12ED2860781F00875D6D /* FCCarbon.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58DA848F2A288310009E37E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58DA84992A288310009E37E6 /* ContentBlockerRequestHandler.m in Sources */,
+				58DA84A52A28848C009E37E6 /* TrustedSite.m in Sources */,
+				58DA84A22A288433009E37E6 /* ContentFilterManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4873,6 +4985,16 @@
 			isa = PBXTargetDependency;
 			target = 588202C6285A12B400B2721A /* macOSNative */;
 			targetProxy = 589741CB28680854008FB897 /* PBXContainerItemProxy */;
+		};
+		58DA849C2A288310009E37E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 58DA84922A288310009E37E6 /* Stay Content Subscribe */;
+			targetProxy = 58DA849B2A288310009E37E6 /* PBXContainerItemProxy */;
+		};
+		58DA84A42A28846A009E37E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 58DA84922A288310009E37E6 /* Stay Content Subscribe */;
+			targetProxy = 58DA84A32A28846A009E37E6 /* PBXContainerItemProxy */;
 		};
 		58F197362A15FA3300B88F39 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5857,6 +5979,66 @@
 			};
 			name = Release;
 		};
+		58DA849F2A288311009E37E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Subscribe/Stay Content Subscribe.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Subscribe/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "6. Subscribe";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Subscribe";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		58DA84A02A288311009E37E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Subscribe/Stay Content Subscribe.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Subscribe/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "6. Subscribe";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Subscribe";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		58F196EE2A15F8B400B88F39 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6303,6 +6485,15 @@
 			buildConfigurations = (
 				588202C9285A12B400B2721A /* Debug */,
 				588202CA285A12B400B2721A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58DA849E2A288311009E37E6 /* Build configuration list for PBXNativeTarget "Stay Content Subscribe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58DA849F2A288311009E37E6 /* Debug */,
+				58DA84A02A288311009E37E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

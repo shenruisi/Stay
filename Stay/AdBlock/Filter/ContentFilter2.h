@@ -16,7 +16,8 @@ typedef enum {
     ContentFilterTypePrivacy = 2,
     ContentFilterTypeRegion = 3,
     ContentFilterTypeCustom = 4,
-    ContentFilterTypeTag = 5
+    ContentFilterTypeTag = 5,
+    ContentFilterTypeSubscribe = 6,
 }ContentFilterType;
 
 @interface ContentFilter : NSObject

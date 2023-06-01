@@ -34,6 +34,8 @@
 #import "FCSplitViewController.h"
 #endif
 
+#import "AddSubscribeSlideController.h"
+
 @interface AdBlockViewController ()<
  UITableViewDelegate,
  UITableViewDataSource
@@ -58,6 +60,7 @@
 @property (nonatomic, strong) FCTableViewHeadMenuItem *trustedSiteMenuItem;
 
 @property (nonatomic, strong) AddTrustedSiteSlideController *addTrustedSiteSlideController;
+@property (nonatomic, strong) AddSubscribeSlideController *addSubscribeSlideController;
 @end
 
 @implementation AdBlockViewController
@@ -107,6 +110,8 @@
     [self tableView];
     
     [self.navigationTabItem activeItem:self.activatedTabItem];
+    
+    self.navigationItem.rightBarButtonItems = @[self.addItem];
     
 #ifdef FC_MAC
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -584,7 +589,24 @@
 }
 
 - (void)addAction:(id)sender{
+    if ([[FCStore shared] getPlan:NO] == FCPlan.None){
+        if (self.upgradeSlideController){
+            [self.upgradeSlideController dismiss];
+        }
+        
+        self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:NSLocalizedString(@"SubscribeRulesLink", @"")];
+        self.upgradeSlideController.baseCer = self;
+        [self.upgradeSlideController show];
+        return;
+    }
     
+    if ([self.addSubscribeSlideController isShown]){
+        [self.addSubscribeSlideController dismiss];
+    }
+    
+    self.addSubscribeSlideController = [[AddSubscribeSlideController alloc] init];
+    self.addSubscribeSlideController.baseCer = self;
+    [self.addSubscribeSlideController show];
 }
 
 //- (void)searchTabItemDidClick{

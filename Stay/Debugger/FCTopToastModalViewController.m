@@ -32,7 +32,7 @@
     
     if (self.icon){
         [self.iconImageView setImage:self.icon];
-        [self.iconImageView setFrame:CGRectMake([self marginLeft]  - 10, (self.view.frame.size.height - 26)/2, 26, 26)];
+        [self.iconImageView setFrame:CGRectMake([self marginLeft]  - 10, (self.view.frame.size.height - FCStyle.sfIcon.pointSize)/2, FCStyle.sfIcon.pointSize, FCStyle.sfIcon.pointSize)];
     }
     else{
         [self.iconImageView setFrame:CGRectZero];
