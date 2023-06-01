@@ -51,6 +51,9 @@
 #import "API.h"
 
 #import "AdBlockDetailViewController.h"
+#import "PopupManager.h"
+#import <SDImageCache.h>
+#import "UIColor+Convert.h"
 
 @interface AppDelegate()
 
@@ -71,7 +74,8 @@
     [Bugsnag start];
 #endif
     
-    NSString *deviceID = [[NSUUID UUID] UUIDString];
+    
+//    NSString *deviceID = [[NSUUID UUID] UUIDString];
     
     //Self point
 //    [[API shared] queryPath:@"/self"
@@ -130,7 +134,6 @@
 //        NSLog(@"%@",biz);
 //    }];
     
-    
     SDImageSVGKCoder *SVGCoder = [SDImageSVGKCoder sharedCoder];
     [[SDImageCodersManager sharedManager] addCoder:SVGCoder];
     [IACManager sharedManager].callbackURLScheme = @"stay";
@@ -182,6 +185,7 @@
 #endif
      
     [[IACManager sharedManager] handleAction:@"pay" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        [PopupManager shared].ingorePopup = YES;
 #ifdef FC_MAC
         if ([QuickAccess primaryController] != nil){
             [QuickAccess primaryController].selectedIndex = 3;
@@ -202,7 +206,7 @@
     }];
     
     [[IACManager sharedManager] handleAction:@"album" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
-        
+        [PopupManager shared].ingorePopup = YES;
         NSString *themeId = inputParameters[@"id"];
         SYBrowseExpandViewController *cer = [[SYBrowseExpandViewController alloc] init];
         cer.url= [NSString stringWithFormat:@"https://api.shenyin.name/stay-fork/album/%@",themeId];
@@ -216,6 +220,7 @@
     }];
     
     [[IACManager sharedManager] handleAction:@"userscript" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        [PopupManager shared].ingorePopup = YES;
         NSString *uuid = inputParameters[@"id"];
         ScriptEntity *entity = [ScriptMananger shareManager].scriptDic[uuid];
         if(entity == nil) {
@@ -242,7 +247,7 @@
     
     
     [[IACManager sharedManager] handleAction:@"snifferVideo" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
-        
+        [PopupManager shared].ingorePopup = YES;
         //如果不是pro会员直接返回
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
         if(!isPro) {
@@ -272,6 +277,7 @@
     }];
     
     [[IACManager sharedManager] handleAction:@"adblock" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        [PopupManager shared].ingorePopup = YES;
         NSString *type = [inputParameters[@"type"] lowercaseString];
         NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
         for (ContentFilter *contentFilter in contentFilters){
@@ -289,6 +295,8 @@
             }
         }
     }];
+    
+    [PopupManager shared];
     
     return YES;
 }

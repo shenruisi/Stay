@@ -19,7 +19,8 @@ typedef enum : NSInteger {
     GroupUserDefaultsKeyDeviceUUID,
     GroupUserDefaultsKeyAppearanceMode = 20000,
     GroupUserDefaultsKeyM3U8Concurrency,
-    GroupUserDefaultsKeyBackgroundColorType
+    GroupUserDefaultsKeyBackgroundColorType,
+    GroupUserDefaultsKeyShownUUIDs
 } GroupUserDefaultsKey;
 
 @interface FCConfig : NSObject

@@ -474,6 +474,16 @@
 		58D1B45B28893D4C009BD608 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 58D1B45328893D4B009BD608 /* AppleIncRootCertificate.cer */; };
 		58D1B45D28893F31009BD608 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D1B45C28893F31009BD608 /* StoreKit.framework */; };
 		58D1B45E28893F3E009BD608 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D1B45C28893F31009BD608 /* StoreKit.framework */; };
+		58DA847D2A26F847009E37E6 /* PopupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA847C2A26F847009E37E6 /* PopupManager.m */; };
+		58DA847E2A26F847009E37E6 /* PopupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA847C2A26F847009E37E6 /* PopupManager.m */; };
+		58DA84812A2718E4009E37E6 /* PopupSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84802A2718E4009E37E6 /* PopupSlideController.m */; };
+		58DA84822A2718E4009E37E6 /* PopupSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84802A2718E4009E37E6 /* PopupSlideController.m */; };
+		58DA84852A2746EA009E37E6 /* PopupModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84842A2746EA009E37E6 /* PopupModalViewController.m */; };
+		58DA84862A2746EA009E37E6 /* PopupModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84842A2746EA009E37E6 /* PopupModalViewController.m */; };
+		58DA84892A27612B009E37E6 /* FCImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84882A27612B009E37E6 /* FCImageView.m */; };
+		58DA848A2A27612B009E37E6 /* FCImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA84882A27612B009E37E6 /* FCImageView.m */; };
+		58DA848D2A278AE7009E37E6 /* JumpCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA848C2A278AE7009E37E6 /* JumpCenter.m */; };
+		58DA848E2A278AE7009E37E6 /* JumpCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DA848C2A278AE7009E37E6 /* JumpCenter.m */; };
 		58DF3FF52898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58DF3FF62898D4820029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
 		58DF3FF8289A4C370029E1AA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DF3FF32898D4810029E1AA /* API.m */; };
@@ -1290,6 +1300,16 @@
 		58D1B45228893D4B009BD608 /* RMAppReceipt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMAppReceipt.m; sourceTree = "<group>"; };
 		58D1B45328893D4B009BD608 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		58D1B45C28893F31009BD608 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		58DA847B2A26F847009E37E6 /* PopupManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupManager.h; sourceTree = "<group>"; };
+		58DA847C2A26F847009E37E6 /* PopupManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopupManager.m; sourceTree = "<group>"; };
+		58DA847F2A2718E4009E37E6 /* PopupSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupSlideController.h; sourceTree = "<group>"; };
+		58DA84802A2718E4009E37E6 /* PopupSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopupSlideController.m; sourceTree = "<group>"; };
+		58DA84832A2746EA009E37E6 /* PopupModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupModalViewController.h; sourceTree = "<group>"; };
+		58DA84842A2746EA009E37E6 /* PopupModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopupModalViewController.m; sourceTree = "<group>"; };
+		58DA84872A27612B009E37E6 /* FCImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCImageView.h; sourceTree = "<group>"; };
+		58DA84882A27612B009E37E6 /* FCImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCImageView.m; sourceTree = "<group>"; };
+		58DA848B2A278AE7009E37E6 /* JumpCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JumpCenter.h; sourceTree = "<group>"; };
+		58DA848C2A278AE7009E37E6 /* JumpCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JumpCenter.m; sourceTree = "<group>"; };
 		58DF3FF32898D4810029E1AA /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
 		58DF3FF42898D4820029E1AA /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		58EA44432869BB5200BD6C4D /* ImportSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportSlideController.h; sourceTree = "<group>"; };
@@ -2279,6 +2299,8 @@
 			children = (
 				588202B62859F9FD00B2721A /* SceneCenter.h */,
 				588202B72859F9FD00B2721A /* SceneCenter.m */,
+				58DA848B2A278AE7009E37E6 /* JumpCenter.h */,
+				58DA848C2A278AE7009E37E6 /* JumpCenter.m */,
 			);
 			path = Center;
 			sourceTree = "<group>";
@@ -2383,6 +2405,8 @@
 				583B540929DD4DFA00CB292A /* UIFont+Convert.m */,
 				583B542629DD671E00CB292A /* NSAttributedString+Style.h */,
 				583B542729DD671E00CB292A /* NSAttributedString+Style.m */,
+				58DA84872A27612B009E37E6 /* FCImageView.h */,
+				58DA84882A27612B009E37E6 /* FCImageView.m */,
 			);
 			path = UXFramework;
 			sourceTree = "<group>";
@@ -2466,6 +2490,19 @@
 				58D1B45228893D4B009BD608 /* RMAppReceipt.m */,
 			);
 			path = IAP;
+			sourceTree = "<group>";
+		};
+		58DA847A2A26F7D1009E37E6 /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				58DA847B2A26F847009E37E6 /* PopupManager.h */,
+				58DA847C2A26F847009E37E6 /* PopupManager.m */,
+				58DA847F2A2718E4009E37E6 /* PopupSlideController.h */,
+				58DA84802A2718E4009E37E6 /* PopupSlideController.m */,
+				58DA84832A2746EA009E37E6 /* PopupModalViewController.h */,
+				58DA84842A2746EA009E37E6 /* PopupModalViewController.m */,
+			);
+			path = Popup;
 			sourceTree = "<group>";
 		};
 		58DF3FF22898D4050029E1AA /* API */ = {
@@ -3152,6 +3189,7 @@
 		84F4830D273A69AA00217BB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				58DA847A2A26F7D1009E37E6 /* Popup */,
 				582061A5294C4BB200A32D0C /* Modal */,
 				849E77CA293C796100AD83D7 /* SYFileManager */,
 				3C8388D029333F7E007563E6 /* SYDownload */,
@@ -4183,6 +4221,7 @@
 				58ADADE129E7FA0700C00332 /* FCTextField.m in Sources */,
 				3C949B96297029F50068231A /* M3U8ExtXByteRange.m in Sources */,
 				584C05AD286179D000E07DDF /* ImageHelper.m in Sources */,
+				58DA84812A2718E4009E37E6 /* PopupSlideController.m in Sources */,
 				588B83282846147000AB2D73 /* UserscriptInfo.m in Sources */,
 				5805D95E2A0632B800F46709 /* DefaultIcon.m in Sources */,
 				587688E72719237E00F834A4 /* SYMoreViewController.m in Sources */,
@@ -4202,6 +4241,7 @@
 				58F1969C2A11FE9F00B88F39 /* TrustedSite.m in Sources */,
 				582061C0294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
 				58F196492A11FD3000B88F39 /* TriggerBlockerAST.m in Sources */,
+				58DA84852A2746EA009E37E6 /* PopupModalViewController.m in Sources */,
 				5831791629CC1F6E00135D8D /* FCRoundedShadowView2.m in Sources */,
 				58F196432A11FD2F00B88F39 /* OptionsBlockerAST.m in Sources */,
 				84C1ED1D27631AE200651DF9 /* SYCodeMirrorView.m in Sources */,
@@ -4246,6 +4286,8 @@
 				58D1B45828893D4C009BD608 /* RMAppReceipt.m in Sources */,
 				58EA4461286C368800BD6C4D /* ContentRecord.m in Sources */,
 				84C1ED262765E29D00651DF9 /* NSString+Urlencode.m in Sources */,
+				58DA84892A27612B009E37E6 /* FCImageView.m in Sources */,
+				58DA847D2A26F847009E37E6 /* PopupManager.m in Sources */,
 				5805D94E2A037FB600F46709 /* EnableStayModalViewController.m in Sources */,
 				84CC9B4F28C72C81002EB493 /* SYBrowseViewController.m in Sources */,
 				582061D2294C4C0E00A32D0C /* ModalItemElement.m in Sources */,
@@ -4342,6 +4384,7 @@
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
 				58F196B22A12102500B88F39 /* AddTrustedSiteSlideController.m in Sources */,
 				8481963529EE8ED700F14B1B /* SYTaskTableViewCell.m in Sources */,
+				58DA848D2A278AE7009E37E6 /* JumpCenter.m in Sources */,
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				58F196842A11FE3100B88F39 /* SeparatorHighlighterAST.m in Sources */,
@@ -4536,6 +4579,7 @@
 				582061FB294C57E400A32D0C /* ModalItemAccessoryView.m in Sources */,
 				582061FF294CB23400A32D0C /* SYDownloadFolderChooseModalViewController.m in Sources */,
 				58F196912A11FE3200B88F39 /* NewLineHighlighterAST.m in Sources */,
+				58DA848A2A27612B009E37E6 /* FCImageView.m in Sources */,
 				58639C362863040700AA80D5 /* ToolbarTrackView.m in Sources */,
 				3C949B9D297029F50068231A /* M3U8ExtXStreamInf.m in Sources */,
 				5831790729CBFC5700135D8D /* FCTableViewCell.m in Sources */,
@@ -4574,6 +4618,8 @@
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
 				5867D159288F91F900EC822B /* TimeHelper.m in Sources */,
 				582061D1294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
+				58DA848E2A278AE7009E37E6 /* JumpCenter.m in Sources */,
+				58DA84862A2746EA009E37E6 /* PopupModalViewController.m in Sources */,
 				58EA44462869BB5300BD6C4D /* ImportSlideController.m in Sources */,
 				5882025C2859E73900B2721A /* SYNetworkUtils.m in Sources */,
 				582441CE28781E0D003DF4F7 /* SYTextInputModelViewController.m in Sources */,
@@ -4610,6 +4656,7 @@
 				3C8388E329335C68007563E6 /* RoundedBorderView.swift in Sources */,
 				5882259B29FF6C1B004CDBF7 /* WelcomeModalViewController.m in Sources */,
 				3C8388D4293355F9007563E6 /* FolderSlideController.swift in Sources */,
+				58DA84822A2718E4009E37E6 /* PopupSlideController.m in Sources */,
 				3C72260E288C243900FF0F68 /* SYSubscribeController.swift in Sources */,
 				588202662859E73900B2721A /* JSDetailCell.m in Sources */,
 				588202672859E73900B2721A /* SYVersionUtils.m in Sources */,
@@ -4683,6 +4730,7 @@
 				583B541629DD504500CB292A /* FCNavigationBar.m in Sources */,
 				582061C5294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */,
+				58DA847E2A26F847009E37E6 /* PopupManager.m in Sources */,
 				582061EF294C4D5500A32D0C /* FCProLabel.m in Sources */,
 				3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */,
 				58639C39286312B100AA80D5 /* QuickAccess.m in Sources */,
