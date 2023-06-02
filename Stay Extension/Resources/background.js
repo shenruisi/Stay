@@ -869,9 +869,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const details = request.details;
             const reqType = request.type;
             const xhrId = request.xhrId;
-            // console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
+            console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
             browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
-                // console.log("GM_xmlhttpRequest----response---", response);
+                console.log("GM_xmlhttpRequest----response---", response);
                 let resp = response.body
                 resp.response = resp.responseText;
                 if (resp.responseType && resp.responseType === "arraybuffer" && resp) {

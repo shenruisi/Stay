@@ -806,8 +806,6 @@ const browser = __b;
 
       handleTouchStartEvent(event){
         const self = this;
-       
-        console.log(event);
         let target = event.changedTouches[0];
         if(!target){
           return;
