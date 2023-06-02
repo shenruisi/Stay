@@ -121,7 +121,7 @@ NSString * const SFExtensionMessageKey = @"message";
             }
         }
     }
-    
+     
     return matched;
 }
 

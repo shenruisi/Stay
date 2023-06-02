@@ -128,12 +128,12 @@ export default {
       .tab-item{
         .tab-img{
           img.unselected{
-            -webkit-filter: drop-shadow(var(--s-dc) 40px 0);
-            filter: drop-shadow(var(--s-dc) 40px 0);
+            -webkit-filter: drop-shadow(#DCDCDC 40px 0);
+            filter: drop-shadow(#DCDCDC 40px 0);
             border-right: 40px solid transparent;
             position: relative;
             left: -20px;
-            transform: translateZ(100px);
+            // transform: translateZ(100px);
             z-index: 888;
           }
         }

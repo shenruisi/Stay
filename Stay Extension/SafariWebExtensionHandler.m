@@ -628,6 +628,9 @@
     [request setHTTPMethod:method];
     if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
         for (NSString *key in headers.allKeys){
+            if ([headers[key] isKindOfClass:[NSNull class]]){
+                continue;
+            }
             [request setValue:headers[key] forHTTPHeaderField:key];
         }
     }

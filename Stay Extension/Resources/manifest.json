@@ -40,7 +40,7 @@
         },
         {
             "js": ["popup/js/sniffer.js"],
-            "matches": [ "*://*/*" ],
+            "matches": [ "*://a/*" ],
             "all_frames": true,
             "run_at": "document_start"
         },
@@ -52,7 +52,7 @@
         },
         {
             "js": ["popup/js/transfer.js"],
-            "matches": [ "*://*/*" ],
+            "matches": [ "*://a/*" ],
             "all_frames": false,
             "run_at": "document_start"
         }
