@@ -35,6 +35,7 @@
 #endif
 
 #import "AddSubscribeSlideController.h"
+#import "SubscribeContentFilterManager.h"
 
 @interface AdBlockViewController ()<
  UITableViewDelegate,
@@ -71,7 +72,8 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
             for (ContentFilter *contentFilter in self.activatedSource){
                 if (contentFilter.type != ContentFilterTypeCustom
-                    && contentFilter.type != ContentFilterTypeTag){
+                    && contentFilter.type != ContentFilterTypeTag
+                    && contentFilter.type != ContentFilterTypeSubscribe){
                     if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
                             NSLog(@"init load content %@ %@",contentFilter.title,error);
@@ -82,7 +84,8 @@
             
             for (ContentFilter *contentFilter in self.stoppedSource){
                 if (contentFilter.type != ContentFilterTypeCustom
-                    && contentFilter.type != ContentFilterTypeTag){
+                    && contentFilter.type != ContentFilterTypeTag
+                    && contentFilter.type != ContentFilterTypeSubscribe){
                     if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
                             NSLog(@"init load content %@ %@",contentFilter.title,error);
@@ -123,8 +126,13 @@
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidAddHandler:) name:ContentFilterDidAddNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trustedSiteDidAddHandler:) name:TrustedSiteDidAddNotification object:nil];
     
+    [self updateContentFilterEnable];
+}
+
+- (void)updateContentFilterEnable{
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT), ^{
         for (ContentFilter *contentFilter in self.activatedSource){
             dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
@@ -164,7 +172,6 @@
             [self.tableView reloadData];
         });
     });
-    
 }
 
 - (void)trustedSiteDidAddHandler:(NSNotification *)note{
@@ -216,7 +223,13 @@
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
                 }
-                [contentFilter checkUpdatingIfNeeded:NO completion:nil];
+                
+                if (ContentFilterTypeSubscribe == contentFilter.type){
+                    [[SubscribeContentFilterManager shared] checkUpdatingIfNeeded:contentFilter focus:NO completion:^(NSError *error, BOOL updated) {}];
+                }
+                else{
+                    [contentFilter checkUpdatingIfNeeded:NO completion:^(NSError * error) {}];
+                }
                 dispatch_semaphore_signal(semaphore);
             }];
             
@@ -247,6 +260,11 @@
             NSLog(@"SFContentBlockerState reload");
         });
     });
+}
+
+- (void)contentFilterDidAddHandler:(NSNotification *)note{
+    [self setupDataSource];
+    [self updateContentFilterEnable];
 }
 
 - (void)contentFilterDidUpdateHandler:(NSNotification *)note{
@@ -295,18 +313,34 @@
         if (ContentFilterTypeTag == contentFilter.type){
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
-        [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
-        [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:0];
-        [contentFilter reloadContentBlockerWihtoutRebuild];
+        
+        if (ContentFilterTypeSubscribe == contentFilter.type){
+            [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+            [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError *error) {
+            }];
+        }
+        else{
+            [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+            [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:0];
+            [contentFilter reloadContentBlockerWihtoutRebuild];
+        }
     }
     else{
         contentFilter.status = 1;
         if (ContentFilterTypeTag == contentFilter.type){
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
-        [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
-        [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:1];
-        [contentFilter reloadContentBlockerWihtoutRebuild];
+        
+        if (ContentFilterTypeSubscribe == contentFilter.type){
+            [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+            [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError *error) {
+            }];
+        }
+        else{
+            [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+            [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:1];
+            [contentFilter reloadContentBlockerWihtoutRebuild];
+        }
     }
 }
 
