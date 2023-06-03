@@ -7,6 +7,10 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSNotificationName const _Nonnull DMTaskDidStartNotification;
+extern NSNotificationName const _Nonnull DMTaskSpeedNotification;
+extern NSNotificationName const _Nonnull DMTaskDidFinishNotification;
+
 typedef enum {
     DMStatusNone = -1,
     DMStatusPending,

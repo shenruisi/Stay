@@ -456,7 +456,7 @@ const browser = __b;
           }
           .__stay_close_con{
             position:fixed;
-            z-index:2147483646;
+            z-index:2147483647;
             right: 20px;
             top: 20px;
             width:26px;
@@ -470,7 +470,7 @@ const browser = __b;
             cursor: default;
             user-select: none;
           }
-          .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483647; background-color:rgba(0,0,0,0);border: ${borderSize}px solid var(--s-fff); border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
+          .__stay_select_target{display:none;position:fixed; box-sizing:border-box;z-index:2147483646; background-color:rgba(0,0,0,0);border: ${borderSize}px solid var(--s-fff); border-radius: 6px;box-shadow: 1px -1px 20px rgba(0,0,0,0.2);}
           .__stay_makeup_menu_wrapper{
             width:192px;
             position:fixed;
@@ -546,7 +546,7 @@ const browser = __b;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             position:fixed; 
-            z-index:2147483647;
+            z-index:2147483646;
             width:160px;
             height: 44px;
             border-radius: 22px;
@@ -803,11 +803,16 @@ const browser = __b;
         // document.addEventListener('DOMContentLoaded', function() {
         //   document.focus();
         // });
-        
+        document.body.focus();
         
         // console.log('startSelecteTagAndMakeupAd-------addEventListener----keyup-----');
         // document.removeEventListener('keyup', handleKeyUpEvent, { passive: true });
-        const keyupEvent = document.addEventListener('keyup', handleKeyUpEvent);
+        const keyupEvent = window.addEventListener('keydown', handleKeyUpEvent);
+        document.addEventListener('focusin', ()=>{
+          // 获取当前焦点元素
+          let focusedElement = document.activeElement;
+          console.log('focusedElement-----',focusedElement)
+        });
       }
     }
 
@@ -824,7 +829,7 @@ const browser = __b;
       hideSeletedTagContentModal();
       hideSeletedTagPanel();
       if(!Utils.isMobileOrIpad()){
-        document.removeEventListener('keyup', handleKeyUpEvent);
+        window.removeEventListener('keydown', handleKeyUpEvent);
       }
     }
 
@@ -870,6 +875,23 @@ const browser = __b;
         const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
       }
       showSelectTagNoteToast(i18nProp['select_note']);
+
+      // if(document.querySelector('#initialFocus')){
+      //   document.querySelector('#initialFocus').focus();
+      // }else{
+
+      //   let inputNode = document.createElement('input');
+      //   inputNode.type = 'text';
+      //   inputNode.value = 'initial to focus';
+      //   inputNode.id = 'initialFocus';
+      //   inputNode.style = {position:'fixed',top: '-100%', left: '-100%', zIndex: '9999'};
+      //   document.body.appendChild(inputNode);
+      //   inputNode.focus();
+      // }
+      // let focusedElement = document.activeElement;
+      // console.log('focusedElement----111----',focusedElement)
+
+      
     }
 
     function addListenerClosePanelEvent(){
@@ -902,7 +924,7 @@ const browser = __b;
           if(Utils.isMobileOrIpad()){
             const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
           }else{
-            const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
+            const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
           }
         }
       }
@@ -917,7 +939,7 @@ const browser = __b;
         if(Utils.isMobileOrIpad()){
           moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
         }else{
-          document.body.removeEventListener('mousemove', handleMoveAndSelecteDom, { passive: true });
+          document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
         }
       }
     }
@@ -1290,7 +1312,7 @@ const browser = __b;
       return new Promise((resolve, reject)=>{
         console.log('before----',selectedDom);
         let styles = window.getComputedStyle(selectedDom);
-        if(styles.position == 'fixed'){
+        if(styles.position == 'fixed' && (selectedDom.id == '' || !checkStaticSelectorId(selectedDom.id))){
           let shouldExpand = false;
           let selectedDomSibling = getValidPreviousSiblingNode(selectedDom) || getValidNextSiblingNode(selectedDom);
           if(selectedDomSibling){
@@ -1321,7 +1343,7 @@ const browser = __b;
               }else{
                 fixedParentDom = fixedParentDomTemp
               }
-              if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom)){
+              if(getValidPreviousSiblingNode(fixedParentDom) || getValidNextSiblingNode(fixedParentDom) || (fixedParentDom.id!='' && checkStaticSelectorId(fixedParentDom.id))){
                 console.log('fixedParentDom-----subling-------yes---');
                 break;
               }
@@ -1359,6 +1381,12 @@ const browser = __b;
               selectedDom.style.display = 'none';
               cssSelectorSet.add(uuid);
             }
+            
+            while(selDom.firstChild){
+              selDom.removeChild(selDom.firstChild)
+            }
+            selDom.remove();
+            selectedDom.remove();
           }
         } catch (error) {
           console.log('error------',error)
@@ -1432,12 +1460,10 @@ const browser = __b;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
       let selectePositionDom = moveDoms[0];
-      if('__stay_selected_tag' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_select_target') ){
-        return;
-      }
       console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
+        let invalidFlag = false;
         let moveDomList = Array.from(moveDoms);
         // console.log('before----',moveDomList);
         moveDomList = moveDomList.filter(item=>{
@@ -1445,11 +1471,16 @@ const browser = __b;
           || '__stay_close' == item.id || item.classList.contains('__stay_close_con') 
           || '__stay_selected_tag' == item.id || item.classList.contains('__stay_select_target') 
           || filterSelectTagNameList.includes(item.nodeName)){
-            
+            if('__stay_close' == item.id || item.classList.contains('__stay_close_con') ){
+              invalidFlag = true;
+            }
           }else{
             return item;
           }
         })
+        if(invalidFlag){
+          return;
+        }
         // console.log('after------',moveDomList);
         if(Utils.isMobileOrIpad()){
           if(moveDomList && moveDomList.length){
@@ -1498,14 +1529,18 @@ const browser = __b;
         console.log('handleSelecteTagPosition---selectePositionDom is null');
         return;
       }
+      selectedDom = selectePositionDom
+      let moveDomRect = selectedDom.getBoundingClientRect();
+      if(moveDomRect.width>=window.innerWidth && moveDomRect.height>= window.innerHeight){
+        return;
+      }
       if('__stay_wrapper' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_move_wrapper') 
       || '__stay_close' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_close_con')
       || '__stay_selected_tag' == selectePositionDom.id || selectePositionDom.classList.contains('__stay_select_target') ){
         return;
       }
       showMakeupTagMenu = false;
-      selectedDom = selectePositionDom
-      let moveDomRect = selectedDom.getBoundingClientRect();
+     
       if(!moveDomRect || !Object.keys(moveDomRect)){
         console.log('handleSelecteTagPosition---moveDomRect is null');
         return;
@@ -1552,9 +1587,9 @@ const browser = __b;
       
       const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
 
-      console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
+      // console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
-        console.log('showMenu---------------------',showMenu);
+        // console.log('showMenu---------------------',showMenu);
         showTagingOperateMenu();
       }
     }
@@ -1681,6 +1716,12 @@ const browser = __b;
           }
           if (el.id && checkStaticSelectorId(el.id)) {
             selector += '#' + el.id;
+            if(checkDomOfIdSelectorSameToSelectedDom(el)){
+              path = [];
+              path.unshift(selector);
+              break;
+            }
+            
             path.unshift(selector);
             break;
           }
@@ -1716,6 +1757,20 @@ const browser = __b;
         console.log(error)
       }
       return path.join(' > ');
+    }
+
+    function checkDomOfIdSelectorSameToSelectedDom(eleDom){
+      if(!eleDom){
+        return false;
+      }
+      let eleDomReact = eleDom.getBoundingClientRect();
+      const selectedDomReact = selectedDom.getBoundingClientRect();
+      console.log(eleDomReact, selectedDomReact)
+      if(((Math.abs(Utils.sub(eleDomReact.width, selectedDomReact.width))<20 && Math.abs(Utils.sub(eleDomReact.height, selectedDomReact.height))<20) 
+      && (eleDomReact.width != 0 && eleDomReact.height != 0)) && (eleDom.id != '' && checkStaticSelectorId(eleDom.id))){
+        return true;
+      }
+      return false;
     }
 
     /**

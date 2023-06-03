@@ -180,9 +180,17 @@ export function isMobile(){
 
 export function isMobileOrIpad(){
   const userAgentInfo = navigator.userAgent;
-  let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPod', 'iPad'];
+  let Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod'];
   let getArr = Agents.filter(i => userAgentInfo.includes(i));
-  return getArr.length ? true : false;
+  let isIphoneOrIpad = getArr.length ? true : false;
+  if(isIphoneOrIpad){
+    return isIphoneOrIpad
+  }else{
+    if (userAgentInfo.match(/Macintosh/) && navigator.maxTouchPoints > 1) {
+      return true;
+    } 
+  }
+  return isIphoneOrIpad;
 }
 
 export function unhtml(str) {
