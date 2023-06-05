@@ -1033,7 +1033,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
         speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
         _lastTimestamp = timestamp;
         _bytesWritten = 0;
-        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskDidFinishNotification
+        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskSpeedNotification
                                                             object:nil
                                                             userInfo:@{
                                                                 @"speed":speed
