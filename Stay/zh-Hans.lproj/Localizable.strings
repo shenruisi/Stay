@@ -350,3 +350,4 @@ NotSupportedOnThisDevice="暂不支持该设备";
 SubscribeRulesLink="订阅规则链接";
 NewSubscription="新的订阅";
 FillCompleteInfo="请填写完整信息";
+DeleteSubscribeConfirm="你确定要删除这条订阅规则吗？";

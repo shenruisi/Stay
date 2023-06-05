@@ -97,4 +97,5 @@
 - (void)updateContentFilterUpdateTime:(NSDate *)updateTime uuid:(NSString *)uuid;
 - (void)updateContentFilterDownloadUrl:(NSString *)downloadUrl uuid:(NSString *)uuid;
 - (void)updateContentFilterLoad:(NSUInteger)load uuid:(NSString *)uuid;
+- (void)deleteContentFilterWithUUID:(NSString *)uuid;
 @end

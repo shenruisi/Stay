@@ -55,7 +55,7 @@ static SubscribeContentFilterManager *instance = nil;
                      && ![contentFilter.uuid isEqualToString:targetSubscribeContentFilter.uuid]){
                      NSString *otherContent = [contentFilter fetchRules:&error];
                      if (nil == error && otherContent.length > 0){
-                         [contentBlockerRules addObjectsFromArray:[contentFilter convertRules:content
+                         [contentBlockerRules addObjectsFromArray:[contentFilter convertRules:otherContent
                                                                              updateFilterInfo:YES
                                                                                       restore:NO]
                          ];
@@ -88,8 +88,8 @@ static SubscribeContentFilterManager *instance = nil;
 
 - (void)reload:(ContentFilter *)targetSubscribeContentFilter completion:(void(^)(NSError *error))completion{
     NSMutableArray<ContentBlockerRule *> *contentBlockerRules = [[NSMutableArray alloc] init];
+    NSError *error;
     if (1 == targetSubscribeContentFilter.status){
-        NSError *error;
         NSString *content = [targetSubscribeContentFilter fetchRules:&error];
         
         if (error){
@@ -101,34 +101,34 @@ static SubscribeContentFilterManager *instance = nil;
                                                                            updateFilterInfo:NO
                                                                                     restore:NO]
         ];
-        
-        NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
-        for (ContentFilter *contentFilter in contentFilters){
-            if (contentFilter.type == ContentFilterTypeSubscribe
-                && contentFilter.status == 1
-                && ![contentFilter.uuid isEqualToString:targetSubscribeContentFilter.uuid]){
-                NSString *otherContent = [contentFilter fetchRules:&error];
-                if (nil == error && otherContent.length > 0){
-                    [contentBlockerRules addObjectsFromArray:[contentFilter convertRules:content
-                                                                        updateFilterInfo:NO
-                                                                                 restore:NO]
-                    ];
-                }
+    }
+    
+    NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
+    for (ContentFilter *contentFilter in contentFilters){
+        if (contentFilter.type == ContentFilterTypeSubscribe
+            && contentFilter.status == 1
+            && ![contentFilter.uuid isEqualToString:targetSubscribeContentFilter.uuid]){
+            NSString *otherContent = [contentFilter fetchRules:&error];
+            if (nil == error && otherContent.length > 0){
+                [contentBlockerRules addObjectsFromArray:[contentFilter convertRules:otherContent
+                                                                    updateFilterInfo:NO
+                                                                             restore:NO]
+                ];
             }
         }
-        
-        [self writeRules:contentBlockerRules mainSubscribeContentFilter:targetSubscribeContentFilter error:&error];
-        
-        if (error){
-            completion(error);
-            return;
-        }
-        
-        [SFContentBlockerManager reloadContentBlockerWithIdentifier:targetSubscribeContentFilter.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
-            completion(error);
-            NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",targetSubscribeContentFilter.contentBlockerIdentifier, error);
-        }];
     }
+    
+    [self writeRules:contentBlockerRules mainSubscribeContentFilter:targetSubscribeContentFilter error:&error];
+    
+    if (error){
+        completion(error);
+        return;
+    }
+    
+    [SFContentBlockerManager reloadContentBlockerWithIdentifier:targetSubscribeContentFilter.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
+        completion(error);
+        NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",targetSubscribeContentFilter.contentBlockerIdentifier, error);
+    }];
 }
 
 - (void)writeRules:(NSMutableArray<ContentBlockerRule *> *)rules

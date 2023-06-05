@@ -348,3 +348,4 @@ NotSupportedOnThisDevice="暫不支持該設備";
 SubscribeRulesLink="訂閱規則鏈接";
 NewSubscription="新的訂閱";
 FillCompleteInfo="請填寫完整信息";
+DeleteSubscribeConfirm="你確定要删除這條訂閱規則嗎？";

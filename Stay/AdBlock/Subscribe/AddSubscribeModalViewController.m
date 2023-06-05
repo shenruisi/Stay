@@ -203,7 +203,7 @@
         subscribe.downloadUrl = self.linkElement.inputEntity.text;
         subscribe.enable = 0;
         subscribe.status = 1;
-        subscribe.sort = 1;
+        subscribe.sort = 6;
         subscribe.load = 1;
         subscribe.expires = @"4 days (update frequency)";
         subscribe.version = @"";
@@ -224,10 +224,8 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.navigationController.slideController stopLoading];
                 [button stopLoading];
-            });
-            
-            if (error){
-                dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error){
                     [weakSelf.navigationController.slideController stopLoading];
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
                                                                                    message:[error localizedDescription]
@@ -238,13 +236,16 @@
                         }];
                     [alert addAction:confirm];
                     [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
-                });
-            }
-            else{
-                [[DataManager shareManager] insertContentFilter:self.contentFilter error:nil];
-                [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidAddNotification object:nil];
-                [self.navigationController.slideController dismiss];
-            }
+                    
+                }
+                else{
+                    [[DataManager shareManager] insertContentFilter:self.contentFilter error:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidAddOrRemoveNotification object:nil];
+                    [self.navigationController.slideController dismiss];
+                }
+            });
+            
+            
             
         }];
     }

@@ -126,7 +126,7 @@
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidAddHandler:) name:ContentFilterDidAddNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidAddOrRemoveHandler:) name:ContentFilterDidAddOrRemoveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trustedSiteDidAddHandler:) name:TrustedSiteDidAddNotification object:nil];
     
     [self updateContentFilterEnable];
@@ -262,7 +262,7 @@
     });
 }
 
-- (void)contentFilterDidAddHandler:(NSNotification *)note{
+- (void)contentFilterDidAddOrRemoveHandler:(NSNotification *)note{
     [self setupDataSource];
     [self updateContentFilterEnable];
 }
@@ -285,6 +285,8 @@
     
 
 - (void)setupDataSource{
+    [self.activatedSource removeAllObjects];
+    [self.stoppedSource removeAllObjects];
     NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
     for (ContentFilter *contentFilter in contentFilters){
         if (contentFilter.active){
@@ -464,7 +466,6 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_tableView == tableView){
-        BOOL isActivatedSelected = self.selectedDataSource == self.activatedSource;
         ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
         FCTableViewCell *cell = (FCTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         NSMutableArray *actions = [[NSMutableArray alloc] init];
@@ -476,10 +477,25 @@
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 [self startHeadLoading];
-                [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
-                    [self stopHeadLoading];
-                    NSLog(@"reloadContentBlockerWithCompletion %@",error);
-                }];
+                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                    if (ContentFilterTypeSubscribe == contentFilter.type){
+                        [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError *error) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self stopHeadLoading];
+                                NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                            });
+                        }];
+                    }
+                    else{
+                        [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self stopHeadLoading];
+                                NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                            });
+                        }];
+                    }
+                });
+                
                 completionHandler(YES);
             }];
             [alert addAction:confirm];
@@ -494,7 +510,7 @@
         }];
         reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
         reloadAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
-        if (isActivatedSelected){
+        if (1 == contentFilter.status){
             [actions addObject:reloadAction];
         }
         
@@ -502,12 +518,48 @@
             [cell doubleTap:cell.fcContentView.center];
             completionHandler(YES);
         }];
-        activeOrStopAction.image = [ImageHelper sfNamed: isActivatedSelected ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
+        activeOrStopAction.image = [ImageHelper sfNamed:(1 == contentFilter.status) ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
         activeOrStopAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         [actions addObject:activeOrStopAction];
         
-        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
+        if (ContentFilterTypeSubscribe == contentFilter.type){
+            __weak AdBlockViewController *weakSelf = self;
+            UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"DeleteSubscribeConfirm", @"")
+                                                                               message:@""
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    contentFilter.status = 0;
+                    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                        [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError * _Nonnull error) {
+                            [contentFilter clear];
+                            [[DataManager shareManager] deleteContentFilterWithUUID:contentFilter.uuid];
+                            [weakSelf contentFilterDidAddOrRemoveHandler:nil];
+                        }];
+                    });
+                    
+                    
+                    completionHandler(YES);
+                    
+                }];
+                [alert addAction:conform];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                     style:UIAlertActionStyleCancel
+                     handler:^(UIAlertAction * _Nonnull action) {
+                    completionHandler(YES);
+                 }];
+                 [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }];
+            deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
+            deleteAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+            [actions insertObject:deleteAction atIndex:0];
+        }
         
+        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
         return configuration;
     }
     else if (_trustedSitesTableView == tableView){
@@ -544,7 +596,6 @@
             [actions addObject:deleteAction];
             
             UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
-            
             return configuration;
         }
     }

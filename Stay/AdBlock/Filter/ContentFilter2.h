@@ -17,7 +17,7 @@ static NSUInteger MAX_RULE_COUNT = 149900;
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName const _Nonnull ContentFilterDidUpdateNotification;
-extern NSNotificationName const _Nonnull ContentFilterDidAddNotification;
+extern NSNotificationName const _Nonnull ContentFilterDidAddOrRemoveNotification;
 
 typedef enum {
     ContentFilterTypeBasic = 1,
@@ -64,6 +64,7 @@ typedef enum {
 - (void)reloadContentBlockerWihtoutRebuild;
 - (NSMutableArray<ContentBlockerRule *> *)convertRules:(NSString *)content updateFilterInfo:(BOOL)updateFilterInfo restore:(BOOL)restore;
 
+- (void)clear;
 @end
 
 NS_ASSUME_NONNULL_END

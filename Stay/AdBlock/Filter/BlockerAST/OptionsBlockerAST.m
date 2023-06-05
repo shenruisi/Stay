@@ -168,6 +168,9 @@
                 self.contentBlockerRule.trigger.urlFilterIsCaseSensitive = YES;
             }
         }
+        else{
+            self.unsupported = YES;
+        }
     }
     
     for (NSString *inverseResourceType in inverseResourceTypes){

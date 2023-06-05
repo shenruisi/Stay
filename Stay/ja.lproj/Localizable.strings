@@ -349,3 +349,4 @@ NotSupportedOnThisDevice="Not Supported";
 SubscribeRulesLink="Subscribe Rules Link";
 NewSubscription="New Subscription";
 FillCompleteInfo="Pls fill in the complete info";
+DeleteSubscribeConfirm="Are you sure you want to delete this subscribe rule?";

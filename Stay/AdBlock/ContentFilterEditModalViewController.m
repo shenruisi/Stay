@@ -17,6 +17,7 @@
 #import "DataManager.h"
 #import "AdBlockDetailViewController.h"
 #import "FCShared.h"
+#import "SubscribeContentFilterManager.h"
 
 @interface ContentFilterEditModalViewController()<
  UITableViewDelegate,
@@ -39,7 +40,9 @@
     self.navigationBar.showCancel = YES;
     self.title = self.contentFilter.title;
     [self tableView];
-    [self restoreButton];
+    if (ContentFilterTypeSubscribe != self.contentFilter.type){
+        [self restoreButton];
+    }
     [self saveButton];
 }
 
@@ -197,56 +200,17 @@
         [button startLoading];
         self.contentFilter.downloadUrl = self.linkElement.inputEntity.text;
         __weak ContentFilterEditModalViewController *weakSelf = self;
-        [self.contentFilter checkUpdatingIfNeeded:YES completion:^(NSError * _Nonnull error) {
-            [button stopLoading];
-            if (nil == error || (error && [error.domain isEqualToString:@"Content Filter Error"])){
-                [[DataManager shareManager] updateContentFilterDownloadUrl:weakSelf.contentFilter.downloadUrl uuid:weakSelf.contentFilter.uuid];
-                AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
-                [cer refreshRules];
-                if (error){
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.navigationController.slideController stopLoading];
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
-                                                                                       message:[error localizedDescription]
-                                                                                preferredStyle:UIAlertControllerStyleAlert];
-                        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                                          style:UIAlertActionStyleDefault
-                                                                        handler:^(UIAlertAction * _Nonnull action) {
-                            }];
-                        [alert addAction:confirm];
-                        [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
-                    });
-                }
-                else{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.navigationController.slideController stopLoading];
-                        UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
-                                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
-                        image = [image imageWithTintColor:FCStyle.fcBlack
-                                            renderingMode:UIImageRenderingModeAlwaysOriginal];
-                        [FCShared.toastCenter show:image
-                                         mainTitle:weakSelf.contentFilter.title
-                                    secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
-                    });
-                }
-            }
-            else{
-                self.contentFilter.downloadUrl = originDownloadUrl;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.navigationController.slideController stopLoading];
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
-                                                                                   message:[error localizedDescription]
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
-                                                                      style:UIAlertActionStyleDefault
-                                                                    handler:^(UIAlertAction * _Nonnull action) {
-                        }];
-                    [alert addAction:confirm];
-                    [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
-                });
-                
-            }
-        }];
+        if (ContentFilterTypeSubscribe == self.contentFilter.type){
+            [[SubscribeContentFilterManager shared] checkUpdatingIfNeeded:self.contentFilter focus:YES completion:^(NSError *error, BOOL updated) {
+                [weakSelf updateOnCompletion:error originDownloadUrl:originDownloadUrl];
+            }];
+        }
+        else{
+            [self.contentFilter checkUpdatingIfNeeded:YES completion:^(NSError * _Nonnull error) {
+                [weakSelf updateOnCompletion:error originDownloadUrl:originDownloadUrl];
+            }];
+        }
+        
     }
     
     NSString *originTitle = self.contentFilter.title;
@@ -259,6 +223,59 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidUpdateNotification object:nil];
     
+}
+
+- (void)updateOnCompletion:(NSError *)error originDownloadUrl:(NSString *)originDownloadUrl{
+    if (nil == error || (error && [error.domain isEqualToString:@"Content Filter Error"])){
+        [[DataManager shareManager] updateContentFilterDownloadUrl:self.contentFilter.downloadUrl uuid:self.contentFilter.uuid];
+        AdBlockDetailViewController *cer = (AdBlockDetailViewController *)self.navigationController.slideController.baseCer;
+        [cer refreshRules];
+        if (error){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.saveButton stopLoading];
+                [self.navigationController.slideController stopLoading];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
+                                                                               message:[error localizedDescription]
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    }];
+                [alert addAction:confirm];
+                [self.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
+            });
+        }
+        else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.saveButton stopLoading];
+                [self.navigationController.slideController stopLoading];
+                UIImage *image =  [UIImage systemImageNamed:@"checkmark.circle.fill"
+                                          withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+                image = [image imageWithTintColor:FCStyle.fcBlack
+                                    renderingMode:UIImageRenderingModeAlwaysOriginal];
+                [FCShared.toastCenter show:image
+                                 mainTitle:self.contentFilter.title
+                            secondaryTitle:NSLocalizedString(@"SaveDone", @"")];
+            });
+        }
+    }
+    else{
+        self.contentFilter.downloadUrl = originDownloadUrl;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.saveButton stopLoading];
+            [self.navigationController.slideController stopLoading];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
+                                                                           message:[error localizedDescription]
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction * _Nonnull action) {
+                }];
+            [alert addAction:confirm];
+            [self.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
+        });
+        
+    }
 }
 
 - (FCButton *)restoreButton{

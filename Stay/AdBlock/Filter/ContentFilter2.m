@@ -16,7 +16,7 @@
 
 
 NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
-NSNotificationName const _Nonnull ContentFilterDidAddNotification = @"app.notification.ContentFilterDidAddNotification";
+NSNotificationName const _Nonnull ContentFilterDidAddOrRemoveNotification = @"app.notification.ContentFilterDidAddOrRemoveNotification";
 
 @interface ContentFilter(){
 }
@@ -430,6 +430,14 @@ NSNotificationName const _Nonnull ContentFilterDidAddNotification = @"app.notifi
     return [textPath stringByAppendingPathComponent:self.path];
 }
 
+- (void)clear{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.sharedPath]){
+        NSError *error;
+        [[NSFileManager defaultManager] removeItemAtPath:self.sharedPath error:&error];
+        NSLog(@"remove file: %@, error: %@",self.sharedPath,error);
+    }
+}
+
 
 + (NSString *)stringOfType:(ContentFilterType)type{
     if (ContentFilterTypeBasic == type) return @"Basic";
@@ -437,6 +445,7 @@ NSNotificationName const _Nonnull ContentFilterDidAddNotification = @"app.notifi
     if (ContentFilterTypeRegion == type) return @"Region";
     if (ContentFilterTypeCustom == type) return @"Custom";
     if (ContentFilterTypeTag == type) return @"Tag";
+    if (ContentFilterTypeSubscribe == type) return @"Subscribe";
     return @"";
 }
 
