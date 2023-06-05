@@ -417,7 +417,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (_tableView == tableView){
         ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
-        return (contentFilter.enable ? 70 : 90) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+        return (contentFilter.enable ? 70 : 100) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
     }
     else if (_trustedSitesTableView == tableView){
         if (0 == indexPath.row){
