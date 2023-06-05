@@ -824,7 +824,7 @@
             [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
     }
     
@@ -852,7 +852,7 @@
             [_trustedSitesTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_trustedSitesTableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_trustedSitesTableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_trustedSitesTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+            [_trustedSitesTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
     }
     

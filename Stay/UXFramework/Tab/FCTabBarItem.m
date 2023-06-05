@@ -18,12 +18,14 @@
 
 @implementation FCTabBarItem
 
-+ (instancetype)ofDescriptor:(NSDictionary *)descriptor{
-    FCTabBarItem *item = [[FCTabBarItem alloc] init];
-    item.selectImage = descriptor[@"select"][@"image"];
-    item.deselectImage = descriptor[@"deselect"][@"image"];
-    item.offsetY = [descriptor[@"offsetY"] floatValue];
-    return item;
+- (instancetype)initWithDescriptor:(NSDictionary *)descriptor{
+    if (self = [super init]){
+        self.selectImage = descriptor[@"select"][@"image"];
+        self.deselectImage = descriptor[@"deselect"][@"image"];
+        self.offsetY = [descriptor[@"offsetY"] floatValue];
+    }
+    
+    return self;
 }
 
 @end

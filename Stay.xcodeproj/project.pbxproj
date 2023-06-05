@@ -207,6 +207,8 @@
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C633C299BC42800F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
+		5842143B2A2DBE790035DCB1 /* FCSpeedTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */; };
+		5842143C2A2DBE790035DCB1 /* FCSpeedTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */; };
 		584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateCollectionController.m */; };
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
@@ -1141,6 +1143,8 @@
 		583B545529DEDDE700CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		584214392A2DBE790035DCB1 /* FCSpeedTabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCSpeedTabBarItem.h; sourceTree = "<group>"; };
+		5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCSpeedTabBarItem.m; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
 		584C05A728607F4E00E07DDF /* NavigateCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateCollectionController.m; sourceTree = "<group>"; };
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
@@ -2475,6 +2479,8 @@
 				58A3618129C049C500080465 /* FCTabBarItem.m */,
 				58A3618429C04BBC00080465 /* FCTabBarController.h */,
 				58A3618529C04BBC00080465 /* FCTabBarController.m */,
+				584214392A2DBE790035DCB1 /* FCSpeedTabBarItem.h */,
+				5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */,
 			);
 			path = Tab;
 			sourceTree = "<group>";
@@ -4479,6 +4485,7 @@
 				5831790629CBFC5700135D8D /* FCTableViewCell.m in Sources */,
 				58F1963B2A11FD2F00B88F39 /* ExceptionBlockerAST.m in Sources */,
 				58A3618229C049C500080465 /* FCTabBarItem.m in Sources */,
+				5842143B2A2DBE790035DCB1 /* FCSpeedTabBarItem.m in Sources */,
 				58ADADDC29E7F6E000C00332 /* ContentFilterEditModalViewController.m in Sources */,
 				58F196862A11FE3200B88F39 /* JSAPIHighlighterAST.m in Sources */,
 				3C919714299297D500485423 /* SYConcurrencyViewController.m in Sources */,
@@ -4724,6 +4731,7 @@
 				582062032950675900A32D0C /* DisabledWebsites.m in Sources */,
 				8460E47129925A66008BC7D0 /* SYSubmitScriptViewController.m in Sources */,
 				58561F5728E6E50400D0913A /* RunsRecord.m in Sources */,
+				5842143C2A2DBE790035DCB1 /* FCSpeedTabBarItem.m in Sources */,
 				3C949B9F297029F50068231A /* M3U8MasterPlaylist.m in Sources */,
 				58724A3428FE77FB00A894D8 /* ExtensionConfig.m in Sources */,
 				58F1968D2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */,

@@ -40,9 +40,8 @@
     self.navigationBar.showCancel = YES;
     self.title = self.contentFilter.title;
     [self tableView];
-    if (ContentFilterTypeSubscribe != self.contentFilter.type){
-        [self restoreButton];
-    }
+    
+    [self restoreButton];
     [self saveButton];
 }
 
@@ -180,12 +179,23 @@
         _saveButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.view addSubview:_saveButton];
         
-        [NSLayoutConstraint activateConstraints:@[
-            [_saveButton.bottomAnchor constraintEqualToAnchor:self.restoreButton.topAnchor constant:-15],
-            [_saveButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:15],
-            [_saveButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-15],
-            [_saveButton.heightAnchor constraintEqualToConstant:45]
-        ]];
+        if (ContentFilterTypeSubscribe == self.contentFilter.type){
+            [NSLayoutConstraint activateConstraints:@[
+                [_saveButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-15],
+                [_saveButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:15],
+                [_saveButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-15],
+                [_saveButton.heightAnchor constraintEqualToConstant:45]
+            ]];
+        }
+        else{
+            [NSLayoutConstraint activateConstraints:@[
+                [_saveButton.bottomAnchor constraintEqualToAnchor:self.restoreButton.topAnchor constant:-15],
+                [_saveButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:15],
+                [_saveButton.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-15],
+                [_saveButton.heightAnchor constraintEqualToConstant:45]
+            ]];
+        }
+       
     }
     
     return _saveButton;
@@ -279,7 +289,7 @@
 }
 
 - (FCButton *)restoreButton{
-    if (nil == _restoreButton){
+    if (nil == _restoreButton && ContentFilterTypeSubscribe != self.contentFilter.type){
         _restoreButton = [[FCButton alloc] init];
         [_restoreButton addTarget:self action:@selector(restoreAction:) forControlEvents:UIControlEventTouchUpInside];
         [_restoreButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"ContentFilterRestore", @"")

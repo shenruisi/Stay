@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shared;
 //- (void)writeJSONToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (void)appendJSONToFileName:(NSString *)fileName dictionary:(NSDictionary *)dictionary error:(NSError **)error;
+- (void)appendJSONToFileName:(NSString *)fileName trustedSite:(NSString *)trustedSite error:(NSError **)error;
+- (void)removeJSONToFileName:(NSString *)fileName trustedSite:(NSString *)trustedSite error:(NSError **)error;
 - (void)writeTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (void)appendTextToFileName:(NSString *)fileName content:(NSString *)content error:(NSError **)error;
 - (NSURL *)ruleJSONURLOfFileName:(NSString *)fileName;
