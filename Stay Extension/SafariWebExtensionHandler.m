@@ -609,7 +609,7 @@
             }];
         }
     }
-    else if ([message[@"type"] isEqualToString:@"trustedSite"]){
+    else if ([message[@"type"] isEqualToString:@"setTrustedSite"]){
         NSString *url = message[@"url"];
         BOOL on = [message[@"on"] boolValue];
         
@@ -635,6 +635,15 @@
                 [self removeTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:url];
             }
         }
+    }
+    else if ([message[@"type"] isEqualToString:@"getTrustedSite"]){
+        NSString *url = message[@"url"];
+        BOOL on = [[ContentFilterManager shared] existTrustSiteWithDomain:url];
+        
+        body = @{
+            @"url":url,
+            @"on":@(on)
+        };
     }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
