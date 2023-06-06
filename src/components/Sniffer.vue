@@ -46,7 +46,8 @@
     </div>
     <div class="long-press-switch"  v-if="isMobile">
       <div class="switch-text">{{  t('longpress') }}</div>
-      <div class="switch" :class="longPressStatusRes=='on'?'switch-on':'switch-off'" @click="longPressSwitchClick">{{ longPressSwitch }}</div>
+      <!-- <div class="switch" :class="longPressStatusRes=='on'?'switch-on':'switch-off'" @click="longPressSwitchClick">{{ longPressSwitch }}</div> -->
+      <SwitchComp class="switch" :switchStatus="threeFingerTapStatus" @switchAction="longPressSwitchClick"></SwitchComp>
     </div>
   </div>
 </template>
@@ -56,9 +57,11 @@ import { reactive, getCurrentInstance, inject, toRefs, watch } from 'vue'
 import { getDomain, getHostname, getFilenameByUrl, getLevel2domain, getFiletypeByUrl, isMobile } from '../utils/util'
 import { useI18n } from 'vue-i18n';
 import store from '../store';
+import SwitchComp from './SwitchComp.vue';
 export default {
   name: 'SnifferComp',
   props: ['browserUrl', 'longPressStatus'],
+  components:{SwitchComp},
   setup (props, {emit, expose}) {
     const { proxy } = getCurrentInstance();
     const { t, tm } = useI18n();
@@ -289,14 +292,13 @@ export default {
       border: 1px solid var(--dm-bd);
       background-color: var(--dm-bg-f7);
       display: flex;
-      padding: 0 20px;
+      padding: 0 80px 0 20px;
       justify-content: center;
       justify-items: center;
       align-items: center;
       user-select: none;
       .switch-text{
-        width: 80%;
-        text-align: left;
+        width: 100%;
         color: var(--dm-font);
         height: 100%;
         display: flex;
@@ -304,38 +306,12 @@ export default {
         user-select: none;
       }
       .switch{
-        width: 20%;
-        color: var(--dm-font-2);
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        position: relative;
-        &::after{
-          content: '';
-          position: absolute;
-          right: 0px;
-          /* background: url(../img/option.png) 50% 50% no-repeat; */
-          /* background-size: 50%; */
-          width: 10px;
-          height: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-          object-fit: contain;
-          border-radius: 50%;
-        }
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
       }
-      .switch-on{
-        &::after{
-          background: var(--s-main);
-        }
-      }
-      .switch-off{
-        &::after{
-          background: var(--dm-bd);
-        }
-      }
+      
     }
     .sniffer-video-box{
       padding: 0px 0 0px 10px;

@@ -1090,10 +1090,30 @@ const browser = __b;
         shouldDecodeQuality[videoInfo.videoUuid] = qualityList;
       }
       // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
+      
       try {
-        addLongPress(videoDom, posDom, videoInfo);
+        if (window === window.top) {
+          // 当前页面不在 <iframe> 中
+          addLongPress(videoDom, posDom, videoInfo);
+        } else {
+          // 当前页面在 <iframe> 中
+          // 向父页面发送消息，请求获取父页面域名
+          const iframe = window.frameElement;
+          let iframeReact = iframe.getBoundingClientRect();
+          console.log('iframeReact------',iframeReact);
+          const posDomReact = posDom.getBoundingClientRect();
+          let videoReact = {
+            x: iframeReact.x,
+            y: iframeReact.y,
+            width: posDomReact.width,
+            height: posDomReact.height
+          }
+          console.log('posDomReact------',posDomReact);
+          const pid = Math.random().toString(36).substring(2, 9);
+          window.parent.postMessage({pid:pid, name: 'PUSH_VIDEO_INFO_TO_PARENT', videoInfo, videoReact}, '*');
+        }
       } catch (error) {
-        
+        console.log('addLongPress----', error)
       }
       
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
@@ -1304,7 +1324,7 @@ const browser = __b;
         }
         // console.log('addLongPress--------LongPress=====',hostUrl)
         videoAreaLongPressEvent = new LongPress(posDom, ()=>{
-          addSinfferModal(videoDom, posDom, videoInfo);
+          addSinfferModalByPosDom(videoDom, posDom, videoInfo);
         })
       }
       else if(hostUrl.indexOf('mobile.twitter.com')>-1){
@@ -1320,7 +1340,7 @@ const browser = __b;
           }
         }
         videoAreaLongPressEvent = new LongPress(posDom, ()=>{
-          addSinfferModal(videoDom, posDom, videoInfo);
+          addSinfferModalByPosDom(videoDom, posDom, videoInfo);
         })
       }
       else if(hostUrl.indexOf('muiplayer.js.org')>-1){
@@ -1331,13 +1351,13 @@ const browser = __b;
         if(posterDom){
           // posDom = posterDom;
           videoAreaLongPressEvent = new LongPress(posterDom, ()=>{
-            addSinfferModal(videoDom, posterDom, videoInfo);
+            addSinfferModalByPosDom(videoDom, posterDom, videoInfo);
           })
         }
       }
       
       new DocumentLongPress(posDom, ()=>{
-        addSinfferModal(videoDom, posDom, videoInfo);
+        addSinfferModalByPosDom(videoDom, posDom, videoInfo);
       });
       
     }
@@ -1402,20 +1422,44 @@ const browser = __b;
      * @param {Object} videoInfo  视频信息            用于popup信息展示
      * @returns 
      */
-    function addSinfferModal(videoDom, posDom, videoInfo){
-      let vWidth = posDom.clientWidth;
-      let vHeight = posDom.clientHeight;
-      let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
-      let top = posDom.getBoundingClientRect().top;
-      let left = posDom.getBoundingClientRect().left;
-      // console.log('videoDom.tagName====',videoDom, posDom)
-      if('VIDEO' == posDom.tagName){
+    function addSinfferModalByPosDom(videoDom, posDom, videoInfo){
+      const posDomReact = posDom.getBoundingClientRect();
+      let top = posDomReact.y;
+      let left = posDomReact.x;
+      if(posDom.tagName && 'VIDEO' == posDom.tagName){
         // console.log('videoDom.parentNode====',videoDom.parentNode)
         top = posDom.parentNode.getBoundingClientRect().top;
         left = posDom.parentNode.getBoundingClientRect().left;
       }
       left = 10;
+
+      let position = {
+        width: posDomReact.width,
+        height: posDomReact.height,
+        x: left,
+        y: top,
+      }
+
+      addSinfferModal(videoDom, position, videoInfo);
+    }
+
+    /**
+     * 添加长按事件
+     * @param {Object} videoDom   视频video dom对象   用于截图,视频播放/暂停判断
+     * @param {Object} posDomReact     视频区域            用于绑定长按事件
+     * @param {Object} videoInfo  视频信息            用于popup信息展示
+     * @returns 
+     */
+    function addSinfferModal(videoDom, posDomReact, videoInfo){
+      
+      let vWidth = posDomReact.width;
+      let vHeight = posDomReact.height;
+      
+      let top = posDomReact.y;
+      let left = posDomReact.x;
+      // console.log('videoDom.tagName====',videoDom, posDom)
+      let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
       // 算出16:9的宽高
       let posterWidth = bodyClientWidth;
       let posterHeight = Utils.div(Utils.mul(posterWidth, 9), 16);
@@ -3548,10 +3592,41 @@ const browser = __b;
         isLoadingLongPressStatus = false;
       }
     }
+
+    function fetchIframeVideoInfo(){
+      if (window === window.top) {
+        // 当前页面不在 <iframe> 中
+        window.addEventListener('message', (event)=>{
+          let messagePid = event.data.pid;
+          let name = event.data.name;
+          if('GET_IFRAME_VIDEO_INFO' == name){
+            let pid = event.data.pid;
+            let videoReact = event.data.videoReact;
+            let iframeVideoInfo = event.data.videoInfo;
+            const posDoms = document.elementsFromPoint(videoReact.x, videoReact.y);
+            console.log('posDoms--------------',posDoms);
+            // videoDom, posDom, videoInfo
+            // addLongPress();
+          }
+        })
+      } else {
+        // 当前页面在 <iframe> 中
+        // 向父页面发送消息，请求获取父页面域名
+        // const pid = Math.random().toString(36).substring(2, 9);
+        // window.parent.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP'}, '*');
+        // window.addEventListener('message', (event)=>{
+        //   let messagePid = event.data.pid;
+        //   if(messagePid == pid){
+
+        //   }
+        // })
+      }
+    }
     
     function startSnifferVideoInfoOnPage(complate){
       fetchLongPressConfig();
       startFetchYoutubeFunStr();
+      fetchIframeVideoInfo();
       startFindVideoInfo(complate);
     }
 
@@ -3592,65 +3667,6 @@ const browser = __b;
         }
       }
     });
-
-    /**
-     * @discarded 废弃请求拦截
-     */
-    function handlePageInterceptor(){
-      function isVideoLink(url){
-        let re = /^(https?:\/\/|\/).*\.(mp4|m3u8)$/;
-        return url.match(re) != null;
-      }    
-        
-      let uniqueUrls = new Set()
-      //XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
-      XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
-        
-      XMLHttpRequest.prototype.open = function(method, url, async, user, password){
-        console.log('OPEN_URL',url);
-        this.reallyOpen(method,url,async,user,password);
-        if (isVideoLink(url)){
-          if (!uniqueUrls.has(url)){
-            uniqueUrls.add(url);
-            console.log('VIDEO_LINK_CAPTURE: ' + url);
-            window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
-            if(isContent){
-              let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
-              browser.runtime.sendMessage(message, (response) => {});
-            }
-          }       
-        }
-      };
-        
-      // XMLHttpRequest.prototype.send = function (body) { 
-      //       alert("--req.body:---",body);
-      //     //   console.log("VIDEO_LINK_CAPTURE: ",this);
-      //     //  console.log("VIDEO_LINK_CAPTURE-------------");
-        
-      //     this.reallySend(body);
-        
-      // };
-        
-      let originalFetch = window.fetch;
-      window.fetch = function(resource, options){
-        let url = typeof resource == 'object' ? resource.url : resource;
-        if (isVideoLink(url)){
-          if (!uniqueUrls.has(url)){
-            uniqueUrls.add(url);
-            console.log('VIDEO_LINK_CAPTURE: ' + url);
-            window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
-            if(isContent){
-              let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
-              browser.runtime.sendMessage(message, (response) => {});
-            }
-          }       
-        }
-        return originalFetch(resource,options);
-      };
-    }
-
-    // handlePageInterceptor();
-
   }
 
   let videoPageUrl = window.location.href;
@@ -3705,6 +3721,19 @@ const browser = __b;
         let decodeFun = '';
         window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
       });
+    }
+    else if(name === 'GET_ORIGIN_FROM_IFRAME'){
+      let pid = e.data.pid;
+      // 将父页面域名发送给子页面
+      e.source.postMessage({name: 'RESP_ORIGIN_FROM_IFRAME', parentOrigin: window.location.origin, pid}, e.origin);
+    }
+    // 接收iframe中video信息
+    else if(name === 'PUSH_VIDEO_INFO_TO_PARENT'){
+      let pid = e.data.pid;
+      let videoReact = e.data.videoReact;
+      let iframeVideoInfo = e.data.videoInfo;
+      window.postMessage({pid:pid, name: 'GET_IFRAME_VIDEO_INFO', videoReact, iframeVideoInfo});
+      console.log('iframeVideoInfo-------', iframeVideoInfo, videoReact)
     }
   })
 })()
