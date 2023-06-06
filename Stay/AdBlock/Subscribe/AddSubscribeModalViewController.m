@@ -16,6 +16,8 @@
 #import "FCShared.h"
 #import "FCStyle.h"
 #import "ContentFilter2.h"
+#import "DataManager.h"
+#import "SubscribeContentFilterManager.h"
 
 @interface AddSubscribeModalViewController()<
  UITableViewDelegate,
@@ -201,8 +203,8 @@
         subscribe.downloadUrl = self.linkElement.inputEntity.text;
         subscribe.enable = 0;
         subscribe.status = 1;
-        subscribe.sort = 1;
-        subscribe.load = 0;
+        subscribe.sort = 6;
+        subscribe.load = 1;
         subscribe.expires = @"4 days (update frequency)";
         subscribe.version = @"";
         subscribe.homepage = @"";
@@ -216,12 +218,14 @@
         self.contentFilter  = subscribe;
         
         __weak AddSubscribeModalViewController *weakSelf = self;
-        
-        [self.contentFilter checkUpdatingIfNeeded:YES completion:^(NSError * _Nonnull error) {
-            [self.navigationController.slideController stopLoading];
-            [button stopLoading];
-            if (error){
-                dispatch_async(dispatch_get_main_queue(), ^{
+        [[SubscribeContentFilterManager shared] checkUpdatingIfNeeded:self.contentFilter
+                                                                focus:YES
+                                                           completion:^(NSError * _Nonnull error, BOOL updated) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.navigationController.slideController stopLoading];
+                [button stopLoading];
+                
+                if (error){
                     [weakSelf.navigationController.slideController stopLoading];
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"AdBlock", @"")
                                                                                    message:[error localizedDescription]
@@ -232,9 +236,17 @@
                         }];
                     [alert addAction:confirm];
                     [weakSelf.navigationController.slideController.baseCer presentViewController:alert animated:YES completion:nil];
-                });
-                return;
-            }
+                    
+                }
+                else{
+                    [[DataManager shareManager] insertContentFilter:self.contentFilter error:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ContentFilterDidAddOrRemoveNotification object:nil];
+                    [self.navigationController.slideController dismiss];
+                }
+            });
+            
+            
+            
         }];
     }
     else{

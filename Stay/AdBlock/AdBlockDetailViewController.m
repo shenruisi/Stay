@@ -13,6 +13,7 @@
 #import "ContentFilterManager.h"
 #import "FCShared.h"
 #import "DeviceHelper.h"
+#import "DataManager.h"
 
 @interface AdBlockDetailViewController ()
 
@@ -155,6 +156,7 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
     else{
+        [[DataManager shareManager] updateContentFilterUpdateTime:[NSDate date] uuid:self.contentFilter.uuid];
         __weak AdBlockDetailViewController *weakSelf = self;
         [self.contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
             dispatch_async(dispatch_get_main_queue(), ^{

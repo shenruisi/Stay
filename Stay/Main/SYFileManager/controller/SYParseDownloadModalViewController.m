@@ -252,6 +252,7 @@
         _entity[@"selectedQuality"] = dic[@"qualityLabel"];
         _entity[@"selectedDownloadUrl"] = dic[@"downloadUrl"];
         _entity[@"selectedAudioUrl"] = dic[@"audioUrl"];
+        _entity[@"selectedProtect"] = dic[@"protect"];
         [self buildQualityView:qualityList selectedQuality:dic[@"qualityLabel"]];
         self.linkLabel.text =  dic[@"downloadUrl"];
     }
@@ -492,11 +493,13 @@
                         NSString *downloadUrl = dic[@"downloadUrl"];
                         NSString *selectedDownloadUrl;
                         NSString *selectedAudioUrl;
+                        Boolean selectedProtect = FALSE;
                         for (NSDictionary *qulity in qualityList) {
                             if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
                                 selectedQuality = qulity[@"qualityLabel"];
                                 selectedDownloadUrl = qulity[@"downloadUrl"];
                                 selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
                                 break;
                             }
                         }
@@ -504,10 +507,12 @@
                             selectedQuality = qualityList[0][@"qualityLabel"];
                             selectedDownloadUrl = qualityList[0][@"downloadUrl"];
                             selectedAudioUrl = qualityList[0][@"audioUrl"];
+                            selectedProtect = [qualityList[0][@"protect"] boolValue];
                         }
                         mutDic[@"selectedQuality"] = selectedQuality;
                         mutDic[@"selectedDownloadUrl"] = selectedDownloadUrl;
                         mutDic[@"selectedAudioUrl"] = selectedAudioUrl;
+                        mutDic[@"selectedProtect"] = @(selectedProtect);
                     }
                     
                     founded = YES;
@@ -522,11 +527,13 @@
                     NSString *selectedQuality;
                     NSString *selectedDownloadUrl;
                     NSString *selectedAudioUrl;
+                    Boolean selectedProtect = FALSE;
                     for (NSDictionary *qulity in qualityList) {
                         if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
                             selectedQuality = qulity[@"qualityLabel"];
                             selectedDownloadUrl = qulity[@"downloadUrl"];
                             selectedAudioUrl = qulity[@"audioUrl"];
+                            selectedProtect = [qulity[@"protect"] boolValue];
                             break;
                         }
                     }
@@ -534,10 +541,12 @@
                         selectedQuality = qualityList[0][@"qualityLabel"];
                         selectedDownloadUrl = qualityList[0][@"downloadUrl"];
                         selectedAudioUrl = qualityList[0][@"audioUrl"];
+                        selectedProtect = [qualityList[0][@"protect"] boolValue];
                     }
                     item[@"selectedQuality"] = selectedQuality;
                     item[@"selectedDownloadUrl"] = selectedDownloadUrl;
                     item[@"selectedAudioUrl"] = selectedAudioUrl;
+                    item[@"selectedProtect"] = @(selectedProtect);
                 }
                 if (item[@"uuid"] == nil) {
                     NSString *selectedUUID = SharedStorageManager.shared.userDefaults.lastFolderUUID;
@@ -609,7 +618,7 @@
                 resource.icon = item[@"poster"];
                 resource.host = item[@"hostUrl"];
                 resource.audioUrl = item[@"selectedAudioUrl"] ? item[@"selectedAudioUrl"] : item[@"audioUrl"];
-                resource.protect = [item[@"protect"] isEqual:@(1)]?YES:NO;
+                resource.protect = [item[@"selectedProtect"] ? item[@"selectedProtect"] : item[@"protect"] isEqual:@(1)]?YES:NO;
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
                 }

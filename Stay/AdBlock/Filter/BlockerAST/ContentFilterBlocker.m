@@ -80,6 +80,9 @@
         
         if ([parser isOptions]){
             ast = [[OptionsBlockerAST alloc] initWithParser:parser args:@[contentBlockerRule]];
+            if (ast.unsupported){
+                return nil;
+            }
         }
         
         if ([parser isSelector]){

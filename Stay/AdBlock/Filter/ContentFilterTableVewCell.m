@@ -26,6 +26,8 @@
 @property (nonatomic, strong) NSArray<NSLayoutConstraint *> *statusViewConstraints;
 @property (nonatomic, strong) UIButton *enableButton;
 @property (nonatomic, strong) UILabel *proLabel;
+@property (nonatomic, strong) UILabel *updateLabel;
+@property (nonatomic, strong) NSArray<NSLayoutConstraint *> *updateLabelConstraints;
 @end
 
 @implementation ContentFilterTableVewCell
@@ -59,6 +61,7 @@
     self.nameLabel.textColor = active ? FCStyle.fcBlack : FCStyle.fcSeparator;
     self.stateView.active = active;
     self.typeLabel.backgroundColor = active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
+    self.updateLabel.textColor = active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
 }
 
 - (void)doubleTap:(CGPoint)location{
@@ -139,6 +142,23 @@
         ]];
     }
     
+    UILabel *updateLabel = (UILabel *)[self.updateLabel duplicate];
+    updateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    updateLabel.textColor = !self.active ? FCStyle.fcSecondaryBlack : FCStyle.fcSeparator;
+    [containerView addSubview:updateLabel];
+    
+    if (!self.enableButton.hidden){
+        [NSLayoutConstraint activateConstraints:@[
+            [updateLabel.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
+            [updateLabel.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-38]
+        ]];
+    }
+    else{
+        [NSLayoutConstraint activateConstraints:@[
+            [updateLabel.trailingAnchor constraintEqualToAnchor:containerView.trailingAnchor constant:-10],
+            [updateLabel.bottomAnchor constraintEqualToAnchor:containerView.bottomAnchor constant:-5]
+        ]];
+    }
     
     UIView *maskView = [[UIView alloc] init];
     maskView.backgroundColor = UIColor.blackColor;
@@ -161,6 +181,11 @@
     self.nameLabel.text = element.title;
     self.active = element.active;
     self.typeLabel.text = [ContentFilter stringOfType:element.type];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy.MM.dd"];
+    NSString *stringFromDate = [formatter stringFromDate:element.updateTime];
+    self.updateLabel.text = [NSString stringWithFormat:@"%@%@",NSLocalizedString(@"UpdateOn", @""),stringFromDate];
     CGRect rect = [self.typeLabel.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20)
                                            options:NSStringDrawingUsesLineFragmentOrigin
                                         attributes:@{NSFontAttributeName : FCStyle.footnote}
@@ -185,6 +210,9 @@
         else if (ContentFilterTypeTag == element.type){
             enableAlert = NSLocalizedString(@"ContentFilterTagAlert", @"");
         }
+        else if (ContentFilterTypeSubscribe == element.type){
+            enableAlert = NSLocalizedString(@"ContentFilterSubscribeAlert", @"");
+        }
         
         CGRect rect = [enableAlert boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 25)
                                                 options:NSStringDrawingUsesLineFragmentOrigin
@@ -195,10 +223,16 @@
     }
     
     [NSLayoutConstraint deactivateConstraints:self.statusViewConstraints];
+    [NSLayoutConstraint deactivateConstraints:self.updateLabelConstraints];
     if (!element.enable){
         self.statusViewConstraints = @[
             [self.stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
             [self.stateView.bottomAnchor constraintEqualToAnchor:self.alertLabel.topAnchor constant:-12]
+        ];
+        
+        self.updateLabelConstraints = @[
+            [self.updateLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
+            [self.updateLabel.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-38],
         ];
     }
     else{
@@ -206,8 +240,14 @@
             [self.stateView.leadingAnchor constraintEqualToAnchor:self.fcContentView.leadingAnchor constant:10],
             [self.stateView.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-15]
         ];
+        
+        self.updateLabelConstraints = @[
+            [self.updateLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
+            [self.updateLabel.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-5]
+        ];
     }
     [NSLayoutConstraint activateConstraints:self.statusViewConstraints];
+    [NSLayoutConstraint activateConstraints:self.updateLabelConstraints];
     
     if (ContentFilterTypeTag == element.type
         || ContentFilterTypeCustom == element.type){
@@ -298,6 +338,29 @@
     
     return _stateView;
 }
+
+- (UILabel *)updateLabel{
+    if (nil == _updateLabel){
+        _updateLabel = [[UILabel alloc] init];
+        _updateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _updateLabel.textAlignment = NSTextAlignmentRight;
+        _updateLabel.font = FCStyle.footnote;
+        _updateLabel.textColor = FCStyle.fcSecondaryBlack;
+        
+        [self.fcContentView addSubview:_updateLabel];
+        
+        self.updateLabelConstraints = @[
+            [_updateLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-10],
+            [_updateLabel.bottomAnchor constraintEqualToAnchor:self.fcContentView.bottomAnchor constant:-15]
+        ];
+        
+        [NSLayoutConstraint activateConstraints:self.updateLabelConstraints];
+        
+    }
+    
+    return _updateLabel;
+}
+
 
 - (UIButton *)enableButton{
     if (nil == _enableButton){

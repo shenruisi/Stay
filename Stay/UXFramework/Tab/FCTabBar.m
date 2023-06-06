@@ -32,6 +32,7 @@
 
 @implementation FCTabBar
 
+
 - (instancetype)initWithStyle:(FCTabBarStyle)style{
     if (self = [super init]){
         self.style = style;
@@ -83,6 +84,7 @@
         
         [self.buttons addObject:button];
         [self addSubview:button];
+        item.button = button;
     }
     else if (self.style == FCTabBarStyleSegment){
         [self.segmentControl insertSegmentWithImage:item.selectImage atIndex:self.segmentControl.numberOfSegments animated:NO];
