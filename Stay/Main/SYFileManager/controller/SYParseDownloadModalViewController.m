@@ -453,8 +453,14 @@
         _curCount++;
     }
     [tableView reloadData];
-    [self.startButton setEnabled:_curCount > 0];
-    self.startButton.backgroundColor = _curCount > 0 ? FCStyle.accent : FCStyle.tertiaryBackground;
+    BOOL isEnable = _curCount > 0;
+    [self.startButton setEnabled:isEnable];
+    self.startButton.layer.borderColor = isEnable ? FCStyle.accent.CGColor : FCStyle.borderColor.CGColor;
+    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
+                                                                                     attributes:@{
+                                NSForegroundColorAttributeName : isEnable ? FCStyle.accent : [UIColor systemGray3Color],
+                                 NSFontAttributeName : FCStyle.bodyBold}]
+                                            forState:UIControlStateNormal];
 }
 
 - (NSMutableArray<NSMutableDictionary *> *)dataSource{
