@@ -1103,6 +1103,23 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(body)
             });
         }
+        else if('trustedSite' == requestOperate){
+            const url = request.url;
+            // console.log("trustedSite-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "trustedSite", url}, function (response) {
+                // console.log("trustedSite-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
+        else if('getTrustedSite' == requestOperate){
+            // console.log("trustedSite-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "getTrustedSite" }, function (response) {
+                // console.log("trustedSite-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
         return true;
     }else if ("content_script" == request.from){
         // console.log("content_script-------request=", request)

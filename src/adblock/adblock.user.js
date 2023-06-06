@@ -1785,7 +1785,7 @@ const browser = __b;
       if(!idStr){
         return false;
       }
-      if(/^[0-9a-zA-Z-_]*$/.test(idStr) && idStr.length>10){
+      if(/^[0-9a-zA-Z-_]*$/.test(idStr) && idStr.length>=10){
         return false;
       }
       return true;

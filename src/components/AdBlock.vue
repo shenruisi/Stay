@@ -17,7 +17,7 @@
       <div class="taging-status" @click="tagingStatusClick">{{  t('taging_status_btn') }}</div>
       <div class="three-finger-switch" >
         <div class="switch-text">{{  t('taging') }}</div>
-        <div class="switch" :class="threeFingerTapStatus=='on'?'switch-on':'switch-off'" @click="threeFingerSwitchClick">{{ threeFingerTapSwitch }}</div>
+        <SwitchComp class="switch" :switchStatus="threeFingerTapStatus" @switchAction="threeFingerSwitchClick"></SwitchComp>
       </div>
     </div>
     <div class="tagging-rules-box" v-if="showTab == 'tagRules'">
@@ -30,17 +30,27 @@
       </template>
       <div class="rule-note">{{ t('rule_note') }}</div>
     </div>
+    <div class="trusted-box" v-if="showTab == 'trusted'">
+      <div class="trusted-site">
+        <div class="site-info"></div>
+        <SwitchComp class="switch-rule" :switchStatus="switchStatus" @switchAction="switchAction"></SwitchComp>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import { reactive, inject, toRefs, watch, computed } from 'vue'
 import { isMobileOrIpad, unhtml } from '../utils/util'
 import { useI18n } from 'vue-i18n';
+import SwitchComp from './SwitchComp.vue';
     
     
 export default {
   name: 'AdBlockComp',
   props: ['currentTab'],
+  components:{
+    SwitchComp
+  },
   setup (props, {emit, expose}) {
     const global = inject('global');
     const store = global.store;
@@ -54,19 +64,24 @@ export default {
       isMobileOrIpad: isMobileOrIpad(),
       threeFingerTapStatus: store.state.threeFingerTapStatus,
       threeFingerTapSwitch: store.state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off'),
-      showTab: props.currentTab && 'tab_1'== props.currentTab ? 'webTag':'tagRules',
-      webRuleList: []
+      showTab: props.currentTab && 'tab_1'== props.currentTab ? 'webTag': ('tab_2'== props.currentTab ?'tagRules':'trusted'),
+      webRuleList: [],
+      switchStatus: 'off',
     });
 
     watch(
       props,
       (newProps) => {
         // 接收到的props的值
-        let showTab = props.currentTab && 'tab_1'== props.currentTab ? 'webTag':'tagRules';
+        let showTab = props.currentTab && 'tab_1'== props.currentTab ? 'webTag': ('tab_2'== props.currentTab ?'tagRules':'trusted');
+
         if(state.showTab != showTab){
           state.showTab = showTab;
           if(state.showTab == 'tagRules'){
             fetchWebTagRules();
+          }
+          if(state.showTab == 'trusted'){
+            fetchTrusted();
           }
         }
       },
@@ -83,7 +98,7 @@ export default {
       }else{
         state.threeFingerTapStatus = 'on';
       }
-      state.threeFingerTapSwitch = state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
+      // state.threeFingerTapSwitch = state.threeFingerTapStatus == 'on' ? t('switch_on') : t('switch_off');
       store.commit('setThreeFingerTapStatus', state.threeFingerTapStatus);
 
       global.browser.tabs.query({
@@ -129,6 +144,35 @@ export default {
         })
       })
       
+    }
+
+    const setTrusted = () => {
+      global.browser.tabs.getSelected(null, (tab) => {
+        state.browserUrl = tab.url;
+        // console.log('state.browserUrl----tab-----', state.browserUrl);
+        store.commit('setBrowserUrl', tab.url);
+        global.browser.runtime.sendMessage({ from: 'popup', operate: 'trustedSite', url: state.browserUrl, on: state.switchStatus=='on'?true:false}, (response) => {
+          console.log('trustedSite====',response);
+          // state.trustedSite = response.url;
+          // state.switchStatus = response.on;
+        })
+      })
+    }
+
+    const fetchTrusted = () => {
+      global.browser.tabs.getSelected(null, (tab) => {
+        state.browserUrl = tab.url;
+        // console.log('state.browserUrl----tab-----', state.browserUrl);
+        store.commit('setBrowserUrl', tab.url);
+        global.browser.runtime.sendMessage({ from: 'popup', operate: 'getTrustedSite', url: state.browserUrl,}, (response) => {
+          console.log('trustedSite====',response);
+          if(response.url){
+            let urlObj = new URL(response.url);
+            state.trustedSite = `${urlObj.hostname}${urlObj.pathname}`;
+          }
+          state.switchStatus = response.on?'on':'off';
+        })
+      })
     }
 
     const deleteWebTagRule = (uuid) => {
@@ -190,6 +234,13 @@ export default {
       let openUrl = 'https://www.craft.do/s/Zmlkwi42U4r5N0';
       global.openUrlInSafariPopup(openUrl);
     }
+
+    const switchAction = (switchStatus) => {
+      state.switchStatus = switchStatus;
+      console.log('switchAction-------switchStatus===',switchStatus);
+      // todo
+      setTrusted()
+    }
     
     return {
       ...toRefs(state),
@@ -199,7 +250,8 @@ export default {
       tagToManageClick,
       deleteRuleClick,
       unHtmlTag,
-      tagToEnableClick
+      tagToEnableClick,
+      switchAction
     };
   }
 }
@@ -342,15 +394,14 @@ export default {
         border: 1px solid var(--dm-bd);
         background-color: var(--dm-bg-f7);
         display: flex;
-        padding: 0 20px;
+        padding: 0 60px 0 20px;
         justify-content: center;
         justify-items: center;
         align-items: center;
         user-select: none;
         cursor: default;
         .switch-text{
-          width: 80%;
-          text-align: left;
+          width: 100%;
           color: var(--dm-font);
           height: 100%;
           display: flex;
@@ -358,38 +409,12 @@ export default {
           user-select: none;
         }
         .switch{
-          width: 20%;
-          color: var(--dm-font-2);
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          user-select: none;
-          position: relative;
-          &::after{
-            content: '';
-            position: absolute;
-            right: 0px;
-            /* background: url(../img/option.png) 50% 50% no-repeat; */
-            /* background-size: 50%; */
-            width: 10px;
-            height: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            object-fit: contain;
-            border-radius: 50%;
-          }
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
         }
-        .switch-on{
-          &::after{
-            background: var(--s-main);
-          }
-        }
-        .switch-off{
-          &::after{
-            background: var(--dm-bd);
-          }
-        }
+        
       }
     }
     .tagging-rules-box{
@@ -473,6 +498,41 @@ export default {
         transform: translateX(-50%);
         z-index: 999;
         user-select: none;
+      }
+    }
+    .trusted-box{
+      width: 100%;
+      height: 100%;
+      padding-top: 10px;
+      .trusted-site{
+        padding: 8px 80px 8px 8px;
+        width: 100%;
+        height: 45px;
+        border: 1px solid var(--dm-bd);
+        background-color: var(--dm-bg);
+        border-radius: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        position: relative;
+        .site-info{
+          width: 100%;
+          height: 45px;
+          line-height: 45px;
+          text-align: left;
+          color: var(--dm-font);
+          font-size: 16px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          -webkit-box-orient: vertical;
+        }
+        .switch-rule{
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
       }
     }
   }
