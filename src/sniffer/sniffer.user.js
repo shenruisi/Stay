@@ -50,6 +50,7 @@ const browser = __b;
     let isLoadingLongPressStatus = false;
     let definedObj = {};
     let videoListMd5 = '';
+    let videoInfoMd5 = '';
     let isStayAround = '';
     let documentLongPressEvent = null;
     let videoAreaLongPressEvent = null;
@@ -1092,26 +1093,7 @@ const browser = __b;
       // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
       
       try {
-        if (window === window.top) {
-          // 当前页面不在 <iframe> 中
-          addLongPress(videoDom, posDom, videoInfo);
-        } else {
-          // 当前页面在 <iframe> 中
-          // 向父页面发送消息，请求获取父页面域名
-          const iframe = window.frameElement;
-          let iframeReact = iframe.getBoundingClientRect();
-          console.log('iframeReact------',iframeReact);
-          const posDomReact = posDom.getBoundingClientRect();
-          let videoReact = {
-            x: iframeReact.x,
-            y: iframeReact.y,
-            width: posDomReact.width,
-            height: posDomReact.height
-          }
-          console.log('posDomReact------',posDomReact);
-          const pid = Math.random().toString(36).substring(2, 9);
-          window.parent.postMessage({pid:pid, name: 'PUSH_VIDEO_INFO_TO_PARENT', videoInfo, videoReact}, '*');
-        }
+        addLongPress(videoDom, posDom, videoInfo);
       } catch (error) {
         console.log('addLongPress----', error)
       }
@@ -1146,6 +1128,18 @@ const browser = __b;
       }
       pushVideoListToTransfer()
     }
+    function getTopmostIframe() {
+      let currentWindow = window;
+      let parentWindow = window.parent;
+    
+      while (parentWindow !== currentWindow) {
+        currentWindow = parentWindow;
+        parentWindow = parentWindow.parent;
+      }
+    
+      return parentWindow.frameElement;
+    }
+    
 
     function checkDecodeFunIsValid(){
       if(!decodeSignatureCipher || !Object.keys(decodeSignatureCipher).length){
@@ -1440,7 +1434,25 @@ const browser = __b;
         y: top,
       }
 
-      addSinfferModal(videoDom, position, videoInfo);
+      if (window === window.top) {
+        // 当前页面不在 <iframe> 中
+        addSinfferModal(videoDom, position, videoInfo);
+      } else {
+        // 当前页面在 <iframe> 中
+        // 向父页面发送消息，
+        // console.log('postMessage----to----parent-------');
+        const posDomReact = posDom.getBoundingClientRect();
+        let videoReact = {
+          x: posDomReact.x,
+          y: posDomReact.y,
+          width: posDomReact.width,
+          height: posDomReact.height,
+        }
+        const pid = Math.random().toString(36).substring(2, 9);
+        window.postMessage({pid:pid, name: 'PUSH_VIDEO_INFO_TO_PARENT', videoInfo, videoReact}, '*');
+      }
+
+      
     }
 
     /**
@@ -1600,9 +1612,22 @@ const browser = __b;
         // console.log('posterCon----3--',posterCon);
         
         let sinfferStyle = `<style id="__style_sinffer_style">
+          :root {
+            --s-modal-bg: rgba(0, 0, 0, 0.4);
+            --s-dl-bg: rgb(247,247,247);
+            --s-posterbg: rgba(255, 255, 255, 1);
+            --s-000-bg: rgba(0,0,0,0);
+          }
+          @media (prefers-color-scheme: dark) {
+            :root {
+              --s-modal-bg: rgba(0, 0, 0, 0.4);
+              --s-dl-bg: rgb(54, 54, 57);
+              --s-posterbg: rgba(0, 0, 0, 1);
+            }
+          }
           .__stay-modal-box{
             position: fixed; 
-            z-index: 9999999; 
+            z-index: 2147483647; 
             width: 100%; 
             height: 100%; 
             text-align: center; 
@@ -1617,10 +1642,11 @@ const browser = __b;
             -moz-osx-font-smoothing: grayscale;
           }
           .__stay-show-modal{
-            ${bg}
+            background-color:var(--s-modal-bg)!important;
             -webkit-backdrop-filter: blur(10px); 
           }
           .__stay-sinffer-content{
+            background-color:var(--s-000-bg)!important;
             width:100%;
             position: absolute;
             left: 0;
@@ -1636,6 +1662,7 @@ const browser = __b;
             transform: translate3d(0,${vTop}px,0);
           }
           .__stay-content{
+            background-color:var(--s-000-bg)!important;
             width:100%;
             position: relative;
             display: flex;
@@ -1645,8 +1672,12 @@ const browser = __b;
             align-items: center;
           }
           ._stay-sinffer-popup{
-            width:230px;padding-top: 10px;box-sizing: border-box;border-radius:15px;
-            ${downloadBg}
+            width:230px;
+            padding-top: 10px;
+            padding-bottom: 16px;
+            box-sizing: border-box;
+            border-radius:15px;
+            background-color: var(--s-dl-bg);
             position: relative;
             margin: 16px auto 0 auto;
             z-index:999999;
@@ -1693,7 +1724,7 @@ const browser = __b;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            ${posterbg}
+            background-color: var(--s-posterbg);
             border-radius: 10px;
             box-shadow: 0 0px 10px rgba(54,54,57,0.1);
           }
@@ -1867,10 +1898,7 @@ const browser = __b;
         return document.querySelector('#__stay_sinffer_modal');
       }
 
-      function restartEventListener(){
-
-       
-      }
+      
 
       modalDom.addEventListener('touchstart', handleModalEvent);
 
@@ -1879,7 +1907,6 @@ const browser = __b;
         event.stopPropagation();
         // modalDom.style.display = 'none';
         // removeModalMouseMoveEvent();
-        restartEventListener();
         modalDom.classList.remove('__stay-show-modal');
         popupDom.style.animation = 'fadeout .5s;';
         
@@ -1905,7 +1932,6 @@ const browser = __b;
               targetGun.href = openUrl;
               targetGun.click();
               downloadItems[i].removeEventListener('touchstart', handleDownloadItemEvent);
-              restartEventListener();
             }
           })(i)
         }
@@ -3595,24 +3621,30 @@ const browser = __b;
 
     function fetchIframeVideoInfo(){
       if (window === window.top) {
-        // 当前页面不在 <iframe> 中
+        // console.log('fetchIframeVideoInfo---------not in iframe----------');
+        // 当前页面不在 <iframe> 中, 接收iframe中video信息
         window.addEventListener('message', (event)=>{
           let messagePid = event.data.pid;
           let name = event.data.name;
-          if('GET_IFRAME_VIDEO_INFO' == name){
+          // console.log('fetchIframeVideoInfo-----------event------',event)
+          if(name === 'PUSH_IFRAME_VIDEO_INFO_TO_PARENT'){
             let pid = event.data.pid;
             let videoReact = event.data.videoReact;
-            let iframeVideoInfo = event.data.videoInfo;
-            const posDoms = document.elementsFromPoint(videoReact.x, videoReact.y);
-            console.log('posDoms--------------',posDoms);
-            // videoDom, posDom, videoInfo
-            // addLongPress();
+            let iframeVideoInfo = event.data.iframeVideoInfo;
+            // console.log('fetchIframeVideoInfo----PUSH_IFRAME_VIDEO_INFO_TO_PARENT-------', iframeVideoInfo, videoReact)
+            const iframeDom = document.querySelector('iframe');
+            console.log('fetchIframeVideoInfo----iframeDom-------', iframeDom)
+            if(iframeDom && iframeDom.getBoundingClientRect()){
+              videoReact.x= iframeDom.getBoundingClientRect().x;
+              videoReact.y= iframeDom.getBoundingClientRect().y;
+            }
+            addSinfferModal(null, videoReact, iframeVideoInfo);
           }
         })
       } else {
         // 当前页面在 <iframe> 中
         // 向父页面发送消息，请求获取父页面域名
-        // const pid = Math.random().toString(36).substring(2, 9);
+        const pid = Math.random().toString(36).substring(2, 9);
         // window.parent.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP'}, '*');
         // window.addEventListener('message', (event)=>{
         //   let messagePid = event.data.pid;
@@ -3732,8 +3764,31 @@ const browser = __b;
       let pid = e.data.pid;
       let videoReact = e.data.videoReact;
       let iframeVideoInfo = e.data.videoInfo;
-      window.postMessage({pid:pid, name: 'GET_IFRAME_VIDEO_INFO', videoReact, iframeVideoInfo});
-      console.log('iframeVideoInfo-------', iframeVideoInfo, videoReact)
+      // console.log('iframeVideoInfo-------', iframeVideoInfo, videoReact, window.location.origin)
+      // window.postMessage({pid:pid, name: 'GET_IFRAME_VIDEO_INFO', videoReact, iframeVideoInfo}, '*');
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'PUSH_IFRAME_VIDEO_INFO_TO_BG', iframeVideoInfo, videoReact}, (response) => {
+        // console.log('PUSH_IFRAME_VIDEO_INFO_TO_BG-----response----',response);
+      });
     }
   })
+
+  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
+    const operate = request.operate;
+    if('background' === requestFrom){
+      if('PUSH_IFRAME_VIDEO_INFO_TO_PARENT' == operate){
+        let videoReact = request.videoReact;
+        let iframeVideoInfo = request.iframeVideoInfo;
+        // console.log('PUSH_IFRAME_VIDEO_INFO_TO_PARENT------', videoReact, iframeVideoInfo)
+        
+        const pid = Math.random().toString(36).substring(2, 9);
+        window.postMessage({pid:pid, name: 'PUSH_IFRAME_VIDEO_INFO_TO_PARENT',  videoReact, iframeVideoInfo});
+
+        sendResponse({success: 'true'})
+      }
+      
+    }
+    return true;
+  });
+
 })()
