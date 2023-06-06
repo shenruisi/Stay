@@ -206,6 +206,13 @@
                 if (state.enabled){
                     contentFilter.enable = 1;
                     [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                    if (ContentFilterTypeTag == contentFilter.type){
+                        [SharedStorageManager shared].extensionConfig = nil;
+                        if ([SharedStorageManager shared].extensionConfig.tagUpdate){
+                            [[DataManager shareManager] updateContentFilterUpdateTime:[SharedStorageManager shared].extensionConfig.tagUpdate uuid:contentFilter.uuid];
+                        }
+                    }
+                    
                     if (0 == contentFilter.load){
                         [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                             if (nil == error){
@@ -222,6 +229,12 @@
                 else{
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                    if (ContentFilterTypeTag == contentFilter.type){
+                        [SharedStorageManager shared].extensionConfig = nil;
+                        if ([SharedStorageManager shared].extensionConfig.tagUpdate){
+                            [[DataManager shareManager] updateContentFilterUpdateTime:[SharedStorageManager shared].extensionConfig.tagUpdate uuid:contentFilter.uuid];
+                        }
+                    }
                 }
                 
                 if (ContentFilterTypeSubscribe == contentFilter.type){

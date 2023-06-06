@@ -32,6 +32,7 @@
     [coder encodeBool:self.showBadge forKey:@"showBadge"];
     [coder encodeObject:self.tagStatus forKey:@"tagStatus"];
     [coder encodeObject:self.backgroundColorType forKey:@"backgroundColorType"];
+    [coder encodeObject:self.tagUpdate forKey:@"tagUpdate"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
@@ -39,6 +40,7 @@
         _showBadge = [coder decodeBoolForKey:@"showBadge"];
         _tagStatus = [coder decodeObjectForKey:@"tagStatus"];
         _backgroundColorType = [coder decodeObjectForKey:@"backgroundColorType"];
+        _tagUpdate = [coder decodeObjectForKey:@"tagUpdate"];
     }
     
     return self;
@@ -66,6 +68,7 @@
     _showBadge = extensionConfig.showBadge;
     _tagStatus = extensionConfig.tagStatus ? extensionConfig.tagStatus : @(1);
     _backgroundColorType = extensionConfig.backgroundColorType;
+    _tagUpdate = extensionConfig.tagUpdate;
 }
 
 - (void)setShowBadge:(BOOL)showBadge{
@@ -80,6 +83,11 @@
 
 - (void)setBackgroundColorType:(NSString *)backgroundColorType{
     _backgroundColorType = backgroundColorType;
+    [self flush];
+}
+
+- (void)setTagUpdate:(NSDate *)tagUpdate{
+    _tagUpdate = tagUpdate;
     [self flush];
 }
 

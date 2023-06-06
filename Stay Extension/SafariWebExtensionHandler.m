@@ -499,6 +499,8 @@
                     @"selector" : selector
                 }
             };
+            [SharedStorageManager shared].extensionConfig = nil;
+            [SharedStorageManager shared].extensionConfig.tagUpdate = [NSDate date];
             [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" dictionary:dictionary error:nil];
             
             NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
@@ -600,6 +602,8 @@
                 }
             }
             
+            [SharedStorageManager shared].extensionConfig = nil;
+            [SharedStorageManager shared].extensionConfig.tagUpdate = [NSDate date];
             [[ContentFilterManager shared] writeTextToFileName:@"Tag.txt" content:newContent error:nil];
             [[ContentFilterManager shared] writeJSONToFileName:@"Tag.json" array:jsonArray error:nil];
             
