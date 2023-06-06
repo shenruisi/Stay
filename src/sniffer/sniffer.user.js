@@ -2141,7 +2141,8 @@ const browser = __b;
      */
     function setYoutubePublicParam(sourceUrl, playerRes){
       if(sourceUrl){
-        ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : Utils.queryURLParams(sourceUrl, 'cver');
+        let cver = Utils.queryURLParams(sourceUrl, 'cver');
+        ytPublicParam.cver = cver ? cver : ytPublicParam.cver;
         setYtParmeObj(sourceUrl)
       }
       if(playerRes && Object.keys(playerRes).length){
@@ -2156,7 +2157,7 @@ const browser = __b;
             if('CSI' == item.service && item.params.length){
               item.params.forEach(param => {
                 if('cver' == param.key){
-                  ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : param.value;
+                  ytPublicParam.cver = param.value ? param.value : ytPublicParam.cver;
                 }
               })
             }
@@ -2167,11 +2168,16 @@ const browser = __b;
     }
 
     function setYtParmeObj(sourceUrl){
-      ytPublicParam.cpn = ytPublicParam.cpn?ytPublicParam.cpn:Utils.queryURLParams(sourceUrl, 'cpn');
-      ytPublicParam.ptk = ytPublicParam.ptk?ytPublicParam.ptk:Utils.queryURLParams(sourceUrl, 'ptk');
-      ytPublicParam.oid = ytPublicParam.oid?ytPublicParam.oid:Utils.queryURLParams(sourceUrl, 'oid');
-      ytPublicParam.ptchn = ytPublicParam.ptchn?ytPublicParam.ptchn:Utils.queryURLParams(sourceUrl, 'ptchn');
-      ytPublicParam.pltype = ytPublicParam.pltype?ytPublicParam.pltype:Utils.queryURLParams(sourceUrl, 'pltype');
+      let cpn = Utils.queryURLParams(sourceUrl, 'cpn');
+      ytPublicParam.cpn = cpn ? cpn : ytPublicParam.cpn;
+      let ptk = Utils.queryURLParams(sourceUrl, 'ptk');
+      ytPublicParam.ptk = ptk ? ptk : ytPublicParam.ptk;
+      let oid = Utils.queryURLParams(sourceUrl, 'oid');
+      ytPublicParam.oid = oid ? oid : ytPublicParam.oid;
+      let ptchn = Utils.queryURLParams(sourceUrl, 'ptchn');
+      ytPublicParam.ptchn = ptchn ? ptchn : ytPublicParam.ptchn;
+      let pltype = Utils.queryURLParams(sourceUrl, 'pltype');
+      ytPublicParam.pltype = pltype? pltype : ytPublicParam.pltype
     }
 
     function getYoutubeVideoUrlOrSignture(signatureCipher){
@@ -3633,7 +3639,7 @@ const browser = __b;
             let iframeVideoInfo = event.data.iframeVideoInfo;
             // console.log('fetchIframeVideoInfo----PUSH_IFRAME_VIDEO_INFO_TO_PARENT-------', iframeVideoInfo, videoReact)
             const iframeDom = document.querySelector('iframe');
-            console.log('fetchIframeVideoInfo----iframeDom-------', iframeDom)
+            // console.log('fetchIframeVideoInfo----iframeDom-------', iframeDom)
             if(iframeDom && iframeDom.getBoundingClientRect()){
               videoReact.x= iframeDom.getBoundingClientRect().x;
               videoReact.y= iframeDom.getBoundingClientRect().y;
