@@ -9,6 +9,9 @@
 #import "InviteProgressView.h"
 #import "FCStyle.h"
 #import "API.h"
+#import "DeviceHelper.h"
+#import "InviteDetail.h"
+#import "SYInviteCardController.h"
 
 @interface InviteRulesView:UIView
 
@@ -105,6 +108,9 @@ UITableViewDataSource
 @property (nonatomic, strong) InviteRulesView *inviteRulesView;
 @property (nonatomic, strong) HowToInviteView *howToInviteView;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIButton *inviteBtn;
+@property (nonatomic, assign) Boolean *started;
+@property (nonatomic, strong) SYInviteCardController *inviteCardController;
 
 
 @end
@@ -117,22 +123,33 @@ UITableViewDataSource
     self.hidesBottomBarWhenPushed = true;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     self.title = NSLocalizedString(@"InviteFriend",@"InviteFriend");
-//    [self iconImageView];
-//    [self pointLabel];
-//    [self inviteView];
-//    self.inviteView.titleArray = @[@"10",@"20",@"50",@"100",@"200"];
-//    self.inviteView.top = 273;
-//    [self.inviteView updateProgress:0.5];
-//    [self inviteLabel];
-//    [self inviteRulesView];
-//    self.inviteRulesView.top = self.inviteLabel.bottom + 13;
-//    self.howToInviteView.top = self.inviteRulesView.bottom + 15;
-    
     [self tableView];
     
     
-    [API shared] 
-
+    [[API shared]  queryPath:@"/invite-task/detail"
+                        pro:NO
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+        
+        if(biz != NULL) {
+            InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+            if(inviteDetail.inviteCode.length > 0) {
+                self.started = true;
+            }
+            
+            self.inviteView.titleArray = inviteDetail.process;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.inviteView updateProgress:0.5];
+            });
+        }
+    }];
+    
+    
+    if (!self.inviteCardController.isShown){
+        [self.inviteCardController show];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -151,8 +168,7 @@ UITableViewDataSource
         [cell.contentView addSubview:self.inviteRulesView];
         self.inviteRulesView.top = self.inviteView.bottom + 21;
 
-        self.inviteView.titleArray = @[@"10",@"20",@"50",@"100",@"200"];
-        [self.inviteView updateProgress:0.5];
+ 
         [cell.contentView addSubview:self.howToInviteView];
         self.howToInviteView.top = self.inviteRulesView.bottom + 15;
         
@@ -232,6 +248,14 @@ UITableViewDataSource
     return _howToInviteView;
 }
 
+- (UIButton *)inviteBtn {
+    if(_inviteBtn == nil) {
+//        _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)];
+        
+    }
+    return _inviteBtn;
+}
+
 - (UITableView *)tableView {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc] init];
@@ -256,6 +280,16 @@ UITableViewDataSource
     }
     return _tableView;
 }
+
+
+- (SYInviteCardController *)inviteCardController {
+    if(_inviteCardController == nil) {
+        _inviteCardController = [[SYInviteCardController alloc] init];
+        
+    }
+    return _inviteCardController;
+}
+
 /*
 #pragma mark - Navigation
 

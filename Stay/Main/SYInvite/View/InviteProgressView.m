@@ -64,20 +64,31 @@
 
 
 - (void)updateProgress:(CGFloat)progress {
-    int index = progress / 0.25;
-    self.progressView.width = 300 * progress;
+//    int index = progress / 0.25;
     for(int i = 0;i < self.nodeViews.count; i++) {
         CAShapeLayer *nodeLayer = self.nodeViews[i];
-        if(i <= index) {
-            nodeLayer.fillColor = FCStyle.accent.CGColor;
-        }
+  
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, 31, 19)];
         title.font = FCStyle.bodyBold;
-        title.text = _titleArray[i];
+        
+        long point = [_titleArray[i][@"displayed_point_value"] longValue];
+        
+        NSNumber *number = [NSNumber numberWithLong:point];
+        
+        title.text = [number stringValue];
         title.textColor = FCStyle.fcBlack;
         title.textAlignment = NSTextAlignmentCenter;
         title.centerX = nodeLayer.bounds.origin.x + 24 + 75 * i;
         [self addSubview:title];
+        
+        
+        bool finished = [_titleArray[i][@"finished"] boolValue];
+        if(finished) {
+            nodeLayer.fillColor = FCStyle.accent.CGColor;
+            self.progressView.width = (300 / (self.nodeViews.count - 1)) * i;
+        }
+        
+        
         
         if(i == (self.nodeViews.count - 1)) {
             title.textColor = FCStyle.fcOrangeColor;

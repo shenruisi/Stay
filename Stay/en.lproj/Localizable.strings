@@ -355,7 +355,7 @@ InviteRuleDesc="Share the link below with your friends. When your friend opens t
 HowToInvite="How to invite?";
 HowToInviteDesc="Checkout online document";
 NotSupportedOnThisDevice="Not Supported";
-
+GenerateCard="Generate Card";
 
 
 

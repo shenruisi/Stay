@@ -38,8 +38,8 @@ static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 #endif
 
 #ifdef DEBUG
-//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
-static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"http://172.16.4.73:10000/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
 #else
 static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
 #endif
