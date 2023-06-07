@@ -18,6 +18,14 @@
         >
           <div class="tab-text">{{ selectedTab.id==1 ? t("state_stopped") :  t("tag_rules")}}</div>
         </div>
+        <div
+          class="tab"
+          @click="tabActionClick('tab_3', selectedTab.name)"
+          :class="{ active: showTab == 'tab_3' }"
+          v-if="selectedTab.id==4"
+        >
+          <div class="tab-text">{{ t("trusted")}}</div>
+        </div>
       </div>
     </Header>
     <div class="tab-content" :style="{paddingTop: (selectedTab.id == 1 || selectedTab.id == 4)?'32px':'0'}">

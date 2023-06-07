@@ -23,6 +23,7 @@
 #import "Stay-Swift.h"
 #endif
 #import "WelcomeSlideController.h"
+#import "FCSpeedTabBarItem.h"
 
 @interface MainTabBarController ()
 
@@ -42,7 +43,7 @@
         self.homeController = homeController;
         
         self.tabBarItems = @[
-            [FCTabBarItem ofDescriptor:@{
+            [[FCTabBarItem alloc] initWithDescriptor:@{
                 @"select":@{
                     @"image" : [ImageHelper sfNamed:@"chevron.left.forwardslash.chevron.right" font:FCStyle.sfSymbolL2Bold color:FCStyle.accent]
                 },
@@ -50,7 +51,7 @@
                     @"image": [ImageHelper sfNamed:@"chevron.left.forwardslash.chevron.right" font:FCStyle.sfSymbolL2 color:FCStyle.fcThirdBlack]
                 }
             }],
-            [FCTabBarItem ofDescriptor:@{
+            [[FCTabBarItem alloc] initWithDescriptor:@{
                 @"select":@{
                     @"image" : [ImageHelper sfNamed:@"bag" font:FCStyle.sfSymbolL2Bold color:FCStyle.accent]
                 },
@@ -58,7 +59,7 @@
                     @"image": [ImageHelper sfNamed:@"bag" font:FCStyle.sfSymbolL2 color:FCStyle.fcThirdBlack]
                 }
             }],
-            [FCTabBarItem ofDescriptor:@{
+            [[FCTabBarItem alloc] initWithDescriptor:@{
                 @"select":@{
                     @"image" : [ImageHelper sfNamed:@"slash.circle" font:FCStyle.sfSymbolL2Bold color:FCStyle.accent]
                 },
@@ -67,7 +68,7 @@
                 },
                 @"offsetY":@(2)
             }],
-            [FCTabBarItem ofDescriptor:@{
+             [[FCSpeedTabBarItem alloc] initWithDescriptor:@{
                 @"select":@{
                     @"image" : [ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.sfSymbolL2Bold color:FCStyle.accent]
                 },
@@ -75,7 +76,7 @@
                     @"image": [ImageHelper sfNamed:@"square.and.arrow.down" font:FCStyle.sfSymbolL2 color:FCStyle.fcThirdBlack]
                 }
             }],
-            [FCTabBarItem ofDescriptor:@{
+            [[FCTabBarItem alloc] initWithDescriptor:@{
                 @"select":@{
                     @"image" : [ImageHelper sfNamed:@"gearshape" font:FCStyle.sfSymbolL2Bold color:FCStyle.accent]
                 },

@@ -15,6 +15,10 @@
 #import "NSURL+m3u8.h"
 #import "FCConfig.h"
 
+NSNotificationName const _Nonnull DMTaskDidStartNotification = @"app.stay.notification.DMTaskDidStartNotification";
+NSNotificationName const _Nonnull DMTaskSpeedNotification = @"app.stay.notification.DMTaskSpeedNotification";
+NSNotificationName const _Nonnull DMTaskDidFinishNotification = @"app.stay.notification.DMTaskDidFinishNotification";
+
 @implementation Request
 
 @end
@@ -166,6 +170,8 @@
 @property (nonatomic, strong) NSMutableDictionary<NSString *, Task *> *taskDict;
 @property (nonatomic, strong) NSMutableDictionary<NSURLSessionTask *, Task *> *sessionDict;
 @property (nonatomic, strong) NSURLSession *downloadSession;
+@property (nonatomic, assign) NSTimeInterval lastTimestamp;
+@property (nonatomic, assign) int64_t bytesWritten;
 @end
 
 @implementation DownloadManager
@@ -192,6 +198,16 @@ static DownloadManager *instance = nil;
 }
 
 - (Task *)enqueue:(Request *)request {
+    BOOL shouldStartNotify = YES;
+    for (Task *task in self.taskDict.allValues) {
+        if (task.status == DMStatusPending
+            || task.status == DMStatusDownloading
+            || task.status == DMStatusTranscoding) {
+            shouldStartNotify = NO;
+            break;
+        }
+    }
+    
     NSString *taskId = [request.url md5];
     Task *task = self.taskDict[taskId];
     if (task == nil) {
@@ -301,6 +317,12 @@ static DownloadManager *instance = nil;
         }
     }
     
+    if (shouldStartNotify) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskDidStartNotification
+                                                            object:nil];
+        _lastTimestamp = [[NSDate date] timeIntervalSince1970];
+        _bytesWritten = 0;
+    }
     return task;
 }
 
@@ -323,6 +345,7 @@ static DownloadManager *instance = nil;
             }
         }
         [self.taskDict removeObjectForKey:taskId];
+        [self notifyFinishIfNeed];
     }
     [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:taskId] error:nil];
 }
@@ -353,6 +376,7 @@ static DownloadManager *instance = nil;
         if (task.block != nil) {
             task.block(task.progress, @"", DMStatusPaused);
         }
+        [self notifyFinishIfNeed];
     }
 }
 
@@ -537,9 +561,11 @@ static DownloadManager *instance = nil;
         NSError *err;
         [fileHandle writeData:[NSData dataWithContentsOfFile:[taskPath stringByAppendingPathComponent:tsURL]] error:&err];
         if (err != nil) {
+            task.status = DMStatusFailedNoSpace;
             if (task.block != nil) {
                 task.block(0, @"", DMStatusFailedNoSpace);
             }
+            [self notifyFinishIfNeed];
             [fileHandle closeAndReturnError:&err];
             return;
         }
@@ -738,9 +764,11 @@ static DownloadManager *instance = nil;
     } else {
         // FAILURE
 //        NSLog(@"Command failed with state %@ and rc %@.%@", [FFmpegKitConfig sessionStateToString:[session getState]], returnCode, [session getFailStackTrace]);
+        task.status = DMStatusFailedTranscode;
         if (task.block != nil) {
             task.block(0, @"", DMStatusFailedTranscode);
         }
+        [self notifyFinishIfNeed];
     }
 }
 
@@ -758,6 +786,8 @@ static DownloadManager *instance = nil;
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
 //    NSLog(@"URLSession sessionTask didCompleteWithError : %@", error);
+    [self notifySpeedIfNeed];
+    
     Task *task = [self getTaskWithSessionTask:sessionTask];
     if (task != nil && task.status != DMStatusPaused) {
         @synchronized (self.sessionDict) {
@@ -779,9 +809,11 @@ static DownloadManager *instance = nil;
                 [self taskFailed:task];
             } else {
                 if (task.normalState.status == 1) {
+                    task.status = DMStatusFailedTranscode;
                     if (task.block != nil) {
                         task.block(0, @"", DMStatusFailedTranscode);
                     }
+                    [self notifyFinishIfNeed];
                 }
             }
         } else {
@@ -794,14 +826,15 @@ static DownloadManager *instance = nil;
                                            didWriteData:(int64_t)bytesWritten
                                       totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    _bytesWritten += bytesWritten;
+    [self notifySpeedIfNeed];
+    
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil) {
         task.bytesWritten += bytesWritten;
-        if (task.isNormal && task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) {
-            return;
-        }
         if (task.block != nil) {
-            task.progress = task.isM3U8 ? task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount : totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
+            task.progress = task.isM3U8 ? task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount
+                                        : ((task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) ? task.progress : totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
             NSString *speed = @"";
             NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
             if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {
@@ -818,6 +851,8 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
 //    NSLog(@"URLSession downloadTask didFinishDownloadingToURL : %@", location);
+    [self notifySpeedIfNeed];
+    
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil && downloadTask.error == nil) {
         if (task.isM3U8) {
@@ -899,9 +934,11 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
                 if (fileSize < 2000) {
                     if (task.normalState.status == 1) {
+                        task.status = DMStatusFailedTranscode;
                         if (task.block != nil) {
                             task.block(0, @"", DMStatusFailedTranscode);
                         }
+                        [self notifyFinishIfNeed];
                     }
                     return;
                 }
@@ -945,23 +982,62 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 }
 
 - (void)taskFailed:(Task *)task {
+    task.status = DMStatusFailed;
     if (task.block != nil) {
         task.block(0, @"", DMStatusFailed);
     }
+    [self notifyFinishIfNeed];
     @synchronized (self.taskDict) {
         [self.taskDict removeObjectForKey:task.taskId];
     }
 }
 
 - (void)taskComplete:(Task *)task {
+    task.status = DMStatusComplete;
     if (task.block != nil) {
         task.block(1, @"", DMStatusComplete);
     }
+    [self notifyFinishIfNeed];
     @synchronized (self.taskDict) {
         [self.taskDict removeObjectForKey:task.taskId];
     }
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
     [[NSFileManager defaultManager] removeItemAtPath:taskPath error:nil];
+}
+
+- (void)notifyFinishIfNeed {
+    BOOL shouldFinishNotify = YES;
+    for (Task *task in self.taskDict.allValues) {
+        if (task.status == DMStatusPending
+            || task.status == DMStatusDownloading
+            || task.status == DMStatusTranscoding) {
+            shouldFinishNotify = NO;
+            break;
+        }
+    }
+    
+    if (shouldFinishNotify) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskDidFinishNotification
+                                                            object:nil];
+        _lastTimestamp = 0;
+        _bytesWritten = 0;
+    }
+}
+
+- (void)notifySpeedIfNeed {
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+    if (_lastTimestamp > 0 && timestamp - _lastTimestamp > 1) {
+        NSString *speed = @"";
+        long long speedBS = _bytesWritten / (timestamp - _lastTimestamp);
+        speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
+        _lastTimestamp = timestamp;
+        _bytesWritten = 0;
+        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskSpeedNotification
+                                                            object:nil
+                                                            userInfo:@{
+                                                                @"speed":speed
+                                                            }];
+    }
 }
 
 @end

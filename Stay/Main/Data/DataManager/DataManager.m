@@ -351,7 +351,7 @@
         return nil;
     }
     
-    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect,load FROM content_filter order by sort asc";
+    NSString *sql = @"SELECT uuid,title,expires,tags,download_url,homepage,status,path,version,create_time,update_time,sort,user_info,iCloud_identifier,type,content_blocker_identifier,rule_path,enable,default_url,default_title,redirect,load FROM content_filter order by sort asc,create_time asc";
     
     sqlite3_stmt *stmt = NULL;
     int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
@@ -746,6 +746,30 @@
 //    if (sqlite3_step(stmt) != SQLITE_DONE) {
 //        sqlite3_finalize(stmt);
 //    }
+    sqlite3_finalize(stmt);
+    sqlite3_close(sqliteHandle);
+}
+
+- (void)deleteContentFilterWithUUID:(NSString *)uuid{
+    sqlite3 *sqliteHandle = [self dbHandle];
+    if (NULL == sqliteHandle){
+        return;
+    }
+    
+    NSString *sql = @"DELETE FROM content_filter  WHERE uuid = ? AND type = 6";
+    
+    sqlite3_stmt *stmt = NULL;
+    int result = sqlite3_prepare(sqliteHandle, [sql UTF8String], -1, &stmt, NULL);
+    if (result != SQLITE_OK) {
+        NSLog(@"Error %s while preparing statement", sqlite3_errmsg(sqliteHandle));
+        NSLog(@"编译sql失败");
+        sqlite3_close(sqliteHandle);
+        return;
+    }
+    
+    sqlite3_bind_text(stmt, 1, [uuid UTF8String], -1, NULL);
+    sqlite3_step(stmt);
+
     sqlite3_finalize(stmt);
     sqlite3_close(sqliteHandle);
 }

@@ -6,17 +6,26 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ContentBlockerRule.h"
+
+#ifdef FC_MAC
+static NSUInteger MAX_RULE_COUNT = 149900;
+#else
+static NSUInteger MAX_RULE_COUNT = 149900;
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSNotificationName const _Nonnull ContentFilterDidUpdateNotification;
+extern NSNotificationName const _Nonnull ContentFilterDidAddOrRemoveNotification;
 
 typedef enum {
     ContentFilterTypeBasic = 1,
     ContentFilterTypePrivacy = 2,
     ContentFilterTypeRegion = 3,
     ContentFilterTypeCustom = 4,
-    ContentFilterTypeTag = 5
+    ContentFilterTypeTag = 5,
+    ContentFilterTypeSubscribe = 6,
 }ContentFilterType;
 
 @interface ContentFilter : NSObject
@@ -50,9 +59,12 @@ typedef enum {
 - (void)reloadContentBlockerWithCompletion:(void(^)(NSError *error))completion;
 - (NSString *)fetchRules:(NSError **)error;
 - (void)checkUpdatingIfNeeded:(BOOL)focus completion:(nullable void(^)(NSError *error))completion;
+- (void)checkUpdatingWithoutBuildRuleIfNeeded:(BOOL)focus completion:(nullable void(^)(NSError *error, BOOL updated))completion;
 + (NSString *)stringOfType:(ContentFilterType)type;
 - (void)reloadContentBlockerWihtoutRebuild;
+- (NSMutableArray<ContentBlockerRule *> *)convertRules:(NSString *)content updateFilterInfo:(BOOL)updateFilterInfo restore:(BOOL)restore;
 
+- (void)clear;
 @end
 
 NS_ASSUME_NONNULL_END

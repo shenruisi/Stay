@@ -30,20 +30,20 @@ static ContentFilterManager *instance = nil;
 - (instancetype)init{
     if (self = [super init]){
         self.ruleJSONPath = [[[[NSFileManager defaultManager]
-                       containerURLForSecurityApplicationGroupIdentifier:
-                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterJSON"];
+                               containerURLForSecurityApplicationGroupIdentifier:
+                                   @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterJSON"];
         
         self.ruleTextPath = [[[[NSFileManager defaultManager]
-                       containerURLForSecurityApplicationGroupIdentifier:
-                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterText"];
+                               containerURLForSecurityApplicationGroupIdentifier:
+                                   @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterText"];
         
         self.truestSitesPath = [[[[NSFileManager defaultManager]
-                       containerURLForSecurityApplicationGroupIdentifier:
-                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".TruestSites"];
+                                  containerURLForSecurityApplicationGroupIdentifier:
+                                      @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".TruestSites"];
         
         self.ruleJSONStoppedPath = [[[[NSFileManager defaultManager]
-                       containerURLForSecurityApplicationGroupIdentifier:
-                           @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterJSONStopped"];
+                                      containerURLForSecurityApplicationGroupIdentifier:
+                                          @"group.com.dajiu.stay.pro"] path] stringByAppendingPathComponent:@".ContentFilterJSONStopped"];
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:self.ruleJSONPath]){
             [[NSFileManager defaultManager] createDirectoryAtPath:self.ruleJSONPath
@@ -127,6 +127,86 @@ static ContentFilterManager *instance = nil;
     NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
     if (error) return;
     [existJsonArray addObject:dictionary];
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:NSJSONWritingWithoutEscapingSlashes error:error];
+    if (error) return;
+    [newData writeToFile:filePath atomically:YES];
+}
+
+- (void)appendJSONToFileName:(NSString *)fileName trustedSite:(NSString *)trustedSite error:(NSError **)error{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    if (nil == jsonData){
+        jsonData = [NSData data];
+    }
+    NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
+    if (error) return;
+    NSDictionary *trusted = existJsonArray.lastObject;
+    
+    if ([trusted[@"trigger"][@"url-filter"] isEqualToString:@".*"]
+        &&[trusted[@"action"][@"type"] isEqualToString:@"ignore-previous-rules"]){
+        NSMutableArray *domains = [[NSMutableArray alloc] initWithArray:trusted[@"trigger"][@"if-domain"]];
+        [domains addObject:trustedSite];
+        NSDictionary *dic = @{
+            @"trigger" : @{
+                @"url-filter" : @".*",
+                @"if-domain" : domains
+            },
+            @"action" : @{
+                @"type" : @"ignore-previous-rules"
+            }
+        };
+        
+        [existJsonArray replaceObjectAtIndex:existJsonArray.count - 1 withObject:dic];
+    }
+    else{
+        [existJsonArray addObject:@{
+            @"trigger" : @{
+                @"url-filter" : @".*",
+                @"if-domain" : @[trustedSite]
+            },
+            @"action" : @{
+                @"type" : @"ignore-previous-rules"
+            }
+        }];
+    }
+    
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:NSJSONWritingWithoutEscapingSlashes error:error];
+    if (error) return;
+    [newData writeToFile:filePath atomically:YES];
+}
+
+- (void)removeJSONToFileName:(NSString *)fileName trustedSite:(NSString *)trustedSite error:(NSError **)error{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    if (nil == jsonData){
+        jsonData = [NSData data];
+    }
+    NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
+    if (error) return;
+    NSDictionary *trusted = existJsonArray.lastObject;
+    
+    if ([trusted[@"trigger"][@"url-filter"] isEqualToString:@".*"]
+        &&[trusted[@"action"][@"type"] isEqualToString:@"ignore-previous-rules"]){
+        NSMutableArray *domains = [[NSMutableArray alloc] initWithArray:trusted[@"trigger"][@"if-domain"]];
+        [domains removeObject:trustedSite];
+        if (domains.count > 0){
+            NSDictionary *dic = @{
+                @"trigger" : @{
+                    @"url-filter" : @".*",
+                    @"if-domain" : domains
+                },
+                @"action" : @{
+                    @"type" : @"ignore-previous-rules"
+                }
+            };
+            
+            [existJsonArray replaceObjectAtIndex:existJsonArray.count - 1 withObject:dic];
+        }
+        else{
+            [existJsonArray removeLastObject];
+        }
+    }
+    
     NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:NSJSONWritingWithoutEscapingSlashes error:error];
     if (error) return;
     [newData writeToFile:filePath atomically:YES];

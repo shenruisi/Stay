@@ -50,7 +50,10 @@ const browser = __b;
     let isLoadingLongPressStatus = false;
     let definedObj = {};
     let videoListMd5 = '';
+    let videoInfoMd5 = '';
     let isStayAround = '';
+    let documentLongPressEvent = null;
+    let videoAreaLongPressEvent = null;
     let longPressStatus = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
@@ -679,6 +682,7 @@ const browser = __b;
           self.timer = 0;
         }
       }
+
     }
 
     function isHidden(el) {
@@ -724,12 +728,16 @@ const browser = __b;
        * @param {function} callback 长按触发的回调函数
        */
       constructor(dom, callback) {
+        this.callback = callback;
         this.dom = dom;
         // this.startTime = 0; // 触摸起始时间
         // this.endTime = 0; // 触摸终止时间
         this.stayLongPressTimer = 0; 
         this.distance = 10; // 触摸距离值
-        this.init(callback);
+        this.handleTouchStartEvent = this.handleTouchStartEvent.bind(this);
+        this.touchmoveCallback = this.touchmoveCallback.bind(this);
+        this.touchEndCallback = this.touchEndCallback.bind(this);
+        this.init();
       }
 
       getDomPageStartX(){
@@ -749,15 +757,31 @@ const browser = __b;
       }
 
       /**
-       * 初始化
+       * 初始化(监听长按事件)
        *
        * @private
        */
-      init(callback) {
-        this.touchstart(callback);
-        this.touchend();
+      init() {
+        this.stayLongPressTimer = 0; 
+        this.distance = 10; // 触摸距离值
+        this.touchstart();
         this.touchmove();
+        this.touchend();
         this.bindLongPressEventFlag();
+      }
+
+      /**
+       * 移除长按事件
+       */
+      removeEvent(){
+        // console.log('removeEvent------------------',this.stayLongPressTimer);
+        if(this.stayLongPressTimer){
+          clearTimeout(this.stayLongPressTimer)
+          this.stayLongPressTimer = 0;
+        }
+        this.removeTouchstart();
+        this.removeTouchmove();
+        this.removeTouchend();
       }
 
       /**
@@ -765,57 +789,39 @@ const browser = __b;
        */
       bindLongPressEventFlag(){
         this.dom.setAttribute('stay-long-press', 'yes');
-        // this.dom.eventList['stayLongPress'] = 'yes';
       }
 
       /**
        * 手指按下时开启定时器，700 毫秒后触发回调函数
        *
        * @private
-       * @param {function} callback 回调函数
        */
-      touchstart(callback) {
-        const self = this;
-        document.body.removeEventListener('touchstart', function(event){
-          self.handleTargetEvent(event, callback);
-          return false;
-        });
-        document.body.addEventListener('touchstart', function(event) {
-          // console.log('touchstart-------',event);
-          self.handleTargetTouchend(event.target);
-          self.handleTargetEvent(event, callback);
-          return false;
-        }, false);
+      touchstart() {
+        this.removeTouchstart();
+        document.body.addEventListener('touchstart', this.handleTouchStartEvent);
       }
 
-      handleTargetTouchend(target){
+      removeTouchstart(){
+        document.body.removeEventListener('touchstart', this.handleTouchStartEvent);
+      }
+
+      handleTouchStartEvent(event){
         const self = this;
+        let target = event.changedTouches[0];
         if(!target){
           return;
         }
-        // target.stopPropagation();
-        // target.stopPropagation();
-        target.addEventListener('touchend', (event)=>{
-          // event.stopPropagation();
-          self.touchEndCallback(event, target);
-          // clearTimeout(self.stayLongPressTimer);
-        })
-      }
-
-      handleTargetEvent(event, callback){
-        event.stopPropagation();
-        event.preventDefault();
-        const self = this;
-        let target = event.changedTouches[0];
         const targetPageX = target.pageX;
         const targetPageY = target.pageY;
+        // console.log('this.dom------------',this.dom.getBoundingClientRect());
         // console.log('targetPageX=',targetPageX,',targetPageY=',targetPageY,'this.domPageStartX=',self.getDomPageStartX(), 'this.domPageStartY=',self.getDomPageStartY() ,'this.domPageEndX=',self.getDomPageEndX(),',this.domPageEndY=',self.getDomPageEndY());
         if(!isHidden(self.dom) && Math.abs(target.pageX - targetPageX) <= self.distance &&
         targetPageX >= self.getDomPageStartX() && targetPageX <= self.getDomPageEndX() && 
         targetPageY >= self.getDomPageStartY() && targetPageY <= self.getDomPageEndY()){
+          event.stopPropagation();
+          event.preventDefault();
           // console.log('start-------', new Date().getTime());
-          this.stayLongPressTimer = window.setTimeout((curTarget, fun) => {
-            self.stayLongPressTimer = 0;
+          this.stayLongPressTimer = window.setTimeout((curTarget) => {
             try {
               let classList = curTarget.target.classList;
               // console.log('start----------event----',event);
@@ -825,22 +831,44 @@ const browser = __b;
               if(!classList.contains('__stay-touch-action')){
                 classList.add('__stay-touch-action');
               }
-              // console.log('end-------', new Date().getTime());
-              if (typeof fun === 'function') {
-                fun();
+              if (typeof this.callback === 'function') {
+                this.callback();
               } else {
                 console.error('callback is not a function!');
               }
-              // curTarget.target.click();
-              curTarget.target.addEventListener('contextmenu', function(e){
+              // console.log('end-------', new Date().getTime());
+              curTarget.target.addEventListener('contextmenu', handleContextmenuEvent);
+              // eslint-disable-next-line no-inner-declarations
+              function handleContextmenuEvent(e){
                 e.preventDefault();
-              });
+                curTarget.target.removeEventListener('contextmenu', handleContextmenuEvent);
+              }
+              
+              // this.removeEvent();
             } catch (error) {
               
+            }finally{
+              // this.removeEvent();
             }
-          }, 600, target, callback);
+          }, 600, target);
           // console.log('end.end-------', new Date().getTime());
         }
+        
+        self.handleTargetTouchend(event.target);
+      }
+
+      handleTargetTouchend(target){
+        const self = this;
+        if(!target){
+          return;
+        }
+        target.addEventListener('touchend', handleTargetEvent)
+        function handleTargetEvent(event){
+          self.touchEndCallback(event)
+          target.removeEventListener('touchend', handleTargetEvent)
+        }
+
+
       }
 
       /**
@@ -850,39 +878,26 @@ const browser = __b;
        */
       touchend() {
         // console.log('handle------touchend---' );
-        const self = this;
-        document.body.removeEventListener('touchend', function(event){
-          // event.stopPropagation();
-          self.touchEndCallback(event, null);
-          // return false;
-        })
-        document.body.addEventListener('touchend', function(event) {
-          // event.stopPropagation();
-          // event.preventDefault();
-          // console.log('touchend-------',event);
-          self.touchEndCallback(event, null)
-          return false;
-        });
+        this.removeTouchend()
+        document.body.addEventListener('touchend', this.touchEndCallback);
       }
 
+      removeTouchend(){
+        document.body.removeEventListener('touchend', this.touchEndCallback)
+      }
 
-      touchEndCallback(event, isTarget){
+      touchEndCallback(event){
         const self = this;
         // event.stopPropagation();
         if(isHidden(this.dom)){
           return;
         }
-        // console.log('touchEndCallback----event------isTarget-', isTarget, event);
-        // 清除定时器
-        clearTimeout(this.stayLongPressTimer);
+        // console.log('touchEndCallback----event-------', event);
         if(this.stayLongPressTimer!=0){
           try {
-            if(isTarget){
-              isTarget.removeEventListener('touchend', (event)=>{
-                // clearTimeout(this.stayLongPressTimer);
-                self.touchEndCallback(event, null)
-              })
-            }
+            clearTimeout(this.stayLongPressTimer);
+            // 清除定时器
+            this.stayLongPressTimer = 0;
           } catch (error) {
             
           }
@@ -893,35 +908,27 @@ const browser = __b;
        * 如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
        */
       touchmove() {
-        const self = this;
-        document.body.removeEventListener('touchmove', function(event){
-          event.preventDefault();
-          event.stopPropagation();
-          touchmoveCallback();
-        });
-        document.body.addEventListener('touchmove', function(event){
-          // console.log('touchmove-------',event);
-          event.preventDefault();
-          event.stopPropagation();
-          touchmoveCallback();
-          return false;
-        })
-        function touchmoveCallback(){
-          if(isHidden(self.dom)){
-            return;
-          }
-          window.clearTimeout(self.stayLongPressTimer);//清除定时器
-          self.stayLongPressTimer = 0;
-          return false;
-        }
+        this.removeTouchmove();
+        document.body.addEventListener('touchmove', this.touchmoveCallback, { passive: true })
       }
 
+      removeTouchmove(){
+        document.body.removeEventListener('touchmove', this.touchmoveCallback, { passive: true });
+      }
+
+      touchmoveCallback(event){
+        const self = this;
+        if(isHidden(self.dom)){
+          return;
+        }
+        window.clearTimeout(self.stayLongPressTimer);//清除定时器
+        self.stayLongPressTimer = 0;
+      }
 
     }
 
     function startFindVideoInfo(completed){
       observerVideo();
-      console.log('---------------startFindVideoInfo---------------')
       videoDoms = document.querySelectorAll('video');  
       // console.log('startFindVideoInfo---------videoDoms------',videoDoms)
       // let flag = false;
@@ -1084,10 +1091,11 @@ const browser = __b;
         shouldDecodeQuality[videoInfo.videoUuid] = qualityList;
       }
       // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
+      
       try {
         addLongPress(videoDom, posDom, videoInfo);
       } catch (error) {
-        
+        console.log('addLongPress----', error)
       }
       
       if(videoIdSet.size && (videoIdSet.has(videoInfo.videoUuid) || videoIdSet.has(videoInfo.videoKey))){
@@ -1120,6 +1128,18 @@ const browser = __b;
       }
       pushVideoListToTransfer()
     }
+    function getTopmostIframe() {
+      let currentWindow = window;
+      let parentWindow = window.parent;
+    
+      while (parentWindow !== currentWindow) {
+        currentWindow = parentWindow;
+        parentWindow = parentWindow.parent;
+      }
+    
+      return parentWindow.frameElement;
+    }
+    
 
     function checkDecodeFunIsValid(){
       if(!decodeSignatureCipher || !Object.keys(decodeSignatureCipher).length){
@@ -1267,7 +1287,7 @@ const browser = __b;
             -webkit-touch-callout: none;
           }
           .__stay-touch-action{
-            touch-action: none!important;
+            touch-action: auto!important;
           }
         </style>`;
         document.body.append(Utils.parseToDOM(sinfferUnselect));
@@ -1297,8 +1317,8 @@ const browser = __b;
           }
         }
         // console.log('addLongPress--------LongPress=====',hostUrl)
-        new LongPress(posDom, ()=>{
-          addSinfferModal(videoDom, posDom, videoInfo);
+        videoAreaLongPressEvent = new LongPress(posDom, ()=>{
+          addSinfferModalByPosDom(videoDom, posDom, videoInfo);
         })
       }
       else if(hostUrl.indexOf('mobile.twitter.com')>-1){
@@ -1313,8 +1333,8 @@ const browser = __b;
             posDom.classList.add('__stay-unselect');
           }
         }
-        new LongPress(posDom, ()=>{
-          addSinfferModal(videoDom, posDom, videoInfo);
+        videoAreaLongPressEvent = new LongPress(posDom, ()=>{
+          addSinfferModalByPosDom(videoDom, posDom, videoInfo);
         })
       }
       else if(hostUrl.indexOf('muiplayer.js.org')>-1){
@@ -1324,14 +1344,14 @@ const browser = __b;
         }
         if(posterDom){
           // posDom = posterDom;
-          new LongPress(posterDom, ()=>{
-            addSinfferModal(videoDom, posterDom, videoInfo);
+          videoAreaLongPressEvent = new LongPress(posterDom, ()=>{
+            addSinfferModalByPosDom(videoDom, posterDom, videoInfo);
           })
         }
       }
       
       new DocumentLongPress(posDom, ()=>{
-        addSinfferModal(videoDom, posDom, videoInfo);
+        addSinfferModalByPosDom(videoDom, posDom, videoInfo);
       });
       
     }
@@ -1368,18 +1388,18 @@ const browser = __b;
     function getLongPressStatus(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          console.log('getLongPressStatus-----true');
+          // console.log('getLongPressStatus-----true');
           browser.runtime.sendMessage({from: 'popup', operate: 'getLongPressStatus'}, (response) => {
-            console.log('getLongPressStatus---------',response)
+            // console.log('getLongPressStatus---------',response)
             let longPressStatusRes = response&&response.longPressStatus?response.longPressStatus:'on';
             resolve(longPressStatusRes);
           });
         }else{
-          console.log('getLongPressStatus-----false');
+          // console.log('getLongPressStatus-----false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_LONG_PRESS_STATUS_RESP') return;
-            console.log('getLongPressStatus---------',e.data.longPressStatusRes)
+            // console.log('getLongPressStatus---------',e.data.longPressStatusRes)
             resolve(e.data.longPressStatusRes);
             window.removeEventListener('message', callback);
           };
@@ -1396,20 +1416,62 @@ const browser = __b;
      * @param {Object} videoInfo  视频信息            用于popup信息展示
      * @returns 
      */
-    function addSinfferModal(videoDom, posDom, videoInfo){
-      let vWidth = posDom.clientWidth;
-      let vHeight = posDom.clientHeight;
-      let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
-      let top = posDom.getBoundingClientRect().top;
-      let left = posDom.getBoundingClientRect().left;
-      // console.log('videoDom.tagName====',videoDom, posDom)
-      if('VIDEO' == posDom.tagName){
+    function addSinfferModalByPosDom(videoDom, posDom, videoInfo){
+      const posDomReact = posDom.getBoundingClientRect();
+      let top = posDomReact.y;
+      let left = posDomReact.x;
+      if(posDom.tagName && 'VIDEO' == posDom.tagName){
         // console.log('videoDom.parentNode====',videoDom.parentNode)
         top = posDom.parentNode.getBoundingClientRect().top;
         left = posDom.parentNode.getBoundingClientRect().left;
       }
       left = 10;
+
+      let position = {
+        width: posDomReact.width,
+        height: posDomReact.height,
+        x: left,
+        y: top,
+      }
+
+      if (window === window.top) {
+        // 当前页面不在 <iframe> 中
+        addSinfferModal(videoDom, position, videoInfo);
+      } else {
+        // 当前页面在 <iframe> 中
+        // 向父页面发送消息，
+        // console.log('postMessage----to----parent-------');
+        const posDomReact = posDom.getBoundingClientRect();
+        let videoReact = {
+          x: posDomReact.x,
+          y: posDomReact.y,
+          width: posDomReact.width,
+          height: posDomReact.height,
+        }
+        const pid = Math.random().toString(36).substring(2, 9);
+        window.postMessage({pid:pid, name: 'PUSH_VIDEO_INFO_TO_PARENT', videoInfo, videoReact}, '*');
+      }
+
+      
+    }
+
+    /**
+     * 添加长按事件
+     * @param {Object} videoDom   视频video dom对象   用于截图,视频播放/暂停判断
+     * @param {Object} posDomReact     视频区域            用于绑定长按事件
+     * @param {Object} videoInfo  视频信息            用于popup信息展示
+     * @returns 
+     */
+    function addSinfferModal(videoDom, posDomReact, videoInfo){
+      
+      let vWidth = posDomReact.width;
+      let vHeight = posDomReact.height;
+      
+      let top = posDomReact.y;
+      let left = posDomReact.x;
+      // console.log('videoDom.tagName====',videoDom, posDom)
+      let bodyClientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let bodyClientWidth = window.innerWidth || document.documentElement.innerWidth || document.body.innerWidth;
       // 算出16:9的宽高
       let posterWidth = bodyClientWidth;
       let posterHeight = Utils.div(Utils.mul(posterWidth, 9), 16);
@@ -1545,14 +1607,27 @@ const browser = __b;
           posterCon = `<div class="__stay-video-poster" style="background:url('${videoInfo.poster}') 50% 50% no-repeat;background-size: cover;"></div>`;
         }
         // console.log('videoDom----1--',videoDom);
-        const canvas = captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
+        // const canvas = captureVideoAndDrawing(videoDom, posterWidth, posterHeight);
         
         // console.log('posterCon----3--',posterCon);
         
         let sinfferStyle = `<style id="__style_sinffer_style">
+          :root {
+            --s-modal-bg: rgba(0, 0, 0, 0.4);
+            --s-dl-bg: rgb(247,247,247);
+            --s-posterbg: rgba(255, 255, 255, 1);
+            --s-000-bg: rgba(0,0,0,0);
+          }
+          @media (prefers-color-scheme: dark) {
+            :root {
+              --s-modal-bg: rgba(0, 0, 0, 0.4);
+              --s-dl-bg: rgb(54, 54, 57);
+              --s-posterbg: rgba(0, 0, 0, 1);
+            }
+          }
           .__stay-modal-box{
             position: fixed; 
-            z-index: 9999999; 
+            z-index: 2147483647; 
             width: 100%; 
             height: 100%; 
             text-align: center; 
@@ -1567,10 +1642,11 @@ const browser = __b;
             -moz-osx-font-smoothing: grayscale;
           }
           .__stay-show-modal{
-            ${bg}
+            background-color:var(--s-modal-bg)!important;
             -webkit-backdrop-filter: blur(10px); 
           }
           .__stay-sinffer-content{
+            background-color:var(--s-000-bg)!important;
             width:100%;
             position: absolute;
             left: 0;
@@ -1586,6 +1662,7 @@ const browser = __b;
             transform: translate3d(0,${vTop}px,0);
           }
           .__stay-content{
+            background-color:var(--s-000-bg)!important;
             width:100%;
             position: relative;
             display: flex;
@@ -1595,8 +1672,12 @@ const browser = __b;
             align-items: center;
           }
           ._stay-sinffer-popup{
-            width:230px;padding-top: 10px;box-sizing: border-box;border-radius:15px;
-            ${downloadBg}
+            width:230px;
+            padding-top: 10px;
+            padding-bottom: 16px;
+            box-sizing: border-box;
+            border-radius:15px;
+            background-color: var(--s-dl-bg);
             position: relative;
             margin: 16px auto 0 auto;
             z-index:999999;
@@ -1643,7 +1724,7 @@ const browser = __b;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            ${posterbg}
+            background-color: var(--s-posterbg);
             border-radius: 10px;
             box-shadow: 0 0px 10px rgba(54,54,57,0.1);
           }
@@ -1819,38 +1900,39 @@ const browser = __b;
 
       
 
-      modalDom.addEventListener('touchmove', e =>{ 
-        e.preventDefault();
-        e.stopPropagation();
-      }, false);
-      modalDom.addEventListener('touchstart', e =>{ 
-        e.preventDefault();
-        // e.stopPropagation();
+      modalDom.addEventListener('touchstart', handleModalEvent);
+
+      function handleModalEvent(event){
+        event.preventDefault();
+        event.stopPropagation();
         // modalDom.style.display = 'none';
+        // removeModalMouseMoveEvent();
         modalDom.classList.remove('__stay-show-modal');
         popupDom.style.animation = 'fadeout .5s;';
-
+        
         let removeTimer = setTimeout(() => {
           if(modalDom){
+            modalDom.removeEventListener('touchstart', handleModalEvent);
             document.body.removeChild(modalDom);
           }
           document.body.removeChild(document.querySelector('#__style_sinffer_style'));
           clearTimeout(removeTimer);
           removeTimer = 0;
         }, 200);
-      }, false);
+      }
 
       const downloadItems = document.querySelectorAll('#__stay_sinffer_modal ._stay-quality-item');
       if(downloadItems && downloadItems.length){
         for(let i=0; i<downloadItems.length; i++){
           (function(n){
-            downloadItems[i].addEventListener('touchstart', e=>{
-              // console.log('e---------',e);
+            downloadItems[i].addEventListener('touchstart', handleDownloadItemEvent);
+            function handleDownloadItemEvent(e){
               let openUrl = e.target.getAttribute('stay-download');
               let targetGun = document.createElement('a');
               targetGun.href = openUrl;
               targetGun.click();
-            })
+              downloadItems[i].removeEventListener('touchstart', handleDownloadItemEvent);
+            }
           })(i)
         }
       }
@@ -2059,7 +2141,8 @@ const browser = __b;
      */
     function setYoutubePublicParam(sourceUrl, playerRes){
       if(sourceUrl){
-        ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : Utils.queryURLParams(sourceUrl, 'cver');
+        let cver = Utils.queryURLParams(sourceUrl, 'cver');
+        ytPublicParam.cver = cver ? cver : ytPublicParam.cver;
         setYtParmeObj(sourceUrl)
       }
       if(playerRes && Object.keys(playerRes).length){
@@ -2074,7 +2157,7 @@ const browser = __b;
             if('CSI' == item.service && item.params.length){
               item.params.forEach(param => {
                 if('cver' == param.key){
-                  ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : param.value;
+                  ytPublicParam.cver = param.value ? param.value : ytPublicParam.cver;
                 }
               })
             }
@@ -2085,11 +2168,16 @@ const browser = __b;
     }
 
     function setYtParmeObj(sourceUrl){
-      ytPublicParam.cpn = ytPublicParam.cpn?ytPublicParam.cpn:Utils.queryURLParams(sourceUrl, 'cpn');
-      ytPublicParam.ptk = ytPublicParam.ptk?ytPublicParam.ptk:Utils.queryURLParams(sourceUrl, 'ptk');
-      ytPublicParam.oid = ytPublicParam.oid?ytPublicParam.oid:Utils.queryURLParams(sourceUrl, 'oid');
-      ytPublicParam.ptchn = ytPublicParam.ptchn?ytPublicParam.ptchn:Utils.queryURLParams(sourceUrl, 'ptchn');
-      ytPublicParam.pltype = ytPublicParam.pltype?ytPublicParam.pltype:Utils.queryURLParams(sourceUrl, 'pltype');
+      let cpn = Utils.queryURLParams(sourceUrl, 'cpn');
+      ytPublicParam.cpn = cpn ? cpn : ytPublicParam.cpn;
+      let ptk = Utils.queryURLParams(sourceUrl, 'ptk');
+      ytPublicParam.ptk = ptk ? ptk : ytPublicParam.ptk;
+      let oid = Utils.queryURLParams(sourceUrl, 'oid');
+      ytPublicParam.oid = oid ? oid : ytPublicParam.oid;
+      let ptchn = Utils.queryURLParams(sourceUrl, 'ptchn');
+      ytPublicParam.ptchn = ptchn ? ptchn : ytPublicParam.ptchn;
+      let pltype = Utils.queryURLParams(sourceUrl, 'pltype');
+      ytPublicParam.pltype = pltype? pltype : ytPublicParam.pltype
     }
 
     function getYoutubeVideoUrlOrSignture(signatureCipher){
@@ -3536,10 +3624,47 @@ const browser = __b;
         isLoadingLongPressStatus = false;
       }
     }
+
+    function fetchIframeVideoInfo(){
+      if (window === window.top) {
+        // console.log('fetchIframeVideoInfo---------not in iframe----------');
+        // 当前页面不在 <iframe> 中, 接收iframe中video信息
+        window.addEventListener('message', (event)=>{
+          let messagePid = event.data.pid;
+          let name = event.data.name;
+          // console.log('fetchIframeVideoInfo-----------event------',event)
+          if(name === 'PUSH_IFRAME_VIDEO_INFO_TO_PARENT'){
+            let pid = event.data.pid;
+            let videoReact = event.data.videoReact;
+            let iframeVideoInfo = event.data.iframeVideoInfo;
+            // console.log('fetchIframeVideoInfo----PUSH_IFRAME_VIDEO_INFO_TO_PARENT-------', iframeVideoInfo, videoReact)
+            const iframeDom = document.querySelector('iframe');
+            // console.log('fetchIframeVideoInfo----iframeDom-------', iframeDom)
+            if(iframeDom && iframeDom.getBoundingClientRect()){
+              videoReact.x= iframeDom.getBoundingClientRect().x;
+              videoReact.y= iframeDom.getBoundingClientRect().y;
+            }
+            addSinfferModal(null, videoReact, iframeVideoInfo);
+          }
+        })
+      } else {
+        // 当前页面在 <iframe> 中
+        // 向父页面发送消息，请求获取父页面域名
+        const pid = Math.random().toString(36).substring(2, 9);
+        // window.parent.postMessage({pid:pid, name: 'GET_YOUTUBE_DECODE_FUN_RESP'}, '*');
+        // window.addEventListener('message', (event)=>{
+        //   let messagePid = event.data.pid;
+        //   if(messagePid == pid){
+
+        //   }
+        // })
+      }
+    }
     
     function startSnifferVideoInfoOnPage(complate){
       fetchLongPressConfig();
       startFetchYoutubeFunStr();
+      fetchIframeVideoInfo();
       startFindVideoInfo(complate);
     }
 
@@ -3580,65 +3705,6 @@ const browser = __b;
         }
       }
     });
-
-    /**
-     * @discarded 废弃请求拦截
-     */
-    function handlePageInterceptor(){
-      function isVideoLink(url){
-        let re = /^(https?:\/\/|\/).*\.(mp4|m3u8)$/;
-        return url.match(re) != null;
-      }    
-        
-      let uniqueUrls = new Set()
-      //XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;
-      XMLHttpRequest.prototype.reallyOpen = XMLHttpRequest.prototype.open;
-        
-      XMLHttpRequest.prototype.open = function(method, url, async, user, password){
-        console.log('OPEN_URL',url);
-        this.reallyOpen(method,url,async,user,password);
-        if (isVideoLink(url)){
-          if (!uniqueUrls.has(url)){
-            uniqueUrls.add(url);
-            console.log('VIDEO_LINK_CAPTURE: ' + url);
-            window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
-            if(isContent){
-              let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
-              browser.runtime.sendMessage(message, (response) => {});
-            }
-          }       
-        }
-      };
-        
-      // XMLHttpRequest.prototype.send = function (body) { 
-      //       alert("--req.body:---",body);
-      //     //   console.log("VIDEO_LINK_CAPTURE: ",this);
-      //     //  console.log("VIDEO_LINK_CAPTURE-------------");
-        
-      //     this.reallySend(body);
-        
-      // };
-        
-      let originalFetch = window.fetch;
-      window.fetch = function(resource, options){
-        let url = typeof resource == 'object' ? resource.url : resource;
-        if (isVideoLink(url)){
-          if (!uniqueUrls.has(url)){
-            uniqueUrls.add(url);
-            console.log('VIDEO_LINK_CAPTURE: ' + url);
-            window.postMessage({name: 'VIDEO_LINK_CAPTURE', urls: uniqueUrls});
-            if(isContent){
-              let message = { from: 'sniffer', operate: 'VIDEO_INFO_PUSH',  videoLinkSet:uniqueUrls};
-              browser.runtime.sendMessage(message, (response) => {});
-            }
-          }       
-        }
-        return originalFetch(resource,options);
-      };
-    }
-
-    // handlePageInterceptor();
-
   }
 
   let videoPageUrl = window.location.href;
@@ -3694,5 +3760,41 @@ const browser = __b;
         window.postMessage({pid:pid, name: 'SAVE_YOUTUBE_DECODE_FUN_STR_RESP', decodeFun});
       });
     }
+    else if(name === 'GET_ORIGIN_FROM_IFRAME'){
+      let pid = e.data.pid;
+      // 将父页面域名发送给子页面
+      e.source.postMessage({name: 'RESP_ORIGIN_FROM_IFRAME', parentOrigin: window.location.origin, pid}, e.origin);
+    }
+    // 接收iframe中video信息
+    else if(name === 'PUSH_VIDEO_INFO_TO_PARENT'){
+      let pid = e.data.pid;
+      let videoReact = e.data.videoReact;
+      let iframeVideoInfo = e.data.videoInfo;
+      // console.log('iframeVideoInfo-------', iframeVideoInfo, videoReact, window.location.origin)
+      // window.postMessage({pid:pid, name: 'GET_IFRAME_VIDEO_INFO', videoReact, iframeVideoInfo}, '*');
+      browser.runtime.sendMessage({from: 'sniffer', operate: 'PUSH_IFRAME_VIDEO_INFO_TO_BG', iframeVideoInfo, videoReact}, (response) => {
+        // console.log('PUSH_IFRAME_VIDEO_INFO_TO_BG-----response----',response);
+      });
+    }
   })
+
+  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const requestFrom = request.from;
+    const operate = request.operate;
+    if('background' === requestFrom){
+      if('PUSH_IFRAME_VIDEO_INFO_TO_PARENT' == operate){
+        let videoReact = request.videoReact;
+        let iframeVideoInfo = request.iframeVideoInfo;
+        // console.log('PUSH_IFRAME_VIDEO_INFO_TO_PARENT------', videoReact, iframeVideoInfo)
+        
+        const pid = Math.random().toString(36).substring(2, 9);
+        window.postMessage({pid:pid, name: 'PUSH_IFRAME_VIDEO_INFO_TO_PARENT',  videoReact, iframeVideoInfo});
+
+        sendResponse({success: 'true'})
+      }
+      
+    }
+    return true;
+  });
+
 })()

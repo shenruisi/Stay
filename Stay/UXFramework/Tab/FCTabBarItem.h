@@ -11,11 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FCTabBarItem : UIView
 
-+ (instancetype)ofDescriptor:(NSDictionary *)descriptor;
+- (instancetype)initWithDescriptor:(NSDictionary *)descriptor;
 
 @property (nonatomic, readonly) UIImage *selectImage;
 @property (nonatomic, readonly) UIImage *deselectImage;
 @property (nonatomic, readonly) CGFloat offsetY;
+
+@property (nonatomic, weak) UIButton *button;
 @end
 
 NS_ASSUME_NONNULL_END

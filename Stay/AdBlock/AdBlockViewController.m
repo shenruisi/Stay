@@ -34,6 +34,9 @@
 #import "FCSplitViewController.h"
 #endif
 
+#import "AddSubscribeSlideController.h"
+#import "SubscribeContentFilterManager.h"
+
 @interface AdBlockViewController ()<
  UITableViewDelegate,
  UITableViewDataSource
@@ -58,6 +61,7 @@
 @property (nonatomic, strong) FCTableViewHeadMenuItem *trustedSiteMenuItem;
 
 @property (nonatomic, strong) AddTrustedSiteSlideController *addTrustedSiteSlideController;
+@property (nonatomic, strong) AddSubscribeSlideController *addSubscribeSlideController;
 @end
 
 @implementation AdBlockViewController
@@ -68,7 +72,8 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
             for (ContentFilter *contentFilter in self.activatedSource){
                 if (contentFilter.type != ContentFilterTypeCustom
-                    && contentFilter.type != ContentFilterTypeTag){
+                    && contentFilter.type != ContentFilterTypeTag
+                    && contentFilter.type != ContentFilterTypeSubscribe){
                     if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
                             NSLog(@"init load content %@ %@",contentFilter.title,error);
@@ -79,7 +84,8 @@
             
             for (ContentFilter *contentFilter in self.stoppedSource){
                 if (contentFilter.type != ContentFilterTypeCustom
-                    && contentFilter.type != ContentFilterTypeTag){
+                    && contentFilter.type != ContentFilterTypeTag
+                    && contentFilter.type != ContentFilterTypeSubscribe){
                     if (![[ContentFilterManager shared] existRuleJSON:contentFilter.rulePath]){
                         [contentFilter reloadContentBlockerWithCompletion:^(NSError * _Nonnull error) {
                             NSLog(@"init load content %@ %@",contentFilter.title,error);
@@ -108,6 +114,8 @@
     
     [self.navigationTabItem activeItem:self.activatedTabItem];
     
+    self.navigationItem.rightBarButtonItems = @[self.addItem];
+    
 #ifdef FC_MAC
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onBecomeActive:)
@@ -118,8 +126,13 @@
 #endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidUpdateHandler:) name:ContentFilterDidUpdateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentFilterDidAddOrRemoveHandler:) name:ContentFilterDidAddOrRemoveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trustedSiteDidAddHandler:) name:TrustedSiteDidAddNotification object:nil];
     
+    [self updateContentFilterEnable];
+}
+
+- (void)updateContentFilterEnable{
     dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT), ^{
         for (ContentFilter *contentFilter in self.activatedSource){
             dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
@@ -159,7 +172,6 @@
             [self.tableView reloadData];
         });
     });
-    
 }
 
 - (void)trustedSiteDidAddHandler:(NSNotification *)note{
@@ -194,6 +206,13 @@
                 if (state.enabled){
                     contentFilter.enable = 1;
                     [[DataManager shareManager] updateContentFilterEnable:1 uuid:contentFilter.uuid];
+                    if (ContentFilterTypeTag == contentFilter.type){
+                        [SharedStorageManager shared].extensionConfig = nil;
+                        if ([SharedStorageManager shared].extensionConfig.tagUpdate){
+                            [[DataManager shareManager] updateContentFilterUpdateTime:[SharedStorageManager shared].extensionConfig.tagUpdate uuid:contentFilter.uuid];
+                        }
+                    }
+                    
                     if (0 == contentFilter.load){
                         [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentFilter.contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                             if (nil == error){
@@ -210,8 +229,20 @@
                 else{
                     contentFilter.enable = 0;
                     [[DataManager shareManager] updateContentFilterEnable:0 uuid:contentFilter.uuid];
+                    if (ContentFilterTypeTag == contentFilter.type){
+                        [SharedStorageManager shared].extensionConfig = nil;
+                        if ([SharedStorageManager shared].extensionConfig.tagUpdate){
+                            [[DataManager shareManager] updateContentFilterUpdateTime:[SharedStorageManager shared].extensionConfig.tagUpdate uuid:contentFilter.uuid];
+                        }
+                    }
                 }
-                [contentFilter checkUpdatingIfNeeded:NO completion:nil];
+                
+                if (ContentFilterTypeSubscribe == contentFilter.type){
+                    [[SubscribeContentFilterManager shared] checkUpdatingIfNeeded:contentFilter focus:NO completion:^(NSError *error, BOOL updated) {}];
+                }
+                else{
+                    [contentFilter checkUpdatingIfNeeded:NO completion:^(NSError * error) {}];
+                }
                 dispatch_semaphore_signal(semaphore);
             }];
             
@@ -244,6 +275,11 @@
     });
 }
 
+- (void)contentFilterDidAddOrRemoveHandler:(NSNotification *)note{
+    [self setupDataSource];
+    [self updateContentFilterEnable];
+}
+
 - (void)contentFilterDidUpdateHandler:(NSNotification *)note{
     [self.tableView reloadData];
 }
@@ -262,6 +298,8 @@
     
 
 - (void)setupDataSource{
+    [self.activatedSource removeAllObjects];
+    [self.stoppedSource removeAllObjects];
     NSArray<ContentFilter *> *contentFilters = [[DataManager shareManager] selectContentFilters];
     for (ContentFilter *contentFilter in contentFilters){
         if (contentFilter.active){
@@ -290,18 +328,34 @@
         if (ContentFilterTypeTag == contentFilter.type){
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
-        [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
-        [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:0];
-        [contentFilter reloadContentBlockerWihtoutRebuild];
+        
+        if (ContentFilterTypeSubscribe == contentFilter.type){
+            [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+            [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError *error) {
+            }];
+        }
+        else{
+            [[DataManager shareManager] updateContentFilterStatus:0 uuid:contentFilter.uuid];
+            [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:0];
+            [contentFilter reloadContentBlockerWihtoutRebuild];
+        }
     }
     else{
         contentFilter.status = 1;
         if (ContentFilterTypeTag == contentFilter.type){
             [SharedStorageManager shared].extensionConfig.tagStatus = @(contentFilter.status);
         }
-        [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
-        [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:1];
-        [contentFilter reloadContentBlockerWihtoutRebuild];
+        
+        if (ContentFilterTypeSubscribe == contentFilter.type){
+            [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+            [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError *error) {
+            }];
+        }
+        else{
+            [[DataManager shareManager] updateContentFilterStatus:1 uuid:contentFilter.uuid];
+            [[ContentFilterManager shared] updateRuleJSON:contentFilter.rulePath status:1];
+            [contentFilter reloadContentBlockerWihtoutRebuild];
+        }
     }
 }
 
@@ -376,7 +430,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (_tableView == tableView){
         ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
-        return (contentFilter.enable ? 70 : 90) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+        return (contentFilter.enable ? 70 : 100) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
     }
     else if (_trustedSitesTableView == tableView){
         if (0 == indexPath.row){
@@ -425,7 +479,6 @@
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (_tableView == tableView){
-        BOOL isActivatedSelected = self.selectedDataSource == self.activatedSource;
         ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
         FCTableViewCell *cell = (FCTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         NSMutableArray *actions = [[NSMutableArray alloc] init];
@@ -437,10 +490,25 @@
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction * _Nonnull action) {
                 [self startHeadLoading];
-                [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
-                    [self stopHeadLoading];
-                    NSLog(@"reloadContentBlockerWithCompletion %@",error);
-                }];
+                dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                    if (ContentFilterTypeSubscribe == contentFilter.type){
+                        [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError *error) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self stopHeadLoading];
+                                NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                            });
+                        }];
+                    }
+                    else{
+                        [contentFilter reloadContentBlockerWithCompletion:^(NSError * error) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self stopHeadLoading];
+                                NSLog(@"reloadContentBlockerWithCompletion %@",error);
+                            });
+                        }];
+                    }
+                });
+                
                 completionHandler(YES);
             }];
             [alert addAction:confirm];
@@ -455,7 +523,7 @@
         }];
         reloadAction.image = [ImageHelper sfNamed:@"arrow.triangle.2.circlepath" font:FCStyle.headline color:FCStyle.accent];
         reloadAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
-        if (isActivatedSelected){
+        if (1 == contentFilter.status){
             [actions addObject:reloadAction];
         }
         
@@ -463,12 +531,48 @@
             [cell doubleTap:cell.fcContentView.center];
             completionHandler(YES);
         }];
-        activeOrStopAction.image = [ImageHelper sfNamed: isActivatedSelected ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
+        activeOrStopAction.image = [ImageHelper sfNamed:(1 == contentFilter.status) ? @"stop.fill" : @"play.fill" font:FCStyle.headline color:FCStyle.accent];
         activeOrStopAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         [actions addObject:activeOrStopAction];
         
-        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
+        if (ContentFilterTypeSubscribe == contentFilter.type){
+            __weak AdBlockViewController *weakSelf = self;
+            UIContextualAction *deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"DeleteSubscribeConfirm", @"")
+                                                                               message:@""
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                  style:UIAlertActionStyleDefault
+                                                                handler:^(UIAlertAction * _Nonnull action) {
+                    contentFilter.status = 0;
+                    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                        [[SubscribeContentFilterManager shared] reload:contentFilter completion:^(NSError * _Nonnull error) {
+                            [contentFilter clear];
+                            [[DataManager shareManager] deleteContentFilterWithUUID:contentFilter.uuid];
+                            [weakSelf contentFilterDidAddOrRemoveHandler:nil];
+                        }];
+                    });
+                    
+                    
+                    completionHandler(YES);
+                    
+                }];
+                [alert addAction:conform];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
+                     style:UIAlertActionStyleCancel
+                     handler:^(UIAlertAction * _Nonnull action) {
+                    completionHandler(YES);
+                 }];
+                 [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }];
+            deleteAction.image = [[UIImage imageNamed:@"delete"] imageWithTintColor:[UIColor redColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
+            deleteAction.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+            [actions insertObject:deleteAction atIndex:0];
+        }
         
+        UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
         return configuration;
     }
     else if (_trustedSitesTableView == tableView){
@@ -505,7 +609,6 @@
             [actions addObject:deleteAction];
             
             UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:actions];
-            
             return configuration;
         }
     }
@@ -584,7 +687,24 @@
 }
 
 - (void)addAction:(id)sender{
+    if ([[FCStore shared] getPlan:NO] == FCPlan.None){
+        if (self.upgradeSlideController){
+            [self.upgradeSlideController dismiss];
+        }
+        
+        self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:NSLocalizedString(@"SubscribeRulesLink", @"")];
+        self.upgradeSlideController.baseCer = self;
+        [self.upgradeSlideController show];
+        return;
+    }
     
+    if ([self.addSubscribeSlideController isShown]){
+        [self.addSubscribeSlideController dismiss];
+    }
+    
+    self.addSubscribeSlideController = [[AddSubscribeSlideController alloc] init];
+    self.addSubscribeSlideController.baseCer = self;
+    [self.addSubscribeSlideController show];
 }
 
 //- (void)searchTabItemDidClick{
@@ -717,7 +837,7 @@
             [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+            [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
     }
     
@@ -745,7 +865,7 @@
             [_trustedSitesTableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_trustedSitesTableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_trustedSitesTableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_trustedSitesTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+            [_trustedSitesTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
         ]];
     }
     

@@ -44,4 +44,9 @@ static KeychainItemWrapper *k_keychain = nil;
 //    [[self keychain] resetKeychainItem];
 }
 
++ (NSString *)country{
+    NSLocale *locale = [NSLocale currentLocale];
+    return locale.countryCode.length > 0 ? locale.countryCode : @"CN";
+}
+
 @end

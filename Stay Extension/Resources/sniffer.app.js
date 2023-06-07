@@ -4,7 +4,7 @@ let randomYTObj = {};
 function fetchRandomStr(randomStr, speedRandomStr){
   // window.webkit.messageHandlers.log.postMessage('fetchRandomStr');
   // window.webkit.messageHandlers.log.postMessage('fetchRandomStr---randomStr--'+randomStr);
-  window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
+  // window.webkit.messageHandlers.log.postMessage('fetchRandomStr-----'+speedRandomStr);
   randomYTObj.randomStr = randomStr;
   randomYTObj.speedRandomStr = speedRandomStr;
 }
@@ -178,6 +178,9 @@ function fetchRandomStr(randomStr, speedRandomStr){
       return decodeURIComponent(window.atob(str).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
+    },
+    decodeBase64V1: function(str) {
+      return window.atob(str);
     },
     isBase64(str){
       if(!str){
@@ -380,6 +383,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
     }
 
   }
+
     
   function startFindVideoInfo(completed){
     observerVideo()
@@ -756,6 +760,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
 
   function getYoutubeNParam(n){
     try {
+      // window.webkit.messageHandlers.log.postMessage('getYoutubeNParam---n----'+ n);
       const decodeSpeedFun = new Function('return '+decodeSpeedFunStr); 
       return decodeSpeedFun()(decodeURIComponent(n));
     } catch (error) {
@@ -771,10 +776,14 @@ function fetchRandomStr(randomStr, speedRandomStr){
    * return cpn=b_JppE6c7Cd9y2Z9&cver=2.20230331.01.00&ptk=youtube_single&oid=grYThWmtgGXLlb99XVUPQQ&ptchn=aO6TYtlC8U5ttz62hTrZgg&pltype=content
    */
   function setYoutubePublicParam(sourceUrl, playerRes){
+    // window.webkit.messageHandlers.log.postMessage('setYoutubePublicParam---sourceUrl---'+ sourceUrl);
+    // window.webkit.messageHandlers.log.postMessage('setYoutubePublicParam---playerRes---'+ JSON.stringify(playerRes));
     if(sourceUrl){
-      ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : Utils.queryURLParams(sourceUrl, 'cver');
+      let cver = Utils.queryURLParams(sourceUrl, 'cver');
+      ytPublicParam.cver = cver ? cver : ytPublicParam.cver;
       setYtParmeObj(sourceUrl)
     }
+    
     if(playerRes && Object.keys(playerRes).length){
       // https://m.youtube.com/ptracking?ei=EJotZK4dw-CwApmmldgO&oid=noTyR-gah-30KqQfy7jXjw&plid=AAX4mNQPIivbGnid&pltype=content&ptchn=hB3UnDddahXU7FKZXmpzMA&ptk=youtube_single&video_id=EQOarcurXfY
       // window.ytplayer.bootstrapPlayerResponse.playbackTracking.ptrackingUrl.baseUrl
@@ -787,7 +796,7 @@ function fetchRandomStr(randomStr, speedRandomStr){
           if('CSI' == item.service && item.params.length){
             item.params.forEach(param => {
               if('cver' == param.key){
-                ytPublicParam.cver = ytPublicParam.cver ? ytPublicParam.cver : param.value;
+                ytPublicParam.cver = param.value ? param.value : ytPublicParam.cver;
               }
             })
           }
@@ -798,11 +807,16 @@ function fetchRandomStr(randomStr, speedRandomStr){
   }
 
   function setYtParmeObj(sourceUrl){
-    ytPublicParam.cpn = ytPublicParam.cpn?ytPublicParam.cpn:Utils.queryURLParams(sourceUrl, 'cpn');
-    ytPublicParam.ptk = ytPublicParam.ptk?ytPublicParam.ptk:Utils.queryURLParams(sourceUrl, 'ptk');
-    ytPublicParam.oid = ytPublicParam.oid?ytPublicParam.oid:Utils.queryURLParams(sourceUrl, 'oid');
-    ytPublicParam.ptchn = ytPublicParam.ptchn?ytPublicParam.ptchn:Utils.queryURLParams(sourceUrl, 'ptchn');
-    ytPublicParam.pltype = ytPublicParam.pltype?ytPublicParam.pltype:Utils.queryURLParams(sourceUrl, 'pltype');
+    let cpn = Utils.queryURLParams(sourceUrl, 'cpn');
+    ytPublicParam.cpn = cpn ? cpn : ytPublicParam.cpn;
+    let ptk = Utils.queryURLParams(sourceUrl, 'ptk');
+    ytPublicParam.ptk = ptk ? ptk : ytPublicParam.ptk;
+    let oid = Utils.queryURLParams(sourceUrl, 'oid');
+    ytPublicParam.oid = oid ? oid : ytPublicParam.oid;
+    let ptchn = Utils.queryURLParams(sourceUrl, 'ptchn');
+    ytPublicParam.ptchn = ptchn ? ptchn : ytPublicParam.ptchn;
+    let pltype = Utils.queryURLParams(sourceUrl, 'pltype');
+    ytPublicParam.pltype = pltype? pltype : ytPublicParam.pltype
   }
   
   function getYoutubeAudioUrlOrSignture(audioArr){

@@ -73,7 +73,6 @@
         [NSLayoutConstraint activateConstraints:@[
             [_titleLabel.leadingAnchor constraintEqualToAnchor:self.circleView.leadingAnchor constant:15],
             [_titleLabel.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-            [_titleLabel.widthAnchor constraintEqualToConstant:150],
             [_titleLabel.heightAnchor constraintEqualToConstant:FCStyle.footnoteBold.pointSize]
         ]];
     }

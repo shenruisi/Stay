@@ -43,8 +43,9 @@ export default {
     'taging': 'Three finger tap to start tagging',
     'taging_manage_title': 'Webpage tagging rules',
     'taging_manage_btn': 'Manage',
-    'web_tag': 'Webpage Tagging',
-    'tag_rules': 'Tagging Rules',
+    'web_tag': 'Tagging',
+    'tag_rules': 'Rules',
+    'trusted': 'Trusted Site',
     'blocker_enable': 'Enable',
     'blocker_info': 'Tag Content Blocker is not enabled',
     'rule_note': 'Tagging rules  that take effect on the currrent webpage',
@@ -94,8 +95,9 @@ export default {
     'taging_manage_btn': '管理',
     'blocker_enable': '开启',
     'blocker_info': '标记内容拦截器未开启',
-    'web_tag': '网页标记',
-    'tag_rules': '标记规则',
+    'web_tag': '标记',
+    'tag_rules': '规则',
+    'trusted': '受信站点',
     'rule_note': '在当前网页上生效的标记规则'
   },
   "zh_HK": {
@@ -143,8 +145,9 @@ export default {
     'taging_manage_btn': '管理',
     'blocker_enable': '開啟',
     'blocker_info': '標記內容攔截器未開啟',
-    'web_tag': '網頁標記',
-    'tag_rules': '標記規則',
+    'web_tag': '標記',
+    'tag_rules': '規則',
+    'trusted': '受信站點',
     'rule_note': '在當前網頁上生效的標記規則'
   }
 }
