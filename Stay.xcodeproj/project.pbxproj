@@ -209,6 +209,7 @@
 		583C633C299BC42800F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		5842143B2A2DBE790035DCB1 /* FCSpeedTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */; };
 		5842143C2A2DBE790035DCB1 /* FCSpeedTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */; };
+		584214422A2ED7510035DCB1 /* bootstrap2.js in Resources */ = {isa = PBXBuildFile; fileRef = 584214412A2ED7510035DCB1 /* bootstrap2.js */; };
 		584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05A728607F4E00E07DDF /* NavigateCollectionController.m */; };
 		584C05A92860843A00E07DDF /* SYExpandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FD4285285B72E400B25A17 /* SYExpandViewController.m */; };
 		584C05AD286179D000E07DDF /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 584C05AC286179D000E07DDF /* ImageHelper.m */; };
@@ -405,6 +406,7 @@
 		588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		589741CA2868084B008FB897 /* macOSNative.bundle in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 588202C7285A12B400B2721A /* macOSNative.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		589F0C532A305EE1008DF420 /* bootstrap2.js in Resources */ = {isa = PBXBuildFile; fileRef = 589F0C512A305D79008DF420 /* bootstrap2.js */; };
 		58A06D1528DAA49200983455 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1028DAA49200983455 /* base64.min.js */; };
 		58A06D1628DAA49200983455 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1128DAA49200983455 /* jquery.cookie.min.js */; };
 		58A06D1728DAA49200983455 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */; };
@@ -1145,6 +1147,7 @@
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584214392A2DBE790035DCB1 /* FCSpeedTabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCSpeedTabBarItem.h; sourceTree = "<group>"; };
 		5842143A2A2DBE790035DCB1 /* FCSpeedTabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCSpeedTabBarItem.m; sourceTree = "<group>"; };
+		584214412A2ED7510035DCB1 /* bootstrap2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap2.js; sourceTree = "<group>"; };
 		584C05A628607F4E00E07DDF /* NavigateCollectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigateCollectionController.h; sourceTree = "<group>"; };
 		584C05A728607F4E00E07DDF /* NavigateCollectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigateCollectionController.m; sourceTree = "<group>"; };
 		584C05AB286179D000E07DDF /* ImageHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
@@ -1269,6 +1272,7 @@
 		588B832B284620F700AB2D73 /* ActivateChanged.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivateChanged.m; sourceTree = "<group>"; };
 		589741CD28680925008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/iOSSupport/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
 		589741CF2868098B008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
+		589F0C512A305D79008DF420 /* bootstrap2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap2.js; sourceTree = "<group>"; };
 		58A06D1028DAA49200983455 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		58A06D1128DAA49200983455 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -2163,6 +2167,7 @@
 				58639CE02864477D00AA80D5 /* _locales */,
 				58639CE42864477D00AA80D5 /* manifest.json */,
 				58639CE62864477D00AA80D5 /* background.js */,
+				589F0C512A305D79008DF420 /* bootstrap2.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2329,6 +2334,7 @@
 				5881342F27294C0E0055E1CE /* iframe.js */,
 				58F7F4DC274648FA00270873 /* MatchPattern.js */,
 				58F7F4B727438CB000270873 /* bootstrap.js */,
+				584214412A2ED7510035DCB1 /* bootstrap2.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3925,6 +3931,7 @@
 				58A06D1528DAA49200983455 /* base64.min.js in Resources */,
 				58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */,
 				58639CE52864477D00AA80D5 /* manifest.json in Resources */,
+				589F0C532A305EE1008DF420 /* bootstrap2.js in Resources */,
 				58639CE12864477D00AA80D5 /* _locales in Resources */,
 				58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */,
 				15F7892729B9DB0100972893 /* popup in Resources */,
@@ -3976,6 +3983,7 @@
 				8410C840275E028A005531EC /* codemirror.js in Resources */,
 				5811069229E6A1260073E9CF /* Privacy.txt in Resources */,
 				84C1ED50277AD93300651DF9 /* arrow-dark@3x.png in Resources */,
+				584214422A2ED7510035DCB1 /* bootstrap2.js in Resources */,
 				84C1ED402765FC8600651DF9 /* search@3x.png in Resources */,
 				587689262719238000F834A4 /* Assets.xcassets in Resources */,
 				8410C844275E028A005531EC /* javascript.js in Resources */,

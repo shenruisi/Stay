@@ -21,9 +21,9 @@
 
     "content_scripts": [
         {
-            "js": [ "convert2RegExp.js", "MatchPattern.js", "bootstrap.js"],
+            "js": [ "convert2RegExp.js", "MatchPattern.js", "bootstrap2.js"],
             "matches": [ "*://*/*" ],
-            "all_frames": false,
+            "all_frames": true,
             "run_at": "document_start"
         },
         {
