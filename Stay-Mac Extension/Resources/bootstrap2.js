@@ -62,9 +62,9 @@ const label = Math.random().toString(36).substring(2, 9);
 
 function executeScript(userscript){
     const tag = window.self === window.top ? "[main]" : `[${label}](window.location)`;
-    let injectInto = userscript.head.injectInto;
+    let injectInto = userscript.metadata.injectInto;
     if ((injectInto === "auto" && (userscript.fallback || cspEnter))){
-        console.warn(`${userscript.head.name}.js will fallback injecting to content.`);
+        console.warn(`${userscript.metadata.name}.js will fallback injecting to content.`);
         injectInto = "content";
     }
     
@@ -72,7 +72,7 @@ function executeScript(userscript){
         try {
             const code = `
                 (function(){
-                    const extension = window.browser;
+                    const extension = window.browser || window.chrome;
                     ${userscript.genCode}
                     async function main(){
                         const GM_apis = undefined;
@@ -80,23 +80,41 @@ function executeScript(userscript){
                         ${userscrip.code}
                     }
                     main();
-                    //# sourceURL=${userscript.head.name.replace(/\s/g, "-") + tag}
+                    //# sourceURL=${userscript.metadata.name.replace(/\s/g, "-") + tag}
                 })();
             `;
             return Function(code)();
         } catch (error) {
-            console.error(`${userscript.head.name} error`, error);
+            console.error(`${userscript.metadata.name} error`, error);
         }
     }
     else{
-        
+        const code = `
+            (function(){
+                const extension = window.browser;
+                ${userscript.genCode}
+                async function main(){
+                    const GM_apis = undefined;
+                    const browser = undefined;
+                    ${userscript.code}
+                    window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "stay"});
+                }
+                main();
+                //# sourceURL=${userscript.metadata.name.replace(/\s/g, "-") + tag}
+            })();
+        `;
+        const tag = document.createElement("script");
+        tag.type = 'text/javascript';
+        tag.id = `${userscript.uuid}`;
+        tag.textContent = code;
+        document.head.appendChild(tag);
     }
 }
 
 function run(userscript){
-    if (userscript.head.runAt === "document_start") {
+    if (userscript.metadata.runAt === "document_start") {
         executeScript(userscript);
-    } else if (runAt === "document_end" || runAt === "document_body") {
+    } else if (userscript.metadata.runAt === "document_end" || runAt === "document_body") {
         if (document.readyState !== "loading") {
             executeScript(userscript);
         } else {
@@ -104,7 +122,7 @@ function run(userscript){
                 executeScript(userscript);
             });
         }
-    } else if (runAt === "document_idle") {
+    } else if (userscript.metadata.runAt === "document_idle") {
         if (document.readyState === "complete") {
             executeScript(userscript);
         } else {
@@ -127,21 +145,33 @@ function cspCallback(e){
         
         for (let i = 0; i < userscripts.length; i++){
             const userscript = userscripts[i];
-            if (userscript.head.injectInto !== "auto") continue;
+            if (userscript.metadata.injectInto !== "auto") continue;
             userscript.fallback = true;
             run(userscript);
         }
     }
 }
 
+function receiveMessage(e){
+    if (e.data?.group === "stay"){
+        const uuid = e.data?.uuid;
+        const operate = e.data?.operate;
+        
+        if (operate === "remove_tag"){
+            document.getElementById(uuid).remove();
+        }
+    }
+}
+
 function addListeners(){
     document.addEventListener("securitypolicyviolation", cspCallback);
+    window.addEventListener("message", receiveMessage, false);
 }
 
 /**
  Struct of Response Script
  - uuid:
- - head:
+ - metadata:
  - requiredScripts:
  - code:
  - scriptMetaStr:
@@ -151,7 +181,7 @@ function addListeners(){
 
 let userscripts;
 function injection(){
-    browser.runtime.sendMessage({ from: "bootstrap", operate: "inject-files"}, (response) => {
+    browser.runtime.sendMessage({ origin: "bootstrap", operate: "get_inject_files" }, (response) => {
         injectFiles = response.body;
         let scripts = injectFiles.jsFiles;
         userscripts = [];
@@ -159,12 +189,12 @@ function injection(){
             const script = scripts[i];
             const userscript = {};
             const gmApis = [];
-            const grants = script.head.grants;
+            const grants = script.metadata.grants;
             const context = `{"uuid": "${script.uuid}"}`;
             
             //https://wiki.greasespot.net/GM.info
             const GM_info = {
-                script: script.head,
+                script: script.metadata,
                 scriptMetaStr: script.scriptMetaStr.script,
                 scriptHandler: injectFiles.scriptHandler,
                 version : injectFiles.scriptHandlerVersion
@@ -191,7 +221,8 @@ function injection(){
             
             userscript.genCode += `const GM = {${gmApis.join(",")}};`
             userscript.genCode += `const GM_info = ${JSONstringify(GM_info)};`
-            userscript.head = script.head;
+            userscript.metadata = script.metadata;
+            userscripts.push(userscript);
             run(userscript);
             
         }
