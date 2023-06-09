@@ -1,6 +1,6 @@
 let __storage;
 
-const GM_apis_content = {
+const GM_apis = {
     setValue: function(key, value){
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.setValue invalid key %s",`{this.name}`,key);
@@ -18,7 +18,20 @@ const GM_apis_content = {
         return new Promise(resolve => {
             const realKey = `_${this.uuid}_${key}`;
             __storage[realKey] = value;
-            browser.storage.local.set({realKey : value}, () => resolve());
+            if (browser){
+                browser.storage.local.set({realKey : value}, () => resolve());
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "setValue") return;
+                    window.removeEventListener("message", callback);
+                    resolve();
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setValue", key: realKey, value: value });
+            }
+            
         });
     },
     _setValue: function(key, value){
@@ -69,6 +82,7 @@ function staySays(msg){
 const label = Math.random().toString(36).substring(2, 9);
 
 let storage;
+let env;
 async function executeScript(userscript){
     const sourceTag = window.self === window.top ? "[main]" : `[${label}](window.location)`;
     let injectInto = userscript.metadata["inject-into"];
@@ -80,12 +94,13 @@ async function executeScript(userscript){
     if (injectInto === "content"){
         try {
             console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto content.`),"color: #B620E0","color: #000000");
-            storage = await (browser || chrome).storage.local.get(null);
+            if (storage == undefined){
+                storage = await (browser || chrome).storage.local.get(null) || {};
+            }
             
             const code = `
                 (function(){
-                    GM_apis = GM_apis_content;
-                    __storage = storage || {};
+                    __storage = storage;
                     ${userscript.genCode}
                     async function main(){
                         const GM_apis_content = undefined;
@@ -103,15 +118,28 @@ async function executeScript(userscript){
     }
     else{
         console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto page.`),"color: #B620E0","color: #000000");
+        
+        if (env == undefined){
+            env = `
+                window.__stay_GM_apis = ${GM_apis};
+            `;
+            
+        }
+        
+        const tag = document.createElement("script");
+        tag.type = 'text/javascript';
+        tag.id = `__stay_env`;
+        tag.textContent = code;
+        document.head.appendChild(tag);
+        
         const code = `
             (function(){
-                const extension = window.browser;
                 ${userscript.genCode}
                 async function main(){
                     const GM_apis = undefined;
                     const browser = undefined;
                     ${userscript.code}
-                    window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "stay"});
+//                    window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "stay"});
                 }
                 main();
                 //# sourceURL=${userscript.metadata.name}.replace(/\s/g, "-") + ${sourceTag}
@@ -168,12 +196,21 @@ function cspCallback(e){
 }
 
 function receiveMessage(e){
-    if (e.data?.group === "stay"){
-        const uuid = e.data?.uuid;
-        const operate = e.data?.operate;
+    const message = e.data;
+    if (message.group === "stay"){
+        const uuid = message.uuid;
+        const operate = message.operate;
         
         if (operate === "remove_tag"){
             document.getElementById(uuid).remove();
+        }
+    }
+    else if (message?.group == "gm_apis"){
+        const uuid = message.uuid;
+        const operate = message.operate;
+        if (operate === "setValue"){
+            browser.storage.local.set({message.key : message.value});
+            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate});
         }
     }
 }
