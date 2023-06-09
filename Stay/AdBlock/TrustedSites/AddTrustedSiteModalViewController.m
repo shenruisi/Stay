@@ -190,7 +190,7 @@ NSNotificationName const _Nonnull TrustedSiteDidAddNotification = @"app.notifica
         return;
     }
     
-    NSRegularExpression *domainRegex = [NSRegularExpression regularExpressionWithPattern:@"([a-zA-Z0-9\\-]*\\.?[a-zA-Z0-9\\-]+\\.[a-zA-Z]{2,})" options:0 error:nil];
+    NSRegularExpression *domainRegex = [NSRegularExpression regularExpressionWithPattern:@"(([a-zA-Z0-9\\-]*\\.?)+[a-zA-Z0-9\\-]+\\.[a-zA-Z]{2,})" options:0 error:nil];
     NSArray<NSTextCheckingResult *> *results = [domainRegex matchesInString:text options:0 range:NSMakeRange(0, text.length)];
     if (results.count == 1){
         NSInteger n = results[0].numberOfRanges;
