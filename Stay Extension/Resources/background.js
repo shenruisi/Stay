@@ -1103,18 +1103,20 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(body)
             });
         }
-        else if('trustedSite' == requestOperate){
+        else if('setTrustedSite' == requestOperate){
             const url = request.url;
-            // console.log("trustedSite-------request=",request);
-            browser.runtime.sendNativeMessage("application.id", { type: "trustedSite", url}, function (response) {
+            const on = request.on;
+            console.log("trustedSite-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "setTrustedSite", url, on}, function (response) {
                 // console.log("trustedSite-------response=",response);
                 let body = response&&response.body?response.body:{}
                 sendResponse(body)
             });
         }
         else if('getTrustedSite' == requestOperate){
-            // console.log("trustedSite-------request=",request);
-            browser.runtime.sendNativeMessage("application.id", { type: "getTrustedSite" }, function (response) {
+            console.log("getTrustedSite-------request=",request);
+            const url = request.url
+            browser.runtime.sendNativeMessage("application.id", { type: "getTrustedSite", url }, function (response) {
                 // console.log("trustedSite-------response=",response);
                 let body = response&&response.body?response.body:{}
                 sendResponse(body)
@@ -1225,7 +1227,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const url = request.url;
             const urlList = request.urlList;
             // console.log("adblock-------request-----",selector, url);
-            browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, url, urlList }, function (response) {
+            browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, urls: urlList }, function (response) {
                 // console.log("adblock-------response=",response);
                 sendResponse({ body: response.body })
             });

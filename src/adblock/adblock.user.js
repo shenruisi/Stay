@@ -1432,33 +1432,26 @@ const browser = __b;
           selDom = document.querySelector(selector);
         }
         console.log('selector-----selector---after-----',selector,selDom)
-        
-
-        try {
-          if(selDom){
-            const uuid = Utils.hexMD5(`${url}${selector}`);
-            if(cssSelectorSet.has(uuid)){
-              selDom.style.display = 'none';
-              resolve(true);
-              return;
-            }else{
-              selDom.style.display = 'none';
-              selectedDom.style.display = 'none';
-              cssSelectorSet.add(uuid);
-            }
-            
-            while(selDom.firstChild){
-              selDom.removeChild(selDom.firstChild)
-            }
-            selDom.remove();
-            selectedDom.remove();
-          }
-        } catch (error) {
-          console.log('error------',error)
-        }
-        
         let url = window.location.href;
-       
+        if(selDom){
+          const uuid = Utils.hexMD5(`${url}${selector}`);
+          if(cssSelectorSet.has(uuid)){
+            selDom.style.display = 'none';
+            resolve(true);
+            return;
+          }else{
+            selDom.style.display = 'none';
+            selectedDom.style.display = 'none';
+            cssSelectorSet.add(uuid);
+          }
+          
+          while(selDom.firstChild){
+            selDom.removeChild(selDom.firstChild)
+          }
+          selDom.remove();
+          selectedDom.remove();
+        }
+
         let urlList = [];
         urlList.push(url);
         let parentUrl = Utils.queryURLParams(url, 'stay_parent_url');
