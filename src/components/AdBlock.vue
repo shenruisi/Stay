@@ -169,7 +169,7 @@ export default {
           console.log('trustedSite====',response);
           if(response.url){
             let urlObj = new URL(response.url);
-            state.trustedSite = `${urlObj.hostname}${urlObj.pathname}`;
+            state.trustedSite = response.url;
           }
           state.switchStatus = response.on?'on':'off';
         })
