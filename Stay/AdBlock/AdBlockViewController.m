@@ -778,6 +778,7 @@
         }
     }
     else if (item == self.trustedSitesTabItem){
+        self.trustedSitesSource = nil;
         self.reloadTabItem.button.hidden = YES;
         _tableView.hidden = YES;
         _webView.hidden = YES;
