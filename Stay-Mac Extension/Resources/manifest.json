@@ -15,7 +15,7 @@
     },
 
     "background": {
-        "scripts": [ "background.js" ],
+        "scripts": [ "background.v2.js" ],
         "persistent": true
     },
 
@@ -30,7 +30,7 @@
             "match_about_blank": true
         },
         {
-            "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.js"],
+            "js": [ "convert2RegExp.js", "MatchPattern.js","bootstrap.v2.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"

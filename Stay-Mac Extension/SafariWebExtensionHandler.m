@@ -599,7 +599,7 @@ NSString * const SFExtensionMessageKey = @"message";
                 @"grants": data[@"grants"],
                 @"icon": data[@"iconUrl"],
                 @"locales": data[@"locales"],
-                @"inject-into": data[@"injectInto"],
+                @"inject-into": [data[@"injectInto"] lowercaseString],
                 @"noframes": data[@"noFrames"]
             }];
             

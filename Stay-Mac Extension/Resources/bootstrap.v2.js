@@ -1,6 +1,7 @@
-let extension;
-const GM_apis = {
-    setValue : function(key, value){
+let __storage;
+
+const GM_apis_content = {
+    setValue: function(key, value){
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.setValue invalid key %s",`{this.name}`,key);
             return new Promise((resolve, reject) => {
@@ -15,13 +16,12 @@ const GM_apis = {
         }
         
         return new Promise(resolve => {
-            const item = {};
-            item[`$_{this.uuid}_${key}`] = value;
-            extension.storage.local.set(item, () => resolve());
+            const realKey = `_${this.uuid}_${key}`;
+            __storage[realKey] = value;
+            browser.storage.local.set({realKey : value}, () => resolve());
         });
-        
     },
-    _setValue : function(key, value){
+    _setValue: function(key, value){
         if (typeof key !== "string" || !key.length) {
             return console.error("%s GM.setValue invalid key %s",`{this.name}`,key);
         }
@@ -29,12 +29,11 @@ const GM_apis = {
             return console.error("%s GM.setValue invalid value %s",`{this.name}`,key);
         }
         
-        const item = {};
-        item[`$_{this.uuid}_${key}`] = value;
-        extension.storage.local.set(item);
+        const realKey = `_${this.uuid}_${key}`;
+        __storage[realKey] = value;
+        browser.storage.local.set({realKey : value});
     },
-    getValue : function(key, defaultValue){
-        console.log("getValue...");
+    getValue: function(key, defaultValue){
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.getValue invalid key %s",`{this.name}`,key);
             return new Promise((resolve, reject) => {
@@ -44,44 +43,52 @@ const GM_apis = {
         
         return new Promise(resolve => {
             const realKey = `_${this.uuid}_${key}`;
-            extension.storage.local.get(realKey, items => {
-                if (Object.keys(item).length === 0) {
-                    if (defaultValue != null) {
-                        resolve(defaultValue);
-                    } else {
-                        resolve(undefined);
-                    }
+            const value = __storage[realKey];
+            if (Object.keys(item).length === 0) {
+                if (defaultValue != null) {
+                    resolve(defaultValue);
                 } else {
-                    resolve(Object.values(item)[0]);
+                    resolve(undefined);
                 }
-            });
+            } else {
+                resolve(value);
+            }
         });
-    }
+    },
+    _getValue: function(key, defaultValue){
+        const realKey = `_${this.uuid}_${key}`;
+        const value = __storage[realKey];
+        return value || defaultValue;
+    },
 }
 
-function staySay(msg){
-    return `Stay say: ${msg}`;
+function staySays(msg){
+    return `Stay says: ${msg}`;
 }
 
 const label = Math.random().toString(36).substring(2, 9);
 
-function executeScript(userscript){
+let storage;
+async function executeScript(userscript){
     const sourceTag = window.self === window.top ? "[main]" : `[${label}](window.location)`;
     let injectInto = userscript.metadata["inject-into"];
     if ((injectInto === "auto") && (userscript.fallback || cspEnter)){
-        console.warn(staySay(`${userscript.metadata.name}.js will fallback injecting to content.`));
+        console.warn(staySays(`${userscript.metadata.name}.js will fallback injecting to content.`));
         injectInto = "content";
     }
     
     if (injectInto === "content"){
         try {
-            console.info(staySay(`Inject %c${userscript.metadata.name}(js) %cto content.`),"color: #B620E0","color: #000000");
+            console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto content.`),"color: #B620E0","color: #000000");
+            storage = await (browser || chrome).storage.local.get(null);
+            
             const code = `
                 (function(){
-                    extension = window.browser || window.chrome;
+                    GM_apis = GM_apis_content;
+                    __storage = storage || {};
                     ${userscript.genCode}
                     async function main(){
-                        const GM_apis = undefined;
+                        const GM_apis_content = undefined;
                         const browser = undefined;
                         ${userscript.code}
                     }
@@ -95,6 +102,7 @@ function executeScript(userscript){
         }
     }
     else{
+        console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto page.`),"color: #B620E0","color: #000000");
         const code = `
             (function(){
                 const extension = window.browser;
@@ -217,21 +225,19 @@ function injection(){
             const unsafeWindow = grants.includes("unsafeWindow");
 
             if (unsafeWindow && injectInto === "auto"){
-                console.warn(staySay(`${script.metadata.name}(js) @inject-into value set to 'page' due to @grant unsafeWindow.`));
+                console.warn(staySays(`${script.metadata.name}(js) @inject-into value set to 'page' due to @grant unsafeWindow.`));
                 script.metadata["inject-into"] = "page";
             }
             else if (grants.length && injectInto === "auto"){
-                console.warn(staySay(`${script.metadata.name}(js) @inject-into value set to 'content' due to has @grant values: ${grants}`));
+                console.warn(staySays(`${script.metadata.name}(js) @inject-into value set to 'content' due to has @grant values: ${grants}`));
                 script.metadata["inject-into"] = "content";
             }
             
             for (let j = 0; j < grants.length; j++){
                 const grant = grants[j];
-                const apiGroup = grant.split('.')[0] || grant.split('_')[0];
-                const apiName = grant.split('.')[1] || "_" + grant.split('_')[1];
+                const apiGroup = (grant.split('.').length > 1 ? grant.split('.')[0] : undefined) || grant.split('_')[0];
+                const apiName = (grant.split('.').length > 1 ? grant.split('.')[1] : undefined) || "_" + grant.split('_')[1];
                 if (apiGroup == "GM"){
-                    if (!Object.keys(GM_apis).includes(apiName)) continue;
-                    
                     let apiStr = `${apiName}: GM_apis.${apiName}`;
                     switch(apiName){
                         case "setValue":
@@ -239,7 +245,9 @@ function injection(){
                             gmApis.push(apiStr + `.bind(${context})`);
                             break;
                         case "_setValue":
-                            userscript.genCode += `const GM_${apiName} = GM_apis.${apiName}.bind(${context})`;
+                        case "_getValue":
+                            userscript.genCode += `const GM${apiName} = GM_apis.${apiName}.bind(${context});`;
+                            break;
                     }
                 }
             }
@@ -252,7 +260,6 @@ function injection(){
             userscript.code = script.code;
             userscripts.push(userscript);
             run(userscript);
-            
         }
     });
 }
