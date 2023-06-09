@@ -132,6 +132,20 @@ static ContentFilterManager *instance = nil;
     [newData writeToFile:filePath atomically:YES];
 }
 
+- (void)appendJSONToFileName:(NSString *)fileName array:(NSMutableArray *)array error:(NSError **)error{
+    NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
+    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
+    if (nil == jsonData){
+        jsonData = [NSData data];
+    }
+    NSMutableArray *existJsonArray = [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:error]];
+    if (error) return;
+    [existJsonArray addObjectsFromArray:array];
+    NSData *newData = [NSJSONSerialization dataWithJSONObject:existJsonArray options:NSJSONWritingWithoutEscapingSlashes error:error];
+    if (error) return;
+    [newData writeToFile:filePath atomically:YES];
+}
+
 - (void)appendJSONToFileName:(NSString *)fileName trustedSite:(NSString *)trustedSite error:(NSError **)error{
     NSString *filePath = [self.ruleJSONPath stringByAppendingPathComponent:fileName];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
