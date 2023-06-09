@@ -1,4 +1,4 @@
-
+let extension;
 const GM_apis = {
     setValue : function(key, value){
         if (typeof key !== "string" || !key.length) {
@@ -31,9 +31,10 @@ const GM_apis = {
         
         const item = {};
         item[`$_{this.uuid}_${key}`] = value;
-        await extension.storage.local.set(item);
+        extension.storage.local.set(item);
     },
     getValue : function(key, defaultValue){
+        console.log("getValue...");
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.getValue invalid key %s",`{this.name}`,key);
             return new Promise((resolve, reject) => {
@@ -42,7 +43,7 @@ const GM_apis = {
         }
         
         return new Promise(resolve => {
-            const realKey = `$_{this.uuid}_${key}`;
+            const realKey = `_${this.uuid}_${key}`;
             extension.storage.local.get(realKey, items => {
                 if (Object.keys(item).length === 0) {
                     if (defaultValue != null) {
@@ -58,29 +59,34 @@ const GM_apis = {
     }
 }
 
+function staySay(msg){
+    return `Stay say: ${msg}`;
+}
+
 const label = Math.random().toString(36).substring(2, 9);
 
 function executeScript(userscript){
-    const tag = window.self === window.top ? "[main]" : `[${label}](window.location)`;
-    let injectInto = userscript.metadata.injectInto;
-    if ((injectInto === "auto" && (userscript.fallback || cspEnter))){
-        console.warn(`${userscript.metadata.name}.js will fallback injecting to content.`);
+    const sourceTag = window.self === window.top ? "[main]" : `[${label}](window.location)`;
+    let injectInto = userscript.metadata["inject-into"];
+    if ((injectInto === "auto") && (userscript.fallback || cspEnter)){
+        console.warn(staySay(`${userscript.metadata.name}.js will fallback injecting to content.`));
         injectInto = "content";
     }
     
     if (injectInto === "content"){
         try {
+            console.info(staySay(`Inject %c${userscript.metadata.name}(js) %cto content.`),"color: #B620E0","color: #000000");
             const code = `
                 (function(){
-                    const extension = window.browser || window.chrome;
+                    extension = window.browser || window.chrome;
                     ${userscript.genCode}
                     async function main(){
                         const GM_apis = undefined;
                         const browser = undefined;
-                        ${userscrip.code}
+                        ${userscript.code}
                     }
                     main();
-                    //# sourceURL=${userscript.metadata.name.replace(/\s/g, "-") + tag}
+                    //# sourceURL=${userscript.metadata.name}.replace(/\s/g, "-") + ${sourceTag}
                 })();
             `;
             return Function(code)();
@@ -100,7 +106,7 @@ function executeScript(userscript){
                     window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "stay"});
                 }
                 main();
-                //# sourceURL=${userscript.metadata.name.replace(/\s/g, "-") + tag}
+                //# sourceURL=${userscript.metadata.name}.replace(/\s/g, "-") + ${sourceTag}
             })();
         `;
         const tag = document.createElement("script");
@@ -112,9 +118,10 @@ function executeScript(userscript){
 }
 
 function run(userscript){
-    if (userscript.metadata.runAt === "document_start") {
+    const runAt = "document_"+userscript.metadata["run-at"];
+    if (runAt === "document_start") {
         executeScript(userscript);
-    } else if (userscript.metadata.runAt === "document_end" || runAt === "document_body") {
+    } else if (runAt === "document_end" || runAt === "document_body") {
         if (document.readyState !== "loading") {
             executeScript(userscript);
         } else {
@@ -122,7 +129,7 @@ function run(userscript){
                 executeScript(userscript);
             });
         }
-    } else if (userscript.metadata.runAt === "document_idle") {
+    } else if (runAt === "document_idle") {
         if (document.readyState === "complete") {
             executeScript(userscript);
         } else {
@@ -176,18 +183,21 @@ function addListeners(){
  - code:
  - scriptMetaStr:
  - type: js
- - fallback: false
  */
 
 let userscripts;
 function injection(){
-    browser.runtime.sendMessage({ origin: "bootstrap", operate: "get_inject_files" }, (response) => {
-        injectFiles = response.body;
+    browser.runtime.sendMessage({ origin: "bootstrap", operate: "script.v2.getInjectFiles" }, (response) => {
+        const injectFiles = response.body;
         let scripts = injectFiles.jsFiles;
         userscripts = [];
         for (let i = 0; i < scripts.length; i++){
             const script = scripts[i];
-            const userscript = {};
+            let userscript = {
+                genCode:"",
+                code:"",
+                fallback: false
+            };
             const gmApis = [];
             const grants = script.metadata.grants;
             const context = `{"uuid": "${script.uuid}"}`;
@@ -195,33 +205,51 @@ function injection(){
             //https://wiki.greasespot.net/GM.info
             const GM_info = {
                 script: script.metadata,
-                scriptMetaStr: script.scriptMetaStr.script,
+                scriptMetaStr: script.scriptMetaStr,
                 scriptHandler: injectFiles.scriptHandler,
                 version : injectFiles.scriptHandlerVersion
             };
             
+            const injectInto = script.metadata["inject-into"];
+
             if (grants.includes("none")) grants.length = 0;
             
-            grants.forEach(grant => {
+            const unsafeWindow = grants.includes("unsafeWindow");
+
+            if (unsafeWindow && injectInto === "auto"){
+                console.warn(staySay(`${script.metadata.name}(js) @inject-into value set to 'page' due to @grant unsafeWindow.`));
+                script.metadata["inject-into"] = "page";
+            }
+            else if (grants.length && injectInto === "auto"){
+                console.warn(staySay(`${script.metadata.name}(js) @inject-into value set to 'content' due to has @grant values: ${grants}`));
+                script.metadata["inject-into"] = "content";
+            }
+            
+            for (let j = 0; j < grants.length; j++){
+                const grant = grants[j];
                 const apiGroup = grant.split('.')[0] || grant.split('_')[0];
                 const apiName = grant.split('.')[1] || "_" + grant.split('_')[1];
                 if (apiGroup == "GM"){
-                    if (!Object.keys(GM_apis).includes(apiName)) return;
+                    if (!Object.keys(GM_apis).includes(apiName)) continue;
                     
                     let apiStr = `${apiName}: GM_apis.${apiName}`;
                     switch(apiName){
                         case "setValue":
+                        case "getValue":
                             gmApis.push(apiStr + `.bind(${context})`);
                             break;
                         case "_setValue":
                             userscript.genCode += `const GM_${apiName} = GM_apis.${apiName}.bind(${context})`;
                     }
                 }
-            });
+            }
             
+            gmApis.push("info: GM_info");
+            
+            userscript.genCode += `const GM_info = ${JSON.stringify(GM_info)};`
             userscript.genCode += `const GM = {${gmApis.join(",")}};`
-            userscript.genCode += `const GM_info = ${JSONstringify(GM_info)};`
             userscript.metadata = script.metadata;
+            userscript.code = script.code;
             userscripts.push(userscript);
             run(userscript);
             

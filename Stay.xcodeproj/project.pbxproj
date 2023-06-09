@@ -406,7 +406,8 @@
 		588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		589741CA2868084B008FB897 /* macOSNative.bundle in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 588202C7285A12B400B2721A /* macOSNative.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		589F0C532A305EE1008DF420 /* bootstrap2.js in Resources */ = {isa = PBXBuildFile; fileRef = 589F0C512A305D79008DF420 /* bootstrap2.js */; };
+		589F0C532A305EE1008DF420 /* bootstrap.v2.js in Resources */ = {isa = PBXBuildFile; fileRef = 589F0C512A305D79008DF420 /* bootstrap.v2.js */; };
+		589F0C552A317081008DF420 /* background.v2.js in Resources */ = {isa = PBXBuildFile; fileRef = 589F0C542A317081008DF420 /* background.v2.js */; };
 		58A06D1528DAA49200983455 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1028DAA49200983455 /* base64.min.js */; };
 		58A06D1628DAA49200983455 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1128DAA49200983455 /* jquery.cookie.min.js */; };
 		58A06D1728DAA49200983455 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */; };
@@ -1272,7 +1273,8 @@
 		588B832B284620F700AB2D73 /* ActivateChanged.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivateChanged.m; sourceTree = "<group>"; };
 		589741CD28680925008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/iOSSupport/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
 		589741CF2868098B008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
-		589F0C512A305D79008DF420 /* bootstrap2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap2.js; sourceTree = "<group>"; };
+		589F0C512A305D79008DF420 /* bootstrap.v2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = bootstrap.v2.js; sourceTree = "<group>"; };
+		589F0C542A317081008DF420 /* background.v2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.v2.js; sourceTree = "<group>"; };
 		58A06D1028DAA49200983455 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		58A06D1128DAA49200983455 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -2167,7 +2169,8 @@
 				58639CE02864477D00AA80D5 /* _locales */,
 				58639CE42864477D00AA80D5 /* manifest.json */,
 				58639CE62864477D00AA80D5 /* background.js */,
-				589F0C512A305D79008DF420 /* bootstrap2.js */,
+				589F0C512A305D79008DF420 /* bootstrap.v2.js */,
+				589F0C542A317081008DF420 /* background.v2.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3931,9 +3934,10 @@
 				58A06D1528DAA49200983455 /* base64.min.js in Resources */,
 				58639D0C28644B7E00AA80D5 /* convert2RegExp.js in Resources */,
 				58639CE52864477D00AA80D5 /* manifest.json in Resources */,
-				589F0C532A305EE1008DF420 /* bootstrap2.js in Resources */,
+				589F0C532A305EE1008DF420 /* bootstrap.v2.js in Resources */,
 				58639CE12864477D00AA80D5 /* _locales in Resources */,
 				58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */,
+				589F0C552A317081008DF420 /* background.v2.js in Resources */,
 				15F7892729B9DB0100972893 /* popup in Resources */,
 				58A06D1928DAA49200983455 /* gm-apis-gen.js in Resources */,
 			);

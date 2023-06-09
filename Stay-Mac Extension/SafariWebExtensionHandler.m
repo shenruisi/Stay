@@ -16,9 +16,16 @@
 #import "ContentFilterManager.h"
 #import "MyAdditions.h"
 
+
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < 110000
 NSString * const SFExtensionMessageKey = @"message";
 #endif
+
+@interface SafariWebExtensionHandler()
+
+@property (nonatomic, strong) NSString *handlerVersion;
+@property (nonatomic, strong) NSString *sharedGroupPath;
+@end
 
 @implementation SafariWebExtensionHandler
 
@@ -148,7 +155,10 @@ NSString * const SFExtensionMessageKey = @"message";
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
     
     id body = [NSNull null];
-    if ([message[@"type"] isEqualToString:@"fetchScripts"]){
+    if ([message[@"type"] hasPrefix:@"script.v2."]){
+        body = [self scriptV2Handler:message];
+    }
+    else if ([message[@"type"] isEqualToString:@"fetchScripts"]){
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
         BOOL requireCompleteScript = digest.length == 0 || [digest isEqualToString:@"no"];
@@ -206,7 +216,6 @@ NSString * const SFExtensionMessageKey = @"message";
                            isPro:[SharedStorageManager shared].userDefaultsExRO.pro
                      isExtension:YES];
         }
-        
     }
     else if ([message[@"type"] isEqualToString:@"fetchTheScript"]){
         NSString *uuid = message[@"uuid"];
@@ -534,6 +543,96 @@ NSString * const SFExtensionMessageKey = @"message";
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
 }
 
+- (NSDictionary *)scriptV2Handler:(NSDictionary *)message{
+    NSString *type = message[@"type"];
+    if ([type isEqualToString:@"script.v2.getInjectFiles"]){
+        NSString *url = message[@"url"];
+        BOOL isTop = [message[@"isTop"] boolValue];
+        
+        NSMutableArray *jsFiles = [[NSMutableArray alloc] init];
+        NSString *scriptHandler = @"stay";
+        NSString *scriptHandlerVersion = [self handlerVersion];
+        [SharedStorageManager shared].userscriptHeaders = nil;
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
+        
+        for(int i = 0;i < datas.count; i++) {
+            NSDictionary *data = datas[i];
+            
+            BOOL noFrames = [data[@"noFrames"] boolValue];
+            if (noFrames && !isTop){
+                [datas removeObjectAtIndex:i--];
+                continue;
+            }
+            
+            if (![data[@"active"] boolValue] || ![self matchesCheck:data url:url]){
+                [datas removeObjectAtIndex:i--];
+                continue;
+            }
+            
+            NSString *disabledUrl = nil;
+            if ((disabledUrl = [self disabledWebsitesCheck:data url:url]) != nil){
+                [datas removeObjectAtIndex:i--];
+                continue;
+            }
+            
+            NSString *requiredScripts = [self getRequiredScriptsWithUUID:data];
+            
+            NSDictionary *scriptMeta  = @{
+                @"description": data[@"description"],
+                @"excludes": data[@"excludes"],
+                @"includes": data[@"includes"],
+                @"matches": data[@"matches"],
+                @"name": data[@"name"],
+                @"namespace": data[@"namespace"],
+                @"resources": data[@"resourceUrls"],
+                @"run-at": data[@"runAt"],
+                @"version": data[@"version"]
+            };
+            
+            NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:scriptMeta];
+            
+            [metadata addEntriesFromDictionary:@{
+                @"grants": data[@"grants"],
+                @"icon": data[@"iconUrl"],
+                @"locales": data[@"locales"],
+                @"inject-into": data[@"injectInto"],
+                @"noframes": data[@"noFrames"]
+            }];
+            
+            NSString *scriptMetaStr = [[NSString alloc] initWithData:
+                                       [NSJSONSerialization dataWithJSONObject:scriptMeta options:0 error:nil]
+                                                            encoding:NSUTF8StringEncoding];
+            
+            UserscriptInfo *info = [self getInfoWithUUID:data[@"uuid"]];
+            
+            NSDictionary *script = @{
+                @"uuid": data[@"uuid"],
+                @"metadata": metadata,
+                @"requiredScripts": requiredScripts,
+                @"code": info.content[@"content"],
+                @"type": @"js",
+                @"scriptMetaStr": scriptMetaStr ? scriptMetaStr : @""
+            };
+            
+            [jsFiles addObject:script];
+            
+            NSNumber *number = [SharedStorageManager shared].runsRecord.contentDic[data[@"uuid"]];
+            [SharedStorageManager shared].runsRecord.contentDic[data[@"uuid"]] = number ? @(number.integerValue+1) : @(1);
+            [[SharedStorageManager shared].runsRecord flush];
+        }
+       
+        [SharedStorageManager shared].extensionConfig = nil;
+        return @{
+            @"showBadge" : @([SharedStorageManager shared].extensionConfig.showBadge),
+            @"scriptHandler": scriptHandler,
+            @"scriptHandlerVersion": scriptHandlerVersion,
+            @"jsFiles": jsFiles
+        };
+    }
+    
+    return nil;
+}
+
 - (NSDictionary *)xmlHttpRequestProxy:(NSDictionary *)details{
     if (nil == details) return @{@"status":@(500), @"responseText":@""};
     NSString *method = details[@"method"];
@@ -612,6 +711,30 @@ NSString * const SFExtensionMessageKey = @"message";
     return [[SharedStorageManager shared] getInfoOfUUID:uuid];
 }
 
+- (NSString *)getRequiredScriptsWithUUID:(NSDictionary *)script{
+    if (script[@"requireUrls"] == nil) return @"";
+    NSArray *array = script[@"requireUrls"];
+    NSMutableString *requiredScripts = [[NSMutableString alloc] initWithString:@""];
+    for (int i = 0; i < array.count; i++){
+        NSString *requireUrl = array[i];
+        if ([requireUrl hasPrefix:@"stay://vendor"]){
+            continue;
+        }
+        NSString *fileName = requireUrl.lastPathComponent;
+        NSString *storageUrl = [NSString stringWithFormat:@"%@/%@/require/%@",self.sharedGroupPath,script[@"uuid"],fileName];
+        if(![[NSFileManager defaultManager] fileExistsAtPath:storageUrl]) {
+            continue;
+        }
+        
+        NSString *requiredScript = [NSString stringWithContentsOfFile:storageUrl encoding:NSUTF8StringEncoding error:nil];
+        if (requiredScript.length > 0){
+            [requiredScripts appendString:requiredScript];
+            [requiredScripts appendString:@"\n"];
+        }
+    }
+    
+    return requiredScripts;
+}
 
 - (NSArray<NSDictionary *> *)getUserScriptRequireListByUserScript:(NSDictionary *)scrpit  {
     if(scrpit != nil && scrpit[@"requireUrls"] != nil){
@@ -687,6 +810,23 @@ NSString * const SFExtensionMessageKey = @"message";
 }
 
 
+- (NSString *)handlerVersion{
+    if (nil == _handlerVersion){
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        _handlerVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+    }
+    
+    return _handlerVersion;
+}
+
+- (NSString *)sharedGroupPath{
+    if (nil == _sharedGroupPath){
+        _sharedGroupPath = [[[NSFileManager defaultManager]
+                             containerURLForSecurityApplicationGroupIdentifier:@"group.com.dajiu.stay.pro"] path];
+    }
+    
+    return _sharedGroupPath;
+}
 
 - (void)stateOfExtension{
 //    [SFSafariApplication get]

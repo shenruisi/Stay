@@ -103,6 +103,9 @@ static Tampermonkey *kInstance = nil;
 
 
 - (void)conventScriptContent:(UserScript *)userScript{
+//    userScript.injectInto = [userScript.injectInto lowercaseString];
+//    userScript.parsedContent = [self _removeComment:userScript.content];
+//    return;
     NSString *scriptWithoutComment = [self _removeComment:userScript.content];
     JSValue *createGMApisWithUserScript = [self.jsContext evaluateScript:@"window.createGMApisWithUserScript"];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
