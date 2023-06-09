@@ -869,9 +869,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const details = request.details;
             const reqType = request.type;
             const xhrId = request.xhrId;
-            // console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
+            console.log("HTTP_REQUEST_API_FROM_CREATE_TO_APP------", request)
             browser.runtime.sendNativeMessage("application.id", { type: "GM_xmlhttpRequest", details, uuid: request.uuid }, function (response) {
-                // console.log("GM_xmlhttpRequest----response---", response);
+                console.log("GM_xmlhttpRequest----response---", response);
                 let resp = response.body
                 resp.response = resp.responseText;
                 if (resp.responseType && resp.responseType === "arraybuffer" && resp) {
@@ -1103,6 +1103,23 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(body)
             });
         }
+        else if('trustedSite' == requestOperate){
+            const url = request.url;
+            // console.log("trustedSite-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "trustedSite", url}, function (response) {
+                // console.log("trustedSite-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
+        else if('getTrustedSite' == requestOperate){
+            // console.log("trustedSite-------request=",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "getTrustedSite" }, function (response) {
+                // console.log("trustedSite-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
         return true;
     }else if ("content_script" == request.from){
         // console.log("content_script-------request=", request)
@@ -1191,6 +1208,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 // console.log('POST_AUDIO_RECORD----', response)
                 sendResponse({ text: response.body })
             });
+        }
+        else if("PUSH_IFRAME_VIDEO_INFO_TO_BG" === requestOperate){
+            let videoReact = request.videoReact;
+            let iframeVideoInfo = request.iframeVideoInfo;
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "PUSH_IFRAME_VIDEO_INFO_TO_PARENT", iframeVideoInfo, videoReact});
+            });
+            sendResponse({ text: 'background already received video info of iframe' })
         }
         return true;
     }else if ("adblock" == request.from){

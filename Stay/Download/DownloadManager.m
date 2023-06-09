@@ -345,6 +345,7 @@ static DownloadManager *instance = nil;
             }
         }
         [self.taskDict removeObjectForKey:taskId];
+        [self notifyFinishIfNeed];
     }
     [NSFileManager.defaultManager removeItemAtPath:[self.dataPath stringByAppendingPathComponent:taskId] error:nil];
 }
@@ -831,11 +832,9 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     Task *task = [self getTaskWithSessionTask:downloadTask];
     if (task != nil) {
         task.bytesWritten += bytesWritten;
-        if (task.isNormal && task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) {
-            return;
-        }
         if (task.block != nil) {
-            task.progress = task.isM3U8 ? task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount : totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
+            task.progress = task.isM3U8 ? task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount
+                                        : ((task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) ? task.progress : totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
             NSString *speed = @"";
             NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
             if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {

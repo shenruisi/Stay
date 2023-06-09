@@ -398,41 +398,45 @@ NSString * const SFExtensionMessageKey = @"message";
         }
     }
     else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
-        NSString *url = message[@"url"];
+        NSArray<NSString *> *urls = message[@"urls"];
         NSString *selector = message[@"selector"];
         
-        if (url.length > 0 && selector.length > 0){
-            NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-            [set addCharactersInString:@"#"];
-            NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
-            NSString *host = uri.host;
-            NSString *path = uri.path;
-            if ([path isEqualToString:@"/"]){
-                path = @"";
-            }
-            path = path ? path : @"";
-//            NSString *fragment = uri.fragment ?  uri.fragment : @"";
-            
-            NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
-            
-            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:rule error:nil];
-            NSDictionary *dictionary = @{
-                @"trigger" : @{
-                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
-                },
-                @"action" : @{
-                    @"type" : @"css-display-none",
-                    @"selector" : selector
+        if (urls.count > 0 && selector.length > 0){
+            NSMutableString *content = [[NSMutableString alloc] init];
+            NSMutableArray *array = [[NSMutableArray alloc] init];
+            for (NSString *url in urls){
+                NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                [set addCharactersInString:@"#"];
+                NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+                NSString *host = uri.host;
+                NSString *path = uri.path;
+                if ([path isEqualToString:@"/"]){
+                    path = @"";
                 }
-            };
-            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" dictionary:dictionary error:nil];
+                path = path ? path : @"";
+                NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
+                [content appendString:rule];
+                [array addObject:@{
+                    @"trigger" : @{
+                        @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
+                    },
+                    @"action" : @{
+                        @"type" : @"css-display-none",
+                        @"selector" : selector
+                    }
+                }];
+            }
             
-            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
+            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:content error:nil];
+            [SharedStorageManager shared].extensionConfig = nil;
+            [SharedStorageManager shared].extensionConfig.tagUpdate = [NSDate date];
+            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" array:array error:nil];
+            
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
             [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
         }
-        
     }
     else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){
         dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);

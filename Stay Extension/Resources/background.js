@@ -1209,6 +1209,14 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ text: response.body })
             });
         }
+        else if("PUSH_IFRAME_VIDEO_INFO_TO_BG" === requestOperate){
+            let videoReact = request.videoReact;
+            let iframeVideoInfo = request.iframeVideoInfo;
+            browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, { from: "background", operate: "PUSH_IFRAME_VIDEO_INFO_TO_PARENT", iframeVideoInfo, videoReact});
+            });
+            sendResponse({ text: 'background already received video info of iframe' })
+        }
         return true;
     }else if ("adblock" == request.from){
         // console.log("content_script-------request=", request)
