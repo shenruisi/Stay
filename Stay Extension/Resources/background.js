@@ -1223,18 +1223,12 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("sendSelectorToHandler" === request.operate){
             const selector = request.selector;
             const url = request.url;
-            console.log("adblock-------request-----",selector, url);
-            browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, url }, function (response) {
-                console.log("adblock-------response=",response);
+            const urlList = request.urlList;
+            // console.log("adblock-------request-----",selector, url);
+            browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, url, urlList }, function (response) {
+                // console.log("adblock-------response=",response);
                 sendResponse({ body: response.body })
             });
-            const code = `let selectedDomBySelector = document.querySelector("${selector}"); if(selectedDomBySelector){selectedDomBySelector.style.display = "none";} `
-            // browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            //     console.log("request.executeScript------", code);
-            //     browser.tabs.executeScript(tabs[0].id, { code: code}, (res)=>{
-            //         console.log("response.executeScript------", res);
-            //     })
-            // });
         }
         return true;
     }
