@@ -1907,7 +1907,7 @@ const browser = __b;
       }
       let matches = idStr.match(/[A-Z]/g);
       let numMatches = idStr.match(/[0-9]/g);
-      if(/^[0-9a-zA-Z-_]*$/.test(idStr) && idStr.length>=10 &&  ((matches && matches.length>4) || (numMatches && numMatches.length>4))){
+      if(/^[0-9a-zA-Z-_]*$/.test(idStr) && idStr.length>=10 &&  ((matches && matches.length>2) || (numMatches && numMatches.length>3))){
         return false;
       }
       return true;

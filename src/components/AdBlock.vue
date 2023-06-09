@@ -154,6 +154,7 @@ export default {
         store.commit('setBrowserUrl', tab.url);
         global.browser.runtime.sendMessage({ from: 'popup', operate: 'setTrustedSite', url: state.browserUrl, on: state.switchStatus=='on'?true:false}, (response) => {
           console.log('setTrustedSite====',response);
+          global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
           // state.trustedSite = response.url;
           // state.switchStatus = response.on;
         })
@@ -167,11 +168,9 @@ export default {
         store.commit('setBrowserUrl', tab.url);
         global.browser.runtime.sendMessage({ from: 'popup', operate: 'getTrustedSite', url: state.browserUrl}, (response) => {
           console.log('trustedSite====',response);
-          if(response.url){
-            let urlObj = new URL(response.url);
-            state.trustedSite = response.url;
-          }
-          state.switchStatus = response.on?'on':'off';
+          state.trustedSite = response.url;
+          state.switchStatus = response.on&&response.on==true?'on':'off';
+          console.log('trustedSite==state.switchStatus==',state.switchStatus);
         })
       })
     }
