@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Position of the tab.
 @property (nonatomic, assign) NSInteger position;
 @property (nonatomic, assign) double operateTimestamp;
+@property (nonatomic, assign) BOOL faceIDEnabled;
+
 - (void)operateUpdate;
 @end
 

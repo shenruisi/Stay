@@ -28,6 +28,7 @@
     [coder encodeObject:self.hexColor forKey:@"hexColor"];
     [coder encodeInteger:self.position forKey:@"position"];
     [coder encodeDouble:self.operateTimestamp forKey:@"operateTimestamp"];
+    [coder encodeBool:self.faceIDEnabled forKey:@"faceIDEnabled"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
@@ -36,6 +37,7 @@
         _hexColor = [coder decodeObjectForKey:@"hexColor"];
         _position = [coder decodeIntegerForKey:@"position"];
         _operateTimestamp = [coder decodeDoubleForKey:@"operateTimestamp"];
+        _faceIDEnabled = [coder decodeBoolForKey:@"faceIDEnabled"];
     }
     
     return self;
@@ -56,6 +58,7 @@
     _hexColor = config.hexColor;
     _position = config.position;
     _operateTimestamp = config.operateTimestamp;
+    _faceIDEnabled = config.faceIDEnabled;
 }
 
 - (void)setName:(NSString *)name{
@@ -75,6 +78,11 @@
 
 - (void)setOperateTimestamp:(double)operateTimestamp{
     _operateTimestamp = operateTimestamp;
+    [self flush];
+}
+
+- (void)setFaceIDEnabled:(BOOL)faceIDEnabled{
+    _faceIDEnabled = faceIDEnabled;
     [self flush];
 }
 

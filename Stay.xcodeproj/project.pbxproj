@@ -18,6 +18,9 @@
 		15F20BD5281BD24800330A56 /* parse-meta-line.js in Resources */ = {isa = PBXBuildFile; fileRef = 15F20BD3281BD24800330A56 /* parse-meta-line.js */; };
 		15F7892729B9DB0100972893 /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 15F7892629B9DB0100972893 /* popup */; };
 		15FEBE7C2999E685003A9625 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
+		3C0A3D7D2A348027007FF098 /* FaceIDAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0A3D7C2A348027007FF098 /* FaceIDAuth.swift */; };
+		3C0A3D7E2A348027007FF098 /* FaceIDAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0A3D7C2A348027007FF098 /* FaceIDAuth.swift */; };
+		3C0A3D812A34BFB8007FF098 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C0A3D832A34BFB8007FF098 /* InfoPlist.strings */; };
 		3C358D4F297394F500118063 /* FWEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4C297394F400118063 /* FWEncryptorAES.m */; };
 		3C358D50297394F500118063 /* FWEncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4C297394F400118063 /* FWEncryptorAES.m */; };
 		3C358D51297394F500118063 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C358D4D297394F400118063 /* NSData+Base64.m */; };
@@ -964,6 +967,11 @@
 		15F7892629B9DB0100972893 /* popup */ = {isa = PBXFileReference; lastKnownFileType = folder; path = popup; sourceTree = "<group>"; };
 		15FEBE7B2999E685003A9625 /* sniffer.app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sniffer.app.js; sourceTree = "<group>"; };
 		3755771ACCADED7F63DD2803 /* Pods-Stay-Mac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay-Mac.release.xcconfig"; path = "Target Support Files/Pods-Stay-Mac/Pods-Stay-Mac.release.xcconfig"; sourceTree = "<group>"; };
+		3C0A3D7C2A348027007FF098 /* FaceIDAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceIDAuth.swift; sourceTree = "<group>"; };
+		3C0A3D822A34BFB8007FF098 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3C0A3D862A34C0A5007FF098 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3C0A3D872A34C0AF007FF098 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		3C0A3D882A34C0B5007FF098 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		3C358D49297394F200118063 /* FWEncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWEncryptorAES.h; sourceTree = "<group>"; };
 		3C358D4A297394F200118063 /* NSData+CommonCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CommonCrypto.h"; sourceTree = "<group>"; };
 		3C358D4B297394F300118063 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
@@ -1860,6 +1868,7 @@
 			children = (
 				3C8388E029335C47007563E6 /* View */,
 				3C8388D129333FB8007563E6 /* Controller */,
+				3C0A3D7C2A348027007FF098 /* FaceIDAuth.swift */,
 			);
 			path = SYDownload;
 			sourceTree = "<group>";
@@ -2260,6 +2269,7 @@
 				587688DA2719237E00F834A4 /* Resources */,
 				5889731C27213C8300BE123E /* Localizable.strings */,
 				3C72260F288C315600FF0F68 /* Stay-Bridging-Header.h */,
+				3C0A3D832A34BFB8007FF098 /* InfoPlist.strings */,
 			);
 			path = Stay;
 			sourceTree = "<group>";
@@ -3958,6 +3968,7 @@
 				58F7F4CD27454E7300270873 /* stay-bootstrap.js in Resources */,
 				58D1B45628893D4B009BD608 /* product_ids.plist in Resources */,
 				84A15E05282CE1FC002E121D /* addScript@3x.png in Resources */,
+				3C0A3D812A34BFB8007FF098 /* InfoPlist.strings in Resources */,
 				84C1ED4E277AD26700651DF9 /* base16-dark.css in Resources */,
 				8496DFBA275935B30075ABD5 /* add@3x.png in Resources */,
 				8410C845275E028A005531EC /* json-ld.html in Resources */,
@@ -4562,6 +4573,7 @@
 				58F196452A11FD3000B88F39 /* AddressBlockerAST.m in Sources */,
 				582061C4294C4C0E00A32D0C /* ModalItemAccessoryWithTextView.m in Sources */,
 				582061EE294C4D5500A32D0C /* FCProLabel.m in Sources */,
+				3C0A3D7D2A348027007FF098 /* FaceIDAuth.swift in Sources */,
 				58F7F4D22745FC0C00270873 /* UserScript.m in Sources */,
 				58F196902A11FE3200B88F39 /* NewLineHighlighterAST.m in Sources */,
 				84C2B402288D86B0002A0C1B /* SYFlashViewController.m in Sources */,
@@ -4674,6 +4686,7 @@
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
 				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
+				3C0A3D7E2A348027007FF098 /* FaceIDAuth.swift in Sources */,
 				58F196952A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */,
 				588202502859E73900B2721A /* SYCodeMirrorView.m in Sources */,
 				3C8388E92934E7DB007563E6 /* MyAdditions.m in Sources */,
@@ -5057,6 +5070,17 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		3C0A3D832A34BFB8007FF098 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C0A3D822A34BFB8007FF098 /* en */,
+				3C0A3D862A34C0A5007FF098 /* ja */,
+				3C0A3D872A34C0AF007FF098 /* zh-Hans */,
+				3C0A3D882A34C0B5007FF098 /* zh-Hant */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		587688DB2719237E00F834A4 /* Main.html */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -5673,6 +5697,7 @@
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Stay uses the camera to save videos.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Stay uses the FaceID to protect folders.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Stay uses Photo Library to save videos.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -5729,6 +5754,7 @@
 				INFOPLIST_FILE = Stay/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stay;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Stay uses the camera to save videos.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Stay uses the FaceID to protect folders.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Stay uses Photo Library to save videos.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "我们需要访问您的麦克风来进行语音识别。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

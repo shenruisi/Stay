@@ -270,6 +270,12 @@ DisabledWebsites="屏蔽网址";
 FailedTranscode="转码失败";
 FailedNoSpace="空间不足";
 needNotDelete="您至少需要保留一个文件夹";
+FaceID="Face ID";
+FaceIDDisabled="未开启";
+FaceIDUnlock="使用FaceID解锁";
+VerifyOn="验证开启";
+VerifyOff="验证关闭";
+VerifyUnlock="验证解锁";
 
 InteractionDetail="互动";
 Type="类型";

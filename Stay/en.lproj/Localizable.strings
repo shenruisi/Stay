@@ -270,6 +270,12 @@ DisabledWebsites="Disabled websites";
 FailedTranscode="Transcode failed";
 FailedNoSpace="Not enough space";
 needNotDelete="You need to keep at least one folder";
+FaceID="Face ID";
+FaceIDDisabled="Unopened";
+FaceIDUnlock="Unlock with FaceID";
+VerifyOn="Verify to turn on";
+VerifyOff="Verify to turn off";
+VerifyUnlock="Verify to unlock";
 
 InteractionDetail="Interaction";
 Type="Type";
