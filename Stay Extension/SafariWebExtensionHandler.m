@@ -471,44 +471,45 @@
         
     }
     else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
-        //
-        NSString *url = message[@"url"];
+        NSArray<NSString *> *urls = message[@"urls"];
         NSString *selector = message[@"selector"];
         
-        if (url.length > 0 && selector.length > 0){
-            NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
-            [set addCharactersInString:@"#"];
-            NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
-            NSString *host = uri.host;
-            NSString *path = uri.path;
-            if ([path isEqualToString:@"/"]){
-                path = @"";
-            }
-            path = path ? path : @"";
-//            NSString *fragment = uri.fragment ?  uri.fragment : @"";
-            
-            NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
-            
-            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:rule error:nil];
-            NSDictionary *dictionary = @{
-                @"trigger" : @{
-                    @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
-                },
-                @"action" : @{
-                    @"type" : @"css-display-none",
-                    @"selector" : selector
+        if (urls.count > 0 && selector.length > 0){
+            NSMutableString *content = [[NSMutableString alloc] init];
+            NSMutableArray *array = [[NSMutableArray alloc] init];
+            for (NSString *url in urls){
+                NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+                [set addCharactersInString:@"#"];
+                NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+                NSString *host = uri.host;
+                NSString *path = uri.path;
+                if ([path isEqualToString:@"/"]){
+                    path = @"";
                 }
-            };
+                path = path ? path : @"";
+                NSString *rule = [NSString stringWithFormat:@"||%@%@##%@\n",host,path,selector];
+                [content appendString:rule];
+                [array addObject:@{
+                    @"trigger" : @{
+                        @"url-filter" : [NSString stringWithFormat:@"^https?://%@%@",host,path]
+                    },
+                    @"action" : @{
+                        @"type" : @"css-display-none",
+                        @"selector" : selector
+                    }
+                }];
+            }
+            
+            [[ContentFilterManager shared] appendTextToFileName:@"Tag.txt" content:content error:nil];
             [SharedStorageManager shared].extensionConfig = nil;
             [SharedStorageManager shared].extensionConfig.tagUpdate = [NSDate date];
-            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" dictionary:dictionary error:nil];
+            [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" array:array error:nil];
             
             NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
             [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
         }
-        
     }
     else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){
         dispatch_time_t deadline = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
@@ -617,35 +618,37 @@
         NSString *url = message[@"url"];
         BOOL on = [message[@"on"] boolValue];
         
+        NSString *domain = [self getDomain:url];
         if (on){
-            if (![[ContentFilterManager shared] existTrustSiteWithDomain:url]){
-                [[ContentFilterManager shared] addTrustSiteWithDomain:url error:nil];
-                [self addTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:url];
-                [self addTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:url];
-                [self addTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:url];
-                [self addTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:url];
-                [self addTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:url];
-                [self addTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:url];
+            if (![[ContentFilterManager shared] existTrustSiteWithDomain:domain]){
+                [[ContentFilterManager shared] addTrustSiteWithDomain:domain error:nil];
+                [self addTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:domain];
+                [self addTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:domain];
+                [self addTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:domain];
+                [self addTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:domain];
+                [self addTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:domain];
+                [self addTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:domain];
             }
         }
         else{
-            if ([[ContentFilterManager shared] existTrustSiteWithDomain:url]){
-                [[ContentFilterManager shared] deleteTrustSiteWithDomain:url];
-                [self removeTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:url];
-                [self removeTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:url];
-                [self removeTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:url];
-                [self removeTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:url];
-                [self removeTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:url];
-                [self removeTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:url];
+            if ([[ContentFilterManager shared] existTrustSiteWithDomain:domain]){
+                [[ContentFilterManager shared] deleteTrustSiteWithDomain:domain];
+                [self removeTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:domain];
             }
         }
     }
     else if ([message[@"type"] isEqualToString:@"getTrustedSite"]){
         NSString *url = message[@"url"];
-        BOOL on = [[ContentFilterManager shared] existTrustSiteWithDomain:url];
+        NSString *domain = [self getDomain:url];
+        BOOL on = [[ContentFilterManager shared] existTrustSiteWithDomain:domain];
         
         body = @{
-            @"url":url,
+            @"url":domain,
             @"on":@(on)
         };
     }
@@ -655,6 +658,20 @@
                                                     }
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
+}
+
+- (NSString *)getDomain:(NSString *)url{
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+    [set addCharactersInString:@"#"];
+    NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+    NSString *host = uri.host;
+    NSString *path = uri.path;
+    if ([path isEqualToString:@"/"]){
+        path = @"";
+    }
+    path = path ? path : @"";
+    NSString *domain = [NSString stringWithFormat:@"%@",host];
+    return domain;
 }
 
 - (void)addTrustedSiteToJSONFile:(NSString *)fileName identifier:(NSString *)identifier url:(NSString *)url{

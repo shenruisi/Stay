@@ -33,6 +33,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
     let greenInput = UITextField()
     let blueInput = UITextField()
     let previewView = UIView()
+    let faceIDContainer = RoundedBorderView()
     
     let globalColors = [
         "B620E0","FA6400","F7B500","6DD400","44D7B6","32C5FF",
@@ -40,6 +41,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
     ]
     var selectedColorIndex = 0
     var selectedColor = "B620E0"
+    var faceIDEnabled = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +90,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
                     break
                 }
             }
+            faceIDEnabled = folderTab!.config.faceIDEnabled
         }
         
         contentView.addSubview(colorContainer)
@@ -175,7 +178,69 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
         previewView.backgroundColor = FCStyle.color(withHexString: selectedColor, alpha: 1)
         colorContainer.addSubview(previewView)
         reloadColor()
-
+        
+        if FaceIDAuth.isSupported {
+            contentView.addSubview(faceIDContainer)
+            let faceIDLabel = UILabel()
+            faceIDLabel.textColor = FCStyle.fcBlack
+            faceIDLabel.font = FCStyle.body
+            faceIDLabel.text = NSLocalizedString("FaceID", comment: "")
+            faceIDLabel.translatesAutoresizingMaskIntoConstraints = false
+            faceIDContainer.addSubview(faceIDLabel)
+            let proLabel = UILabel()
+            proLabel.backgroundColor = FCStyle.backgroundGolden
+            proLabel.font = .boldSystemFont(ofSize: 10)
+            proLabel.text = "PRO"
+            proLabel.textAlignment = .center
+            proLabel.textColor = FCStyle.fcGolden
+            proLabel.layer.borderWidth = 1
+            proLabel.layer.borderColor = FCStyle.borderGolden.cgColor
+            proLabel.layer.cornerRadius = 5
+            proLabel.clipsToBounds = true
+            proLabel.isHidden = FCStore.shared().getPlan(false) != .none
+            proLabel.translatesAutoresizingMaskIntoConstraints = false
+            faceIDContainer.addSubview(proLabel)
+            
+            NSLayoutConstraint.activate([
+                faceIDContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+                faceIDContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19),
+                faceIDContainer.topAnchor.constraint(equalTo: colorContainer.bottomAnchor, constant: FaceIDAuth.isSupported ? 26 : 0),
+                faceIDContainer.heightAnchor.constraint(equalToConstant: FaceIDAuth.isSupported ? 45 : 0),
+                faceIDLabel.leadingAnchor.constraint(equalTo: faceIDContainer.leadingAnchor, constant: 19),
+                faceIDLabel.centerYAnchor.constraint(equalTo: faceIDContainer.centerYAnchor),
+                proLabel.leadingAnchor.constraint(equalTo: faceIDLabel.trailingAnchor, constant: 5),
+                proLabel.widthAnchor.constraint(equalToConstant: 30),
+                proLabel.centerYAnchor.constraint(equalTo: faceIDLabel.centerYAnchor),
+                proLabel.heightAnchor.constraint(equalToConstant: 15),
+            ])
+            
+            if FaceIDAuth.isEnable {
+                let faceIDSwitch = UISwitch()
+                faceIDSwitch.onTintColor = FCStyle.accent
+                faceIDSwitch.isOn = faceIDEnabled
+                faceIDSwitch.addTarget(self, action: #selector(faceSwitchAction), for: .valueChanged)
+                faceIDSwitch.translatesAutoresizingMaskIntoConstraints = false
+                faceIDContainer.addSubview(faceIDSwitch)
+                
+                NSLayoutConstraint.activate([
+                    faceIDSwitch.trailingAnchor.constraint(equalTo: faceIDContainer.trailingAnchor, constant: -15),
+                    faceIDSwitch.centerYAnchor.constraint(equalTo: faceIDContainer.centerYAnchor),
+                ])
+            } else {
+                let disableLable = UILabel()
+                disableLable.textColor = FCStyle.fcSecondaryBlack
+                disableLable.font = FCStyle.body
+                disableLable.text = NSLocalizedString("FaceIDDisabled", comment: "")
+                disableLable.translatesAutoresizingMaskIntoConstraints = false
+                faceIDContainer.addSubview(disableLable)
+                
+                NSLayoutConstraint.activate([
+                    disableLable.trailingAnchor.constraint(equalTo: faceIDContainer.trailingAnchor, constant: -15),
+                    disableLable.centerYAnchor.constraint(equalTo: faceIDContainer.centerYAnchor),
+                ])
+            }
+        }
+        
         let confirmBtn = UIButton()
         confirmBtn.backgroundColor = FCStyle.accent
         confirmBtn.layer.cornerRadius = 10
@@ -201,7 +266,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.heightAnchor.constraint(equalToConstant: 335),
+            contentView.heightAnchor.constraint(equalToConstant: FaceIDAuth.isSupported ? 405 : 335),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             nameContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
@@ -219,13 +284,13 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
             
             confirmBtn.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
             confirmBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19),
-            confirmBtn.topAnchor.constraint(equalTo: colorContainer.bottomAnchor, constant: 28),
+            confirmBtn.topAnchor.constraint(equalTo: FaceIDAuth.isSupported ? faceIDContainer.bottomAnchor : colorContainer.bottomAnchor, constant: 28),
             confirmBtn.heightAnchor.constraint(equalToConstant: 45),
         ])
     }
     
     override func mainViewSize() -> CGSize {
-        return CGSize(width: self.maxViewWidth() - 30, height: 380)
+        return CGSize(width: self.maxViewWidth() - 30, height: FaceIDAuth.isSupported ? 450 : 380)
     }
     
     @objc
@@ -284,6 +349,27 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
     }
     
     @objc
+    func faceSwitchAction(mySwitch: UISwitch) {
+        if mySwitch.isOn {
+            FaceIDAuth.evaluate(localizedReason: NSLocalizedString("VerifyOn", comment: "")) {
+                if $0 {
+                    self.faceIDEnabled = true
+                } else {
+                    mySwitch.isOn = false
+                }
+            }
+        } else {
+            FaceIDAuth.evaluate(localizedReason: NSLocalizedString("VerifyOff", comment: "")) {
+                if $0 {
+                    self.faceIDEnabled = false
+                } else {
+                    mySwitch.isOn = true
+                }
+            }
+        }
+    }
+    
+    @objc
     func confirm() {
         var alert: UIAlertController? = nil
         if nameInput.text?.count == 0 {
@@ -296,10 +382,12 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
             if folderTab != nil {
                 folderTab?.config.name = nameInput.text!
                 folderTab?.config.hexColor = selectedColor
+                folderTab?.config.faceIDEnabled = faceIDEnabled
             } else {
                 folderTab = FCShared.tabManager.newTab()
                 folderTab?.config.name = nameInput.text!
                 folderTab?.config.hexColor = selectedColor
+                folderTab?.config.faceIDEnabled = faceIDEnabled
             }
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "app.stay.notification.SYFolderChangeNotification"), object: nil)
             self.navigationController?.slideController?.dismiss()

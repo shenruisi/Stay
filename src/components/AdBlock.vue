@@ -32,7 +32,7 @@
     </div>
     <div class="trusted-box" v-if="showTab == 'trusted'">
       <div class="trusted-site">
-        <div class="site-info"></div>
+        <div class="site-info">{{ trustedSite }}</div>
         <SwitchComp class="switch-rule" :switchStatus="switchStatus" @switchAction="switchAction"></SwitchComp>
       </div>
     </div>
@@ -67,6 +67,7 @@ export default {
       showTab: props.currentTab && 'tab_1'== props.currentTab ? 'webTag': ('tab_2'== props.currentTab ?'tagRules':'trusted'),
       webRuleList: [],
       switchStatus: 'off',
+      trustedSite: '',
     });
 
     watch(
@@ -151,8 +152,9 @@ export default {
         state.browserUrl = tab.url;
         // console.log('state.browserUrl----tab-----', state.browserUrl);
         store.commit('setBrowserUrl', tab.url);
-        global.browser.runtime.sendMessage({ from: 'popup', operate: 'trustedSite', url: state.browserUrl, on: state.switchStatus=='on'?true:false}, (response) => {
-          console.log('trustedSite====',response);
+        global.browser.runtime.sendMessage({ from: 'popup', operate: 'setTrustedSite', url: state.browserUrl, on: state.switchStatus=='on'?true:false}, (response) => {
+          console.log('setTrustedSite====',response);
+          global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
           // state.trustedSite = response.url;
           // state.switchStatus = response.on;
         })
@@ -164,13 +166,11 @@ export default {
         state.browserUrl = tab.url;
         // console.log('state.browserUrl----tab-----', state.browserUrl);
         store.commit('setBrowserUrl', tab.url);
-        global.browser.runtime.sendMessage({ from: 'popup', operate: 'getTrustedSite', url: state.browserUrl,}, (response) => {
+        global.browser.runtime.sendMessage({ from: 'popup', operate: 'getTrustedSite', url: state.browserUrl}, (response) => {
           console.log('trustedSite====',response);
-          if(response.url){
-            let urlObj = new URL(response.url);
-            state.trustedSite = `${urlObj.hostname}${urlObj.pathname}`;
-          }
-          state.switchStatus = response.on?'on':'off';
+          state.trustedSite = response.url;
+          state.switchStatus = response.on&&response.on==true?'on':'off';
+          console.log('trustedSite==state.switchStatus==',state.switchStatus);
         })
       })
     }
@@ -191,11 +191,20 @@ export default {
         // global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});
       })
     }
-
-    fetchTagingStatus();
-    if(state.showTab == 'tagRules'){
+    const startFetchAboutConfig = () => {
+      fetchTagingStatus();
       fetchWebTagRules();
+      fetchTrusted();
+      // if(state.showTab == 'tagRules'){
+        
+      // }
+      // if(state.showTab == 'trusted'){
+        
+      // }
     }
+
+    startFetchAboutConfig();
+    
 
     const tagingStatusClick = () => {
       global.browser.tabs.query({

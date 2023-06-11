@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  Stay
+
+  Created by Jin on 2023/6/10.
+  
+*/
+NSFaceIDUsageDescription = "Stay使用faceID來保護視頻下載目錄。";

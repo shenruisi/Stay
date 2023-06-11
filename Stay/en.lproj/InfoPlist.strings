@@ -1,0 +1,8 @@
+/* 
+  InfoPlist.strings
+  Stay
+
+  Created by Jin on 2023/6/10.
+  
+*/
+NSFaceIDUsageDescription = "Stay uses the FaceID to protect folders.";
