@@ -22,6 +22,9 @@ typedef enum{
 
 + (void)saveUUID:(NSString *)uuid;
 + (void)reset;
++ (void)consumePoints:(CGFloat)pointValue;
++ (void)rollbackPoints:(CGFloat)pointValue;
++ (CGFloat)totalConsumePoints;
 @end
 
 NS_ASSUME_NONNULL_END
