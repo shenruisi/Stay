@@ -128,7 +128,8 @@
                        deviceId:DeviceHelper.uuid
                              biz:@{
             @"name" : _textField.text,
-            @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png"
+            @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",
+            @"color":_color.length > 0?_color:[self hexStringFromColor:FCStyle.accent]
         }
                       completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
             
@@ -307,9 +308,9 @@
     if(nil == _stayLabel){
         _stayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 44, 22)];
         if(_color != NULL) {
-            _stayLabel.textColor =  UIColorFromRGB(_color);
+            _stayLabel.backgroundColor =  UIColorFromRGB(_color);
         } else {
-            _stayLabel.textColor = FCStyle.accent;
+            _stayLabel.backgroundColor = FCStyle.accent;
         }
         _stayLabel.textColor = FCStyle.fcWhite;
         _stayLabel.font = FCStyle.footnote;
@@ -490,6 +491,25 @@
     return _confirmBtn;
 }
 
+
+- (NSString *)hexFromUIColor:(UIColor *)color
+{
+    if (CGColorGetNumberOfComponents(color.CGColor) < 4) {
+        const CGFloat *components = CGColorGetComponents(color.CGColor);
+        color = [UIColor colorWithRed:components[0]
+                                green:components[0]
+                                 blue:components[0]
+                                alpha:components[1]];
+    }
+
+    if (CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor)) != kCGColorSpaceModelRGB) {
+        return [NSString stringWithFormat:@"#FFFFFF"];
+    }
+
+    return [NSString stringWithFormat:@"#%x%x%x", (int)((CGColorGetComponents(color.CGColor))[0]*255.0),
+            (int)((CGColorGetComponents(color.CGColor))[1]*255.0),
+            (int)((CGColorGetComponents(color.CGColor))[2]*255.0)];
+}
 
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(kScreenWidth - 30, 450), 765);
