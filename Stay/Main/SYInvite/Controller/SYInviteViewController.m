@@ -20,6 +20,8 @@
 @property (nonatomic, strong) FCImageView *iconImageView;
 @property (nonatomic, strong) CAGradientLayer *gradientLayer;
 @property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UIView *backView;
+
 @end
 
 @implementation InviteImageView
@@ -31,8 +33,43 @@
     return self;
 }
 - (void)setupUI {
-    
+    [self backView];
+    [self inviteView];
+    [self gradientLayer];
 }
+
+- (UIView *)backView {
+    if(_backView == nil) {
+        _backView = [[UIView alloc] initWithFrame:CGRectMake(26, 19,  self.width - 47 * 2, 387)];
+        [self addSubview:_backView];
+    }
+    return _backView;
+}
+
+- (UIView *)inviteView {
+    if(_inviteView == nil) {
+        _inviteView = [[UIView alloc] initWithFrame:CGRectMake(40, 33, self.width - 47 * 2 - 80, 300)];
+        _inviteView.backgroundColor = FCStyle.fcWhite;
+        _inviteView.layer.cornerRadius = 10;
+        _inviteView.clipsToBounds = YES;
+        [self.backView addSubview:_inviteView];
+    }
+    return _inviteView;
+}
+
+- (CAGradientLayer *)gradientLayer{
+    if (nil == _gradientLayer){
+        _gradientLayer = [CAGradientLayer layer];
+        _gradientLayer.frame = [self backView].bounds;
+        NSArray<UIColor *> *colors = FCStyle.accentGradient;
+        _gradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
+        [self.backView.layer insertSublayer:_gradientLayer atIndex:0];
+    }
+    
+    return _gradientLayer;
+}
+
+
 @end
 
 @interface InviteRulesView:UIView
@@ -133,7 +170,7 @@ UITableViewDataSource
 @property (nonatomic, strong) UIButton *inviteBtn;
 @property (nonatomic, assign) Boolean *started;
 @property (nonatomic, strong) SYInviteCardController *inviteCardController;
-
+@property (nonatomic, strong) InviteImageView *inviteImageView;
 
 @end
 
@@ -337,6 +374,10 @@ UITableViewDataSource
     }
     return _inviteCardController;
 }
+//
+//- (InviteImageView *)inviteImageView {
+//
+//}
 
 /*
 #pragma mark - Navigation
