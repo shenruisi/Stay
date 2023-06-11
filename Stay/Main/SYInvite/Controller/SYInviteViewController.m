@@ -12,6 +12,28 @@
 #import "DeviceHelper.h"
 #import "InviteDetail.h"
 #import "SYInviteCardController.h"
+#import "UserScript.h"
+#import "FCImageView.h"
+
+@interface InviteImageView:UIView
+@property (nonatomic, strong) UIView *inviteView;
+@property (nonatomic, strong) FCImageView *iconImageView;
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
+@property (nonatomic, strong) UILabel *nameLabel;
+@end
+
+@implementation InviteImageView
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+- (void)setupUI {
+    
+}
+@end
 
 @interface InviteRulesView:UIView
 
@@ -138,19 +160,29 @@ UITableViewDataSource
             if(inviteDetail.inviteCode.length > 0) {
                 self.started = true;
             }
-            
-            self.inviteView.titleArray = inviteDetail.process;
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.inviteView updateProgress:0.5];
+
+                    self.inviteView.titleArray = inviteDetail.process;
+                    if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+                        self.inviteCardController.dateStr = inviteDetail.sinceEn;
+                    } else {
+                        self.inviteCardController.dateStr = inviteDetail.sinceCn;
+                    }
+                    self.inviteCardController.imageList = inviteDetail.candidateCovers;
+                    [self.inviteView updateProgress:0.5];
             });
         }
     }];
     
-    
+   
+}
+
+- (void)inviteCreate:(UIButton *)sender {
     if (!self.inviteCardController.isShown){
         [self.inviteCardController show];
     }
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row == 0) {
@@ -172,7 +204,13 @@ UITableViewDataSource
         [cell.contentView addSubview:self.howToInviteView];
         self.howToInviteView.top = self.inviteRulesView.bottom + 15;
         
-        
+        [cell.contentView addSubview:self.inviteBtn];
+         
+        if(_started) {
+                
+        } else {
+            self.inviteBtn.top = self.howToInviteView.bottom + 23;
+        }
         return cell;
     }
     
@@ -184,7 +222,11 @@ UITableViewDataSource
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 532;
+    if(_started) {
+        return 1375;
+    } else {
+        return 647;
+    }
 }
 
 
@@ -232,7 +274,7 @@ UITableViewDataSource
 
 - (InviteRulesView *)inviteRulesView {
     if(_inviteRulesView == nil) {
-        _inviteRulesView = [[InviteRulesView alloc] initWithFrame:CGRectMake(19, 0, 348, 300)];
+        _inviteRulesView = [[InviteRulesView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 300)];
         _inviteRulesView.layer.cornerRadius = 10;
         _inviteRulesView.backgroundColor = FCStyle.fcWhite;
     }
@@ -241,7 +283,7 @@ UITableViewDataSource
 
 - (HowToInviteView *)howToInviteView {
     if(_howToInviteView == nil) {
-        _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, 348, 70)];
+        _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 70)];
         _howToInviteView.layer.cornerRadius = 10;
         _howToInviteView.backgroundColor = FCStyle.fcWhite;
     }
@@ -250,8 +292,14 @@ UITableViewDataSource
 
 - (UIButton *)inviteBtn {
     if(_inviteBtn == nil) {
-//        _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)];
-        
+        _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 45)];
+        [_inviteBtn setTitle:@"Start Gifting" forState:UIControlStateNormal];
+        [_inviteBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+        [_inviteBtn addTarget:self action:@selector(inviteCreate:) forControlEvents:UIControlEventTouchUpInside];
+        _inviteBtn.font = FCStyle.bodyBold;
+        _inviteBtn.layer.borderColor = FCStyle.accent.CGColor;
+        _inviteBtn.layer.borderWidth = 1;
+        _inviteBtn.layer.cornerRadius = 10;
     }
     return _inviteBtn;
 }

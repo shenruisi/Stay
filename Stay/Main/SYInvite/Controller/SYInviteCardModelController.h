@@ -11,6 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYInviteCardModelController : ModalViewController
 
+@property (nonatomic, strong) NSArray *imageList;
+@property (nonatomic, strong) NSString *color;
+@property (nonatomic, strong) NSString *dateString;
+@property (nonatomic, strong) NSString *defaultImage;
+
 @end
 
 NS_ASSUME_NONNULL_END

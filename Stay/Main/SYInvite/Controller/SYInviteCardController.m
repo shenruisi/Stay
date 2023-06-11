@@ -15,6 +15,7 @@
 - (ModalNavigationController *)navController{
     if (nil == _navController){
         SYInviteCardModelController *cer = [[SYInviteCardModelController alloc] init];
+        cer.imageList = self.imageList;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer radius:15];
         _navController.slideController = self;
     }
@@ -36,6 +37,11 @@
 
 - (BOOL)blockAction{
     return YES;
+}
+
+- (void)setImageList:(NSArray *)imageList {
+    _imageList = imageList;
+    
 }
 
 @end

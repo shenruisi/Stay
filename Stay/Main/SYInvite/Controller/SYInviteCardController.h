@@ -10,6 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SYInviteCardController : FCSlideController
+@property (nonatomic, strong) NSArray *imageList;
+@property (nonatomic, strong) NSString *dateStr;
 
 @end
 

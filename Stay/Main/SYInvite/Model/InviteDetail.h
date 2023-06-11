@@ -17,7 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *link;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) NSArray<NSDictionary *> *process;
-@property (nonatomic, copy) NSString *since;
+@property (nonatomic, copy) NSString *sinceEn;
+@property (nonatomic, copy) NSString *sinceCn;
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, copy) NSString *taskId;
 @property (nonatomic, assign) NSInteger visitedCount;

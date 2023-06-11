@@ -11,16 +11,13 @@
 
 @property (nonatomic, strong) NSMutableArray *nodeViews;
 @property (nonatomic, strong) UIView *progressView;
-@property (nonatomic, strong) NSArray *nodeList; 
+@property (nonatomic, strong) NSArray *nodeList;
 
 @end
 @implementation InviteProgressView
 
-
-
 - (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
+    if ([super initWithFrame:frame]) {
         self.nodeViews = [NSMutableArray array];
         self.nodeList = @[@0, @0.25, @0.5,@0.75,@1];
         [self setupUI];

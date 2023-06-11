@@ -17,7 +17,8 @@
     inviteDtail.link = jsonObject[@"link"];
     inviteDtail.name = jsonObject[@"name"];
     inviteDtail.process = jsonObject[@"process"];
-    inviteDtail.since = jsonObject[@"since"];
+    inviteDtail.sinceEn = jsonObject[@"since_en"];
+    inviteDtail.sinceCn = jsonObject[@"since_cn"];
     inviteDtail.status = [jsonObject[@"status"] integerValue];
     inviteDtail.taskId = jsonObject[@"task_id"];
     inviteDtail.visitedCount = [jsonObject[@"visited_count"] integerValue];
