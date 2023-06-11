@@ -31,12 +31,14 @@
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.pro forKey:@"pro"];
     [coder encodeObject:self.deviceID forKey:@"deviceID"];
+    [coder encodeFloat:self.availablePoints forKey:@"availablePoints"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _pro = [coder decodeBoolForKey:@"pro"];
         _deviceID = [coder decodeObjectForKey:@"deviceID"];
+        _availablePoints = [coder decodeFloatForKey:@"availablePoints"];
     }
     
     return self;
@@ -57,6 +59,7 @@
                                                                         error:nil];
     _pro = userDefaults.pro;
     _deviceID = userDefaults.deviceID;
+    _availablePoints = userDefaults.availablePoints;
 }
 
 - (void)setPro:(BOOL)pro{
@@ -68,6 +71,12 @@
     _deviceID = deviceID;
     [self flush];
 }
+
+- (void)setAvailablePoints:(CGFloat)availablePoints{
+    _availablePoints = availablePoints;
+    [self flush];
+}
+
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {
     return  _userDefaultsExROQueue;
