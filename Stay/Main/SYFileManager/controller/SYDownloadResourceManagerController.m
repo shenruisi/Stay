@@ -54,14 +54,7 @@
     if (fCTab != nil && fCTab.config.faceIDEnabled) {
         [self.tableView setHidden:YES];
         [self.faceIDLockView setHidden:NO];
-        [FaceIDAuth evaluateWithLocalizedReason:NSLocalizedString(@"VerifyUnlock", @"") completion:^(BOOL success) {
-            if (success) {
-                [self.faceIDLockView removeFromSuperview];
-                [self.tableView setHidden:NO];
-            } else {
-                
-            }
-        }];
+        [self faceAction:nil];
     }
 }
 
@@ -345,6 +338,17 @@
     });
 }
 
+- (void)faceAction:(UIButton *)sender {
+    [FaceIDAuth evaluateWithLocalizedReason:NSLocalizedString(@"VerifyUnlock", @"") completion:^(BOOL success) {
+        if (success) {
+            [self.faceIDLockView removeFromSuperview];
+            [self.tableView setHidden:NO];
+        } else {
+            
+        }
+    }];
+}
+
 - (UITableView *)tableView {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc]init];
@@ -389,15 +393,22 @@
         UIImageView *icon = [[UIImageView alloc] init];
         icon.image = [ImageHelper sfNamed:@"faceid" font:[UIFont systemFontOfSize:34] color:FCStyle.accent];
         [stackV addArrangedSubview:icon];
-        UILabel *label = [[UILabel alloc] init];
-        label.textColor = FCStyle.accent;
-        label.font = FCStyle.footnoteBold;
-        label.text = NSLocalizedString(@"FaceIDUnlock", @"");
-        [stackV addArrangedSubview:label];
+        UIButton *btn = [[UIButton alloc] init];
+        [btn setTitle:NSLocalizedString(@"FaceIDUnlock", @"") forState:UIControlStateNormal];
+        [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+        btn.titleLabel.font = FCStyle.footnoteBold;
+        btn.layer.cornerRadius = 8;
+        btn.layer.borderWidth = 1;
+        btn.layer.borderColor = FCStyle.accent.CGColor;
+        btn.clipsToBounds = YES;
+        [btn addTarget:self action:@selector(faceAction:) forControlEvents:UIControlEventTouchUpInside];
+        [btn sizeToFit];
+        [stackV addArrangedSubview:btn];
         
         [NSLayoutConstraint activateConstraints:@[
             [stackV.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
             [stackV.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+            [btn.widthAnchor constraintEqualToConstant:btn.width + 30],
         ]];
     }
     return _faceIDLockView;

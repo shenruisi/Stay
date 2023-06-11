@@ -197,6 +197,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
             proLabel.layer.borderColor = FCStyle.borderGolden.cgColor
             proLabel.layer.cornerRadius = 5
             proLabel.clipsToBounds = true
+            proLabel.isHidden = FCStore.shared().getPlan(false) != .none
             proLabel.translatesAutoresizingMaskIntoConstraints = false
             faceIDContainer.addSubview(proLabel)
             
