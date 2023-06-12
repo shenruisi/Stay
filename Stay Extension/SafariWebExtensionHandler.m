@@ -471,6 +471,7 @@
         
     }
     else if ([message[@"type"] isEqualToString:@"canTagAd"]){
+        [SharedStorageManager shared].userDefaultsExRO = nil;
         CGFloat availablePoints = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
         CGFloat tagConsumePoints = [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
         body = @{
@@ -517,6 +518,12 @@
             [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
+            
+            [SharedStorageManager shared].userDefaultsExRO = nil;
+            if (![SharedStorageManager shared].userDefaultsExRO.pro){
+                [SharedStorageManager shared].userDefaults = nil;
+                [SharedStorageManager shared].userDefaults.tagConsumed =  [SharedStorageManager shared].userDefaults.tagConsumed +  [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
+            }
         }
     }
     else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){

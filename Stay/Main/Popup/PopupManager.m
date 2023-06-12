@@ -70,6 +70,10 @@
             if (200 == statusCode){
                 NSInteger points = [biz[@"points"] integerValue];
                 NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+                [SharedStorageManager shared].userDefaults = nil;
+                [DeviceHelper consumePoints:[SharedStorageManager shared].userDefaults.tagConsumed];
+                [SharedStorageManager shared].userDefaults.tagConsumed = 0;
+                
                 [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)points - DeviceHelper.totalConsumePoints;
                 [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
                 
