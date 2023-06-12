@@ -25,7 +25,8 @@
 #import "SharedStorageManager.h"
 #import "FCTableViewCell.h"
 #import "SYInviteViewController.h"
-
+#import "API.h"
+#import "DeviceHelper.h"
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
 
@@ -516,7 +517,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         self.noteLabel.text = [@([[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency]) stringValue];
     } else if ([@"stayPoint" isEqualToString:type]){
         Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
-        self.noteLabel.text = isPro?NSLocalizedString(@"GetMorePoint", @""):NSLocalizedString(@"GiftPointToFriend", @"");
+        self.noteLabel.text = isPro?NSLocalizedString(@"GiftPointToFriend", @""):NSLocalizedString(@"GetMorePoint", @"");
 
     } else {
         self.noteLabel.text = nil;
@@ -544,6 +545,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
+@property (nonatomic, assign) NSUInteger leftPointCount;
 @end
 
 @implementation SYMoreViewController
@@ -585,6 +587,29 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                object:nil];
     
     self.tableView.sectionHeaderTopPadding = 0;
+    
+    
+    
+    [[API shared] queryPath:@"/self"
+                        pro:[[FCStore shared] getPlan:NO]
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+        
+        if([[FCStore shared] getPlan:NO]) {
+            _leftPointCount =  [biz[@"gift_points"] integerValue];
+        } else {
+            _leftPointCount = [biz[@"point"] integerValue];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.dataSource = nil;
+            [self.tableView reloadData];
+        });
+        
+    }];
+    
 }
 
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
@@ -884,7 +909,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"section":NSLocalizedString(@"StayPoint",@""),
                 @"cells":@[
                     @{
-                        @"title":@"100 Point(s)",
+                        @"title":[NSString stringWithFormat:@"%ld Point(s)",_leftPointCount] ,
                         @"icon":@"InviteImage",
                       @"type":@"stayPoint",
                     }

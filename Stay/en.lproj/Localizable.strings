@@ -370,14 +370,13 @@ DeleteSubscribeConfirm="Are you sure you want to delete this subscribe rule?";
 UpdateOn="Update on ";
 Iuse="I use";
 ASafariExtension="A Safari Extension";
-
-
-
-
-
-
-
-
+inviteTipsPro="Scan to get gift points";
+inviteTips="Scan to download Stay on the AppStore";
+ShareCard="Share Card";
+CopLink="Cop Link";
+EditInfo="Edit Info";
+GiftPointToFriend="Gift Point To Friend";
+GetMorePoint="Get More Point";
 
 
 

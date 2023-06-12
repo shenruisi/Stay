@@ -16,6 +16,9 @@
     if (nil == _navController){
         SYInviteCardModelController *cer = [[SYInviteCardModelController alloc] init];
         cer.imageList = self.imageList;
+        cer.color = self.color;
+        cer.defaultImage = self.defaultImage;
+        cer.defaultName = self.defaultName;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer radius:15];
         _navController.slideController = self;
     }

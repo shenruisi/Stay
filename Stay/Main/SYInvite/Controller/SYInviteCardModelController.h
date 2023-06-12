@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *color;
 @property (nonatomic, strong) NSString *dateString;
 @property (nonatomic, strong) NSString *defaultImage;
-
+@property (nonatomic, strong) NSString *defaultName;
 @end
 
 NS_ASSUME_NONNULL_END

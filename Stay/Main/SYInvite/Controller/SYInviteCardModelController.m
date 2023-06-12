@@ -69,6 +69,7 @@
 @property (nonatomic, strong) SelectBarView *colorControl;
 @property (nonatomic, strong) UIButton *confirmBtn;
 @property (nonatomic, strong) NSString *colorStr;
+@property (nonatomic, strong) NSString *firstImageStr;
 
 
 @end
@@ -77,7 +78,8 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    
+    self.colorStr = self.color;
+    self.firstImageStr = _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png";
     self.hideNavigationBar = NO;
     self.title = NSLocalizedString(@"GenerateCard", @"");
     [self backView];
@@ -127,9 +129,9 @@
                             pro:NO
                        deviceId:DeviceHelper.uuid
                              biz:@{
-            @"name" : _textField.text,
+            @"name" : _nameLabel.text,
             @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",
-            @"color":_color.length > 0?_color:[self hexStringFromColor:FCStyle.accent]
+            @"color":_colorStr.length > 0?_colorStr:[self hexFromUIColor:FCStyle.accent]
         }
                       completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
             
@@ -141,7 +143,9 @@
                                                                  }                                                     forKey:@"default_invite"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 [self.navigationController.slideController dismiss];
-                
+    
+                NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
             });
                 
         }];
@@ -151,12 +155,28 @@
 
 - (void)resetImage
 {
-   
+    _defaultImage = self.firstImageStr;
+    [self.iconImageView sd_setImageWithURL:self.defaultImage placeholderImage:nil options:0 context:nil progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.iconImageView.progress = (CGFloat)receivedSize / expectedSize;
+        });
+    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        [self.iconImageView clearProcess];
+    }];
+    
+    
+    [self.iconView sd_setImageWithURL:self.defaultImage placeholderImage:nil options:0 context:nil progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.iconView.progress = (CGFloat)receivedSize / expectedSize;
+        });
+    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        [self.iconView clearProcess];
+    }];
 }
 
 - (void)randomColor {
     UIColor *randomColor = [self randomTintColor];
-    NSString *hexString = [self hexStringFromColor:randomColor];
+    NSString *hexString = [self hexFromUIColor:randomColor];
     _colorStr = hexString;
     self.nameLabel.textColor = randomColor;
     self.useLabel.textColor = randomColor;
@@ -167,7 +187,14 @@
 }
 
 - (void)resetColor {
-    
+    _colorStr = _color.length > 0?_color:[self hexFromUIColor:FCStyle.accent];
+    UIColor *randomColor = UIColorFromRGB(_colorStr);
+    self.nameLabel.textColor = randomColor;
+    self.useLabel.textColor = randomColor;
+    self.stayLabel.backgroundColor = randomColor;
+    [self.sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:randomColor]];
+    self.extensionLabel.textColor = randomColor;
+    self.colorView.backgroundColor = randomColor;
 }
 
 - (UIColor *)randomTintColor {
@@ -176,22 +203,6 @@
     CGFloat blue = (CGFloat)arc4random_uniform(256) / 255.0;
     
     return [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
-}
-
-- (NSString *)hexStringFromColor:(UIColor *)color {
-    if (!color) {
-        return nil;
-    }
-    
-    CGFloat red, green, blue, alpha;
-    [color getRed:&red green:&green blue:&blue alpha:&alpha];
-    
-    int r = red * 255;
-    int g = green * 255;
-    int b = blue * 255;
-    
-    NSString *hexString = [NSString stringWithFormat:@"#%02X%02X%02X", r, g, b];
-    return hexString;
 }
 
 #pragma mark - UITextFieldDelegate
@@ -264,7 +275,7 @@
             _nameLabel.textColor = FCStyle.accent;
         }
         _nameLabel.font = [UIFont boldSystemFontOfSize:24];
-//        _nameLabel.text = @"SHEN YIN";
+        _nameLabel.text = self.defaultName;
         _nameLabel.top = self.iconImageView.bottom + 12;
         [self.inviteView addSubview:_nameLabel];
 
@@ -281,6 +292,7 @@
         _textField.top = self.nameTitleLabel.bottom + 10;
         _textField.layer.cornerRadius = 10;
         _textField.clipsToBounds = YES;
+        _textField.text = self.defaultName;
         [_textField addTarget:self action:@selector(textChange) forControlEvents:UIControlEventEditingChanged];
         [self.view addSubview:_textField];
     }
