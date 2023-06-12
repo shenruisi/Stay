@@ -1,15 +1,18 @@
 let __storage;
-
+let __storageChangeListeners = [];
+let __extension = window.browser;
+//Supported GM APIS
+//https://violentmonkey.github.io/api/gm/
 const GM_apis = {
     setValue: function(key, value){
         if (typeof key !== "string" || !key.length) {
-            console.error("%s GM.setValue invalid key %s",`{this.name}`,key);
+            console.error("%s GM.setValue invalid key %s",`${this.name}`,key);
             return new Promise((resolve, reject) => {
                reject();
             });
         }
         if (value == null) {
-            console.error("%s GM.setValue invalid value %s",`{this.name}`,key);
+            console.error("%s GM.setValue invalid value %s",`${this.name}`,key);
             return new Promise((resolve, reject) => {
                reject();
             });
@@ -18,33 +21,48 @@ const GM_apis = {
         return new Promise(resolve => {
             const realKey = `_${this.uuid}_${key}`;
             __storage[realKey] = value;
-            if (browser){
-                browser.storage.local.set({realKey : value}, () => resolve());
+            const item = {};
+            item[realKey] = value;
+            if (__extension){
+                __extension.storage.local.set(item, () => resolve());
             }
             else{
                 const pid = Math.random().toString(36).substring(1, 9);
                 const callback = e => {
-                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "setValue") return;
+                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "setValue" || e.data.type !== "resp") return;
                     window.removeEventListener("message", callback);
                     resolve();
                 };
                 window.addEventListener("message", callback);
-                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setValue", key: realKey, value: value });
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setValue", key: realKey, value: value, group: "gm_apis", type: "req"});
             }
             
         });
     },
     _setValue: function(key, value){
         if (typeof key !== "string" || !key.length) {
-            return console.error("%s GM.setValue invalid key %s",`{this.name}`,key);
+            return console.error("%s GM_setValue invalid key %s",`${this.name}`,key);
         }
         if (value == null) {
-            return console.error("%s GM.setValue invalid value %s",`{this.name}`,key);
+            return console.error("%s GM_setValue invalid value %s",`${this.name}`,key);
         }
         
         const realKey = `_${this.uuid}_${key}`;
         __storage[realKey] = value;
-        browser.storage.local.set({realKey : value});
+        const item = {};
+        item[realKey] = value;
+        if (__extension){
+            __extension.storage.local.set(item);
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "setValue" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setValue", key: realKey, value: value, group: "gm_apis", type: "req"});
+        }
     },
     getValue: function(key, defaultValue){
         if (typeof key !== "string" || !key.length) {
@@ -69,14 +87,119 @@ const GM_apis = {
         });
     },
     _getValue: function(key, defaultValue){
+        if (typeof key !== "string" || !key.length) {
+            console.error("%s GM_getValue invalid key %s",`{this.name}`,key);
+            return;
+        }
         const realKey = `_${this.uuid}_${key}`;
         const value = __storage[realKey];
         return value || defaultValue;
     },
+    listValues: function(){
+        return new Promise(resolve => {
+            const prefix = `_${this.uuid}_`;
+            const keys = [];
+            const allKeys = __storage.keys();
+            for (let i = 0; i < allKeys.length; i++){
+                const key = allKeys[i];
+                if (key.startsWith(prefix)) {
+                    const k = key.replace(prefix, "");
+                    keys.push(k);
+                }
+            }
+            resolve(keys);
+        });
+    },
+    _listValues: function(){
+        const prefix = `_${this.uuid}_`;
+        const keys = [];
+        const allKeys = __storage.keys();
+        for (let i = 0; i < allKeys.length; i++){
+            const key = allKeys[i];
+            if (key.startsWith(prefix)) {
+                const k = key.replace(prefix, "");
+                keys.push(k);
+            }
+        }
+        return keys;
+    },
+    deleteValue: function(key){
+        if (typeof key !== "string" || !key.length) {
+            console.error("%s GM.deleteValue invalid key %s",`{this.name}`,key);
+            return new Promise((resolve, reject) => {
+               reject();
+            });
+        }
+        
+        return new Promise(resolve => {
+            const realKey = `_${this.uuid}_${key}`;
+            __storage.delete(realKey);
+            if (__extension){
+                __extension.storage.local.remove(realKey, () => {
+                    resolve();
+                });
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "deleteValue" || e.data.type !== "resp") return;
+                    window.removeEventListener("message", callback);
+                    resolve();
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "deleteValue", key: realKey, group: "gm_apis", type: "req"});
+            }
+        });
+    },
+    _deleteValue: function(key){
+        if (typeof key !== "string" || !key.length) {
+            console.error("%s GM.deleteValue invalid key %s",`{this.name}`,key);
+            return;
+        }
+        
+        const realKey = `_${this.uuid}_${key}`;
+        __storage.delete(realKey);
+        
+        if (__extension){
+            __extension.storage.local.remove(realKey);
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "deleteValue" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "deleteValue", key: realKey, group: "gm_apis", type: "req"});
+        }
+    },
+    addValueChangeListener: function(name, callback){
+        
+    }
 }
 
 function staySays(msg){
     return `Stay says: ${msg}`;
+}
+
+
+const fetchStorage = function fetchStorage(){
+    if (__extension){
+        return __extension.storage.local.get(null);
+    }
+    else{
+        return new Promise(resolve => {
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.operate !== "storage.local.getAll" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+                const items = JSON.parse(e.data.items);
+                resolve(items);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ pid: pid, operate: "storage.local.getAll", group: "stay", type: "req"});
+        });
+    }
 }
 
 const label = Math.random().toString(36).substring(2, 9);
@@ -95,15 +218,17 @@ async function executeScript(userscript){
         try {
             console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto content.`),"color: #B620E0","color: #000000");
             if (storage == undefined){
-                storage = await (browser || chrome).storage.local.get(null) || {};
+                console.time();
+                storage = await fetchStorage();
+                console.timeEnd();
             }
             
             const code = `
                 (function(){
                     __storage = storage;
                     ${userscript.genCode}
-                    async function main(){
-                        const GM_apis_content = undefined;
+                    function main(){
+                        const GM_apis = undefined;
                         const browser = undefined;
                         ${userscript.code}
                     }
@@ -118,24 +243,25 @@ async function executeScript(userscript){
     }
     else{
         console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto page.`),"color: #B620E0","color: #000000");
-        
-        if (env == undefined){
-            env = `
-                window.__stay_GM_apis = ${GM_apis};
-            `;
-            
-        }
-        
-        const tag = document.createElement("script");
-        tag.type = 'text/javascript';
-        tag.id = `__stay_env`;
-        tag.textContent = code;
-        document.head.appendChild(tag);
-        
+        const GM_apis_code = `
+        {
+           setValue: ${GM_apis.setValue},
+           _setValue: ${GM_apis._setValue},
+           getValue: ${GM_apis.getValue},
+           _getValue: ${GM_apis._getValue},
+        };
+        `;
         const code = `
-            (function(){
+            (async function(){
+                //env
+                __extension = undefined;
+                ${fetchStorage}
+                console.time();
+                __storage = await fetchStorage();
+                console.timeEnd();
+                const GM_apis = ${GM_apis_code};
                 ${userscript.genCode}
-                async function main(){
+                function main(){
                     const GM_apis = undefined;
                     const browser = undefined;
                     ${userscript.code}
@@ -204,20 +330,38 @@ function receiveMessage(e){
         if (operate === "remove_tag"){
             document.getElementById(uuid).remove();
         }
+        else if (operate === "storage.local.getAll"){
+            browser.storage.local.get(null, (items) => {
+                window.postMessage({pid: message.pid, operate: message.operate, items: JSON.stringify(items), type: "resp"});
+            });
+        }
     }
-    else if (message?.group == "gm_apis"){
+    else if (message.group == "gm_apis"){
         const uuid = message.uuid;
         const operate = message.operate;
         if (operate === "setValue"){
-            browser.storage.local.set({message.key : message.value});
-            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate});
+            const item = {};
+            item[message.key] = message.value;
+            browser.storage.local.set(item);
+            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
         }
     }
+}
+
+function storageLocalOnChanged(changes){
+    const changedItems = Object.keys(changes);
+
+      for (const item of changedItems) {
+        console.log(`${item} has changed:`);
+        console.log("Old value: ", changes[item].oldValue);
+        console.log("New value: ", changes[item].newValue);
+      }
 }
 
 function addListeners(){
     document.addEventListener("securitypolicyviolation", cspCallback);
     window.addEventListener("message", receiveMessage, false);
+    browser.storage.local.onChanged.addListener(storageLocalOnChanged);
 }
 
 /**
@@ -309,9 +453,10 @@ async function initialize(){
     `;
     console.log(`%c${stay}`,"color: #B620E0");
     console.log("Developed by DJ APPS");
+    console.time();
     let switches = await browser.storage.local.get('_userscript_switch');
+    console.timeEnd();
     if (switches._userscript_switch === false) return console.info('Stay userscript is off');
-    
     addListeners();
     injection();
 }
