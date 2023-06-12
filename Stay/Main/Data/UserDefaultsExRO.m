@@ -28,10 +28,12 @@
     return YES;
 }
 
+
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.pro forKey:@"pro"];
     [coder encodeObject:self.deviceID forKey:@"deviceID"];
     [coder encodeFloat:self.availablePoints forKey:@"availablePoints"];
+    [coder encodeFloat:self.availablePoints forKey:@"availableGiftPoints"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
@@ -39,6 +41,11 @@
         _pro = [coder decodeBoolForKey:@"pro"];
         _deviceID = [coder decodeObjectForKey:@"deviceID"];
         _availablePoints = [coder decodeFloatForKey:@"availablePoints"];
+        _availableGiftPoints = [coder decodeFloatForKey:@"availableGiftPoints"];
+        _downloadConsumePoints = [coder decodeFloatForKey:@"downloadConsumePoints"];
+        if (_downloadConsumePoints == 0) _downloadConsumePoints = 1;
+        _tagConsumePoints = [coder decodeFloatForKey:@"tagConsumePoints"];
+        if (_tagConsumePoints == 0) _tagConsumePoints = 0.5;
     }
     
     return self;
@@ -74,6 +81,21 @@
 
 - (void)setAvailablePoints:(CGFloat)availablePoints{
     _availablePoints = availablePoints;
+    [self flush];
+}
+
+- (void)setAvailableGiftPoints:(CGFloat)availableGiftPoints{
+    _availableGiftPoints = availableGiftPoints;
+    [self flush];
+}
+
+- (void)setDownloadConsumePoints:(CGFloat)downloadConsumePoints{
+    _downloadConsumePoints = downloadConsumePoints;
+    [self flush];
+}
+
+- (void)setTagConsumePoints:(CGFloat)tagConsumePoints{
+    _tagConsumePoints = tagConsumePoints;
     [self flush];
 }
 

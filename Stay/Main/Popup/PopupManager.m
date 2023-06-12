@@ -14,6 +14,7 @@
 #import "FCStore.h"
 #import "DeviceHelper.h"
 #import "PopupSlideController.h"
+#import "SharedStorageManager.h"
 
 @interface PopupManager()
 
@@ -63,10 +64,33 @@
 - (void)onBecomeActive:(NSNotification *)note{
     if (!self.ingorePopup){
         [[API shared] queryPath:@"/popups"
-                            pro:[[FCStore shared] getPlan:NO]
+                            pro:[[FCStore shared] getPlan:NO] != FCPlan.None
                        deviceId:DeviceHelper.uuid
                             biz:nil completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
             if (200 == statusCode){
+                NSInteger points = [biz[@"points"] integerValue];
+                NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+                [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)points - DeviceHelper.totalConsumePoints;
+                [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+                
+                NSArray *pointsConsumeConfig = biz[@"points_consume_config"];
+                for (NSDictionary *consume in pointsConsumeConfig){
+                    NSString *type = consume[@"type"];
+                    if ([type isEqualToString:@"download"]){
+                        [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints = [consume[@"value"] floatValue];
+                    }
+                    else if ([type isEqualToString:@"tag"]){
+                        [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints = [consume[@"value"] floatValue];
+                    }
+                }
+                
+                NSLog(@"availablePoints: %f, availableGiftPoints: %f, downloadConsumePoints: %f, tagConsumePoints: %f",
+                      [SharedStorageManager shared].userDefaultsExRO.availablePoints,
+                      [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints,
+                      [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints,
+                      [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints);
+                
+                
                 NSDictionary *popup = biz[@"popup"];
                 NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
                 if (popup && !(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"])){
