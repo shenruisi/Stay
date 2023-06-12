@@ -12,7 +12,6 @@
 @property (nonatomic, strong) NSMutableArray *nodeViews;
 @property (nonatomic, strong) UIView *progressView;
 @property (nonatomic, strong) NSArray *nodeList;
-
 @end
 @implementation InviteProgressView
 

@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, copy) NSString *taskId;
 @property (nonatomic, assign) NSInteger visitedCount;
-
+@property (nonatomic, copy) NSString *color;
 + (instancetype)ofDictionary:(NSDictionary *)jsonObject;
 
 
