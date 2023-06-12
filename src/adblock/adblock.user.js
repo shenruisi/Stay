@@ -24,18 +24,18 @@ const browser = __b;
   }
 
   async function startInjectScript(){
-    let isStayAround = await fetchStayAroundStatus();
-    if(isStayAround == 'a'){
-      try {
-        // for page
-        handleInjectScriptToPage();
-        document.addEventListener('securitypolicyviolation', (e) => {
-          // for content
-          injectSelectedAdTagJS(true);
-        })
-      } catch (error) {
-                
-      }
+    // let isStayAround = await fetchStayAroundStatus();
+    // if(isStayAround == 'a'){
+    // }
+    try {
+      // for page
+      handleInjectScriptToPage();
+      document.addEventListener('securitypolicyviolation', (e) => {
+        // for content
+        injectSelectedAdTagJS(true);
+      })
+    } catch (error) {
+              
     }
   }
   
@@ -71,7 +71,6 @@ const browser = __b;
    * @param {boolean} isContent false:page模式，true:content模式
    */
   function injectSelectedAdTagJS(isContent){
-    let showMakeupTagPanel = false;
     let checkZindexFlag = false;
     let showMakeupTagMenu = false;
     let makeupTagListenerObj = {threeFingerTapStatus: ''};
@@ -81,11 +80,13 @@ const browser = __b;
     let threeFingerMoveStart = null;
     let threeFingerMoveEnd = null;
     let selectedDom = null;
-    let moveTouched = 0;
     let notShowTagNameList = ['STYLE','SCRIPT','#text','LINK', 'META'];
     let filterSelectTagNameList = ['HTML', 'BODY'];
     let i18nProp = {};
     let cssSelectorSet = new Set();
+    let isStayAround = '';
+    let isLoadingAround = false;
+    let canTagAdConfig = {};
     const AdLangMessage = {
       'en_US': {
         'tag_as_ad': 'Tag as ad',
@@ -96,7 +97,10 @@ const browser = __b;
         'cancel': 'Cancel',
         'select_note': 'Tap to select an element',
         'select_confirm': 'Tap again to confirm the element',
-        'iframe_toast_note': 'Click and start tag the AD in the iframe'
+        'iframe_toast_note': 'Click and start tag the AD in the iframe',
+        'consume_points': 'tag and consume # points',
+        'confirm': 'Confirm',
+        'not_enough': 'Your stay points is not enough to tag current ad. Get stay points!',
       },
       'zh_CN': {
         'tag_as_ad': '标记为广告',
@@ -107,7 +111,10 @@ const browser = __b;
         'cancel': '取消',
         'select_note': '点击选择一个元素',
         'select_confirm': '再次点击确认元素',
-        'iframe_toast_note': '点击开始标记iframe中的广告'
+        'iframe_toast_note': '点击开始标记嵌套网页中的广告',
+        'consume_points': '标记并消耗#个体验点',
+        'confirm': '确定',
+        'not_enough': '你的体验点数不足以标记当前广告, 去获得体验点数！',
       },
       'zh_HK': {
         'tag_as_ad': '標記為廣告',
@@ -118,7 +125,10 @@ const browser = __b;
         'cancel': '取消',
         'select_note': '點擊選擇一個元素',
         'select_confirm': '再次點擊確認元素',
-        'iframe_toast_note': '點擊開始標記iframe中的廣告'
+        'iframe_toast_note': '點擊開始標記嵌套網頁中的廣告',
+        'consume_points': '標記并消耗#个體驗點',
+        'confirm': '確定',
+        'not_enough': '你的體驗點數不足以標記當前廣告，去獲得體驗點數！',
       },
     }
     const distance = 10;
@@ -454,6 +464,7 @@ const browser = __b;
             --s-fff: #ffffff;
             --s-white: #ffffff;
             --s-main: #B620E0;
+            --s-a8: #a8a8a8;
             --s-bg-close-color: #ffffff;
             --s-bg-close-icon: url("https://res.stayfork.app/scripts/0116C07D465E5D8B7F3F32D2BC6C0946/icon.png");
             --s-bg-repeat: no-repeat;
@@ -465,6 +476,7 @@ const browser = __b;
             :root {
               --s-fff: #c4c4c4;
               --s-main: #B620E0;
+              --s-a8: #a8a8a8;
               --s-iframe-bg: rgba(145, 25, 179, 0.25);
               --s-bg-close-color: #1C1C1C;
               --s-bg-close-icon: url("https://res.stayfork.app/scripts/27AB16B17B3CCBEFA53E5CAC0DE3215D/icon.png");
@@ -526,8 +538,10 @@ const browser = __b;
             padding: 10px;
             text-align: center;
             color: var(--s-main)!important;
-            border-radius: 5px;
+            border-radius: 10px;
             background: var(--s-fff);
+            box-shadow: 1px -1px 20px rgba(0,0,0,0.2);
+            font-weight:600;
             font-size: 16px;
             font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -639,6 +653,56 @@ const browser = __b;
             top: 50%;
             transform: translate(0, -50%);
           }
+          .__stay_alert_wrapper{
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",Helvetica, Arial, "Lucida Grande", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position:fixed; 
+            z-index:2147483647;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+          }
+          .__stay_alert_prompt{
+            text-align: left;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            color: #212121;
+            padding: 10px 0;
+            margin-bottom: 20px;
+          }
+          .__stay_alert_btn_box{
+            width: 100%;
+            height: 36px;
+            display:flex;
+            justify-content: flex-end;
+            align-items: center;
+            box-sizing: border-box;
+          }
+          .__stay_alert_btn{
+            width: 86px;
+            height: 36px;
+            border-radius: 4px;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-left: 10px
+          }
+          .__stay_confirm{
+            background: var(--s-main);
+            color: #fff;
+          }
+          .__stay_cancel{
+            background: var(--s-a8);
+            color: #fff;
+          }
           @keyframes dropIn {
             0% {
               transform: translate(-50%, -100%);
@@ -696,8 +760,6 @@ const browser = __b;
       if (event.touches.length === 3) {
         event.preventDefault();
         threeFingerMoveStart = event.pageX;
-        // if(!showMakeupTagPanel){
-        // }
         if('on' == makeupTagListenerObj.makeupStatus){
           console.log('handleTouchstartEvent.makeupStatus------')
           // startSelecteTagAndMakeupAd()
@@ -715,7 +777,7 @@ const browser = __b;
         event.preventDefault();
         threeFingerMoveEnd = event.pageX;
         let moveDistance = Math.abs(Utils.sub(threeFingerMoveEnd, threeFingerMoveStart));
-        if(moveDistance <= distance ){ // && !showMakeupTagPanel
+        if(moveDistance <= distance ){
           if('on' == makeupTagListenerObj.makeupStatus){
             // startSelecteTagAndMakeupAd()
             console.log('handleTouchmoveEvent.makeupStatus------')
@@ -762,6 +824,28 @@ const browser = __b;
           window.addEventListener('message', callback);
         }
         resolve(true)
+      })
+    }
+
+    function getStayAround(){
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
+            if(response.body && JSON.stringify(response.body)!='{}'){
+              resolve( response.body);
+            }
+          });
+        }else{
+          const pid = Math.random().toString(36).substring(2, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'GET_STAY_AROUND_RESP') return;
+            let isStayPro = e.data ? (e.data.response ? e.data.response.body : 'b'): 'b';
+            resolve(isStayPro);
+            window.removeEventListener('message', callback);
+          };
+          window.postMessage({ id: pid, pid: pid, name: 'GET_STAY_AROUND' });
+          window.addEventListener('message', callback);
+        }
       })
     }
 
@@ -858,7 +942,6 @@ const browser = __b;
       //   document.body.focus();
       // });
       // document.body.focus();
-      showMakeupTagPanel = true;
       createOrShowSeleteTagPanelWithModal();
       stopListenerMove();
       startListenerMove();
@@ -1015,13 +1098,13 @@ const browser = __b;
       }
       event.stopPropagation();
       event.preventDefault();
-      showTagingOperateMenu()
+      showTagingOperateMenu(true)
     }
 
     /**
      * 展示标记菜单
      */
-    function showTagingOperateMenu(){
+    function showTagingOperateMenu(shouldFetchCanTag){
       console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu, selectedDom);
       if(showMakeupTagMenu){
         // console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
@@ -1032,7 +1115,9 @@ const browser = __b;
       stopWindowScroll();
       // if(Utils.isMobileOrIpad()){
       // }
-      
+      if(isStayAround == 'b' && shouldFetchCanTag){
+        fetchUserIfCanTag();
+      }
       preselectedTargetDom.classList.replace('__stay_select_target_init_border', '__stay_select_target_selected_border');
       // todo
       let closeMenu = 'https://res.stayfork.app/scripts/95CF6156C3CCD94629AF09F81A6CD5FF/icon.png';
@@ -1162,6 +1247,32 @@ const browser = __b;
       showMakeupTagMenu = true;
       preselectedTargetDom.appendChild(tagMenuDom);
       const menuItemEvent = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box').addEventListener(clickEvent, handleMenuItemClick);
+
+    }
+
+    async function fetchUserIfCanTag(){
+      return new Promise((resolve, reject) => {
+        if(isContent){
+          browser.runtime.sendMessage({from: 'adblock', operate: 'GET_IF_CAN_TAG'}, (response) => {
+            if(response.body && JSON.stringify(response.body)!='{}'){
+              console.log('browser.fetchUserIfCanTag----canTagAdConfig---', canTagAdConfig);
+              canTagAdConfig = response.body;
+              resolve(response.body);
+            }
+          });
+        }else{
+          const pid = Math.random().toString(36).substring(2, 9);
+          const callback = e => {
+            if (e.data.pid !== pid || e.data.name !== 'GET_IF_CAN_TAG_RESP') return;
+            canTagAdConfig = e.data ? (e.data.response ? e.data.response : {}): {};
+            console.log('postMessage.fetchUserIfCanTag----canTagAdConfig---', canTagAdConfig);
+            resolve(canTagAdConfig);
+            window.removeEventListener('message', callback);
+          };
+          window.postMessage({ id: pid, pid: pid, name: 'GET_IF_CAN_TAG' });
+          window.addEventListener('message', callback);
+        }
+      })
     }
 
     function getValidParentNode(){
@@ -1291,6 +1402,21 @@ const browser = __b;
         if(hasNode === 'false'){
           return;
         }
+
+        // check user points
+        if(isStayAround == 'b'){
+          console.log('handleMenuItemClick ------- canTagAdConfig----',canTagAdConfig);
+          if(typeof canTagAdConfig.tag_ad != 'undefined' && (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
+            // 没有可用点数
+            let prompt = i18nProp['not_enough'];
+            createAndShowAlert(prompt, ()=>{
+              let targetGun = document.createElement('a');
+              targetGun.href = 'stay://x-callback-url/pay';
+              targetGun.click();
+            })
+            return;
+          }
+        }
         
         let menuItemType = item.getAttribute('type');
 
@@ -1363,17 +1489,10 @@ const browser = __b;
         durationTimer = null;
       }, 2000);
       // console.log('handleSelectedTag-----to---send');
-      sendSelectedTagToHandler();
+      handleTagSelector();
     }
 
-    function checkWebSiteUseFullPath(){
-      let url = window.location.href;
-      if(url.indexOf('')){
-
-      }
-    }
-
-    async function sendSelectedTagToHandler(){
+    async function handleTagSelector(){
       return new Promise((resolve, reject)=>{
         console.log('before----',selectedDom);
         let styles = window.getComputedStyle(selectedDom);
@@ -1433,50 +1552,110 @@ const browser = __b;
         }
         console.log('selector-----selector---after-----',selector,selDom)
         let url = window.location.href;
-        if(selDom){
-          const uuid = Utils.hexMD5(`${url}${selector}`);
-          if(cssSelectorSet.has(uuid)){
-            selDom.style.display = 'none';
-            resolve(true);
-            return;
-          }else{
-            selDom.style.display = 'none';
-            selectedDom.style.display = 'none';
-            cssSelectorSet.add(uuid);
-          }
-          
-          while(selDom.firstChild){
-            selDom.removeChild(selDom.firstChild)
-          }
-          selDom.remove();
-          selectedDom.remove();
-        }
-
-        let urlList = [];
-        urlList.push(url);
-        let parentUrl = Utils.queryURLParams(url, 'stay_parent_url');
-        if(parentUrl){
-          parentUrl = decodeURIComponent(parentUrl);
-          let parentUrlArr = parentUrl.split(',');
-          urlList.push(...parentUrlArr);
-        }
-        // selectedDom.style.display = 'none';
-        selectedDom = null;
-        // console.log('sendSelectedTagToHandler----------------', selector, url);
-        if(isContent){
-          // console.log('sendSelectedTagToHandler-----true');
-          browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url, urlList}, (response) => {
-            console.log('sendSelectedTagToHandler---------',response)
+        
+        // check user role
+        if(isStayAround == 'b'){
+          // show toast 消耗点数
+          let prompt = i18nProp['consume_points'].replace('#', canTagAdConfig.consume_points);
+          createAndShowAlert(prompt, ()=>{
+            sendSelectedTagToHandler(selDom, url, selector);
           });
         }else{
-          // console.log('sendSelectedTagToHandler-----false');
-          const pid = Math.random().toString(36).substring(2, 9);
-          window.postMessage({pid: pid, name: 'SEND_SELECTOR_TO_HANDLER',  selector, url, urlList});
+          sendSelectedTagToHandler(selDom, url, selector);
         }
+        // console.log('sendSelectedTagToHandler----------------', selector, url);
         resolve(true)
       })
     }
+
+    function createAndShowAlert(prompt, confirmFun){
+
+      let stayAlertDom = document.querySelector('#__stay_alert');
+      if(!stayAlertDom){
+        const stayAlertDomStr = [
+          '<div class="__stay_alert_wrapper" id="__stay_alert">',
+          `<div class="__stay_alert_prompt" id="__stay_alertPrompt" >${prompt}</div>`,
+          '<div class="__stay_alert_btn_box" id="__stay_alertBtnBox" >',
+          `<div class="__stay_alert_btn __stay_confirm" id="__stayConfirm">${i18nProp['confirm']}</div>`,
+          `<div class="__stay_alert_btn __stay_cancel" id="__stayCancel">${i18nProp['cancel']}</div>`,
+          '</div>',
+          '</div>'
+        ];
+
+        document.body.appendChild(Utils.parseToDOM(stayAlertDomStr.join('')));
+        stayAlertDom = document.querySelector('#__stay_alert');
+      }else{
+        stayAlertDom.style.display = 'block';
+        document.querySelector('#__stay_alertPrompt').innerText = prompt;
+      }
+      document.querySelector('#__stayConfirm').addEventListener(clickEvent, handleConfirmBtnAction);
+      document.querySelector('#__stayCancel').addEventListener(clickEvent, handleCancelBtnAction);
+      function handleConfirmBtnAction(event){
+        event.stopPropagation();
+        event.preventDefault();
+        confirmFun();
+        closeAlert();
+      }
   
+      function handleCancelBtnAction(event){
+        event.stopPropagation();
+        event.preventDefault();
+        closeAlert();
+      }
+
+      function closeAlert(){
+        stayAlertDom.style.display = 'none';
+        document.querySelector('#__stayConfirm').removeEventListener(clickEvent, handleConfirmBtnAction);
+        document.querySelector('#__stayCancel').removeEventListener(clickEvent, handleCancelBtnAction);
+      }
+    }
+
+    
+  
+    function sendSelectedTagToHandler(selDom, url, selector){
+      if(selDom){
+        const uuid = Utils.hexMD5(`${url}${selector}`);
+        if(cssSelectorSet.has(uuid)){
+          selDom.style.display = 'none';
+          return;
+        }else{
+          selDom.style.display = 'none';
+          selectedDom.style.display = 'none';
+          cssSelectorSet.add(uuid);
+        }
+        
+        while(selDom.firstChild){
+          selDom.removeChild(selDom.firstChild)
+        }
+        selDom.remove();
+        selectedDom.remove();
+      }else{
+        // 标记失败，尝试使用expand和narrow
+        
+        return
+      }
+      let urlList = [];
+      urlList.push(url);
+      let parentUrl = Utils.queryURLParams(url, 'stay_parent_url');
+      if(parentUrl){
+        parentUrl = decodeURIComponent(parentUrl);
+        let parentUrlArr = parentUrl.split(',');
+        urlList.push(...parentUrlArr);
+      }
+      selectedDom = null;
+      if(isContent){
+        // console.log('sendSelectedTagToHandler-----true');
+        browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url, urlList}, (response) => {
+          console.log('sendSelectedTagToHandler---------',response)
+        });
+      }else{
+        // console.log('sendSelectedTagToHandler-----false');
+        const pid = Math.random().toString(36).substring(2, 9);
+        window.postMessage({pid: pid, name: 'SEND_SELECTOR_TO_HANDLER',  selector, url, urlList});
+      }
+    }
+
+
     /**
      * 隐藏标记中的模态框内容
      */
@@ -1494,7 +1673,6 @@ const browser = __b;
       if(moveWrapperDom!=null){
         moveWrapperDom.style.clipPath = 'none';
       }
-      moveTouched = 0;
       showMakeupTagMenu = false;
     }
 
@@ -1506,7 +1684,6 @@ const browser = __b;
       if(moveWrapperDom!=null){
         removeListenerClosePanelEvent();
         moveWrapperDom.style.display = 'none';
-        showMakeupTagPanel = false;
       }
       if(closeTagingDom != null){
         closeTagingDom.style.display = 'none';
@@ -1520,7 +1697,7 @@ const browser = __b;
      * @returns 
      */
     function handleMoveAndSelecteDom(event){
-      // console.log('touchmove------handleMoveAndSelecteDom-------------', event, moveTouched);
+      // console.log('touchmove------handleMoveAndSelecteDom-------------', event);
       if(event.touches && event.touches.length>1){
         return;
       }
@@ -1667,7 +1844,7 @@ const browser = __b;
       // console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
         // console.log('showMenu---------------------',showMenu);
-        showTagingOperateMenu();
+        showTagingOperateMenu(false);
       }
     }
 
@@ -1940,11 +2117,19 @@ const browser = __b;
       }
     });
 
-    function startMakeupTag(){
+    async function startMakeupTag(){
       
       let browserLangurage = languageCode()
       i18nProp = AdLangMessage[browserLangurage] || AdLangMessage['en_US'];
       makeupTagListenerObj.makeupStatus = 'off';
+
+      if(!isStayAround && !isLoadingAround){
+        isLoadingAround = true;
+        isStayAround = await getStayAround();
+        isLoadingAround = false;
+      }
+      
+      
       asyncFetchThreeFingerTapStatus();
       // asyncFetchMakeupTagStatus();
       listenerMakeupStatusFromPopup();
@@ -2006,11 +2191,20 @@ const browser = __b;
       browser.runtime.sendMessage({from: 'content_script', operate: 'setThreeFingerTapStatus', threeFingerTapStatus, type}, (response) => {
       });
     }
-    // else if(name === 'pushThreeFingerTapStatus'){
-    //   let pid = e.data.pid;
-    //   let threeFingerTapStatus = e.data.threeFingerTapStatus
-    //   window.postMessage({pid:pid, name: 'pushThreeFingerTapStatus', threeFingerTapStatus});
-    // }
+    else if(name === 'GET_STAY_AROUND'){
+      let pid = e.data.pid;
+      browser.runtime.sendMessage({from: 'content_script', operate: 'GET_STAY_AROUND'}, (response) => {
+        window.postMessage({pid:pid, name: 'GET_STAY_AROUND_RESP', response: response });
+      });
+    }
+    else if(name === 'GET_IF_CAN_TAG'){
+      let pid = e.data.pid;
+      browser.runtime.sendMessage({from: 'adblock', operate: 'GET_IF_CAN_TAG'}, (response) => {
+        let body = response&&response.body?response.body:{};
+        window.postMessage({pid:pid, name: 'GET_IF_CAN_TAG_RESP', response: body });
+      });
+    }
+    
     else if(name === 'SEND_SELECTOR_TO_HANDLER'){
       let pid = e.data.pid;
       let selector = e.data.selector;

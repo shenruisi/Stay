@@ -79,8 +79,8 @@ export default {
         //   selectedQuality: ''
         // }
       ],
-      longPressSwitch: props.longPressStatus == 'on' ? t('switch_on') : t('switch_off'),
-      longPressStatusRes: props.longPressStatus,
+      // longPressSwitch: props.longPressStatus == 'on' ? t('switch_on') : t('switch_off'),
+      threeFingerTapStatus: props.longPressStatus,
       isMobile: isMobile()
     });
 
@@ -89,8 +89,8 @@ export default {
       (newProps) => {
         // 接收到的props的值
         state.browserUrl = newProps.browserUrl;
-        state.longPressStatusRes = newProps.longPressStatus;
-        state.longPressSwitch = newProps.longPressStatus == 'on' ? t('switch_on') : t('switch_off');
+        state.threeFingerTapStatus = newProps.longPressStatus;
+        // state.longPressSwitch = newProps.longPressStatus == 'on' ? t('switch_on') : t('switch_off');
       },
       { immediate: true, deep: true }
     );
@@ -213,14 +213,13 @@ export default {
 
     const longPressSwitchClick = () => {
       // console.log('longPressSwitchClick====')
-      if(state.longPressStatusRes == 'on'){
-        state.longPressStatusRes = 'off';
+      if(state.threeFingerTapStatus == 'on'){
+        state.threeFingerTapStatus = 'off';
       }else{
-        state.longPressStatusRes = 'on';
+        state.threeFingerTapStatus = 'on';
       }
-      state.longPressSwitch = state.longPressStatusRes == 'on' ? t('switch_on') : t('switch_off');
-      store.commit('setLongPressStatus', state.longPressStatusRes);
-      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.longPressStatusRes, operate: 'setLongPressStatus'}, (response) => {
+      store.commit('setLongPressStatus', state.threeFingerTapStatus);
+      global.browser.runtime.sendMessage({ from: 'popup', longPressStatus: state.threeFingerTapStatus, operate: 'setLongPressStatus'}, (response) => {
         // console.log('longPressSwitchClick----response',response)
         if(response){
           global.browser.runtime.sendMessage({ from: 'popup', operate: 'refreshTargetTabs'});

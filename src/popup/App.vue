@@ -30,11 +30,10 @@
     </Header>
     <div class="tab-content" :style="{paddingTop: (selectedTab.id == 1 || selectedTab.id == 4)?'32px':'0'}">
       <MatchedScript v-if="selectedTab.id==1" ref="matchedScriptRef" :currentTab="showTab"></MatchedScript>
-      <template v-if="selectedTab.id==2 || selectedTab.id==3 || selectedTab.id==4">
+      <template v-if="selectedTab.id==2">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
-          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
-          <AdBlock v-if="selectedTab.id==4" ref="adBlockRef" :currentTab="showTab"></AdBlock>
+          
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
           <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
@@ -42,6 +41,8 @@
           <a class="what-it" :href="selectedTab.whatisurl" target="_blank">{{ t(selectedTab.whatistitle) }}</a>
         </UpgradePro>
       </template>
+      <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
+      <AdBlock v-if="selectedTab.id==4" ref="adBlockRef" :currentTab="showTab"></AdBlock>
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>
   </div>

@@ -1232,6 +1232,13 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse({ body: response.body })
             });
         }
+        else if ("GET_IF_CAN_TAG" === request.operate){
+            console.log("adblock----GET_IF_CAN_TAG---request-----",request);
+            browser.runtime.sendNativeMessage("application.id", { type: "canTagAd" }, function (response) {
+                console.log("adblock----GET_IF_CAN_TAG---response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }
 });
