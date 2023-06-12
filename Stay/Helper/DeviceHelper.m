@@ -44,6 +44,19 @@ static KeychainItemWrapper *k_keychain = nil;
 //    [[self keychain] resetKeychainItem];
 }
 
++ (void)consumePoints:(CGFloat)pointValue{
+    CGFloat newPoints = [self totalConsumePoints] + pointValue;
+    [[self keychain] setObject:@(newPoints) forKey:(id)kSecAttrLabel];
+}
++ (void)rollbackPoints:(CGFloat)pointValue{
+    CGFloat newPoints = [self totalConsumePoints] - pointValue;
+    [[self keychain] setObject:@(newPoints) forKey:(id)kSecAttrLabel];
+}
++ (CGFloat)totalConsumePoints{
+    NSNumber *points =  [[self keychain] objectForKey:(id)kSecAttrLabel];
+    return [points floatValue];
+}
+
 + (NSString *)country{
     NSLocale *locale = [NSLocale currentLocale];
     return locale.countryCode.length > 0 ? locale.countryCode : @"CN";

@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *deviceID;
 @property (nonatomic, assign) BOOL pro;
+@property (nonatomic, assign) CGFloat availablePoints;
 @end
 
 NS_ASSUME_NONNULL_END
