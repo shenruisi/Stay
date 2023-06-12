@@ -470,6 +470,14 @@
         
         
     }
+    else if ([message[@"type"] isEqualToString:@"canTagAd"]){
+        CGFloat availablePoints = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        CGFloat tagConsumePoints = [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
+        body = @{
+            @"tag_ad" : @((availablePoints - tagConsumePoints) >= 0),
+            @"consume_points" : @(tagConsumePoints)
+        };
+    }
     else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
         NSArray<NSString *> *urls = message[@"urls"];
         NSString *selector = message[@"selector"];
