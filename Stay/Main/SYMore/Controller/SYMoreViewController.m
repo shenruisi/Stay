@@ -591,13 +591,13 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     
     
     [[API shared] queryPath:@"/self"
-                        pro:[[FCStore shared] getPlan:NO]
+                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
                    deviceId:DeviceHelper.uuid
                         biz:nil
                  completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
         NSLog(@"%@",biz);
         
-        if([[FCStore shared] getPlan:NO]) {
+        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
             _leftPointCount =  [biz[@"gift_points"] integerValue];
         } else {
             _leftPointCount = [biz[@"point"] integerValue];

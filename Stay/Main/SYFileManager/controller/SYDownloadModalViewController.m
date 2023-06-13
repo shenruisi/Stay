@@ -23,6 +23,7 @@
 #import "SYDownloadFolderChooseModalViewController.h"
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
+#import "FCStore.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,
@@ -251,7 +252,9 @@
 - (UIButton *)startDownloadButton{
     if (nil == _startDownloadButton){
         _startDownloadButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
-        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro? NSLocalizedString(@"StartDownload", @""):NSLocalizedString(@"ConsumePoint", @"")
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]

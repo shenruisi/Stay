@@ -153,10 +153,10 @@ UIDocumentPickerDelegate
                                                  name:@"changeDownloading"
                                                object:nil];
 
-    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
-    if(isPro) {
-        self.navigationItem.rightBarButtonItems = @[[self addItem]];
-    }
+//    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+//    if(isPro) {
+    self.navigationItem.rightBarButtonItems = @[[self addItem]];
+//    }
     
     [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
     if(self.videoArray.count > 0) {
@@ -1016,18 +1016,18 @@ UIDocumentPickerDelegate
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
-    if (isPro){
-        if (_emptyTipsView){
-            [_emptyTipsView removeFromSuperview];
-            _emptyTipsView = nil;
-        }
-    }
-    else{
-        [self emptyTipsView];
-    }
+//    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+//    if (isPro){
+//        if (_emptyTipsView){
+//            [_emptyTipsView removeFromSuperview];
+//            _emptyTipsView = nil;
+//        }
+//    }
+//    else{
+//        [self emptyTipsView];
+//    }
         
-    self.tableView.hidden = !isPro;
+//    self.tableView.hidden = !isPro;
     
     
 #ifndef FC_MAC
