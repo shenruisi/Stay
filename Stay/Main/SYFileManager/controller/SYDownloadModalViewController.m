@@ -24,6 +24,7 @@
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
 #import "FCStore.h"
+#import "SYInviteTaskController.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,
@@ -275,6 +276,23 @@
 
 - (void)startDownloadAction:(id)sender{
 
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    if(!isPro) {
+        float point = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+        
+        if(point >= downloadNeedPoint) {
+            [DeviceHelper consumePoints:downloadNeedPoint];
+        } else {
+            SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
+            cer.nav = self.nav;
+            cer.needBack = true;
+            [self.navigationController pushModalViewController:cer];
+            return;
+        }
+    }
+    
     
     if(self.linkElements[0].inputEntity.text == nil || self.linkElements[0].inputEntity.text.length == 0 ) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
