@@ -239,6 +239,10 @@
     [self.sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:randomColor]];
     self.extensionLabel.textColor = randomColor;
     self.colorView.backgroundColor = randomColor;
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    if (![[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.dateLabel.textColor =randomColor;
+    }
 }
 
 - (void)resetColor {
@@ -250,6 +254,9 @@
     [self.sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:randomColor]];
     self.extensionLabel.textColor = randomColor;
     self.colorView.backgroundColor = randomColor;
+    if (![[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.dateLabel.textColor =randomColor;
+    }
 }
 
 - (UIColor *)randomTintColor {
@@ -511,7 +518,7 @@
         _colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, 0, 44, 18)];
         _colorLabel.font = FCStyle.subHeadlineBold;
         _colorLabel.textColor = FCStyle.subtitleColor;
-        _colorLabel.text = NSLocalizedString(@"Cover",@"");
+        _colorLabel.text = NSLocalizedString(@"Color",@"");
         [self.view addSubview:_colorLabel];
         _colorLabel.centerY = self.colorView.centerY;
         _colorLabel.left =self.colorView.right + 5;

@@ -111,6 +111,7 @@
     self.sigImageView = nil;
     self.extensionLabel = nil;
     self.qrCodeImageView = nil;
+    self.dateLabel = nil;
     [self backView];
     [self inviteView];
     [self gradientLayer];
