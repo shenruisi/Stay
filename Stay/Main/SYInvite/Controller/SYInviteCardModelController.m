@@ -12,6 +12,7 @@
 #import "FCImageView.h"
 #import "API.h"
 #import "DeviceHelper.h"
+#import "FCStore.h"
 
 @interface SelectBarView:UIView
 
@@ -125,8 +126,10 @@
 }
 
 - (void)confirmInviteCard {
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
         [[API shared]  queryPath:@"/invite-task/init"
-                            pro:NO
+                            pro:isPro
                        deviceId:DeviceHelper.uuid
                              biz:@{
             @"name" : _nameLabel.text,

@@ -377,9 +377,13 @@ CopLink="Cop Link";
 EditInfo="Edit Info";
 GiftPointToFriend="Gift Point To Friend";
 GetMorePoint="Get More Point";
-
-
-
+ConsumePoint="Consuming 1 Point to Download";
+BacktoDownload="Back to download";
+TryAgain="Try it later";
+HowToGift="How to Gift";
+HowToGiftDesc="Checkout online document";
+GiftRule="Gift Rule";
+GiftRuleDesc="Since you are a Stay pro user, you have 100 Stay points that can be given to 5 of your friends for free. No matter whether your friend is already a Stay user or not, as long as your friend is not a Stay Pro user, your friend can get 20 Stay points for free. points.";
 
 
 

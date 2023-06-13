@@ -72,9 +72,6 @@
 }
 
 
-- (void)shareLink:(UIButton *)sender{
-    
-}
 @end
 
 @interface InviteImageView:UIView
@@ -375,8 +372,10 @@
 }
 
 - (void)setupUI {
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, 100, 21)];
-    titleLab.text = NSLocalizedString(@"InviteRule",@"InviteFriend");
+    titleLab.text = isPro? NSLocalizedString(@"GiftRule",@"InviteFriend"):NSLocalizedString(@"InviteRule",@"InviteFriend");
     titleLab.font = FCStyle.headlineBold;
     titleLab.textColor = FCStyle.fcBlack;
     titleLab.textAlignment = NSTextAlignmentCenter;
@@ -384,7 +383,7 @@
     titleLab.centerX = self.width / 2;
     
     UILabel *descLab = [[UILabel alloc] initWithFrame:CGRectMake(11, 0, 322, 100)];
-    descLab.text = NSLocalizedString(@"InviteRuleDesc",@"InviteFriend");
+    descLab.text = isPro?NSLocalizedString(@"GiftRuleDesc",@"InviteFriend"):NSLocalizedString(@"InviteRuleDesc",@"InviteFriend");
     descLab.font = FCStyle.footnote;
     descLab.numberOfLines = 0;
     descLab.textColor = FCStyle.subtitleColor;
@@ -416,8 +415,12 @@
 }
 
 - (void)setupUI {
+
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 13, 100, 21)];
-    titleLab.text = NSLocalizedString(@"HowToInvite",@"");
+    titleLab.text = isPro ? NSLocalizedString(@"HowToGift",@""):  NSLocalizedString(@"HowToInvite",@"");
     titleLab.font = FCStyle.headlineBold;
     titleLab.textColor = FCStyle.fcBlack;
     titleLab.textAlignment = NSTextAlignmentLeft;
@@ -426,7 +429,7 @@
 //    titleLab.centerX = self.width / 2;
     
     UILabel *descLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 322, 100)];
-    descLab.text = NSLocalizedString(@"HowToInviteDesc",@"InviteFriend");
+    descLab.text = isPro ? NSLocalizedString(@"HowToGiftDesc",@"InviteFriend") : NSLocalizedString(@"HowToInviteDesc",@"InviteFriend");
     descLab.font = FCStyle.footnote;
     descLab.numberOfLines = 0;
     descLab.textColor = FCStyle.subtitleColor;
@@ -460,6 +463,11 @@ UITableViewDataSource
 @property (nonatomic, strong) SYInviteCardController *inviteCardController;
 @property (nonatomic, strong) InviteImageView *inviteImageView;
 @property (nonatomic, strong) InviteDetail *detail;
+@property (nonatomic, strong) UILabel *proPointLabel;
+@property (nonatomic, strong) UILabel *proInviteLeftLabel;
+@property (nonatomic, strong) UILabel *proGiftTitleLabel;
+
+
 @end
 
 @implementation SYInviteViewController
@@ -476,14 +484,13 @@ UITableViewDataSource
                                              selector:@selector(saveInviteSuccess:)
                                                  name:@"app.stay.notification.SaveInviteSuccess"
                                                object:nil];
-    
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
     [[API shared]  queryPath:@"/invite-task/detail"
-                        pro:NO
+                        pro:isPro
                    deviceId:DeviceHelper.uuid
                         biz:nil
                  completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        NSLog(@"%@",biz);
-        
         if(biz != NULL) {
             InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
             if(inviteDetail.inviteCode.length > 0) {
@@ -499,12 +506,16 @@ UITableViewDataSource
         }
     }];
     
+      
+    
    
 }
 
 - (void)saveInviteSuccess:(NSNotification *)sender{
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
     [[API shared]  queryPath:@"/invite-task/detail"
-                        pro:NO
+                        pro:isPro
                    deviceId:DeviceHelper.uuid
                         biz:nil
                  completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
@@ -547,21 +558,28 @@ UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row == 0) {
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                                        reuseIdentifier:nil];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:self.iconImageView];
-        [cell.contentView addSubview:self.pointLabel];
-        self.pointLabel.top = self.iconImageView.bottom + 24;
-        [cell.contentView addSubview:self.inviteView];
-        self.inviteView.top = self.pointLabel.bottom + 11;
-        [cell.contentView addSubview:self.inviteLabel];
-        self.inviteLabel.top = self.inviteView.bottom + 21;
-        [cell.contentView addSubview:self.inviteRulesView];
-        self.inviteRulesView.top = self.inviteView.bottom + 21;
-
- 
+        
+        if(!isPro) {
+            [cell.contentView addSubview:self.pointLabel];
+            
+            self.pointLabel.top = self.iconImageView.bottom + 24;
+            [cell.contentView addSubview:self.inviteView];
+            self.inviteView.top = self.pointLabel.bottom + 11;
+            [cell.contentView addSubview:self.inviteLabel];
+            self.inviteLabel.top = self.inviteView.bottom + 21;
+            [cell.contentView addSubview:self.inviteRulesView];
+            self.inviteRulesView.top = self.inviteView.bottom + 21;
+        } else {
+            [cell.contentView addSubview:self.inviteRulesView];
+            self.inviteRulesView.top = self.inviteView.bottom + 16;
+        }
         [cell.contentView addSubview:self.howToInviteView];
         self.howToInviteView.top = self.inviteRulesView.bottom + 15;
         
@@ -725,6 +743,8 @@ UITableViewDataSource
     }
     return _inviteImageView;
 }
+
+
 
 - (void)shareLink:(UIButton *)sender {
     //分享的url

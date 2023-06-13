@@ -669,6 +669,8 @@
 		58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB201283B5D3F00BC2A92 /* LoadingStatusModalViewController.m */; };
 		58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FEB208283E072B00BC2A92 /* MatchPattern.m */; };
 		6196D6DAD37ED57CA6DA1A01 /* libPods-Stay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8324085BF6D1637082EC8C6B /* libPods-Stay.a */; };
+		8410091D2A36C7D3007F6B8A /* SYInviteTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410091C2A36C7D3007F6B8A /* SYInviteTaskController.m */; };
+		8410091E2A36C7D3007F6B8A /* SYInviteTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410091C2A36C7D3007F6B8A /* SYInviteTaskController.m */; };
 		8410C840275E028A005531EC /* codemirror.js in Resources */ = {isa = PBXBuildFile; fileRef = 8410C837275E028A005531EC /* codemirror.js */; };
 		8410C841275E028A005531EC /* typescript.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83A275E028A005531EC /* typescript.html */; };
 		8410C842275E028A005531EC /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 8410C83B275E028A005531EC /* index.html */; };
@@ -1558,6 +1560,8 @@
 		58FEB207283E072B00BC2A92 /* MatchPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MatchPattern.h; sourceTree = "<group>"; };
 		58FEB208283E072B00BC2A92 /* MatchPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MatchPattern.m; sourceTree = "<group>"; };
 		8324085BF6D1637082EC8C6B /* libPods-Stay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Stay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8410091B2A36C7D3007F6B8A /* SYInviteTaskController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYInviteTaskController.h; sourceTree = "<group>"; };
+		8410091C2A36C7D3007F6B8A /* SYInviteTaskController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYInviteTaskController.m; sourceTree = "<group>"; };
 		8410C837275E028A005531EC /* codemirror.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = codemirror.js; sourceTree = "<group>"; };
 		8410C83A275E028A005531EC /* typescript.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = typescript.html; sourceTree = "<group>"; };
 		8410C83B275E028A005531EC /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -3480,6 +3484,8 @@
 				84FE3A2A2A283B26007E9F52 /* SYInviteCardController.m */,
 				84FE3A2D2A283B45007E9F52 /* SYInviteCardModelController.h */,
 				84FE3A2E2A283B45007E9F52 /* SYInviteCardModelController.m */,
+				8410091B2A36C7D3007F6B8A /* SYInviteTaskController.h */,
+				8410091C2A36C7D3007F6B8A /* SYInviteTaskController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -4555,6 +4561,7 @@
 				3C8388CE2931B786007563E6 /* ColorHelper.m in Sources */,
 				84AC68D127E434E600F356DF /* SYNotesViewController.m in Sources */,
 				3C949B92297029F50068231A /* M3U8ExtXKey.m in Sources */,
+				8410091D2A36C7D3007F6B8A /* SYInviteTaskController.m in Sources */,
 				582061D6294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				583B542829DD671E00CB292A /* NSAttributedString+Style.m in Sources */,
 				58A3617929C023BC00080465 /* FCRootViewController.m in Sources */,
@@ -4906,6 +4913,7 @@
 				84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				58A3619029C0502500080465 /* AdBlockViewController.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
+				8410091E2A36C7D3007F6B8A /* SYInviteTaskController.m in Sources */,
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
 				588202722859E73900B2721A /* Tampermonkey.m in Sources */,
 				58CFA5CD28F30668004C5140 /* SYNavigationController.m in Sources */,

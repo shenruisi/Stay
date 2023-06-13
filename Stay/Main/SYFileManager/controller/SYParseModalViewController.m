@@ -17,7 +17,7 @@
 #import "VideoParser.h"
 #import "SYDownloadModalViewController.h"
 #import "SYParseDownloadModalViewController.h"
-
+#import "FCStore.h"
 @interface SYParseModalViewController()<
  UITableViewDelegate,
  UITableViewDataSource
