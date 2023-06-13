@@ -13,6 +13,7 @@
 #import "API.h"
 #import "DeviceHelper.h"
 #import "FCStore.h"
+#import "UserScript.h"
 
 @interface SelectBarView:UIView
 
@@ -58,7 +59,6 @@
 @property (nonatomic, strong) UILabel *useLabel;
 @property (nonatomic, strong) UILabel *stayLabel;
 @property (nonatomic, strong) UILabel *sinceLabel;
-@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIImageView *sigImageView;
 @property (nonatomic, strong) UILabel *extensionLabel;
 @property (nonatomic, strong) UILabel *nameTitleLabel;
@@ -71,7 +71,8 @@
 @property (nonatomic, strong) UIButton *confirmBtn;
 @property (nonatomic, strong) NSString *colorStr;
 @property (nonatomic, strong) NSString *firstImageStr;
-
+@property (nonatomic, strong) UILabel *proLabel;
+@property (nonatomic, strong) UILabel *dateLabel;
 
 @end
 @implementation SYInviteCardModelController
@@ -88,8 +89,33 @@
     [self inviteView];
     [self iconImageView];
     [self nameLabel];
-    [self useLabel];
-    [self stayLabel];
+    
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.useLabel.text = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        [self.useLabel sizeToFit];
+        [self stayLabel];
+        [self sigImageView];
+
+        if(isPro) {
+            self.proLabel.centerY =  self.useLabel.centerY;
+            self.proLabel.left = self.stayLabel.right + 5;
+        }
+        self.extensionLabel.right = self.inviteView.width - 21;
+    } else {
+        [self useLabel];
+        [self stayLabel];
+        if(isPro) {
+            self.proLabel.centerY =  self.useLabel.centerY;
+            self.proLabel.left = self.stayLabel.right + 5;
+            self.dateLabel.centerY = self.useLabel.centerY;
+            self.dateLabel.left = self.proLabel.right + 5;
+        } else {
+            self.dateLabel.centerY = self.useLabel.centerY;
+            self.dateLabel.left = self.stayLabel.right + 5;
+        }
+    }
+    
     [self sigImageView];
     [self extensionLabel];
     [self nameTitleLabel];
@@ -337,7 +363,7 @@
         } else {
             _useLabel.textColor = FCStyle.accent;
         }
-        _useLabel.text = NSLocalizedString(@"Iuse",@"");
+        _useLabel.text = NSLocalizedString(@"IUseStay",@"");
         [_useLabel sizeToFit];
         _useLabel.top = self.nameLabel.bottom + 9;
         [self.inviteView addSubview:_useLabel];
@@ -532,6 +558,46 @@
     return _confirmBtn;
 }
 
+- (UILabel *)proLabel{
+    if (nil == _proLabel){
+        _proLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 15)];
+        _proLabel.backgroundColor = FCStyle.backgroundGolden;
+        _proLabel.font = [UIFont boldSystemFontOfSize:10];
+        _proLabel.text = @"PRO";
+        _proLabel.layer.borderWidth = 1;
+        _proLabel.layer.borderColor = FCStyle.borderGolden.CGColor;
+        _proLabel.layer.cornerRadius = 5;
+        _proLabel.textAlignment = NSTextAlignmentCenter;
+        _proLabel.textColor = FCStyle.fcGolden;
+        _proLabel.clipsToBounds = YES;
+        [self.inviteView addSubview:_proLabel];
+
+    }
+    
+    return _proLabel;
+}
+
+- (UILabel *)dateLabel {
+    if(nil == _dateLabel) {
+        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+        if(self.detail.color.length > 0) {
+            _dateLabel.textColor =  UIColorFromRGB(self.detail.color);
+        } else {
+            _dateLabel.textColor = FCStyle.accent;
+        }
+        _dateLabel.font = FCStyle.footnoteBold;
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
+
+        //设置：在0-3个单位长度内的内容显示成红色
+        [str addAttribute:NSFontAttributeName value:FCStyle.footnote range:NSMakeRange(0, 5)];
+        _dateLabel.attributedText = str;
+        [self.inviteView addSubview:_dateLabel];
+
+    }
+    return _dateLabel;
+}
 
 - (NSString *)hexFromUIColor:(UIColor *)color
 {

@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *color;
 @property (nonatomic, assign) NSInteger rest;
 @property (nonatomic, assign) NSInteger total;
+@property (nonatomic, copy) NSString *giftCode;
+
 
 + (instancetype)ofDictionary:(NSDictionary *)jsonObject;
 

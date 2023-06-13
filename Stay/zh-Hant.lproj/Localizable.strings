@@ -383,3 +383,4 @@ GiftRule="Gift Rule";
 GiftRuleDesc="Since you are a Stay pro user, you have 100 Stay points that can be given to 5 of your friends for free. No matter whether your friend is already a Stay user or not, as long as your friend is not a Stay Pro user, your friend can get 20 Stay points for free. points.";
 GiftYourPoint="Gift Your Points to Friends";
 UserLeft="Users Left";
+IUseStay="I use";

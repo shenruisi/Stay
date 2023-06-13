@@ -89,6 +89,8 @@
 @property (nonatomic, strong) UIImageView *qrCodeImageView;
 @property (nonatomic, strong) UILabel *tipsLabel;
 @property (nonatomic, strong) UIButton *addBtn;
+@property (nonatomic, strong) UILabel *proLabel;
+@property (nonatomic, strong) UILabel *dateLabel;
 @end
 
 @implementation InviteImageView
@@ -113,8 +115,33 @@
     [self gradientLayer];
     [self iconImageView];
     [self nameLabel];
-    [self useLabel];
-    [self stayLabel];
+
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.useLabel.text = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        [self.useLabel sizeToFit];
+        [self stayLabel];
+        [self sigImageView];
+
+        if(isPro) {
+            self.proLabel.centerY =  self.useLabel.centerY;
+            self.proLabel.left = self.stayLabel.right + 5;
+        }
+        self.extensionLabel.right = self.inviteView.width - 21;
+    } else {
+        [self useLabel];
+        [self stayLabel];
+        if(isPro) {
+            self.proLabel.centerY =  self.useLabel.centerY;
+            self.proLabel.left = self.stayLabel.right + 5;
+            self.dateLabel.centerY = self.useLabel.centerY;
+            self.dateLabel.left = self.proLabel.right + 5;
+        } else {
+            self.dateLabel.centerY = self.useLabel.centerY;
+            self.dateLabel.left = self.stayLabel.right + 5;
+        }
+    }
+    
     [self sigImageView];
     [self extensionLabel];
     [self qrCodeImageView];
@@ -124,7 +151,7 @@
 
 - (UIView *)backView {
     if(_backView == nil) {
-        _backView = [[UIView alloc] initWithFrame:CGRectMake(26, 19,  self.width - 26 * 2, 387)];
+        _backView = [[UIView alloc] initWithFrame:CGRectMake(11, 16,  self.width - 11 * 2, 438)];
         [self addSubview:_backView];
     }
     return _backView;
@@ -132,7 +159,7 @@
 
 - (UIView *)inviteView {
     if(_inviteView == nil) {
-        _inviteView = [[UIView alloc] initWithFrame:CGRectMake(50, 33, self.width - 26 * 2 - 100, 330)];
+        _inviteView = [[UIView alloc] initWithFrame:CGRectMake(40, 21, self.width - 11 * 2 - 80, 390)];
         _inviteView.backgroundColor = FCStyle.fcWhite;
         _inviteView.layer.cornerRadius = 10;
         _inviteView.clipsToBounds = YES;
@@ -155,7 +182,7 @@
 
 - (FCImageView *)iconImageView {
     if(nil == _iconImageView) {
-        _iconImageView = [[FCImageView alloc] initWithFrame:CGRectMake(14, 14, self.width - 26 * 2 - 100 - 28, (self.width - 26 * 2 - 100 - 28) / 1.25)];
+        _iconImageView = [[FCImageView alloc] initWithFrame:CGRectMake(14, 15, self.width - 11 * 2 - 80 - 28, 174)];
         if(self.detail.cover.length > 1) {
             [_iconImageView sd_setImageWithURL:self.detail.cover];
         } else {
@@ -213,7 +240,7 @@
             _stayLabel.backgroundColor = FCStyle.accent;
         }
         _stayLabel.textColor = FCStyle.fcWhite;
-        _stayLabel.font = FCStyle.footnote;
+        _stayLabel.font = FCStyle.footnoteBold;
         _stayLabel.text = NSLocalizedString(@"Stay",@"");
         _stayLabel.layer.cornerRadius = 10;
         _stayLabel.clipsToBounds = YES;
@@ -250,6 +277,7 @@
         [_extensionLabel sizeToFit];
         [self.inviteView addSubview:_extensionLabel];
         _extensionLabel.top = self.sigImageView.bottom;
+        _extensionLabel.sizeToFit;
         _extensionLabel.left = self.stayLabel.left;
     }
     return _extensionLabel;
@@ -257,9 +285,9 @@
 
 - (UIImageView *)qrCodeImageView {
     if(nil == _qrCodeImageView) {
-        _qrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 40, 40)];
+        _qrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 48, 48)];
         [self.inviteView addSubview:_qrCodeImageView];
-        _qrCodeImageView.top = self.extensionLabel.bottom + 30;
+        _qrCodeImageView.top = self.extensionLabel.bottom + 32;
         if(self.detail.link.length > 0) {
             [self generatingTwoDimensionalCode];
         }
@@ -307,6 +335,48 @@
     }
     return _addBtn;
 }
+
+- (UILabel *)proLabel{
+    if (nil == _proLabel){
+        _proLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 15)];
+        _proLabel.backgroundColor = FCStyle.backgroundGolden;
+        _proLabel.font = [UIFont boldSystemFontOfSize:10];
+        _proLabel.text = @"PRO";
+        _proLabel.layer.borderWidth = 1;
+        _proLabel.layer.borderColor = FCStyle.borderGolden.CGColor;
+        _proLabel.layer.cornerRadius = 5;
+        _proLabel.textAlignment = NSTextAlignmentCenter;
+        _proLabel.textColor = FCStyle.fcGolden;
+        _proLabel.clipsToBounds = YES;
+        [self.inviteView addSubview:_proLabel];
+
+    }
+    
+    return _proLabel;
+}
+
+- (UILabel *)dateLabel {
+    if(nil == _dateLabel) {
+        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+        if(self.detail.color.length > 0) {
+            _dateLabel.textColor =  UIColorFromRGB(self.detail.color);
+        } else {
+            _dateLabel.textColor = FCStyle.accent;
+        }
+        _dateLabel.font = FCStyle.footnoteBold;
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
+
+        //设置：在0-3个单位长度内的内容显示成红色
+        [str addAttribute:NSFontAttributeName value:FCStyle.footnote range:NSMakeRange(0, 5)];
+        _dateLabel.attributedText = str;
+        [self.inviteView addSubview:_dateLabel];
+
+    }
+    return _dateLabel;
+}
+
 
 - (void)shareImage:(UIButton *)sender{
     
@@ -516,15 +586,13 @@ UITableViewDataSource
                       completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
             if(biz != NULL) {
                 InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.inviteCode.length > 0) {
+                if(inviteDetail.giftCode.length > 0) {
                     self.started = true;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    self.inviteView.titleArray = inviteDetail.process;
                     _detail = inviteDetail;
                     [self.tableView reloadData];
-                    [self.inviteView updateProgress:0.5];
                 });
             }
         }];
@@ -570,15 +638,12 @@ UITableViewDataSource
             
             if(biz != NULL) {
                 InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.inviteCode.length > 0) {
+                if(inviteDetail.giftCode.length > 0) {
                     self.started = true;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    self.inviteView.titleArray = inviteDetail.process;
                     _detail = inviteDetail;
                     [self.tableView reloadData];
-                    [self.inviteView updateProgress:0.5];
                 });
             }
         }];
@@ -597,6 +662,7 @@ UITableViewDataSource
         self.inviteCardController.color = _detail.color;
         self.inviteCardController.defaultImage = _detail.cover;
         self.inviteCardController.defaultName = _detail.name;
+        self.inviteCardController.detail = _detail;
     }
     if (!self.inviteCardController.isShown){
         [self.inviteCardController show];
@@ -629,7 +695,15 @@ UITableViewDataSource
             self.proPointLabel.centerX = self.view.width / 2;
             self.proPointLabel.top = self.iconImageView.bottom + 16;
             
-            self.proInviteLeftLabel.text = [NSString stringWithFormat:@"%ld/%ld %@",_detail.rest,_detail.total,NSLocalizedString(@"UserLeft", @"")];
+            NSString *contentStr =[NSString stringWithFormat:@"%ld/%ld %@",_detail.rest,_detail.total,NSLocalizedString(@"UserLeft", @"")];
+
+            NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
+
+            //设置：在0-3个单位长度内的内容显示成红色
+
+            [str addAttribute:NSForegroundColorAttributeName value:FCStyle.subtitleColor range:NSMakeRange(0, 1)];
+            
+            self.proInviteLeftLabel.attributedText = str;
             
             
             [cell.contentView addSubview:self.proInviteLeftLabel];
@@ -800,7 +874,7 @@ UITableViewDataSource
 
 - (InviteImageView *)inviteImageView {
     if(nil == _inviteImageView) {
-        _inviteImageView = [[InviteImageView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 474)];
+        _inviteImageView = [[InviteImageView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 525)];
         _inviteImageView.backgroundColor = FCStyle.fcWhite;
         _inviteImageView.layer.cornerRadius = 10;
         _inviteImageView.layer.masksToBounds = YES;

@@ -6,7 +6,7 @@
 //
 
 #import "ModalViewController.h"
-
+#import "InviteDetail.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SYInviteCardModelController : ModalViewController
@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *dateString;
 @property (nonatomic, strong) NSString *defaultImage;
 @property (nonatomic, strong) NSString *defaultName;
+@property (nonatomic, strong) InviteDetail *detail;
+
 @end
 
 NS_ASSUME_NONNULL_END

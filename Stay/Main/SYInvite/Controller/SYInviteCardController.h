@@ -6,7 +6,7 @@
 //
 
 #import "FCSlideController.h"
-
+#import "InviteDetail.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SYInviteCardController : FCSlideController
@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *color;
 @property (nonatomic, strong) NSString *defaultImage;
 @property (nonatomic, strong) NSString *defaultName;
+@property (nonatomic, strong) InviteDetail *detail;
 
 @end
 
