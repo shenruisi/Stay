@@ -15,11 +15,13 @@
 #import "DeviceHelper.h"
 #import "PopupSlideController.h"
 #import "SharedStorageManager.h"
+#import "CommitCodeSlideController.h"
 
 @interface PopupManager()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *,NSNumber *> *shownUUIDsDic;
 @property (nonatomic, strong) PopupSlideController *popupSlideController;
+@property (nonatomic, strong) CommitCodeSlideController *commitCodeSlideController;
 @end
 
 @implementation PopupManager
@@ -114,6 +116,9 @@
                 }
             }
         }];
+        
+        self.commitCodeSlideController = [[CommitCodeSlideController alloc] init];
+        [self.commitCodeSlideController show];
     }
 }
 

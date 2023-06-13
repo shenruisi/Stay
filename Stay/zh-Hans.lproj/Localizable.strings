@@ -384,3 +384,9 @@ HowToGift="How to Gift";
 HowToGiftDesc="Checkout online document";
 GiftRule="Gift Rule";
 GiftRuleDesc="Since you are a Stay pro user, you have 100 Stay points that can be given to 5 of your friends for free. No matter whether your friend is already a Stay user or not, as long as your friend is not a Stay Pro user, your friend can get 20 Stay points for free. points.";
+
+EnterCode="输入邀请/礼物码";
+PointsUsedFor="点数有什么作用？";
+PasteFromClipboard="从剪贴板粘贴";
+GetPoints="获取点数";
+NoCodeSkip="没有邀请/礼物码，跳过";

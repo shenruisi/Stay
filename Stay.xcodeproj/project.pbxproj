@@ -412,6 +412,10 @@
 		589F0C5E2A380A47008DF420 /* CommitCodeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */; };
 		589F0C612A380AC0008DF420 /* CommitCodeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */; };
 		589F0C622A380AC0008DF420 /* CommitCodeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */; };
+		589F0C652A3813B4008DF420 /* FCLinkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C642A3813B4008DF420 /* FCLinkButton.m */; };
+		589F0C662A3813B4008DF420 /* FCLinkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C642A3813B4008DF420 /* FCLinkButton.m */; };
+		589F0C692A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */; };
+		589F0C6A2A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */; };
 		58A06D1528DAA49200983455 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1028DAA49200983455 /* base64.min.js */; };
 		58A06D1628DAA49200983455 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1128DAA49200983455 /* jquery.cookie.min.js */; };
 		58A06D1728DAA49200983455 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */; };
@@ -1297,6 +1301,10 @@
 		589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommitCodeSlideController.m; sourceTree = "<group>"; };
 		589F0C5F2A380AC0008DF420 /* CommitCodeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommitCodeModalViewController.h; sourceTree = "<group>"; };
 		589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommitCodeModalViewController.m; sourceTree = "<group>"; };
+		589F0C632A3813B4008DF420 /* FCLinkButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCLinkButton.h; sourceTree = "<group>"; };
+		589F0C642A3813B4008DF420 /* FCLinkButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCLinkButton.m; sourceTree = "<group>"; };
+		589F0C672A387C24008DF420 /* CommitCodeSucceedModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommitCodeSucceedModalViewController.h; sourceTree = "<group>"; };
+		589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommitCodeSucceedModalViewController.m; sourceTree = "<group>"; };
 		58A06D1028DAA49200983455 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		58A06D1128DAA49200983455 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -2482,6 +2490,8 @@
 				589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */,
 				589F0C5F2A380AC0008DF420 /* CommitCodeModalViewController.h */,
 				589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */,
+				589F0C672A387C24008DF420 /* CommitCodeSucceedModalViewController.h */,
+				589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */,
 			);
 			path = CommitCode;
 			sourceTree = "<group>";
@@ -2519,6 +2529,8 @@
 				583B542729DD671E00CB292A /* NSAttributedString+Style.m */,
 				58DA84872A27612B009E37E6 /* FCImageView.h */,
 				58DA84882A27612B009E37E6 /* FCImageView.m */,
+				589F0C632A3813B4008DF420 /* FCLinkButton.h */,
+				589F0C642A3813B4008DF420 /* FCLinkButton.m */,
 			);
 			path = UXFramework;
 			sourceTree = "<group>";
@@ -4525,6 +4537,7 @@
 				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				849E77D7293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
 				5884031C29667079002CA227 /* UIColor+Convert.m in Sources */,
+				589F0C692A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */,
 				58DA84CB2A2A1EC1009E37E6 /* SubscribeContentFilterManager.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
@@ -4643,6 +4656,7 @@
 				58F196412A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */,
 				583B541529DD504500CB292A /* FCNavigationBar.m in Sources */,
 				5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */,
+				589F0C652A3813B4008DF420 /* FCLinkButton.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
@@ -4806,6 +4820,7 @@
 				5867D155288F88FC00EC822B /* AlertHelper.m in Sources */,
 				582061C1294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
 				58F1963A2A11FD2F00B88F39 /* FilterToken.m in Sources */,
+				589F0C662A3813B4008DF420 /* FCLinkButton.m in Sources */,
 				3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58F196502A11FD3000B88F39 /* SpecialCommentBlockerAST.m in Sources */,
 				58724A2C28FE43E500A894D8 /* DeviceHelper.m in Sources */,
@@ -4849,6 +4864,7 @@
 				58F1968D2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */,
 				3C358D572973E58800118063 /* NSArray+m3u8.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
+				589F0C6A2A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */,
 				3C358D582973E58B00118063 /* NSString+m3u8.m in Sources */,
 				3C91971D299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
