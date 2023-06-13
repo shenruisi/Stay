@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSDictionary *useInfo;
 @property (nonatomic, assign) BOOL protect;
 @property (nonatomic, copy) NSString *audioUrl;
+@property (nonatomic, copy) NSString *qualityLabel;
 
 
 @end

@@ -13,6 +13,7 @@
 #import "API.h"
 #import "DeviceHelper.h"
 #import "FCStore.h"
+#import "UserScript.h"
 
 @interface SelectBarView:UIView
 
@@ -58,7 +59,6 @@
 @property (nonatomic, strong) UILabel *useLabel;
 @property (nonatomic, strong) UILabel *stayLabel;
 @property (nonatomic, strong) UILabel *sinceLabel;
-@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIImageView *sigImageView;
 @property (nonatomic, strong) UILabel *extensionLabel;
 @property (nonatomic, strong) UILabel *nameTitleLabel;
@@ -71,7 +71,8 @@
 @property (nonatomic, strong) UIButton *confirmBtn;
 @property (nonatomic, strong) NSString *colorStr;
 @property (nonatomic, strong) NSString *firstImageStr;
-
+@property (nonatomic, strong) UILabel *proLabel;
+@property (nonatomic, strong) UILabel *dateLabel;
 
 @end
 @implementation SYInviteCardModelController
@@ -88,8 +89,33 @@
     [self inviteView];
     [self iconImageView];
     [self nameLabel];
-    [self useLabel];
-    [self stayLabel];
+    
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.useLabel.text = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        [self.useLabel sizeToFit];
+        [self stayLabel];
+        [self sigImageView];
+
+        if(isPro) {
+            self.proLabel.centerY =  self.useLabel.centerY;
+            self.proLabel.left = self.stayLabel.right + 5;
+        }
+        self.extensionLabel.right = self.inviteView.width - 21;
+    } else {
+        [self useLabel];
+        [self stayLabel];
+        if(isPro) {
+            self.proLabel.centerY =  self.useLabel.centerY;
+            self.proLabel.left = self.stayLabel.right + 5;
+            self.dateLabel.centerY = self.useLabel.centerY;
+            self.dateLabel.left = self.proLabel.right + 5;
+        } else {
+            self.dateLabel.centerY = self.useLabel.centerY;
+            self.dateLabel.left = self.stayLabel.right + 5;
+        }
+    }
+    
     [self sigImageView];
     [self extensionLabel];
     [self nameTitleLabel];
@@ -128,9 +154,10 @@
 - (void)confirmInviteCard {
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-        [[API shared]  queryPath:@"/invite-task/init"
-                            pro:isPro
-                       deviceId:DeviceHelper.uuid
+    if(isPro) {
+        [[API shared]  queryPath:@"/gift-task/init"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
                              biz:@{
             @"name" : _nameLabel.text,
             @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",
@@ -146,12 +173,37 @@
                                                                  }                                                     forKey:@"default_invite"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 [self.navigationController.slideController dismiss];
-    
+                
                 NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
                 [[NSNotificationCenter defaultCenter]postNotification:notification];
             });
-                
         }];
+    } else {
+        [[API shared]  queryPath:@"/invite-task/init"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
+                             biz:@{
+            @"name" : _nameLabel.text,
+            @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",
+            @"color":_colorStr.length > 0?_colorStr:[self hexFromUIColor:FCStyle.accent]
+        }
+                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@{@"image":_defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",@"color":_colorStr.length > 0? _colorStr:@"",
+                                                                   @"name":_textField.text
+                                                                 }                                                     forKey:@"default_invite"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [self.navigationController.slideController dismiss];
+                
+                NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+            });
+            
+        }];
+    }
  
         
 }
@@ -187,6 +239,10 @@
     [self.sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:randomColor]];
     self.extensionLabel.textColor = randomColor;
     self.colorView.backgroundColor = randomColor;
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    if (![[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.dateLabel.textColor =randomColor;
+    }
 }
 
 - (void)resetColor {
@@ -198,6 +254,9 @@
     [self.sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:randomColor]];
     self.extensionLabel.textColor = randomColor;
     self.colorView.backgroundColor = randomColor;
+    if (![[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        self.dateLabel.textColor =randomColor;
+    }
 }
 
 - (UIColor *)randomTintColor {
@@ -272,7 +331,7 @@
 - (UILabel *)nameLabel {
     if(_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 200, 28)];
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _nameLabel.textColor =  UIColorFromRGB(_color);
         } else {
             _nameLabel.textColor = FCStyle.accent;
@@ -306,12 +365,12 @@
     if(nil == _useLabel) {
         _useLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 300, 22)];
         _useLabel.font = FCStyle.footnote;
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _useLabel.textColor =  UIColorFromRGB(_color);
         } else {
             _useLabel.textColor = FCStyle.accent;
         }
-        _useLabel.text = NSLocalizedString(@"Iuse",@"");
+        _useLabel.text = NSLocalizedString(@"IUseStay",@"");
         [_useLabel sizeToFit];
         _useLabel.top = self.nameLabel.bottom + 9;
         [self.inviteView addSubview:_useLabel];
@@ -322,7 +381,7 @@
 - (UILabel *)stayLabel {
     if(nil == _stayLabel){
         _stayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 44, 22)];
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _stayLabel.backgroundColor =  UIColorFromRGB(_color);
         } else {
             _stayLabel.backgroundColor = FCStyle.accent;
@@ -343,7 +402,7 @@
 - (UIImageView *)sigImageView {
     if(nil == _sigImageView) {
         _sigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 19)];
-        [_sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:_color != NULL?UIColorFromRGB(_color):FCStyle.accent]];
+        [_sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:_color.length > 0?UIColorFromRGB(_color):FCStyle.accent]];
         [self.inviteView addSubview:_sigImageView];
         _sigImageView.top = self.stayLabel.bottom;
         _sigImageView.left = self.stayLabel.right - 7;
@@ -356,7 +415,7 @@
     if(nil == _extensionLabel) {
         _extensionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 19)];
         _extensionLabel.font = FCStyle.footnoteBold;
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _extensionLabel.textColor =  UIColorFromRGB(_color);
         } else {
             _extensionLabel.textColor = FCStyle.accent;
@@ -443,7 +502,7 @@
         _colorView.layer.masksToBounds = YES;
         _colorView.layer.borderColor = FCStyle.borderColor.CGColor;
         _colorView.layer.borderWidth = 1;
-        if(_color == NULL) {
+        if(_color.length <= 0) {
             _colorView.backgroundColor = FCStyle.accent;
         } else {
             _colorView.backgroundColor = UIColorFromRGB(_color);
@@ -459,7 +518,7 @@
         _colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, 0, 44, 18)];
         _colorLabel.font = FCStyle.subHeadlineBold;
         _colorLabel.textColor = FCStyle.subtitleColor;
-        _colorLabel.text = NSLocalizedString(@"Cover",@"");
+        _colorLabel.text = NSLocalizedString(@"Color",@"");
         [self.view addSubview:_colorLabel];
         _colorLabel.centerY = self.colorView.centerY;
         _colorLabel.left =self.colorView.right + 5;
@@ -506,6 +565,46 @@
     return _confirmBtn;
 }
 
+- (UILabel *)proLabel{
+    if (nil == _proLabel){
+        _proLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 15)];
+        _proLabel.backgroundColor = FCStyle.backgroundGolden;
+        _proLabel.font = [UIFont boldSystemFontOfSize:10];
+        _proLabel.text = @"PRO";
+        _proLabel.layer.borderWidth = 1;
+        _proLabel.layer.borderColor = FCStyle.borderGolden.CGColor;
+        _proLabel.layer.cornerRadius = 5;
+        _proLabel.textAlignment = NSTextAlignmentCenter;
+        _proLabel.textColor = FCStyle.fcGolden;
+        _proLabel.clipsToBounds = YES;
+        [self.inviteView addSubview:_proLabel];
+
+    }
+    
+    return _proLabel;
+}
+
+- (UILabel *)dateLabel {
+    if(nil == _dateLabel) {
+        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+        if(self.detail.color.length > 0) {
+            _dateLabel.textColor =  UIColorFromRGB(self.detail.color);
+        } else {
+            _dateLabel.textColor = FCStyle.accent;
+        }
+        _dateLabel.font = FCStyle.footnoteBold;
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
+
+        //设置：在0-3个单位长度内的内容显示成红色
+        [str addAttribute:NSFontAttributeName value:FCStyle.footnote range:NSMakeRange(0, 5)];
+        _dateLabel.attributedText = str;
+        [self.inviteView addSubview:_dateLabel];
+
+    }
+    return _dateLabel;
+}
 
 - (NSString *)hexFromUIColor:(UIColor *)color
 {

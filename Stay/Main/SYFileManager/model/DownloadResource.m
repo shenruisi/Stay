@@ -30,6 +30,8 @@
     copyed.useInfo = [self.useInfo copy];
     copyed.audioUrl = [self.audioUrl copy];
     copyed.protect = self.protect;
+    copyed.qualityLabel = [self.qualityLabel copy];
+
     return copyed;
 }
 

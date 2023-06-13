@@ -369,7 +369,7 @@ InviteRuleDesc="Share the link below with your friends. When your friend opens t
 HowToInvite="How to invite?";
 HowToInviteDesc="Checkout online document";
 GenerateCard="Generate Card";
-ASafariExtension="A Safari Extension";
+ASafariExtension="Safari浏览器扩展";
 inviteTipsPro="Scan to get gift points";
 inviteTips="Scan to download Stay on the AppStore";
 ShareCard="Share Card";
@@ -385,8 +385,12 @@ HowToGiftDesc="Checkout online document";
 GiftRule="Gift Rule";
 GiftRuleDesc="Since you are a Stay pro user, you have 100 Stay points that can be given to 5 of your friends for free. No matter whether your friend is already a Stay user or not, as long as your friend is not a Stay Pro user, your friend can get 20 Stay points for free. points.";
 
+
 EnterCode="输入邀请/礼物码";
 PointsUsedFor="点数有什么作用？";
 PasteFromClipboard="从剪贴板粘贴";
 GetPoints="获取点数";
 NoCodeSkip="没有邀请/礼物码，跳过";
+GiftYourPoint="Gift Your Points to Friends";
+UserLeft="Users Left";
+IUseStay="我从";

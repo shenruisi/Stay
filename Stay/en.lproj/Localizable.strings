@@ -390,6 +390,9 @@ PointsUsedFor="What are points used for?";
 PasteFromClipboard="Paste from clipboard";
 GetPoints="Get Points";
 NoCodeSkip="No invitation/gift code, skip";
+GiftYourPoint="Gift Your Points to Friends";
+UserLeft="Users Left";
+IUseStay="I use";
 
 
 

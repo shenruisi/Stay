@@ -387,3 +387,6 @@ EnterCode="輸入邀請/禮物碼";
 PasteFromClipboard="從剪貼板粘貼";
 GetPoints="獲取點數";
 NoCodeSkip="沒有邀請/禮物碼，跳過";
+GiftYourPoint="Gift Your Points to Friends";
+UserLeft="Users Left";
+IUseStay="I use";
