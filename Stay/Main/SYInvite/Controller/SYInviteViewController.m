@@ -91,6 +91,7 @@
 @property (nonatomic, strong) UIButton *addBtn;
 @property (nonatomic, strong) UILabel *proLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
+@property (nonatomic, strong) UINavigationController *nav;
 @end
 
 @implementation InviteImageView
@@ -379,7 +380,14 @@
 
 
 - (void)shareImage:(UIButton *)sender{
+    UIGraphicsBeginImageContextWithOptions(self.inviteView.bounds.size, NO, [UIScreen mainScreen].scale);
+   [self.inviteView drawViewHierarchyInRect:self.inviteView.bounds afterScreenUpdates:YES];
+   UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+   UIGraphicsEndImageContext();
     
+    UIActivityViewController *activityController=[[UIActivityViewController alloc]initWithActivityItems:@[image] applicationActivities:nil];
+        [self.nav presentViewController:activityController animated:YES completion:nil];
+
 }
 
  -(void)generatingTwoDimensionalCode {
@@ -878,6 +886,7 @@ UITableViewDataSource
         _inviteImageView.backgroundColor = FCStyle.fcWhite;
         _inviteImageView.layer.cornerRadius = 10;
         _inviteImageView.layer.masksToBounds = YES;
+        _inviteImageView.nav = self.navigationController;
     }
     return _inviteImageView;
 }
