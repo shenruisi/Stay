@@ -45,6 +45,7 @@ static FCConfig *k_config = nil;
             if (deviceID.length == 0){
                 deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
                 [DeviceHelper saveUUID:deviceID];
+                [self setBoolValueOfKey:GroupUserDefaultsKeyNewDevice value:YES setWhenNil:YES];
             }
         }
         [self setStringValueOfKey:GroupUserDefaultsKeyDeviceUUID value:deviceID setWhenNil:YES];
