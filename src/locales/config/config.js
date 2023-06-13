@@ -97,7 +97,7 @@ export default {
     'blocker_info': '标记内容拦截器未开启',
     'web_tag': '标记',
     'tag_rules': '规则',
-    'trusted': '受信站点',
+    'trusted': '信任站点',
     'rule_note': '在当前网页上生效的标记规则'
   },
   "zh_HK": {
@@ -147,7 +147,7 @@ export default {
     'blocker_info': '標記內容攔截器未開啟',
     'web_tag': '標記',
     'tag_rules': '規則',
-    'trusted': '受信站點',
+    'trusted': '信任站點',
     'rule_note': '在當前網頁上生效的標記規則'
   }
 }
