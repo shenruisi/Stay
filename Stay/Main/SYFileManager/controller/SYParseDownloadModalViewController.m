@@ -624,7 +624,7 @@
             float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
             
             if(point >= downloadNeedPoint) {
-                
+                [DeviceHelper consumePoints:downloadNeedPoint];
             } else {
                 SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
                 cer.nav = self.nav;

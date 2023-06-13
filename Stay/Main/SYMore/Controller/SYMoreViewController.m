@@ -545,7 +545,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
-@property (nonatomic, assign) NSUInteger leftPointCount;
+@property (nonatomic, assign) CGFloat leftPointCount;
 @end
 
 @implementation SYMoreViewController
@@ -597,12 +597,17 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                  completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
         NSLog(@"%@",biz);
         
+//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+//            _leftPointCount =  [biz[@"gift_points"] integerValue];
+//        } else {
+//            _leftPointCount = [biz[@"point"] integerValue];
+//        }
         if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
-            _leftPointCount =  [biz[@"gift_points"] integerValue];
+            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
         } else {
-            _leftPointCount = [biz[@"point"] integerValue];
+            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
         }
-        
+//
         dispatch_async(dispatch_get_main_queue(), ^{
             self.dataSource = nil;
             [self.tableView reloadData];
@@ -909,7 +914,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"section":NSLocalizedString(@"StayPoint",@""),
                 @"cells":@[
                     @{
-                        @"title":[NSString stringWithFormat:@"%ld Point(s)",_leftPointCount] ,
+                        @"title":[NSString stringWithFormat:@"%lf Point(s)",_leftPointCount] ,
                         @"icon":@"InviteImage",
                       @"type":@"stayPoint",
                     }
