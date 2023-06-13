@@ -128,9 +128,10 @@
 - (void)confirmInviteCard {
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-        [[API shared]  queryPath:@"/invite-task/init"
-                            pro:isPro
-                       deviceId:DeviceHelper.uuid
+    if(isPro) {
+        [[API shared]  queryPath:@"/gift-task/init"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
                              biz:@{
             @"name" : _nameLabel.text,
             @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",
@@ -146,12 +147,37 @@
                                                                  }                                                     forKey:@"default_invite"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 [self.navigationController.slideController dismiss];
-    
+                
                 NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
                 [[NSNotificationCenter defaultCenter]postNotification:notification];
             });
-                
         }];
+    } else {
+        [[API shared]  queryPath:@"/invite-task/init"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
+                             biz:@{
+            @"name" : _nameLabel.text,
+            @"cover" : _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",
+            @"color":_colorStr.length > 0?_colorStr:[self hexFromUIColor:FCStyle.accent]
+        }
+                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@{@"image":_defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png",@"color":_colorStr.length > 0? _colorStr:@"",
+                                                                   @"name":_textField.text
+                                                                 }                                                     forKey:@"default_invite"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [self.navigationController.slideController dismiss];
+                
+                NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
+                [[NSNotificationCenter defaultCenter]postNotification:notification];
+            });
+            
+        }];
+    }
  
         
 }
@@ -272,7 +298,7 @@
 - (UILabel *)nameLabel {
     if(_nameLabel == nil) {
         _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 200, 28)];
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _nameLabel.textColor =  UIColorFromRGB(_color);
         } else {
             _nameLabel.textColor = FCStyle.accent;
@@ -306,7 +332,7 @@
     if(nil == _useLabel) {
         _useLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 300, 22)];
         _useLabel.font = FCStyle.footnote;
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _useLabel.textColor =  UIColorFromRGB(_color);
         } else {
             _useLabel.textColor = FCStyle.accent;
@@ -322,7 +348,7 @@
 - (UILabel *)stayLabel {
     if(nil == _stayLabel){
         _stayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 44, 22)];
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _stayLabel.backgroundColor =  UIColorFromRGB(_color);
         } else {
             _stayLabel.backgroundColor = FCStyle.accent;
@@ -343,7 +369,7 @@
 - (UIImageView *)sigImageView {
     if(nil == _sigImageView) {
         _sigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 19)];
-        [_sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:_color != NULL?UIColorFromRGB(_color):FCStyle.accent]];
+        [_sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:_color.length > 0?UIColorFromRGB(_color):FCStyle.accent]];
         [self.inviteView addSubview:_sigImageView];
         _sigImageView.top = self.stayLabel.bottom;
         _sigImageView.left = self.stayLabel.right - 7;
@@ -356,7 +382,7 @@
     if(nil == _extensionLabel) {
         _extensionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 19)];
         _extensionLabel.font = FCStyle.footnoteBold;
-        if(_color != NULL) {
+        if(_color.length > 0) {
             _extensionLabel.textColor =  UIColorFromRGB(_color);
         } else {
             _extensionLabel.textColor = FCStyle.accent;
@@ -443,7 +469,7 @@
         _colorView.layer.masksToBounds = YES;
         _colorView.layer.borderColor = FCStyle.borderColor.CGColor;
         _colorView.layer.borderWidth = 1;
-        if(_color == NULL) {
+        if(_color.length <= 0) {
             _colorView.backgroundColor = FCStyle.accent;
         } else {
             _colorView.backgroundColor = UIColorFromRGB(_color);

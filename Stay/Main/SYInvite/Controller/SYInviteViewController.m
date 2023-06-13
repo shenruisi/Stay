@@ -17,6 +17,7 @@
 #import "UIImageView+WebCache.h"
 #import "ImageHelper.h"
 #import "FCStore.h"
+#import "SharedStorageManager.h"
 
 @interface ShareLinkView:UIView
 @property (nonatomic, strong) NSString *linkStr;
@@ -486,25 +487,48 @@ UITableViewDataSource
                                                object:nil];
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-    [[API shared]  queryPath:@"/invite-task/detail"
-                        pro:isPro
-                   deviceId:DeviceHelper.uuid
-                        biz:nil
-                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        if(biz != NULL) {
-            InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-            if(inviteDetail.inviteCode.length > 0) {
-                self.started = true;
+    if(!isPro) {
+        
+        [[API shared]  queryPath:@"/invite-task/detail"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
+                             biz:nil
+                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            if(biz != NULL) {
+                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+                if(inviteDetail.inviteCode.length > 0) {
+                    self.started = true;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    self.inviteView.titleArray = inviteDetail.process;
+                    _detail = inviteDetail;
+                    [self.tableView reloadData];
+                    [self.inviteView updateProgress:0.5];
+                });
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
-
-                self.inviteView.titleArray = inviteDetail.process;
-                _detail = inviteDetail;
-                [self.tableView reloadData];
-                [self.inviteView updateProgress:0.5];
-            });
-        }
-    }];
+        }];
+    } else {
+        [[API shared]  queryPath:@"/gift-task/detail"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
+                             biz:nil
+                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            if(biz != NULL) {
+                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+                if(inviteDetail.inviteCode.length > 0) {
+                    self.started = true;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    self.inviteView.titleArray = inviteDetail.process;
+                    _detail = inviteDetail;
+                    [self.tableView reloadData];
+                    [self.inviteView updateProgress:0.5];
+                });
+            }
+        }];
+    }
     
       
     
@@ -514,27 +538,51 @@ UITableViewDataSource
 - (void)saveInviteSuccess:(NSNotification *)sender{
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-    [[API shared]  queryPath:@"/invite-task/detail"
-                        pro:isPro
-                   deviceId:DeviceHelper.uuid
-                        biz:nil
-                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        NSLog(@"%@",biz);
-        
-        if(biz != NULL) {
-            InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-            if(inviteDetail.inviteCode.length > 0) {
-                self.started = true;
+    if(isPro) {
+        [[API shared]  queryPath:@"/gift-task/detail"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
+                             biz:nil
+                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            NSLog(@"%@",biz);
+            
+            if(biz != NULL) {
+                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+                if(inviteDetail.inviteCode.length > 0) {
+                    self.started = true;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    self.inviteView.titleArray = inviteDetail.process;
+                    _detail = inviteDetail;
+                    [self.tableView reloadData];
+                    [self.inviteView updateProgress:0.5];
+                });
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
-
-                self.inviteView.titleArray = inviteDetail.process;
-                _detail = inviteDetail;
-                [self.tableView reloadData];
-                [self.inviteView updateProgress:0.5];
-            });
-        }
-    }];
+        }];
+    } else {
+        [[API shared]  queryPath:@"/invite-task/detail"
+                             pro:isPro
+                        deviceId:DeviceHelper.uuid
+                             biz:nil
+                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            NSLog(@"%@",biz);
+            
+            if(biz != NULL) {
+                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+                if(inviteDetail.inviteCode.length > 0) {
+                    self.started = true;
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    self.inviteView.titleArray = inviteDetail.process;
+                    _detail = inviteDetail;
+                    [self.tableView reloadData];
+                    [self.inviteView updateProgress:0.5];
+                });
+            }
+        }];
+    }
 }
 
 
@@ -577,8 +625,24 @@ UITableViewDataSource
             [cell.contentView addSubview:self.inviteRulesView];
             self.inviteRulesView.top = self.inviteView.bottom + 21;
         } else {
+            [cell.contentView addSubview:self.proPointLabel];
+            self.proPointLabel.centerX = self.view.width / 2;
+            self.proPointLabel.top = self.iconImageView.bottom + 16;
+            
+            self.proInviteLeftLabel.text = [NSString stringWithFormat:@"%ld/%ld %@",_detail.rest,_detail.total,NSLocalizedString(@"UserLeft", @"")];
+            
+            
+            [cell.contentView addSubview:self.proInviteLeftLabel];
+            
+            self.proInviteLeftLabel.centerX = self.proPointLabel.centerX;
+            self.proInviteLeftLabel.top = self.proPointLabel.bottom + 16;
+            
+            [cell.contentView addSubview:self.proGiftTitleLabel];
+            
+            self.proGiftTitleLabel.top = self.proInviteLeftLabel.bottom + 19;
+            
             [cell.contentView addSubview:self.inviteRulesView];
-            self.inviteRulesView.top = self.inviteView.bottom + 16;
+            self.inviteRulesView.top = self.proGiftTitleLabel.bottom + 16;
         }
         [cell.contentView addSubview:self.howToInviteView];
         self.howToInviteView.top = self.inviteRulesView.bottom + 15;
@@ -745,6 +809,38 @@ UITableViewDataSource
 }
 
 
+- (UILabel *)proPointLabel {
+    if(nil == _proPointLabel) {
+        _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
+        _proPointLabel.text = [NSString stringWithFormat:@"%@ Points",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description];
+        _proPointLabel.font = FCStyle.title3Bold;
+        _proPointLabel.textColor = FCStyle.accent;
+        _proPointLabel.textAlignment = NSTextAlignmentCenter;
+        
+    }
+    return _proPointLabel;
+}
+
+- (UILabel *)proInviteLeftLabel {
+    if(nil == _proInviteLeftLabel) {
+        _proInviteLeftLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 21)];
+        _proInviteLeftLabel.textAlignment = NSTextAlignmentCenter;
+        _proInviteLeftLabel.font = FCStyle.headlineBold;
+        _proInviteLeftLabel.textColor = FCStyle.fcBlack;
+
+    }
+    return _proInviteLeftLabel;
+}
+
+- (UILabel *)proGiftTitleLabel {
+    if(nil == _proGiftTitleLabel) {
+        _proGiftTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 200, 18)];
+        _proGiftTitleLabel.text = NSLocalizedString(@"GiftYourPoint", @"");
+        _proGiftTitleLabel.font = FCStyle.subHeadlineBold;
+        _proGiftTitleLabel.textColor = FCStyle.subtitleColor;
+    }
+    return _proGiftTitleLabel;
+}
 
 - (void)shareLink:(UIButton *)sender {
     //分享的url

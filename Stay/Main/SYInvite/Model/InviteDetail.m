@@ -23,6 +23,8 @@
     inviteDtail.taskId = jsonObject[@"task_id"];
     inviteDtail.visitedCount = [jsonObject[@"visited_count"] integerValue];
     inviteDtail.color = jsonObject[@"color"];
+    inviteDtail.rest = [jsonObject[@"rest"] integerValue];
+    inviteDtail.total = [jsonObject[@"total"] integerValue];
 
     return inviteDtail;
 }

@@ -724,6 +724,8 @@
 		84B635172978BF200000DAF1 /* SYDownloadPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */; };
 		84B6351A2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */; };
 		84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */; };
+		84B887062A3838CF00FA8EEF /* SYInviteTaskSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B887052A3838CF00FA8EEF /* SYInviteTaskSlideController.m */; };
+		84B887072A3838CF00FA8EEF /* SYInviteTaskSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B887052A3838CF00FA8EEF /* SYInviteTaskSlideController.m */; };
 		84BA56F62944BC5D00FD4446 /* SYProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA56F52944BC5D00FD4446 /* SYProgress.m */; };
 		84BA56F72944BC5D00FD4446 /* SYProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA56F52944BC5D00FD4446 /* SYProgress.m */; };
 		84BA9D13292B11CF00BB28A7 /* SYWebsiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA9D12292B11CF00BB28A7 /* SYWebsiteViewController.m */; };
@@ -1626,6 +1628,8 @@
 		84B635152978BF200000DAF1 /* SYDownloadPreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadPreviewController.m; sourceTree = "<group>"; };
 		84B635182978BF660000DAF1 /* SYDownloadPreviewModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYDownloadPreviewModalViewController.h; sourceTree = "<group>"; };
 		84B635192978BF660000DAF1 /* SYDownloadPreviewModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYDownloadPreviewModalViewController.m; sourceTree = "<group>"; };
+		84B887042A3838CF00FA8EEF /* SYInviteTaskSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYInviteTaskSlideController.h; sourceTree = "<group>"; };
+		84B887052A3838CF00FA8EEF /* SYInviteTaskSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYInviteTaskSlideController.m; sourceTree = "<group>"; };
 		84BA56F42944BC5D00FD4446 /* SYProgress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYProgress.h; sourceTree = "<group>"; };
 		84BA56F52944BC5D00FD4446 /* SYProgress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYProgress.m; sourceTree = "<group>"; };
 		84BA9D11292B11CE00BB28A7 /* SYWebsiteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYWebsiteViewController.h; sourceTree = "<group>"; };
@@ -3484,6 +3488,8 @@
 				84FE3A2A2A283B26007E9F52 /* SYInviteCardController.m */,
 				84FE3A2D2A283B45007E9F52 /* SYInviteCardModelController.h */,
 				84FE3A2E2A283B45007E9F52 /* SYInviteCardModelController.m */,
+				84B887042A3838CF00FA8EEF /* SYInviteTaskSlideController.h */,
+				84B887052A3838CF00FA8EEF /* SYInviteTaskSlideController.m */,
 				8410091B2A36C7D3007F6B8A /* SYInviteTaskController.h */,
 				8410091C2A36C7D3007F6B8A /* SYInviteTaskController.m */,
 			);
@@ -4621,6 +4627,7 @@
 				58F196412A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */,
 				583B541529DD504500CB292A /* FCNavigationBar.m in Sources */,
 				5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */,
+				84B887062A3838CF00FA8EEF /* SYInviteTaskSlideController.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
 				58FEB1E7283B563000BC2A92 /* FCRoundedShadowView.m in Sources */,
@@ -4759,6 +4766,7 @@
 				582061E1294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
 				5882024F2859E73900B2721A /* SYDetailViewController.m in Sources */,
 				8460E47529925AAD008BC7D0 /* SYSubmitScriptSlideController.m in Sources */,
+				84B887072A3838CF00FA8EEF /* SYInviteTaskSlideController.m in Sources */,
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
 				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
