@@ -380,8 +380,8 @@
 
 
 - (void)shareImage:(UIButton *)sender{
-    UIGraphicsBeginImageContextWithOptions(self.inviteView.bounds.size, NO, [UIScreen mainScreen].scale);
-   [self.inviteView drawViewHierarchyInRect:self.inviteView.bounds afterScreenUpdates:YES];
+    UIGraphicsBeginImageContextWithOptions(self.backView.bounds.size, NO, [UIScreen mainScreen].scale);
+   [self.backView drawViewHierarchyInRect:self.backView.bounds afterScreenUpdates:YES];
    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
    UIGraphicsEndImageContext();
     
