@@ -883,6 +883,13 @@ UIDocumentPickerDelegate
                     defaultManager = [NSFileManager defaultManager];
                     [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
                 } else {
+                    
+                    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+
+                    if(!isPro){
+                        float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+                        [DeviceHelper rollbackPoints:downloadNeedPoint];
+                    }
                     [[DownloadManager shared] remove:downloadResource.downloadUuid];
                 }
                 [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
