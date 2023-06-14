@@ -16,6 +16,7 @@
 #import "FCStore.h"
 #import "DeviceHelper.h"
 #import "AlertHelper.h"
+#import "FCConfig.h"
 
 @protocol _CommitCodeTextFieldDelegate;
 @interface _CommitCodeTextField : UITextField
@@ -55,14 +56,6 @@
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
     return NO;
-//    if ([NSStringFromSelector(action) isEqualToString:@"select:"]
-//        ||[NSStringFromSelector(action) isEqualToString:@"selectAll:"]
-//        ||[NSStringFromSelector(action) isEqualToString:@"copy:"]
-//        ||[NSStringFromSelector(action) isEqualToString:@"cut:"]
-//        ||[NSStringFromSelector(action) isEqualToString:@"_share:"]){
-//        return NO;
-//    }
-//    return [super canPerformAction:action withSender:sender];
 }
 
 - (BOOL)becomeFirstResponder{
@@ -77,10 +70,6 @@
     return [super resignFirstResponder];
 }
 
-//- (CGRect)caretRectForPosition:(UITextPosition *)position{
-//    CGRect caretRect = [super caretRectForPosition:position];
-//    return CGRectMake((self.width-caretRect.size.width)/2, caretRect.origin.y, caretRect.size.width, caretRect.size.height);
-//}
 @end
 
 @interface CommitCodeModalViewController()<
@@ -282,25 +271,29 @@
                         biz:@{
         @"code": code
     } completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        [self.navigationController.slideController stopLoading];
-        [button stopLoading];
-        if (statusCode == 200){
-            CommitCodeSucceedModalViewController *cer = [[CommitCodeSucceedModalViewController alloc] init];
-            cer.pointValue = 20;
-            [self.navigationController pushModalViewController:cer];
-        }
-        else{
-            if (statusCode == 404 || statusCode == 409){
-                [AlertHelper simpleWithTitle:NSLocalizedString(@"Error", @"")
-                                     message:NSLocalizedString(server[@"message"] ? server[@"message"] : @"CodeNotFound", @"")
-                                       inCer:self.navigationController.slideController.baseCer];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.navigationController.slideController stopLoading];
+            [button stopLoading];
+            if (statusCode == 200){
+                [[FCConfig shared] setBoolValueOfKey:GroupUserDefaultsKeyNewDevice value:NO];
+                CommitCodeSucceedModalViewController *cer = [[CommitCodeSucceedModalViewController alloc] init];
+                cer.pointValue = [biz[@"point_value"] integerValue];
+                [self.navigationController pushModalViewController:cer];
+                
             }
             else{
-                [AlertHelper simpleWithTitle:NSLocalizedString(@"Error", @"")
-                                     message:[error localizedDescription]
-                                       inCer:self.navigationController.slideController.baseCer];
+                if (statusCode == 404 || statusCode == 409){
+                    [AlertHelper simpleWithTitle:NSLocalizedString(@"Error", @"")
+                                         message:NSLocalizedString(server[@"message"] ? server[@"message"] : @"CodeNotFound", @"")
+                                           inCer:self.navigationController.slideController.baseCer];
+                }
+                else{
+                    [AlertHelper simpleWithTitle:NSLocalizedString(@"Error", @"")
+                                         message:[error localizedDescription]
+                                           inCer:self.navigationController.slideController.baseCer];
+                }
             }
-        }
+        });
     }];
 }
 
@@ -333,6 +326,7 @@
 
 - (void)dismissAction:(id)sender{
     [self.navigationController.slideController dismiss];
+    [[FCConfig shared] setBoolValueOfKey:GroupUserDefaultsKeyNewDevice value:NO];
 }
 
 - (void)nextResponse:(_CommitCodeTextField *)textField{
