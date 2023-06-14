@@ -460,7 +460,7 @@
     self.startButton.layer.borderColor = isEnable ? FCStyle.accent.CGColor : FCStyle.borderColor.CGColor;
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):NSLocalizedString(@"ConsumePoint", @"")
+    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""): [NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                      attributes:@{
                                 NSForegroundColorAttributeName : isEnable ? FCStyle.accent : [UIColor systemGray3Color],
                                  NSFontAttributeName : FCStyle.bodyBold}]
@@ -574,7 +574,7 @@
         }
         [self.emptyView setHidden:YES];
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-        [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):NSLocalizedString(@"ConsumePoint", @"")
+        [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):[NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]

@@ -255,7 +255,7 @@
         _startDownloadButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro? NSLocalizedString(@"StartDownload", @""):NSLocalizedString(@"ConsumePoint", @"")
+        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro? NSLocalizedString(@"StartDownload", @""):[NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
@@ -449,7 +449,6 @@
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.backgroundColor = FCStyle.popup;
         [self.view addSubview:_tableView];
-        
         [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
         [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
         [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];

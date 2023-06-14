@@ -80,6 +80,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    self.navigationBar.showCancel = YES;
     self.colorStr = self.color;
     self.firstImageStr = _defaultImage.length > 0?_defaultImage:@"https://res.stayfork.app/covers/rainbow.png";
     self.hideNavigationBar = NO;
@@ -555,7 +556,7 @@
         [_confirmBtn setTitle:NSLocalizedString(@"Confirm",@"") forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_confirmBtn addTarget:self action:@selector(confirmInviteCard) forControlEvents:UIControlEventTouchUpInside];
-
+        _confirmBtn.font = FCStyle.bodyBold;
         _confirmBtn.layer.borderColor = FCStyle.accent.CGColor;
         _confirmBtn.layer.borderWidth = 1;
         _confirmBtn.layer.cornerRadius = 10;
