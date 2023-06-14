@@ -411,7 +411,7 @@
     shareIconImageView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
     shareIconImageView.clipsToBounds = YES;
     [shareInviteView addSubview:shareIconImageView];
-    UILabel *shareNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 200, 28)];
+    UILabel *shareNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 28)];
     if(self.detail.color.length > 0 ) {
         shareNameLabel.textColor =  UIColorFromRGB(self.detail.color );
     } else {
@@ -423,7 +423,7 @@
     [shareInviteView addSubview:shareNameLabel];
     
     
-    UILabel *shareUseLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 300, 22)];
+    UILabel *shareUseLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 300, 22)];
     shareUseLabel.font = FCStyle.footnote;
     if(self.detail.color.length > 0 ) {
         shareUseLabel.textColor =  UIColorFromRGB(self.detail.color);
@@ -533,7 +533,7 @@
     }
     
     
-    UIImageView *shareQrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 48, 48)];
+    UIImageView *shareQrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 0, 48, 48)];
     [shareInviteView addSubview:shareQrCodeImageView];
     shareQrCodeImageView.bottom = 450;
     if(self.detail.link.length > 0) {
