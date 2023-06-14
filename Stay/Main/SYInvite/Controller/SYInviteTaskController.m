@@ -185,6 +185,19 @@ UITableViewDataSource
     self.pointRules.centerX = self.subButton.centerX;
 }
 
+- (void)howPoint {
+    NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
+    
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        if (FCDeviceTypeIPhone == DeviceHelper.type){
+            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
+            [self.nav presentViewController:safariVc animated:YES completion:nil];
+        }
+#endif
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -376,6 +389,9 @@ UITableViewDataSource
         _pointRules.textColor = FCStyle.accent;
         _pointRules.font = FCStyle.bodyBold;
         _pointRules.textAlignment = NSTextAlignmentCenter;
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(howPoint)];
+        [_pointRules addGestureRecognizer:gesture];
         [self.view addSubview:_pointRules];
 
     }

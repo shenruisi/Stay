@@ -104,7 +104,7 @@
     return self;
 }
 - (void)setupUI {
-    
+    self.tipsLabel = nil;
     self.dateLabel = nil;
     self.qrCodeImageView = nil;
     self.extensionLabel = nil;
@@ -123,7 +123,7 @@
     [self nameLabel];
 
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
         NSString *userStr = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
         NSMutableAttributedString *userStrAttr = [[NSMutableAttributedString alloc]initWithString:userStr];
         NSRange range = [userStr rangeOfString:_detail.sinceCn];

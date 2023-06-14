@@ -132,6 +132,7 @@
 
 - (void)randomImage
 {
+    [self.textField resignFirstResponder];
     NSUInteger randomIndex = arc4random_uniform((uint32_t)self.imageList.count);
     _defaultImage = self.imageList[randomIndex];
     [self.iconImageView sd_setImageWithURL:self.defaultImage placeholderImage:nil options:0 context:nil progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
@@ -211,6 +212,8 @@
 
 - (void)resetImage
 {
+    [self.textField resignFirstResponder];
+
     _defaultImage = self.firstImageStr;
     [self.iconImageView sd_setImageWithURL:self.defaultImage placeholderImage:nil options:0 context:nil progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -231,6 +234,8 @@
 }
 
 - (void)randomColor {
+    [self.textField resignFirstResponder];
+
     UIColor *randomColor = [self randomTintColor];
     NSString *hexString = [self hexFromUIColor:randomColor];
     _colorStr = hexString;
@@ -247,6 +252,7 @@
 }
 
 - (void)resetColor {
+    [self.textField resignFirstResponder];
     _colorStr = _color.length > 0?_color:[self hexFromUIColor:FCStyle.accent];
     UIColor *randomColor = UIColorFromRGB(_colorStr);
     self.nameLabel.textColor = randomColor;
@@ -355,6 +361,8 @@
         _textField.top = self.nameTitleLabel.bottom + 10;
         _textField.layer.cornerRadius = 10;
         _textField.clipsToBounds = YES;
+        _textField.layer.borderWidth = 1;
+        _textField.layer.borderColor = FCStyle.borderColor.CGColor;
         _textField.text = self.defaultName;
         [_textField addTarget:self action:@selector(textChange) forControlEvents:UIControlEventEditingChanged];
         [self.view addSubview:_textField];
