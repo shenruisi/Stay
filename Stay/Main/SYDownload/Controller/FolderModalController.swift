@@ -354,7 +354,7 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
         if mySwitch.isOn {
             if FCStore.shared().getPlan(false) == FCPlan.none {
                 upgradeController = UpgradeModalViewController()
-                upgradeController?.message = NSLocalizedString("UpgradeMessage", comment: "")
+                upgradeController?.message = NSLocalizedString("FaceID", comment: "")
                 navigationController?.push(upgradeController!)
                 
                 mySwitch.isOn = false
