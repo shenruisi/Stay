@@ -1409,7 +1409,7 @@ const browser = __b;
           if(typeof canTagAdConfig.tag_ad != 'undefined' && (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
             // 没有可用点数
             let prompt = i18nProp['not_enough'];
-            createAndShowAlert(prompt, ()=>{
+            showConfirmModal(prompt, ()=>{
               let targetGun = document.createElement('a');
               targetGun.href = 'stay://x-callback-url/pay';
               targetGun.click();
@@ -1557,7 +1557,7 @@ const browser = __b;
         if(isStayAround == 'b'){
           // show toast 消耗点数
           let prompt = i18nProp['consume_points'].replace('#', canTagAdConfig.consume_points);
-          createAndShowAlert(prompt, ()=>{
+          showConfirmModal(prompt, ()=>{
             sendSelectedTagToHandler(selDom, url, selector);
           });
         }else{
@@ -1566,6 +1566,21 @@ const browser = __b;
         // console.log('sendSelectedTagToHandler----------------', selector, url);
         resolve(true)
       })
+    }
+
+    function showConfirmModal(prompt, confirmFun){
+      const result = confirm(prompt);
+      if (result) {
+        // 用户点击了确定按钮
+        console.log('用户点击了确定按钮');
+        confirmFun();
+        // 在这里可以执行确认操作的逻辑
+      } else {
+        // 用户点击了取消按钮
+        console.log('用户点击了取消按钮');
+
+        // 在这里可以执行取消操作的逻辑
+      }
     }
 
     function createAndShowAlert(prompt, confirmFun){
