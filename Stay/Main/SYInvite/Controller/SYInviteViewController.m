@@ -104,14 +104,17 @@
 }
 - (void)setupUI {
     
-    self.iconImageView = nil;
-    self.nameLabel = nil;
-    self.useLabel = nil;
-    self.stayLabel = nil;
-    self.sigImageView = nil;
-    self.extensionLabel = nil;
-    self.qrCodeImageView = nil;
     self.dateLabel = nil;
+    self.qrCodeImageView = nil;
+    self.extensionLabel = nil;
+    self.sigImageView = nil;
+    self.stayLabel = nil;
+    self.useLabel = nil;
+    self.nameLabel = nil;
+    self.iconImageView = nil;
+
+    [self.inviteView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
     [self backView];
     [self inviteView];
     [self gradientLayer];
@@ -381,8 +384,204 @@
 
 
 - (void)shareImage:(UIButton *)sender{
-    UIGraphicsBeginImageContextWithOptions(self.backView.bounds.size, NO, [UIScreen mainScreen].scale);
-   [self.backView drawViewHierarchyInRect:self.backView.bounds afterScreenUpdates:YES];
+    UIView *shareBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,  390, 610)];
+    
+    UIView *shareInviteView = [[UIView alloc] initWithFrame:CGRectMake(50, 50, 290, 461)];
+    shareInviteView.backgroundColor = FCStyle.fcWhite;
+    shareInviteView.layer.cornerRadius = 10;
+    shareInviteView.clipsToBounds = YES;
+    [shareBackView addSubview:shareInviteView];
+    
+    
+    CAGradientLayer *shareGradientLayer = [CAGradientLayer layer];
+    shareGradientLayer.frame = shareBackView.bounds;
+    NSArray<UIColor *> *colors = FCStyle.accentGradient;
+    shareGradientLayer.colors = @[(id)colors[0].CGColor, (id)colors[1].CGColor];
+    [shareBackView.layer insertSublayer:shareGradientLayer atIndex:0];
+    
+    
+    FCImageView *shareIconImageView = [[FCImageView alloc] initWithFrame:CGRectMake(20, 21, 250, 200)];
+    if(self.detail.cover.length > 1) {
+        [shareIconImageView sd_setImageWithURL:self.detail.cover];
+    } else {
+        [shareIconImageView setImage:[UIImage imageNamed:@"rainbow"]];
+    }
+    
+    shareIconImageView.layer.cornerRadius = 10;
+    shareIconImageView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+    shareIconImageView.clipsToBounds = YES;
+    [shareInviteView addSubview:shareIconImageView];
+    UILabel *shareNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 200, 28)];
+    if(self.detail.color.length > 0 ) {
+        shareNameLabel.textColor =  UIColorFromRGB(self.detail.color );
+    } else {
+        shareNameLabel.textColor = FCStyle.accent;
+    }
+    shareNameLabel.font = [UIFont boldSystemFontOfSize:24];
+    shareNameLabel.text = self.detail.name;
+    shareNameLabel.top = shareIconImageView.bottom + 12;
+    [shareInviteView addSubview:shareNameLabel];
+    
+    
+    UILabel *shareUseLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 300, 22)];
+    shareUseLabel.font = FCStyle.footnote;
+    if(self.detail.color.length > 0 ) {
+        shareUseLabel.textColor =  UIColorFromRGB(self.detail.color);
+    } else {
+        shareUseLabel.textColor = FCStyle.accent;
+    }
+    shareUseLabel.text = NSLocalizedString(@"Iuse",@"");
+    [shareUseLabel sizeToFit];
+    shareUseLabel.top = shareNameLabel.bottom + 9;
+    [shareInviteView addSubview:shareUseLabel];
+    
+    
+    UILabel *shareStayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 44, 22)];
+    if(self.detail.color.length > 0) {
+        shareStayLabel.backgroundColor =  UIColorFromRGB(self.detail.color);
+    } else {
+        shareStayLabel.backgroundColor = FCStyle.accent;
+    }
+    shareStayLabel.textColor = FCStyle.fcWhite;
+    shareStayLabel.font = FCStyle.footnoteBold;
+    shareStayLabel.text = NSLocalizedString(@"Stay",@"");
+    shareStayLabel.layer.cornerRadius = 10;
+    shareStayLabel.clipsToBounds = YES;
+    shareStayLabel.textAlignment = NSTextAlignmentCenter;
+    [shareInviteView addSubview:shareStayLabel];
+ 
+    
+    UIImageView *shareSigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 19)];
+    [shareSigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:self.detail.color.length > 0?UIColorFromRGB(self.detail.color):FCStyle.accent]];
+    [shareInviteView addSubview:shareSigImageView];
+   
+    
+    UILabel *shareProLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 15)];
+    shareProLabel.backgroundColor = FCStyle.backgroundGolden;
+    shareProLabel.font = [UIFont boldSystemFontOfSize:10];
+    shareProLabel.text = @"PRO";
+    shareProLabel.layer.borderWidth = 1;
+    shareProLabel.layer.borderColor = FCStyle.borderGolden.CGColor;
+    shareProLabel.layer.cornerRadius = 5;
+    shareProLabel.textAlignment = NSTextAlignmentCenter;
+    shareProLabel.textColor = FCStyle.fcGolden;
+    shareProLabel.clipsToBounds = YES;
+    
+    UILabel *shareExtensionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 19)];
+    shareExtensionLabel.font = FCStyle.footnoteBold;
+    if(self.detail.color.length > 0) {
+        shareExtensionLabel.textColor =  UIColorFromRGB(self.detail.color);
+    } else {
+        shareExtensionLabel.textColor = FCStyle.accent;
+    }
+    shareExtensionLabel.text = NSLocalizedString(@"ASafariExtension",@"");
+    [shareExtensionLabel sizeToFit];
+    [shareInviteView addSubview:shareExtensionLabel];
+    shareExtensionLabel.top = shareSigImageView.bottom;
+    shareExtensionLabel.sizeToFit;
+    shareExtensionLabel.left = shareStayLabel.left;
+    
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+        shareUseLabel.text = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        [shareUseLabel sizeToFit];
+        shareStayLabel.left = shareUseLabel.right + 5;
+        shareStayLabel.centerY = shareUseLabel.centerY;
+        shareSigImageView.top = shareStayLabel.bottom;
+        shareSigImageView.left = shareStayLabel.right - 7;
+        if(isPro) {
+            [shareInviteView addSubview:shareProLabel];
+            shareProLabel.centerY =  shareUseLabel.centerY;
+            shareProLabel.left = shareUseLabel.right + 5;
+        }
+        shareExtensionLabel.top = shareSigImageView.bottom;
+        shareExtensionLabel.right = shareInviteView.width - 41;
+    } else {
+        
+        UILabel *shareDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+        if(self.detail.color.length > 0) {
+            shareDateLabel.textColor =  UIColorFromRGB(self.detail.color);
+        } else {
+            shareDateLabel.textColor = FCStyle.accent;
+        }
+        shareDateLabel.font = FCStyle.footnoteBold;
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
+
+        //设置：在0-3个单位长度内的内容显示成红色
+        [str addAttribute:NSFontAttributeName value:FCStyle.footnote range:NSMakeRange(0, 5)];
+        shareDateLabel.attributedText = str;
+        [shareInviteView addSubview:shareDateLabel];
+        
+        shareStayLabel.left = shareUseLabel.right + 5;
+        shareStayLabel.centerY = shareUseLabel.centerY;
+        shareSigImageView.top = shareStayLabel.bottom;
+        shareSigImageView.left = shareStayLabel.right - 7;
+        if(isPro) {
+            [shareInviteView addSubview:shareProLabel];
+           shareProLabel.centerY =  shareUseLabel.centerY;
+            shareProLabel.left = shareUseLabel.right + 5;
+            shareDateLabel.centerY = shareUseLabel.centerY;
+            shareDateLabel.left = shareProLabel.right + 5;
+        } else {
+            shareDateLabel.centerY = shareUseLabel.centerY;
+            shareDateLabel.left = shareStayLabel.right + 5;
+        }
+        
+        shareExtensionLabel.top = shareSigImageView.bottom;
+    }
+    
+    
+    UIImageView *shareQrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 48, 48)];
+    [shareInviteView addSubview:shareQrCodeImageView];
+    shareQrCodeImageView.bottom = 450;
+    if(self.detail.link.length > 0) {
+        shareQrCodeImageView.image = self.qrCodeImageView.image;
+    }
+    
+    UILabel *shareTipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 141, 33)];
+    shareTipsLabel.font = FCStyle.footnote;
+    shareTipsLabel.textColor = FCStyle.subtitleColor;
+    if(isPro){
+        shareTipsLabel.height = 16;
+        shareTipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
+    } else {
+        shareTipsLabel.text = NSLocalizedString(@"inviteTips",@"");
+        shareTipsLabel.numberOfLines = 2;
+    }
+    
+    [shareInviteView addSubview:shareTipsLabel];
+    
+    shareTipsLabel.bottom = shareQrCodeImageView.bottom;
+    shareTipsLabel.left = shareQrCodeImageView.right + 5;
+    
+    UILabel *tips1Label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 21)];
+    tips1Label.font = FCStyle.headlineBold;
+    tips1Label.text = @"Once load,";
+    tips1Label.textColor = RGBA(47, 49, 19, 0.38);
+    [tips1Label sizeToFit];
+    tips1Label.left = 84;
+    tips1Label.top = shareInviteView.bottom + 39;
+    [shareBackView addSubview:tips1Label];
+    
+    UIImageView *stayImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 26, 26)];
+    stayImage.image = [UIImage imageNamed:@"NavIcon"];
+    [shareBackView addSubview:stayImage];
+    stayImage.left = tips1Label.right + 5;
+    stayImage.centerY = tips1Label.centerY;
+    
+    UILabel *tips2Label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 21)];
+    tips2Label.font = FCStyle.headlineBold;
+    tips2Label.text = @"tay forever.";
+    tips2Label.textColor = RGBA(47, 49, 19, 0.38);
+    [tips2Label sizeToFit];
+    tips2Label.left = stayImage.right + 3;
+    tips2Label.top = shareInviteView.bottom + 39;
+    [shareBackView addSubview:tips2Label];
+    
+   UIGraphicsBeginImageContextWithOptions(shareBackView.bounds.size, NO, [UIScreen mainScreen].scale);
+   [shareBackView drawViewHierarchyInRect:shareBackView.bounds afterScreenUpdates:YES];
    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
    UIGraphicsEndImageContext();
     
@@ -409,7 +608,7 @@
      CIImage *image = [filter outputImage];// 此时的 image 是模糊的
 
      // 高清处理：将获取到的二维码添加到 imageview
-     self.qrCodeImageView.image =[self createNonInterpolatedUIImageFormCIImage:image withSize:40];// withSize 大于等于视图显示的尺寸
+     self.qrCodeImageView.image =[self createNonInterpolatedUIImageFormCIImage:image withSize:48];// withSize 大于等于视图显示的尺寸
 }
 
 - (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image withSize:(CGFloat) size {
