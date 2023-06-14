@@ -18,6 +18,8 @@
 #import "CommitCodeSlideController.h"
 #import "FCApp.h"
 
+NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.stay.notification.PopupShouldShowCodeCommitNotification";
+
 @interface PopupManager()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *,NSNumber *> *shownUUIDsDic;
@@ -55,6 +57,11 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(onResignActive:)
                                                      name:UIApplicationWillResignActiveNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(showCodeCommitHandler:)
+                                                     name:PopupShouldShowCodeCommitNotification
                                                    object:nil];
         
         //        UIApplicationWillResignActiveNotification
@@ -118,10 +125,16 @@
             }
         }];
         
+       
+    }
+}
+
+- (void)showCodeCommitHandler:(NSNotification *)note{
+    if ([[FCConfig shared] getBoolValueOfKey:GroupUserDefaultsKeyNewDevice]){
         self.commitCodeSlideController = [[CommitCodeSlideController alloc] init];
         self.commitCodeSlideController.baseCer = FCApp.keyWindow.rootViewController;
         [self.commitCodeSlideController show];
-    }
+    }   
 }
 
 - (void)onResignActive:(NSNotification *)note{

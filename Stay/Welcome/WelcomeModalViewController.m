@@ -25,6 +25,7 @@
 #import "QuickAccess.h"
 
 #import "DeviceHelper.h"
+#import "PopupManager.h"
 
 
 @interface WelcomeModalViewController()<
@@ -370,6 +371,7 @@
             if (element.enable){
                 [[QuickAccess primaryController].fcTabBar selectIndex:1];
                 [weakSelf.navigationController.slideController dismiss];
+                [[NSNotificationCenter defaultCenter] postNotificationName:PopupShouldShowCodeCommitNotification object:nil];
             }
         };
         
@@ -418,6 +420,8 @@
         [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstGuide"];
         [groupUserDefaults synchronize];
         [self.navigationController.slideController dismiss];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:PopupShouldShowCodeCommitNotification object:nil];
     }];
     [alert addAction:confirm];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", @"")
