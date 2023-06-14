@@ -843,7 +843,7 @@ UITableViewDataSource
             
             if(biz != NULL) {
                 InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.inviteCode.length > 0) {
+                if(inviteDetail.giftCode.length > 0) {
                     self.started = true;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -865,7 +865,7 @@ UITableViewDataSource
             
             if(biz != NULL) {
                 InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.giftCode.length > 0) {
+                if(inviteDetail.inviteCode.length > 0) {
                     self.started = true;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
