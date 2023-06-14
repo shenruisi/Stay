@@ -59,7 +59,7 @@ settings.M3U8Concurrency="M3U8下载并发数";
 settings.Concurrency="并发数";
 
 unsupportedFileFormat = "不支持的文件格式";
-ok = "确认";
+ok = "好的";
 settings.update = "更新";
 Error="出错了";
 Loading="加载中";
@@ -384,6 +384,20 @@ HowToGift="How to Gift";
 HowToGiftDesc="Checkout online document";
 GiftRule="Gift Rule";
 GiftRuleDesc="Since you are a Stay pro user, you have 100 Stay points that can be given to 5 of your friends for free. No matter whether your friend is already a Stay user or not, as long as your friend is not a Stay Pro user, your friend can get 20 Stay points for free. points.";
+
+
+EnterCode="输入邀请/礼物码";
+PointsUsedFor="点数有什么作用？";
+PasteFromClipboard="从剪贴板粘贴";
+GetPoints="获取点数";
+NoCodeSkip="没有邀请/礼物码，跳过";
 GiftYourPoint="Gift Your Points to Friends";
 UserLeft="Users Left";
 IUseStay="我从";
+
+Points="点数";
+CommitCodePasteAlert="输入码不存在";
+InviteCodeNotFound="邀请码不存在";
+GiftCodeNotFound="礼物码不存在";
+GiftCodeHasExpired="礼物码已失效";
+CodeNotFound="邀请/礼物码不存在";

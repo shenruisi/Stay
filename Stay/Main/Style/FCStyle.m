@@ -201,6 +201,38 @@
     return [UIColor colorNamed:@"FilterSelectorColor"];
 }
 
++ (UIFont *)LargeTitle1{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:50];
+#else
+    return [UIFont systemFontOfSize:48];
+#endif
+}
+
++ (UIFont *)LargeTitle1Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:50];
+#else
+    return [UIFont boldSystemFontOfSize:48];
+#endif
+}
+
++ (UIFont *)LargeTitle3{
+#ifdef FC_IOS
+    return [UIFont systemFontOfSize:34];
+#else
+    return [UIFont systemFontOfSize:32];
+#endif
+}
+
++ (UIFont *)LargeTitle3Bold{
+#ifdef FC_IOS
+    return [UIFont boldSystemFontOfSize:34];
+#else
+    return [UIFont boldSystemFontOfSize:32];
+#endif
+}
+
 + (UIFont *)title1{
 #ifdef FC_IOS
     return [UIFont systemFontOfSize:28];

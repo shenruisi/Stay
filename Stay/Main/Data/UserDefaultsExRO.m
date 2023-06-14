@@ -33,7 +33,9 @@
     [coder encodeBool:self.pro forKey:@"pro"];
     [coder encodeObject:self.deviceID forKey:@"deviceID"];
     [coder encodeFloat:self.availablePoints forKey:@"availablePoints"];
-    [coder encodeFloat:self.availablePoints forKey:@"availableGiftPoints"];
+    [coder encodeFloat:self.availableGiftPoints forKey:@"availableGiftPoints"];
+    [coder encodeFloat:self.downloadConsumePoints forKey:@"downloadConsumePoints"];
+    [coder encodeFloat:self.tagConsumePoints forKey:@"tagConsumePoints"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
@@ -67,6 +69,9 @@
     _pro = userDefaults.pro;
     _deviceID = userDefaults.deviceID;
     _availablePoints = userDefaults.availablePoints;
+    _availableGiftPoints = userDefaults.availableGiftPoints;
+    _downloadConsumePoints = userDefaults.downloadConsumePoints;
+    _tagConsumePoints = userDefaults.tagConsumePoints;
 }
 
 - (void)setPro:(BOOL)pro{

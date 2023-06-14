@@ -408,6 +408,14 @@
 		588B832C284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		588B832D284620F700AB2D73 /* ActivateChanged.m in Sources */ = {isa = PBXBuildFile; fileRef = 588B832B284620F700AB2D73 /* ActivateChanged.m */; };
 		589741CA2868084B008FB897 /* macOSNative.bundle in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 588202C7285A12B400B2721A /* macOSNative.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		589F0C5D2A380A47008DF420 /* CommitCodeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */; };
+		589F0C5E2A380A47008DF420 /* CommitCodeSlideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */; };
+		589F0C612A380AC0008DF420 /* CommitCodeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */; };
+		589F0C622A380AC0008DF420 /* CommitCodeModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */; };
+		589F0C652A3813B4008DF420 /* FCLinkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C642A3813B4008DF420 /* FCLinkButton.m */; };
+		589F0C662A3813B4008DF420 /* FCLinkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C642A3813B4008DF420 /* FCLinkButton.m */; };
+		589F0C692A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */; };
+		589F0C6A2A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */; };
 		58A06D1528DAA49200983455 /* base64.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1028DAA49200983455 /* base64.min.js */; };
 		58A06D1628DAA49200983455 /* jquery.cookie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1128DAA49200983455 /* jquery.cookie.min.js */; };
 		58A06D1728DAA49200983455 /* jquery-3.5.1.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */; };
@@ -1291,6 +1299,14 @@
 		588B832B284620F700AB2D73 /* ActivateChanged.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivateChanged.m; sourceTree = "<group>"; };
 		589741CD28680925008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/iOSSupport/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
 		589741CF2868098B008FB897 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/SafariServices.framework; sourceTree = DEVELOPER_DIR; };
+		589F0C5B2A380A47008DF420 /* CommitCodeSlideController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommitCodeSlideController.h; sourceTree = "<group>"; };
+		589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommitCodeSlideController.m; sourceTree = "<group>"; };
+		589F0C5F2A380AC0008DF420 /* CommitCodeModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommitCodeModalViewController.h; sourceTree = "<group>"; };
+		589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommitCodeModalViewController.m; sourceTree = "<group>"; };
+		589F0C632A3813B4008DF420 /* FCLinkButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCLinkButton.h; sourceTree = "<group>"; };
+		589F0C642A3813B4008DF420 /* FCLinkButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCLinkButton.m; sourceTree = "<group>"; };
+		589F0C672A387C24008DF420 /* CommitCodeSucceedModalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommitCodeSucceedModalViewController.h; sourceTree = "<group>"; };
+		589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CommitCodeSucceedModalViewController.m; sourceTree = "<group>"; };
 		58A06D1028DAA49200983455 /* base64.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = base64.min.js; sourceTree = "<group>"; };
 		58A06D1128DAA49200983455 /* jquery.cookie.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = jquery.cookie.min.js; sourceTree = "<group>"; };
 		58A06D1228DAA49200983455 /* jquery-3.5.1.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "jquery-3.5.1.min.js"; sourceTree = "<group>"; };
@@ -2471,6 +2487,19 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		589F0C5A2A380A02008DF420 /* CommitCode */ = {
+			isa = PBXGroup;
+			children = (
+				589F0C5B2A380A47008DF420 /* CommitCodeSlideController.h */,
+				589F0C5C2A380A47008DF420 /* CommitCodeSlideController.m */,
+				589F0C5F2A380AC0008DF420 /* CommitCodeModalViewController.h */,
+				589F0C602A380AC0008DF420 /* CommitCodeModalViewController.m */,
+				589F0C672A387C24008DF420 /* CommitCodeSucceedModalViewController.h */,
+				589F0C682A387C24008DF420 /* CommitCodeSucceedModalViewController.m */,
+			);
+			path = CommitCode;
+			sourceTree = "<group>";
+		};
 		58A06D0F28DAA49200983455 /* vendor */ = {
 			isa = PBXGroup;
 			children = (
@@ -2504,6 +2533,8 @@
 				583B542729DD671E00CB292A /* NSAttributedString+Style.m */,
 				58DA84872A27612B009E37E6 /* FCImageView.h */,
 				58DA84882A27612B009E37E6 /* FCImageView.m */,
+				589F0C632A3813B4008DF420 /* FCLinkButton.h */,
+				589F0C642A3813B4008DF420 /* FCLinkButton.m */,
 			);
 			path = UXFramework;
 			sourceTree = "<group>";
@@ -3313,6 +3344,7 @@
 		84F4830D273A69AA00217BB3 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				589F0C5A2A380A02008DF420 /* CommitCode */,
 				84FE3A182A209CD4007E9F52 /* SYInvite */,
 				58DA847A2A26F7D1009E37E6 /* Popup */,
 				582061A5294C4BB200A32D0C /* Modal */,
@@ -4511,6 +4543,7 @@
 				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
 				849E77D7293E0BFF00AD83D7 /* SYDownloadResourceManagerController.m in Sources */,
 				5884031C29667079002CA227 /* UIColor+Convert.m in Sources */,
+				589F0C692A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */,
 				58DA84CB2A2A1EC1009E37E6 /* SubscribeContentFilterManager.m in Sources */,
 				58D1B44628880474009BD608 /* UIView+Rotate.m in Sources */,
 				58EA4449286A9B7D00BD6C4D /* ImportMenuModalViewController.m in Sources */,
@@ -4590,6 +4623,7 @@
 				3C949B90297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58FEB1E0283B55C500BC2A92 /* FCSlideController.m in Sources */,
 				587688F12719238000F834A4 /* main.m in Sources */,
+				589F0C5D2A380A47008DF420 /* CommitCodeSlideController.m in Sources */,
 				58F196512A11FD3000B88F39 /* ContentFilterManager.m in Sources */,
 				58F196922A11FE3200B88F39 /* JSAPIExceptionHighlighterAST.m in Sources */,
 				849E77DB293E0E0C00AD83D7 /* DownloadResourceTableViewCell.m in Sources */,
@@ -4599,6 +4633,7 @@
 				58FEB1E1283B55C500BC2A92 /* FCBlockView.m in Sources */,
 				84E8EA0D2962C20D003846AD /* SYChangeDocSlideController.m in Sources */,
 				58F196842A11FE3100B88F39 /* SeparatorHighlighterAST.m in Sources */,
+				589F0C612A380AC0008DF420 /* CommitCodeModalViewController.m in Sources */,
 				587688E42719237E00F834A4 /* SceneDelegate.m in Sources */,
 				84FE3A212A24A83A007E9F52 /* InviteProgressView.m in Sources */,
 				58FEB202283B5D3F00BC2A92 /* LoadingStatusModalViewController.m in Sources */,
@@ -4627,6 +4662,7 @@
 				58F196412A11FD2F00B88F39 /* SelectorBlockerAST.m in Sources */,
 				583B541529DD504500CB292A /* FCNavigationBar.m in Sources */,
 				5839C31C29305CA100CCBAE5 /* FCTopToast.m in Sources */,
+				589F0C652A3813B4008DF420 /* FCLinkButton.m in Sources */,
 				84B887062A3838CF00FA8EEF /* SYInviteTaskSlideController.m in Sources */,
 				5867D16228920E4C00EC822B /* UserDefaultsExRO.m in Sources */,
 				58D1B4492888EBB3009BD608 /* UserDefaults.m in Sources */,
@@ -4792,6 +4828,7 @@
 				5867D155288F88FC00EC822B /* AlertHelper.m in Sources */,
 				582061C1294C4C0E00A32D0C /* ModalItemInputView.m in Sources */,
 				58F1963A2A11FD2F00B88F39 /* FilterToken.m in Sources */,
+				589F0C662A3813B4008DF420 /* FCLinkButton.m in Sources */,
 				3C949B91297029F50068231A /* M3U8MediaPlaylist.m in Sources */,
 				58F196502A11FD3000B88F39 /* SpecialCommentBlockerAST.m in Sources */,
 				58724A2C28FE43E500A894D8 /* DeviceHelper.m in Sources */,
@@ -4835,6 +4872,7 @@
 				58F1968D2A11FE3200B88F39 /* OptionsHighlighterAST.m in Sources */,
 				3C358D572973E58800118063 /* NSArray+m3u8.m in Sources */,
 				5882025A2859E73900B2721A /* FCView.m in Sources */,
+				589F0C6A2A387C25008DF420 /* CommitCodeSucceedModalViewController.m in Sources */,
 				3C358D582973E58B00118063 /* NSString+m3u8.m in Sources */,
 				3C91971D299688D900485423 /* SYParseDownloadModalViewController.m in Sources */,
 				5882025B2859E73900B2721A /* NSString+Urlencode.m in Sources */,
@@ -4920,6 +4958,7 @@
 				5839C3192930525D00CCBAE5 /* ToastDebugger.m in Sources */,
 				84B6351B2978BF660000DAF1 /* SYDownloadPreviewModalViewController.m in Sources */,
 				58A3619029C0502500080465 /* AdBlockViewController.m in Sources */,
+				589F0C5E2A380A47008DF420 /* CommitCodeSlideController.m in Sources */,
 				584C05A828607F4E00E07DDF /* NavigateCollectionController.m in Sources */,
 				8410091E2A36C7D3007F6B8A /* SYInviteTaskController.m in Sources */,
 				849E77E5293E0E9200AD83D7 /* DownloadResource.m in Sources */,
@@ -4944,6 +4983,7 @@
 				582061D7294C4C7000A32D0C /* FCLayoutView.m in Sources */,
 				58AC12E52860750800875D6D /* FCShared.m in Sources */,
 				588202752859E73900B2721A /* ScriptMananger.m in Sources */,
+				589F0C622A380AC0008DF420 /* CommitCodeModalViewController.m in Sources */,
 				3C949B95297029F50068231A /* M3U8ExtXStreamInfList.m in Sources */,
 				5805D94F2A037FB600F46709 /* EnableStayModalViewController.m in Sources */,
 				58F1967D2A11FE3100B88F39 /* AddressHighlighterAST.m in Sources */,
