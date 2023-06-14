@@ -191,10 +191,11 @@
             
             self.parseDownloadController.nav = self.nav;
             [self.navigationController pushModalViewController:self.parseDownloadController];
-            [self.parseDownloadController setData:[NSArray array]];
+            [self.parseDownloadController setData:[NSArray array] withQualityLabe:nil];
             
             [[VideoParser shared] parse:[targetUrl safeEncode] completionBlock:^(NSArray<NSDictionary *> * _Nonnull videoItems) {
-                [self.parseDownloadController setData:videoItems];
+                [self.parseDownloadController setData:videoItems
+                                      withQualityLabe:([self.dic[@"downloadUrl"] isEqualToString:link] ? self.dic[@"qualityLabel"] : nil)];
             }];
         }
     } else {
