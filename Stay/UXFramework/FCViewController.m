@@ -86,6 +86,8 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.enableTabItem = _enableTabItem;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SYViewWillAppear" object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -196,6 +198,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"BackgroundColorDidChange"
                                                   object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"SYViewWillAppear" object:nil];
 }
 
 @end

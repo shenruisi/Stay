@@ -11,6 +11,8 @@
 #import "DeviceHelper.h"
 #import "FCApp.h"
 #import "SYInviteViewController.h"
+#import <SafariServices/SafariServices.h>
+
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -115,7 +117,7 @@
         _pointLabel = [[UILabel alloc] init];
         _pointLabel.textColor = FCStyle.accent;
         _pointLabel.font = FCStyle.bodyBold;
-        _pointLabel.text = @"10 Points";
+        _pointLabel.text =  [NSString stringWithFormat:@"%ld Points",[_dic[@"point_value"] integerValue]] ;
         _pointLabel.translatesAutoresizingMaskIntoConstraints = false;
         [self.backView addSubview:_pointLabel];
         [NSLayoutConstraint activateConstraints:@[
@@ -138,6 +140,9 @@ UITableViewDataSource
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *taskArray;
 @property (nonatomic, strong) UIButton *subButton;
+@property (nonatomic, strong) NSMutableDictionary *rewardBlockDic;
+@property (nonatomic, strong) NSMutableDictionary *webRewardBlockDic;
+
 @end
 @implementation SYInviteTaskController
 
@@ -158,6 +163,17 @@ UITableViewDataSource
         });
         
     }];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillEnterForeground:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(SYViewWillAppear:)
+                                                 name:@"SYViewWillAppear"
+                                               object:nil];
     [self subButton];
 }
 
@@ -195,7 +211,80 @@ UITableViewDataSource
 #endif
         
         [self.navigationController.slideController dismiss];
-    } 
+    } else if ([@"generic" isEqualToString: dic[@"type"]]) {
+        
+        
+        NSData *jsonData = [dic[@"action_json"] dataUsingEncoding:NSUTF8StringEncoding];
+
+
+        NSDictionary *action = [NSJSONSerialization JSONObjectWithData:jsonData
+
+        options:NSJSONReadingMutableContainers
+
+        error:nil];
+        
+        if([@"app" isEqualToString:action[@"type"]]) {
+            if(self.rewardBlockDic[dic[@"uuid"]] == NULL) {
+                
+       
+                
+                if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:action[@"url"]]]){
+                    
+                    [[API shared] queryPath:@"/generic-task/init"
+                                        pro:NO
+                                   deviceId:DeviceHelper.uuid
+                                        biz:@{@"task_id":dic[@"uuid"]}
+                                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+                    }];
+                    
+                    
+                    dispatch_block_t rewardBlock =  dispatch_block_create(0, ^{
+                        [[API shared] queryPath:@"/generic-task/commit"
+                                            pro:NO
+                                       deviceId:DeviceHelper.uuid
+                                            biz:@{@"task_id":dic[@"uuid"]}
+                                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+                        }];
+                    });
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
+                    self.rewardBlockDic[dic[@"uuid"]] = rewardBlock;
+                    
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:action[@"url"]]];
+                }
+            
+            }
+        } else if([@"web" isEqualToString:action[@"type"]]) {
+            
+            [[API shared] queryPath:@"/generic-task/init"
+                                pro:NO
+                           deviceId:DeviceHelper.uuid
+                                biz:@{@"task_id":dic[@"uuid"]}
+                         completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+            }];
+            
+            dispatch_block_t rewardBlock =  dispatch_block_create(0, ^{
+                [[API shared] queryPath:@"/generic-task/commit"
+                                    pro:NO
+                               deviceId:DeviceHelper.uuid
+                                    biz:@{@"task_id":dic[@"uuid"]}
+                             completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+                    
+                    NSLog(@"请求成功了");
+                }];
+            });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
+            self.webRewardBlockDic[dic[@"uuid"]] = rewardBlock;
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        if (FCDeviceTypeIPhone == DeviceHelper.type){
+            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:action[@"url"]]];
+            [self.nav presentViewController:safariVc animated:YES completion:nil];
+        }
+#endif
+        }
+        
+    }
 }
 
 
@@ -253,8 +342,75 @@ UITableViewDataSource
     return _subButton;
 }
 
+- (NSMutableDictionary *)rewardBlockDic {
+    if(nil == _rewardBlockDic) {
+        _rewardBlockDic = [NSMutableDictionary dictionary];
+    }
+    return _rewardBlockDic;
+}
+
+- (NSMutableDictionary *)webRewardBlockDic {
+    if(nil == _webRewardBlockDic) {
+        _webRewardBlockDic = [NSMutableDictionary dictionary];
+    }
+    return _webRewardBlockDic;
+}
+
 - (CGSize)mainViewSize{
     return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 447);
+}
+
+- (void)SYViewWillAppear:(NSNotification *)notification {
+    if(self.webRewardBlockDic.count > 0) {
+        for (dispatch_block_t rewardBlock in self.webRewardBlockDic.allValues) {
+            dispatch_block_cancel(rewardBlock);
+        }
+        [self.webRewardBlockDic removeAllObjects];
+        
+        
+        [[API shared] queryPath:@"/tasks"
+                            pro:NO
+                       deviceId:DeviceHelper.uuid
+                            biz:nil
+                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+
+
+            _taskArray = biz[@"tasks"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+            
+        }];
+    }
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    if(self.rewardBlockDic.count > 0) {
+        for (dispatch_block_t rewardBlock in self.rewardBlockDic.allValues) {
+            dispatch_block_cancel(rewardBlock);
+        }
+        [self.rewardBlockDic removeAllObjects];
+        [[API shared] queryPath:@"/tasks"
+                            pro:NO
+                       deviceId:DeviceHelper.uuid
+                            biz:nil
+                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+
+
+            _taskArray = biz[@"tasks"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+            
+        }];
+    }
+}
+
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
