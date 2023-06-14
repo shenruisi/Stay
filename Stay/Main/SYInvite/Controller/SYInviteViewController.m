@@ -18,6 +18,7 @@
 #import "ImageHelper.h"
 #import "FCStore.h"
 #import "SharedStorageManager.h"
+#import <SafariServices/SafariServices.h>
 
 @interface ShareLinkView:UIView
 @property (nonatomic, strong) NSString *linkStr;
@@ -69,8 +70,8 @@
     [self addSubview:shareBtn];
     shareBtn.top = visitLabel.bottom + 19;
     shareBtn.centerX = self.width / 2;
-    
 }
+
 
 
 @end
@@ -674,6 +675,8 @@
     descLab.centerX = self.width / 2;
     
     self.height = descLab.bottom + 27;
+    
+
 }
 
 @end
@@ -718,6 +721,15 @@
     
     descLab.top = titleLab.bottom + 12;
     self.height = descLab.bottom + 15;
+    
+    UIImageView *accessor = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 13, 18)];
+    UIImage *image = [UIImage systemImageNamed:@"chevron.right"
+                             withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
+    image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
+    accessor.image = image;
+    [self addSubview:accessor];
+    accessor.right = self.width - 18;
+    accessor.centerY = self.height / 2;
     
     
     
@@ -1028,6 +1040,9 @@ UITableViewDataSource
         _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 70)];
         _howToInviteView.layer.cornerRadius = 10;
         _howToInviteView.backgroundColor = FCStyle.fcWhite;
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(clickHowTo)];
+        [_howToInviteView addGestureRecognizer:gesture];
     }
     return _howToInviteView;
 }
@@ -1133,11 +1148,32 @@ UITableViewDataSource
     [self.navigationController presentViewController:activityVC animated:YES completion:nil];
 }
 
+- (void)clickHowTo {
+    
+    NSString *url = @"https://www.craft.do/s/7Cc0xEh8BZ9HJg";
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    if(!isPro) {
+        url = @"https://www.craft.do/s/fkiUptzlNzV2DA";
+    }
+    
+    
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        if (FCDeviceTypeIPhone == DeviceHelper.type){
+            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
+            [self presentViewController:safariVc animated:YES completion:nil];
+        }
+#endif
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                         name:@"app.stay.notification.SaveInviteSuccess"
                                                       object:nil];
 }
+
 /*
 #pragma mark - Navigation
 
