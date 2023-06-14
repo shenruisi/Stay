@@ -16,6 +16,7 @@
 #import "PopupSlideController.h"
 #import "SharedStorageManager.h"
 #import "CommitCodeSlideController.h"
+#import "FCApp.h"
 
 @interface PopupManager()
 
@@ -118,6 +119,7 @@
         }];
         
         self.commitCodeSlideController = [[CommitCodeSlideController alloc] init];
+        self.commitCodeSlideController.baseCer = FCApp.keyWindow.rootViewController;
         [self.commitCodeSlideController show];
     }
 }

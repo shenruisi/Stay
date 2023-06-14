@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CommitCodeSucceedModalViewController : ModalViewController
 
+@property (nonatomic, assign) NSInteger pointValue;
 @end
 
 NS_ASSUME_NONNULL_END

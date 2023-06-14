@@ -10,7 +10,12 @@
 #import "FCLinkButton.h"
 #import "FCStyle.h"
 #import "FCButton.h"
-
+#import "CommitCodeSucceedModalViewController.h"
+#import "FCShared.h"
+#import "API.h"
+#import "FCStore.h"
+#import "DeviceHelper.h"
+#import "AlertHelper.h"
 
 @protocol _CommitCodeTextFieldDelegate;
 @interface _CommitCodeTextField : UITextField
@@ -173,6 +178,7 @@
 - (UIButton *)pasteButton{
     if (nil == _pasteButton){
         _pasteButton = [[UIButton alloc] init];
+        [_pasteButton addTarget:self action:@selector(pasteAction:) forControlEvents:UIControlEventTouchUpInside];
         _pasteButton.layer.cornerRadius = 10;
         _pasteButton.layer.borderWidth = 1;
         _pasteButton.layer.borderColor = FCStyle.accent.CGColor;
@@ -196,6 +202,26 @@
     }
     
     return _pasteButton;
+}
+
+- (void)pasteAction:(id)sender{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    if (pasteboard.string.length == 6){
+        for (int i = 0; i < 6; i++){
+            self.textFieldGroup[i].text = [[pasteboard.string substringWithRange:NSMakeRange(i, 1)] uppercaseString];
+            [self updateConfirmStatus];
+        }
+    }
+    else{
+        UIImage *image =  [UIImage systemImageNamed:@"x.circle.fill"
+                                  withConfiguration:[UIImageSymbolConfiguration configurationWithFont:FCStyle.sfIcon]];
+        image = [image imageWithTintColor:UIColor.redColor
+                            renderingMode:UIImageRenderingModeAlwaysOriginal];
+        [FCShared.toastCenter show:image
+                         mainTitle:NSLocalizedString(@"Clipboard", @"")
+                    secondaryTitle:NSLocalizedString(@"CommitCodePasteAlert", @"")];
+        
+    }
 }
 
 - (FCButton *)confirmButton{
@@ -242,7 +268,40 @@
 }
 
 - (void)confirmAction:(id)sender{
-
+    NSMutableString *code = [[NSMutableString alloc] init];
+    for (int i = 0; i < self.textFieldGroup.count; i++){
+        [code appendString:self.textFieldGroup[i].text];
+    }
+    
+    FCButton *button = (FCButton *)sender;
+    [self.navigationController.slideController startLoading];
+    [button startLoading];
+    [[API shared] queryPath:@"/code/commit"
+                        pro:[[FCStore shared] getPlan:NO] != FCPlan.None
+                   deviceId:DeviceHelper.uuid
+                        biz:@{
+        @"code": code
+    } completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        [self.navigationController.slideController stopLoading];
+        [button stopLoading];
+        if (statusCode == 200){
+            CommitCodeSucceedModalViewController *cer = [[CommitCodeSucceedModalViewController alloc] init];
+            cer.pointValue = 20;
+            [self.navigationController pushModalViewController:cer];
+        }
+        else{
+            if (statusCode == 404 || statusCode == 409){
+                [AlertHelper simpleWithTitle:NSLocalizedString(@"Error", @"")
+                                     message:NSLocalizedString(server[@"message"] ? server[@"message"] : @"CodeNotFound", @"")
+                                       inCer:self.navigationController.slideController.baseCer];
+            }
+            else{
+                [AlertHelper simpleWithTitle:NSLocalizedString(@"Error", @"")
+                                     message:[error localizedDescription]
+                                       inCer:self.navigationController.slideController.baseCer];
+            }
+        }
+    }];
 }
 
 - (FCButton *)dismissButton{

@@ -59,7 +59,7 @@ settings.M3U8Concurrency="M3U8下载并发数";
 settings.Concurrency="并发数";
 
 unsupportedFileFormat = "不支持的文件格式";
-ok = "确认";
+ok = "好的";
 settings.update = "更新";
 Error="出错了";
 Loading="加载中";
@@ -394,3 +394,10 @@ NoCodeSkip="没有邀请/礼物码，跳过";
 GiftYourPoint="Gift Your Points to Friends";
 UserLeft="Users Left";
 IUseStay="我从";
+
+Points="点数";
+CommitCodePasteAlert="输入码不存在";
+InviteCodeNotFound="邀请码不存在";
+GiftCodeNotFound="礼物码不存在";
+GiftCodeHasExpired="礼物码已失效";
+CodeNotFound="邀请/礼物码不存在";

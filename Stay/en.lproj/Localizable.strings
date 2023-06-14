@@ -394,10 +394,12 @@ GiftYourPoint="Gift Your Points to Friends";
 UserLeft="Users Left";
 IUseStay="I use";
 
-
-
-
-
+Points="Points";
+CommitCodePasteAlert="The code does not exist";
+InviteCodeNotFound="Invitation code does not exist";
+GiftCodeNotFound="Gift code does not exist";
+GiftCodeHasExpired="Gift code has expired";
+CodeNotFound="Invitation/Gift code does not exist";
 
 
 
