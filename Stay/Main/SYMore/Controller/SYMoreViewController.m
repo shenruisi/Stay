@@ -563,6 +563,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     [super viewWillAppear:animated];
     dispatch_async(dispatch_get_main_queue(), ^{
 //        self.tableView.frame = self.view.bounds;
+        self.dataSource = nil;
         [self.tableView reloadData];
     });
     

@@ -366,6 +366,22 @@ UITableViewDataSource
             dispatch_block_cancel(rewardBlock);
         }
         [self.webRewardBlockDic removeAllObjects];
+        
+        
+        [[API shared] queryPath:@"/tasks"
+                            pro:NO
+                       deviceId:DeviceHelper.uuid
+                            biz:nil
+                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+
+
+            _taskArray = biz[@"tasks"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+            
+        }];
     }
 }
 
@@ -375,6 +391,20 @@ UITableViewDataSource
             dispatch_block_cancel(rewardBlock);
         }
         [self.rewardBlockDic removeAllObjects];
+        [[API shared] queryPath:@"/tasks"
+                            pro:NO
+                       deviceId:DeviceHelper.uuid
+                            biz:nil
+                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+
+
+            _taskArray = biz[@"tasks"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+            
+        }];
     }
 }
 
