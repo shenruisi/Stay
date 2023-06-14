@@ -28,4 +28,6 @@
 
 #import "SYVideoCellTableViewCell.h"
 
+#import "UpgradeModalViewController.h"
+
 #endif /* Stay_Bridging_Header_h */

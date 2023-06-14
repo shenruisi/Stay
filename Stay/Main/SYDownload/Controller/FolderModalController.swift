@@ -348,9 +348,18 @@ class FolderModalController: ModalViewController, UITextFieldDelegate {
         }
     }
     
+    var upgradeController: UpgradeModalViewController?
     @objc
     func faceSwitchAction(mySwitch: UISwitch) {
         if mySwitch.isOn {
+            if FCStore.shared().getPlan(false) == FCPlan.none {
+                upgradeController = UpgradeModalViewController()
+                upgradeController?.message = NSLocalizedString("UpgradeMessage", comment: "")
+                navigationController?.push(upgradeController!)
+                
+                mySwitch.isOn = false
+                return
+            }
             FaceIDAuth.evaluate(localizedReason: NSLocalizedString("VerifyOn", comment: "")) {
                 if $0 {
                     self.faceIDEnabled = true

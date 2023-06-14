@@ -1008,6 +1008,7 @@ UIDocumentPickerDelegate
 - (FolderSlideController *)folderSlideController {
     if(_folderSlideController == nil) {
         _folderSlideController = [[FolderSlideController alloc] initWithFolderTab:nil];
+        _folderSlideController.baseCer = self;
     }
     return _folderSlideController;
 }
