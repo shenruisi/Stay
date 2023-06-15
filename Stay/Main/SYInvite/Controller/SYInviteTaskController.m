@@ -117,7 +117,7 @@
         _pointLabel = [[UILabel alloc] init];
         _pointLabel.textColor = FCStyle.accent;
         _pointLabel.font = FCStyle.bodyBold;
-        _pointLabel.text =  [NSString stringWithFormat:@"%ld Points",[_dic[@"point_value"] integerValue]] ;
+        _pointLabel.text =  [NSString stringWithFormat:@"%ld %@",[_dic[@"point_value"] integerValue],NSLocalizedString(@"Points",@"")] ;
         _pointLabel.translatesAutoresizingMaskIntoConstraints = false;
         [self.backView addSubview:_pointLabel];
         [NSLayoutConstraint activateConstraints:@[

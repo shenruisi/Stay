@@ -926,7 +926,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"section":NSLocalizedString(@"StayPoint",@""),
                 @"cells":@[
                     @{
-                        @"title":[NSString stringWithFormat:@"%@ Point(s)",@(_leftPointCount).description] ,
+                        @"title":[NSString stringWithFormat:@"%@ %@",@(_leftPointCount).description,NSLocalizedString(@"Points",@"")] ,
                         @"icon":@"InviteImage",
                       @"type":@"stayPoint",
                     }

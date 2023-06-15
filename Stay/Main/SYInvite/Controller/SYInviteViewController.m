@@ -1124,7 +1124,7 @@ UITableViewDataSource
 - (UILabel *)proPointLabel {
     if(nil == _proPointLabel) {
         _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
-        _proPointLabel.text = [NSString stringWithFormat:@"%@ Points",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description];
+        _proPointLabel.text = [NSString stringWithFormat:@"%@ %@",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description,NSLocalizedString(@"Points",@"")];
         _proPointLabel.font = FCStyle.title3Bold;
         _proPointLabel.textColor = FCStyle.accent;
         _proPointLabel.textAlignment = NSTextAlignmentCenter;
