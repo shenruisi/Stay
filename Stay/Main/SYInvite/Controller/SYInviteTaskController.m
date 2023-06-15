@@ -189,7 +189,7 @@ UITableViewDataSource
     NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
     
 #ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
@@ -297,7 +297,7 @@ UITableViewDataSource
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
             self.webRewardBlockDic[dic[@"uuid"]] = rewardBlock;
 #ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"]]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:action[@"url"]]];

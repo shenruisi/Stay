@@ -1173,7 +1173,7 @@ UITableViewDataSource
     
     
 #ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
