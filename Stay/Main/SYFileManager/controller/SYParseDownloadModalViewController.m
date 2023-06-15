@@ -475,7 +475,7 @@
     return _dataSource;
 }
 
-- (void)setData:(NSArray<NSDictionary *> *)data {
+- (void)setData:(NSArray<NSDictionary *> *)data withQualityLabe:(nullable NSString *)qualityLabel {
     if (data.count == 0) {
         _curCount = 0;
         [self.dataSource removeAllObjects];
@@ -504,13 +504,26 @@
                         NSString *selectedDownloadUrl;
                         NSString *selectedAudioUrl;
                         Boolean selectedProtect = FALSE;
-                        for (NSDictionary *qulity in qualityList) {
-                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
-                                selectedQuality = qulity[@"qualityLabel"];
-                                selectedDownloadUrl = qulity[@"downloadUrl"];
-                                selectedAudioUrl = qulity[@"audioUrl"];
-                                selectedProtect = [qulity[@"protect"] boolValue];
-                                break;
+                        if (qualityLabel.length > 0) {
+                            for (NSDictionary *qulity in qualityList) {
+                                if ([qualityLabel isEqualToString:qulity[@"qualityLabel"]]) {
+                                    selectedQuality = qulity[@"qualityLabel"];
+                                    selectedDownloadUrl = qulity[@"downloadUrl"];
+                                    selectedAudioUrl = qulity[@"audioUrl"];
+                                    selectedProtect = [qulity[@"protect"] boolValue];
+                                    break;
+                                }
+                            }
+                        }
+                        if (selectedQuality.length == 0) {
+                            for (NSDictionary *qulity in qualityList) {
+                                if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                    selectedQuality = qulity[@"qualityLabel"];
+                                    selectedDownloadUrl = qulity[@"downloadUrl"];
+                                    selectedAudioUrl = qulity[@"audioUrl"];
+                                    selectedProtect = [qulity[@"protect"] boolValue];
+                                    break;
+                                }
                             }
                         }
                         if (selectedQuality.length == 0) {
@@ -538,13 +551,26 @@
                     NSString *selectedDownloadUrl;
                     NSString *selectedAudioUrl;
                     Boolean selectedProtect = FALSE;
-                    for (NSDictionary *qulity in qualityList) {
-                        if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
-                            selectedQuality = qulity[@"qualityLabel"];
-                            selectedDownloadUrl = qulity[@"downloadUrl"];
-                            selectedAudioUrl = qulity[@"audioUrl"];
-                            selectedProtect = [qulity[@"protect"] boolValue];
-                            break;
+                    if (qualityLabel.length > 0) {
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([qualityLabel isEqualToString:qulity[@"qualityLabel"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
+                                break;
+                            }
+                        }
+                    }
+                    if (selectedQuality.length == 0) {
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
+                                break;
+                            }
                         }
                     }
                     if (selectedQuality.length == 0) {
