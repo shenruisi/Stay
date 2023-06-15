@@ -151,14 +151,14 @@ NSNotificationName const _Nonnull DMTaskDidFinishNotification = @"app.stay.notif
     NSMutableString *content = [NSMutableString stringWithFormat:@"%d\n%d\n%@\n%@\n%@\n%@",
                          _mode, _status, _videoUrl, _videoType == nil ? @"mp4" : _videoType, _audioUrl == nil ? @"" : _audioUrl, _audioType == nil ? @"m4a" : _audioType];
     if (_mode == 1 || _mode == 2) {
-        [content appendFormat:@"%lu\n%lu\n%lu\n", _totalCount, _currCount, _videoCount];
+        [content appendFormat:@"\n%lu\n%lu\n%lu", _totalCount, _currCount, _videoCount];
         @synchronized (_videoRangeURLs) {
             for (NSString *rangeURL in _videoRangeURLs) {
                 [content appendFormat:@"\n%@", rangeURL];
             }
         }
         if (_mode == 2) {
-            [content appendFormat:@"%lu\n", _audioCount];
+            [content appendFormat:@"\n%lu", _audioCount];
             @synchronized (_audioRangeURLs) {
                 for (NSString *rangeURL in _audioRangeURLs) {
                     [content appendFormat:@"\n%@", rangeURL];
@@ -1068,6 +1068,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     [self notifySpeedIfNeed];
     
     Task *task = [self getTaskWithSessionTask:downloadTask];
+    NSLog(@"URLSession currCount: %ld, totalCount: %ld", task.normalState.currCount, task.normalState.totalCount);
     if (task != nil) {
         task.bytesWritten += bytesWritten;
         if (task.block != nil) {
@@ -1088,8 +1089,8 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
             if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {
                 long long speedBS = task.bytesWritten / (timestamp - task.lastTimestamp);
-//                NSLog([NSString stringWithFormat:@"speedBS : %ld, bytesWritten : %ld, time : %f", speedBS, task.bytesWritten, timestamp - task.lastTimestamp]);
                 speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
+                NSLog([NSString stringWithFormat:@"URLSession speed : %@, progress : %f", speed, task.progress]);
                 task.lastTimestamp = timestamp;
                 task.bytesWritten = 0;
                 task.block(task.progress, speed, DMStatusDownloading);
