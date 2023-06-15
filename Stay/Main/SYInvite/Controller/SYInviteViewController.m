@@ -298,6 +298,8 @@
         _qrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 48, 48)];
         [self.inviteView addSubview:_qrCodeImageView];
         _qrCodeImageView.top = self.extensionLabel.bottom + 32;
+        _qrCodeImageView.layer.cornerRadius = 2;
+        _qrCodeImageView.layer.masksToBounds = YES;
         if(self.detail.link.length > 0) {
             [self generatingTwoDimensionalCode];
         }
