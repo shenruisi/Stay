@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SYParseDownloadModalViewController : ModalViewController
 @property(nonatomic,strong) UINavigationController *nav;
 
-- (void)setData:(NSArray<NSDictionary *> *)data;
+- (void)setData:(NSArray<NSDictionary *> *)data withQualityLabe:(nullable NSString *)qualityLabell;
 @end
 
 NS_ASSUME_NONNULL_END

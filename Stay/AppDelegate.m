@@ -54,12 +54,13 @@
 #import "PopupManager.h"
 #import <SDImageCache.h>
 #import "UIColor+Convert.h"
+#import "SYInviteTaskSlideController.h"
 
 @interface AppDelegate()
 
 @property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 @property (nonatomic, strong) SYDownloadSlideController *syDownloadSlideController;
-
+@property (nonatomic, strong) SYInviteTaskSlideController *inviteTaskSlideController;
 
 @end
 
@@ -248,11 +249,11 @@
     
     [[IACManager sharedManager] handleAction:@"snifferVideo" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
         [PopupManager shared].ingorePopup = YES;
-        //如果不是pro会员直接返回
-        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-        if(!isPro) {
-            return;
-        }
+//        //如果不是pro会员直接返回
+//        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//        if(!isPro) {
+//            return;
+//        }
 
         if (self.syDownloadSlideController.isShown){
             [self.syDownloadSlideController dismiss];
@@ -295,6 +296,16 @@
             }
         }
     }];
+    
+    [[IACManager sharedManager] handleAction:@"taskList" withBlock:^(NSDictionary *inputParameters, IACSuccessBlock success, IACFailureBlock failure) {
+        [PopupManager shared].ingorePopup = YES;
+        self.inviteTaskSlideController = nil;
+        if(!self.inviteTaskSlideController.isShown) {
+            [self.inviteTaskSlideController show];
+        }
+        
+    }];
+    
     
     [PopupManager shared];
     
@@ -365,5 +376,15 @@
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window {
     return _orientationLock;
 }
+
+- (SYInviteTaskSlideController *)inviteTaskSlideController {
+    if(nil == _inviteTaskSlideController) {
+        _inviteTaskSlideController = [[SYInviteTaskSlideController alloc] init];
+        UINavigationController *nav = [self getCurrentNCFrom:[UIApplication sharedApplication].keyWindow.rootViewController];
+        _inviteTaskSlideController.nav = nav;
+    }
+    return _inviteTaskSlideController;
+}
+
 
 @end

@@ -470,6 +470,15 @@
         
         
     }
+    else if ([message[@"type"] isEqualToString:@"canTagAd"]){
+        [SharedStorageManager shared].userDefaultsExRO = nil;
+        CGFloat availablePoints = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        CGFloat tagConsumePoints = [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
+        body = @{
+            @"tag_ad" : @((availablePoints - tagConsumePoints) >= 0),
+            @"consume_points" : @(tagConsumePoints)
+        };
+    }
     else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
         NSArray<NSString *> *urls = message[@"urls"];
         NSString *selector = message[@"selector"];
@@ -509,6 +518,12 @@
             [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
+            
+            [SharedStorageManager shared].userDefaultsExRO = nil;
+            if (![SharedStorageManager shared].userDefaultsExRO.pro){
+                [SharedStorageManager shared].userDefaults = nil;
+                [SharedStorageManager shared].userDefaults.tagConsumed =  [SharedStorageManager shared].userDefaults.tagConsumed +  [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
+            }
         }
     }
     else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){
@@ -618,35 +633,37 @@
         NSString *url = message[@"url"];
         BOOL on = [message[@"on"] boolValue];
         
+        NSString *domain = [self getDomain:url];
         if (on){
-            if (![[ContentFilterManager shared] existTrustSiteWithDomain:url]){
-                [[ContentFilterManager shared] addTrustSiteWithDomain:url error:nil];
-                [self addTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:url];
-                [self addTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:url];
-                [self addTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:url];
-                [self addTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:url];
-                [self addTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:url];
-                [self addTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:url];
+            if (![[ContentFilterManager shared] existTrustSiteWithDomain:domain]){
+                [[ContentFilterManager shared] addTrustSiteWithDomain:domain error:nil];
+                [self addTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:domain];
+                [self addTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:domain];
+                [self addTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:domain];
+                [self addTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:domain];
+                [self addTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:domain];
+                [self addTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:domain];
             }
         }
         else{
-            if ([[ContentFilterManager shared] existTrustSiteWithDomain:url]){
-                [[ContentFilterManager shared] deleteTrustSiteWithDomain:url];
-                [self removeTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:url];
-                [self removeTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:url];
-                [self removeTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:url];
-                [self removeTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:url];
-                [self removeTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:url];
-                [self removeTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:url];
+            if ([[ContentFilterManager shared] existTrustSiteWithDomain:domain]){
+                [[ContentFilterManager shared] deleteTrustSiteWithDomain:domain];
+                [self removeTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe" url:domain];
             }
         }
     }
     else if ([message[@"type"] isEqualToString:@"getTrustedSite"]){
         NSString *url = message[@"url"];
-        BOOL on = [[ContentFilterManager shared] existTrustSiteWithDomain:url];
+        NSString *domain = [self getDomain:url];
+        BOOL on = [[ContentFilterManager shared] existTrustSiteWithDomain:domain];
         
         body = @{
-            @"url":url,
+            @"url":domain,
             @"on":@(on)
         };
     }
@@ -656,6 +673,20 @@
                                                     }
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
+}
+
+- (NSString *)getDomain:(NSString *)url{
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+    [set addCharactersInString:@"#"];
+    NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+    NSString *host = uri.host;
+    NSString *path = uri.path;
+    if ([path isEqualToString:@"/"]){
+        path = @"";
+    }
+    path = path ? path : @"";
+    NSString *domain = [NSString stringWithFormat:@"%@",host];
+    return domain;
 }
 
 - (void)addTrustedSiteToJSONFile:(NSString *)fileName identifier:(NSString *)identifier url:(NSString *)url{

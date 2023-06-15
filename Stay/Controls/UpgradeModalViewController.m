@@ -6,6 +6,7 @@
 //
 
 #import "UpgradeModalViewController.h"
+#import "UpgradeSlideController.h"
 #import "FCApp.h"
 #import "FCStyle.h"
 #import "FCButton.h"
@@ -65,7 +66,11 @@
 }
 
 - (void)dismissAction:(id)sender{
-    [self.navigationController.slideController dismiss];
+    if ([self.navigationController.slideController isKindOfClass:[UpgradeSlideController class]]) {
+        [self.navigationController.slideController dismiss];
+    } else {
+        [self.navigationController popModalViewController];
+    }
 }
 
 - (UILabel *)messageLabel{

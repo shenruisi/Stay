@@ -42,7 +42,7 @@
         [attributes setObject:self.loadingTitleColor forKey:NSForegroundColorAttributeName];
     }
     [self setAttributedTitle:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@...",self.savedTitle] attributes:attributes] forState:UIControlStateNormal];
-    self.backgroundColor = self.loadingBackgroundColor ? self.loadingBackgroundColor : FCStyle.fcSeparator;
+    self.backgroundColor = self.loadingBackgroundColor ? self.loadingBackgroundColor : UIColor.clearColor;
     if (self.loadingBorderColor){
         self.layer.borderColor = self.loadingBorderColor.CGColor;
     }
@@ -76,7 +76,7 @@
 - (UIActivityIndicatorView *)loadingView{
     if (nil == _loadingView){
         _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
-        _loadingView.color = self.loadingViewColor ? self.loadingViewColor : FCStyle.fcWhite;
+        _loadingView.color = self.loadingViewColor ? self.loadingViewColor : FCStyle.fcSecondaryBlack;
         _loadingView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_loadingView];
         

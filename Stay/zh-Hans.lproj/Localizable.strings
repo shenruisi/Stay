@@ -59,7 +59,7 @@ settings.M3U8Concurrency="M3U8下载并发数";
 settings.Concurrency="并发数";
 
 unsupportedFileFormat = "不支持的文件格式";
-ok = "确认";
+ok = "好的";
 settings.update = "更新";
 Error="出错了";
 Loading="加载中";
@@ -270,6 +270,12 @@ DisabledWebsites="屏蔽网址";
 FailedTranscode="转码失败";
 FailedNoSpace="空间不足";
 needNotDelete="您至少需要保留一个文件夹";
+FaceID="Face ID";
+FaceIDDisabled="未开启";
+FaceIDUnlock="使用FaceID解锁";
+VerifyOn="验证开启";
+VerifyOff="验证关闭";
+VerifyUnlock="验证解锁";
 
 InteractionDetail="互动";
 Type="类型";
@@ -353,3 +359,53 @@ NewSubscription="新的订阅";
 FillCompleteInfo="请填写完整信息";
 DeleteSubscribeConfirm="你确定要删除这条订阅规则吗？";
 UpdateOn="更新于";
+Iuse="我正在使用";
+PointProgress="点数获取进度";
+InviteFriend="邀请好友";
+InviteToGetPoint="邀请好友获取点数";
+InviteRule="邀请规则";
+InviteRuleDesc="分享您生成的卡片或者链接给您的朋友。如果您的朋友还有安装过Stay，通过输入您的邀请码，您和您的朋友都会获得相应的点数。如果您成功邀请5位朋友，您可以获得200个Stay点数。";
+
+HowToInvite="如何邀请好友？";
+HowToInviteDesc="查看在线指引";
+GenerateCard="生成卡片";
+ASafariExtension="Safari浏览器扩展";
+inviteTipsPro="Scan to get gift points";
+inviteTips="Scan to download Stay on the AppStore";
+ShareCard="分享卡片";
+CopLink="分享链接";
+EditInfo="编辑卡片";
+GiftPointToFriend="赠送好友点数";
+GetMorePoint="获取更多点数";
+ConsumePoint="Consuming %@ Point to Download";
+BacktoDownload="返回下载";
+TryAgain="稍后再试";
+HowToGift="如何赠送好友？";
+HowToGiftDesc="查看在线指引";
+GiftRule="礼物规则";
+GiftRuleDesc="由于您已经成为Stay Pro会员，您有100个Stay点数可以赠送给您的5位朋友。分享您生成的卡片或者链接给您的朋友，如果您的朋友还没有安装过Stay，通过输入您的礼物码，可以免费获赠20个Stay点数。";
+
+
+EnterCode="输入邀请/礼物码";
+PointsUsedFor="点数有什么作用？";
+PasteFromClipboard="从剪贴板粘贴";
+GetPoints="获取点数";
+NoCodeSkip="没有邀请/礼物码，跳过";
+GiftYourPoint="赠送好友点数";
+UserLeft="位还可邀请";
+IUseStay="我从";
+
+Points="点数";
+CommitCodePasteAlert="输入码不存在";
+InviteCodeNotFound="邀请码不存在";
+GiftCodeNotFound="礼物码不存在";
+GiftCodeHasExpired="礼物码已失效";
+CodeNotFound="邀请/礼物码不存在";
+
+
+StartInviting="Start Inviting";
+StartGifting="Start Gifting";
+PonitRules="What can Stay points do?";
+StayPoint="STAY点数";
+Confirm="确认";
+StayForm="Stay问卷";

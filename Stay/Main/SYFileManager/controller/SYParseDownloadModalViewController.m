@@ -24,6 +24,8 @@
 #import "SYDownloadResourceManagerController.h"
 #import "DeviceHelper.h"
 #import "QuickAccess.h"
+#import "FCStore.h"
+#import "SYInviteTaskController.h"
 
 @interface _DownloadTableViewCell : UITableViewCell<
   UITextViewDelegate
@@ -456,7 +458,9 @@
     BOOL isEnable = _curCount > 0;
     [self.startButton setEnabled:isEnable];
     self.startButton.layer.borderColor = isEnable ? FCStyle.accent.CGColor : FCStyle.borderColor.CGColor;
-    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""): [NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                      attributes:@{
                                 NSForegroundColorAttributeName : isEnable ? FCStyle.accent : [UIColor systemGray3Color],
                                  NSFontAttributeName : FCStyle.bodyBold}]
@@ -471,7 +475,7 @@
     return _dataSource;
 }
 
-- (void)setData:(NSArray<NSDictionary *> *)data {
+- (void)setData:(NSArray<NSDictionary *> *)data withQualityLabe:(nullable NSString *)qualityLabel {
     if (data.count == 0) {
         _curCount = 0;
         [self.dataSource removeAllObjects];
@@ -500,13 +504,26 @@
                         NSString *selectedDownloadUrl;
                         NSString *selectedAudioUrl;
                         Boolean selectedProtect = FALSE;
-                        for (NSDictionary *qulity in qualityList) {
-                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
-                                selectedQuality = qulity[@"qualityLabel"];
-                                selectedDownloadUrl = qulity[@"downloadUrl"];
-                                selectedAudioUrl = qulity[@"audioUrl"];
-                                selectedProtect = [qulity[@"protect"] boolValue];
-                                break;
+                        if (qualityLabel.length > 0) {
+                            for (NSDictionary *qulity in qualityList) {
+                                if ([qualityLabel isEqualToString:qulity[@"qualityLabel"]]) {
+                                    selectedQuality = qulity[@"qualityLabel"];
+                                    selectedDownloadUrl = qulity[@"downloadUrl"];
+                                    selectedAudioUrl = qulity[@"audioUrl"];
+                                    selectedProtect = [qulity[@"protect"] boolValue];
+                                    break;
+                                }
+                            }
+                        }
+                        if (selectedQuality.length == 0) {
+                            for (NSDictionary *qulity in qualityList) {
+                                if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                    selectedQuality = qulity[@"qualityLabel"];
+                                    selectedDownloadUrl = qulity[@"downloadUrl"];
+                                    selectedAudioUrl = qulity[@"audioUrl"];
+                                    selectedProtect = [qulity[@"protect"] boolValue];
+                                    break;
+                                }
                             }
                         }
                         if (selectedQuality.length == 0) {
@@ -534,13 +551,26 @@
                     NSString *selectedDownloadUrl;
                     NSString *selectedAudioUrl;
                     Boolean selectedProtect = FALSE;
-                    for (NSDictionary *qulity in qualityList) {
-                        if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
-                            selectedQuality = qulity[@"qualityLabel"];
-                            selectedDownloadUrl = qulity[@"downloadUrl"];
-                            selectedAudioUrl = qulity[@"audioUrl"];
-                            selectedProtect = [qulity[@"protect"] boolValue];
-                            break;
+                    if (qualityLabel.length > 0) {
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([qualityLabel isEqualToString:qulity[@"qualityLabel"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
+                                break;
+                            }
+                        }
+                    }
+                    if (selectedQuality.length == 0) {
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
+                                break;
+                            }
                         }
                     }
                     if (selectedQuality.length == 0) {
@@ -569,7 +599,8 @@
             }
         }
         [self.emptyView setHidden:YES];
-        [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+        [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):[NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
@@ -612,6 +643,24 @@
     if (self.dataSource.count == 0) {
         [self.navigationController.slideController dismiss];
     } else {
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+        if(!isPro) {
+            float point = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+            float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+            
+            if(point >= downloadNeedPoint) {
+                [DeviceHelper consumePoints:downloadNeedPoint];
+            } else {
+                SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
+                cer.nav = self.nav;
+                cer.needBack = true;
+                [self.navigationController pushModalViewController:cer];
+                return;
+            }
+        }
+        
+        
         int count = 0;
         int oldCount = 0;
         FCTab *tab;

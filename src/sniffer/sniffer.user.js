@@ -50,10 +50,7 @@ const browser = __b;
     let isLoadingLongPressStatus = false;
     let definedObj = {};
     let videoListMd5 = '';
-    let videoInfoMd5 = '';
     let isStayAround = '';
-    let documentLongPressEvent = null;
-    let videoAreaLongPressEvent = null;
     let longPressStatus = '';
     let hostUrl = window.location.href;
     let host = window.location.host;
@@ -1072,7 +1069,7 @@ const browser = __b;
      * @param {Object} posDom    添加长按事件的dom对象 
      * @param {Object} videoInfo 
      */
-    function checkVideoExist(videoDom, posDom, videoInfo){
+    async function checkVideoExist(videoDom, posDom, videoInfo){
       let downloadUrl = videoInfo.downloadUrl;
       if(!videoInfo.videoKey && !videoInfo.videoUuid){
         return;
@@ -1092,6 +1089,25 @@ const browser = __b;
       }
       // videoInfo.downloadUrl = Utils.isChinese(videoInfo.downloadUrl) ? window.encodeURI(videoInfo.downloadUrl) : videoInfo.downloadUrl;
       
+      if(!isStayAround && !isLoadingAround){
+        isLoadingAround = true;
+        isStayAround = await getStayAround();
+        isLoadingAround = false;
+      }
+      if('b' == isStayAround){
+        if(hostUrl.indexOf('youtube.com')>-1){
+          videoInfo.downloadUrl = videoInfo.hostUrl;
+          videoInfo.audioUrl = '';
+          if(videoInfo.qualityList && videoInfo.qualityList.length){
+            videoInfo.qualityList.forEach(item=>{
+              item.downloadUrl = videoInfo.hostUrl;
+              item.audioUrl = '';
+              return item;
+            })
+          }
+        }
+      }
+
       try {
         addLongPress(videoDom, posDom, videoInfo);
       } catch (error) {
@@ -1103,6 +1119,7 @@ const browser = __b;
         videoList.forEach(item=>{
           if(item.videoUuid == videoInfo.videoUuid || item.videoUuid == videoInfo.videoKey){
             item.downloadUrl = videoInfo.downloadUrl;
+            item.audioUrl = videoInfo.audioUrl?videoInfo.audioUrl:'';
             item.poster = videoInfo.poster?videoInfo.poster:'';
             item.title = videoInfo.title
             item.hostUrl = videoInfo.hostUrl
@@ -1215,7 +1232,7 @@ const browser = __b;
       if(videoListMd5 && videoListMd5 == videoInfoListMd5){
         return;
       }
-      console.log('pushVideoListToTransfer------',videoList);
+      // console.log('pushVideoListToTransfer------',videoList);
       videoListMd5 = videoInfoListMd5;
       if(isContent){
         // console.log('isContent----------------------');
@@ -1244,7 +1261,7 @@ const browser = __b;
         return;
       }
 
-      if(isLoadingAround || isLoadingLongPressStatus){
+      if(isLoadingLongPressStatus){
         return;
       }
 
@@ -1260,15 +1277,15 @@ const browser = __b;
       }
 
       // console.log('----getStayAround-----start------');
-      if(!isStayAround){
-        isLoadingAround = true;
-        isStayAround = await getStayAround();
-        isLoadingAround = false;
-      }
-      // console.log('----isStayAround-----',isStayAround);
-      if(isStayAround!='a'){
-        return;
-      }
+      // if(!isStayAround){
+      //   isLoadingAround = true;
+      //   isStayAround = await getStayAround();
+      //   isLoadingAround = false;
+      // }
+      // // console.log('----isStayAround-----',isStayAround);
+      // if(isStayAround!='a'){
+      //   return;
+      // }
       
       // console.log('addLongPress-------------',videoDom, posDom, videoInfo)
       let stayLongPress = posDom.getAttribute('stay-long-press');
@@ -1317,7 +1334,7 @@ const browser = __b;
           }
         }
         // console.log('addLongPress--------LongPress=====',hostUrl)
-        videoAreaLongPressEvent = new LongPress(posDom, ()=>{
+        new LongPress(posDom, ()=>{
           addSinfferModalByPosDom(videoDom, posDom, videoInfo);
         })
       }
@@ -1333,7 +1350,7 @@ const browser = __b;
             posDom.classList.add('__stay-unselect');
           }
         }
-        videoAreaLongPressEvent = new LongPress(posDom, ()=>{
+        new LongPress(posDom, ()=>{
           addSinfferModalByPosDom(videoDom, posDom, videoInfo);
         })
       }
@@ -1344,7 +1361,7 @@ const browser = __b;
         }
         if(posterDom){
           // posDom = posterDom;
-          videoAreaLongPressEvent = new LongPress(posterDom, ()=>{
+          new LongPress(posterDom, ()=>{
             addSinfferModalByPosDom(videoDom, posterDom, videoInfo);
           })
         }
@@ -1359,26 +1376,19 @@ const browser = __b;
     function getStayAround(){
       return new Promise((resolve, reject) => {
         if(isContent){
-          // console.log('getStayAround-----true');
           browser.runtime.sendMessage({from: 'sniffer', operate: 'GET_STAY_AROUND'}, (response) => {
-            // console.log('GET_STAY_AROUND---------',response)
             if(response.body && JSON.stringify(response.body)!='{}'){
-              // console.log('isStayAround---------', response.body)
               resolve( response.body);
             }
           });
         }else{
-          // console.log('getStayAround-----false');
           const pid = Math.random().toString(36).substring(2, 9);
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_STAY_AROUND_RESP') return;
-            // console.log('RESP_GET_STAY_AROUND----response=', e.data);
             let isStayPro = e.data ? (e.data.response ? e.data.response.body : 'b'): 'b';
-            // console.log('RESP_GET_STAY_AROUND----isStayAround=', isStayPro);
             resolve(isStayPro);
             window.removeEventListener('message', callback);
           };
-          // console.log('getStayAround-----false-----start---pid=',pid);
           window.postMessage({ id: pid, pid: pid, name: 'GET_STAY_AROUND' });
           window.addEventListener('message', callback);
         }
@@ -3612,13 +3622,13 @@ const browser = __b;
       }
     }
 
-    async function fetchLongPressConfig(){
-      if(!isStayAround){
+    async function fetchSnifferConfig(){
+      if(!isStayAround && !isLoadingAround){
         isLoadingAround = true;
         isStayAround = await getStayAround();
         isLoadingAround = false;
       }
-      if(!longPressStatus){
+      if(!longPressStatus && !isLoadingLongPressStatus){
         isLoadingLongPressStatus = true;
         longPressStatus = await getLongPressStatus();
         isLoadingLongPressStatus = false;
@@ -3661,8 +3671,8 @@ const browser = __b;
       }
     }
     
-    function startSnifferVideoInfoOnPage(complate){
-      fetchLongPressConfig();
+    async function startSnifferVideoInfoOnPage(complate){
+      await fetchSnifferConfig();
       startFetchYoutubeFunStr();
       fetchIframeVideoInfo();
       startFindVideoInfo(complate);

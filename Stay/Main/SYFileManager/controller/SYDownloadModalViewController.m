@@ -23,6 +23,8 @@
 #import "SYDownloadFolderChooseModalViewController.h"
 #import "QuickAccess.h"
 #import "DeviceHelper.h"
+#import "FCStore.h"
+#import "SYInviteTaskController.h"
 
 @interface SYDownloadModalViewController()<
  UITableViewDelegate,
@@ -251,7 +253,9 @@
 - (UIButton *)startDownloadButton{
     if (nil == _startDownloadButton){
         _startDownloadButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
-        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"StartDownload", @"")
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+        [_startDownloadButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro? NSLocalizedString(@"StartDownload", @""):[NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]
@@ -272,6 +276,23 @@
 
 - (void)startDownloadAction:(id)sender{
 
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    if(!isPro) {
+        float point = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+        
+        if(point >= downloadNeedPoint) {
+            [DeviceHelper consumePoints:downloadNeedPoint];
+        } else {
+            SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
+            cer.nav = self.nav;
+            cer.needBack = true;
+            [self.navigationController pushModalViewController:cer];
+            return;
+        }
+    }
+    
     
     if(self.linkElements[0].inputEntity.text == nil || self.linkElements[0].inputEntity.text.length == 0 ) {
         UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"urlNotEmpty", @"")
@@ -428,7 +449,6 @@
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.backgroundColor = FCStyle.popup;
         [self.view addSubview:_tableView];
-        
         [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
         [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
         [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];

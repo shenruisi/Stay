@@ -28,15 +28,26 @@
     return YES;
 }
 
+
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
     [coder encodeBool:self.pro forKey:@"pro"];
     [coder encodeObject:self.deviceID forKey:@"deviceID"];
+    [coder encodeFloat:self.availablePoints forKey:@"availablePoints"];
+    [coder encodeFloat:self.availableGiftPoints forKey:@"availableGiftPoints"];
+    [coder encodeFloat:self.downloadConsumePoints forKey:@"downloadConsumePoints"];
+    [coder encodeFloat:self.tagConsumePoints forKey:@"tagConsumePoints"];
 }
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
     if (self = [super init]){
         _pro = [coder decodeBoolForKey:@"pro"];
         _deviceID = [coder decodeObjectForKey:@"deviceID"];
+        _availablePoints = [coder decodeFloatForKey:@"availablePoints"];
+        _availableGiftPoints = [coder decodeFloatForKey:@"availableGiftPoints"];
+        _downloadConsumePoints = [coder decodeFloatForKey:@"downloadConsumePoints"];
+        if (_downloadConsumePoints == 0) _downloadConsumePoints = 1;
+        _tagConsumePoints = [coder decodeFloatForKey:@"tagConsumePoints"];
+        if (_tagConsumePoints == 0) _tagConsumePoints = 0.5;
     }
     
     return self;
@@ -57,6 +68,10 @@
                                                                         error:nil];
     _pro = userDefaults.pro;
     _deviceID = userDefaults.deviceID;
+    _availablePoints = userDefaults.availablePoints;
+    _availableGiftPoints = userDefaults.availableGiftPoints;
+    _downloadConsumePoints = userDefaults.downloadConsumePoints;
+    _tagConsumePoints = userDefaults.tagConsumePoints;
 }
 
 - (void)setPro:(BOOL)pro{
@@ -68,6 +83,27 @@
     _deviceID = deviceID;
     [self flush];
 }
+
+- (void)setAvailablePoints:(CGFloat)availablePoints{
+    _availablePoints = availablePoints;
+    [self flush];
+}
+
+- (void)setAvailableGiftPoints:(CGFloat)availableGiftPoints{
+    _availableGiftPoints = availableGiftPoints;
+    [self flush];
+}
+
+- (void)setDownloadConsumePoints:(CGFloat)downloadConsumePoints{
+    _downloadConsumePoints = downloadConsumePoints;
+    [self flush];
+}
+
+- (void)setTagConsumePoints:(CGFloat)tagConsumePoints{
+    _tagConsumePoints = tagConsumePoints;
+    [self flush];
+}
+
 
 - (dispatch_queue_t _Nonnull)dispatchQueue {
     return  _userDefaultsExROQueue;

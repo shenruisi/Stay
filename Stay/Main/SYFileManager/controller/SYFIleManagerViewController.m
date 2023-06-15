@@ -153,10 +153,10 @@ UIDocumentPickerDelegate
                                                  name:@"changeDownloading"
                                                object:nil];
 
-    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
-    if(isPro) {
-        self.navigationItem.rightBarButtonItems = @[[self addItem]];
-    }
+//    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+//    if(isPro) {
+    self.navigationItem.rightBarButtonItems = @[[self addItem]];
+//    }
     
     [self.videoArray addObjectsFromArray:[[DataManager shareManager] selectAllUnDownloadComplete]];
     if(self.videoArray.count > 0) {
@@ -883,6 +883,13 @@ UIDocumentPickerDelegate
                     defaultManager = [NSFileManager defaultManager];
                     [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
                 } else {
+                    
+                    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+
+                    if(!isPro){
+                        float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+                        [DeviceHelper rollbackPoints:downloadNeedPoint];
+                    }
                     [[DownloadManager shared] remove:downloadResource.downloadUuid];
                 }
                 [[DataManager shareManager] deleteVideoByuuid:downloadResource.downloadUuid];
@@ -1008,6 +1015,7 @@ UIDocumentPickerDelegate
 - (FolderSlideController *)folderSlideController {
     if(_folderSlideController == nil) {
         _folderSlideController = [[FolderSlideController alloc] initWithFolderTab:nil];
+        _folderSlideController.baseCer = self;
     }
     return _folderSlideController;
 }
@@ -1016,18 +1024,18 @@ UIDocumentPickerDelegate
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
-    if (isPro){
-        if (_emptyTipsView){
-            [_emptyTipsView removeFromSuperview];
-            _emptyTipsView = nil;
-        }
-    }
-    else{
-        [self emptyTipsView];
-    }
+//    Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+//    if (isPro){
+//        if (_emptyTipsView){
+//            [_emptyTipsView removeFromSuperview];
+//            _emptyTipsView = nil;
+//        }
+//    }
+//    else{
+//        [self emptyTipsView];
+//    }
         
-    self.tableView.hidden = !isPro;
+//    self.tableView.hidden = !isPro;
     
     
 #ifndef FC_MAC

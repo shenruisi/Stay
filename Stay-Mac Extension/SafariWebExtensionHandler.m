@@ -397,6 +397,15 @@ NSString * const SFExtensionMessageKey = @"message";
             [[API shared] commitYoutbe:path code:code nCode:nCode];
         }
     }
+    else if ([message[@"type"] isEqualToString:@"canTagAd"]){
+        [SharedStorageManager shared].userDefaultsExRO = nil;
+        CGFloat availablePoints = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        CGFloat tagConsumePoints = [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
+        body = @{
+            @"tag_ad" : @((availablePoints - tagConsumePoints) >= 0),
+            @"consume_points" : @(tagConsumePoints)
+        };
+    }
     else if ([message[@"type"] isEqualToString:@"ADB_tag_ad"]){
         NSArray<NSString *> *urls = message[@"urls"];
         NSString *selector = message[@"selector"];
@@ -436,6 +445,12 @@ NSString * const SFExtensionMessageKey = @"message";
             [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
+            
+            [SharedStorageManager shared].userDefaultsExRO = nil;
+            if (![SharedStorageManager shared].userDefaultsExRO.pro){
+                [SharedStorageManager shared].userDefaults = nil;
+                [SharedStorageManager shared].userDefaults.tagConsumed =  [SharedStorageManager shared].userDefaults.tagConsumed +  [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
+            }
         }
     }
     else if ([message[@"type"] isEqualToString:@"fetchTagStatus"]){

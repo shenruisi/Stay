@@ -56,9 +56,10 @@
 
 - (NSDictionary *)getHeaders {
     NSString *host = self.host;
-    if ([host containsString:@"akamai-cdn-content.com"]) {
+    if ([host containsString:@"akamai-cdn-content.com"] || [host containsString:@"akamai-content-network.com"]) {
         return @{
                  @"User-Agent": @"Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Mobile/15E148 Safari/604.1",
+                 @"referer": @"https://missav.com",
         };
     }
     return nil;

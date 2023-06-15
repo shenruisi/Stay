@@ -35,6 +35,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) SYTextInputViewController *sYTextInputViewController;
 @property (nonatomic, strong) SYChangeDocSlideController *syChangeDocSlideController;
+@property (nonatomic, strong) UIView *faceIDLockView;
 @end
 
 @implementation SYDownloadResourceManagerController
@@ -49,6 +50,12 @@
     self.tableView.sectionHeaderTopPadding = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeVideoDoc:) name:@"changeVideoDoc" object:nil];
 
+    FCTab *fCTab = [[FCShared tabManager] tabOfUUID:self.pathUuid];
+    if (fCTab != nil && fCTab.config.faceIDEnabled) {
+        [self.tableView setHidden:YES];
+        [self.faceIDLockView setHidden:NO];
+        [self faceAction:nil];
+    }
 }
 
 - (void)changeVideoDoc:(NSNotification *)notification {
@@ -331,6 +338,17 @@
     });
 }
 
+- (void)faceAction:(UIButton *)sender {
+    [FaceIDAuth evaluateWithLocalizedReason:NSLocalizedString(@"VerifyUnlock", @"") completion:^(BOOL success) {
+        if (success) {
+            [self.faceIDLockView removeFromSuperview];
+            [self.tableView setHidden:NO];
+        } else {
+            
+        }
+    }];
+}
+
 - (UITableView *)tableView {
     if (_tableView == nil) {
         _tableView = [[UITableView alloc]init];
@@ -360,6 +378,40 @@
 
     }
     return _sYTextInputViewController;
+}
+
+- (UIView *)faceIDLockView {
+    if (_faceIDLockView == nil) {
+        UIStackView *stackV = [[UIStackView alloc] init];
+        stackV.axis = UILayoutConstraintAxisVertical;
+        stackV.alignment = UIStackViewAlignmentCenter;
+        stackV.spacing = 20;
+        stackV.translatesAutoresizingMaskIntoConstraints = NO;
+        _faceIDLockView = stackV;
+        [self.view addSubview:_faceIDLockView];
+        
+        UIImageView *icon = [[UIImageView alloc] init];
+        icon.image = [ImageHelper sfNamed:@"faceid" font:[UIFont systemFontOfSize:34] color:FCStyle.accent];
+        [stackV addArrangedSubview:icon];
+        UIButton *btn = [[UIButton alloc] init];
+        [btn setTitle:NSLocalizedString(@"FaceIDUnlock", @"") forState:UIControlStateNormal];
+        [btn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+        btn.titleLabel.font = FCStyle.footnoteBold;
+        btn.layer.cornerRadius = 8;
+        btn.layer.borderWidth = 1;
+        btn.layer.borderColor = FCStyle.accent.CGColor;
+        btn.clipsToBounds = YES;
+        [btn addTarget:self action:@selector(faceAction:) forControlEvents:UIControlEventTouchUpInside];
+        [btn sizeToFit];
+        [stackV addArrangedSubview:btn];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [stackV.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+            [stackV.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+            [btn.widthAnchor constraintEqualToConstant:btn.width + 30],
+        ]];
+    }
+    return _faceIDLockView;
 }
 
 @end

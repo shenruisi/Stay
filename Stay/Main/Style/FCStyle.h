@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIColor *titleGrayColor;
 @property(class, nonatomic, readonly) UIColor *progressBgColor;
 @property(class, nonatomic, readonly) UIColor *subtitleColor;
-
+@property(class, nonatomic, readonly) UIColor *fcOrangeColor;
 
 @property(class, nonatomic, readonly) UIColor *filterCommentColor;
 @property(class, nonatomic, readonly) UIColor *filterExceptionColor;
@@ -65,6 +65,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *title1Bold;
 @property(class, nonatomic, readonly) UIFont *title3;
 @property(class, nonatomic, readonly) UIFont *title3Bold;
+@property(class, nonatomic, readonly) UIFont *LargeTitle1;
+@property(class, nonatomic, readonly) UIFont *LargeTitle1Bold;
+@property(class, nonatomic, readonly) UIFont *LargeTitle3;
+@property(class, nonatomic, readonly) UIFont *LargeTitle3Bold;
+
 
 @property(class, nonatomic, readonly) UIColor *fcShadowLine;
 @property(class, nonatomic, readonly) UIFont *sfFootnote;
@@ -84,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) UIFont *sfSymbolL2Bold;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL3;
 @property(class, nonatomic, readonly) UIFont *sfSymbolL3Bold;
+
 
 
 

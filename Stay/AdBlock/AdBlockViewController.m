@@ -377,7 +377,7 @@
                         [self.upgradeSlideController dismiss];
                     }
                     
-                    self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
+                    self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:contentFilter.title];
                     self.upgradeSlideController.baseCer = self;
                     [self.upgradeSlideController show];
                     return;
@@ -778,6 +778,7 @@
         }
     }
     else if (item == self.trustedSitesTabItem){
+        self.trustedSitesSource = nil;
         self.reloadTabItem.button.hidden = YES;
         _tableView.hidden = YES;
         _webView.hidden = YES;

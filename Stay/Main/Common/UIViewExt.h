@@ -19,7 +19,18 @@
 
 #define RGB(r,g,b)  [UIColor colorWithRed:(r)/255.f green:(g)/255.f blue:(b)/255.f alpha:1.f]
 
-
+#define UIColorFromRGB(hexString) \
+({ \
+    unsigned int hexValue = 0; \
+    NSScanner *scanner = [NSScanner scannerWithString:hexString]; \
+    [scanner setScanLocation:1]; \
+    [scanner scanHexInt:&hexValue]; \
+    UIColor *color = [UIColor colorWithRed:((CGFloat)((hexValue & 0xFF0000) >> 16)) / 255.0 \
+                                     green:((CGFloat)((hexValue & 0xFF00) >> 8)) / 255.0 \
+                                      blue:((CGFloat)(hexValue & 0xFF)) / 255.0 \
+                                     alpha:1.0]; \
+    color; \
+})
 CGPoint CGRectGetCenter(CGRect rect);
 CGRect  CGRectMoveToCenter(CGRect rect, CGPoint center);
 

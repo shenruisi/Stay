@@ -24,7 +24,10 @@
 #import "SYFlashViewController.h"
 #import "SharedStorageManager.h"
 #import "FCTableViewCell.h"
-
+#import "SYInviteViewController.h"
+#import "API.h"
+#import "DeviceHelper.h"
+#import "SYInviteTaskSlideController.h"
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
 
@@ -513,6 +516,10 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     NSString *type = entity[@"type"];
     if ([@"M3U8Concurrency" isEqualToString:type]) {
         self.noteLabel.text = [@([[FCConfig shared] getIntegerValueOfKey:GroupUserDefaultsKeyM3U8Concurrency]) stringValue];
+    } else if ([@"stayPoint" isEqualToString:type]){
+        Boolean isPro = [[FCStore shared] getPlan:NO] != FCPlan.None;
+        self.noteLabel.text = isPro?NSLocalizedString(@"GiftPointToFriend", @""):NSLocalizedString(@"GetMorePoint", @"");
+
     } else {
         self.noteLabel.text = nil;
     }
@@ -539,6 +546,8 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<NSDictionary *> *dataSource;
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
+@property (nonatomic, assign) CGFloat leftPointCount;
+@property (nonatomic, strong) SYInviteTaskSlideController *inviteTaskSlideController;
 @end
 
 @implementation SYMoreViewController
@@ -554,6 +563,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     [super viewWillAppear:animated];
     dispatch_async(dispatch_get_main_queue(), ^{
 //        self.tableView.frame = self.view.bounds;
+        self.dataSource = nil;
         [self.tableView reloadData];
     });
     
@@ -580,6 +590,34 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                object:nil];
     
     self.tableView.sectionHeaderTopPadding = 0;
+    
+    
+    
+    [[API shared] queryPath:@"/self"
+                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+        
+//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+//            _leftPointCount =  [biz[@"gift_points"] integerValue];
+//        } else {
+//            _leftPointCount = [biz[@"point"] integerValue];
+//        }
+        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+        } else {
+            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        }
+//
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.dataSource = nil;
+            [self.tableView reloadData];
+        });
+        
+    }];
+    
 }
 
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
@@ -632,6 +670,9 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         cell = [[_BadgeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     else if ([entity[@"type"] isEqualToString:@"M3U8Concurrency"]){
+        cell = [[_MoreNoteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
+    else if ([entity[@"type"] isEqualToString:@"stayPoint"]) {
         cell = [[_MoreNoteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     else{
@@ -698,6 +739,24 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 #else
             [self.navigationController pushViewController:[[SYConcurrencyViewController alloc] init] animated:YES];
 #endif
+        } else if([type isEqualToString:@"stayPoint"]) {
+            Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+            if(isPro) {
+#ifdef FC_MAC
+                [self presentViewController:
+                 [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
+                                   animated:YES completion:^{}];
+#else
+                [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
+#endif
+            } else {
+                self.inviteTaskSlideController = nil;
+                if(!self.inviteTaskSlideController.isShown) {
+                    [self.inviteTaskSlideController show];
+                }
+            }
+            
         }
     }
 }
@@ -864,6 +923,16 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 ]
             },
             @{
+                @"section":NSLocalizedString(@"StayPoint",@""),
+                @"cells":@[
+                    @{
+                        @"title":[NSString stringWithFormat:@"%@ Point(s)",@(_leftPointCount).description] ,
+                        @"icon":@"InviteImage",
+                      @"type":@"stayPoint",
+                    }
+                ]
+            },
+            @{
                 @"section":NSLocalizedString(@"SYNC",@""),
                 @"cells":@[
                     @{@"title":@"iCloud",
@@ -885,11 +954,10 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
             @{
                 @"section":NSLocalizedString(@"Interaction",@""),
                 @"cells":@[
-#ifndef FC_MAC
-                    @{@"title":NSLocalizedString(@"settings.getStarted",@""),
-                      @"type":@"getStarted",
+                    @{@"title":NSLocalizedString(@"StayForm",@""),
+                      @"url":@"https://50o23tv4hp8.typeform.com/to/jd90gBvi",
+                      @"type":@"stayForm",
                     },
-#endif
                     @{@"title":NSLocalizedString(@"settings.rateApp",@""),
                       @"url":@"https://apps.apple.com/app/id1591620171?action=write-review",
                       @"subtitle":@"Stay"
@@ -959,6 +1027,14 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     }
     
     return _tableView;
+}
+
+- (SYInviteTaskSlideController *)inviteTaskSlideController {
+    if(nil == _inviteTaskSlideController) {
+        _inviteTaskSlideController = [[SYInviteTaskSlideController alloc] init];
+        _inviteTaskSlideController.nav = self.navigationController;
+    }
+    return _inviteTaskSlideController;
 }
 
 - (void)dealloc{
