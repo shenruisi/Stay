@@ -159,7 +159,11 @@
 }
 
 - (NSURLRequest *)getRequest {
-    return [[NSURL URLWithString:self] getRequest];
+    return [[NSURL URLWithString:self] getRequest:nil];
+}
+
+- (NSURLRequest *)getRequest:(NSString *)range {
+    return [[NSURL URLWithString:self] getRequest:range];
 }
 
 @end

@@ -27,6 +27,6 @@
 
 - (nullable NSDictionary *)getHeaders;
 
-- (NSURLRequest *)getRequest;
+- (NSURLRequest *)getRequest:(nullable NSString *)range;
 
 @end
