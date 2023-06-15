@@ -386,6 +386,7 @@ UITableViewDataSource
         NSRange contentRange = {0, [content length] - 1};
         [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
           
+        _pointRules.userInteractionEnabled = YES;
         _pointRules.attributedText = content;
         _pointRules.textColor = FCStyle.accent;
         _pointRules.font = FCStyle.bodyBold;
