@@ -377,7 +377,7 @@
                         [self.upgradeSlideController dismiss];
                     }
                     
-                    self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:[NSString stringWithFormat:NSLocalizedString(@"UpgradeMessage", @""),contentFilter.title]];
+                    self.upgradeSlideController = [[UpgradeSlideController alloc] initWithMessage:contentFilter.title];
                     self.upgradeSlideController.baseCer = self;
                     [self.upgradeSlideController show];
                     return;
