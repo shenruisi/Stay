@@ -202,6 +202,7 @@ UITableViewDataSource
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     InviteTaskCell *cell = [[InviteTaskCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SYTaskCell"];
+    cell.backgroundColor = FCStyle.popup;
     cell.dic = _taskArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setUpUI];

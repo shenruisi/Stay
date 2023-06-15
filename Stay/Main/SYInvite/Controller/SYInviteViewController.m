@@ -374,7 +374,7 @@
             _dateLabel.textColor = FCStyle.accent;
         }
         _dateLabel.font = FCStyle.footnoteBold;
-        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceCn];
 
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
 
@@ -513,7 +513,7 @@
             shareDateLabel.textColor = FCStyle.accent;
         }
         shareDateLabel.font = FCStyle.footnoteBold;
-        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceCn];
 
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
 
@@ -880,11 +880,11 @@ UITableViewDataSource
 
 - (void)inviteCreate:(UIButton *)sender {
     if(_detail != NULL) {
-        if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-            self.inviteCardController.dateStr = _detail.sinceEn;
-        } else {
+//        if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+//            self.inviteCardController.dateStr = _detail.sinceCn;
+//        } else {
             self.inviteCardController.dateStr = _detail.sinceCn;
-        }
+//        }
         self.inviteCardController.imageList = _detail.candidateCovers;
         self.inviteCardController.color = _detail.color;
         self.inviteCardController.defaultImage = _detail.cover;

@@ -602,7 +602,7 @@
             _dateLabel.textColor = FCStyle.accent;
         }
         _dateLabel.font = FCStyle.footnoteBold;
-        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceCn];
 
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
 
