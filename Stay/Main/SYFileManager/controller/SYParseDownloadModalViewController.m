@@ -683,6 +683,7 @@
                 resource.host = item[@"hostUrl"];
                 resource.audioUrl = item[@"selectedAudioUrl"] ? item[@"selectedAudioUrl"] : item[@"audioUrl"];
                 resource.protect = [item[@"selectedProtect"] ? item[@"selectedProtect"] : item[@"protect"] isEqual:@(1)]?YES:NO;
+                resource.qualityLabel =  item[@"selectedQuality"];
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
                 }

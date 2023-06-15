@@ -339,6 +339,7 @@
     if(self.dic != NULL) {
         resource.icon = self.dic[@"poster"];
         resource.host = self.dic[@"hostUrl"];
+        resource.qualityLabel = self.dic[@"qualityLabel"];
     }
     
     if(resource.host == nil) {
