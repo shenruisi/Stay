@@ -148,312 +148,312 @@ UITableViewDataSource
 @end
 @implementation SYInviteTaskController
 
-- (void)viewDidLoad {
-    self.navigationBar.hidden = NO;
-    self.navigationBar.showCancel = YES;
-
-    self.title = NSLocalizedString(@"GetMorePoint", @"");
-    [[API shared] queryPath:@"/tasks"
-                        pro:NO
-                   deviceId:DeviceHelper.uuid
-                        biz:nil
-                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-
-
-        _taskArray = biz[@"tasks"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-        
-    }];
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillEnterForeground:)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(SYViewWillAppear:)
-                                                 name:@"SYViewWillAppear"
-                                               object:nil];
-    [self subButton];
-    
-    [self pointRules];
-    self.pointRules.bottom = self.subButton.top - 15;
-    self.pointRules.centerX = self.subButton.centerX;
-}
-
-- (void)howPoint {
-    NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
-    
-#ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-#else
-        if (FCDeviceTypeIPhone == DeviceHelper.type){
-            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
-            [self.nav presentViewController:safariVc animated:YES completion:nil];
-        }
-#endif
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    InviteTaskCell *cell = [[InviteTaskCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SYTaskCell"];
-    cell.dic = _taskArray[indexPath.row];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    [cell setUpUI];
-    return cell;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(_taskArray == NULL) {
-        return 0;
-    } else {
-        return  _taskArray.count;
-    }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 85;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *dic = _taskArray[indexPath.row];
-    if([@"invite" isEqualToString: dic[@"type"]]) {
-#ifdef FC_MAC
-            [self presentViewController:
-             [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
-                               animated:YES completion:^{}];
-#else
-            [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
-#endif
-        
-        [self.navigationController.slideController dismiss];
-    } else if ([@"generic" isEqualToString: dic[@"type"]]) {
-        
-        
-        NSData *jsonData = [dic[@"action_json"] dataUsingEncoding:NSUTF8StringEncoding];
-
-
-        NSDictionary *action = [NSJSONSerialization JSONObjectWithData:jsonData
-
-        options:NSJSONReadingMutableContainers
-
-        error:nil];
-        
-        if([@"app" isEqualToString:action[@"type"]]) {
-            if(self.rewardBlockDic[dic[@"uuid"]] == NULL) {
-                
-       
-                
-                if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:action[@"url"]]]){
-                    
-                    [[API shared] queryPath:@"/generic-task/init"
-                                        pro:NO
-                                   deviceId:DeviceHelper.uuid
-                                        biz:@{@"task_id":dic[@"uuid"]}
-                                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-                    }];
-                    
-                    
-                    dispatch_block_t rewardBlock =  dispatch_block_create(0, ^{
-                        [[API shared] queryPath:@"/generic-task/commit"
-                                            pro:NO
-                                       deviceId:DeviceHelper.uuid
-                                            biz:@{@"task_id":dic[@"uuid"]}
-                                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-                        }];
-                    });
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
-                    self.rewardBlockDic[dic[@"uuid"]] = rewardBlock;
-                    
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:action[@"url"]]];
-                }
-            
-            }
-        } else if([@"web" isEqualToString:action[@"type"]]) {
-            
-            [[API shared] queryPath:@"/generic-task/init"
-                                pro:NO
-                           deviceId:DeviceHelper.uuid
-                                biz:@{@"task_id":dic[@"uuid"]}
-                         completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-            }];
-            
-            dispatch_block_t rewardBlock =  dispatch_block_create(0, ^{
-                [[API shared] queryPath:@"/generic-task/commit"
-                                    pro:NO
-                               deviceId:DeviceHelper.uuid
-                                    biz:@{@"task_id":dic[@"uuid"]}
-                             completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-                    
-                    NSLog(@"请求成功了");
-                }];
-            });
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
-            self.webRewardBlockDic[dic[@"uuid"]] = rewardBlock;
-#ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-#else
-        if (FCDeviceTypeIPhone == DeviceHelper.type){
-            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:action[@"url"]]];
-            [self.nav presentViewController:safariVc animated:YES completion:nil];
-        }
-#endif
-        }
-        
-    }
-}
-
-
-- (void)backLast:(UIButton *)sender {
-    if(_needBack) {
-        [self.navigationController popModalViewController];
-    } else {
-        [self.navigationController.slideController dismiss];
-    }
-}
-
-- (UITableView *)tableView{
-    if (nil == _tableView){
-        _tableView = [[UITableView alloc] init];
-        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        //TODO:
-        if (@available(ios 15.0, *)){
-           _tableView.sectionHeaderTopPadding = 0;
-        }
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.sectionFooterHeight = 0;
-        _tableView.showsVerticalScrollIndicator = NO;
-        _tableView.backgroundColor = FCStyle.popup;
-        [self.view addSubview:_tableView];
-        [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
-        [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
-        [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10] setActive:YES];
-        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10-10-45 - 40] setActive:YES];
-    }
-    return _tableView;
-}
-
-- (UIButton *)subButton{
-    if (nil == _subButton){
-        _subButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
-
-        [_subButton setAttributedTitle:[[NSAttributedString alloc] initWithString:_needBack?NSLocalizedString(@"BacktoDownload", @""):NSLocalizedString(@"TryAgain", @"")
-                                                                                 attributes:@{
-                             NSForegroundColorAttributeName : FCStyle.accent,
-                             NSFontAttributeName : FCStyle.bodyBold}]
-                                        forState:UIControlStateNormal];
-        [_subButton addTarget:self
-                                 action:@selector(backLast:)
-                       forControlEvents:UIControlEventTouchUpInside];
-        _subButton.backgroundColor = UIColor.clearColor;
-        _subButton.layer.borderColor = FCStyle.accent.CGColor;
-        _subButton.layer.borderWidth = 1;
-        _subButton.layer.cornerRadius = 10;
-        _subButton.layer.masksToBounds = YES;
-        [self.view addSubview:_subButton];
-    }
-    
-    return _subButton;
-}
-
-- (NSMutableDictionary *)rewardBlockDic {
-    if(nil == _rewardBlockDic) {
-        _rewardBlockDic = [NSMutableDictionary dictionary];
-    }
-    return _rewardBlockDic;
-}
-
-- (NSMutableDictionary *)webRewardBlockDic {
-    if(nil == _webRewardBlockDic) {
-        _webRewardBlockDic = [NSMutableDictionary dictionary];
-    }
-    return _webRewardBlockDic;
-}
-
-- (UILabel *)pointRules {
-    if(nil == _pointRules) {
-        _pointRules = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
-        
-        NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"PonitRules", @"")];
-        NSRange contentRange = {0, [content length] - 1};
-        [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
-          
-        _pointRules.attributedText = content;
-        _pointRules.textColor = FCStyle.accent;
-        _pointRules.font = FCStyle.bodyBold;
-        _pointRules.textAlignment = NSTextAlignmentCenter;
-        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                  action:@selector(howPoint)];
-        [_pointRules addGestureRecognizer:gesture];
-        [self.view addSubview:_pointRules];
-
-    }
-    return _pointRules;
-    
-}
-
-- (CGSize)mainViewSize{
-    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 487);
-}
-
-- (void)SYViewWillAppear:(NSNotification *)notification {
-    if(self.webRewardBlockDic.count > 0) {
-        for (dispatch_block_t rewardBlock in self.webRewardBlockDic.allValues) {
-            dispatch_block_cancel(rewardBlock);
-        }
-        [self.webRewardBlockDic removeAllObjects];
-        
-        
-        [[API shared] queryPath:@"/tasks"
-                            pro:NO
-                       deviceId:DeviceHelper.uuid
-                            biz:nil
-                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-
-
-            _taskArray = biz[@"tasks"];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
-            
-        }];
-    }
-}
-
-- (void)applicationWillEnterForeground:(NSNotification *)notification {
-    if(self.rewardBlockDic.count > 0) {
-        for (dispatch_block_t rewardBlock in self.rewardBlockDic.allValues) {
-            dispatch_block_cancel(rewardBlock);
-        }
-        [self.rewardBlockDic removeAllObjects];
-        [[API shared] queryPath:@"/tasks"
-                            pro:NO
-                       deviceId:DeviceHelper.uuid
-                            biz:nil
-                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-
-
-            _taskArray = biz[@"tasks"];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-            });
-            
-        }];
-    }
-}
-
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+//- (void)viewDidLoad {
+//    self.navigationBar.hidden = NO;
+//    self.navigationBar.showCancel = YES;
+//
+//    self.title = NSLocalizedString(@"GetMorePoint", @"");
+//    [[API shared] queryPath:@"/tasks"
+//                        pro:NO
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//
+//
+//        _taskArray = biz[@"tasks"];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.tableView reloadData];
+//        });
+//        
+//    }];
+//    
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(applicationWillEnterForeground:)
+//                                                 name:UIApplicationWillEnterForegroundNotification
+//                                               object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(SYViewWillAppear:)
+//                                                 name:@"SYViewWillAppear"
+//                                               object:nil];
+//    [self subButton];
+//    
+//    [self pointRules];
+//    self.pointRules.bottom = self.subButton.top - 15;
+//    self.pointRules.centerX = self.subButton.centerX;
+//}
+//
+//- (void)howPoint {
+//    NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
+//    
+//#ifdef FC_MAC
+//        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+//#else
+//        if (FCDeviceTypeIPhone == DeviceHelper.type){
+//            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
+//            [self.nav presentViewController:safariVc animated:YES completion:nil];
+//        }
+//#endif
+//}
+//
+//
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//    InviteTaskCell *cell = [[InviteTaskCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SYTaskCell"];
+//    cell.dic = _taskArray[indexPath.row];
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    [cell setUpUI];
+//    return cell;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//    if(_taskArray == NULL) {
+//        return 0;
+//    } else {
+//        return  _taskArray.count;
+//    }
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return 85;
+//}
+//
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSDictionary *dic = _taskArray[indexPath.row];
+//    if([@"invite" isEqualToString: dic[@"type"]]) {
+//#ifdef FC_MAC
+//            [self presentViewController:
+//             [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
+//                               animated:YES completion:^{}];
+//#else
+//            [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
+//#endif
+//        
+//        [self.navigationController.slideController dismiss];
+//    } else if ([@"generic" isEqualToString: dic[@"type"]]) {
+//        
+//        
+//        NSData *jsonData = [dic[@"action_json"] dataUsingEncoding:NSUTF8StringEncoding];
+//
+//
+//        NSDictionary *action = [NSJSONSerialization JSONObjectWithData:jsonData
+//
+//        options:NSJSONReadingMutableContainers
+//
+//        error:nil];
+//        
+//        if([@"app" isEqualToString:action[@"type"]]) {
+//            if(self.rewardBlockDic[dic[@"uuid"]] == NULL) {
+//                
+//       
+//                
+//                if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:action[@"url"]]]){
+//                    
+//                    [[API shared] queryPath:@"/generic-task/init"
+//                                        pro:NO
+//                                   deviceId:DeviceHelper.uuid
+//                                        biz:@{@"task_id":dic[@"uuid"]}
+//                                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//                    }];
+//                    
+//                    
+//                    dispatch_block_t rewardBlock =  dispatch_block_create(0, ^{
+//                        [[API shared] queryPath:@"/generic-task/commit"
+//                                            pro:NO
+//                                       deviceId:DeviceHelper.uuid
+//                                            biz:@{@"task_id":dic[@"uuid"]}
+//                                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//                        }];
+//                    });
+//                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
+//                    self.rewardBlockDic[dic[@"uuid"]] = rewardBlock;
+//                    
+//                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:action[@"url"]]];
+//                }
+//            
+//            }
+//        } else if([@"web" isEqualToString:action[@"type"]]) {
+//            
+//            [[API shared] queryPath:@"/generic-task/init"
+//                                pro:NO
+//                           deviceId:DeviceHelper.uuid
+//                                biz:@{@"task_id":dic[@"uuid"]}
+//                         completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//            }];
+//            
+//            dispatch_block_t rewardBlock =  dispatch_block_create(0, ^{
+//                [[API shared] queryPath:@"/generic-task/commit"
+//                                    pro:NO
+//                               deviceId:DeviceHelper.uuid
+//                                    biz:@{@"task_id":dic[@"uuid"]}
+//                             completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//                    
+//                    NSLog(@"请求成功了");
+//                }];
+//            });
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
+//            self.webRewardBlockDic[dic[@"uuid"]] = rewardBlock;
+//#ifdef FC_MAC
+//        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+//#else
+//        if (FCDeviceTypeIPhone == DeviceHelper.type){
+//            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:action[@"url"]]];
+//            [self.nav presentViewController:safariVc animated:YES completion:nil];
+//        }
+//#endif
+//        }
+//        
+//    }
+//}
+//
+//
+//- (void)backLast:(UIButton *)sender {
+//    if(_needBack) {
+//        [self.navigationController popModalViewController];
+//    } else {
+//        [self.navigationController.slideController dismiss];
+//    }
+//}
+//
+//- (UITableView *)tableView{
+//    if (nil == _tableView){
+//        _tableView = [[UITableView alloc] init];
+//        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+//        _tableView.delegate = self;
+//        _tableView.dataSource = self;
+//        //TODO:
+//        if (@available(ios 15.0, *)){
+//           _tableView.sectionHeaderTopPadding = 0;
+//        }
+//        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        _tableView.sectionFooterHeight = 0;
+//        _tableView.showsVerticalScrollIndicator = NO;
+//        _tableView.backgroundColor = FCStyle.popup;
+//        [self.view addSubview:_tableView];
+//        [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
+//        [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
+//        [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10] setActive:YES];
+//        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10-10-45 - 40] setActive:YES];
+//    }
+//    return _tableView;
+//}
+//
+//- (UIButton *)subButton{
+//    if (nil == _subButton){
+//        _subButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
+//
+//        [_subButton setAttributedTitle:[[NSAttributedString alloc] initWithString:_needBack?NSLocalizedString(@"BacktoDownload", @""):NSLocalizedString(@"TryAgain", @"")
+//                                                                                 attributes:@{
+//                             NSForegroundColorAttributeName : FCStyle.accent,
+//                             NSFontAttributeName : FCStyle.bodyBold}]
+//                                        forState:UIControlStateNormal];
+//        [_subButton addTarget:self
+//                                 action:@selector(backLast:)
+//                       forControlEvents:UIControlEventTouchUpInside];
+//        _subButton.backgroundColor = UIColor.clearColor;
+//        _subButton.layer.borderColor = FCStyle.accent.CGColor;
+//        _subButton.layer.borderWidth = 1;
+//        _subButton.layer.cornerRadius = 10;
+//        _subButton.layer.masksToBounds = YES;
+//        [self.view addSubview:_subButton];
+//    }
+//    
+//    return _subButton;
+//}
+//
+//- (NSMutableDictionary *)rewardBlockDic {
+//    if(nil == _rewardBlockDic) {
+//        _rewardBlockDic = [NSMutableDictionary dictionary];
+//    }
+//    return _rewardBlockDic;
+//}
+//
+//- (NSMutableDictionary *)webRewardBlockDic {
+//    if(nil == _webRewardBlockDic) {
+//        _webRewardBlockDic = [NSMutableDictionary dictionary];
+//    }
+//    return _webRewardBlockDic;
+//}
+//
+//- (UILabel *)pointRules {
+//    if(nil == _pointRules) {
+//        _pointRules = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+//        
+//        NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"PonitRules", @"")];
+//        NSRange contentRange = {0, [content length] - 1};
+//        [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+//          
+//        _pointRules.attributedText = content;
+//        _pointRules.textColor = FCStyle.accent;
+//        _pointRules.font = FCStyle.bodyBold;
+//        _pointRules.textAlignment = NSTextAlignmentCenter;
+//        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                                                  action:@selector(howPoint)];
+//        [_pointRules addGestureRecognizer:gesture];
+//        [self.view addSubview:_pointRules];
+//
+//    }
+//    return _pointRules;
+//    
+//}
+//
+//- (CGSize)mainViewSize{
+//    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 487);
+//}
+//
+//- (void)SYViewWillAppear:(NSNotification *)notification {
+//    if(self.webRewardBlockDic.count > 0) {
+//        for (dispatch_block_t rewardBlock in self.webRewardBlockDic.allValues) {
+//            dispatch_block_cancel(rewardBlock);
+//        }
+//        [self.webRewardBlockDic removeAllObjects];
+//        
+//        
+//        [[API shared] queryPath:@"/tasks"
+//                            pro:NO
+//                       deviceId:DeviceHelper.uuid
+//                            biz:nil
+//                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//
+//
+//            _taskArray = biz[@"tasks"];
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self.tableView reloadData];
+//            });
+//            
+//        }];
+//    }
+//}
+//
+//- (void)applicationWillEnterForeground:(NSNotification *)notification {
+//    if(self.rewardBlockDic.count > 0) {
+//        for (dispatch_block_t rewardBlock in self.rewardBlockDic.allValues) {
+//            dispatch_block_cancel(rewardBlock);
+//        }
+//        [self.rewardBlockDic removeAllObjects];
+//        [[API shared] queryPath:@"/tasks"
+//                            pro:NO
+//                       deviceId:DeviceHelper.uuid
+//                            biz:nil
+//                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//
+//
+//            _taskArray = biz[@"tasks"];
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self.tableView reloadData];
+//            });
+//            
+//        }];
+//    }
+//}
+//
+//
+//- (void)dealloc {
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//}
 
 @end

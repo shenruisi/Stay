@@ -1,5 +1,5 @@
 let __storage;
-let __storageChangeListeners = [];
+let __storageChangeListeners = new Map();
 let __extension = window.browser;
 //Supported GM APIS
 //https://violentmonkey.github.io/api/gm/
@@ -52,6 +52,7 @@ const GM_apis = {
         const item = {};
         item[realKey] = value;
         if (__extension){
+            //TODO: This sync will cause the valueChangeListener received the message before added.
             __extension.storage.local.set(item);
         }
         else{
@@ -99,7 +100,7 @@ const GM_apis = {
         return new Promise(resolve => {
             const prefix = `_${this.uuid}_`;
             const keys = [];
-            const allKeys = __storage.keys();
+            const allKeys = Object.keys(__storage);
             for (let i = 0; i < allKeys.length; i++){
                 const key = allKeys[i];
                 if (key.startsWith(prefix)) {
@@ -113,7 +114,7 @@ const GM_apis = {
     _listValues: function(){
         const prefix = `_${this.uuid}_`;
         const keys = [];
-        const allKeys = __storage.keys();
+        const allKeys = Object.keys(__storage);
         for (let i = 0; i < allKeys.length; i++){
             const key = allKeys[i];
             if (key.startsWith(prefix)) {
@@ -133,7 +134,7 @@ const GM_apis = {
         
         return new Promise(resolve => {
             const realKey = `_${this.uuid}_${key}`;
-            __storage.delete(realKey);
+            delete __storage[realKey];
             if (__extension){
                 __extension.storage.local.remove(realKey, () => {
                     resolve();
@@ -158,7 +159,7 @@ const GM_apis = {
         }
         
         const realKey = `_${this.uuid}_${key}`;
-        __storage.delete(realKey);
+        delete __storage[realKey];
         
         if (__extension){
             __extension.storage.local.remove(realKey);
@@ -173,8 +174,73 @@ const GM_apis = {
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "deleteValue", key: realKey, group: "gm_apis", type: "req"});
         }
     },
-    addValueChangeListener: function(name, callback){
-        
+    addValueChangeListener: function(name, valueChangeCallback){
+        const realKey = `_${this.uuid}_${name}`;
+        return new Promise(resolve => {
+            if (__extension){
+                __storageChangeListeners[realKey] = valueChangeCallback;
+                resolve(realKey);
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "addValueChangeListener" || e.data.type !== "resp") return;
+                    window.removeEventListener("message", callback);
+                    reslove(realKey);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "addValueChangeListener", key: realKey, group: "gm_apis", type: "req"});
+            }
+        });
+    },
+    _addValueChangeListener: function(name, valueChangeCallback){
+        const realKey = `_${this.uuid}_${name}`;
+        if (__extension){
+            __storageChangeListeners[realKey] = valueChangeCallback;
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "addValueChangeListener" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+                reslove(realKey);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "addValueChangeListener", key: realKey, group: "gm_apis", type: "req"});
+        }
+        return realKey;
+    },
+    removeValueChangeListener: function(listenerId){
+        return new Promise(resolve => {
+            if (__extension){
+                delete __storageChangeListeners[listenerId];
+                resolve();
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "removeValueChangeListener" || e.data.type !== "resp") return;
+                    window.removeEventListener("message", callback);
+                    reslove();
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "removeValueChangeListener", key: realKey, group: "gm_apis", type: "req"});
+            }
+        });
+    },
+    _removeValueChangeListener: function(listenerId){
+        if (__extension){
+            delete __storageChangeListeners[listenerId];
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "removeValueChangeListener" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "removeValueChangeListener", key: listenerId, group: "gm_apis", type: "req"});
+        }
     }
 }
 
@@ -197,7 +263,7 @@ const fetchStorage = function fetchStorage(){
                 resolve(items);
             };
             window.addEventListener("message", callback);
-            window.postMessage({ pid: pid, operate: "storage.local.getAll", group: "stay", type: "req"});
+            window.postMessage({ pid: pid, operate: "storage.local.getAll", group: "inject_page", type: "req"});
         });
     }
 }
@@ -205,7 +271,6 @@ const fetchStorage = function fetchStorage(){
 const label = Math.random().toString(36).substring(2, 9);
 
 let storage;
-let env;
 async function executeScript(userscript){
     const sourceTag = window.self === window.top ? "[main]" : `[${label}](window.location)`;
     let injectInto = userscript.metadata["inject-into"];
@@ -254,10 +319,11 @@ async function executeScript(userscript){
         const code = `
             (async function(){
                 //env
-                __extension = undefined;
+                window.addEventListener("message", ${valueChangeDispatchInPage}, false);
+                const __extension = undefined;
                 ${fetchStorage}
                 console.time();
-                __storage = await fetchStorage();
+                const __storage = await fetchStorage();
                 console.timeEnd();
                 const GM_apis = ${GM_apis_code};
                 ${userscript.genCode}
@@ -323,7 +389,7 @@ function cspCallback(e){
 
 function receiveMessage(e){
     const message = e.data;
-    if (message.group === "stay"){
+    if (message.group === "inject_page"){
         const uuid = message.uuid;
         const operate = message.operate;
         
@@ -345,17 +411,31 @@ function receiveMessage(e){
             browser.storage.local.set(item);
             window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
         }
+        else if (operate === "addValueChangeListener"){
+//            __storageChangeListeners[message.key] =
+        }
     }
+}
+
+function valueChangeDispatchInPage(e){
+//    if (e.data.group === "inject_page"){
+//        const params = JSON.parse(e.data.params);
+//        const realKey =
+//        const callback = __storageChangeListeners[params.key];
+//        if (callback){
+//            callback(params)
+//        }
+//    }
 }
 
 function storageLocalOnChanged(changes){
     const changedItems = Object.keys(changes);
-
-      for (const item of changedItems) {
-        console.log(`${item} has changed:`);
-        console.log("Old value: ", changes[item].oldValue);
-        console.log("New value: ", changes[item].newValue);
-      }
+    for (const item of changedItems) {
+        const callback = __storageChangeListeners[item];
+        if (callback){
+            callback(item.substring(34),changes[item].oldValue,changes[item].newValue,false);
+        }
+    }
 }
 
 function addListeners(){
@@ -423,10 +503,18 @@ function injection(){
                     switch(apiName){
                         case "setValue":
                         case "getValue":
+                        case "deleteValue":
+                        case "listValues":
+                        case "addValueChangeListener":
+                        case "removeValueChangeListener":
                             gmApis.push(apiStr + `.bind(${context})`);
                             break;
                         case "_setValue":
                         case "_getValue":
+                        case "_deleteValue":
+                        case "_listValues":
+                        case "_addValueChangeListener":
+                        case "_removeValueChangeListener":
                             userscript.genCode += `const GM${apiName} = GM_apis.${apiName}.bind(${context});`;
                             break;
                     }

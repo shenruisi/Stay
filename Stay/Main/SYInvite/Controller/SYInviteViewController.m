@@ -19,6 +19,8 @@
 #import "FCStore.h"
 #import "SharedStorageManager.h"
 #import <SafariServices/SafariServices.h>
+#import "FCShared.h"
+#import "Plugin.h"
 
 @interface ShareLinkView:UIView
 @property (nonatomic, strong) NSString *linkStr;
@@ -770,432 +772,432 @@ UITableViewDataSource
 
 @implementation SYInviteViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.hidesBottomBarWhenPushed = true;
-    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    self.title = NSLocalizedString(@"InviteFriend",@"InviteFriend");
-    [self tableView];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(saveInviteSuccess:)
-                                                 name:@"app.stay.notification.SaveInviteSuccess"
-                                               object:nil];
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-
-    if(!isPro) {
-        
-        [[API shared]  queryPath:@"/invite-task/detail"
-                             pro:isPro
-                        deviceId:DeviceHelper.uuid
-                             biz:nil
-                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-            if(biz != NULL) {
-                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.inviteCode.length > 0) {
-                    self.started = true;
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    self.inviteView.titleArray = inviteDetail.process;
-                    _detail = inviteDetail;
-                    [self.tableView reloadData];
-                    [self.inviteView updateProgress:0.5];
-                });
-            }
-        }];
-    } else {
-        [[API shared]  queryPath:@"/gift-task/detail"
-                             pro:isPro
-                        deviceId:DeviceHelper.uuid
-                             biz:nil
-                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-            if(biz != NULL) {
-                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.giftCode.length > 0) {
-                    self.started = true;
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    _detail = inviteDetail;
-                    [self.tableView reloadData];
-                });
-            }
-        }];
-    }
-    
-      
-    
-   
-}
-
-- (void)saveInviteSuccess:(NSNotification *)sender{
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-
-    if(isPro) {
-        [[API shared]  queryPath:@"/gift-task/detail"
-                             pro:isPro
-                        deviceId:DeviceHelper.uuid
-                             biz:nil
-                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-            NSLog(@"%@",biz);
-            
-            if(biz != NULL) {
-                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.giftCode.length > 0) {
-                    self.started = true;
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    self.inviteView.titleArray = inviteDetail.process;
-                    _detail = inviteDetail;
-                    [self.tableView reloadData];
-                    [self.inviteView updateProgress:0.5];
-                });
-            }
-        }];
-    } else {
-        [[API shared]  queryPath:@"/invite-task/detail"
-                             pro:isPro
-                        deviceId:DeviceHelper.uuid
-                             biz:nil
-                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-            NSLog(@"%@",biz);
-            
-            if(biz != NULL) {
-                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.inviteCode.length > 0) {
-                    self.started = true;
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    _detail = inviteDetail;
-                    [self.tableView reloadData];
-                });
-            }
-        }];
-    }
-}
-
-
-- (void)inviteCreate:(UIButton *)sender {
-    if(_detail != NULL) {
-        if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-            self.inviteCardController.dateStr = _detail.sinceEn;
-        } else {
-            self.inviteCardController.dateStr = _detail.sinceCn;
-        }
-        self.inviteCardController.imageList = _detail.candidateCovers;
-        self.inviteCardController.color = _detail.color;
-        self.inviteCardController.defaultImage = _detail.cover;
-        self.inviteCardController.defaultName = _detail.name;
-        self.inviteCardController.detail = _detail;
-    }
-    if (!self.inviteCardController.isShown){
-        [self.inviteCardController show];
-    }
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == 0) {
-        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-
-        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                                       reuseIdentifier:nil];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:self.iconImageView];
-        
-        if(!isPro) {
-            [cell.contentView addSubview:self.pointLabel];
-            
-            self.pointLabel.top = self.iconImageView.bottom + 24;
-            [cell.contentView addSubview:self.inviteView];
-            self.inviteView.top = self.pointLabel.bottom + 11;
-            [cell.contentView addSubview:self.inviteLabel];
-            self.inviteLabel.top = self.inviteView.bottom + 21;
-            [cell.contentView addSubview:self.inviteRulesView];
-            self.inviteRulesView.top = self.inviteView.bottom + 21;
-        } else {
-            [cell.contentView addSubview:self.proPointLabel];
-            self.proPointLabel.centerX = self.view.width / 2;
-            self.proPointLabel.top = self.iconImageView.bottom + 16;
-            
-            NSString *contentStr =[NSString stringWithFormat:@"%ld/%ld %@",_detail.rest,_detail.total,NSLocalizedString(@"UserLeft", @"")];
-
-            NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
-
-            //设置：在0-3个单位长度内的内容显示成红色
-
-            [str addAttribute:NSForegroundColorAttributeName value:FCStyle.subtitleColor range:NSMakeRange(0, 1)];
-            
-            self.proInviteLeftLabel.attributedText = str;
-            
-            
-            [cell.contentView addSubview:self.proInviteLeftLabel];
-            
-            self.proInviteLeftLabel.centerX = self.proPointLabel.centerX;
-            self.proInviteLeftLabel.top = self.proPointLabel.bottom + 16;
-            
-            [cell.contentView addSubview:self.proGiftTitleLabel];
-            
-            self.proGiftTitleLabel.top = self.proInviteLeftLabel.bottom + 19;
-            
-            [cell.contentView addSubview:self.inviteRulesView];
-            self.inviteRulesView.top = self.proGiftTitleLabel.bottom + 16;
-        }
-        [cell.contentView addSubview:self.howToInviteView];
-        self.howToInviteView.top = self.inviteRulesView.bottom + 15;
-        
-        [cell.contentView addSubview:self.inviteBtn];
-         
-        if(_started) {
-            [cell.contentView addSubview:self.inviteImageView];
-            self.inviteImageView.detail = _detail;
-            [self.inviteImageView setupUI];
-            self.inviteImageView.top = self.howToInviteView.bottom + 13;
-            ShareLinkView *linkView = [[ShareLinkView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 150)];
-            linkView.backgroundColor = FCStyle.fcWhite;
-            linkView.layer.cornerRadius = 10;
-            linkView.layer.masksToBounds = YES;
-            linkView.visitcount = _detail.visitedCount;
-            linkView.linkStr = _detail.link;
-            linkView.cer = self;
-            [linkView setUpUI];
-            [cell.contentView addSubview:linkView];
-
-            linkView.top = self.inviteImageView.bottom + 26;
-            [self.inviteBtn setTitle:NSLocalizedString(@"EditInfo", @"") forState:UIControlStateNormal];
-            self.inviteBtn.top = linkView.bottom + 32;
-            
-        } else {
-            self.inviteBtn.top = self.howToInviteView.bottom + 23;
-        }
-        return cell;
-    }
-    
-    return nil;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(_started) {
-        return 1375;
-    } else {
-        return 647;
-    }
-}
-
-
-- (UIImageView *)iconImageView {
-    if(_iconImageView == nil) {
-        _iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 25, 100, 100)];
-        _iconImageView.centerX = self.view.centerX;
-        [_iconImageView setImage:[UIImage imageNamed:@"InviteBigIcon"]];
-    }
-    return _iconImageView;
-}
-
-
-- (InviteProgressView *)inviteView {
-    if(_inviteView == nil) {
-        _inviteView = [[InviteProgressView alloc] initWithFrame:CGRectMake(21, 0, 348, 69)];
-        _inviteView.backgroundColor = FCStyle.fcWhite;
-        _inviteView.layer.cornerRadius = 10;
-    }
-    
-    return _inviteView;
-}
-
-- (UILabel *)pointLabel {
-    if(_pointLabel == nil) {
-        _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 149, 120, 18)];
-        _pointLabel.font = FCStyle.subHeadlineBold;
-        _pointLabel.textColor = FCStyle.subtitleColor;
-        _pointLabel.text = NSLocalizedString(@"PointProgress", @"");
-        _pointLabel.top = self.iconImageView.bottom + 24;
-    }
-    return _pointLabel;
-}
-
-- (UILabel *)inviteLabel {
-    if(_inviteLabel == nil) {
-        _inviteLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 240, 18)];
-        _inviteLabel.font = FCStyle.subHeadlineBold;
-        _inviteLabel.textColor = FCStyle.subtitleColor;
-        _inviteLabel.text = NSLocalizedString(@"InviteToGetPoint", @"");
-        _inviteLabel.top = self.inviteView.bottom + 21;
-    }
-    return _inviteLabel;
-}
-
-- (InviteRulesView *)inviteRulesView {
-    if(_inviteRulesView == nil) {
-        _inviteRulesView = [[InviteRulesView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 300)];
-        _inviteRulesView.layer.cornerRadius = 10;
-        _inviteRulesView.backgroundColor = FCStyle.fcWhite;
-    }
-    return _inviteRulesView;
-}
-
-- (HowToInviteView *)howToInviteView {
-    if(_howToInviteView == nil) {
-        _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 70)];
-        _howToInviteView.layer.cornerRadius = 10;
-        _howToInviteView.backgroundColor = FCStyle.fcWhite;
-        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                  action:@selector(clickHowTo)];
-        [_howToInviteView addGestureRecognizer:gesture];
-    }
-    return _howToInviteView;
-}
-
-- (UIButton *)inviteBtn {
-    if(_inviteBtn == nil) {
-        _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 45)];
-        [_inviteBtn setTitle:NSLocalizedString(@"StartInviting", @"") forState:UIControlStateNormal];
-        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-        if(isPro) {
-            [_inviteBtn setTitle:NSLocalizedString(@"StartGifting", @"") forState:UIControlStateNormal];
-
-        }
-        
-        
-        [_inviteBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
-        [_inviteBtn addTarget:self action:@selector(inviteCreate:) forControlEvents:UIControlEventTouchUpInside];
-        _inviteBtn.font = FCStyle.bodyBold;
-        _inviteBtn.layer.borderColor = FCStyle.accent.CGColor;
-        _inviteBtn.layer.borderWidth = 1;
-        _inviteBtn.layer.cornerRadius = 10;
-    }
-    return _inviteBtn;
-}
-
-- (UITableView *)tableView {
-    if (_tableView == nil) {
-        _tableView = [[UITableView alloc] init];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-        _tableView.backgroundColor = [UIColor clearColor];
-        if (@available(iOS 15.0, *)){
-           _tableView.sectionHeaderTopPadding = 0;
-        }
-        _tableView.sectionFooterHeight = 0;
-        [self.view addSubview:_tableView];
-                
-        [NSLayoutConstraint activateConstraints:@[
-            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [_tableView.heightAnchor constraintEqualToConstant:self.view.height]
-        ]];
-        
-    }
-    return _tableView;
-}
-
-
-- (SYInviteCardController *)inviteCardController {
-    if(_inviteCardController == nil) {
-        _inviteCardController = [[SYInviteCardController alloc] init];
-        
-    }
-    return _inviteCardController;
-}
-
-- (InviteImageView *)inviteImageView {
-    if(nil == _inviteImageView) {
-        _inviteImageView = [[InviteImageView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 525)];
-        _inviteImageView.backgroundColor = FCStyle.fcWhite;
-        _inviteImageView.layer.cornerRadius = 10;
-        _inviteImageView.layer.masksToBounds = YES;
-        _inviteImageView.nav = self.navigationController;
-    }
-    return _inviteImageView;
-}
-
-
-- (UILabel *)proPointLabel {
-    if(nil == _proPointLabel) {
-        _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
-        _proPointLabel.text = [NSString stringWithFormat:@"%@ Points",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description];
-        _proPointLabel.font = FCStyle.title3Bold;
-        _proPointLabel.textColor = FCStyle.accent;
-        _proPointLabel.textAlignment = NSTextAlignmentCenter;
-        
-    }
-    return _proPointLabel;
-}
-
-- (UILabel *)proInviteLeftLabel {
-    if(nil == _proInviteLeftLabel) {
-        _proInviteLeftLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 21)];
-        _proInviteLeftLabel.textAlignment = NSTextAlignmentCenter;
-        _proInviteLeftLabel.font = FCStyle.headlineBold;
-        _proInviteLeftLabel.textColor = FCStyle.fcBlack;
-
-    }
-    return _proInviteLeftLabel;
-}
-
-- (UILabel *)proGiftTitleLabel {
-    if(nil == _proGiftTitleLabel) {
-        _proGiftTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 200, 18)];
-        _proGiftTitleLabel.text = NSLocalizedString(@"GiftYourPoint", @"");
-        _proGiftTitleLabel.font = FCStyle.subHeadlineBold;
-        _proGiftTitleLabel.textColor = FCStyle.subtitleColor;
-    }
-    return _proGiftTitleLabel;
-}
-
-- (void)shareLink:(UIButton *)sender {
-    //分享的url
-    NSArray *activityItems = @[_detail.link];
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
-
-    [self.navigationController presentViewController:activityVC animated:YES completion:nil];
-}
-
-- (void)clickHowTo {
-    
-    NSString *url = @"https://www.craft.do/s/7Cc0xEh8BZ9HJg";
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-
-    if(!isPro) {
-        url = @"https://www.craft.do/s/fkiUptzlNzV2DA";
-    }
-    
-    
-#ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
-#else
-        if (FCDeviceTypeIPhone == DeviceHelper.type){
-            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
-            [self presentViewController:safariVc animated:YES completion:nil];
-        }
-#endif
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:@"app.stay.notification.SaveInviteSuccess"
-                                                      object:nil];
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+//- (void)viewDidLoad {
+//    [super viewDidLoad];
+//    // Do any additional setup after loading the view.
+//    self.hidesBottomBarWhenPushed = true;
+//    self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+//    self.title = NSLocalizedString(@"InviteFriend",@"InviteFriend");
+//    [self tableView];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(saveInviteSuccess:)
+//                                                 name:@"app.stay.notification.SaveInviteSuccess"
+//                                               object:nil];
+//    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//
+//    if(!isPro) {
+//        
+//        [[API shared]  queryPath:@"/invite-task/detail"
+//                             pro:isPro
+//                        deviceId:DeviceHelper.uuid
+//                             biz:nil
+//                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//            if(biz != NULL) {
+//                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+//                if(inviteDetail.inviteCode.length > 0) {
+//                    self.started = true;
+//                }
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    
+//                    self.inviteView.titleArray = inviteDetail.process;
+//                    _detail = inviteDetail;
+//                    [self.tableView reloadData];
+//                    [self.inviteView updateProgress:0.5];
+//                });
+//            }
+//        }];
+//    } else {
+//        [[API shared]  queryPath:@"/gift-task/detail"
+//                             pro:isPro
+//                        deviceId:DeviceHelper.uuid
+//                             biz:nil
+//                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//            if(biz != NULL) {
+//                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+//                if(inviteDetail.giftCode.length > 0) {
+//                    self.started = true;
+//                }
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    
+//                    _detail = inviteDetail;
+//                    [self.tableView reloadData];
+//                });
+//            }
+//        }];
+//    }
+//    
+//      
+//    
+//   
+//}
+//
+//- (void)saveInviteSuccess:(NSNotification *)sender{
+//    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//
+//    if(isPro) {
+//        [[API shared]  queryPath:@"/gift-task/detail"
+//                             pro:isPro
+//                        deviceId:DeviceHelper.uuid
+//                             biz:nil
+//                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//            NSLog(@"%@",biz);
+//            
+//            if(biz != NULL) {
+//                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+//                if(inviteDetail.giftCode.length > 0) {
+//                    self.started = true;
+//                }
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    
+//                    self.inviteView.titleArray = inviteDetail.process;
+//                    _detail = inviteDetail;
+//                    [self.tableView reloadData];
+//                    [self.inviteView updateProgress:0.5];
+//                });
+//            }
+//        }];
+//    } else {
+//        [[API shared]  queryPath:@"/invite-task/detail"
+//                             pro:isPro
+//                        deviceId:DeviceHelper.uuid
+//                             biz:nil
+//                      completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//            NSLog(@"%@",biz);
+//            
+//            if(biz != NULL) {
+//                InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
+//                if(inviteDetail.inviteCode.length > 0) {
+//                    self.started = true;
+//                }
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    _detail = inviteDetail;
+//                    [self.tableView reloadData];
+//                });
+//            }
+//        }];
+//    }
+//}
+//
+//
+//- (void)inviteCreate:(UIButton *)sender {
+//    if(_detail != NULL) {
+//        if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
+//            self.inviteCardController.dateStr = _detail.sinceEn;
+//        } else {
+//            self.inviteCardController.dateStr = _detail.sinceCn;
+//        }
+//        self.inviteCardController.imageList = _detail.candidateCovers;
+//        self.inviteCardController.color = _detail.color;
+//        self.inviteCardController.defaultImage = _detail.cover;
+//        self.inviteCardController.defaultName = _detail.name;
+//        self.inviteCardController.detail = _detail;
+//    }
+//    if (!self.inviteCardController.isShown){
+//        [self.inviteCardController show];
+//    }
+//}
+//
+//
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if(indexPath.row == 0) {
+//        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//
+//        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+//                                                       reuseIdentifier:nil];
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//        cell.backgroundColor = [UIColor clearColor];
+//        [cell.contentView addSubview:self.iconImageView];
+//        
+//        if(!isPro) {
+//            [cell.contentView addSubview:self.pointLabel];
+//            
+//            self.pointLabel.top = self.iconImageView.bottom + 24;
+//            [cell.contentView addSubview:self.inviteView];
+//            self.inviteView.top = self.pointLabel.bottom + 11;
+//            [cell.contentView addSubview:self.inviteLabel];
+//            self.inviteLabel.top = self.inviteView.bottom + 21;
+//            [cell.contentView addSubview:self.inviteRulesView];
+//            self.inviteRulesView.top = self.inviteView.bottom + 21;
+//        } else {
+//            [cell.contentView addSubview:self.proPointLabel];
+//            self.proPointLabel.centerX = self.view.width / 2;
+//            self.proPointLabel.top = self.iconImageView.bottom + 16;
+//            
+//            NSString *contentStr =[NSString stringWithFormat:@"%ld/%ld %@",_detail.rest,_detail.total,NSLocalizedString(@"UserLeft", @"")];
+//
+//            NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
+//
+//            //设置：在0-3个单位长度内的内容显示成红色
+//
+//            [str addAttribute:NSForegroundColorAttributeName value:FCStyle.subtitleColor range:NSMakeRange(0, 1)];
+//            
+//            self.proInviteLeftLabel.attributedText = str;
+//            
+//            
+//            [cell.contentView addSubview:self.proInviteLeftLabel];
+//            
+//            self.proInviteLeftLabel.centerX = self.proPointLabel.centerX;
+//            self.proInviteLeftLabel.top = self.proPointLabel.bottom + 16;
+//            
+//            [cell.contentView addSubview:self.proGiftTitleLabel];
+//            
+//            self.proGiftTitleLabel.top = self.proInviteLeftLabel.bottom + 19;
+//            
+//            [cell.contentView addSubview:self.inviteRulesView];
+//            self.inviteRulesView.top = self.proGiftTitleLabel.bottom + 16;
+//        }
+//        [cell.contentView addSubview:self.howToInviteView];
+//        self.howToInviteView.top = self.inviteRulesView.bottom + 15;
+//        
+//        [cell.contentView addSubview:self.inviteBtn];
+//         
+//        if(_started) {
+//            [cell.contentView addSubview:self.inviteImageView];
+//            self.inviteImageView.detail = _detail;
+//            [self.inviteImageView setupUI];
+//            self.inviteImageView.top = self.howToInviteView.bottom + 13;
+//            ShareLinkView *linkView = [[ShareLinkView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 150)];
+//            linkView.backgroundColor = FCStyle.fcWhite;
+//            linkView.layer.cornerRadius = 10;
+//            linkView.layer.masksToBounds = YES;
+//            linkView.visitcount = _detail.visitedCount;
+//            linkView.linkStr = _detail.link;
+//            linkView.cer = self;
+//            [linkView setUpUI];
+//            [cell.contentView addSubview:linkView];
+//
+//            linkView.top = self.inviteImageView.bottom + 26;
+//            [self.inviteBtn setTitle:NSLocalizedString(@"EditInfo", @"") forState:UIControlStateNormal];
+//            self.inviteBtn.top = linkView.bottom + 32;
+//            
+//        } else {
+//            self.inviteBtn.top = self.howToInviteView.bottom + 23;
+//        }
+//        return cell;
+//    }
+//    
+//    return nil;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//    return 1;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if(_started) {
+//        return 1375;
+//    } else {
+//        return 647;
+//    }
+//}
+//
+//
+//- (UIImageView *)iconImageView {
+//    if(_iconImageView == nil) {
+//        _iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 25, 100, 100)];
+//        _iconImageView.centerX = self.view.centerX;
+//        [_iconImageView setImage:[UIImage imageNamed:@"InviteBigIcon"]];
+//    }
+//    return _iconImageView;
+//}
+//
+//
+//- (InviteProgressView *)inviteView {
+//    if(_inviteView == nil) {
+//        _inviteView = [[InviteProgressView alloc] initWithFrame:CGRectMake(21, 0, 348, 69)];
+//        _inviteView.backgroundColor = FCStyle.fcWhite;
+//        _inviteView.layer.cornerRadius = 10;
+//    }
+//    
+//    return _inviteView;
+//}
+//
+//- (UILabel *)pointLabel {
+//    if(_pointLabel == nil) {
+//        _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 149, 120, 18)];
+//        _pointLabel.font = FCStyle.subHeadlineBold;
+//        _pointLabel.textColor = FCStyle.subtitleColor;
+//        _pointLabel.text = NSLocalizedString(@"PointProgress", @"");
+//        _pointLabel.top = self.iconImageView.bottom + 24;
+//    }
+//    return _pointLabel;
+//}
+//
+//- (UILabel *)inviteLabel {
+//    if(_inviteLabel == nil) {
+//        _inviteLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 240, 18)];
+//        _inviteLabel.font = FCStyle.subHeadlineBold;
+//        _inviteLabel.textColor = FCStyle.subtitleColor;
+//        _inviteLabel.text = NSLocalizedString(@"InviteToGetPoint", @"");
+//        _inviteLabel.top = self.inviteView.bottom + 21;
+//    }
+//    return _inviteLabel;
+//}
+//
+//- (InviteRulesView *)inviteRulesView {
+//    if(_inviteRulesView == nil) {
+//        _inviteRulesView = [[InviteRulesView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 300)];
+//        _inviteRulesView.layer.cornerRadius = 10;
+//        _inviteRulesView.backgroundColor = FCStyle.fcWhite;
+//    }
+//    return _inviteRulesView;
+//}
+//
+//- (HowToInviteView *)howToInviteView {
+//    if(_howToInviteView == nil) {
+//        _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 70)];
+//        _howToInviteView.layer.cornerRadius = 10;
+//        _howToInviteView.backgroundColor = FCStyle.fcWhite;
+//        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                                                  action:@selector(clickHowTo)];
+//        [_howToInviteView addGestureRecognizer:gesture];
+//    }
+//    return _howToInviteView;
+//}
+//
+//- (UIButton *)inviteBtn {
+//    if(_inviteBtn == nil) {
+//        _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 45)];
+//        [_inviteBtn setTitle:NSLocalizedString(@"StartInviting", @"") forState:UIControlStateNormal];
+//        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//        if(isPro) {
+//            [_inviteBtn setTitle:NSLocalizedString(@"StartGifting", @"") forState:UIControlStateNormal];
+//
+//        }
+//        
+//        
+//        [_inviteBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+//        [_inviteBtn addTarget:self action:@selector(inviteCreate:) forControlEvents:UIControlEventTouchUpInside];
+//        _inviteBtn.font = FCStyle.bodyBold;
+//        _inviteBtn.layer.borderColor = FCStyle.accent.CGColor;
+//        _inviteBtn.layer.borderWidth = 1;
+//        _inviteBtn.layer.cornerRadius = 10;
+//    }
+//    return _inviteBtn;
+//}
+//
+//- (UITableView *)tableView {
+//    if (_tableView == nil) {
+//        _tableView = [[UITableView alloc] init];
+//        _tableView.delegate = self;
+//        _tableView.dataSource = self;
+//        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+//        _tableView.backgroundColor = [UIColor clearColor];
+//        if (@available(iOS 15.0, *)){
+//           _tableView.sectionHeaderTopPadding = 0;
+//        }
+//        _tableView.sectionFooterHeight = 0;
+//        [self.view addSubview:_tableView];
+//                
+//        [NSLayoutConstraint activateConstraints:@[
+//            [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+//            [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+//            [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+//            [_tableView.heightAnchor constraintEqualToConstant:self.view.height]
+//        ]];
+//        
+//    }
+//    return _tableView;
+//}
+//
+//
+//- (SYInviteCardController *)inviteCardController {
+//    if(_inviteCardController == nil) {
+//        _inviteCardController = [[SYInviteCardController alloc] init];
+//        
+//    }
+//    return _inviteCardController;
+//}
+//
+//- (InviteImageView *)inviteImageView {
+//    if(nil == _inviteImageView) {
+//        _inviteImageView = [[InviteImageView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 525)];
+//        _inviteImageView.backgroundColor = FCStyle.fcWhite;
+//        _inviteImageView.layer.cornerRadius = 10;
+//        _inviteImageView.layer.masksToBounds = YES;
+//        _inviteImageView.nav = self.navigationController;
+//    }
+//    return _inviteImageView;
+//}
+//
+//
+//- (UILabel *)proPointLabel {
+//    if(nil == _proPointLabel) {
+//        _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
+//        _proPointLabel.text = [NSString stringWithFormat:@"%@ Points",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description];
+//        _proPointLabel.font = FCStyle.title3Bold;
+//        _proPointLabel.textColor = FCStyle.accent;
+//        _proPointLabel.textAlignment = NSTextAlignmentCenter;
+//        
+//    }
+//    return _proPointLabel;
+//}
+//
+//- (UILabel *)proInviteLeftLabel {
+//    if(nil == _proInviteLeftLabel) {
+//        _proInviteLeftLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 21)];
+//        _proInviteLeftLabel.textAlignment = NSTextAlignmentCenter;
+//        _proInviteLeftLabel.font = FCStyle.headlineBold;
+//        _proInviteLeftLabel.textColor = FCStyle.fcBlack;
+//
+//    }
+//    return _proInviteLeftLabel;
+//}
+//
+//- (UILabel *)proGiftTitleLabel {
+//    if(nil == _proGiftTitleLabel) {
+//        _proGiftTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 200, 18)];
+//        _proGiftTitleLabel.text = NSLocalizedString(@"GiftYourPoint", @"");
+//        _proGiftTitleLabel.font = FCStyle.subHeadlineBold;
+//        _proGiftTitleLabel.textColor = FCStyle.subtitleColor;
+//    }
+//    return _proGiftTitleLabel;
+//}
+//
+//- (void)shareLink:(UIButton *)sender {
+//    //分享的url
+//    NSArray *activityItems = @[_detail.link];
+//    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
+//
+//    [self.navigationController presentViewController:activityVC animated:YES completion:nil];
+//}
+//
+//- (void)clickHowTo {
+//    
+//    NSString *url = @"https://www.craft.do/s/7Cc0xEh8BZ9HJg";
+//    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+//
+//    if(!isPro) {
+//        url = @"https://www.craft.do/s/fkiUptzlNzV2DA";
+//    }
+//    
+//    
+//#ifdef FC_MAC
+//        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+//#else
+//        if (FCDeviceTypeIPhone == DeviceHelper.type){
+//            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
+//            [self presentViewController:safariVc animated:YES completion:nil];
+//        }
+//#endif
+//}
+//
+//- (void)dealloc {
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                        name:@"app.stay.notification.SaveInviteSuccess"
+//                                                      object:nil];
+//}
+//
+///*
+//#pragma mark - Navigation
+//
+//// In a storyboard-based application, you will often want to do a little preparation before navigation
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    // Get the new view controller using [segue destinationViewController].
+//    // Pass the selected object to the new view controller.
+//}
+//*/
 
 @end
