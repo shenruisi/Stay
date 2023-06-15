@@ -335,7 +335,13 @@ static DownloadManager *instance = nil;
                     [NSFileManager.defaultManager removeItemAtPath:[dirPath stringByAppendingPathComponent:[[[self getSessionTaskURL: sessionState.sessionTask].absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 }
                 if (sessionTask == nil) {
-                    sessionTask = [self.downloadSession downloadTaskWithRequest:[[self getSessionTaskURL:sessionState.sessionTask] getRequest:nil]];
+                    NSString *range = nil;
+                    if (sessionState.sessionTask.originalRequest != nil) {
+                        range = sessionState.sessionTask.originalRequest.allHTTPHeaderFields[@"Range"];
+                    } else {
+                        range = sessionState.sessionTask.currentRequest.allHTTPHeaderFields[@"Range"];
+                    }
+                    sessionTask = [self.downloadSession downloadTaskWithRequest:[[self getSessionTaskURL:sessionState.sessionTask] getRequest:range]];
                 }
                 sessionState.sessionTask = sessionTask;
                 if (sessionState.sessionTask != nil) {
