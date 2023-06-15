@@ -460,7 +460,7 @@
     self.startButton.layer.borderColor = isEnable ? FCStyle.accent.CGColor : FCStyle.borderColor.CGColor;
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):NSLocalizedString(@"ConsumePoint", @"")
+    [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""): [NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                      attributes:@{
                                 NSForegroundColorAttributeName : isEnable ? FCStyle.accent : [UIColor systemGray3Color],
                                  NSFontAttributeName : FCStyle.bodyBold}]
@@ -475,7 +475,7 @@
     return _dataSource;
 }
 
-- (void)setData:(NSArray<NSDictionary *> *)data {
+- (void)setData:(NSArray<NSDictionary *> *)data withQualityLabe:(nullable NSString *)qualityLabel {
     if (data.count == 0) {
         _curCount = 0;
         [self.dataSource removeAllObjects];
@@ -504,13 +504,26 @@
                         NSString *selectedDownloadUrl;
                         NSString *selectedAudioUrl;
                         Boolean selectedProtect = FALSE;
-                        for (NSDictionary *qulity in qualityList) {
-                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
-                                selectedQuality = qulity[@"qualityLabel"];
-                                selectedDownloadUrl = qulity[@"downloadUrl"];
-                                selectedAudioUrl = qulity[@"audioUrl"];
-                                selectedProtect = [qulity[@"protect"] boolValue];
-                                break;
+                        if (qualityLabel.length > 0) {
+                            for (NSDictionary *qulity in qualityList) {
+                                if ([qualityLabel isEqualToString:qulity[@"qualityLabel"]]) {
+                                    selectedQuality = qulity[@"qualityLabel"];
+                                    selectedDownloadUrl = qulity[@"downloadUrl"];
+                                    selectedAudioUrl = qulity[@"audioUrl"];
+                                    selectedProtect = [qulity[@"protect"] boolValue];
+                                    break;
+                                }
+                            }
+                        }
+                        if (selectedQuality.length == 0) {
+                            for (NSDictionary *qulity in qualityList) {
+                                if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                    selectedQuality = qulity[@"qualityLabel"];
+                                    selectedDownloadUrl = qulity[@"downloadUrl"];
+                                    selectedAudioUrl = qulity[@"audioUrl"];
+                                    selectedProtect = [qulity[@"protect"] boolValue];
+                                    break;
+                                }
                             }
                         }
                         if (selectedQuality.length == 0) {
@@ -538,13 +551,26 @@
                     NSString *selectedDownloadUrl;
                     NSString *selectedAudioUrl;
                     Boolean selectedProtect = FALSE;
-                    for (NSDictionary *qulity in qualityList) {
-                        if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
-                            selectedQuality = qulity[@"qualityLabel"];
-                            selectedDownloadUrl = qulity[@"downloadUrl"];
-                            selectedAudioUrl = qulity[@"audioUrl"];
-                            selectedProtect = [qulity[@"protect"] boolValue];
-                            break;
+                    if (qualityLabel.length > 0) {
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([qualityLabel isEqualToString:qulity[@"qualityLabel"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
+                                break;
+                            }
+                        }
+                    }
+                    if (selectedQuality.length == 0) {
+                        for (NSDictionary *qulity in qualityList) {
+                            if ([downloadUrl isEqualToString:qulity[@"downloadUrl"]]) {
+                                selectedQuality = qulity[@"qualityLabel"];
+                                selectedDownloadUrl = qulity[@"downloadUrl"];
+                                selectedAudioUrl = qulity[@"audioUrl"];
+                                selectedProtect = [qulity[@"protect"] boolValue];
+                                break;
+                            }
                         }
                     }
                     if (selectedQuality.length == 0) {
@@ -574,7 +600,7 @@
         }
         [self.emptyView setHidden:YES];
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-        [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):NSLocalizedString(@"ConsumePoint", @"")
+        [self.startButton setAttributedTitle:[[NSAttributedString alloc] initWithString:isPro?NSLocalizedString(@"StartDownload", @""):[NSString stringWithFormat:NSLocalizedString(@"ConsumePoint", @""), @([SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints).description]
                                                                                  attributes:@{
                              NSForegroundColorAttributeName : FCStyle.accent,
                              NSFontAttributeName : FCStyle.bodyBold}]

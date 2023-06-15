@@ -370,12 +370,13 @@ GenerateCard="生成卡片";
 ASafariExtension="A Safari Extension";
 inviteTipsPro="Scan to get gift points";
 inviteTips="Scan to download Stay on the AppStore";
+
 ShareCard="分享卡片";
 CopLink="分享鏈接";
 EditInfo="編輯卡片";
 GiftPointToFriend="贈送朋友點數";
 GetMorePoint="獲取更多點數";
-ConsumePoint="Consuming 1 Point to Download";
+ConsumePoint="Consuming %@ Point to Download";
 BacktoDownload="返回下載";
 TryAgain="稍後再試";
 HowToGift="如何贈送好友？";
@@ -398,6 +399,11 @@ InviteCodeNotFound="邀請碼不存在";
 GiftCodeNotFound="禮物碼不存在";
 GiftCodeHasExpired="禮物碼已失效";
 CodeNotFound="邀請/禮物碼不存在";
+
+
+StartInviting="Start Inviting";
+StartGifting="Start Gifting";
+PonitRules="What can Stay points do?";
 StayPoint="STAY點數";
 Confirm="確認";
 StayForm="Stay問卷";

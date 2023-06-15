@@ -32,7 +32,7 @@
 
 
 - (void)setUpUI {
-    UILabel *linkView = [[UILabel alloc] initWithFrame:CGRectMake(18, 12, self.width - 36, 61)];
+    UILabel *linkView = [[UILabel alloc] initWithFrame:CGRectMake(18, 12, self.width - 36, 45)];
     linkView.layer.cornerRadius = 10;
     linkView.layer.masksToBounds = YES;
     linkView.backgroundColor = FCStyle.secondaryPopup;
@@ -104,7 +104,7 @@
     return self;
 }
 - (void)setupUI {
-    
+    self.tipsLabel = nil;
     self.dateLabel = nil;
     self.qrCodeImageView = nil;
     self.extensionLabel = nil;
@@ -123,8 +123,12 @@
     [self nameLabel];
 
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-        self.useLabel.text = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+    if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
+        NSString *userStr = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        NSMutableAttributedString *userStrAttr = [[NSMutableAttributedString alloc]initWithString:userStr];
+        NSRange range = [userStr rangeOfString:_detail.sinceCn];
+        [userStrAttr addAttribute:NSFontAttributeName value:FCStyle.footnoteBold range:range];
+        self.useLabel.attributedText = userStrAttr;
         [self.useLabel sizeToFit];
         [self stayLabel];
         [self sigImageView];
@@ -402,11 +406,7 @@
     
     
     FCImageView *shareIconImageView = [[FCImageView alloc] initWithFrame:CGRectMake(20, 21, 250, 200)];
-    if(self.detail.cover.length > 1) {
-        [shareIconImageView sd_setImageWithURL:self.detail.cover];
-    } else {
-        [shareIconImageView setImage:[UIImage imageNamed:@"rainbow"]];
-    }
+    [shareIconImageView setImage:self.iconImageView.image];
     
     shareIconImageView.layer.cornerRadius = 10;
     shareIconImageView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
@@ -479,12 +479,19 @@
     [shareExtensionLabel sizeToFit];
     [shareInviteView addSubview:shareExtensionLabel];
     shareExtensionLabel.top = shareSigImageView.bottom;
-    shareExtensionLabel.sizeToFit;
+    [shareExtensionLabel sizeToFit];
     shareExtensionLabel.left = shareStayLabel.left;
     
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
     if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-        shareUseLabel.text = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        
+        NSString *userStr = [NSString stringWithFormat:@"%@%@开始使用", NSLocalizedString(@"IUseStay",@""),_detail.sinceCn];
+        
+        NSMutableAttributedString *userStrAttr = [[NSMutableAttributedString alloc]initWithString:userStr];
+        NSRange range = [userStr rangeOfString:_detail.sinceCn];
+        [userStrAttr addAttribute:NSFontAttributeName value:FCStyle.footnoteBold range:range];
+        
+        shareUseLabel.attributedText =userStrAttr;
         [shareUseLabel sizeToFit];
         shareStayLabel.left = shareUseLabel.right + 5;
         shareStayLabel.centerY = shareUseLabel.centerY;
@@ -493,7 +500,7 @@
         if(isPro) {
             [shareInviteView addSubview:shareProLabel];
             shareProLabel.centerY =  shareUseLabel.centerY;
-            shareProLabel.left = shareUseLabel.right + 5;
+            shareProLabel.left = shareStayLabel.right + 5;
         }
         shareExtensionLabel.top = shareSigImageView.bottom;
         shareExtensionLabel.right = shareInviteView.width - 41;
@@ -836,7 +843,7 @@ UITableViewDataSource
             
             if(biz != NULL) {
                 InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.inviteCode.length > 0) {
+                if(inviteDetail.giftCode.length > 0) {
                     self.started = true;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -858,7 +865,7 @@ UITableViewDataSource
             
             if(biz != NULL) {
                 InviteDetail *inviteDetail = [InviteDetail ofDictionary:biz];
-                if(inviteDetail.giftCode.length > 0) {
+                if(inviteDetail.inviteCode.length > 0) {
                     self.started = true;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -948,7 +955,7 @@ UITableViewDataSource
             self.inviteImageView.detail = _detail;
             [self.inviteImageView setupUI];
             self.inviteImageView.top = self.howToInviteView.bottom + 13;
-            ShareLinkView *linkView = [[ShareLinkView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 167)];
+            ShareLinkView *linkView = [[ShareLinkView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 150)];
             linkView.backgroundColor = FCStyle.fcWhite;
             linkView.layer.cornerRadius = 10;
             linkView.layer.masksToBounds = YES;
@@ -1050,7 +1057,14 @@ UITableViewDataSource
 - (UIButton *)inviteBtn {
     if(_inviteBtn == nil) {
         _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 45)];
-        [_inviteBtn setTitle:@"Start Gifting" forState:UIControlStateNormal];
+        [_inviteBtn setTitle:NSLocalizedString(@"StartInviting", @"") forState:UIControlStateNormal];
+        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+        if(isPro) {
+            [_inviteBtn setTitle:NSLocalizedString(@"StartGifting", @"") forState:UIControlStateNormal];
+
+        }
+        
+        
         [_inviteBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_inviteBtn addTarget:self action:@selector(inviteCreate:) forControlEvents:UIControlEventTouchUpInside];
         _inviteBtn.font = FCStyle.bodyBold;

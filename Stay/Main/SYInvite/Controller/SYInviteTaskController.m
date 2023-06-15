@@ -142,12 +142,16 @@ UITableViewDataSource
 @property (nonatomic, strong) UIButton *subButton;
 @property (nonatomic, strong) NSMutableDictionary *rewardBlockDic;
 @property (nonatomic, strong) NSMutableDictionary *webRewardBlockDic;
+@property (nonatomic, strong) UILabel *pointRules;
+
 
 @end
 @implementation SYInviteTaskController
 
 - (void)viewDidLoad {
     self.navigationBar.hidden = NO;
+    self.navigationBar.showCancel = YES;
+
     self.title = NSLocalizedString(@"GetMorePoint", @"");
     [[API shared] queryPath:@"/tasks"
                         pro:NO
@@ -175,6 +179,23 @@ UITableViewDataSource
                                                  name:@"SYViewWillAppear"
                                                object:nil];
     [self subButton];
+    
+    [self pointRules];
+    self.pointRules.bottom = self.subButton.top - 15;
+    self.pointRules.centerX = self.subButton.centerX;
+}
+
+- (void)howPoint {
+    NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
+    
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+#else
+        if (FCDeviceTypeIPhone == DeviceHelper.type){
+            SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
+            [self.nav presentViewController:safariVc animated:YES completion:nil];
+        }
+#endif
 }
 
 
@@ -313,8 +334,8 @@ UITableViewDataSource
         [self.view addSubview:_tableView];
         [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
         [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
-        [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor] setActive:YES];
-        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10-10-45] setActive:YES];
+        [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10] setActive:YES];
+        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10-10-45 - 40] setActive:YES];
     }
     return _tableView;
 }
@@ -356,8 +377,30 @@ UITableViewDataSource
     return _webRewardBlockDic;
 }
 
+- (UILabel *)pointRules {
+    if(nil == _pointRules) {
+        _pointRules = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+        
+        NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"PonitRules", @"")];
+        NSRange contentRange = {0, [content length] - 1};
+        [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+          
+        _pointRules.attributedText = content;
+        _pointRules.textColor = FCStyle.accent;
+        _pointRules.font = FCStyle.bodyBold;
+        _pointRules.textAlignment = NSTextAlignmentCenter;
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(howPoint)];
+        [_pointRules addGestureRecognizer:gesture];
+        [self.view addSubview:_pointRules];
+
+    }
+    return _pointRules;
+    
+}
+
 - (CGSize)mainViewSize{
-    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 447);
+    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 487);
 }
 
 - (void)SYViewWillAppear:(NSNotification *)notification {
