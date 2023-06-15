@@ -98,7 +98,7 @@ const browser = __b;
         'select_note': 'Tap to select an element',
         'select_confirm': 'Tap again to confirm the element',
         'iframe_toast_note': 'Click and start tag the AD in the iframe',
-        'consume_points': 'tag and consume # points',
+        'consume_points': 'Tag and consume # points',
         'confirm': 'Confirm',
         'not_enough': 'Your stay points is not enough to tag current ad. Get stay points!',
       },
@@ -1411,7 +1411,7 @@ const browser = __b;
             let prompt = i18nProp['not_enough'];
             showConfirmModal(prompt, ()=>{
               let targetGun = document.createElement('a');
-              targetGun.href = 'stay://x-callback-url/pay';
+              targetGun.href = 'stay://x-callback-url/taskList';
               targetGun.click();
             })
             return;
