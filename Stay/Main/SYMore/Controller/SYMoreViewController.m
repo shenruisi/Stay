@@ -561,16 +561,24 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    dispatch_async(dispatch_get_main_queue(), ^{
-//        self.tableView.frame = self.view.bounds;
+    [[API shared] queryPath:@"/self"
+                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+        
         if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
             _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
         } else {
             _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
         }
-        self.dataSource = nil;
-        [self.tableView reloadData];
-    });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.dataSource = nil;
+            [self.tableView reloadData];
+        });
+        
+    }];
     
 //    [FCStore shared].testingProFlag = YES;
 }
@@ -598,30 +606,24 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     
     
     
-    [[API shared] queryPath:@"/self"
-                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
-                   deviceId:DeviceHelper.uuid
-                        biz:nil
-                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        NSLog(@"%@",biz);
-        
-//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
-//            _leftPointCount =  [biz[@"gift_points"] integerValue];
-//        } else {
-//            _leftPointCount = [biz[@"point"] integerValue];
-//        }
-        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
-            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
-        } else {
-            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
-        }
+//    [[API shared] queryPath:@"/self"
+//                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
 //
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.dataSource = nil;
-            [self.tableView reloadData];
-        });
-        
-    }];
+//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+//        } else {
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.dataSource = nil;
+//            [self.tableView reloadData];
+//        });
+//
+//    }];
     
 }
 
