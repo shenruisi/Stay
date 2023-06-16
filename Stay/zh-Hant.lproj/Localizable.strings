@@ -367,9 +367,9 @@ InviteRuleDesc="分享您生成的卡片或者鏈接給您的朋友。如果您�
 HowToInvite="如何邀請好友？";
 HowToInviteDesc="查看在線指引";
 GenerateCard="生成卡片";
-ASafariExtension="A Safari Extension";
-inviteTipsPro="Scan to get gift points";
-inviteTips="Scan to download Stay on the AppStore";
+ASafariExtension="Safari瀏覽器擴展";
+inviteTipsPro="掃描二維碼獲取贈送點數";
+inviteTips="掃描二維碼查看來自`%@`的邀請";
 
 ShareCard="分享卡片";
 CopLink="分享鏈接";
