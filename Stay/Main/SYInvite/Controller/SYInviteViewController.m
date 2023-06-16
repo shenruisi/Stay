@@ -314,8 +314,9 @@
         _tipsLabel.font = FCStyle.footnote;
         _tipsLabel.textColor = FCStyle.subtitleColor;
         if(isPro){
-            _tipsLabel.height = 16;
             _tipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
+            _tipsLabel.numberOfLines = 0;
+            [_tipsLabel sizeToFit];
         } else {
             _tipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
             _tipsLabel.numberOfLines = 2;
@@ -554,8 +555,9 @@
     shareTipsLabel.font = FCStyle.footnote;
     shareTipsLabel.textColor = FCStyle.subtitleColor;
     if(isPro){
-        shareTipsLabel.height = 16;
         shareTipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
+        shareTipsLabel.numberOfLines = 0;
+        [shareTipsLabel sizeToFit];
     } else {
         shareTipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
         shareTipsLabel.numberOfLines = 2;
@@ -777,14 +779,16 @@ UITableViewDataSource
     // Do any additional setup after loading the view.
     self.hidesBottomBarWhenPushed = true;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    self.title = NSLocalizedString(@"InviteFriend",@"InviteFriend");
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    
+    self.title = isPro?NSLocalizedString(@"GiftFriend",@"GiftFriend") : NSLocalizedString(@"InviteFriend",@"InviteFriend");
     [self tableView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(saveInviteSuccess:)
                                                  name:@"app.stay.notification.SaveInviteSuccess"
                                                object:nil];
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
     if(!isPro) {
         
