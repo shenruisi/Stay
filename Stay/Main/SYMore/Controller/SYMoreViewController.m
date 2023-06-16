@@ -569,8 +569,12 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
         NSLog(@"%@",biz);
         
         if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
             _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
         } else {
+            NSInteger points = [biz[@"points"] integerValue];
+            [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
             _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
