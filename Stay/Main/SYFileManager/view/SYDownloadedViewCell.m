@@ -291,7 +291,7 @@
         _qualityLabel.textColor = FCStyle.accent;
         _qualityLabel.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
         _qualityLabel.layer.cornerRadius = 10;
-        _qualityLabel.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
+        _qualityLabel.layer.maskedCorners =  kCALayerMaxXMinYCorner;
         _qualityLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _qualityLabel.font = FCStyle.footnoteBold;
         _qualityLabel.layer.masksToBounds = YES;
