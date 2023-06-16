@@ -170,7 +170,7 @@
 - (UIView *)inviteView {
     if(_inviteView == nil) {
         _inviteView = [[UIView alloc] initWithFrame:CGRectMake(40, 21, self.width - 11 * 2 - 80, 390)];
-        _inviteView.backgroundColor = FCStyle.fcWhite;
+        _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
         _inviteView.clipsToBounds = YES;
         [self.backView addSubview:_inviteView];
@@ -395,7 +395,7 @@
     UIView *shareBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,  390, 610)];
     
     UIView *shareInviteView = [[UIView alloc] initWithFrame:CGRectMake(50, 50, 290, 461)];
-    shareInviteView.backgroundColor = FCStyle.fcWhite;
+    shareInviteView.backgroundColor = FCStyle.secondaryBackground;
     shareInviteView.layer.cornerRadius = 10;
     shareInviteView.clipsToBounds = YES;
     [shareBackView addSubview:shareInviteView];
@@ -571,7 +571,7 @@
     UILabel *tips1Label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 21)];
     tips1Label.font = FCStyle.headlineBold;
     tips1Label.text = @"Once load,";
-    tips1Label.textColor = RGBA(47, 49, 19, 0.38);
+    tips1Label.textColor = FCStyle.fcThirdBlack;
     [tips1Label sizeToFit];
     tips1Label.left = 84;
     tips1Label.top = shareInviteView.bottom + 39;
@@ -586,7 +586,7 @@
     UILabel *tips2Label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 21)];
     tips2Label.font = FCStyle.headlineBold;
     tips2Label.text = @"tay forever.";
-    tips2Label.textColor = RGBA(47, 49, 19, 0.38);
+    tips2Label.textColor = FCStyle.fcThirdBlack;
     [tips2Label sizeToFit];
     tips2Label.left = stayImage.right + 3;
     tips2Label.top = shareInviteView.bottom + 39;
@@ -961,7 +961,7 @@ UITableViewDataSource
             [self.inviteImageView setupUI];
             self.inviteImageView.top = self.howToInviteView.bottom + 13;
             ShareLinkView *linkView = [[ShareLinkView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 150)];
-            linkView.backgroundColor = FCStyle.fcWhite;
+            linkView.backgroundColor = FCStyle.secondaryBackground;
             linkView.layer.cornerRadius = 10;
             linkView.layer.masksToBounds = YES;
             linkView.visitcount = _detail.visitedCount;
@@ -1009,7 +1009,7 @@ UITableViewDataSource
 - (InviteProgressView *)inviteView {
     if(_inviteView == nil) {
         _inviteView = [[InviteProgressView alloc] initWithFrame:CGRectMake(21, 0, 348, 69)];
-        _inviteView.backgroundColor = FCStyle.fcWhite;
+        _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
     }
     
@@ -1042,7 +1042,8 @@ UITableViewDataSource
     if(_inviteRulesView == nil) {
         _inviteRulesView = [[InviteRulesView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 300)];
         _inviteRulesView.layer.cornerRadius = 10;
-        _inviteRulesView.backgroundColor = FCStyle.fcWhite;
+        _inviteRulesView.layer.masksToBounds = YES;
+        _inviteRulesView.backgroundColor = FCStyle.secondaryBackground;
     }
     return _inviteRulesView;
 }
@@ -1051,7 +1052,7 @@ UITableViewDataSource
     if(_howToInviteView == nil) {
         _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 70)];
         _howToInviteView.layer.cornerRadius = 10;
-        _howToInviteView.backgroundColor = FCStyle.fcWhite;
+        _howToInviteView.backgroundColor = FCStyle.secondaryBackground;
         UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                   action:@selector(clickHowTo)];
         [_howToInviteView addGestureRecognizer:gesture];
@@ -1118,7 +1119,7 @@ UITableViewDataSource
 - (InviteImageView *)inviteImageView {
     if(nil == _inviteImageView) {
         _inviteImageView = [[InviteImageView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 525)];
-        _inviteImageView.backgroundColor = FCStyle.fcWhite;
+        _inviteImageView.backgroundColor = FCStyle.secondaryBackground;
         _inviteImageView.layer.cornerRadius = 10;
         _inviteImageView.layer.masksToBounds = YES;
         _inviteImageView.nav = self.navigationController;

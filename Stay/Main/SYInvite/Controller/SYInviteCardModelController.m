@@ -318,7 +318,7 @@
 - (UIView *)inviteView {
     if(_inviteView == nil) {
         _inviteView = [[UIView alloc] initWithFrame:CGRectMake(40, 25, [self getMainView].frame.size.width - 36 - 80, 314)];
-        _inviteView.backgroundColor = FCStyle.fcWhite;
+        _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
         _inviteView.clipsToBounds = YES;
         [self.backView addSubview:_inviteView];
