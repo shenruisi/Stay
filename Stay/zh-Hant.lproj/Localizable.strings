@@ -390,7 +390,7 @@ PasteFromClipboard="從剪貼板粘貼";
 GetPoints="獲取點數";
 NoCodeSkip="沒有邀請/禮物碼，跳過";
 GiftYourPoint="贈送好友點數";
-UserLeft="位還可邀請";
+UserLeft="位還可贈送";
 IUseStay="我從";
 
 Points="點數";
@@ -410,4 +410,6 @@ StayForm="Stay問卷";
 Viewed="已查看";
 Cover="封面";
 Color="文字顏色";
-GiftFriend ="Gift Friend";
+GiftFriend ="贈送好友";
+Random="隨機";
+Reset="重置";

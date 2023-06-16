@@ -392,7 +392,7 @@ PasteFromClipboard="从剪贴板粘贴";
 GetPoints="获取点数";
 NoCodeSkip="没有邀请/礼物码，跳过";
 GiftYourPoint="赠送好友点数";
-UserLeft="位还可邀请";
+UserLeft="位还可赠送";
 IUseStay="我从";
 
 Points="点数";
@@ -413,3 +413,5 @@ Viewed="已查看";
 Cover="封面";
 Color="文字颜色";
 GiftFriend ="赠送好友";
+Random="随机";
+Reset="重置";
