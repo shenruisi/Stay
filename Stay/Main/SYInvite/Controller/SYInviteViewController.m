@@ -298,6 +298,8 @@
         _qrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 48, 48)];
         [self.inviteView addSubview:_qrCodeImageView];
         _qrCodeImageView.top = self.extensionLabel.bottom + 32;
+        _qrCodeImageView.layer.cornerRadius = 2;
+        _qrCodeImageView.layer.masksToBounds = YES;
         if(self.detail.link.length > 0) {
             [self generatingTwoDimensionalCode];
         }
@@ -312,10 +314,11 @@
         _tipsLabel.font = FCStyle.footnote;
         _tipsLabel.textColor = FCStyle.subtitleColor;
         if(isPro){
-            _tipsLabel.height = 16;
             _tipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
+            _tipsLabel.numberOfLines = 0;
+            [_tipsLabel sizeToFit];
         } else {
-            _tipsLabel.text = NSLocalizedString(@"inviteTips",@"");
+            _tipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
             _tipsLabel.numberOfLines = 2;
         }
         
@@ -552,10 +555,11 @@
     shareTipsLabel.font = FCStyle.footnote;
     shareTipsLabel.textColor = FCStyle.subtitleColor;
     if(isPro){
-        shareTipsLabel.height = 16;
         shareTipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
+        shareTipsLabel.numberOfLines = 0;
+        [shareTipsLabel sizeToFit];
     } else {
-        shareTipsLabel.text = NSLocalizedString(@"inviteTips",@"");
+        shareTipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
         shareTipsLabel.numberOfLines = 2;
     }
     
@@ -775,14 +779,16 @@ UITableViewDataSource
     // Do any additional setup after loading the view.
     self.hidesBottomBarWhenPushed = true;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    self.title = NSLocalizedString(@"InviteFriend",@"InviteFriend");
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    
+    self.title = isPro?NSLocalizedString(@"GiftFriend",@"GiftFriend") : NSLocalizedString(@"InviteFriend",@"InviteFriend");
     [self tableView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(saveInviteSuccess:)
                                                  name:@"app.stay.notification.SaveInviteSuccess"
                                                object:nil];
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
     if(!isPro) {
         
@@ -879,12 +885,11 @@ UITableViewDataSource
 
 
 - (void)inviteCreate:(UIButton *)sender {
+    self.inviteCardController = nil;
     if(_detail != NULL) {
-//        if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-//            self.inviteCardController.dateStr = _detail.sinceCn;
-//        } else {
-            self.inviteCardController.dateStr = _detail.sinceCn;
-//        }
+
+        self.inviteCardController.dateStr = _detail.sinceCn;
+
         self.inviteCardController.imageList = _detail.candidateCovers;
         self.inviteCardController.color = _detail.color;
         self.inviteCardController.defaultImage = _detail.cover;
@@ -1124,7 +1129,7 @@ UITableViewDataSource
 - (UILabel *)proPointLabel {
     if(nil == _proPointLabel) {
         _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
-        _proPointLabel.text = [NSString stringWithFormat:@"%@ Points",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description];
+        _proPointLabel.text = [NSString stringWithFormat:@"%@ %@",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description,NSLocalizedString(@"Points",@"")];
         _proPointLabel.font = FCStyle.title3Bold;
         _proPointLabel.textColor = FCStyle.accent;
         _proPointLabel.textAlignment = NSTextAlignmentCenter;
@@ -1173,7 +1178,7 @@ UITableViewDataSource
     
     
 #ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];

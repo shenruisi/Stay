@@ -277,9 +277,13 @@
             if (statusCode == 200){
                 [[FCConfig shared] setBoolValueOfKey:GroupUserDefaultsKeyNewDevice value:NO];
                 CommitCodeSucceedModalViewController *cer = [[CommitCodeSucceedModalViewController alloc] init];
-                cer.pointValue = [biz[@"point_value"] integerValue];
-                [self.navigationController pushModalViewController:cer];
                 
+                cer.pointValue = [biz[@"point_value"] integerValue];
+                NSInteger totalPointValue = [biz[@"total_point_value"] integerValue];
+                [SharedStorageManager shared].userDefaults = nil;
+                [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)totalPointValue - DeviceHelper.totalConsumePoints;
+                
+                [self.navigationController pushModalViewController:cer];
             }
             else{
                 if (statusCode == 404 || statusCode == 409){

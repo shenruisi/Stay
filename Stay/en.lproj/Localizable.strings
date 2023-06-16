@@ -370,8 +370,8 @@ DeleteSubscribeConfirm="Are you sure you want to delete this subscribe rule?";
 UpdateOn="Update on ";
 Iuse="I use";
 ASafariExtension="A Safari Extension";
-inviteTipsPro="Scan to get gift points";
-inviteTips="Scan to download Stay on the AppStore";
+inviteTipsPro="Scan the QR code to get gift points";
+inviteTips="Scan the QR code to view the invitation from `%@`";
 ShareCard="Share Card";
 CopLink="Share Link";
 EditInfo="Edit Card";
@@ -403,16 +403,16 @@ CodeNotFound="Invitation/Gift code does not exist";
 
 StartInviting="Start Inviting";
 StartGifting="Start Gifting";
-PonitRules="What can Stay points do?";
+PonitRules="What are points used for?";
 StayPoint="STAY POINTS";
 Confirm="Confirm";
 StayForm="Stay Form";
-
-
-
-
-
-
+Viewed="Viewed";
+Cover="Cover";
+Color="Text Color";
+GiftFriend ="Gift Friend";
+Random="Random";
+Reset="Reset";
 
 
 

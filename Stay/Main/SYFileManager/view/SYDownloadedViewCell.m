@@ -13,7 +13,7 @@
 #import "FCShared.h"
 #import "ColorHelper.h"
 #import "DeviceHelper.h"
-
+#import "UIColor+Convert.h"
 @implementation SYDownloadedViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -25,6 +25,7 @@
         [self savePhotoBtn];
         [self saveFileBtn];
         [self timeLab];
+        [self qualityLabel];
     }
     return self;
 }
@@ -49,6 +50,14 @@
     } else {
         [_avatorView setImage:[UIImage imageNamed:@"videoDefault"]];
     }
+    
+    if(_downloadResource.qualityLabel.length > 0) {
+        self.qualityLabel.hidden = NO;
+        self.qualityLabel.text = _downloadResource.qualityLabel;
+    } else {
+        self.qualityLabel.hidden = true;
+    }
+    
     _hostLabel.text =  _downloadResource.host;
     _titleLabel.text = _downloadResource.title;
     if(self.downloadResource.downloadProcess > 0) {
@@ -275,6 +284,29 @@
     }
     return _timeLab;
 }
+
+- (UILabel *)qualityLabel {
+    if(nil == _qualityLabel) {
+        _qualityLabel = [[UILabel alloc] init];
+        _qualityLabel.textColor = FCStyle.accent;
+        _qualityLabel.backgroundColor = [[FCStyle.accent colorWithAlphaComponent:0.1] rgba2rgb:FCStyle.secondaryBackground];
+        _qualityLabel.layer.cornerRadius = 10;
+        _qualityLabel.layer.maskedCorners =  kCALayerMaxXMinYCorner;
+        _qualityLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _qualityLabel.font = FCStyle.footnoteBold;
+        _qualityLabel.layer.masksToBounds = YES;
+        _qualityLabel.textAlignment = NSTextAlignmentCenter;
+        [self.fcContentView addSubview:_qualityLabel];
+        [NSLayoutConstraint activateConstraints:@[
+            [_qualityLabel.topAnchor constraintEqualToAnchor:self.fcContentView.topAnchor constant:1 ],
+            [_qualityLabel.trailingAnchor constraintEqualToAnchor:self.fcContentView.trailingAnchor constant:-1 ],
+            [_qualityLabel.heightAnchor constraintEqualToConstant:25],
+            [_qualityLabel.widthAnchor constraintEqualToConstant:50],
+        ]];
+    }
+    return _qualityLabel;
+}
+
 
 - (void)setProgress:(CGFloat)progress {
     _progress = progress;

@@ -117,7 +117,7 @@
         _pointLabel = [[UILabel alloc] init];
         _pointLabel.textColor = FCStyle.accent;
         _pointLabel.font = FCStyle.bodyBold;
-        _pointLabel.text =  [NSString stringWithFormat:@"%ld Points",[_dic[@"point_value"] integerValue]] ;
+        _pointLabel.text =  [NSString stringWithFormat:@"%ld %@",[_dic[@"point_value"] integerValue],NSLocalizedString(@"Points",@"")] ;
         _pointLabel.translatesAutoresizingMaskIntoConstraints = false;
         [self.backView addSubview:_pointLabel];
         [NSLayoutConstraint activateConstraints:@[
@@ -189,7 +189,7 @@ UITableViewDataSource
     NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
     
 #ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
@@ -297,7 +297,7 @@ UITableViewDataSource
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([action[@"duration"] floatValue] * NSEC_PER_SEC)), dispatch_get_main_queue(), rewardBlock);
             self.webRewardBlockDic[dic[@"uuid"]] = rewardBlock;
 #ifdef FC_MAC
-        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"] stringByAddingPercentEncodingWithAllowedCharacters:set]]];
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"]]];
 #else
         if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:action[@"url"]]];
@@ -386,6 +386,7 @@ UITableViewDataSource
         NSRange contentRange = {0, [content length] - 1};
         [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
           
+        _pointRules.userInteractionEnabled = YES;
         _pointRules.attributedText = content;
         _pointRules.textColor = FCStyle.accent;
         _pointRules.font = FCStyle.bodyBold;
