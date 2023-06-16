@@ -585,9 +585,11 @@ static DownloadManager *instance = nil;
 }
 
 - (void)transcodeM3U8:(Task *)task {
+    task.status = DMStatusTranscoding;
     if (task.block != nil) {
         task.block(0, @"", DMStatusTranscoding);
     }
+    [self notifyFinishIfNeed];
     dispatch_async(self->_transcodeQueue, ^{
         [self combineM3U8Ts:task];
         [self convertM3U8ToMP4:task];
@@ -815,9 +817,11 @@ static DownloadManager *instance = nil;
 }
 
 - (void)transcodeNormal:(Task *)task {
+    task.status = DMStatusTranscoding;
     if (task.block != nil) {
         task.block(0, @"", DMStatusTranscoding);
     }
+    [self notifyFinishIfNeed];
     dispatch_async(self->_transcodeQueue, ^{
         [self convertNormalToMP4:task];
     });
@@ -1074,7 +1078,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     [self notifySpeedIfNeed];
     
     Task *task = [self getTaskWithSessionTask:downloadTask];
-    NSLog(@"URLSession currCount: %ld, totalCount: %ld", task.normalState.currCount, task.normalState.totalCount);
     if (task != nil) {
         task.bytesWritten += bytesWritten;
         if (task.block != nil) {
@@ -1096,7 +1099,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {
                 long long speedBS = task.bytesWritten / (timestamp - task.lastTimestamp);
                 speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
-                NSLog([NSString stringWithFormat:@"URLSession speed : %@, progress : %f", speed, task.progress]);
                 task.lastTimestamp = timestamp;
                 task.bytesWritten = 0;
                 task.block(task.progress, speed, DMStatusDownloading);
@@ -1304,8 +1306,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     BOOL shouldFinishNotify = YES;
     for (Task *task in self.taskDict.allValues) {
         if (task.status == DMStatusPending
-            || task.status == DMStatusDownloading
-            || task.status == DMStatusTranscoding) {
+            || task.status == DMStatusDownloading) {
             shouldFinishNotify = NO;
             break;
         }
@@ -1320,18 +1321,29 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 }
 
 - (void)notifySpeedIfNeed {
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    if (_lastTimestamp > 0 && timestamp - _lastTimestamp > 1) {
-        NSString *speed = @"";
-        long long speedBS = _bytesWritten / (timestamp - _lastTimestamp);
-        speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
-        _lastTimestamp = timestamp;
-        _bytesWritten = 0;
-        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskSpeedNotification
-                                                            object:nil
-                                                            userInfo:@{
-                                                                @"speed":speed
-                                                            }];
+    BOOL shouldSpeedNotify = NO;
+    for (Task *task in self.taskDict.allValues) {
+        if (task.status == DMStatusPending
+            || task.status == DMStatusDownloading) {
+            shouldSpeedNotify = YES;
+            break;
+        }
+    }
+    
+    if (shouldSpeedNotify) {
+        NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+        if (_lastTimestamp > 0 && timestamp - _lastTimestamp > 1) {
+            NSString *speed = @"";
+            long long speedBS = _bytesWritten / (timestamp - _lastTimestamp);
+            speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
+            _lastTimestamp = timestamp;
+            _bytesWritten = 0;
+            [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskSpeedNotification
+                                                                object:nil
+                                                                userInfo:@{
+                                                                    @"speed":speed
+                                                                }];
+        }
     }
 }
 
