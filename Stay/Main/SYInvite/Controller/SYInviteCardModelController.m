@@ -14,6 +14,7 @@
 #import "DeviceHelper.h"
 #import "FCStore.h"
 #import "UserScript.h"
+#import "FCButton.h"
 
 @interface SelectBarView:UIView
 
@@ -68,7 +69,7 @@
 @property (nonatomic, strong) UIView *colorView;
 @property (nonatomic, strong) UILabel *colorLabel;
 @property (nonatomic, strong) SelectBarView *colorControl;
-@property (nonatomic, strong) UIButton *confirmBtn;
+@property (nonatomic, strong) FCButton *confirmBtn;
 @property (nonatomic, strong) NSString *colorStr;
 @property (nonatomic, strong) NSString *firstImageStr;
 @property (nonatomic, strong) UILabel *proLabel;
@@ -154,8 +155,9 @@
 }
 
 - (void)confirmInviteCard {
-        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
+    [self.confirmBtn startLoading];
     if(isPro) {
         [[API shared]  queryPath:@"/gift-task/init"
                              pro:isPro
@@ -558,9 +560,9 @@
     return _colorControl;
 }
 
-- (UIButton *)confirmBtn {
+- (FCButton *)confirmBtn {
     if(nil == _confirmBtn) {
-        _confirmBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, 0, [self getMainView].frame.size.width - 36, 45)];
+        _confirmBtn = [[FCButton alloc] initWithFrame:CGRectMake(18, 0, [self getMainView].frame.size.width - 36, 45)];
         [_confirmBtn setTitle:NSLocalizedString(@"Confirm",@"") forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_confirmBtn addTarget:self action:@selector(confirmInviteCard) forControlEvents:UIControlEventTouchUpInside];

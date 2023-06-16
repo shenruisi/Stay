@@ -885,12 +885,11 @@ UITableViewDataSource
 
 
 - (void)inviteCreate:(UIButton *)sender {
+    self.inviteCardController = nil;
     if(_detail != NULL) {
-//        if (! [[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"]) {
-//            self.inviteCardController.dateStr = _detail.sinceCn;
-//        } else {
-            self.inviteCardController.dateStr = _detail.sinceCn;
-//        }
+
+        self.inviteCardController.dateStr = _detail.sinceCn;
+
         self.inviteCardController.imageList = _detail.candidateCovers;
         self.inviteCardController.color = _detail.color;
         self.inviteCardController.defaultImage = _detail.cover;
