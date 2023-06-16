@@ -403,10 +403,10 @@ GiftCodeHasExpired="礼物码已失效";
 CodeNotFound="邀请/礼物码不存在";
 
 
-StartInviting="Start Inviting";
-StartGifting="Start Gifting";
-PonitRules="What can Stay points do?";
+StartInviting="开始邀请";
+StartGifting="开始赠送";
+PonitRules="点数有什么作用？";
 StayPoint="STAY点数";
 Confirm="确认";
 StayForm="Stay问卷";
-Viewed="Viewed";
+Viewed="已查看";
