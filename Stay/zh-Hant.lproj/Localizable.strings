@@ -362,7 +362,7 @@ PointProgress="點數獲取進度";
 InviteFriend="邀請好友";
 InviteToGetPoint="邀請好友獲取點數";
 InviteRule="邀請規則";
-InviteRuleDesc="分享您生成的卡片或者鏈接給您的朋友。如果您的朋友還有安裝過Stay，通過輸入您的邀請碼，您和您的朋友都會獲得相應的點數。如果您成功邀請5位朋友，您可以獲得200個Stay點數。";
+InviteRuleDesc="分享您生成的卡片或者鏈接給您的朋友。如果您的朋友還有安裝過Stay，通過輸入您的邀請碼，您和您的朋友都會獲得相應的點數。如果您成功邀請5位朋友，您可以獲得最多200個Stay點數。";
 
 HowToInvite="如何邀請好友？";
 HowToInviteDesc="查看在線指引";

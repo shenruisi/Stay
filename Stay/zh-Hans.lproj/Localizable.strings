@@ -364,7 +364,7 @@ PointProgress="点数获取进度";
 InviteFriend="邀请好友";
 InviteToGetPoint="邀请好友获取点数";
 InviteRule="邀请规则";
-InviteRuleDesc="分享您生成的卡片或者链接给您的朋友。如果您的朋友还有安装过Stay，通过输入您的邀请码，您和您的朋友都会获得相应的点数。如果您成功邀请5位朋友，您可以获得200个Stay点数。";
+InviteRuleDesc="分享您生成的卡片或者链接给您的朋友。如果您的朋友还有安装过Stay，通过输入您的邀请码，您和您的朋友都会获得相应的点数。如果您成功邀请5位朋友，您可以获得最多200个Stay点数。";
 
 HowToInvite="如何邀请好友？";
 HowToInviteDesc="查看在线指引";
