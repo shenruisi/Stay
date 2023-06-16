@@ -176,6 +176,7 @@
                                                                    @"name":_textField.text
                                                                  }                                                     forKey:@"default_invite"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
+                [self.confirmBtn stopLoading];
                 [self.navigationController.slideController dismiss];
                 
                 NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
