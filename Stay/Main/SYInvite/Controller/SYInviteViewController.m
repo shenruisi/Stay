@@ -1109,6 +1109,7 @@ UITableViewDataSource
 - (SYInviteCardController *)inviteCardController {
     if(_inviteCardController == nil) {
         _inviteCardController = [[SYInviteCardController alloc] init];
+        _inviteCardController.nav = self.navigationController;
         
     }
     return _inviteCardController;

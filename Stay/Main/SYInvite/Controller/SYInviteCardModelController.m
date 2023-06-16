@@ -155,6 +155,23 @@
 }
 
 - (void)confirmInviteCard {
+    
+    if(self.nameLabel.text.length <= 0) {
+        
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"NameNotNull", @"")
+                                                                              message:@""
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *onlyOneConfirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction * _Nonnull action) {
+            
+            
+        }];
+        [onlyOneAlert addAction:onlyOneConfirm];
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+        return;
+        
+    }
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
     [self.confirmBtn startLoading];

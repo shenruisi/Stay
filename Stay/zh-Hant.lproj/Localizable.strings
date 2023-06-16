@@ -413,3 +413,4 @@ Color="文字顏色";
 GiftFriend ="贈送好友";
 Random="隨機";
 Reset="重置";
+NameNotNull="name not null";

@@ -20,6 +20,7 @@
         cer.defaultImage = self.defaultImage;
         cer.defaultName = self.defaultName;
         cer.detail = self.detail;
+        cer.nav = self.nav;
         _navController = [[ModalNavigationController alloc] initWithRootModalViewController:cer radius:15];
         _navController.slideController = self;
     }

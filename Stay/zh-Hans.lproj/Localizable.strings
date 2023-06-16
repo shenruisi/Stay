@@ -415,3 +415,4 @@ Color="文字颜色";
 GiftFriend ="赠送好友";
 Random="随机";
 Reset="重置";
+NameNotNull="名称不能为空";
