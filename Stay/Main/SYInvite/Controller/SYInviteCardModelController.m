@@ -564,9 +564,13 @@
 - (FCButton *)confirmBtn {
     if(nil == _confirmBtn) {
         _confirmBtn = [[FCButton alloc] initWithFrame:CGRectMake(18, 0, [self getMainView].frame.size.width - 36, 45)];
-        [_confirmBtn setTitle:NSLocalizedString(@"Confirm",@"") forState:UIControlStateNormal];
+//        [_confirmBtn setTitle:NSLocalizedString(@"Confirm",@"") forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_confirmBtn addTarget:self action:@selector(confirmInviteCard) forControlEvents:UIControlEventTouchUpInside];
+        [_confirmBtn setAttributedTitle: [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Confirm", @"") attributes:@{
+                    NSForegroundColorAttributeName:FCStyle.accent,
+                    NSFontAttributeName: FCStyle.bodyBold,
+        }] forState:UIControlStateNormal];
         _confirmBtn.font = FCStyle.bodyBold;
         _confirmBtn.layer.borderColor = FCStyle.accent.CGColor;
         _confirmBtn.layer.borderWidth = 1;
