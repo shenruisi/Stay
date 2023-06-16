@@ -317,7 +317,7 @@
             _tipsLabel.height = 16;
             _tipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
         } else {
-            _tipsLabel.text = NSLocalizedString(@"inviteTips",@"");
+            _tipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
             _tipsLabel.numberOfLines = 2;
         }
         
@@ -557,7 +557,7 @@
         shareTipsLabel.height = 16;
         shareTipsLabel.text = NSLocalizedString(@"inviteTipsPro",@"");
     } else {
-        shareTipsLabel.text = NSLocalizedString(@"inviteTips",@"");
+        shareTipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
         shareTipsLabel.numberOfLines = 2;
     }
     
