@@ -410,3 +410,5 @@ StayPoint="STAY点数";
 Confirm="确认";
 StayForm="Stay问卷";
 Viewed="已查看";
+Cover="封面";
+Color="文字颜色";

@@ -406,3 +406,5 @@ StayPoint="STAY POINTS";
 Confirm="Confirm";
 StayForm="Stay Form";
 Viewed="Viewed";
+Cover="Cover";
+Color="Text Color";
