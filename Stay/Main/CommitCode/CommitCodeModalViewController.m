@@ -284,9 +284,6 @@
                 [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)totalPointValue - DeviceHelper.totalConsumePoints;
                 
                 [self.navigationController pushModalViewController:cer];
-                
-                
-                
             }
             else{
                 if (statusCode == 404 || statusCode == 409){

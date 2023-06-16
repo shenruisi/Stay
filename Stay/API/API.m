@@ -38,8 +38,8 @@ static NSString *END_POINT = @"https://api.shenyin.name/stay/";
 #endif
 
 #ifdef DEBUG
-//static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
-static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
+static NSString *STAY_FORK_END_POINT = @"http://127.0.0.1:10000/stay-fork/";
+//static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
 #else
 static NSString *STAY_FORK_END_POINT = @"https://api.shenyin.name/stay-fork/";
 #endif
@@ -295,10 +295,10 @@ static API *instance = nil;
         else{
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             NSInteger statusCode = [httpResponse statusCode];
+            data = [rc4Decrypt decrypt:data];
+            NSError *error = nil;
+            NSDictionary *responseBody = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             if (statusCode >= 200 && statusCode < 300){
-                data = [rc4Decrypt decrypt:data];
-                NSError *error = nil;
-                NSDictionary *responseBody = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
                 if (error){
                     if (completion){
                         completion(500,error,nil,nil);
@@ -312,7 +312,7 @@ static API *instance = nil;
             }
             else{
                 if (completion){
-                    completion(statusCode,nil,nil,nil);
+                    completion(statusCode,nil,responseBody[@"server"],nil);
                 }
             }
         }
