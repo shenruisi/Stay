@@ -563,6 +563,11 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     [super viewWillAppear:animated];
     dispatch_async(dispatch_get_main_queue(), ^{
 //        self.tableView.frame = self.view.bounds;
+        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+        } else {
+            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+        }
         self.dataSource = nil;
         [self.tableView reloadData];
     });
