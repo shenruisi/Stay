@@ -162,9 +162,11 @@
                 
                 DownloadResource *downloadResource = weakSelf.array[indexPath.row];
                 if(downloadResource.status == 2) {
-                    NSFileManager *defaultManager;
-                    defaultManager = [NSFileManager defaultManager];
-                    [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
+                    dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT),^{
+                        NSFileManager *defaultManager;
+                        defaultManager = [NSFileManager defaultManager];
+                        [defaultManager removeItemAtPath:downloadResource.allPath error:nil];
+                    });
                 } else {
                     [[DownloadManager shared] remove:downloadResource.downloadUuid];
                 }
