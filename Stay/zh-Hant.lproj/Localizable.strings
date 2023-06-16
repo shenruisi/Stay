@@ -376,7 +376,7 @@ CopLink="分享鏈接";
 EditInfo="編輯卡片";
 GiftPointToFriend="贈送朋友點數";
 GetMorePoint="獲取更多點數";
-ConsumePoint="Consuming %@ Point to Download";
+ConsumePoint="消耗%@個點數開始下載";
 BacktoDownload="返回下載";
 TryAgain="稍後再試";
 HowToGift="如何贈送好友？";
@@ -401,10 +401,10 @@ GiftCodeHasExpired="禮物碼已失效";
 CodeNotFound="邀請/禮物碼不存在";
 
 
-StartInviting="Start Inviting";
-StartGifting="Start Gifting";
-PonitRules="What can Stay points do?";
+StartInviting="開始邀請";
+StartGifting="開始贈送";
+PonitRules="點數有什麼作用？";
 StayPoint="STAY點數";
 Confirm="確認";
 StayForm="Stay問卷";
-Viewed="Viewed";
+Viewed="已查看";
