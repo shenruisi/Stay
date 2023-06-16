@@ -524,7 +524,7 @@
 
 - (UILabel *)colorLabel {
     if(nil == _colorLabel) {
-        _colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, 0, 44, 18)];
+        _colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, 0, 120, 18)];
         _colorLabel.font = FCStyle.subHeadlineBold;
         _colorLabel.textColor = FCStyle.subtitleColor;
         _colorLabel.text = NSLocalizedString(@"Color",@"");
