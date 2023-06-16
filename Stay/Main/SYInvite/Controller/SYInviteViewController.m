@@ -779,14 +779,16 @@ UITableViewDataSource
     // Do any additional setup after loading the view.
     self.hidesBottomBarWhenPushed = true;
     self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-    self.title = NSLocalizedString(@"InviteFriend",@"InviteFriend");
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+
+    
+    self.title = isPro?NSLocalizedString(@"GiftFriend",@"GiftFriend") : NSLocalizedString(@"InviteFriend",@"InviteFriend");
     [self tableView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(saveInviteSuccess:)
                                                  name:@"app.stay.notification.SaveInviteSuccess"
                                                object:nil];
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
     if(!isPro) {
         
