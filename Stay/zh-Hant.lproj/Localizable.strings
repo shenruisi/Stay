@@ -411,6 +411,7 @@ Viewed="已查看";
 Cover="封面";
 Color="文字顏色";
 GiftFriend ="贈送好友";
-Random="隨機";
+Random="換一個";
 Reset="重置";
-NameNotNull="name not null";
+
+NameNotNull="名稱不能為空";
