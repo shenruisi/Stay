@@ -622,6 +622,13 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     self.tableView.sectionHeaderTopPadding = 0;
     
     
+    if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+        self.leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+    }
+    else{
+        self.leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+    }
+    
     
 //    [[API shared] queryPath:@"/self"
 //                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
