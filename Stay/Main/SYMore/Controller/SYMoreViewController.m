@@ -563,28 +563,28 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[API shared] queryPath:@"/self"
-                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
-                   deviceId:DeviceHelper.uuid
-                        biz:nil
-                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        NSLog(@"%@",biz);
-        
-        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
-            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
-            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
-            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
-        } else {
-            NSInteger points = [biz[@"points"] integerValue];
-            [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
-            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.dataSource = nil;
-            [self.tableView reloadData];
-        });
-        
-    }];
+//    [[API shared] queryPath:@"/self"
+//                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
+//
+//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+//            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+//            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+//        } else {
+//            NSInteger points = [biz[@"points"] integerValue];
+//            [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.dataSource = nil;
+//            [self.tableView reloadData];
+//        });
+//
+//    }];
     
 //    [FCStore shared].testingProFlag = YES;
 }
@@ -972,7 +972,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"section":NSLocalizedString(@"StayPoint",@""),
                 @"cells":@[
                     @{
-                        @"title":[NSString stringWithFormat:@"%@ %@",@(_leftPointCount).description,NSLocalizedString(@"Points",@"")] ,
+                        @"title":[NSString stringWithFormat:@"%@ %@",@(self.leftPointCount).description,NSLocalizedString(@"Points",@"")] ,
                         @"icon":@"InviteImage",
                       @"type":@"stayPoint",
                     }
