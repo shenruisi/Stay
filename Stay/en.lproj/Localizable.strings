@@ -414,7 +414,7 @@ GiftFriend ="Gift Friend";
 Random="Random";
 Reset="Reset";
 
-NameNotNull="name not null";
+NameNotNull="Name cannot be empty";
 
 
 

@@ -26,7 +26,7 @@ static KeychainItemWrapper *k_keychain = nil;
     static dispatch_once_t onceTokenKeychain;
     dispatch_once(&onceTokenKeychain, ^{
         if (nil == k_keychain){
-            k_keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"stay-keychain-stroge" accessGroup:nil];
+            k_keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"stay-keychain-stroge2" accessGroup:@"group.com.dajiu.stay.pro"];
         }
     });
     return k_keychain;
@@ -46,15 +46,17 @@ static KeychainItemWrapper *k_keychain = nil;
 
 + (void)consumePoints:(CGFloat)pointValue{
     CGFloat newPoints = [self totalConsumePoints] + pointValue;
-    [[self keychain] setObject:@(newPoints) forKey:(id)kSecAttrLabel];
+    NSString *newPointsStr = [NSString stringWithFormat:@"%.1f",newPoints];
+    [[self keychain] setObject:newPointsStr forKey:(id)kSecAttrLabel];
 }
 + (void)rollbackPoints:(CGFloat)pointValue{
     CGFloat newPoints = [self totalConsumePoints] - pointValue;
-    [[self keychain] setObject:@(newPoints) forKey:(id)kSecAttrLabel];
+    NSString *newPointsStr = [NSString stringWithFormat:@"%.1f",newPoints];
+    [[self keychain] setObject:newPointsStr forKey:(id)kSecAttrLabel];
 }
 + (CGFloat)totalConsumePoints{
-    NSNumber *points =  [[self keychain] objectForKey:(id)kSecAttrLabel];
-    return [points floatValue];
+    NSString *pointsStr =  [[self keychain] objectForKey:(id)kSecAttrLabel];
+    return [pointsStr floatValue];
 }
 
 + (NSString *)country{

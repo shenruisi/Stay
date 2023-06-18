@@ -1402,24 +1402,7 @@ const browser = __b;
         if(hasNode === 'false'){
           return;
         }
-
-        // check user points
-        if(isStayAround == 'b'){
-          console.log('handleMenuItemClick ------- canTagAdConfig----',canTagAdConfig);
-          if(typeof canTagAdConfig.tag_ad != 'undefined' && (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
-            // 没有可用点数
-            let prompt = i18nProp['not_enough'];
-            showConfirmModal(prompt, ()=>{
-              let targetGun = document.createElement('a');
-              targetGun.href = 'stay://x-callback-url/taskList';
-              targetGun.click();
-            })
-            return;
-          }
-        }
-        
         let menuItemType = item.getAttribute('type');
-
         menuItemBox.removeEventListener(clickEvent, handleMenuItemClick);
         preselectedTargetDom.removeChild(document.querySelector('#__stay_makeup_menu'));
         hideSeletedTagContentModal();
@@ -1472,6 +1455,20 @@ const browser = __b;
     }
 
     function handleSelectedTag(){
+      // check user points
+      if(isStayAround == 'b'){
+        console.log('handleMenuItemClick ------- canTagAdConfig----',canTagAdConfig);
+        if(typeof canTagAdConfig.tag_ad != 'undefined' && (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
+          // 没有可用点数
+          let prompt = i18nProp['not_enough'];
+          showConfirmModal(prompt, ()=>{
+            let targetGun = document.createElement('a');
+            targetGun.href = 'stay://x-callback-url/taskList';
+            targetGun.click();
+          })
+          return;
+        }
+      }
       let finishTaggedDom = document.querySelector('#__stay_tagged')
       if(!finishTaggedDom){
         finishTaggedDom = document.createElement('div');

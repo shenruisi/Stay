@@ -413,6 +413,7 @@ Viewed="已查看";
 Cover="封面";
 Color="文字颜色";
 GiftFriend ="赠送好友";
-Random="随机";
+Random="换一个";
 Reset="重置";
+
 NameNotNull="名称不能为空";
