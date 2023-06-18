@@ -659,7 +659,7 @@
             float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
             
             if(point >= downloadNeedPoint) {
-                [DeviceHelper consumePoints:downloadNeedPoint];
+//                [DeviceHelper consumePoints:downloadNeedPoint];
             } else {
                 SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
                 cer.nav = self.nav;
@@ -751,6 +751,14 @@
             return;
         } else {
 
+            if(!isPro) {
+                float point = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+                float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+                if(point >= downloadNeedPoint) {
+                   [DeviceHelper consumePoints:downloadNeedPoint];
+                }
+            }
+            
           
             [self.nav popToRootViewControllerAnimated:true];
 #ifdef FC_MAC

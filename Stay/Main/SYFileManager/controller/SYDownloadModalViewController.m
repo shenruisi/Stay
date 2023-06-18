@@ -283,7 +283,7 @@
         float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
         
         if(point >= downloadNeedPoint) {
-            [DeviceHelper consumePoints:downloadNeedPoint];
+//            [DeviceHelper consumePoints:downloadNeedPoint];
         } else {
             SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
             cer.nav = self.nav;
@@ -351,6 +351,16 @@
     resource.downloadUuid = [self md5HexDigest:downLoadUrl];
     DownloadResource *oldResource =  [[DataManager shareManager] selectDownloadResourceByDownLoadUUid:[self md5HexDigest:downLoadUrl]];
     if(!(oldResource != nil && oldResource.downloadUrl != nil)) {
+        
+        
+        if(!isPro) {
+            float point = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+            float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+            if(point >= downloadNeedPoint) {
+                [DeviceHelper consumePoints:downloadNeedPoint];
+            }
+        }
+        
         FCTab *tab = [[FCShared tabManager] tabOfUUID:self.saveToElements[0].generalEntity.uuid];
         
       

@@ -12,6 +12,8 @@
 #import "FCApp.h"
 #import "SYInviteViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "FCStore.h"
+#import "SharedStorageManager.h"
 
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
@@ -428,6 +430,27 @@ UITableViewDataSource
             
         }];
     }
+    
+    [[API shared] queryPath:@"/self"
+                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+        
+        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+        } else {
+            NSInteger points = [biz[@"points"] integerValue];
+            [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+        
+    }];
+    
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
