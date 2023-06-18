@@ -1411,7 +1411,6 @@ const browser = __b;
         removeStopWindowScroll();
         if('tag' === menuItemType){
           handleSelectedTag();
-          showSelectTagNoteToast(i18nProp['select_note']);
         }else if('expand' === menuItemType){
           // console.log('expand--------', getValidParentNode());
           handleSelecteTagPosition(getValidParentNode(), true);
@@ -1487,6 +1486,7 @@ const browser = __b;
       }, 2000);
       // console.log('handleSelectedTag-----to---send');
       handleTagSelector();
+      showSelectTagNoteToast(i18nProp['select_note']);
     }
 
     async function handleTagSelector(){
