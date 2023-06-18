@@ -28,6 +28,8 @@
 #import "API.h"
 #import "DeviceHelper.h"
 #import "SYInviteTaskSlideController.h"
+#import "UserDefaultsExRO.h"
+
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
 
@@ -606,6 +608,17 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                  name:@"app.stay.notification.SYSubscibeChangeNotification"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(availablePointsDidChangeHandler:)
+                                                 name:UserDefaultsExROAvailablePointsDidChangeNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(availableGiftPointsDidChangeHandler:)
+                                                 name:UserDefaultsExROAvailableGiftPointsDidChangeNotification
+                                               object:nil];
+    
+    
     self.tableView.sectionHeaderTopPadding = 0;
     
     
@@ -629,6 +642,28 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 //
 //    }];
     
+}
+
+- (void)availablePointsDidChangeHandler:(NSNotification *)note{
+    if([[FCStore shared] getPlan:NO] == FCPlan.None) {
+        self.leftPointCount = [[note userInfo][@"value"] floatValue];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.dataSource = nil;
+        [self.tableView reloadData];
+    });
+}
+
+- (void)availableGiftPointsDidChangeHandler:(NSNotification *)note{
+    if([[FCStore shared] getPlan:NO] != FCPlan.None) {
+        self.leftPointCount = [[note userInfo][@"value"] floatValue];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.dataSource = nil;
+        [self.tableView reloadData];
+    });
 }
 
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
