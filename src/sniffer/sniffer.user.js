@@ -2337,6 +2337,18 @@ const browser = __b;
       else if(host.indexOf('555yy4.com')>-1){
         videoInfo = handle555yy4VideoInfo(videoSnifferDom);
       }
+      else if(host.indexOf('web.telegram.org')>-1){
+        if(downloadUrl){
+          const sourcePath = decodeURIComponent(downloadUrl);
+          let fileNameArr = sourcePath.match(/"fileName":".*"/g);
+          if(fileNameArr && fileNameArr.length){
+            let fileName = fileNameArr[0];
+            fileName = fileName.replace('"fileName":', '');
+            title = fileName.replace(/"/g,'')
+          }
+        }
+      }
+      
 
       if(videoInfo.downloadUrl){
         downloadUrl = videoInfo.downloadUrl
