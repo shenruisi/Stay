@@ -172,6 +172,8 @@ const browser = __b;
           }else{
             if(/^\//i.test(downloadUrl)){
               downloadUrl = window.location.origin+downloadUrl;
+            }else{
+              downloadUrl = window.location.origin+window.location.pathname+downloadUrl;
             }
           }
         }
