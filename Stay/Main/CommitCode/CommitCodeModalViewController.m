@@ -17,6 +17,9 @@
 #import "DeviceHelper.h"
 #import "AlertHelper.h"
 #import "FCConfig.h"
+#import <SafariServices/SafariServices.h>
+#import "FCShared.h"
+#import "Plugin.h"
 
 @protocol _CommitCodeTextFieldDelegate;
 @interface _CommitCodeTextField : UITextField
@@ -127,6 +130,15 @@
             NSForegroundColorAttributeName : FCStyle.accent
         }];
         _linkButton.attributedTitle = title;
+        __weak CommitCodeModalViewController *weakSelf = (CommitCodeModalViewController *)self;
+        _linkButton.action = ^{
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:@"https://www.craft.me/s/waHJPeiNdBTuli"]];
+#else
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.craft.me/s/waHJPeiNdBTuli"]];
+        [weakSelf.navigationController.slideController.baseCer presentViewController:safariVc animated:YES completion:nil];
+#endif
+        };
         
         [self.view addSubview:_linkButton];
         [NSLayoutConstraint activateConstraints:@[
@@ -137,6 +149,7 @@
     
     return _linkButton;
 }
+
 
 - (NSMutableArray<_CommitCodeTextField *> *)textFieldGroup{
     if (nil == _textFieldGroup){
