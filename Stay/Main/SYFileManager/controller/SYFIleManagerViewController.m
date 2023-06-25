@@ -1038,14 +1038,14 @@ UIDocumentPickerDelegate
 //    self.tableView.hidden = !isPro;
     
     
-#ifndef FC_MAC
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    if(nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstDownloadGuide"]){
-        self.sYDownloadPreviewController = [[SYDownloadPreviewController alloc] init];
-        [self.sYDownloadPreviewController show];
-        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstDownloadGuide"];
-    }
-#endif
+//#ifndef FC_MAC
+//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+//    if(nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstDownloadGuide"]){
+//        self.sYDownloadPreviewController = [[SYDownloadPreviewController alloc] init];
+//        [self.sYDownloadPreviewController show];
+//        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstDownloadGuide"];
+//    }
+//#endif
     
     if( self.selectedIdx == 0) {
         [self.tableView reloadData];
