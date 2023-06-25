@@ -262,6 +262,10 @@
         [code appendString:self.textFieldGroup[i].text];
     }
     
+    if (code.length < 6){
+        return;
+    }
+    
     FCButton *button = (FCButton *)sender;
     [self.navigationController.slideController startLoading];
     [button startLoading];
@@ -334,7 +338,7 @@
 }
 
 - (void)nextResponse:(_CommitCodeTextField *)textField{
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
     NSUInteger index = [self.textFieldGroup indexOfObject:textField];
     if (index < self.textFieldGroup.count - 1){
         [[self.textFieldGroup objectAtIndex:index + 1] becomeFirstResponder];
@@ -342,7 +346,7 @@
 }
 
 - (void)prevResponse:(_CommitCodeTextField *)textField{
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
     NSUInteger index = [self.textFieldGroup indexOfObject:textField];
     if (index > 0){
         [[self.textFieldGroup objectAtIndex:index - 1] becomeFirstResponder];
