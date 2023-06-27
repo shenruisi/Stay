@@ -14,7 +14,8 @@
 #import <SafariServices/SafariServices.h>
 #import "FCStore.h"
 #import "SharedStorageManager.h"
-
+#import "FCShared.h"
+#import "Plugin.h"
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -227,7 +228,7 @@ UITableViewDataSource
     NSDictionary *dic = _taskArray[indexPath.row];
     if([@"invite" isEqualToString: dic[@"type"]]) {
 #ifdef FC_MAC
-            [self presentViewController:
+            [self.nav presentViewController:
              [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
                                animated:YES completion:^{}];
 #else
