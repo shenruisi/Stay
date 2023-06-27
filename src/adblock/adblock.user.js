@@ -428,7 +428,7 @@ const browser = __b;
         return binl2hex(coreMD5(str2binl(str))) 
       }
     }
-    let clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
+    const clickEvent =  'click'; //Utils.isMobileOrIpad()?'touchstart':'click';
     let borderColor = '#ffffff';
     // if(!Utils.isMobileOrIpad()){
     //   borderColor = '#B620E0';
