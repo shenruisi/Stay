@@ -87,7 +87,7 @@ const browser = __b;
     let isStayAround = '';
     let isLoadingAround = false;
     let isTouchestartSelect = false;
-    let isMousemoveSelect = false;
+    // let isMousemoveSelect = false;
     let canTagAdConfig = {};
     const AdLangMessage = {
       'en_US': {
@@ -1021,7 +1021,7 @@ const browser = __b;
         preselectedTargetDom.id='__stay_selected_tag';
         preselectedTargetDom.classList.add('__stay_select_target');
         document.body.appendChild(preselectedTargetDom);
-        const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+        // const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
       }
       showSelectTagNoteToast(i18nProp['select_note']);
 
@@ -1101,11 +1101,15 @@ const browser = __b;
 
     function handleShowTagingOperateMenuEvent(event){
       console.log('handleShowTagingOperateMenuEvent------',event)
+      if(isTouchestartSelect){
+        return;
+      }
       if(event.touches && event.touches.length>1){
         return;
       }
+      console.log('handleShowTagingOperateMenuEvent-----start----------')
       event.stopPropagation();
-      // event.preventDefault();
+      event.preventDefault();
       showTagingOperateMenu(true)
     }
 
@@ -1736,20 +1740,29 @@ const browser = __b;
       let eventType = event.type;
       if(eventType == 'touchstart'){
         // event.preventDefault();
-        // clickEvent = 'touchstart';
+        isTouchestartSelect = true;
       }else if(eventType == 'mousemove'){
         // webkitForce 属性的值是一个介于 0 到 1 之间的浮点数，表示用户施加在触摸屏幕上的力度。值为 0 表示没有施加力度，而值为 1 表示施加了最大力度。
         // 即当触屏产生压力时才会有webkitForce的值
-        if(event.webkitForce > 0){
+        if(typeof event.webkitForce != 'undefined' && event.webkitForce > 0){
+          // event.stopPropagation();
+          // event.preventDefault();
           // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
           return;
         }else{
-          // clickEvent = 'click';
+
         }
-        // isMousemoveSelect = true;
+        isTouchestartSelect = false
         // console.log('mousemove----------continue------',isMousemoveSelect)
       }
-      // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect, '",isMousemoveSelect------"',isMousemoveSelect)
+      console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
+
+      preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      preselectedTargetDom.remove();
+      preselectedTargetDom = document.createElement('div');
+      preselectedTargetDom.id='__stay_selected_tag';
+      preselectedTargetDom.classList.add('__stay_select_target');
+      document.body.appendChild(preselectedTargetDom);
       
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
@@ -1844,8 +1857,9 @@ const browser = __b;
         console.log('handleSelecteTagPosition---moveDomRect is null');
         return;
       }
-      if(!showMenu && Utils.isMobileOrIpad()){
+      if(!showMenu && isTouchestartSelect){
         showSelectTagNoteToast(i18nProp['select_confirm']);
+        isTouchestartSelect = false;
       }
 
       let targetWidth = getMoveDomWidth(moveDomRect.width);
@@ -1864,12 +1878,19 @@ const browser = __b;
       if(document.querySelector('#__stay_iframe_toast')){
         document.querySelector('#__stay_iframe_toast').removeEventListener(clickEvent, handleIframeToastClick);
       }
-      preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
       showMakeupTagMenu = false;
-      // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
-      while(preselectedTargetDom.firstChild){
-        preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
-      }
+      // preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      // // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
+      // while(preselectedTargetDom.firstChild){
+      //   preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
+      // }
+      // preselectedTargetDom.remove();
+
+      // preselectedTargetDom = document.createElement('div');
+      // preselectedTargetDom.id='__stay_selected_tag';
+      // preselectedTargetDom.classList.add('__stay_select_target');
+      // document.body.appendChild(preselectedTargetDom);
+
       preselectedTargetDom.style.width = '1px';
       preselectedTargetDom.style.height = '1px';
       preselectedTargetDom.style.left = '-10px';
@@ -1889,7 +1910,7 @@ const browser = __b;
       preselectedTargetDom.style.top = targetY+'px';
       preselectedTargetDom.style.display = 'block';
       
-      preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      const preselectedTargetDomEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
 
       console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
