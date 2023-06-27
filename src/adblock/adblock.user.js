@@ -1736,7 +1736,7 @@ const browser = __b;
       let eventType = event.type;
       if(eventType == 'touchstart'){
         // event.preventDefault();
-        clickEvent = 'touchstart';
+        // clickEvent = 'touchstart';
       }else if(eventType == 'mousemove'){
         // webkitForce 属性的值是一个介于 0 到 1 之间的浮点数，表示用户施加在触摸屏幕上的力度。值为 0 表示没有施加力度，而值为 1 表示施加了最大力度。
         // 即当触屏产生压力时才会有webkitForce的值
@@ -1744,7 +1744,7 @@ const browser = __b;
           // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
           return;
         }else{
-          clickEvent = 'click';
+          // clickEvent = 'click';
         }
         // isMousemoveSelect = true;
         // console.log('mousemove----------continue------',isMousemoveSelect)
@@ -1784,7 +1784,7 @@ const browser = __b;
         if(iframeDom){
           selectePositionDom = iframeDom;
         }else{
-          if(Utils.isMobileOrIpad()){
+          if(Utils.isMobile()){
             if(moveDomList && moveDomList.length){
               if(moveDomList.length<=3){
                 selectePositionDom = moveDomList[0];
