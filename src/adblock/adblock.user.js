@@ -1737,17 +1737,19 @@ const browser = __b;
       if(eventType == 'touchstart'){
         // event.preventDefault();
         clickEvent = 'touchstart';
-        if(isMousemoveSelect){
-          return;
-        }
-        isTouchestartSelect = true;
+        // if(isMousemoveSelect){
+        //   return;
+        // }
+        // isTouchestartSelect = true;
       }else if(eventType == 'mousemove'){
-        clickEvent = 'click';
-        if(isTouchestartSelect){
+        // 0手指触屏行为，1手指触控板行为
+        if(event.button == 0){
           // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
           return;
+        }else{
+          clickEvent = 'click';
         }
-        isMousemoveSelect = true;
+        // isMousemoveSelect = true;
         // console.log('mousemove----------continue------',isMousemoveSelect)
       }
       // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect, '",isMousemoveSelect------"',isMousemoveSelect)
