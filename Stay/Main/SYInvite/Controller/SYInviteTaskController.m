@@ -14,6 +14,8 @@
 #import <SafariServices/SafariServices.h>
 #import "FCStore.h"
 #import "SharedStorageManager.h"
+#import "FCShared.h"
+#import "Plugin.h"
 
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
