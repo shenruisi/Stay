@@ -56,7 +56,7 @@
 }
 
 - (CGFloat)marginToFrom{
-    return 40;
+    return self.parentView.safeAreaInsets.top;
 }
 
 - (ModalNavigationController *)topToastNavController{

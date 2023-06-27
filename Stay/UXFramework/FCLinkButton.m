@@ -10,6 +10,7 @@
 @interface FCLinkButton()
 
 @property (nonatomic, strong) UIView *line;
+
 @end
 
 @implementation FCLinkButton
@@ -18,6 +19,11 @@
     if (self = [super init]){
         self.backgroundColor = UIColor.clearColor;
         [self line];
+        self.userInteractionEnabled = YES;
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                  action:@selector(tapGesture:)];
+        
+        [self addGestureRecognizer:gesture];
     }
     
     return self;
@@ -46,6 +52,10 @@
     _line.backgroundColor = [_attributedTitle attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:nil];
 }
 
-
+- (void)tapGesture:(UIGestureRecognizer *)gesture{
+    if (self.action){
+        self.action();
+    }
+}
 
 @end

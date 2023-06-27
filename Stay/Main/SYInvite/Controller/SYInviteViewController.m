@@ -19,6 +19,8 @@
 #import "FCStore.h"
 #import "SharedStorageManager.h"
 #import <SafariServices/SafariServices.h>
+#import "FCShared.h"
+#import "Plugin.h"
 
 @interface ShareLinkView:UIView
 @property (nonatomic, strong) NSString *linkStr;

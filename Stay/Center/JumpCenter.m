@@ -22,6 +22,7 @@
 #import "SYNoDownLoadDetailViewController.h"
 #import "ScriptEntity.h"
 #import "DataManager.h"
+#import "SYInviteViewController.h"
 
 @implementation JumpCenter
 
@@ -92,6 +93,9 @@
                      [baseCer.navigationController pushViewController:cer animated:true];
                 }
             }
+        }
+        else if ([url.host isEqualToString:@"gift"]){
+            [baseCer.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
         }
     } else {
         NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];

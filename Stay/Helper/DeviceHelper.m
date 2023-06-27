@@ -10,6 +10,8 @@
 #import "KeychainItemWrapper.h"
 #import "FCConfig.h"
 
+NSNotificationName const _Nonnull DeviceHelperConsumePointsDidChangeNotification = @"app.stay.notification.DeviceHelperConsumePointsDidChangeNotification";
+
 @implementation DeviceHelper
 
 + (FCDeviceType)type{
@@ -48,11 +50,21 @@ static KeychainItemWrapper *k_keychain = nil;
     CGFloat newPoints = [self totalConsumePoints] + pointValue;
     NSString *newPointsStr = [NSString stringWithFormat:@"%.1f",newPoints];
     [[self keychain] setObject:newPointsStr forKey:(id)kSecAttrLabel];
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:DeviceHelperConsumePointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:nil];
+#endif
 }
 + (void)rollbackPoints:(CGFloat)pointValue{
     CGFloat newPoints = [self totalConsumePoints] - pointValue;
     NSString *newPointsStr = [NSString stringWithFormat:@"%.1f",newPoints];
     [[self keychain] setObject:newPointsStr forKey:(id)kSecAttrLabel];
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:DeviceHelperConsumePointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:nil];
+#endif
 }
 + (CGFloat)totalConsumePoints{
     NSString *pointsStr =  [[self keychain] objectForKey:(id)kSecAttrLabel];

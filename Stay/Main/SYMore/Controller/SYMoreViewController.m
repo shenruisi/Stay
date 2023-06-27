@@ -618,6 +618,13 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                  name:UserDefaultsExROAvailableGiftPointsDidChangeNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(consumePointsDidChangeHandler:)
+                                                 name:DeviceHelperConsumePointsDidChangeNotification
+                                               object:nil];
+    
+    
+    
     
     self.tableView.sectionHeaderTopPadding = 0;
     
@@ -649,6 +656,23 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 //
 //    }];
     
+}
+
+- (void)consumePointsDidChangeHandler:(NSNotification *)note{
+    [[API shared] queryPath:@"/self"
+                            pro:[[FCStore shared] getPlan:NO] != FCPlan.None
+                       deviceId:DeviceHelper.uuid
+                            biz:nil
+                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+    
+        if (200 == statusCode){
+            NSInteger points = [biz[@"points"] integerValue];
+            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+            [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)points - DeviceHelper.totalConsumePoints;
+            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+        }
+    }];
 }
 
 - (void)availablePointsDidChangeHandler:(NSNotification *)note{

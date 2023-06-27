@@ -146,7 +146,13 @@
     [self.navigationController.slideController dismiss];
     NSString *urlStr = self.dic[@"jump_url"];
     MainTabBarController *tabBarController = [QuickAccess primaryController];
-    [JumpCenter jumpWithUrl:urlStr baseCer:tabBarController.selectedViewController];
+    UIViewController *cer = tabBarController.selectedViewController;
+    if ([cer isKindOfClass:[UINavigationController class]]){
+        UINavigationController *nav = (UINavigationController *)cer;
+        cer = nav.topViewController;
+    }
+    
+    [JumpCenter jumpWithUrl:urlStr baseCer:cer];
 }
 
 - (FCButton *)dismissButton{
