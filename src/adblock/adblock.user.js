@@ -1737,13 +1737,10 @@ const browser = __b;
       if(eventType == 'touchstart'){
         // event.preventDefault();
         clickEvent = 'touchstart';
-        // if(isMousemoveSelect){
-        //   return;
-        // }
-        // isTouchestartSelect = true;
       }else if(eventType == 'mousemove'){
-        // 0手指触屏行为，1手指触控板行为
-        if(event.button == 0){
+        // webkitForce 属性的值是一个介于 0 到 1 之间的浮点数，表示用户施加在触摸屏幕上的力度。值为 0 表示没有施加力度，而值为 1 表示施加了最大力度。
+        // 即当触屏产生压力时才会有webkitForce的值
+        if(event.webkitForce > 0){
           // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
           return;
         }else{
