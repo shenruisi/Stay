@@ -86,6 +86,8 @@ const browser = __b;
     let cssSelectorSet = new Set();
     let isStayAround = '';
     let isLoadingAround = false;
+    let isTouchestartSelect = false;
+    let isMousemoveSelect = false;
     let canTagAdConfig = {};
     const AdLangMessage = {
       'en_US': {
@@ -426,7 +428,7 @@ const browser = __b;
         return binl2hex(coreMD5(str2binl(str))) 
       }
     }
-    const clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
+    let clickEvent = Utils.isMobileOrIpad()?'touchstart':'click';
     let borderColor = '#ffffff';
     // if(!Utils.isMobileOrIpad()){
     //   borderColor = '#B620E0';
@@ -1068,10 +1070,13 @@ const browser = __b;
         let isBindMoveEvent = moveWrapperDom.getAttribute('movevent');
         if(!isBindMoveEvent || (isBindMoveEvent && isBindMoveEvent == 'false')){
           moveWrapperDom.setAttribute('movevent', 'true');
+          // moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
+          // document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
           if(Utils.isMobileOrIpad()){
-            const mouseMoveHandler = moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
+            moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
+            document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
           }else{
-            const mouseMoveHandler = document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
+            document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
           }
         }
       }
@@ -1083,8 +1088,11 @@ const browser = __b;
     function stopListenerMove(){
       if(moveWrapperDom){
         moveWrapperDom.setAttribute('movevent', 'false');
+        // moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
+        // document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
         if(Utils.isMobileOrIpad()){
           moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
+          document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
         }else{
           document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
         }
@@ -1097,7 +1105,7 @@ const browser = __b;
         return;
       }
       event.stopPropagation();
-      event.preventDefault();
+      // event.preventDefault();
       showTagingOperateMenu(true)
     }
 
@@ -1434,9 +1442,14 @@ const browser = __b;
         moveWrapperDom.addEventListener('touchstart', handleStopScroll);
         moveWrapperDom.addEventListener('touchmove', handleStopScroll);
         moveWrapperDom.addEventListener('touchend', handleStopScroll);
+        document.body.addEventListener('mousemove', handleStopScroll, { passive: true });
       }else{
         document.body.addEventListener('mousemove', handleStopScroll, { passive: true });
       }
+      // moveWrapperDom.addEventListener('touchstart', handleStopScroll);
+      // moveWrapperDom.addEventListener('touchmove', handleStopScroll);
+      // moveWrapperDom.addEventListener('touchend', handleStopScroll);
+      // document.body.addEventListener('mousemove', handleStopScroll, { passive: true });
     }
 
     function removeStopWindowScroll(){
@@ -1444,9 +1457,14 @@ const browser = __b;
         moveWrapperDom.removeEventListener('touchstart', handleStopScroll);
         moveWrapperDom.removeEventListener('touchmove', handleStopScroll);
         moveWrapperDom.removeEventListener('touchend', handleStopScroll);
+        document.body.removeEventListener('mousemove', handleStopScroll, { passive: true });
       }else{
         document.body.removeEventListener('mousemove', handleStopScroll, { passive: true });
       }
+      // moveWrapperDom.removeEventListener('touchstart', handleStopScroll);
+      // moveWrapperDom.removeEventListener('touchmove', handleStopScroll);
+      // moveWrapperDom.removeEventListener('touchend', handleStopScroll);
+      // document.body.removeEventListener('mousemove', handleStopScroll, { passive: true });
     }
     function handleStopScroll(event){
       event.preventDefault();
@@ -1709,10 +1727,31 @@ const browser = __b;
      * @returns 
      */
     function handleMoveAndSelecteDom(event){
-      // console.log('touchmove------handleMoveAndSelecteDom-------------', event);
+      // event.stopPropagation();
+      
+      console.log('------handleMoveAndSelecteDom----------type---'+event.type, event);
       if(event.touches && event.touches.length>1){
         return;
       }
+      let eventType = event.type;
+      if(eventType == 'touchstart'){
+        // event.preventDefault();
+        clickEvent = 'touchstart';
+        if(isMousemoveSelect){
+          return;
+        }
+        isTouchestartSelect = true;
+      }else if(eventType == 'mousemove'){
+        clickEvent = 'click';
+        if(isTouchestartSelect){
+          // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
+          return;
+        }
+        isMousemoveSelect = true;
+        // console.log('mousemove----------continue------',isMousemoveSelect)
+      }
+      // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect, '",isMousemoveSelect------"',isMousemoveSelect)
+      
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
@@ -1851,9 +1890,9 @@ const browser = __b;
       preselectedTargetDom.style.top = targetY+'px';
       preselectedTargetDom.style.display = 'block';
       
-      const preselectedTargetEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
 
-      // console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
+      console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
         // console.log('showMenu---------------------',showMenu);
         showTagingOperateMenu(false);
