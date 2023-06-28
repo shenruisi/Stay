@@ -114,9 +114,17 @@ export default {
         overflow: hidden;
         position: relative;
         top: -6px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         img{
           height: 40px;
           width: 40px;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
         }
       }
     }
