@@ -856,6 +856,7 @@ UIDocumentPickerDelegate
         UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             FCTab *tab = [FCShared tabManager].tabs[indexPath.row - 1];
             weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
+            weakSelf.folderSlideController.baseCer = self;
             [self.folderSlideController show];
             [tableView setEditing:NO animated:YES];
         }];
