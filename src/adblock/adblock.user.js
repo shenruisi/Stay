@@ -1101,9 +1101,6 @@ const browser = __b;
 
     function handleShowTagingOperateMenuEvent(event){
       console.log('handleShowTagingOperateMenuEvent------',event)
-      if(isTouchestartSelect){
-        return;
-      }
       if(event.touches && event.touches.length>1){
         return;
       }
@@ -1757,12 +1754,15 @@ const browser = __b;
       }
       console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
 
-      preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
-      preselectedTargetDom.remove();
-      preselectedTargetDom = document.createElement('div');
-      preselectedTargetDom.id='__stay_selected_tag';
-      preselectedTargetDom.classList.add('__stay_select_target');
-      document.body.appendChild(preselectedTargetDom);
+      if(isTouchestartSelect){
+        preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+        preselectedTargetDom.remove();
+        preselectedTargetDom = document.createElement('div');
+        preselectedTargetDom.id='__stay_selected_tag';
+        preselectedTargetDom.classList.add('__stay_select_target');
+        document.body.appendChild(preselectedTargetDom);
+      }
+      
       
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
@@ -1879,17 +1879,14 @@ const browser = __b;
         document.querySelector('#__stay_iframe_toast').removeEventListener(clickEvent, handleIframeToastClick);
       }
       showMakeupTagMenu = false;
-      // preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
-      // // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
-      // while(preselectedTargetDom.firstChild){
-      //   preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
-      // }
-      // preselectedTargetDom.remove();
+      if(!isTouchestartSelect){
 
-      // preselectedTargetDom = document.createElement('div');
-      // preselectedTargetDom.id='__stay_selected_tag';
-      // preselectedTargetDom.classList.add('__stay_select_target');
-      // document.body.appendChild(preselectedTargetDom);
+        preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+        // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
+        while(preselectedTargetDom.firstChild){
+          preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
+        }
+      }
 
       preselectedTargetDom.style.width = '1px';
       preselectedTargetDom.style.height = '1px';
