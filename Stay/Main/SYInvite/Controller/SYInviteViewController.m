@@ -311,7 +311,7 @@
 
 - (UILabel *)tipsLabel {
     if(nil == _tipsLabel) {
-        _tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 141, 33)];
+        _tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 161, 33)];
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
         _tipsLabel.font = FCStyle.footnote;
         _tipsLabel.textColor = FCStyle.subtitleColor;
@@ -543,6 +543,7 @@
         }
         
         shareExtensionLabel.top = shareSigImageView.bottom;
+        shareExtensionLabel.left = shareStayLabel.left;
     }
     
     
@@ -553,7 +554,7 @@
         shareQrCodeImageView.image = self.qrCodeImageView.image;
     }
     
-    UILabel *shareTipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 141, 33)];
+    UILabel *shareTipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 181, 33)];
     shareTipsLabel.font = FCStyle.footnote;
     shareTipsLabel.textColor = FCStyle.subtitleColor;
     if(isPro){
@@ -600,7 +601,9 @@
    UIGraphicsEndImageContext();
     
     UIActivityViewController *activityController=[[UIActivityViewController alloc]initWithActivityItems:@[image] applicationActivities:nil];
-        [self.nav presentViewController:activityController animated:YES completion:nil];
+    activityController.popoverPresentationController.sourceView = self;
+    activityController.popoverPresentationController.sourceRect = self.bounds;
+    [self.nav presentViewController:activityController animated:YES completion:nil];
 
 }
 
@@ -1168,6 +1171,9 @@ UITableViewDataSource
     NSArray *activityItems = @[_detail.link];
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
 
+    activityVC.popoverPresentationController.sourceView = self.view;
+    activityVC.popoverPresentationController.sourceRect = self.view.bounds;
+    
     [self.navigationController presentViewController:activityVC animated:YES completion:nil];
 }
 
@@ -1184,10 +1190,12 @@ UITableViewDataSource
 #ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url]];
 #else
-        if (FCDeviceTypeIPhone == DeviceHelper.type){
+//        if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
             [self presentViewController:safariVc animated:YES completion:nil];
-        }
+//        } else{
+//            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+//        }
 #endif
 }
 
