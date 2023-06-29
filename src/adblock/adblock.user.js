@@ -1124,9 +1124,7 @@ const browser = __b;
       stopWindowScroll();
       // if(Utils.isMobileOrIpad()){
       // }
-      if(isStayAround == 'b' && shouldFetchCanTag){
-        fetchUserIfCanTag();
-      }
+      
       preselectedTargetDom.classList.replace('__stay_select_target_init_border', '__stay_select_target_selected_border');
       // todo
       let closeMenu = 'https://res.stayfork.app/scripts/95CF6156C3CCD94629AF09F81A6CD5FF/icon.png';
@@ -1256,7 +1254,9 @@ const browser = __b;
       showMakeupTagMenu = true;
       preselectedTargetDom.appendChild(tagMenuDom);
       const menuItemEvent = document.querySelector('#__stay_makeup_menu .__stay_makeup_menu_item_box').addEventListener(clickEvent, handleMenuItemClick);
-
+      // if(isStayAround == 'b' && shouldFetchCanTag){
+      //   canTagAdConfig = await fetchUserIfCanTag();
+      // }
     }
 
     async function fetchUserIfCanTag(){
@@ -1472,9 +1472,10 @@ const browser = __b;
       event.stopPropagation();
     }
 
-    function handleSelectedTag(){
+    async function handleSelectedTag(){
       // check user points
       if(isStayAround == 'b'){
+        canTagAdConfig = await fetchUserIfCanTag();
         console.log('handleMenuItemClick ------- canTagAdConfig----',canTagAdConfig);
         if(typeof canTagAdConfig.tag_ad != 'undefined' && (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
           // 没有可用点数
@@ -1912,7 +1913,7 @@ const browser = __b;
       console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
         // console.log('showMenu---------------------',showMenu);
-        showTagingOperateMenu(false);
+        showTagingOperateMenu(true);
       }
     }
 
