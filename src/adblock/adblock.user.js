@@ -1274,7 +1274,7 @@ const browser = __b;
           const callback = e => {
             if (e.data.pid !== pid || e.data.name !== 'GET_IF_CAN_TAG_RESP') return;
             canTagAdConfig = e.data ? (e.data.response ? e.data.response : {}): {};
-            console.log('postMessage.fetchUserIfCanTag----canTagAdConfig---', canTagAdConfig);
+            console.log('postMessage.fetchUserIfCanTag--e.data------'+e.data+'-------canTagAdConfig---', canTagAdConfig);
             resolve(canTagAdConfig);
             window.removeEventListener('message', callback);
           };
@@ -1477,7 +1477,8 @@ const browser = __b;
       if(isStayAround == 'b'){
         canTagAdConfig = await fetchUserIfCanTag();
         console.log('handleMenuItemClick ------- canTagAdConfig----',canTagAdConfig);
-        if(typeof canTagAdConfig.tag_ad != 'undefined' && (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
+
+        if(!canTagAdConfig || typeof canTagAdConfig.tag_ad == 'undefined' || (!canTagAdConfig.tag_ad || canTagAdConfig.tag_ad == 'false')){
           // 没有可用点数
           let prompt = i18nProp['not_enough'];
           showConfirmModal(prompt, ()=>{
