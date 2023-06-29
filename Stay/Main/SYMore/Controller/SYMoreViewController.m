@@ -678,6 +678,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 - (void)availablePointsDidChangeHandler:(NSNotification *)note{
     if([[FCStore shared] getPlan:NO] == FCPlan.None) {
         self.leftPointCount = [[note userInfo][@"value"] floatValue];
+        NSLog(@"left point count: %f",self.leftPointCount);
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -689,6 +690,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 - (void)availableGiftPointsDidChangeHandler:(NSNotification *)note{
     if([[FCStore shared] getPlan:NO] != FCPlan.None) {
         self.leftPointCount = [[note userInfo][@"value"] floatValue];
+        NSLog(@"left point count: %f",self.leftPointCount);
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
