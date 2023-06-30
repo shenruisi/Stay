@@ -1743,15 +1743,12 @@ const browser = __b;
         return;
       }
       let eventType = event.type;
-      if(eventType == 'touchstart'){
-        // event.preventDefault();
+      if(eventType == 'click'){
         isTouchestartSelect = true;
       }else if(eventType == 'mousemove'){
         // webkitForce 属性的值是一个介于 0 到 1 之间的浮点数，表示用户施加在触摸屏幕上的力度。值为 0 表示没有施加力度，而值为 1 表示施加了最大力度。
         // 即当触屏产生压力时才会有webkitForce的值
         if(typeof event.webkitForce != 'undefined' && event.webkitForce > 0){
-          // event.stopPropagation();
-          // event.preventDefault();
           console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
           return;
         }else{
@@ -1760,7 +1757,7 @@ const browser = __b;
         isTouchestartSelect = false
         // console.log('mousemove----------continue------',isMousemoveSelect)
       }
-      console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
+      console.log('----------isTouchestartSelect------',isTouchestartSelect)
 
       preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
       preselectedTargetDom.remove();
