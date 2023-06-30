@@ -194,10 +194,10 @@ UITableViewDataSource
 #ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:url]];
 #else
-        if (FCDeviceTypeIPhone == DeviceHelper.type){
+//        if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url]];
             [self.nav presentViewController:safariVc animated:YES completion:nil];
-        }
+//        }
 #endif
 }
 
@@ -302,10 +302,10 @@ UITableViewDataSource
 #ifdef FC_MAC
         [FCShared.plugin.appKit openUrl:[NSURL URLWithString:action[@"url"]]];
 #else
-        if (FCDeviceTypeIPhone == DeviceHelper.type){
+//        if (FCDeviceTypeIPhone == DeviceHelper.type){
             SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:action[@"url"]]];
             [self.nav presentViewController:safariVc animated:YES completion:nil];
-        }
+//        }
 #endif
         }
         

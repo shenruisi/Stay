@@ -71,7 +71,22 @@ NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.
     return self;
 }
 
+- (void)setIngorePopup:(BOOL)ingorePopup{
+    _ingorePopup = ingorePopup;
+    if (_ingorePopup){
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:DeviceHelperConsumePointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:nil];
+#endif
+    }
+}
+
 - (void)onBecomeActive:(NSNotification *)note{
+    [SharedStorageManager shared].userDefaults = nil;
+    [DeviceHelper consumePoints:[SharedStorageManager shared].userDefaults.tagConsumed];
+    [SharedStorageManager shared].userDefaults.tagConsumed = 0;
+    
     if (!self.ingorePopup){
         [[API shared] queryPath:@"/popups"
                             pro:[[FCStore shared] getPlan:NO] != FCPlan.None
@@ -80,9 +95,6 @@ NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.
             if (200 == statusCode){
                 NSInteger points = [biz[@"points"] integerValue];
                 NSInteger giftPoints = [biz[@"gift_points"] integerValue];
-                [SharedStorageManager shared].userDefaults = nil;
-                [DeviceHelper consumePoints:[SharedStorageManager shared].userDefaults.tagConsumed];
-                [SharedStorageManager shared].userDefaults.tagConsumed = 0;
                 
                 [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)points - DeviceHelper.totalConsumePoints;
                 [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
