@@ -1762,22 +1762,19 @@ const browser = __b;
       }
       console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
 
-      if(isTouchestartSelect){
-        preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
-        preselectedTargetDom.remove();
-        preselectedTargetDom = null;
-        preselectedTargetDom = document.createElement('div');
-        preselectedTargetDom.id='__stay_selected_tag';
-        preselectedTargetDom.classList.add('__stay_select_target');
-        document.body.appendChild(preselectedTargetDom);
-      }
-      
+      preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      preselectedTargetDom.remove();
+      preselectedTargetDom = null;
+      preselectedTargetDom = document.createElement('div');
+      preselectedTargetDom.id='__stay_selected_tag';
+      preselectedTargetDom.classList.add('__stay_select_target');
+      document.body.appendChild(preselectedTargetDom);
       
       let moveX = event.x || event.touches[0].clientX;
       let moveY = event.y || event.touches[0].clientY;
       const moveDoms = document.elementsFromPoint(moveX, moveY);
       let selectePositionDom = moveDoms[0];
-      console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
+      // console.log('handleMoveAndSelecteDom----------moveDoms-----',moveDoms);
       let moveDomRect = selectePositionDom.getBoundingClientRect();
       if(moveDoms && moveDoms.length>1){
         let invalidFlag = false;
@@ -1802,54 +1799,58 @@ const browser = __b;
         if(invalidFlag){
           return;
         }
-        console.log('after------',moveDomList);
+        console.log('handleMoveAndSelecteDom-----after------',moveDomList);
         if(iframeDom){
           selectePositionDom = iframeDom;
         }else{
-          if(Utils.isMobile()){
-            if(moveDomList && moveDomList.length){
-              if(moveDomList.length<=3){
-                selectePositionDom = moveDomList[0];
-              }else if(moveDomList.length > 3){
-                selectePositionDom = moveDomList[0];
-                let styles = window.getComputedStyle(selectePositionDom);
-                // console.log('styles.position---------',styles.position)
-                // 判断节点是否具有绝对定位
-                if (styles.position !== 'fixed') {
-                  let i = 2;
-                  selectePositionDom = moveDomList[i];
-                  let selectePositionDomRect = selectePositionDom.getBoundingClientRect();
-                  // eslint-disable-next-line no-constant-condition
-                  while(true){
-                    // console.log('while----start----i----',i)
-                    let checkDom = moveDomList[i];
-                    let checkDomRect = checkDom.getBoundingClientRect();
-                    if((checkDomRect.width==0 && checkDomRect.height==0) || (Math.abs(Utils.sub(selectePositionDomRect.width, checkDomRect.width))<=1 && Math.abs(Utils.sub(selectePositionDomRect.height, checkDomRect.height))<=1)){
-                      i = i + 1;
-                      // console.log('while----next--------',i)
-                      if(i >= (moveDomList.length-1)){
-                        break;
-                      }
-                    }else{
-                      break;
-                    }
-                  }
-                  // console.log('i------------',i)
-                  while(moveDomRect.height > document.documentElement.clientHeight){
-                    i = i - 1;
-                    selectePositionDom = moveDomList[i];
-                    moveDomRect = selectePositionDom.getBoundingClientRect();
-                    if(i == 0){
-                      break;
-                    }
-                  }
-                } 
-              }
-            }else{
-              return;
-            }
-          }else{
+          if(moveDomList && moveDomList.length){
             selectePositionDom = moveDomList[0];
+            let styles = window.getComputedStyle(selectePositionDom);
+            // console.log('styles.position---------',styles.position)
+            // 判断节点是否具有绝对定位
+            if (styles.position !== 'fixed') {
+              let i = 0;
+              let selectePositionDomRect = selectePositionDom.getBoundingClientRect();
+              // eslint-disable-next-line no-constant-condition
+              while(true){
+                // console.log('while----start----i----',i)
+                let checkDom = moveDomList[i];
+                let checkDomRect = checkDom.getBoundingClientRect();
+                if((checkDomRect.width==0 && checkDomRect.height==0) || (checkDomRect.height <= 20 || checkDomRect.width <= 20)){
+                  i = i + 1;
+                  selectePositionDom = moveDomList[i];
+                  selectePositionDomRect = selectePositionDom.getBoundingClientRect();
+                  if(i >= (moveDomList.length-1)){
+                    break;
+                  }
+                }else{
+                  console.log(selectePositionDomRect.width, checkDomRect.width, selectePositionDomRect.height, checkDomRect.height);
+                  if((Math.abs(Utils.sub(selectePositionDomRect.width, checkDomRect.width))<=1 && Math.abs(Utils.sub(selectePositionDomRect.height, checkDomRect.height))<=1)){
+                    i = i + 1;
+                    // console.log('while----next--------',i)
+                    if(i >= (moveDomList.length-1)){
+                      break;
+                    }
+                  }else{
+                    i = i - 1;
+                    break;
+                  }
+                }
+              }
+              selectePositionDom = moveDomList[i];
+              console.log('i------------',i)
+              while(moveDomRect.height > document.documentElement.clientHeight){
+                i = i - 1;
+                selectePositionDom = moveDomList[i];
+                moveDomRect = selectePositionDom.getBoundingClientRect();
+                if(i == 0){
+                  break;
+                }
+              }
+              
+            } 
+          }else{
+            return;
           }
         }
       }else{
@@ -1906,14 +1907,6 @@ const browser = __b;
         document.querySelector('#__stay_iframe_toast').removeEventListener(clickEvent, handleIframeToastClick);
       }
 
-      if(!isTouchestartSelect){
-        preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
-        // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
-        while(preselectedTargetDom.firstChild){
-          preselectedTargetDom.removeChild(preselectedTargetDom.firstChild)
-        }
-      }
-
       preselectedTargetDom.style.width = '1px';
       preselectedTargetDom.style.height = '1px';
       preselectedTargetDom.style.left = '-10px';
@@ -1935,7 +1928,7 @@ const browser = __b;
       
       setTimeout(() => {
         preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
-      }, 100);
+      }, 200);
       
       console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
