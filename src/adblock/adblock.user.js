@@ -1073,7 +1073,7 @@ const browser = __b;
           // moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
           // document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
           if(Utils.isMobileOrIpad()){
-            moveWrapperDom.addEventListener('touchstart', handleMoveAndSelecteDom);
+            moveWrapperDom.addEventListener('click', handleMoveAndSelecteDom);
             document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
           }else{
             document.body.addEventListener('mousemove', handleMoveAndSelecteDom);
@@ -1091,7 +1091,7 @@ const browser = __b;
         // moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
         // document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
         if(Utils.isMobileOrIpad()){
-          moveWrapperDom.removeEventListener('touchstart', handleMoveAndSelecteDom);
+          moveWrapperDom.removeEventListener('click', handleMoveAndSelecteDom);
           document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
         }else{
           document.body.removeEventListener('mousemove', handleMoveAndSelecteDom);
@@ -1838,7 +1838,12 @@ const browser = __b;
                 }
               }
               selectePositionDom = moveDomList[i];
-              console.log('i------------',i)
+              
+              // selectePositionDomRect = selectePositionDom.getBoundingClientRect();
+
+              console.log('i------------',i, moveDomRect.height,document.documentElement.clientHeight)
+              moveDomRect = selectePositionDom.getBoundingClientRect();
+              // console.log();
               while(moveDomRect.height > document.documentElement.clientHeight){
                 i = i - 1;
                 selectePositionDom = moveDomList[i];
