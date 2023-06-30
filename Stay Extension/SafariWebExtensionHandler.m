@@ -176,6 +176,7 @@
 //            NSLog(@"%@",audioDataAsNSData);
 //        }];
     
+        [SharedStorageManager shared].userDefaults = nil;
         [SharedStorageManager shared].userDefaults.safariExtensionEnabled = YES;
         NSString *url = message[@"url"];
         NSString *digest = message[@"digest"];
