@@ -1101,19 +1101,22 @@ const browser = __b;
 
     function handleShowTagingOperateMenuEvent(event){
       console.log('handleShowTagingOperateMenuEvent------',event)
+      // if(isTouchestartSelect){
+      //   return;
+      // }
       if(event.touches && event.touches.length>1){
         return;
       }
       console.log('handleShowTagingOperateMenuEvent-----start----------')
       event.stopPropagation();
       event.preventDefault();
-      showTagingOperateMenu(true)
+      showTagingOperateMenu()
     }
 
     /**
      * 展示标记菜单
      */
-    function showTagingOperateMenu(shouldFetchCanTag){
+    function showTagingOperateMenu(){
       console.log('showTagingOperateMenu  addListener click----------showMakeupTagMenu-----',showMakeupTagMenu, selectedDom);
       if(showMakeupTagMenu){
         // console.log('showTagingOperateMenu=======showMakeupTagMenu is true');
@@ -1473,6 +1476,7 @@ const browser = __b;
     }
 
     async function handleSelectedTag(){
+      console.log('handleMenuItemClick ------- isStayAround----',isStayAround);
       // check user points
       if(isStayAround == 'b'){
         canTagAdConfig = await fetchUserIfCanTag();
@@ -1647,6 +1651,8 @@ const browser = __b;
   
     function sendSelectedTagToHandler(selDom, url, selector){
       if(selDom){
+        console.log('sendSelectedTagToHandler-----selDom----',selDom)
+        console.log('sendSelectedTagToHandler-----selectedDom----',selectedDom)
         const uuid = Utils.hexMD5(`${url}${selector}`);
         if(cssSelectorSet.has(uuid)){
           selDom.style.display = 'none';
@@ -1664,7 +1670,7 @@ const browser = __b;
         selectedDom.remove();
       }else{
         // 标记失败，尝试使用expand和narrow
-        
+        console.log('sendSelectedTagToHandler-----selDom is null')
         return
       }
       let urlList = [];
@@ -1746,7 +1752,7 @@ const browser = __b;
         if(typeof event.webkitForce != 'undefined' && event.webkitForce > 0){
           // event.stopPropagation();
           // event.preventDefault();
-          // console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
+          console.log('return---------mousemove----------isTouchestartSelect------',isTouchestartSelect)
           return;
         }else{
 
@@ -1759,6 +1765,7 @@ const browser = __b;
       if(isTouchestartSelect){
         preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
         preselectedTargetDom.remove();
+        preselectedTargetDom = null;
         preselectedTargetDom = document.createElement('div');
         preselectedTargetDom.id='__stay_selected_tag';
         preselectedTargetDom.classList.add('__stay_select_target');
@@ -1811,6 +1818,23 @@ const browser = __b;
                 if (styles.position !== 'fixed') {
                   let i = 2;
                   selectePositionDom = moveDomList[i];
+                  let selectePositionDomRect = selectePositionDom.getBoundingClientRect();
+                  // eslint-disable-next-line no-constant-condition
+                  while(true){
+                    // console.log('while----start----i----',i)
+                    let checkDom = moveDomList[i];
+                    let checkDomRect = checkDom.getBoundingClientRect();
+                    if((checkDomRect.width==0 && checkDomRect.height==0) || (Math.abs(Utils.sub(selectePositionDomRect.width, checkDomRect.width))<=1 && Math.abs(Utils.sub(selectePositionDomRect.height, checkDomRect.height))<=1)){
+                      i = i + 1;
+                      // console.log('while----next--------',i)
+                      if(i >= (moveDomList.length-1)){
+                        break;
+                      }
+                    }else{
+                      break;
+                    }
+                  }
+                  // console.log('i------------',i)
                   while(moveDomRect.height > document.documentElement.clientHeight){
                     i = i - 1;
                     selectePositionDom = moveDomList[i];
@@ -1861,7 +1885,7 @@ const browser = __b;
       }
       if(!showMenu && isTouchestartSelect){
         showSelectTagNoteToast(i18nProp['select_confirm']);
-        isTouchestartSelect = false;
+        // isTouchestartSelect = false;
       }
 
       let targetWidth = getMoveDomWidth(moveDomRect.width);
@@ -1877,12 +1901,12 @@ const browser = __b;
           targetX = 0;
         }
       }
+
       if(document.querySelector('#__stay_iframe_toast')){
         document.querySelector('#__stay_iframe_toast').removeEventListener(clickEvent, handleIframeToastClick);
       }
-      showMakeupTagMenu = false;
-      if(!isTouchestartSelect){
 
+      if(!isTouchestartSelect){
         preselectedTargetDom.removeEventListener(clickEvent, handleShowTagingOperateMenuEvent);
         // console.log('targetWidth=',targetWidth,',targetHeight=',targetHeight,',targetX=',targetX,',targetY=',targetY);
         while(preselectedTargetDom.firstChild){
@@ -1909,8 +1933,10 @@ const browser = __b;
       preselectedTargetDom.style.top = targetY+'px';
       preselectedTargetDom.style.display = 'block';
       
-      const preselectedTargetDomEvent = preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
-
+      setTimeout(() => {
+        preselectedTargetDom.addEventListener(clickEvent, handleShowTagingOperateMenuEvent);
+      }, 100);
+      
       console.log('showMakeupTagMenu----------------------',showMakeupTagMenu);
       if(showMenu){
         // console.log('showMenu---------------------',showMenu);
