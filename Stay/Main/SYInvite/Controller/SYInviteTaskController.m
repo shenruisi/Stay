@@ -397,7 +397,7 @@ UITableViewDataSource
         [_buyProButton addTarget:self
                           action:@selector(buyStay:)
                        forControlEvents:UIControlEventTouchUpInside];
-        [_buyProButton setTitle:NSLocalizedString(@"Upgrade", @"") forState:UIControlStateNormal];
+        [_buyProButton setTitle:NSLocalizedString(@"UpgradeTo", @"") forState:UIControlStateNormal];
 
         _buyProButton.layer.borderColor = FCStyle.borderGolden.CGColor;
         _buyProButton.layer.borderWidth = 1;
