@@ -28,7 +28,7 @@ static KeychainItemWrapper *k_keychain = nil;
     static dispatch_once_t onceTokenKeychain;
     dispatch_once(&onceTokenKeychain, ^{
         if (nil == k_keychain){
-            k_keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"stay-keychain-stroge2" accessGroup:@"group.com.dajiu.stay.pro"];
+            k_keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"stay-keychain-stroge" accessGroup:nil];
         }
     });
     return k_keychain;
