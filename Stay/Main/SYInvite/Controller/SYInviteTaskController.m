@@ -201,11 +201,9 @@ UITableViewDataSource
              [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
                                animated:YES completion:^{}];
 #else
-//            [self.nav pushViewController:[[SYSubscribeController alloc] init] animated:YES];
-    
-    [self.nav presentViewController:[[SYSubscribeController alloc] init]  animated:YES completion:^{
-            
-    }];
+    [self.navigationController.slideController dismiss];
+    [self.nav pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+             
 #endif
             
 }
