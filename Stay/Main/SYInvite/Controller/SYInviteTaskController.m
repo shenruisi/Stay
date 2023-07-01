@@ -403,7 +403,7 @@ UITableViewDataSource
         _buyProButton.layer.borderWidth = 1;
         _buyProButton.backgroundColor =  FCStyle.backgroundGolden;
         _buyProButton.font = FCStyle.bodyBold;
-        [_buyProButton addTarget:self action:@selector(UpgradeTo) forControlEvents:UIControlEventTouchUpInside];
+        [_buyProButton addTarget:self action:@selector(buyStay:) forControlEvents:UIControlEventTouchUpInside];
         [_buyProButton setTitleColor:FCStyle.fcGolden forState:UIControlStateNormal];
         _buyProButton.layer.cornerRadius = 10;
         _buyProButton.layer.masksToBounds = YES;
