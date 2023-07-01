@@ -191,8 +191,8 @@ UITableViewDataSource
     
     [self buyProButton];
     [self pointRules];
-    self.pointRules.bottom = self.subButton.top - 15;
-    self.pointRules.centerX = self.subButton.centerX;
+    self.pointRules.bottom = self.buyProButton.top - 15;
+    self.pointRules.centerX = self.buyProButton.centerX;
 }
 
 - (void)buyStay:(id)sender {
@@ -369,7 +369,7 @@ UITableViewDataSource
 
 - (UIButton *)subButton{
     if (nil == _subButton){
-        _subButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45 - 10 - 45, self.view.frame.size.width - 30, 45)];
+        _subButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
 
         [_subButton setAttributedTitle:[[NSAttributedString alloc] initWithString:_needBack?NSLocalizedString(@"BacktoDownload", @""):NSLocalizedString(@"TryAgain", @"")
                                                                                  attributes:@{
@@ -392,19 +392,19 @@ UITableViewDataSource
 
 - (UIButton *)buyProButton {
     if (nil == _buyProButton){
-        _buyProButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
+        _buyProButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45 - 45 - 10, self.view.frame.size.width - 30, 45)];
 
-        [_buyProButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"UpgradeTo", @"")
-                                                                                 attributes:@{
-                             NSForegroundColorAttributeName : FCStyle.accent,
-                             NSFontAttributeName : FCStyle.bodyBold}]
-                                        forState:UIControlStateNormal];
         [_buyProButton addTarget:self
                           action:@selector(buyStay:)
                        forControlEvents:UIControlEventTouchUpInside];
-        _buyProButton.backgroundColor = UIColor.clearColor;
-        _buyProButton.layer.borderColor = FCStyle.accent.CGColor;
+        [_buyProButton setTitle:NSLocalizedString(@"Upgrade", @"") forState:UIControlStateNormal];
+
+        _buyProButton.layer.borderColor = FCStyle.borderGolden.CGColor;
         _buyProButton.layer.borderWidth = 1;
+        _buyProButton.backgroundColor =  FCStyle.backgroundGolden;
+        _buyProButton.font = FCStyle.bodyBold;
+        [_buyProButton addTarget:self action:@selector(UpgradeTo) forControlEvents:UIControlEventTouchUpInside];
+        [_buyProButton setTitleColor:FCStyle.fcGolden forState:UIControlStateNormal];
         _buyProButton.layer.cornerRadius = 10;
         _buyProButton.layer.masksToBounds = YES;
         [self.view addSubview:_buyProButton];
