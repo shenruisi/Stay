@@ -16,6 +16,11 @@
 #import "SharedStorageManager.h"
 #import "FCShared.h"
 #import "Plugin.h"
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -143,6 +148,7 @@ UITableViewDataSource
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *taskArray;
 @property (nonatomic, strong) UIButton *subButton;
+@property (nonatomic, strong) UIButton *buyProButton;
 @property (nonatomic, strong) NSMutableDictionary *rewardBlockDic;
 @property (nonatomic, strong) NSMutableDictionary *webRewardBlockDic;
 @property (nonatomic, strong) UILabel *pointRules;
@@ -183,10 +189,27 @@ UITableViewDataSource
                                                object:nil];
     [self subButton];
     
+    [self buyProButton];
     [self pointRules];
     self.pointRules.bottom = self.subButton.top - 15;
     self.pointRules.centerX = self.subButton.centerX;
 }
+
+- (void)buyStay:(id)sender {
+#ifdef FC_MAC
+            [self.nav presentViewController:
+             [[UINavigationController alloc] initWithRootViewController:[[SYSubscribeController alloc] init]]
+                               animated:YES completion:^{}];
+#else
+//            [self.nav pushViewController:[[SYSubscribeController alloc] init] animated:YES];
+    
+    [self.nav presentViewController:[[SYSubscribeController alloc] init]  animated:YES completion:^{
+            
+    }];
+#endif
+            
+}
+
 
 - (void)howPoint {
     NSString *url = @"https://www.craft.do/s/waHJPeiNdBTuli";
@@ -339,14 +362,14 @@ UITableViewDataSource
         [[_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor] setActive:YES];
         [[_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor] setActive:YES];
         [[_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:10] setActive:YES];
-        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10-10-45 - 40] setActive:YES];
+        [[_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10-10-45 - 40 - 45 - 10] setActive:YES];
     }
     return _tableView;
 }
 
 - (UIButton *)subButton{
     if (nil == _subButton){
-        _subButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
+        _subButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45 - 10 - 45, self.view.frame.size.width - 30, 45)];
 
         [_subButton setAttributedTitle:[[NSAttributedString alloc] initWithString:_needBack?NSLocalizedString(@"BacktoDownload", @""):NSLocalizedString(@"TryAgain", @"")
                                                                                  attributes:@{
@@ -365,6 +388,29 @@ UITableViewDataSource
     }
     
     return _subButton;
+}
+
+- (UIButton *)buyProButton {
+    if (nil == _buyProButton){
+        _buyProButton = [[UIButton alloc] initWithFrame:CGRectMake(15, self.view.height - 10 - 45, self.view.frame.size.width - 30, 45)];
+
+        [_buyProButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"UpgradeTo", @"")
+                                                                                 attributes:@{
+                             NSForegroundColorAttributeName : FCStyle.accent,
+                             NSFontAttributeName : FCStyle.bodyBold}]
+                                        forState:UIControlStateNormal];
+        [_buyProButton addTarget:self
+                          action:@selector(buyStay:)
+                       forControlEvents:UIControlEventTouchUpInside];
+        _buyProButton.backgroundColor = UIColor.clearColor;
+        _buyProButton.layer.borderColor = FCStyle.accent.CGColor;
+        _buyProButton.layer.borderWidth = 1;
+        _buyProButton.layer.cornerRadius = 10;
+        _buyProButton.layer.masksToBounds = YES;
+        [self.view addSubview:_buyProButton];
+    }
+    
+    return _buyProButton;
 }
 
 - (NSMutableDictionary *)rewardBlockDic {
