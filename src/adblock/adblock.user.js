@@ -103,6 +103,7 @@ const browser = __b;
         'consume_points': 'Tag and consume # points',
         'confirm': 'Confirm',
         'not_enough': 'Your stay points is not enough to tag current ad. Get stay points!',
+        'failed_tag': 'Failed to tag'
       },
       'zh_CN': {
         'tag_as_ad': '标记为广告',
@@ -117,6 +118,7 @@ const browser = __b;
         'consume_points': '标记并消耗#个体验点数',
         'confirm': '确定',
         'not_enough': '你的体验点数不足以标记当前广告, 去获得体验点数！',
+        'failed_tag': '标记失败'
       },
       'zh_HK': {
         'tag_as_ad': '標記為廣告',
@@ -131,6 +133,7 @@ const browser = __b;
         'consume_points': '標記并消耗#个體驗點數',
         'confirm': '確定',
         'not_enough': '你的體驗點數不足以標記當前廣告，去獲得體驗點數！',
+        'failed_tag': '標記失敗'
       },
     }
     const distance = 10;
@@ -1575,16 +1578,7 @@ const browser = __b;
         console.log('selector-----selector---after-----',selector,selDom)
         let url = window.location.href;
         
-        // check user role
-        if(isStayAround == 'b'){
-          // show toast 消耗点数
-          let prompt = i18nProp['consume_points'].replace('#', canTagAdConfig.consume_points);
-          showConfirmModal(prompt, ()=>{
-            sendSelectedTagToHandler(selDom, url, selector);
-          });
-        }else{
-          sendSelectedTagToHandler(selDom, url, selector);
-        }
+        sendSelectedTagToHandler(selDom, url, selector);
         // console.log('sendSelectedTagToHandler----------------', selector, url);
         resolve(true)
       })
@@ -1651,8 +1645,8 @@ const browser = __b;
   
     function sendSelectedTagToHandler(selDom, url, selector){
       if(selDom){
-        console.log('sendSelectedTagToHandler-----selDom----',selDom)
-        console.log('sendSelectedTagToHandler-----selectedDom----',selectedDom)
+        // console.log('sendSelectedTagToHandler-----selDom----',selDom)
+        // console.log('sendSelectedTagToHandler-----selectedDom----',selectedDom)
         const uuid = Utils.hexMD5(`${url}${selector}`);
         if(cssSelectorSet.has(uuid)){
           selDom.style.display = 'none';
@@ -1666,11 +1660,13 @@ const browser = __b;
         while(selDom.firstChild){
           selDom.removeChild(selDom.firstChild)
         }
-        selDom.remove();
-        selectedDom.remove();
+        // selDom.remove();
+        // selectedDom.remove();
       }else{
         // 标记失败，尝试使用expand和narrow
-        console.log('sendSelectedTagToHandler-----selDom is null')
+        // console.log('sendSelectedTagToHandler-----selDom is null')
+        let prompt = i18nProp['failed_tag'];
+        showConfirmModal(prompt, ()=>{});
         return
       }
       let urlList = [];
@@ -1681,14 +1677,29 @@ const browser = __b;
         let parentUrlArr = parentUrl.split(',');
         urlList.push(...parentUrlArr);
       }
+      // console.log('sendSelectedTagToHandler-----goto------sendSelectorToHandler------', urlList);
       selectedDom = null;
+      // check user role
+      if(isStayAround == 'b'){
+        // show toast 消耗点数
+        let prompt = i18nProp['consume_points'].replace('#', canTagAdConfig.consume_points);
+        showConfirmModal(prompt, ()=>{
+          fetchSelectorToHandler(selector, url, urlList);
+        });
+      }else{
+        fetchSelectorToHandler(selector, url, urlList)
+      }
+      
+    }
+
+    function fetchSelectorToHandler(selector, url, urlList){
       if(isContent){
         // console.log('sendSelectedTagToHandler-----true');
         browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url, urlList}, (response) => {
           console.log('sendSelectedTagToHandler---------',response)
         });
       }else{
-        // console.log('sendSelectedTagToHandler-----false');
+        // console.log('sendSelectedTagToHandler-----false------url------', url);
         const pid = Math.random().toString(36).substring(2, 9);
         window.postMessage({pid: pid, name: 'SEND_SELECTOR_TO_HANDLER',  selector, url, urlList});
       }
@@ -2301,9 +2312,9 @@ const browser = __b;
       let selector = e.data.selector;
       let url = e.data.url;
       let urlList = e.data.urlList;
-      // console.log('sendSelectedTagToHandler--------selector-----',selector, url);
+      console.log('sendSelectedTagToHandler--------selector-----',selector, url);
       browser.runtime.sendMessage({from: 'adblock', operate: 'sendSelectorToHandler', selector, url, urlList}, (response) => {
-        // console.log('sendSelectedTagToHandler---------',response)
+        console.log('sendSelectedTagToHandler---------',response)
       });
     }
   })
