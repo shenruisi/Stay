@@ -84,8 +84,10 @@ NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.
 
 - (void)onBecomeActive:(NSNotification *)note{
     [SharedStorageManager shared].userDefaults = nil;
-    [DeviceHelper consumePoints:[SharedStorageManager shared].userDefaults.tagConsumed];
+    CGFloat tagConsumed = [SharedStorageManager shared].userDefaults.tagConsumed;
+    [DeviceHelper consumePoints:tagConsumed];
     [SharedStorageManager shared].userDefaults.tagConsumed = 0;
+    [SharedStorageManager shared].userDefaultsExRO.availablePoints = [SharedStorageManager shared].userDefaultsExRO.availablePoints - tagConsumed;
     
     if (!self.ingorePopup){
         [[API shared] queryPath:@"/popups"

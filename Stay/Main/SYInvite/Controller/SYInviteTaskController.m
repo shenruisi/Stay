@@ -494,7 +494,6 @@ UITableViewDataSource
                 [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
             }
         }
-        
     }];
 }
 
