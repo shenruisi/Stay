@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *defaultImage;
 @property (nonatomic, strong) NSString *defaultName;
 @property (nonatomic, strong) InviteDetail *detail;
+@property(nonatomic,strong) UINavigationController *nav;
 
 @end
 

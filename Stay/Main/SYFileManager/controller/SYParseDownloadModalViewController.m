@@ -37,6 +37,7 @@
 @property (nonatomic, strong) UILabel *hostLabel;
 @property (nonatomic, strong) UITextView *titleText;
 @property (nonatomic, strong) UIView *qualityView;;
+@property (nonatomic, strong) UIButton *copyBtn;;
 @property (nonatomic, strong) UILabel *linkLabel;
 @property (nonatomic, strong) UIControl *folderView;
 @property (nonatomic, strong) UIImageView *folderImg;
@@ -69,13 +70,7 @@
         downloadLabel.text = NSLocalizedString(@"DownloadLink", @"");
         [stackV addArrangedSubview:downloadLabel];
         [stackV setCustomSpacing:6 afterView:downloadLabel];
-        UIButton *copyBtn = [[UIButton alloc] init];
-        [copyBtn setTitle:NSLocalizedString(@"Copy", @"") forState:UIControlStateNormal];
-        [copyBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
-        copyBtn.titleLabel.font = FCStyle.footnote;
-        [copyBtn addTarget:self action:@selector(copyAction:) forControlEvents:UIControlEventTouchUpInside];
-        copyBtn.translatesAutoresizingMaskIntoConstraints = NO;
-        [stackV addSubview:copyBtn];
+        [stackV addSubview:self.copyBtn];
         UIView *linkView = [[UIView alloc] init];
         linkView.layer.cornerRadius = 10;
         linkView.clipsToBounds = YES;
@@ -125,8 +120,8 @@
             [self.titleText.bottomAnchor constraintEqualToAnchor:topView.bottomAnchor],
             [self.qualityView.widthAnchor constraintEqualToAnchor:stackV.widthAnchor],
             [self.qualityView.heightAnchor constraintEqualToConstant:25],
-            [copyBtn.trailingAnchor constraintEqualToAnchor:stackV.trailingAnchor constant:-6],
-            [copyBtn.topAnchor constraintEqualToAnchor:downloadLabel.topAnchor constant:-5],
+            [self.copyBtn.trailingAnchor constraintEqualToAnchor:stackV.trailingAnchor constant:-6],
+            [self.copyBtn.topAnchor constraintEqualToAnchor:downloadLabel.topAnchor constant:-5],
             [linkView.widthAnchor constraintEqualToAnchor:stackV.widthAnchor],
             [linkView.heightAnchor constraintEqualToConstant:45],
             [self.linkLabel.leadingAnchor constraintEqualToAnchor:linkView.leadingAnchor constant:11],
@@ -176,6 +171,7 @@
         [self.qualityView setHidden:YES];
         self.linkLabel.text = entity[@"downloadUrl"];
     }
+    [self.copyBtn setHidden:[FCStore.shared getPlan:NO] == FCPlan.None];
     FCTab *tab = [[FCShared tabManager] tabOfUUID:entity[@"uuid"]];
     if(tab == nil) {
         NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:@"MY_PHONE_STORAGE"];
@@ -333,6 +329,19 @@
     }
     
     return _qualityView;
+}
+
+- (UIButton *)copyBtn {
+    if (nil == _copyBtn) {
+        _copyBtn = [[UIButton alloc] init];
+        [_copyBtn setTitle:NSLocalizedString(@"Copy", @"") forState:UIControlStateNormal];
+        [_copyBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
+        _copyBtn.titleLabel.font = FCStyle.footnote;
+        [_copyBtn addTarget:self action:@selector(copyAction:) forControlEvents:UIControlEventTouchUpInside];
+        _copyBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+    
+    return _copyBtn;
 }
 
 - (UILabel *)linkLabel {
@@ -650,7 +659,7 @@
             float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
             
             if(point >= downloadNeedPoint) {
-                [DeviceHelper consumePoints:downloadNeedPoint];
+//                [DeviceHelper consumePoints:downloadNeedPoint];
             } else {
                 SYInviteTaskController *cer = [[SYInviteTaskController alloc] init];
                 cer.nav = self.nav;
@@ -674,6 +683,7 @@
                 resource.host = item[@"hostUrl"];
                 resource.audioUrl = item[@"selectedAudioUrl"] ? item[@"selectedAudioUrl"] : item[@"audioUrl"];
                 resource.protect = [item[@"selectedProtect"] ? item[@"selectedProtect"] : item[@"protect"] isEqual:@(1)]?YES:NO;
+                resource.qualityLabel =  item[@"selectedQuality"];
                 if(resource.host == nil) {
                     resource.host = [NSURL URLWithString:downLoadUrl].host;
                 }
@@ -741,6 +751,14 @@
             return;
         } else {
 
+            if(!isPro) {
+                float point = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+                float downloadNeedPoint = [SharedStorageManager shared].userDefaultsExRO.downloadConsumePoints;
+                if(point >= downloadNeedPoint) {
+                   [DeviceHelper consumePoints:downloadNeedPoint];
+                }
+            }
+            
           
             [self.nav popToRootViewControllerAnimated:true];
 #ifdef FC_MAC

@@ -275,7 +275,22 @@ static ContentFilterManager *instance = nil;
     return [NSURL fileURLWithPath:filePath];
 }
 
+- (NSArray<NSString *> *)defaultTrustedSites{
+    return @[@"github.com"];
+}
+
+- (void)writeDefaultTrustedSitesIfNeeded{
+    NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"defaultTrustedSites"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]){
+        [@"1" writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        for (NSString *domain in [self defaultTrustedSites]){
+            [self addTrustSiteWithDomain:domain error:nil];
+        }
+    }
+}
+
 - (NSArray<TrustedSite *> *)trustedSites{
+    [self writeDefaultTrustedSitesIfNeeded];
     NSString *filePath = [self.truestSitesPath stringByAppendingPathComponent:@"domainRule1"];
     NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
     if (nil == jsonData) return @[];

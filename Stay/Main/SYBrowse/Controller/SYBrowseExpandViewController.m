@@ -22,14 +22,17 @@
 #import "UserscriptUpdateManager.h"
 #import "SharedStorageManager.h"
 #import "SYNetworkUtils.h"
+#import "DownloadScriptSlideController.h"
+
 #ifdef FC_MAC
 #import "QuickAccess.h"
 #endif
 
 @interface SYBrowseExpandViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) LoadingSlideController *loadingSlideController;
 @property (nonatomic, strong) NSString  *selectedUrl;
+@property (nonatomic, strong) DownloadScriptSlideController *loadingSlideController;
+
 
 
 @end
@@ -217,11 +220,17 @@
     NSString *url = objc_getAssociatedObject(sender,@"downloadUrl");
     NSString *name = objc_getAssociatedObject(sender,@"name");
     NSArray *platforms = objc_getAssociatedObject(sender,@"platforms");
+    NSString *iconUrl = objc_getAssociatedObject(sender,@"iconUrl");
+
     _selectedUrl = url;
     [self.tableView reloadData];
 
-    self.loadingSlideController.originSubText = name;
+    self.loadingSlideController = nil;
+    self.loadingSlideController.originMainText = name;
+    self.loadingSlideController.iconUrl = iconUrl;
     [self.loadingSlideController show];
+    [self.loadingSlideController show];
+    [self.loadingSlideController startLoading];
 
     
     
@@ -252,10 +261,10 @@
                     [self.tableView reloadData];
                 });
             } else {
-                [self.loadingSlideController updateSubText:userScript.errorMessage];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                                dispatch_get_main_queue(), ^{
                     if (self.loadingSlideController.isShown){
+                        [self.loadingSlideController stopLoading];
                         [self.loadingSlideController dismiss];
                         self.loadingSlideController = nil;
                     }
@@ -278,10 +287,10 @@
         BOOL saveSuccess = [[UserscriptUpdateManager shareManager] saveRequireUrl:userScript];
         BOOL saveResourceSuccess = [[UserscriptUpdateManager shareManager] saveResourceUrl:userScript];
         if(!saveSuccess || !saveResourceSuccess) {
-            [self.loadingSlideController updateSubText:NSLocalizedString(@"Error", @"")];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
             dispatch_get_main_queue(), ^{
                 if (self.loadingSlideController.isShown){
+                    [self.loadingSlideController stopLoading];
                     [self.loadingSlideController dismiss];
                     self.loadingSlideController = nil;
                 }
@@ -325,16 +334,6 @@
         });
     });
     
-}
-
-
-- (LoadingSlideController *)loadingSlideController{
-    if (nil == _loadingSlideController){
-        _loadingSlideController = [[LoadingSlideController alloc] init];
-        _loadingSlideController.originMainText = NSLocalizedString(@"settings.downloadScript", @"");
-    }
-    
-    return _loadingSlideController;
 }
 
 - (UITableView *)tableView {
@@ -386,6 +385,14 @@
         [[ScriptMananger shareManager] buildData];
     }
     
+}
+
+- (DownloadScriptSlideController *)loadingSlideController{
+    if (nil == _loadingSlideController){
+        _loadingSlideController = [[DownloadScriptSlideController alloc] init];
+    }
+    
+    return _loadingSlideController;
 }
 
 /*

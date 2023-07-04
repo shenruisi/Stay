@@ -29,7 +29,9 @@
         NSString *downloadUrl = self.dic[@"downloadUrl"];
         if (downloadUrl.length > 0) {
             NSURL *linkURL = [NSURL URLWithString:downloadUrl];
-            if (linkURL != nil && ([linkURL.lastPathComponent hasSuffix:@".mp4"] || [linkURL.lastPathComponent hasSuffix:@".m3u8"])) {
+            if (linkURL != nil && ([[linkURL.lastPathComponent lowercaseString] hasSuffix:@".mp4"]
+                                   || [[linkURL.lastPathComponent lowercaseString] hasSuffix:@".m3u8"]
+                                   || ([linkURL.host containsString:@"telegram"] && [[linkURL.path lowercaseString] containsString:@".mp4"]))) {
                 SYDownloadModalViewController *cer = [[SYDownloadModalViewController alloc] init];
                 cer.dic = self.dic;
                 cer.nav = self.controller;

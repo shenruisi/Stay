@@ -17,6 +17,9 @@
 #import "DeviceHelper.h"
 #import "AlertHelper.h"
 #import "FCConfig.h"
+#import <SafariServices/SafariServices.h>
+#import "FCShared.h"
+#import "Plugin.h"
 
 @protocol _CommitCodeTextFieldDelegate;
 @interface _CommitCodeTextField : UITextField
@@ -127,6 +130,15 @@
             NSForegroundColorAttributeName : FCStyle.accent
         }];
         _linkButton.attributedTitle = title;
+        __weak CommitCodeModalViewController *weakSelf = (CommitCodeModalViewController *)self;
+        _linkButton.action = ^{
+#ifdef FC_MAC
+        [FCShared.plugin.appKit openUrl:[NSURL URLWithString:@"https://www.craft.me/s/waHJPeiNdBTuli"]];
+#else
+        SFSafariViewController *safariVc = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:@"https://www.craft.me/s/waHJPeiNdBTuli"]];
+        [weakSelf.navigationController.slideController.baseCer presentViewController:safariVc animated:YES completion:nil];
+#endif
+        };
         
         [self.view addSubview:_linkButton];
         [NSLayoutConstraint activateConstraints:@[
@@ -137,6 +149,7 @@
     
     return _linkButton;
 }
+
 
 - (NSMutableArray<_CommitCodeTextField *> *)textFieldGroup{
     if (nil == _textFieldGroup){
@@ -262,6 +275,10 @@
         [code appendString:self.textFieldGroup[i].text];
     }
     
+    if (code.length < 6){
+        return;
+    }
+    
     FCButton *button = (FCButton *)sender;
     [self.navigationController.slideController startLoading];
     [button startLoading];
@@ -277,9 +294,13 @@
             if (statusCode == 200){
                 [[FCConfig shared] setBoolValueOfKey:GroupUserDefaultsKeyNewDevice value:NO];
                 CommitCodeSucceedModalViewController *cer = [[CommitCodeSucceedModalViewController alloc] init];
-                cer.pointValue = [biz[@"point_value"] integerValue];
-                [self.navigationController pushModalViewController:cer];
                 
+                cer.pointValue = [biz[@"point_value"] integerValue];
+                NSInteger totalPointValue = [biz[@"total_point_value"] integerValue];
+                [SharedStorageManager shared].userDefaults = nil;
+                [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)totalPointValue - DeviceHelper.totalConsumePoints;
+                
+                [self.navigationController pushModalViewController:cer];
             }
             else{
                 if (statusCode == 404 || statusCode == 409){
@@ -330,7 +351,7 @@
 }
 
 - (void)nextResponse:(_CommitCodeTextField *)textField{
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
     NSUInteger index = [self.textFieldGroup indexOfObject:textField];
     if (index < self.textFieldGroup.count - 1){
         [[self.textFieldGroup objectAtIndex:index + 1] becomeFirstResponder];
@@ -338,7 +359,7 @@
 }
 
 - (void)prevResponse:(_CommitCodeTextField *)textField{
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
     NSUInteger index = [self.textFieldGroup indexOfObject:textField];
     if (index > 0){
         [[self.textFieldGroup objectAtIndex:index - 1] becomeFirstResponder];

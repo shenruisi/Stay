@@ -161,7 +161,7 @@
     if (nil == _addButton){
         _addButton = [[FCButton alloc] init];
         [_addButton addTarget:self action:@selector(addAction:) forControlEvents:UIControlEventTouchUpInside];
-        [_addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Add", @"")
+        [_addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"settings.add", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.accent,
             NSFontAttributeName : FCStyle.bodyBold

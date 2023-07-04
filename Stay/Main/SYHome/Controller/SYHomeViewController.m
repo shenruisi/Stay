@@ -858,7 +858,7 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 
     [self iCloudSyncIfNeeded];
     
-    [[API shared] active:[[FCConfig shared] getStringValueOfKey:GroupUserDefaultsKeyDeviceUUID]
+    [[API shared] active:[DeviceHelper uuid]
                    isPro:[[FCStore shared] getPlan:NO] != FCPlan.None
              isExtension:NO];
 }

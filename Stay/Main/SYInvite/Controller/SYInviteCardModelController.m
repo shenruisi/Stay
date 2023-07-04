@@ -14,6 +14,7 @@
 #import "DeviceHelper.h"
 #import "FCStore.h"
 #import "UserScript.h"
+#import "FCButton.h"
 
 @interface SelectBarView:UIView
 
@@ -68,7 +69,7 @@
 @property (nonatomic, strong) UIView *colorView;
 @property (nonatomic, strong) UILabel *colorLabel;
 @property (nonatomic, strong) SelectBarView *colorControl;
-@property (nonatomic, strong) UIButton *confirmBtn;
+@property (nonatomic, strong) FCButton *confirmBtn;
 @property (nonatomic, strong) NSString *colorStr;
 @property (nonatomic, strong) NSString *firstImageStr;
 @property (nonatomic, strong) UILabel *proLabel;
@@ -154,8 +155,26 @@
 }
 
 - (void)confirmInviteCard {
-        Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    
+    if(self.nameLabel.text.length <= 0) {
+        
+        UIAlertController *onlyOneAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"NameNotNull", @"")
+                                                                              message:@""
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *onlyOneConfirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction * _Nonnull action) {
+            
+            
+        }];
+        [onlyOneAlert addAction:onlyOneConfirm];
+        [self.nav presentViewController:onlyOneAlert animated:YES completion:nil];
+        return;
+        
+    }
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
+    [self.confirmBtn startLoading];
     if(isPro) {
         [[API shared]  queryPath:@"/gift-task/init"
                              pro:isPro
@@ -174,6 +193,7 @@
                                                                    @"name":_textField.text
                                                                  }                                                     forKey:@"default_invite"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
+                [self.confirmBtn stopLoading];
                 [self.navigationController.slideController dismiss];
                 
                 NSNotification *notification = [NSNotification notificationWithName:@"app.stay.notification.SaveInviteSuccess" object:nil];
@@ -298,7 +318,7 @@
 - (UIView *)inviteView {
     if(_inviteView == nil) {
         _inviteView = [[UIView alloc] initWithFrame:CGRectMake(40, 25, [self getMainView].frame.size.width - 36 - 80, 314)];
-        _inviteView.backgroundColor = FCStyle.fcWhite;
+        _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
         _inviteView.clipsToBounds = YES;
         [self.backView addSubview:_inviteView];
@@ -524,7 +544,7 @@
 
 - (UILabel *)colorLabel {
     if(nil == _colorLabel) {
-        _colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, 0, 44, 18)];
+        _colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, 0, 120, 18)];
         _colorLabel.font = FCStyle.subHeadlineBold;
         _colorLabel.textColor = FCStyle.subtitleColor;
         _colorLabel.text = NSLocalizedString(@"Color",@"");
@@ -558,12 +578,16 @@
     return _colorControl;
 }
 
-- (UIButton *)confirmBtn {
+- (FCButton *)confirmBtn {
     if(nil == _confirmBtn) {
-        _confirmBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, 0, [self getMainView].frame.size.width - 36, 45)];
-        [_confirmBtn setTitle:NSLocalizedString(@"Confirm",@"") forState:UIControlStateNormal];
+        _confirmBtn = [[FCButton alloc] initWithFrame:CGRectMake(18, 0, [self getMainView].frame.size.width - 36, 45)];
+//        [_confirmBtn setTitle:NSLocalizedString(@"Confirm",@"") forState:UIControlStateNormal];
         [_confirmBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
         [_confirmBtn addTarget:self action:@selector(confirmInviteCard) forControlEvents:UIControlEventTouchUpInside];
+        [_confirmBtn setAttributedTitle: [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Confirm", @"") attributes:@{
+                    NSForegroundColorAttributeName:FCStyle.accent,
+                    NSFontAttributeName: FCStyle.bodyBold,
+        }] forState:UIControlStateNormal];
         _confirmBtn.font = FCStyle.bodyBold;
         _confirmBtn.layer.borderColor = FCStyle.accent.CGColor;
         _confirmBtn.layer.borderWidth = 1;
@@ -602,7 +626,7 @@
             _dateLabel.textColor = FCStyle.accent;
         }
         _dateLabel.font = FCStyle.footnoteBold;
-        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceEn];
+        NSString *contentStr =[NSString stringWithFormat:@"since %@",_detail.sinceCn];
 
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
 

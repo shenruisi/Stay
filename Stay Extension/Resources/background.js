@@ -1226,9 +1226,9 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const selector = request.selector;
             const url = request.url;
             const urlList = request.urlList;
-            // console.log("adblock-------request-----",selector, url);
+            console.log("adblock----ADB_tag_ad---request-----",selector, urlList);
             browser.runtime.sendNativeMessage("application.id", { type: "ADB_tag_ad", selector, urls: urlList }, function (response) {
-                // console.log("adblock-------response=",response);
+                console.log("adblock----ADB_tag_ad---response=",response);
                 sendResponse({ body: response.body })
             });
         }

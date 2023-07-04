@@ -10,6 +10,8 @@
 #import "KeychainItemWrapper.h"
 #import "FCConfig.h"
 
+NSNotificationName const _Nonnull DeviceHelperConsumePointsDidChangeNotification = @"app.stay.notification.DeviceHelperConsumePointsDidChangeNotification";
+
 @implementation DeviceHelper
 
 + (FCDeviceType)type{
@@ -46,15 +48,27 @@ static KeychainItemWrapper *k_keychain = nil;
 
 + (void)consumePoints:(CGFloat)pointValue{
     CGFloat newPoints = [self totalConsumePoints] + pointValue;
-    [[self keychain] setObject:@(newPoints) forKey:(id)kSecAttrLabel];
+    NSString *newPointsStr = [NSString stringWithFormat:@"%.1f",newPoints];
+    [[self keychain] setObject:newPointsStr forKey:(id)kSecAttrLabel];
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:DeviceHelperConsumePointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:nil];
+#endif
 }
 + (void)rollbackPoints:(CGFloat)pointValue{
     CGFloat newPoints = [self totalConsumePoints] - pointValue;
-    [[self keychain] setObject:@(newPoints) forKey:(id)kSecAttrLabel];
+    NSString *newPointsStr = [NSString stringWithFormat:@"%.1f",newPoints];
+    [[self keychain] setObject:newPointsStr forKey:(id)kSecAttrLabel];
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:DeviceHelperConsumePointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:nil];
+#endif
 }
 + (CGFloat)totalConsumePoints{
-    NSNumber *points =  [[self keychain] objectForKey:(id)kSecAttrLabel];
-    return [points floatValue];
+    NSString *pointsStr =  [[self keychain] objectForKey:(id)kSecAttrLabel];
+    return [pointsStr floatValue];
 }
 
 + (NSString *)country{

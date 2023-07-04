@@ -7,6 +7,9 @@
 
 #import "UserDefaultsExRO.h"
 
+NSNotificationName const _Nonnull UserDefaultsExROAvailablePointsDidChangeNotification = @"app.stay.notification.UserDefaultsExROAvailablePointsDidChangeNotification";
+NSNotificationName const _Nonnull UserDefaultsExROAvailableGiftPointsDidChangeNotification = @"app.stay.notification.UserDefaultsExROAvailableGiftPointsDidChangeNotification";
+
 @interface UserDefaultsExRO(){
     dispatch_queue_t _userDefaultsExROQueue;
 }
@@ -87,11 +90,25 @@
 - (void)setAvailablePoints:(CGFloat)availablePoints{
     _availablePoints = availablePoints;
     [self flush];
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:UserDefaultsExROAvailablePointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:@{
+        @"value" : @(_availablePoints)
+    }];
+#endif
 }
 
 - (void)setAvailableGiftPoints:(CGFloat)availableGiftPoints{
     _availableGiftPoints = availableGiftPoints;
     [self flush];
+#if FC_IOS || FC_MAC
+    [[NSNotificationCenter defaultCenter] postNotificationName:UserDefaultsExROAvailableGiftPointsDidChangeNotification
+                                                        object:nil
+                                                      userInfo:@{
+        @"value" : @(_availableGiftPoints)
+    } ];
+#endif
 }
 
 - (void)setDownloadConsumePoints:(CGFloat)downloadConsumePoints{

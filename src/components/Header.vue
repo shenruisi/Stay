@@ -15,7 +15,7 @@ import { reactive, toRefs, inject, watch, ref, onMounted,nextTick } from 'vue'
 import { useI18n } from 'vue-i18n';
 export default {
   name: 'headerComp',
-  props:['titleInfo'],
+  props:['titleInfo', 'isStayPro'],
   setup (props, {emit, expose}) {
     console.log('props-----', props, props.titleInfo);
     const global = inject('global');
@@ -23,7 +23,7 @@ export default {
     const { t, tm, locale } = useI18n();
     const state = reactive({
       staySwitch: store.state.staySwitch,
-      isStayPro: store.state.isStayPro,
+      isStayPro: props.isStayPro,
       title: props.titleInfo
     })
     const headerRef = ref(null);
@@ -53,6 +53,7 @@ export default {
       (newProps) => {
         // 接收到的props的值
         state.title = newProps.titleInfo;
+        state.isStayPro = newProps.isStayPro;
       },
       { immediate: true, deep: true }
     );

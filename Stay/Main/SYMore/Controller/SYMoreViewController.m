@@ -28,6 +28,8 @@
 #import "API.h"
 #import "DeviceHelper.h"
 #import "SYInviteTaskSlideController.h"
+#import "UserDefaultsExRO.h"
+
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
 
@@ -561,11 +563,28 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    dispatch_async(dispatch_get_main_queue(), ^{
-//        self.tableView.frame = self.view.bounds;
-        self.dataSource = nil;
-        [self.tableView reloadData];
-    });
+//    [[API shared] queryPath:@"/self"
+//                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
+//
+//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+//            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+//            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+//        } else {
+//            NSInteger points = [biz[@"points"] integerValue];
+//            [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.dataSource = nil;
+//            [self.tableView reloadData];
+//        });
+//
+//    }];
     
 //    [FCStore shared].testingProFlag = YES;
 }
@@ -589,35 +608,95 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                                                  name:@"app.stay.notification.SYSubscibeChangeNotification"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(availablePointsDidChangeHandler:)
+                                                 name:UserDefaultsExROAvailablePointsDidChangeNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(availableGiftPointsDidChangeHandler:)
+                                                 name:UserDefaultsExROAvailableGiftPointsDidChangeNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(consumePointsDidChangeHandler:)
+                                                 name:DeviceHelperConsumePointsDidChangeNotification
+                                               object:nil];
+    
+    
+    
+    
     self.tableView.sectionHeaderTopPadding = 0;
     
     
+    if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+        self.leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+    }
+    else{
+        self.leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+    }
     
-    [[API shared] queryPath:@"/self"
-                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
-                   deviceId:DeviceHelper.uuid
-                        biz:nil
-                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        NSLog(@"%@",biz);
-        
-//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
-//            _leftPointCount =  [biz[@"gift_points"] integerValue];
-//        } else {
-//            _leftPointCount = [biz[@"point"] integerValue];
-//        }
-        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
-            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
-        } else {
-            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
-        }
+    
+//    [[API shared] queryPath:@"/self"
+//                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+//                   deviceId:DeviceHelper.uuid
+//                        biz:nil
+//                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+//        NSLog(@"%@",biz);
 //
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.dataSource = nil;
-            [self.tableView reloadData];
-        });
-        
-    }];
+//        if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints;
+//        } else {
+//            _leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.dataSource = nil;
+//            [self.tableView reloadData];
+//        });
+//
+//    }];
     
+}
+
+- (void)consumePointsDidChangeHandler:(NSNotification *)note{
+    [[API shared] queryPath:@"/self"
+                            pro:[[FCStore shared] getPlan:NO] != FCPlan.None
+                       deviceId:DeviceHelper.uuid
+                            biz:nil
+                     completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+    
+        if (200 == statusCode){
+            NSInteger points = [biz[@"points"] integerValue];
+            NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+            [SharedStorageManager shared].userDefaultsExRO.availablePoints = (CGFloat)points - DeviceHelper.totalConsumePoints;
+            [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+        }
+    }];
+}
+
+- (void)availablePointsDidChangeHandler:(NSNotification *)note{
+    if([[FCStore shared] getPlan:NO] == FCPlan.None) {
+        self.leftPointCount = [[note userInfo][@"value"] floatValue];
+        NSLog(@"left point count: %f",self.leftPointCount);
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.dataSource = nil;
+        [self.tableView reloadData];
+    });
+}
+
+- (void)availableGiftPointsDidChangeHandler:(NSNotification *)note{
+    if([[FCStore shared] getPlan:NO] != FCPlan.None) {
+        self.leftPointCount = [[note userInfo][@"value"] floatValue];
+        NSLog(@"left point count: %f",self.leftPointCount);
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.dataSource = nil;
+        [self.tableView reloadData];
+    });
 }
 
 - (void)subscibeDidChangeHandler:(NSNotification *)note{
@@ -926,7 +1005,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
                 @"section":NSLocalizedString(@"StayPoint",@""),
                 @"cells":@[
                     @{
-                        @"title":[NSString stringWithFormat:@"%@ Point(s)",@(_leftPointCount).description] ,
+                        @"title":[NSString stringWithFormat:@"%@ %@",@(self.leftPointCount).description,NSLocalizedString(@"Points",@"")] ,
                         @"icon":@"InviteImage",
                       @"type":@"stayPoint",
                     }

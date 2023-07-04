@@ -92,12 +92,18 @@ NSNotificationName const _Nonnull DMTaskDidFinishNotification = @"app.stay.notif
 
 @interface NormalState : NSObject
 
-@property (nonatomic, assign) int mode; // 0:no range
+@property (nonatomic, assign) int mode; // 0:no range // 1: video range // 2: video & audio range
 @property (nonatomic, assign) int status; // 0:start 1: video downloaded 2: audio downloaded 3: convert to mp4 success
 @property (nonatomic, strong) NSString *videoUrl;
 @property (nonatomic, strong) NSString *videoType;
 @property (nonatomic, strong) NSString *audioUrl;
 @property (nonatomic, strong) NSString *audioType;
+@property (nonatomic, assign) NSUInteger totalCount;
+@property (nonatomic, assign) NSUInteger currCount;
+@property (nonatomic, assign) NSUInteger videoCount;
+@property (nonatomic, strong) NSMutableArray<NSString *> *videoRangeURLs;
+@property (nonatomic, assign) NSUInteger audioCount;
+@property (nonatomic, strong) NSMutableArray<NSString *> *audioRangeURLs;
 @end
 
 @implementation NormalState
@@ -116,6 +122,24 @@ NSNotificationName const _Nonnull DMTaskDidFinishNotification = @"app.stay.notif
             self.videoType = lines[3];
             self.audioUrl = lines[4];
             self.audioType = lines[5];
+            if (self.mode == 1 || self.mode == 2) {
+                self.totalCount = lines[6].intValue;
+                self.currCount = lines[7].intValue;
+                self.videoCount = lines[8].intValue;
+                self.videoRangeURLs = [NSMutableArray array];
+                NSUInteger videoMaxLine = 9 + self.videoCount;
+                for (int i = 9; i < videoMaxLine; i++) {
+                    [self.videoRangeURLs addObject:lines[i]];
+                }
+                if (self.mode == 2) {
+                    self.audioCount = lines[videoMaxLine++].intValue;
+                    self.audioRangeURLs = [NSMutableArray array];
+                    NSUInteger audioMaxLine = videoMaxLine + self.audioCount;
+                    for (int i = videoMaxLine; i < audioMaxLine; i++) {
+                        [self.audioRangeURLs addObject:lines[i]];
+                    }
+                }
+            }
             return self;
         }
     }
@@ -124,8 +148,24 @@ NSNotificationName const _Nonnull DMTaskDidFinishNotification = @"app.stay.notif
 }
 
 - (void)saveToPath:(NSString *)taskPath {
-    NSString *content = [NSString stringWithFormat:@"%d\n%d\n%@\n%@\n%@\n%@",
+    NSMutableString *content = [NSMutableString stringWithFormat:@"%d\n%d\n%@\n%@\n%@\n%@",
                          _mode, _status, _videoUrl, _videoType == nil ? @"mp4" : _videoType, _audioUrl == nil ? @"" : _audioUrl, _audioType == nil ? @"m4a" : _audioType];
+    if (_mode == 1 || _mode == 2) {
+        [content appendFormat:@"\n%lu\n%lu\n%lu", _totalCount, _currCount, _videoCount];
+        @synchronized (_videoRangeURLs) {
+            for (NSString *rangeURL in _videoRangeURLs) {
+                [content appendFormat:@"\n%@", rangeURL];
+            }
+        }
+        if (_mode == 2) {
+            [content appendFormat:@"\n%lu", _audioCount];
+            @synchronized (_audioRangeURLs) {
+                for (NSString *rangeURL in _audioRangeURLs) {
+                    [content appendFormat:@"\n%@", rangeURL];
+                }
+            }
+        }
+    }
     NSString *filePath = [taskPath stringByAppendingPathComponent:@"NormalState"];
     [NSFileManager.defaultManager moveItemAtPath:filePath toPath:[filePath stringByAppendingString:@"_bak"] error:nil];
     [content writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
@@ -295,7 +335,13 @@ static DownloadManager *instance = nil;
                     [NSFileManager.defaultManager removeItemAtPath:[dirPath stringByAppendingPathComponent:[[[self getSessionTaskURL: sessionState.sessionTask].absoluteString md5] stringByAppendingString:@"_data"]] error:nil];
                 }
                 if (sessionTask == nil) {
-                    sessionTask = [self.downloadSession downloadTaskWithRequest:[[self getSessionTaskURL:sessionState.sessionTask] getRequest]];
+                    NSString *range = nil;
+                    if (sessionState.sessionTask.originalRequest != nil) {
+                        range = sessionState.sessionTask.originalRequest.allHTTPHeaderFields[@"Range"];
+                    } else {
+                        range = sessionState.sessionTask.currentRequest.allHTTPHeaderFields[@"Range"];
+                    }
+                    sessionTask = [self.downloadSession downloadTaskWithRequest:[[self getSessionTaskURL:sessionState.sessionTask] getRequest:range]];
                 }
                 sessionState.sessionTask = sessionTask;
                 if (sessionState.sessionTask != nil) {
@@ -490,11 +536,11 @@ static DownloadManager *instance = nil;
             NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
             NSString *keyURL = task.m3u8State.keyURL;
             if (keyURL != nil && [keyURL hasPrefix:@"http"] && ![currURLs containsObject:keyURL]) {
-                [self addTsSession:keyURL withTaskPath:taskPath andTask:task];
+                [self addTsSession:keyURL withTaskPath:taskPath andTask:task ifRange:nil];
             } else {
                 for (NSString *tsURL in task.m3u8State.tsURLs) {
                     if ([tsURL hasPrefix:@"http"] && ![currURLs containsObject:tsURL]) {
-                        [self addTsSession:tsURL withTaskPath:taskPath andTask:task];
+                        [self addTsSession:tsURL withTaskPath:taskPath andTask:task ifRange:nil];
                         count++;
                         if (count >= _m3u8Concurrency) {
                             break;
@@ -513,7 +559,7 @@ static DownloadManager *instance = nil;
     });
 }
 
-- (void)addTsSession:(NSString *)tsURL withTaskPath:(NSString *)taskPath andTask:(Task *)task {
+- (void)addTsSession:(NSString *)tsURL withTaskPath:(NSString *)taskPath andTask:(Task *)task ifRange:(NSString *)range {
     NSURLSessionTask *sessionTask;
     NSString *dataFilePath = [taskPath stringByAppendingPathComponent:[[tsURL md5] stringByAppendingString:@"_data"]];
     NSData *data = [NSData dataWithContentsOfFile:dataFilePath];
@@ -521,7 +567,7 @@ static DownloadManager *instance = nil;
         sessionTask = [self.downloadSession downloadTaskWithResumeData:data];
     }
     if (sessionTask == nil) {
-        sessionTask = [self.downloadSession downloadTaskWithRequest:[tsURL getRequest]];
+        sessionTask = [self.downloadSession downloadTaskWithRequest:[tsURL getRequest:range]];
     };
     [NSFileManager.defaultManager removeItemAtPath:dataFilePath error:nil];
     if (sessionTask != nil) {
@@ -539,9 +585,11 @@ static DownloadManager *instance = nil;
 }
 
 - (void)transcodeM3U8:(Task *)task {
+    task.status = DMStatusTranscoding;
     if (task.block != nil) {
         task.block(0, @"", DMStatusTranscoding);
     }
+    [self notifyFinishIfNeed];
     dispatch_async(self->_transcodeQueue, ^{
         [self combineM3U8Ts:task];
         [self convertM3U8ToMP4:task];
@@ -589,17 +637,53 @@ static DownloadManager *instance = nil;
 }
 
 - (void)startNormalTask:(Task *)task withRequest:(Request *)request {
-    NormalState *normalState = [[NormalState alloc] init];
-    normalState.videoUrl = request.url;
-    normalState.videoType = [request.url containsString:@"webm"] ? @"webm" : @"mp4";
-    normalState.audioUrl = request.audioUrl;
-    if (request.audioUrl.length > 0) {
-        normalState.audioType = [request.audioUrl containsString:@"webm"] ? @"webm" : @"mp4";
-    }
-    task.normalState = normalState;
-    task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
-    task.bytesWritten = 0;
-    [self resumNormalTask:task];
+    [self initNormalTask:task request:request completion:^(long long videoBytes, long long audioBytes) {
+        NormalState *normalState = [[NormalState alloc] init];
+        normalState.videoUrl = request.url;
+        normalState.videoType = [request.url containsString:@"webm"] ? @"webm" : @"mp4";
+        normalState.audioUrl = request.audioUrl;
+        if (request.audioUrl.length > 0) {
+            normalState.audioType = [request.audioUrl containsString:@"webm"] ? @"webm" : @"mp4";
+        }
+        
+        if (videoBytes > 0) {
+            long long from = 0, to = 0;
+            NSUInteger videoCount = 0;
+            NSMutableArray *videoRangeUrls = [NSMutableArray array];
+            while (from < videoBytes) {
+                to = MIN(from + 512 * 1024 + arc4random_uniform(1024), videoBytes - 1);
+                [videoRangeUrls addObject:[NSString stringWithFormat:@"bytes=%lld-%lld;%@", from, to, request.url]];
+                videoCount++;
+                from = to + 1;
+            }
+            normalState.mode = 1;
+            normalState.totalCount = videoCount;
+            normalState.videoCount = videoCount;
+            normalState.videoRangeURLs = videoRangeUrls;
+            
+            if (audioBytes > 0) {
+                from = 0;
+                to = 0;
+                NSUInteger audioCount = 0;
+                NSMutableArray *audioRangeUrls = [NSMutableArray array];
+                while (from < audioBytes) {
+                    to = MIN(from + 512 * 1024 + arc4random_uniform(1024), audioBytes - 1);
+                    [audioRangeUrls addObject:[NSString stringWithFormat:@"bytes=%lld-%lld;%@", from, to, request.audioUrl]];
+                    audioCount++;
+                    from = to + 1;
+                }
+                normalState.mode = 2;
+                normalState.totalCount += audioCount;
+                normalState.audioCount = audioCount;
+                normalState.audioRangeURLs = audioRangeUrls;
+            }
+        }
+        
+        task.normalState = normalState;
+        task.lastTimestamp = [[NSDate date] timeIntervalSince1970];
+        task.bytesWritten = 0;
+        [self resumNormalTask:task];
+    }];
 }
 
 - (void)resumNormalTask:(Task *)task {
@@ -620,8 +704,8 @@ static DownloadManager *instance = nil;
                 if (task.block != nil) {
                     task.block(0, @"", DMStatusTranscoding);
                 }
-                if (task.sessionStates.count == 0) {
-                    [self addTsSession:task.normalState.audioUrl withTaskPath:taskPath andTask:task];
+                if (task.normalState.mode != 2 && task.sessionStates.count == 0) {
+                    [self addTsSession:task.normalState.audioUrl withTaskPath:taskPath andTask:task ifRange:nil];
                 }
             }
         } else {
@@ -657,13 +741,73 @@ static DownloadManager *instance = nil;
             }
         }
     } else {
-        if (task.sessionStates.count > 0) {
-            return;
-        }
-        @synchronized (task.sessionStates) {
-            [self addTsSession:task.normalState.videoUrl withTaskPath:taskPath andTask:task];
-            if (task.normalState.audioUrl.length > 0) {
-                [self addTsSession:task.normalState.audioUrl withTaskPath:taskPath andTask:task];
+        if (task.normalState.mode == 0) {
+            if (task.sessionStates.count > 0) {
+                return;
+            }
+            @synchronized (task.sessionStates) {
+                [self addTsSession:task.normalState.videoUrl withTaskPath:taskPath andTask:task ifRange:nil];
+                if (task.normalState.audioUrl.length > 0) {
+                    [self addTsSession:task.normalState.audioUrl withTaskPath:taskPath andTask:task ifRange:nil];
+                }
+            }
+        } else if (task.normalState.mode == 1 || task.normalState.mode == 2) {
+            @synchronized (task.sessionStates) {
+                NSUInteger count = task.sessionStates.count;
+                NSMutableSet<NSString *> *currURLs = [NSMutableSet set];
+                for (TaskSessionState *sessionState in task.sessionStates) {
+                    NSString *url = [self getSessionTaskURL:sessionState.sessionTask].absoluteString;
+                    if (url.length > 0) {
+                        [currURLs addObject:url];
+                    }
+                }
+                NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+                if (task.normalState.mode == 2) {
+                    for (NSString *rangeURL in task.normalState.audioRangeURLs) {
+                        if ([rangeURL hasPrefix:@"bytes="]) {
+                            NSRange range = [rangeURL rangeOfString:@";"];
+                            if (range.length > 0) {
+                                NSString *url = [rangeURL substringFromIndex:range.location + 1];
+                                if (![currURLs containsObject:url]) {
+                                    [self addTsSession:url withTaskPath:taskPath andTask:task ifRange:[rangeURL substringToIndex:range.location]];
+                                    count++;
+                                    if (count >= _m3u8Concurrency) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (task.normalState.mode == 1
+                               && task.normalState.audioUrl.length > 0
+                               && ![currURLs containsObject:task.normalState.audioUrl]) {
+                    count++;
+                    [self addTsSession:task.normalState.audioUrl withTaskPath:taskPath andTask:task ifRange:nil];
+                }
+                
+                if (count < _m3u8Concurrency) {
+                    for (NSString *rangeURL in task.normalState.videoRangeURLs) {
+                        if ([rangeURL hasPrefix:@"bytes="]) {
+                            NSRange range = [rangeURL rangeOfString:@";"];
+                            if (range.length > 0) {
+                                NSString *url = [rangeURL substringFromIndex:range.location + 1];
+                                if (![currURLs containsObject:url]) {
+                                    [self addTsSession:url withTaskPath:taskPath andTask:task ifRange:[rangeURL substringToIndex:range.location]];
+                                    count++;
+                                    if (count >= _m3u8Concurrency) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (count == 0) {
+                    task.block(1.0, @"", DMStatusDownloading);
+                    task.normalState.status = 2;
+                    [self transcodeNormal:task];
+                }
             }
         }
     }
@@ -673,9 +817,11 @@ static DownloadManager *instance = nil;
 }
 
 - (void)transcodeNormal:(Task *)task {
+    task.status = DMStatusTranscoding;
     if (task.block != nil) {
         task.block(0, @"", DMStatusTranscoding);
     }
+    [self notifyFinishIfNeed];
     dispatch_async(self->_transcodeQueue, ^{
         [self convertNormalToMP4:task];
     });
@@ -687,6 +833,59 @@ static DownloadManager *instance = nil;
     }
     
     NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
+    if (task.normalState.mode == 1 || task.normalState.mode == 2) {
+        NSString *videoPath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]];
+        if (![NSFileManager.defaultManager fileExistsAtPath:videoPath]) {
+            NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"video.%@", task.normalState.videoType]];
+            [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+            NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
+            for (NSString *rangeURL in task.normalState.videoRangeURLs) {
+                NSError *err;
+                [fileHandle writeData:[NSData dataWithContentsOfFile:[taskPath stringByAppendingPathComponent:rangeURL]] error:&err];
+                if (err != nil) {
+                    task.status = DMStatusFailedNoSpace;
+                    if (task.block != nil) {
+                        task.block(0, @"", DMStatusFailedNoSpace);
+                    }
+                    [self notifyFinishIfNeed];
+                    [fileHandle closeAndReturnError:&err];
+                    return;
+                }
+            }
+            [fileHandle closeAndReturnError:nil];
+            [NSFileManager.defaultManager moveItemAtPath:filePath toPath:videoPath error:nil];
+            for (NSString *rangeURL in task.normalState.videoRangeURLs) {
+                [NSFileManager.defaultManager removeItemAtPath:[taskPath stringByAppendingPathComponent:rangeURL] error:nil];
+            }
+        }
+        
+        if (task.normalState.mode == 2) {
+            NSString *audioPath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [task.normalState.audioUrl md5], task.normalState.audioType]];
+            if (![NSFileManager.defaultManager fileExistsAtPath:audioPath]) {
+                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"audio.%@", task.normalState.audioType]];
+                [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+                NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:filePath];
+                for (NSString *rangeURL in task.normalState.audioRangeURLs) {
+                    NSError *err;
+                    [fileHandle writeData:[NSData dataWithContentsOfFile:[taskPath stringByAppendingPathComponent:rangeURL]] error:&err];
+                    if (err != nil) {
+                        task.status = DMStatusFailedNoSpace;
+                        if (task.block != nil) {
+                            task.block(0, @"", DMStatusFailedNoSpace);
+                        }
+                        [self notifyFinishIfNeed];
+                        [fileHandle closeAndReturnError:&err];
+                        return;
+                    }
+                }
+                [fileHandle closeAndReturnError:nil];
+                [NSFileManager.defaultManager moveItemAtPath:filePath toPath:audioPath error:nil];
+                for (NSString *rangeURL in task.normalState.audioRangeURLs) {
+                    [NSFileManager.defaultManager removeItemAtPath:[taskPath stringByAppendingPathComponent:rangeURL] error:nil];
+                }
+            }
+        }
+    }
     [NSFileManager.defaultManager removeItemAtPath:task.filePath error:nil];
     NSString *command = [NSString stringWithFormat:@"-i '%@.%@' -c:v mpeg4 -qscale:v 4 -c:a aac '%@'", [taskPath stringByAppendingPathComponent:task.taskId], task.normalState.videoType, task.filePath];
     if (task.normalState.audioUrl.length > 0) {
@@ -784,6 +983,51 @@ static DownloadManager *instance = nil;
     }
 }
 
+- (void)initNormalTask:(Task *)task request:(Request *)request completion:(void (^)(long long videoBytes, long long audioBytes))completion{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
+        long long videoBytes = -1;
+        long long audioBytes = -1;
+        
+        NSMutableURLRequest *urlReq = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:request.url]];
+        [urlReq setHTTPMethod:@"HEAD"];
+        NSDictionary *headers = @{
+            @"User-Agent": @"Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Mobile/15E148 Safari/604.1",
+        };
+        for (NSString *key in headers.allKeys) {
+            [urlReq addValue:headers[key] forHTTPHeaderField:key];
+        }
+        NSHTTPURLResponse *response;
+        [NSURLConnection sendSynchronousRequest:urlReq returningResponse:&response error:nil];
+        if (response != nil && response.statusCode == 200) {
+            if ([response.allHeaderFields[@"Accept-Ranges"] isEqualToString:@"bytes"]) {
+                long long bytes = [response.allHeaderFields[@"Content-Length"] longLongValue];
+                if (bytes > 0) {
+                    videoBytes = bytes;
+                }
+            }
+        }
+        
+        if (request.audioUrl.length > 0) {
+            urlReq = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:request.audioUrl]];
+            [urlReq setHTTPMethod:@"HEAD"];
+            for (NSString *key in headers.allKeys) {
+                [urlReq addValue:headers[key] forHTTPHeaderField:key];
+            }
+            [NSURLConnection sendSynchronousRequest:urlReq returningResponse:&response error:nil];
+            if (response != nil && response.statusCode == 200) {
+                if ([response.allHeaderFields[@"Accept-Ranges"] isEqualToString:@"bytes"]) {
+                    long long bytes = [response.allHeaderFields[@"Content-Length"] longLongValue];
+                    if (bytes > 0) {
+                        audioBytes = bytes;
+                    }
+                }
+            }
+        }
+        
+        completion(videoBytes, audioBytes);
+    });
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)sessionTask didCompleteWithError:(NSError *)error {
 //    NSLog(@"URLSession sessionTask didCompleteWithError : %@", error);
     [self notifySpeedIfNeed];
@@ -799,22 +1043,26 @@ static DownloadManager *instance = nil;
         if (task.isM3U8) {
             [self resumeM3U8Task:task];
         } else if (task.isNormal) {
-            if ([task.normalState.videoUrl isEqualToString:[self getSessionTaskURL:sessionTask].absoluteString]) {
-                for (TaskSessionState *sessionState in task.sessionStates) {
-                    @synchronized (self.sessionDict) {
-                        [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+            if (task.normalState.mode == 0) {
+                if ([task.normalState.videoUrl isEqualToString:[self getSessionTaskURL:sessionTask].absoluteString]) {
+                    for (TaskSessionState *sessionState in task.sessionStates) {
+                        @synchronized (self.sessionDict) {
+                            [self.sessionDict removeObjectForKey:sessionState.sessionTask];
+                        }
+                        [sessionState.sessionTask cancel];
                     }
-                    [sessionState.sessionTask cancel];
+                    [self taskFailed:task];
+                } else {
+                    if (task.normalState.status == 1) {
+                        task.status = DMStatusFailedTranscode;
+                        if (task.block != nil) {
+                            task.block(0, @"", DMStatusFailedTranscode);
+                        }
+                        [self notifyFinishIfNeed];
+                    }
                 }
-                [self taskFailed:task];
             } else {
-                if (task.normalState.status == 1) {
-                    task.status = DMStatusFailedTranscode;
-                    if (task.block != nil) {
-                        task.block(0, @"", DMStatusFailedTranscode);
-                    }
-                    [self notifyFinishIfNeed];
-                }
+                [self resumNormalTask:task];
             }
         } else {
             [self taskFailed:task];
@@ -833,13 +1081,23 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     if (task != nil) {
         task.bytesWritten += bytesWritten;
         if (task.block != nil) {
-            task.progress = task.isM3U8 ? task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount
-                                        : ((task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) ? task.progress : totalBytesWritten * 1.0 / totalBytesExpectedToWrite);
+            if (task.isM3U8) {
+                task.progress = task.m3u8State.currCount * 1.0 / task.m3u8State.totalCount;
+            } else if (task.isNormal) {
+                if (task.normalState.mode == 0) {
+                    task.progress = (task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) ? task.progress : totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
+                } else if (task.normalState.mode == 1) {
+                    task.progress = (task.normalState.audioUrl.length > 0 && [task.normalState.audioUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) ? task.progress : task.normalState.currCount * 1.0 / task.normalState.totalCount;
+                } else if (task.normalState.mode == 2) {
+                    task.progress = task.normalState.currCount * 1.0 / task.normalState.totalCount;
+                }
+            } else {
+                task.progress = totalBytesWritten * 1.0 / totalBytesExpectedToWrite;
+            }
             NSString *speed = @"";
             NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
             if (task.lastTimestamp > 0 && timestamp - task.lastTimestamp > 1) {
                 long long speedBS = task.bytesWritten / (timestamp - task.lastTimestamp);
-//                NSLog([NSString stringWithFormat:@"speedBS : %ld, bytesWritten : %ld, time : %f", speedBS, task.bytesWritten, timestamp - task.lastTimestamp]);
                 speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
                 task.lastTimestamp = timestamp;
                 task.bytesWritten = 0;
@@ -912,7 +1170,12 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
             [self removeSessionTask:downloadTask fromTask:task];
             if ([task.normalState.videoUrl isEqualToString:[self getSessionTaskURL:downloadTask].absoluteString]) {
                 NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]];
+                NSString *rangeURL = nil;
+                NSString * contentRange = ((NSHTTPURLResponse *)downloadTask.response).allHeaderFields[@"Content-Range"];
+                if (contentRange.length > 0) {
+                    rangeURL = [NSString stringWithFormat:@"bytes=%@;%@", [contentRange substringWithRange:NSMakeRange(6, [contentRange rangeOfString:@"/"].location - 6)], task.normalState.videoUrl];
+                }
+                NSString *filePath = task.normalState.mode == 0 ? [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", task.taskId, task.normalState.videoType]] : [taskPath stringByAppendingPathComponent:[rangeURL md5]];
                 [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
                 unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
                 if (fileSize < 2000) {
@@ -925,11 +1188,29 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                     [self taskFailed:task];
                     return;
                 }
-                task.normalState.status = 1;
+                if (task.normalState.mode == 0) {
+                    task.normalState.status = 1;
+                } else {
+                    NSMutableArray<NSString *> *rangeURLs = task.normalState.videoRangeURLs;
+                    @synchronized (rangeURLs) {
+                        for (int i = 0; i < rangeURLs.count; i++) {
+                            if ([rangeURLs[i] isEqualToString:rangeURL]) {
+                                task.normalState.currCount++;
+                                rangeURLs[i] = filePath.lastPathComponent;
+                                break;
+                            }
+                        }
+                    }
+                }
                 [self resumNormalTask:task];
             } else {
                 NSString *taskPath = [self.dataPath stringByAppendingPathComponent:task.taskId];
-                NSString *filePath = [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[self getSessionTaskURL:downloadTask].absoluteString md5], task.normalState.audioType]];
+                NSString *rangeURL = nil;
+                NSString * contentRange = ((NSHTTPURLResponse *)downloadTask.response).allHeaderFields[@"Content-Range"];
+                if (contentRange.length > 0) {
+                    rangeURL = [NSString stringWithFormat:@"bytes=%@;%@", [contentRange substringWithRange:NSMakeRange(6, [contentRange rangeOfString:@"/"].location - 6)], task.normalState.audioUrl];
+                }
+                NSString *filePath = task.normalState.mode == 2 ? [taskPath stringByAppendingPathComponent:[rangeURL md5]] : [taskPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[self getSessionTaskURL:downloadTask].absoluteString md5], task.normalState.audioType]];
                 [NSFileManager.defaultManager moveItemAtURL:location toURL:[NSURL fileURLWithPath:filePath] error:nil];
                 unsigned long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
                 if (fileSize < 2000) {
@@ -942,8 +1223,24 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                     }
                     return;
                 }
-                if (task.normalState.status == 1) {
-                    task.normalState.status = 2;
+                if (task.normalState.mode == 0) {
+                    if (task.normalState.status == 1) {
+                        task.normalState.status = 2;
+                        [self resumNormalTask:task];
+                    }
+                } else {
+                    if (task.normalState.mode == 2) {
+                        NSMutableArray<NSString *> *rangeURLs = task.normalState.audioRangeURLs;
+                        @synchronized (rangeURLs) {
+                            for (int i = 0; i < rangeURLs.count; i++) {
+                                if ([rangeURLs[i] isEqualToString:rangeURL]) {
+                                    task.normalState.currCount++;
+                                    rangeURLs[i] = filePath.lastPathComponent;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     [self resumNormalTask:task];
                 }
             }
@@ -1009,8 +1306,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     BOOL shouldFinishNotify = YES;
     for (Task *task in self.taskDict.allValues) {
         if (task.status == DMStatusPending
-            || task.status == DMStatusDownloading
-            || task.status == DMStatusTranscoding) {
+            || task.status == DMStatusDownloading) {
             shouldFinishNotify = NO;
             break;
         }
@@ -1025,18 +1321,29 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 }
 
 - (void)notifySpeedIfNeed {
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    if (_lastTimestamp > 0 && timestamp - _lastTimestamp > 1) {
-        NSString *speed = @"";
-        long long speedBS = _bytesWritten / (timestamp - _lastTimestamp);
-        speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
-        _lastTimestamp = timestamp;
-        _bytesWritten = 0;
-        [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskSpeedNotification
-                                                            object:nil
-                                                            userInfo:@{
-                                                                @"speed":speed
-                                                            }];
+    BOOL shouldSpeedNotify = NO;
+    for (Task *task in self.taskDict.allValues) {
+        if (task.status == DMStatusPending
+            || task.status == DMStatusDownloading) {
+            shouldSpeedNotify = YES;
+            break;
+        }
+    }
+    
+    if (shouldSpeedNotify) {
+        NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+        if (_lastTimestamp > 0 && timestamp - _lastTimestamp > 1) {
+            NSString *speed = @"";
+            long long speedBS = _bytesWritten / (timestamp - _lastTimestamp);
+            speed = [[NSByteCountFormatter stringFromByteCount:speedBS countStyle:NSByteCountFormatterCountStyleFile] stringByAppendingString:@"/S"];
+            _lastTimestamp = timestamp;
+            _bytesWritten = 0;
+            [[NSNotificationCenter defaultCenter] postNotificationName:DMTaskSpeedNotification
+                                                                object:nil
+                                                                userInfo:@{
+                                                                    @"speed":speed
+                                                                }];
+        }
     }
 }
 
