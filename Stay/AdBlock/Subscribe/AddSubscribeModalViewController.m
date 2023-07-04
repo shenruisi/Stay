@@ -18,6 +18,7 @@
 #import "ContentFilter2.h"
 #import "DataManager.h"
 #import "SubscribeContentFilterManager.h"
+#import "NSString+Urlencode.h"
 
 @interface AddSubscribeModalViewController()<
  UITableViewDelegate,
@@ -199,8 +200,8 @@
         subscribe.title =  self.titleElement.inputEntity.text;
         subscribe.path = [NSString stringWithFormat:@"%@.txt",uuid];
         subscribe.rulePath = @"Subscribe.json";
-        subscribe.defaultUrl = self.linkElement.inputEntity.text;
-        subscribe.downloadUrl = self.linkElement.inputEntity.text;
+        subscribe.defaultUrl = [self.linkElement.inputEntity.text safeEncode];
+        subscribe.downloadUrl = [self.linkElement.inputEntity.text safeEncode];
         subscribe.enable = 0;
         subscribe.status = 1;
         subscribe.sort = 6;
