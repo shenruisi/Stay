@@ -434,7 +434,7 @@ NSString * const SFExtensionMessageKey = @"message";
             [SharedStorageManager shared].extensionConfig.tagUpdate = [NSDate date];
             [[ContentFilterManager shared] appendJSONToFileName:@"Tag.json" array:array error:nil];
             
-            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag";
+            NSString *contentBlockerIdentifier = @"com.dajiu.stay.pro.Stay-Content-Tag-Mac";
             [SFContentBlockerManager reloadContentBlockerWithIdentifier:contentBlockerIdentifier completionHandler:^(NSError * _Nullable error) {
                 NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",contentBlockerIdentifier, error);
             }];
