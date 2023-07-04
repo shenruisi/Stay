@@ -547,12 +547,86 @@ NSString * const SFExtensionMessageKey = @"message";
             }];
         }
     }
+    else if ([message[@"type"] isEqualToString:@"setTrustedSite"]){
+        NSString *url = message[@"url"];
+        BOOL on = [message[@"on"] boolValue];
+        
+        NSString *domain = [self getDomain:url];
+        if (on){
+            if (![[ContentFilterManager shared] existTrustSiteWithDomain:domain]){
+                [[ContentFilterManager shared] addTrustSiteWithDomain:domain error:nil];
+                [self addTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic-Mac" url:domain];
+                [self addTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy-Mac" url:domain];
+                [self addTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region-Mac" url:domain];
+                [self addTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom-Mac" url:domain];
+                [self addTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag-Mac" url:domain];
+                [self addTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe-Mac" url:domain];
+            }
+        }
+        else{
+            if ([[ContentFilterManager shared] existTrustSiteWithDomain:domain]){
+                [[ContentFilterManager shared] deleteTrustSiteWithDomain:domain];
+                [self removeTrustedSiteToJSONFile:@"Basic.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Basic-Mac" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Privacy.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Privacy-Mac" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Region.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Region-Mac" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Custom.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Custom-Mac" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Tag.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Tag-Mac" url:domain];
+                [self removeTrustedSiteToJSONFile:@"Subscribe.json" identifier:@"com.dajiu.stay.pro.Stay-Content-Subscribe-Mac" url:domain];
+            }
+        }
+    }
+    else if ([message[@"type"] isEqualToString:@"getTrustedSite"]){
+        NSString *url = message[@"url"];
+        NSString *domain = [self getDomain:url];
+        BOOL on = [[ContentFilterManager shared] existTrustSiteWithDomain:domain];
+        
+        body = @{
+            @"url":domain,
+            @"on":@(on)
+        };
+    }
 
     response.userInfo = @{ SFExtensionMessageKey: @{ @"type": message[@"type"],
                                                      @"body": body == nil ? [NSNull null]:body,
                                                     }
     };
     [context completeRequestReturningItems:@[ response ] completionHandler:nil];
+}
+
+- (NSString *)getDomain:(NSString *)url{
+    NSMutableCharacterSet *set  = [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+    [set addCharactersInString:@"#"];
+    NSURL *uri = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:set]];
+    NSString *host = uri.host;
+    NSString *path = uri.path;
+    if ([path isEqualToString:@"/"]){
+        path = @"";
+    }
+    path = path ? path : @"";
+    NSString *domain = [NSString stringWithFormat:@"%@",host];
+    return domain;
+}
+
+- (void)addTrustedSiteToJSONFile:(NSString *)fileName identifier:(NSString *)identifier url:(NSString *)url{
+    [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:identifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+        if (state.enabled){
+            [[ContentFilterManager shared] appendJSONToFileName:fileName trustedSite:url error:nil];
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:identifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",identifier, error);
+            }];
+        }
+    }];
+}
+
+- (void)removeTrustedSiteToJSONFile:(NSString *)fileName identifier:(NSString *)identifier url:(NSString *)url{
+    [SFContentBlockerManager getStateOfContentBlockerWithIdentifier:identifier completionHandler:^(SFContentBlockerState * _Nullable state, NSError * _Nullable error) {
+        if (state.enabled){
+            [[ContentFilterManager shared] removeJSONToFileName:fileName trustedSite:url error:nil];
+            [SFContentBlockerManager reloadContentBlockerWithIdentifier:identifier completionHandler:^(NSError * _Nullable error) {
+                NSLog(@"ReloadContentBlockerWithIdentifier:%@ error:%@",identifier, error);
+            }];
+        }
+    }];
 }
 
 - (NSDictionary *)xmlHttpRequestProxy:(NSDictionary *)details{
@@ -566,6 +640,9 @@ NSString * const SFExtensionMessageKey = @"message";
     [request setHTTPMethod:method];
     if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
         for (NSString *key in headers.allKeys){
+            if ([headers[key] isKindOfClass:[NSNull class]]){
+                continue;
+            }
             [request setValue:headers[key] forHTTPHeaderField:key];
         }
     }
