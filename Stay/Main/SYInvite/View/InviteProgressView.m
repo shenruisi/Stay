@@ -29,7 +29,7 @@
     CGFloat nodeSize = 13.0;
        
        // 创建进度条背景视图
-    UIView *progressBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(24, 19,300 , 7)];
+    UIView *progressBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(24, 19,self.width - 48 , 7)];
     progressBackgroundView.backgroundColor = FCStyle.progressBgColor;
     [self addSubview:progressBackgroundView];
        
@@ -74,14 +74,14 @@
         title.text = [number stringValue];
         title.textColor = FCStyle.fcBlack;
         title.textAlignment = NSTextAlignmentCenter;
-        title.centerX = nodeLayer.bounds.origin.x + 24 + 75 * i;
+        title.centerX = nodeLayer.bounds.origin.x + 24 + (self.width - 48) / 4.0 * i;
         [self addSubview:title];
         
         
         bool finished = [_titleArray[i][@"finished"] boolValue];
         if(finished) {
             nodeLayer.fillColor = FCStyle.accent.CGColor;
-            self.progressView.width = (300 / (self.nodeViews.count - 1)) * i;
+            self.progressView.width = ((self.width - 48) / (self.nodeViews.count - 1)) * i;
         }
         
         

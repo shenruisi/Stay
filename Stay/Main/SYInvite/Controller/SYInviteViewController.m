@@ -1015,7 +1015,7 @@ UITableViewDataSource
 
 - (InviteProgressView *)inviteView {
     if(_inviteView == nil) {
-        _inviteView = [[InviteProgressView alloc] initWithFrame:CGRectMake(21, 0, 348, 69)];
+        _inviteView = [[InviteProgressView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 69)];
         _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
     }
