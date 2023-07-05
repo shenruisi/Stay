@@ -11,6 +11,7 @@ target 'Stay' do
  pod 'Bugsnag'
  pod 'ffmpeg-kit-ios-full', '~> 5.1'
  pod 'lottie-ios'
+ pod  'Ads-CN'
 end
 
 target 'Stay-Mac' do
