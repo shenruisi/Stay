@@ -251,9 +251,7 @@ UITableViewDataSource
     NSDictionary *dic = _taskArray[indexPath.row];
     if([@"invite" isEqualToString: dic[@"type"]]) {
 #ifdef FC_MAC
-            [self.nav presentViewController:
-             [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
-                               animated:YES completion:^{}];
+        [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #else
             [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #endif
