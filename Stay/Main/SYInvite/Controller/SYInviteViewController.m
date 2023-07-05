@@ -533,10 +533,12 @@
         shareSigImageView.left = shareStayLabel.right - 7;
         if(isPro) {
             [shareInviteView addSubview:shareProLabel];
-           shareProLabel.centerY =  shareUseLabel.centerY;
-            shareProLabel.left = shareUseLabel.right + 5;
+            shareProLabel.centerY =  shareStayLabel.centerY;
+            shareProLabel.left = shareStayLabel.right + 5;
             shareDateLabel.centerY = shareUseLabel.centerY;
             shareDateLabel.left = shareProLabel.right + 5;
+            
+            
         } else {
             shareDateLabel.centerY = shareUseLabel.centerY;
             shareDateLabel.left = shareStayLabel.right + 5;
