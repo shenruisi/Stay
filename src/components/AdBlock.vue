@@ -28,7 +28,7 @@
           <div class="delete-icon" @click="deleteRuleClick(item.uuid)"></div>
         </div>
       </template>
-      <div class="rule-note">{{ t('rule_note') }}</div>
+      <div class="rule-note">{{ switchStatus=='on'?t('rule_note_1'):t('rule_note') }}</div>
     </div>
     <div class="trusted-box" v-if="showTab == 'trusted'">
       <div class="trusted-site">
@@ -170,16 +170,16 @@ export default {
           console.log('trustedSite====',response);
           state.trustedSite = response.url;
           state.switchStatus = response.on&&response.on==true?'on':'off';
-          console.log('trustedSite==state.switchStatus==',state.switchStatus);
+          // console.log('trustedSite==state.switchStatus==',state.switchStatus);
         })
       })
     }
 
     const deleteWebTagRule = (uuid) => {
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'deleteTagRule', uuid}, (response) => {
-        console.log('deleteTagRule====',response, state.webRuleList);
+        // console.log('deleteTagRule====',response, state.webRuleList);
         state.webRuleList = state.webRuleList.filter(item=>{if(item.uuid!=uuid){return item;}});
-        console.log('state.webRuleList====', state.webRuleList);
+        // console.log('state.webRuleList====', state.webRuleList);
         global.browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
           const message = { from: 'popup', operate: 'refreshTargetTabs'};
           global.browser.tabs.sendMessage(tabs[0].id, message, response => {
@@ -495,11 +495,12 @@ export default {
       }
       .rule-note{
         width: 95%;
-        height: 25px;
+        // height: 25px;
+        line-height: 15px;
+        padding: 5px;
         border-radius: 8px;
         background-color: var(--s-main-f10);
         color: var(--s-main);
-        line-height: 25px;
         text-align: center;
         font-size: 13px;
         position: fixed;

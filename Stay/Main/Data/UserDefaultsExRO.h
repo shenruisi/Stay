@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName const _Nonnull UserDefaultsExROAvailablePointsDidChangeNotification;
+extern NSNotificationName const _Nonnull UserDefaultsExROAvailableGiftPointsDidChangeNotification;
+
 @interface UserDefaultsExRO : FCDisk<NSSecureCoding>
 
 @property (nonatomic, strong) NSString *deviceID;

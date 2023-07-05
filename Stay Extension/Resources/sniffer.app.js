@@ -119,6 +119,8 @@ function fetchRandomStr(randomStr, speedRandomStr){
         }else{
           if(/^\//i.test(downloadUrl)){
             downloadUrl = window.location.origin+downloadUrl;
+          }else{
+            downloadUrl = window.location.origin+window.location.pathname+downloadUrl;
           }
         }
       }
@@ -925,6 +927,20 @@ function fetchRandomStr(randomStr, speedRandomStr){
     else if(host.indexOf('hxaa79.com')>-1){
       videoInfo = handleHxaa79VideoInfo(videoSnifferDom);
     }
+    else if(host.indexOf('555yy4.com')>-1){
+      videoInfo = handle555yy4VideoInfo(videoSnifferDom);
+    }
+    else if(host.indexOf('web.telegram.org')>-1){
+      if(downloadUrl){
+        const sourcePath = decodeURIComponent(downloadUrl);
+        let fileNameArr = sourcePath.match(/"fileName":".*"/g);
+        if(fileNameArr && fileNameArr.length){
+          let fileName = fileNameArr[0];
+          fileName = fileName.replace('"fileName":', '');
+          title = fileName.replace(/"/g,'')
+        }
+      }
+    }
 
 
     if(videoInfo.downloadUrl){
@@ -1354,6 +1370,24 @@ function fetchRandomStr(randomStr, speedRandomStr){
     if(titleDom){
       videoInfo.title = titleDom.textContent;
     }
+    return videoInfo;
+  }
+
+  function handle555yy4VideoInfo(videoDom){
+    let videoInfo = {};
+    videoInfo.poster = videoDom.getAttribute('poster') || '';
+    videoInfo.downloadUrl = videoDom.getAttribute('src');
+    videoInfo.title = videoDom.getAttribute('title');
+    let videoTitle = window.parent.document.title;
+    // console.log('videoTitle------',videoTitle,window.parent.ep_title,window.parent.MAC.Title);
+    if(!videoTitle){
+      videoTitle = window.parent.ep_title;
+      
+    }
+    if(!videoTitle){
+      videoTitle = window.parent.MAC.Title;
+    }
+    videoInfo.title = videoTitle;
     return videoInfo;
   }
 

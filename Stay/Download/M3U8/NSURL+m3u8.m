@@ -65,11 +65,14 @@
     return nil;
 }
 
-- (NSURLRequest *)getRequest {
+- (NSURLRequest *)getRequest:(NSString *)range {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self];
     NSDictionary *headers = [self getHeaders];
     for (NSString *key in headers.allKeys) {
         [request addValue:headers[key] forHTTPHeaderField:key];
+    }
+    if (range.length > 0) {
+        [request addValue:range forHTTPHeaderField:@"Range"];
     }
     return request;
 }

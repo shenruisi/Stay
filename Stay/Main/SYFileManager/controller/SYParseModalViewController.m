@@ -174,9 +174,10 @@
     if (result != nil) {
         NSString *targetUrl = [[link substringWithRange:[result rangeAtIndex:0]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSURL *linkURL = [NSURL URLWithString:[targetUrl safeEncode]];
-        if (linkURL != nil && ([linkURL.lastPathComponent hasSuffix:@".mp4"]
-                               || [linkURL.lastPathComponent hasSuffix:@".m3u8"]
-                               || [linkURL.host containsString:@"googlevideo.com"])) {
+        if (linkURL != nil && ([[linkURL.lastPathComponent lowercaseString] hasSuffix:@".mp4"]
+                               || [[linkURL.lastPathComponent lowercaseString] hasSuffix:@".m3u8"]
+                               || [linkURL.host containsString:@"googlevideo.com"]
+                               || ([linkURL.host containsString:@"telegram"] && [[linkURL.path lowercaseString] containsString:@".mp4"]))) {
             SYDownloadModalViewController *cer = [[SYDownloadModalViewController alloc] init];
             cer.dic = [NSMutableDictionary dictionaryWithDictionary:self.dic];
             cer.dic[@"downloadUrl"] = targetUrl;

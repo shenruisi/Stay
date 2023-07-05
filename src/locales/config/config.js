@@ -49,6 +49,7 @@ export default {
     'blocker_enable': 'Enable',
     'blocker_info': 'Tag Content Blocker is not enabled',
     'rule_note': 'Tagging rules  that take effect on the currrent webpage',
+    'rule_note_1': 'The current web page is a trust site, the above rules are invalid.'
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -98,7 +99,8 @@ export default {
     'web_tag': '标记',
     'tag_rules': '规则',
     'trusted': '信任站点',
-    'rule_note': '在当前网页上生效的标记规则'
+    'rule_note': '在当前网页上生效的标记规则',
+    'rule_note_1': '当前网页为信任站点，以上规则已失效。'
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -148,7 +150,8 @@ export default {
     'web_tag': '標記',
     'tag_rules': '規則',
     'trusted': '信任站點',
-    'rule_note': '在當前網頁上生效的標記規則'
+    'rule_note': '在當前網頁上生效的標記規則',
+    'rule_note_1': '當前網頁為信任站點，以上規則已失效。'
   }
 }
 /* eslint-disable */

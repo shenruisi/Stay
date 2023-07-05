@@ -399,10 +399,12 @@ NSString * const SFExtensionMessageKey = @"message";
     }
     else if ([message[@"type"] isEqualToString:@"canTagAd"]){
         [SharedStorageManager shared].userDefaultsExRO = nil;
+        [SharedStorageManager shared].userDefaults = nil;
+        CGFloat tagConsumed = [SharedStorageManager shared].userDefaults.tagConsumed;
         CGFloat availablePoints = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
         CGFloat tagConsumePoints = [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints;
         body = @{
-            @"tag_ad" : @((availablePoints - tagConsumePoints) >= 0),
+            @"tag_ad" : @((availablePoints - tagConsumePoints - tagConsumed) >= 0),
             @"consume_points" : @(tagConsumePoints)
         };
     }

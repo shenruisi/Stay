@@ -362,21 +362,21 @@ PointProgress="點數獲取進度";
 InviteFriend="邀請好友";
 InviteToGetPoint="邀請好友獲取點數";
 InviteRule="邀請規則";
-InviteRuleDesc="分享您生成的卡片或者鏈接給您的朋友。如果您的朋友還有安裝過Stay，通過輸入您的邀請碼，您和您的朋友都會獲得相應的點數。如果您成功邀請5位朋友，您可以獲得200個Stay點數。";
+InviteRuleDesc="分享您生成的卡片或者鏈接給您的朋友。如果您的朋友還有安裝過Stay，通過輸入您的邀請碼，您和您的朋友都會獲得相應的點數。如果您成功邀請5位朋友，您可以獲得最多200個Stay點數。";
 
 HowToInvite="如何邀請好友？";
 HowToInviteDesc="查看在線指引";
 GenerateCard="生成卡片";
-ASafariExtension="A Safari Extension";
-inviteTipsPro="Scan to get gift points";
-inviteTips="Scan to download Stay on the AppStore";
+ASafariExtension="Safari瀏覽器擴展";
+inviteTipsPro="掃描二維碼獲取贈送點數";
+inviteTips="掃描二維碼查看來自`%@`的邀請";
 
 ShareCard="分享卡片";
 CopLink="分享鏈接";
 EditInfo="編輯卡片";
 GiftPointToFriend="贈送朋友點數";
 GetMorePoint="獲取更多點數";
-ConsumePoint="Consuming %@ Point to Download";
+ConsumePoint="消耗%@個點數開始下載";
 BacktoDownload="返回下載";
 TryAgain="稍後再試";
 HowToGift="如何贈送好友？";
@@ -390,7 +390,7 @@ PasteFromClipboard="從剪貼板粘貼";
 GetPoints="獲取點數";
 NoCodeSkip="沒有邀請/禮物碼，跳過";
 GiftYourPoint="贈送好友點數";
-UserLeft="位還可邀請";
+UserLeft="位還可贈送";
 IUseStay="我從";
 
 Points="點數";
@@ -401,9 +401,17 @@ GiftCodeHasExpired="禮物碼已失效";
 CodeNotFound="邀請/禮物碼不存在";
 
 
-StartInviting="Start Inviting";
-StartGifting="Start Gifting";
-PonitRules="What can Stay points do?";
+StartInviting="開始邀請";
+StartGifting="開始贈送";
+PonitRules="點數有什麼作用？";
 StayPoint="STAY點數";
 Confirm="確認";
 StayForm="Stay問卷";
+Viewed="已查看";
+Cover="封面";
+Color="文字顏色";
+GiftFriend ="贈送好友";
+Random="換一個";
+Reset="重置";
+
+NameNotNull="名稱不能為空";

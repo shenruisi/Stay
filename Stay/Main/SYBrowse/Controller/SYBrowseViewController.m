@@ -812,6 +812,15 @@ UIPopoverPresentationControllerDelegate
 - (void)didBeganSearch {
     self.searchStatus = YES;
     [_searchDatas removeAllObjects];
+    if(_searchTableView != nil) {
+        [NSLayoutConstraint activateConstraints:@[
+            [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
+            [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
+            [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
+            [_searchTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
+        ]];
+    }
+    
     [self.searchTableView reloadData];
 }
 
@@ -1122,16 +1131,16 @@ UIPopoverPresentationControllerDelegate
             }
             
             [self.searchDatas addObjectsFromArray:dic[@"biz"]];
-                    dispatch_async(dispatch_get_main_queue(),^{
+                dispatch_async(dispatch_get_main_queue(),^{
                         [self.searchTableView reloadData];
                     });
-                } failBlock:^(NSError * _Nonnull error) {
-                    dispatch_async(dispatch_get_main_queue(),^{
-                        [self.searchTableView reloadData];
-                    });
-                    
-                    _searchDataQuerying = false;
-                }];
+            } failBlock:^(NSError * _Nonnull error) {
+                dispatch_async(dispatch_get_main_queue(),^{
+                    [self.searchTableView reloadData];
+                });
+                
+                _searchDataQuerying = false;
+            }];
     });
 }
 
@@ -1445,7 +1454,6 @@ UIPopoverPresentationControllerDelegate
             [_searchTableView.leadingAnchor constraintEqualToAnchor:self.searchViewController.view.leadingAnchor],
             [_searchTableView.trailingAnchor constraintEqualToAnchor:self.searchViewController.view.trailingAnchor],
             [_searchTableView.topAnchor constraintEqualToAnchor:self.searchViewController.view.topAnchor constant:self.navigationBarBaseLine],
-//            [_searchTableView.heightAnchor constraintEqualToConstant:self.view.height - self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
             [_searchTableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height - self.navigationBarBaseLine]
         ]];
     }

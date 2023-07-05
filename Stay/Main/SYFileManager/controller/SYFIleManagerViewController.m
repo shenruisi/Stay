@@ -856,6 +856,7 @@ UIDocumentPickerDelegate
         UIContextualAction *changeTitleAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
             FCTab *tab = [FCShared tabManager].tabs[indexPath.row - 1];
             weakSelf.folderSlideController =  [[FolderSlideController alloc] initWithFolderTab:tab];
+            weakSelf.folderSlideController.baseCer = self;
             [self.folderSlideController show];
             [tableView setEditing:NO animated:YES];
         }];
@@ -1038,14 +1039,14 @@ UIDocumentPickerDelegate
 //    self.tableView.hidden = !isPro;
     
     
-#ifndef FC_MAC
-    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
-    if(nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstDownloadGuide"]){
-        self.sYDownloadPreviewController = [[SYDownloadPreviewController alloc] init];
-        [self.sYDownloadPreviewController show];
-        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstDownloadGuide"];
-    }
-#endif
+//#ifndef FC_MAC
+//    NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
+//    if(nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstDownloadGuide"]){
+//        self.sYDownloadPreviewController = [[SYDownloadPreviewController alloc] init];
+//        [self.sYDownloadPreviewController show];
+//        [groupUserDefaults setObject:@(YES) forKey:@"userDefaults.firstDownloadGuide"];
+//    }
+//#endif
     
     if( self.selectedIdx == 0) {
         [self.tableView reloadData];

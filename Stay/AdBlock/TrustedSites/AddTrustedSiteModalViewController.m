@@ -115,7 +115,7 @@ NSNotificationName const _Nonnull TrustedSiteDidAddNotification = @"app.notifica
     if (nil == _addButton){
         _addButton = [[FCButton alloc] init];
         [_addButton addTarget:self action:@selector(addAction:) forControlEvents:UIControlEventTouchUpInside];
-        [_addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Add", @"")
+        [_addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"settings.add", @"")
                                                                 attributes:@{
             NSForegroundColorAttributeName : FCStyle.fcSeparator,
             NSFontAttributeName : FCStyle.bodyBold
@@ -157,7 +157,7 @@ NSNotificationName const _Nonnull TrustedSiteDidAddNotification = @"app.notifica
         __weak AddTrustedSiteModalViewController *weakSelf = self;
         _domainElement.inputEntity.textChanged = ^(NSString * _Nonnull text) {
             if (text.length > 0){
-                [weakSelf.addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Add", @"")
+                [weakSelf.addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"settings.add", @"")
                                                                         attributes:@{
                     NSForegroundColorAttributeName : FCStyle.accent,
                     NSFontAttributeName : FCStyle.bodyBold
@@ -167,7 +167,7 @@ NSNotificationName const _Nonnull TrustedSiteDidAddNotification = @"app.notifica
                 weakSelf.addButton.layer.borderWidth = 1;
             }
             else{
-                [weakSelf.addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Add", @"")
+                [weakSelf.addButton setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"settings.add", @"")
                                                                         attributes:@{
                     NSForegroundColorAttributeName : FCStyle.fcSeparator,
                     NSFontAttributeName : FCStyle.bodyBold
