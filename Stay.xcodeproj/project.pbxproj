@@ -465,6 +465,11 @@
 		58AFD76429A1BA43001D412F /* ua.user.js in Resources */ = {isa = PBXBuildFile; fileRef = 58AFD76229A1BA43001D412F /* ua.user.js */; };
 		58C6637C2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
 		58C6637D2990E05F00B00110 /* VideoParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C6637B2990E05F00B00110 /* VideoParser.m */; };
+		58C70BD12A54029500B7715E /* blockerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 58C70BD02A54029500B7715E /* blockerList.json */; };
+		58C70BD42A54029500B7715E /* ContentBlockerRequestHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C70BD32A54029500B7715E /* ContentBlockerRequestHandler.m */; };
+		58C70BDA2A5405B800B7715E /* Stay Content Subscribe Mac.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58C70BCD2A54029400B7715E /* Stay Content Subscribe Mac.appex */; platformFilter = maccatalyst; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		58C70BDD2A54065800B7715E /* ContentFilterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1962B2A11FD2F00B88F39 /* ContentFilterManager.m */; };
+		58C70BDE2A54067200B7715E /* TrustedSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F1969B2A11FE9F00B88F39 /* TrustedSite.m */; };
 		58CF689E286D917900A52B2B /* message.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689D286D917800A52B2B /* message.js */; };
 		58CF68A0286D91B200A52B2B /* bootstrap.js in Resources */ = {isa = PBXBuildFile; fileRef = 58CF689F286D91B200A52B2B /* bootstrap.js */; };
 		58CFA5C928F2CC79004C5140 /* MacSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CFA5C828F2CC79004C5140 /* MacSplitViewController.m */; };
@@ -878,6 +883,13 @@
 			remoteGlobalIDString = 588202C6285A12B400B2721A;
 			remoteInfo = macOSNative;
 		};
+		58C70BDB2A5405B900B7715E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 58C70BCC2A54029400B7715E;
+			remoteInfo = "Stay Content Subscribe Mac";
+		};
 		58DA84A32A28846A009E37E6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 587688CC2719237E00F834A4 /* Project object */;
@@ -973,6 +985,7 @@
 				589741CA2868084B008FB897 /* macOSNative.bundle in Embed App Extensions */,
 				58F197402A15FA3800B88F39 /* Stay Content Tag Mac.appex in Embed App Extensions */,
 				58F1973D2A15FA3600B88F39 /* Stay Content Region Mac.appex in Embed App Extensions */,
+				58C70BDA2A5405B800B7715E /* Stay Content Subscribe Mac.appex in Embed App Extensions */,
 				58639CF7286447B200AA80D5 /* Stay-Mac Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -1360,6 +1373,12 @@
 		58AFD76229A1BA43001D412F /* ua.user.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ua.user.js; sourceTree = "<group>"; };
 		58C6637A2990E05F00B00110 /* VideoParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoParser.h; sourceTree = "<group>"; };
 		58C6637B2990E05F00B00110 /* VideoParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoParser.m; sourceTree = "<group>"; };
+		58C70BCD2A54029400B7715E /* Stay Content Subscribe Mac.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Stay Content Subscribe Mac.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58C70BD02A54029500B7715E /* blockerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = blockerList.json; sourceTree = "<group>"; };
+		58C70BD22A54029500B7715E /* ContentBlockerRequestHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentBlockerRequestHandler.h; sourceTree = "<group>"; };
+		58C70BD32A54029500B7715E /* ContentBlockerRequestHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentBlockerRequestHandler.m; sourceTree = "<group>"; };
+		58C70BD52A54029500B7715E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58C70BD62A54029500B7715E /* Stay_Content_Subscribe_Mac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Stay_Content_Subscribe_Mac.entitlements; sourceTree = "<group>"; };
 		58CB58D2F7543E33AB029E21 /* Pods-Stay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Stay.release.xcconfig"; path = "Target Support Files/Pods-Stay/Pods-Stay.release.xcconfig"; sourceTree = "<group>"; };
 		58CF689D286D917800A52B2B /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		58CF689F286D91B200A52B2B /* bootstrap.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bootstrap.js; sourceTree = "<group>"; };
@@ -1844,6 +1863,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		58C70BCA2A54029400B7715E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58DA84902A288310009E37E6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2252,6 +2278,7 @@
 				58F197072A15F93300B88F39 /* Stay Content Region Mac */,
 				58F197182A15F98A00B88F39 /* Stay Content Custom Mac */,
 				58F197292A15F99900B88F39 /* Stay Content Tag Mac */,
+				58C70BCF2A54029500B7715E /* Stay Content Subscribe Mac */,
 				587688D52719237E00F834A4 /* Products */,
 				58F7F4BC2743AABE00270873 /* Frameworks */,
 				61471BD8CEEC7081650F0787 /* Pods */,
@@ -2280,6 +2307,7 @@
 				58F197162A15F98900B88F39 /* Stay Content Custom Mac.appex */,
 				58F197272A15F99900B88F39 /* Stay Content Tag Mac.appex */,
 				58DA84932A288310009E37E6 /* Stay Content Subscribe.appex */,
+				58C70BCD2A54029400B7715E /* Stay Content Subscribe Mac.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2619,6 +2647,18 @@
 				58C6637B2990E05F00B00110 /* VideoParser.m */,
 			);
 			path = VideoParser;
+			sourceTree = "<group>";
+		};
+		58C70BCF2A54029500B7715E /* Stay Content Subscribe Mac */ = {
+			isa = PBXGroup;
+			children = (
+				58C70BD02A54029500B7715E /* blockerList.json */,
+				58C70BD22A54029500B7715E /* ContentBlockerRequestHandler.h */,
+				58C70BD32A54029500B7715E /* ContentBlockerRequestHandler.m */,
+				58C70BD52A54029500B7715E /* Info.plist */,
+				58C70BD62A54029500B7715E /* Stay_Content_Subscribe_Mac.entitlements */,
+			);
+			path = "Stay Content Subscribe Mac";
 			sourceTree = "<group>";
 		};
 		58D1B44D28893D27009BD608 /* IAP */ = {
@@ -3766,6 +3806,7 @@
 				58F1973C2A15FA3600B88F39 /* PBXTargetDependency */,
 				58F1973F2A15FA3800B88F39 /* PBXTargetDependency */,
 				58F197422A15FA3900B88F39 /* PBXTargetDependency */,
+				58C70BDC2A5405B900B7715E /* PBXTargetDependency */,
 			);
 			name = "Stay-Mac";
 			productName = Stay;
@@ -3788,6 +3829,23 @@
 			productName = macOSNative;
 			productReference = 588202C7285A12B400B2721A /* macOSNative.bundle */;
 			productType = "com.apple.product-type.bundle";
+		};
+		58C70BCC2A54029400B7715E /* Stay Content Subscribe Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58C70BD92A54029500B7715E /* Build configuration list for PBXNativeTarget "Stay Content Subscribe Mac" */;
+			buildPhases = (
+				58C70BC92A54029400B7715E /* Sources */,
+				58C70BCA2A54029400B7715E /* Frameworks */,
+				58C70BCB2A54029400B7715E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stay Content Subscribe Mac";
+			productName = "Stay Content Subscribe Mac";
+			productReference = 58C70BCD2A54029400B7715E /* Stay Content Subscribe Mac.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		58DA84922A288310009E37E6 /* Stay Content Subscribe */ = {
 			isa = PBXNativeTarget;
@@ -3936,6 +3994,9 @@
 					588202C6285A12B400B2721A = {
 						CreatedOnToolsVersion = 13.3.1;
 					};
+					58C70BCC2A54029400B7715E = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					58DA84922A288310009E37E6 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -3990,6 +4051,7 @@
 				58F197042A15F93200B88F39 /* Stay Content Region Mac */,
 				58F197152A15F98900B88F39 /* Stay Content Custom Mac */,
 				58F197262A15F99800B88F39 /* Stay Content Tag Mac */,
+				58C70BCC2A54029400B7715E /* Stay Content Subscribe Mac */,
 			);
 		};
 /* End PBXProject section */
@@ -4228,6 +4290,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58C70BCB2A54029400B7715E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58C70BD12A54029500B7715E /* blockerList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5053,6 +5123,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		58C70BC92A54029400B7715E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58C70BD42A54029500B7715E /* ContentBlockerRequestHandler.m in Sources */,
+				58C70BDE2A54067200B7715E /* TrustedSite.m in Sources */,
+				58C70BDD2A54065800B7715E /* ContentFilterManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		58DA848F2A288310009E37E6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5161,6 +5241,12 @@
 			isa = PBXTargetDependency;
 			target = 588202C6285A12B400B2721A /* macOSNative */;
 			targetProxy = 589741CB28680854008FB897 /* PBXContainerItemProxy */;
+		};
+		58C70BDC2A5405B900B7715E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = maccatalyst;
+			target = 58C70BCC2A54029400B7715E /* Stay Content Subscribe Mac */;
+			targetProxy = 58C70BDB2A5405B900B7715E /* PBXContainerItemProxy */;
 		};
 		58DA84A42A28846A009E37E6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -6177,6 +6263,68 @@
 			};
 			name = Release;
 		};
+		58C70BD72A54029500B7715E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Subscribe Mac/Stay_Content_Subscribe_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Subscribe Mac/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "6. Subscribe";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Subscribe-Mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		58C70BD82A54029500B7715E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Stay Content Subscribe Mac/Stay_Content_Subscribe_Mac.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J25G7D7AL3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Stay Content Subscribe Mac/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "6. Subscribe";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				INFOPLIST_KEY_WKWatchOnly = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dajiu.stay.pro.Stay-Content-Subscribe-Mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
 		58DA849F2A288311009E37E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6687,6 +6835,15 @@
 			buildConfigurations = (
 				588202C9285A12B400B2721A /* Debug */,
 				588202CA285A12B400B2721A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58C70BD92A54029500B7715E /* Build configuration list for PBXNativeTarget "Stay Content Subscribe Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58C70BD72A54029500B7715E /* Debug */,
+				58C70BD82A54029500B7715E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

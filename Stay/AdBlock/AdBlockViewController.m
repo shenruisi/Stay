@@ -430,7 +430,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (_tableView == tableView){
         ContentFilter *contentFilter = self.selectedDataSource[indexPath.row];
-        return (contentFilter.enable ? 70 : 100) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
+        return (contentFilter.enable ? 70 : 105) + [ContentFilterTableVewCell contentInset].top + [ContentFilterTableVewCell contentInset].bottom;
     }
     else if (_trustedSitesTableView == tableView){
         if (0 == indexPath.row){
@@ -833,12 +833,13 @@
         _tableView.sectionFooterHeight = 0;
         _tableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:_tableView];
-        
+
         [NSLayoutConstraint activateConstraints:@[
             [_tableView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
             [_tableView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
             [_tableView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
             [_tableView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-self.navigationController.tabBarController.tabBar.height]
+            
         ]];
     }
     

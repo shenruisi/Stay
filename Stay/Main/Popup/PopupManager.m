@@ -44,10 +44,10 @@ NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.
 - (instancetype)init{
     if (self = [super init]){
 #ifdef FC_MAC
-        //    [[NSNotificationCenter defaultCenter] addObserver:self
-        //                                             selector:@selector(onBecomeActive:)
-        //                                                 name:SVCDidBecomeActiveNotification
-        //                                               object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(onBecomeActive:)
+                                                         name:SVCDidBecomeActiveNotification
+                                                       object:nil];
 #else
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(onBecomeActive:)
