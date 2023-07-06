@@ -31,6 +31,7 @@ export default createStore({
     selectedTab: {id: 1, name: 'matched_scripts_tab'},
     tabAction: {matched_scripts_tab: 'tab_1', adblock_tab: 'tab_1'},
     darkmodeToggleStatus: 'auto',
+    darkmodeTheme: 'default',
     siteEnabled: true,
     longPressStatus: 'on',
     threeFingerTapStatus: 'on',
@@ -55,6 +56,9 @@ export default createStore({
     },
     darkmodeToggleStatusGetter: (state) => {
       return state.darkmodeToggleStatus;
+    },
+    darkmodeThemeGetter: (state) => {
+      return state.darkmodeTheme;
     },
     siteEnabledGetter: (state) => {
       return state.siteEnabled;
@@ -95,6 +99,9 @@ export default createStore({
     setDarkmodeToggleStatus: (state, data) => {
       state.darkmodeToggleStatus = data;
     },
+    setDarkmodeTheme: (state, data) => {
+      state.darkmodeTheme = data;
+    },
     setSiteEnabled: (state, data) => {
       state.siteEnabled = data;
     },
@@ -134,6 +141,9 @@ export default createStore({
     setDarkmodeToggleStatusAsync: ({ commit }, data) => {
       commit('setDarkmodeToggleStatus', data);
     },
+    setDarkmodeThemeAsync: ({ commit }, data) => {
+      commit('setDarkmodeTheme', data);
+    },
     setSiteEnabledAsync: ({ commit }, data) => {
       commit('setSiteEnabled', data);
     },
@@ -166,7 +176,7 @@ export default createStore({
       key: 'stay-popup-vuex-store-persistence',
       // paths是存储state中的那些数据，如果是模块下具体的数据需要加上模块名称，如moudleA.name
       // 修改state后触发才可以看到本地存储数据的的变化。
-      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro', 'darkmodeToggleStatus', 'siteEnabled', 'longPressStatus', 'threeFingerTapStatus', 'blockStatus', 'tabAction']
+      paths: ['moudleA', 'staySwitch', 'selectedTab', 'isStayPro', 'darkmodeToggleStatus', 'darkmodeTheme', 'siteEnabled', 'longPressStatus', 'threeFingerTapStatus', 'blockStatus', 'tabAction']
     })
   ]
 });

@@ -32,7 +32,7 @@
       <MatchedScript v-if="selectedTab.id==1" ref="matchedScriptRef" :currentTab="showTab"></MatchedScript>
       <template v-if="selectedTab.id==2">
         <template v-if="isStayPro">
-          <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
+          <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :darkmodeTheme="darkmodeTheme" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
           
         </template>
           <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
@@ -86,6 +86,7 @@ export default {
       browserUrl: '',
       isStayPro: store.state.isStayPro,
       darkmodeToggleStatus: store.state.darkmodeToggleStatus,
+      darkmodeTheme: store.state.darkmodeTheme,
       siteEnabled: store.state.siteEnabled,
       longPressStatus: store.state.longPressStatus,
       isMobile: isMobile(),
@@ -115,6 +116,8 @@ export default {
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
           store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
+          state.darkmodeTheme = request.darkmodeTheme;
+          store.commit('setDarkmodeTheme', state.darkmodeTheme);
           state.siteEnabled = request.enabled;
           store.commit('setSiteEnabled', state.siteEnabled);
         }

@@ -49,7 +49,16 @@ export default {
     'blocker_enable': 'Enable',
     'blocker_info': 'Tag Content Blocker is not enabled',
     'rule_note': 'Tagging rules  that take effect on the currrent webpage',
-    'rule_note_1': 'The current web page is a trust site, the above rules are invalid.'
+    'rule_note_1': 'The current web page is a trust site, the above rules are invalid.',
+    'dark_in_safari': 'Dark mode in Safari',
+    "darkmode_theme_default": "Default",
+    "darkmode_theme_eco": "Eco",
+    "darkmode_theme_eyecare": "Eye Care",
+    "dark_theme": 'Theme',
+    "dark_switch_on_web": 'Turn off dark mode on this domain',
+    'switch_on_note': 'Stay will never darken this page because the Dark Mode is <span style="font-weight: 700">turn off by you on this domian</span>.',
+    'switch_auto_note': 'Stay will never darken this page because the Dark Mode is <span style="font-weight: 700">currently not enabled on your device</span>.',
+    'switch_off_note': 'Stay will never darken this page because the Dark Mode <span style="font-weight: 700">in Safari is off</span>.'
   },
   "zh": {
     "matched_scripts_tab": "已匹配脚本",
@@ -100,7 +109,16 @@ export default {
     'tag_rules': '规则',
     'trusted': '信任站点',
     'rule_note': '在当前网页上生效的标记规则',
-    'rule_note_1': '当前网页为信任站点，以上规则已失效。'
+    'rule_note_1': '当前网页为信任站点，以上规则已失效。',
+    'dark_in_safari': 'Safari中暗黑模式',
+    "darkmode_theme_default": "默认",
+    "darkmode_theme_eco": "省电",
+    "darkmode_theme_eyecare": "护眼",
+    "dark_theme": '主題',
+    "dark_switch_on_web": '在此域名上关闭暗黑模式',
+    'switch_on_note': '停留在这个页面一直不会暗黑，是因为暗黑模式<span style="font-weight: 700">这个域名被你关闭了</span>.',
+    'switch_auto_note': '停留在这个页面一直不会暗黑，是因为暗黑模式<span style="font-weight: 700">当前在设备上没有激活</span>.',
+    'switch_off_note': '停留在这个页面一直不会暗黑，是因为暗黑模式<span style="font-weight: 700">在Safari中已关闭</span>.'
   },
   "zh_HK": {
     "matched_scripts_tab": "已匹配腳本",
@@ -151,7 +169,16 @@ export default {
     'tag_rules': '規則',
     'trusted': '信任站點',
     'rule_note': '在當前網頁上生效的標記規則',
-    'rule_note_1': '當前網頁為信任站點，以上規則已失效。'
+    'rule_note_1': '當前網頁為信任站點，以上規則已失效。',
+    'dark_in_safari': 'Safari中暗黑模式',
+    "darkmode_theme_default": "默認",
+    "darkmode_theme_eco": "省電",
+    "darkmode_theme_eyecare": "護眼",
+    "dark_theme": '主題',
+    'dark_switch_on_web': '在此域名上關閉暗黑模式',
+    'switch_on_note': '停留在這個頁面一直不回暗黑，是因為暗黑模式<span style="font-weight: 700">這個域名被你關閉了</span>.',
+    'switch_auto_note': '停留在這個頁面一直不回暗黑，是因為暗黑模式<span style="font-weight: 700">当前在设备上没有激活</span>.',
+    'switch_off_note': '停留在這個頁面一直不回暗黑，是因為暗黑模式<span style="font-weight: 700">在Safari中已關閉</span>.'
   }
 }
 /* eslint-disable */
