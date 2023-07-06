@@ -31,7 +31,7 @@ export default createStore({
     selectedTab: {id: 1, name: 'matched_scripts_tab'},
     tabAction: {matched_scripts_tab: 'tab_1', adblock_tab: 'tab_1'},
     darkmodeToggleStatus: 'auto',
-    darkmodeTheme: 'default',
+    darkmodeTheme: 'Default',
     siteEnabled: true,
     longPressStatus: 'on',
     threeFingerTapStatus: 'on',

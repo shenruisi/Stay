@@ -17,19 +17,6 @@
         <SwitchComp class="switch-rule" :switchStatus="hostSwitchStatus" @switchAction="allowEnabledAction" :disabled="'off'===darkmodeSwitchStatus"></SwitchComp>
       </div>
     </div>
-    <!-- <div class="darkmode-pro">
-      <div class="darkmode-setting">
-        <div class="setting"  v-for="(item, index) in darkmodeSettings" :class="{active: item.isSelected}" 
-        :status="item.status" :key="index" @click="dakmodeSetingClick(item.status)">{{ item.name }}</div>
-      </div>
-      <div class="darkmode-web">
-        <div class="check-box">
-          <input id="allowEnabled" @change='changeWebsiteAllowEnabled($event)' :checked="siteEnabled" :disabled="'off'===darkmodeToggleStatus" type="checkbox" class="allow" />
-        </div>
-        <input id="domainInput" class="website-input" v-model="hostName" type="text" disabled />
-      </div>
-      <div id="darkmodeAllowNote" class="darkmode-note">{{ siteEnabled ? t('darkmode_enabled'):t('darkmode_disabled') }}</div>
-    </div> -->
   </div>
 </template>
 
@@ -57,7 +44,7 @@ export default {
       isStayPro: store.state.isStayPro,
       hostName,
       darkmodeSwitchStatus: store.state.darkmodeToggleStatus,
-      darkmodeTheme: store.state.darkmodeTheme,
+      darkmodeTheme: props.darkmodeTheme,
       siteEnabled: store.state.siteEnabled,
       hostSwitchStatus: store.state.siteEnabled?'on':'off',
       switchList: [
@@ -66,9 +53,9 @@ export default {
         {value:'off', name: t('darkmode_off'), isSelected: props.darkmodeToggleStatus==='off'}
       ],
       themeList: [
-        {value:'default', name: t('darkmode_theme_default'), isSelected: props.darkmodeTheme==='default'},
-        {value:'eco', name: t('darkmode_theme_eco'), isSelected: props.darkmodeTheme==='eco'},
-        {value:'eyecare', name: t('darkmode_theme_eyecare'), isSelected: props.darkmodeTheme==='eyecare'}
+        {value:'Default', name: t('darkmode_theme_default'), isSelected: props.darkmodeTheme==='Default'},
+        {value:'Eco', name: t('darkmode_theme_eco'), isSelected: props.darkmodeTheme==='Eco'},
+        {value:'Eyecare', name: t('darkmode_theme_eyecare'), isSelected: props.darkmodeTheme==='Eyecare'}
       ],
       switchNote: '',
       themeNote: '',
@@ -83,10 +70,16 @@ export default {
         state.siteEnabled = newProps.siteEnabled;
         state.hostSwitchStatus = newProps.siteEnabled?'on':'off';
         state.darkmodeSwitchStatus = newProps.darkmodeToggleStatus;
+        state.darkmodeTheme = newProps.darkmodeTheme;
         state.switchList = [
-          {value:'on', name: t('darkmode_on'), isSelected: props.darkmodeToggleStatus==='on'},
-          {value:'auto', name: t('darkmode_auto'), isSelected: props.darkmodeToggleStatus==='auto'},
-          {value:'off', name: t('darkmode_off'), isSelected: props.darkmodeToggleStatus==='off'}
+          {value:'on', name: t('darkmode_on'), isSelected: newProps.darkmodeToggleStatus==='on'},
+          {value:'auto', name: t('darkmode_auto'), isSelected: newProps.darkmodeToggleStatus==='auto'},
+          {value:'off', name: t('darkmode_off'), isSelected: newProps.darkmodeToggleStatus==='off'}
+        ];
+        state.themeList = [
+          {value:'Default', name: t('darkmode_theme_default'), isSelected: newProps.darkmodeTheme==='Default'},
+          {value:'Eco', name: t('darkmode_theme_eco'), isSelected: newProps.darkmodeTheme==='Eco'},
+          {value:'Eyecare', name: t('darkmode_theme_eyecare'), isSelected: newProps.darkmodeTheme==='Eyecare'}
         ];
       },
       { immediate: true, deep: true }
@@ -106,6 +99,7 @@ export default {
           item.isSelected = false;
         }
       });
+      store.commit('setDarkmodeToggleStatus', state.darkmodeSwitchStatus);
       handleDarkmodeProSetting();
     }
 
@@ -128,38 +122,31 @@ export default {
       return switchNote;
     }
 
-    // const dakmodeSetingClick = (status) => {
-    //   console.log('dakmodeSetingClick-----',status, state.darkmodeToggleStatus);
-    //   if(state.darkmodeToggleStatus === status){
-    //     return;
-    //   }
-    //   state.darkmodeToggleStatus = status;
-    //   state.darkmodeSettings.forEach(item => {
-    //     if(item.status === status){
-    //       item.isSelected = true;
-    //     }else{
-    //       item.isSelected = false;
-    //     }
-    //   });
-    //   handleDarkmodeProSetting();
-    // }
-
     const handleDarkmodeProSetting = () => {
-      if (state.darkmodeSwitchStatus){
-        store.commit('setDarkmodeToggleStatus', state.darkmodeSwitchStatus);
-        // console.log('state.darkmodeToggleStatus-----',state.darkmodeToggleStatus);
-        global.browser.runtime.sendMessage({ type: 'popup', operate: 'DARKMODE_SETTING', isStayAround: state.isStayPro?'a':'b', status: state.darkmodeSwitchStatus, domain: state.hostName, enabled: state.siteEnabled }, (response) => {
-          // console.log("DARKMODE_SETTING response----", response);
-        })
-      }
+      console.log('handleDarkmodeProSetting request----------', state.darkmodeSwitchStatus, state.darkmodeTheme);
+      global.browser.runtime.sendMessage({ type: 'popup', operate: 'DARKMODE_SETTING', isStayAround: state.isStayPro?'a':'b', status: state.darkmodeSwitchStatus, darkmodeColorTheme: state.darkmodeTheme, domain: state.hostName, enabled: state.siteEnabled }, (response) => {
+        // console.log("DARKMODE_SETTING response----", response);
+      })
     }
 
-    const themeSwitchAction = (theme) => {
-      console.log('themeSwitchAction-----',theme)
+    const themeSwitchAction = (darkmodeTheme) => {
+      console.log('themeSwitchAction-----',darkmodeTheme)
+      if(state.darkmodeTheme === darkmodeTheme){
+        return;
+      }
+      state.darkmodeTheme = darkmodeTheme;
+      state.themeList.forEach(item => {
+        if(item.value === darkmodeTheme){
+          item.isSelected = true;
+        }else{
+          item.isSelected = false;
+        }
+      });
+      store.commit('setDarkmodeTheme', state.darkmodeTheme);
+      handleDarkmodeProSetting();
     }
 
     const allowEnabledAction = (hostSwitchStatus) => {
-      // state.siteEnabled = siteEnabled;
       state.hostSwitchStatus = hostSwitchStatus
       state.siteEnabled = hostSwitchStatus=='on'?true:false;
       store.commit('setSiteEnabled', state.siteEnabled);
@@ -167,12 +154,7 @@ export default {
     }
 
     state.switchNote = handleSwitchNote(props.darkmodeToggleStatus);
-    // const changeWebsiteAllowEnabled = (event) => {
-    //   const disabled = event.target.checked;
-    //   state.siteEnabled = disabled;
-    //   store.commit('setSiteEnabled', state.siteEnabled);
-    //   handleDarkmodeProSetting();
-    // }
+    
     
     return {
       ...toRefs(state),
@@ -247,117 +229,6 @@ export default {
       border-radius: 10px;
       user-select: none;
     }
-  }
-  
-  .darkmode-setting{
-    margin: 0 auto 15px auto;
-    display: flex;
-    /* flex: 1; */
-    background: var(--dm-bg);
-    height: 26px;
-    width: 100%;
-    border: 1px solid var(--s-main);
-    border-radius: 7px;
-    justify-content: space-between;
-    justify-items: center;
-    align-items: center;
-    position: relative;
-    user-select: none;
-  }
-  .darkmode-setting .setting:first-child{
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-  .darkmode-setting .setting:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-  }
-  .darkmode-setting .setting{
-    width: 33.33%;
-    color: var(--dm-font);
-    font-size: 13px;
-    cursor: pointer;
-    font-weight: 400;
-    height: 100%;
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    flex-flow: column;
-    user-select: none;
-  }
-  .darkmode-pro .darkmode-setting .active {
-    color: var(--dm-bg);
-    background: var(--s-main);
-  }
-  .darkmode-web{
-    border-radius: 7px;
-    border: 1px solid var(--s-main);
-    position: relative;
-    margin-bottom: 10px;
-    width: 100%; 
-    background: var(--dm-bg);
-  }
-  .darkmode-web input.website-input{
-    width: 100%;
-    padding: 0 30px 0 10px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 12px;
-    opacity:1;
-    border-radius:7px;
-    background: var(--dm-bg);
-    color: var(--dm-font);
-  }
-  .check-box{
-    position: absolute;
-    right: 2px;
-    top: 2px;
-    width: 26px;
-    height: 20px;     
-    z-index: 999;  
-  }
-  .check-box input.allow{
-    cursor: pointer;
-    position: relative;
-    width: 11px;
-    height: 11px;
-    background: var(--dm-bg);
-    color: var(--dm-font);
-  }
-  input[type='checkbox']:disabled::after {
-    opacity: 0.4;
-  }
-  input[type=checkbox]::after {
-    position: absolute;
-    top: -2px;
-    right: 0px;
-    background: var(--dm-bg);
-    color: var(--dm-bg);
-    height: 12px;
-    width: 12px;
-    display: inline-block;
-    visibility: visible;
-    text-align: center;
-    content: '';
-    border-radius: 2px;
-    box-sizing: border-box;
-    border: 1px solid var(--s-main);
-  }
-  input[type='checkbox']:checked::after {
-    content: '✓';
-    font-size: 10px;
-    line-height: 10px;
-    font-family: system-ui, -apple-system;
-    font-weight: bold;
-    color: var(--dm-bg);
-    background-color: var(--s-main);
-  }
-  .darkmode-note{
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--dm-font-3);
   }
 }
 </style>

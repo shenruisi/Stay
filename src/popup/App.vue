@@ -116,7 +116,7 @@ export default {
           store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
           store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
-          state.darkmodeTheme = request.darkmodeTheme;
+          state.darkmodeTheme = request.darkmodeColorTheme;
           store.commit('setDarkmodeTheme', state.darkmodeTheme);
           state.siteEnabled = request.enabled;
           store.commit('setSiteEnabled', state.siteEnabled);
