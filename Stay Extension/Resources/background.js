@@ -1529,15 +1529,15 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
     const ECO_COLORSCHEME = {
         lightScheme: DEFAULT_COLORS.lightScheme,
         darkScheme: {
-            background: "#ffffcc",
-            text: "#695011"
+            background: "#000000",
+            text: "#969696"
         }
     };
     const EYECARE_COLORSCHEME = {
         lightScheme: DEFAULT_COLORS.lightScheme,
         darkScheme: {
-            background: "#000000",
-            text: "#969696"
+            background: "#ffffcc",
+            text: "#695011"
         }
     };
 
