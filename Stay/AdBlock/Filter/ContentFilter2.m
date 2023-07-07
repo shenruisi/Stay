@@ -59,6 +59,7 @@ NSNotificationName const _Nonnull ContentFilterDidAddOrRemoveNotification = @"ap
 
     if (daysBetween >= days || focus) {
         NSLog(@"Start update ContentBlockerWithIdentifier:%@",self.contentBlockerIdentifier);
+        
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.downloadUrl]];
         [request setHTTPMethod:@"GET"];
         [[[NSURLSession sharedSession] dataTaskWithRequest:request

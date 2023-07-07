@@ -1,6 +1,6 @@
 <template>
   <label class="switch">
-    <input type="checkbox" :checked="switchStatus=='on'" @change='switchAction($event)'>
+    <input type="checkbox" :checked="switchStatus=='on'" @change='switchAction($event)' :disabled="disabled">
     <span class="slider"></span>
   </label>
 </template>
@@ -8,11 +8,21 @@
 import { reactive, getCurrentInstance, inject, toRefs, watch } from 'vue'
 export default ({
   name: 'SwitchComp',
-  props: ['switchStatus'],
+  props: {
+    switchStatus: {
+      type: String,
+      default: 'on'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   setup (props, {emit, expose}) {
     const state = reactive({
       
       switchStatus: props.switchStatus,
+      disabled: props.disabled 
       
     });
     watch(
@@ -20,6 +30,7 @@ export default ({
       (newProps) => {
         // 接收到的props的值
         state.switchStatus = newProps.switchStatus;
+        state.disabled = newProps.disabled;
       },
       { immediate: true, deep: true }
     );
@@ -80,5 +91,11 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(20px);
+}
+input[disabled] + .slider {
+  /* 添加禁用状态的样式 */
+  opacity: 0.6;
+  cursor: not-allowed;
+  /* 其他样式 */
 }
 </style>

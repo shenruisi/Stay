@@ -1,17 +1,21 @@
 <template>
   <div class="popup-darkmode-wrapper">
-    <div class="darkmode-pro">
-      <div class="darkmode-setting">
-        <div class="setting"  v-for="(item, index) in darkmodeSettings" :class="{active: item.isSelected}" 
-        :status="item.status" :key="index" @click="dakmodeSetingClick(item.status)">{{ item.name }}</div>
+    <div class="darkmode-switch-box">
+      <div class="title">{{ t('dark_in_safari') }}</div>
+      <SwitchButtonComp :buttonList="switchList" @switchAction="darkmodeSwitchAction" class="switch-comp"></SwitchButtonComp>
+      <div class="switch-note" v-html="switchNote"></div>
+    </div>
+    <div class="darkmode-theme-box">
+      <div class="title">{{ t('dark_theme') }}</div>
+      <SwitchButtonComp :buttonList="themeList" @switchAction="themeSwitchAction" class="switch-comp"></SwitchButtonComp>
+      <div class="theme-note">{{ themeNote }}</div>
+    </div>
+    <div class="darkmode-host-box">
+      <div class="title">{{ t('dark_switch_on_web') }}</div>
+      <div class="switch-on-host">
+        <div class="host-info">{{ hostName }}</div>
+        <SwitchComp class="switch-rule" :switchStatus="hostSwitchStatus" @switchAction="allowEnabledAction" :disabled="'off'===darkmodeSwitchStatus"></SwitchComp>
       </div>
-      <div class="darkmode-web">
-        <div class="check-box">
-          <input id="allowEnabled" @change='changeWebsiteAllowEnabled($event)' :checked="siteEnabled" :disabled="'off'===darkmodeToggleStatus" type="checkbox" class="allow" />
-        </div>
-        <input id="domainInput" class="website-input" v-model="hostName" type="text" disabled />
-      </div>
-      <div id="darkmodeAllowNote" class="darkmode-note">{{ siteEnabled ? t('darkmode_enabled'):t('darkmode_disabled') }}</div>
     </div>
   </div>
 </template>
@@ -20,27 +24,43 @@
 import { reactive, inject, toRefs, watch } from 'vue'
 import { useI18n } from 'vue-i18n';
 import { getHostname } from '../utils/util'
+import SwitchButtonComp from '../components/SwitchButtonComp.vue'
+import SwitchComp from './SwitchComp.vue';
 export default {
   name: 'DarkModeComp',
-  props:['siteEnabled', 'darkmodeToggleStatus', 'browserUrl'],
+  props:['siteEnabled', 'darkmodeToggleStatus', 'browserUrl', 'darkmodeTheme'],
+  components:{
+    SwitchButtonComp,
+    SwitchComp
+  },
   setup (props, {emit, expose}) {
     const { t, tm } = useI18n();
     const global = inject('global');
     const store = global.store;
     const hostName = getHostname(props.browserUrl || store.state.browserUrl);
+    
     const state = reactive({
       browserUrl: store.state.browserUrl,
       isStayPro: store.state.isStayPro,
       hostName,
-      darkmodeToggleStatus: store.state.darkmodeToggleStatus,
+      darkmodeSwitchStatus: store.state.darkmodeToggleStatus,
+      darkmodeTheme: props.darkmodeTheme,
       siteEnabled: store.state.siteEnabled,
-      darkmodeSettings: [
-        {status:'on', name: t('darkmode_on'), isSelected: props.darkmodeToggleStatus==='on'},
-        {status:'auto', name: t('darkmode_auto'), isSelected: props.darkmodeToggleStatus==='auto'},
-        {status:'off', name: t('darkmode_off'), isSelected: props.darkmodeToggleStatus==='off'}
-      ]
+      hostSwitchStatus: store.state.siteEnabled?'on':'off',
+      switchList: [
+        {value:'on', name: t('darkmode_on'), isSelected: props.darkmodeToggleStatus==='on'},
+        {value:'auto', name: t('darkmode_auto'), isSelected: props.darkmodeToggleStatus==='auto'},
+        {value:'off', name: t('darkmode_off'), isSelected: props.darkmodeToggleStatus==='off'}
+      ],
+      themeList: [
+        {value:'Default', name: t('darkmode_theme_default'), isSelected: props.darkmodeTheme==='Default'},
+        {value:'Eco', name: t('darkmode_theme_eco'), isSelected: props.darkmodeTheme==='Eco'},
+        {value:'Eyecare', name: t('darkmode_theme_eyecare'), isSelected: props.darkmodeTheme==='Eyecare'}
+      ],
+      switchNote: '',
+      themeNote: '',
     });
-
+    console.log('siteEnabled----',state.siteEnabled)
     watch(
       props,
       (newProps) => {
@@ -48,55 +68,101 @@ export default {
         state.browserUrl = newProps.browserUrl;
         state.hostName = getHostname(newProps.browserUrl);
         state.siteEnabled = newProps.siteEnabled;
-        state.darkmodeToggleStatus = newProps.darkmodeToggleStatus;
-        state.darkmodeSettings = [
-          {status:'on', name: t('darkmode_on'), isSelected: newProps.darkmodeToggleStatus==='on'},
-          {status:'auto', name: t('darkmode_auto'), isSelected: newProps.darkmodeToggleStatus==='auto'},
-          {status:'off', name: t('darkmode_off'), isSelected: newProps.darkmodeToggleStatus==='off'}
-        ]
+        state.hostSwitchStatus = newProps.siteEnabled?'on':'off';
+        state.darkmodeSwitchStatus = newProps.darkmodeToggleStatus;
+        state.darkmodeTheme = newProps.darkmodeTheme;
+        state.switchList = [
+          {value:'on', name: t('darkmode_on'), isSelected: newProps.darkmodeToggleStatus==='on'},
+          {value:'auto', name: t('darkmode_auto'), isSelected: newProps.darkmodeToggleStatus==='auto'},
+          {value:'off', name: t('darkmode_off'), isSelected: newProps.darkmodeToggleStatus==='off'}
+        ];
+        state.themeList = [
+          {value:'Default', name: t('darkmode_theme_default'), isSelected: newProps.darkmodeTheme==='Default'},
+          {value:'Eco', name: t('darkmode_theme_eco'), isSelected: newProps.darkmodeTheme==='Eco'},
+          {value:'Eyecare', name: t('darkmode_theme_eyecare'), isSelected: newProps.darkmodeTheme==='Eyecare'}
+        ];
       },
       { immediate: true, deep: true }
     );
 
-    const dakmodeSetingClick = (status) => {
-      console.log('dakmodeSetingClick-----',status, state.darkmodeToggleStatus);
-      if(state.darkmodeToggleStatus === status){
+    const darkmodeSwitchAction = (status) => {
+      console.log('dakmodeSetingClick-----',status, state.darkmodeSwitchStatus);
+      if(state.darkmodeSwitchStatus === status){
         return;
       }
-      state.darkmodeToggleStatus = status;
-      state.darkmodeSettings.forEach(item => {
-        if(item.status === status){
+      state.darkmodeSwitchStatus = status;
+      state.switchList.forEach(item => {
+        if(item.value === status){
+          item.isSelected = true;
+          state.switchNote = handleSwitchNote(status);
+        }else{
+          item.isSelected = false;
+        }
+      });
+      store.commit('setDarkmodeToggleStatus', state.darkmodeSwitchStatus);
+      handleDarkmodeProSetting();
+    }
+
+    const handleSwitchNote = (switchStatus) => {
+      if(!switchStatus){
+        return;
+      }
+      let switchNote = '';
+      switch(switchStatus){
+        case 'on':
+          switchNote = t('switch_on_note');
+          break;
+        case 'off':
+          switchNote = t('switch_off_note');
+          break;
+        case 'auto':
+          switchNote = t('switch_auto_note');
+          break;
+      }
+      return switchNote;
+    }
+
+    const handleDarkmodeProSetting = () => {
+      console.log('handleDarkmodeProSetting request----------', state.darkmodeSwitchStatus, state.darkmodeTheme);
+      global.browser.runtime.sendMessage({ type: 'popup', operate: 'DARKMODE_SETTING', isStayAround: state.isStayPro?'a':'b', status: state.darkmodeSwitchStatus, darkmodeColorTheme: state.darkmodeTheme, domain: state.hostName, enabled: state.siteEnabled }, (response) => {
+        // console.log("DARKMODE_SETTING response----", response);
+      })
+    }
+
+    const themeSwitchAction = (darkmodeTheme) => {
+      console.log('themeSwitchAction-----',darkmodeTheme)
+      if(state.darkmodeTheme === darkmodeTheme){
+        return;
+      }
+      state.darkmodeTheme = darkmodeTheme;
+      state.themeList.forEach(item => {
+        if(item.value === darkmodeTheme){
           item.isSelected = true;
         }else{
           item.isSelected = false;
         }
       });
+      store.commit('setDarkmodeTheme', state.darkmodeTheme);
       handleDarkmodeProSetting();
     }
 
-    const handleDarkmodeProSetting = () => {
-      if (state.darkmodeToggleStatus){
-        store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
-        // console.log('state.darkmodeToggleStatus-----',state.darkmodeToggleStatus);
-        global.browser.runtime.sendMessage({ type: 'popup', operate: 'DARKMODE_SETTING', isStayAround: state.isStayPro?'a':'b', status: state.darkmodeToggleStatus, domain: state.hostName, enabled: state.siteEnabled }, (response) => {
-          // console.log("DARKMODE_SETTING response----", response);
-        })
-      }
-    }
-
-    const changeWebsiteAllowEnabled = (event) => {
-      const disabled = event.target.checked;
-      state.siteEnabled = disabled;
+    const allowEnabledAction = (hostSwitchStatus) => {
+      state.hostSwitchStatus = hostSwitchStatus
+      state.siteEnabled = hostSwitchStatus=='on'?true:false;
       store.commit('setSiteEnabled', state.siteEnabled);
       handleDarkmodeProSetting();
     }
+
+    state.switchNote = handleSwitchNote(props.darkmodeToggleStatus);
+    
     
     return {
       ...toRefs(state),
       t,
       tm,
-      dakmodeSetingClick,
-      changeWebsiteAllowEnabled
+      darkmodeSwitchAction,
+      themeSwitchAction,
+      allowEnabledAction
     };
   }
 }
@@ -104,118 +170,65 @@ export default {
 
 <style lang="less" scoped>
 .popup-darkmode-wrapper{
-  width: 78%;
+  width: 100%;
   margin: 0 auto;
-  padding: 20px 0;
-  .darkmode-setting{
-    margin: 0 auto 15px auto;
-    display: flex;
-    /* flex: 1; */
-    background: var(--dm-bg);
-    height: 26px;
+  padding: 10px;
+  .darkmode-switch-box, .darkmode-theme-box, .darkmode-host-box{
     width: 100%;
-    border: 1px solid var(--s-main);
-    border-radius: 7px;
-    justify-content: space-between;
-    justify-items: center;
-    align-items: center;
-    position: relative;
-    user-select: none;
-  }
-  .darkmode-setting .setting:first-child{
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-  .darkmode-setting .setting:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-  }
-  .darkmode-setting .setting{
-    width: 33.33%;
-    color: var(--dm-font);
-    font-size: 13px;
-    cursor: pointer;
-    font-weight: 400;
-    height: 100%;
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    justify-items: center;
-    text-align: center;
-    flex-flow: column;
-    user-select: none;
-  }
-  .darkmode-pro .darkmode-setting .active {
-    color: var(--dm-bg);
-    background: var(--s-main);
-  }
-  .darkmode-web{
-    border-radius: 7px;
-    border: 1px solid var(--s-main);
-    position: relative;
-    margin-bottom: 10px;
-    width: 100%; 
-    background: var(--dm-bg);
-  }
-  .darkmode-web input.website-input{
-    width: 100%;
-    padding: 0 30px 0 10px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 12px;
-    opacity:1;
-    border-radius:7px;
-    background: var(--dm-bg);
-    color: var(--dm-font);
-  }
-  .check-box{
-    position: absolute;
-    right: 2px;
-    top: 2px;
-    width: 26px;
-    height: 20px;     
-    z-index: 999;  
-  }
-  .check-box input.allow{
-    cursor: pointer;
-    position: relative;
-    width: 11px;
-    height: 11px;
-    background: var(--dm-bg);
-    color: var(--dm-font);
-  }
-  input[type='checkbox']:disabled::after {
-    opacity: 0.4;
-  }
-  input[type=checkbox]::after {
-    position: absolute;
-    top: -2px;
-    right: 0px;
-    background: var(--dm-bg);
-    color: var(--dm-bg);
-    height: 12px;
-    width: 12px;
-    display: inline-block;
-    visibility: visible;
-    text-align: center;
-    content: '';
-    border-radius: 2px;
-    box-sizing: border-box;
-    border: 1px solid var(--s-main);
-  }
-  input[type='checkbox']:checked::after {
-    content: '✓';
-    font-size: 10px;
-    line-height: 10px;
-    font-family: system-ui, -apple-system;
-    font-weight: bold;
-    color: var(--dm-bg);
-    background-color: var(--s-main);
-  }
-  .darkmode-note{
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--dm-font-3);
+    .title{
+      padding: 5px;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--dm-font-2);
+      text-align: left;
+    }
+    .switch-comp{
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .switch-on-host{
+      width: 100%;
+      margin-bottom: 10px;
+      height: 42px;
+      padding: 8px 80px 8px 8px;
+      width: 100%;
+      border: 1px solid var(--dm-bd);
+      background-color: var(--dm-bg);
+      border-radius: 10px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      position: relative;
+      .host-info{
+        width: 100%;
+        height: 100%;
+        text-align: left;
+        color: var(--dm-font);
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        -webkit-box-orient: vertical;
+        user-select: none;
+      }
+      .switch-rule{
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    .switch-note{
+      margin-bottom: 10px;
+      width: 100%;
+      background-color: var(--s-main-f10);
+      color: var(--s-main);
+      font-size: 16px;
+      text-align: left;
+      padding: 12px;
+      border-radius: 10px;
+      user-select: none;
+    }
   }
 }
 </style>

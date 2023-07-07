@@ -1507,6 +1507,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         selectionColor: "auto",
         styleSystemControls: !isCSSColorSchemePropSupported,
         lightColorScheme: "Default",
+        // Default,Eco,Eyecare
         darkColorScheme: "Default",
         immediateModify: false
     };
@@ -1522,6 +1523,21 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 backgroundColor: DEFAULT_COLORS.darkScheme.background,
                 textColor: DEFAULT_COLORS.darkScheme.text
             }
+        }
+    };
+
+    const ECO_COLORSCHEME = {
+        lightScheme: DEFAULT_COLORS.lightScheme,
+        darkScheme: {
+            background: "#000000",
+            text: "#969696"
+        }
+    };
+    const EYECARE_COLORSCHEME = {
+        lightScheme: DEFAULT_COLORS.lightScheme,
+        darkScheme: {
+            background: "#ffffcc",
+            text: "#695011"
         }
     };
 
@@ -1543,6 +1559,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             latitude: null,
             longitude: null
         },
+        // DEFAULT_THEME中darkColorScheme：Default,Eco,Eyecare
         stay_theme: DEFAULT_THEME,
         stay_presets: [],
         stay_customThemes: [],
@@ -3197,6 +3214,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                             const mode = this.autoState === "scheme-dark" ? 1 : 0;
                             theme = {...theme, mode};
                         }
+                        
                         const isIFrame = frameUrl != null;
                         const detectDarkTheme = !isIFrame && settings.stay_detectDarkTheme && !isPDF(url);
                         const fixes = getDynamicThemeFixesFor(
@@ -3282,6 +3300,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         from: "background", 
                         isStayAround: settings["isStayAround"],
                         darkmodeToggleStatus: settings["toggleStatus"], 
+                        darkmodeColorTheme: settings.stay_theme.darkColorScheme,
                         enabled: enabled,
                         operate: "giveDarkmodeConfig" 
                     });
@@ -3329,9 +3348,38 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     else if("DARKMODE_SETTING" === request.operate){
                         let setting = {...this.user.settings};
                         const toggleStatus = request.status;
+                        const darkmodeColorTheme = request.darkmodeColorTheme;
                         let isStayAround = request.isStayAround;
                         setting["toggleStatus"] = toggleStatus
                         setting["isStayAround"] = isStayAround
+                        // if(setting.stay_theme.darkColorScheme != darkmodeColorTheme){
+                        //     let theme = setting.stay_theme;
+                        //     if(darkmodeColorTheme == "Eco"){
+                        //         theme.darkSchemeBackgroundColor = ECO_COLORSCHEME.darkScheme.background;
+                        //         theme.darkSchemeTextColor = ECO_COLORSCHEME.darkScheme.text;
+                        //         theme.darkColorScheme = "Eco";
+                        //     }else if(darkmodeColorTheme == "Eyecare"){
+                        //         theme.darkSchemeBackgroundColor = EYECARE_COLORSCHEME.darkScheme.background;
+                        //         theme.darkSchemeTextColor = EYECARE_COLORSCHEME.darkScheme.text;
+                        //         theme.darkColorScheme = "Eyecare"
+                        //     }else{
+                        //         theme = {...DEFAULT_THEME};
+                        //     }
+                        //     setting.stay_theme = theme
+                        // }
+                        let theme = setting.stay_theme;
+                            if(darkmodeColorTheme == "Eco"){
+                                theme.darkSchemeBackgroundColor = ECO_COLORSCHEME.darkScheme.background;
+                                theme.darkSchemeTextColor = ECO_COLORSCHEME.darkScheme.text;
+                                theme.darkColorScheme = "Eco";
+                            }else if(darkmodeColorTheme == "Eyecare"){
+                                theme.darkSchemeBackgroundColor = EYECARE_COLORSCHEME.darkScheme.background;
+                                theme.darkSchemeTextColor = EYECARE_COLORSCHEME.darkScheme.text;
+                                theme.darkColorScheme = "Eyecare"
+                            }else{
+                                theme = {...DEFAULT_THEME};
+                            }
+                            setting.stay_theme = theme
                         let siteListDisabled = setting["siteListDisabled"];
                         let domain = request.domain;
                         let enabled = request.enabled;
@@ -3481,7 +3529,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             this.user.set(settings);
             if (
                 prev.siteListDisabled.length !== settings.siteListDisabled.length || 
-                prev.toggleStatus !== settings.toggleStatus
+                prev.toggleStatus !== settings.toggleStatus ||
+                prev.stay_theme.darkColorScheme !== settings.stay_theme.darkColorScheme
                 // prev.automation !== this.user.settings.automation ||
                 // prev.time.activation !== this.user.settings.time.activation ||
                 // prev.time.deactivation !== this.user.settings.time.deactivation ||
