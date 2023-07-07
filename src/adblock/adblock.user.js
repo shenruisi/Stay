@@ -1,5 +1,5 @@
 /**
- * 解析页面video标签
+ * 标记tag
  */
 
 let __b; 
@@ -1649,19 +1649,16 @@ const browser = __b;
         // console.log('sendSelectedTagToHandler-----selectedDom----',selectedDom)
         const uuid = Utils.hexMD5(`${url}${selector}`);
         if(cssSelectorSet.has(uuid)){
-          selDom.style.display = 'none';
+          let styleStr = selDom.style.cssText;
+          selDom.style.cssText = styleStr + ';display:none!important';
           return;
         }else{
-          selDom.style.display = 'none';
-          selectedDom.style.display = 'none';
+          let styleStr = selDom.style.cssText;
+          selDom.style.cssText = styleStr + ';display:none!important';
+          let styleV2Str = selectedDom.style.cssText;
+          selectedDom.style.cssText = styleV2Str + ';display:none!important';
           cssSelectorSet.add(uuid);
         }
-        
-        while(selDom.firstChild){
-          selDom.removeChild(selDom.firstChild)
-        }
-        // selDom.remove();
-        // selectedDom.remove();
       }else{
         // 标记失败，尝试使用expand和narrow
         // console.log('sendSelectedTagToHandler-----selDom is null')
@@ -2101,6 +2098,14 @@ const browser = __b;
       let polygon = `polygon(0 0, 0 ${targetY}px, ${targetX}px ${targetY}px, ${rectRightPointX}px ${targetY}px, ${rectRightPointX}px ${rectBottomPointY}px, ${targetX}px ${rectBottomPointY}px, ${targetX}px ${targetY}px, 0 ${targetY}px, 0 100%,100% 100%, 100% 0)`;
       return polygon;
     }
+
+    function useNthChildPath(){
+      const hostUrl = window.location.href;
+      if(hostUrl.indexOf('.sstv.fun')>-1){
+        return true;
+      }
+      return false;
+    }
   
     function getSelector(el, useClass) {
       if (!(el instanceof Element)) return;
@@ -2113,7 +2118,7 @@ const browser = __b;
             path.unshift(selector);
             break;
           }
-          if (el.id && checkStaticSelectorId(el.id)) {
+          if (el.id && checkStaticSelectorId(el.id) && !useNthChildPath()) {
             selector += '#' + el.id;
             if(checkDomOfIdSelectorSameToSelectedDom(el)){
               path = [];
@@ -2124,7 +2129,7 @@ const browser = __b;
             path.unshift(selector);
             break;
           }
-          else if(el.className && useClass){
+          else if(el.className && useClass && !useNthChildPath()){
             selector += `.${el.className.replace(/\s+/g, '.')}`
           }
           else {
@@ -2240,17 +2245,30 @@ const browser = __b;
     async function checkZindexDom(){
       if(!checkZindexFlag){
         setTimeout(()=>{
-          const zIndexDoms = document.querySelectorAll("[style*='z-index']");
-          const nodeList = Array.from(zIndexDoms);
-          if(nodeList && nodeList.length){
-            nodeList.forEach((node, i)=>{
-              const zIndex = node.style.zIndex;
-              if(zIndex>2147483600){
-                node.style.zIndex = 2147483500;
-              }
-            });
-          }
+          const elements = document.querySelectorAll('*');
+          const nodeList = Array.from(elements);
+          nodeList.forEach((node, i)=>{
+            const zIndex = parseInt(window.getComputedStyle(node).getPropertyValue('z-index'));
+            if(zIndex>2147483600){
+              let styleStr = node.style.cssText;
+              // alert("zIndex------"+zIndex+'------'+styleStr)
+              node.style.cssText = styleStr + ';z-index:2147482400!important';
+            }
+          });
+          
+          // const zIndexDoms = document.querySelectorAll("[style*='z-index']");
+          // const nodeList = Array.from(zIndexDoms);
+          // if(nodeList && nodeList.length){
+          //   nodeList.forEach((node, i)=>{
+          //     const zIndex = node.style.zIndex;
+          //     if(zIndex>2147483600){
+          //       node.style.zIndex = '2147483500';
+          //     }
+          //   });
+          // }
         }, 100)
+
+
       }
     }
 

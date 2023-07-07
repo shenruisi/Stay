@@ -39,45 +39,6 @@
     userAgent.includes("mobile");
     var isWindows = platform.startsWith('win');
     var isMacOS = platform.startsWith('mac');
-    var ThemeEngines = {
-        cssFilter: 'cssFilter',
-        svgFilter: 'svgFilter',
-        staticTheme: 'staticTheme',
-        dynamicTheme: 'dynamicTheme',
-    };
-    var DEFAULT_COLORS = {
-        darkScheme: {
-            background: '#181a1b',
-            text: '#e8e6e3',
-        },
-        lightScheme: {
-            background: '#dcdad7',
-            text: '#181a1b',
-        },
-    };
-
-    var DEFAULT_THEME = {
-        mode: 1,
-        brightness: 100,
-        contrast: 100,
-        grayscale: 0,
-        sepia: 0,
-        useFont: false,
-        fontFamily: isMacOS ? 'Helvetica Neue' : isWindows ? 'Segoe UI' : 'Open Sans',
-        textStroke: 0,
-        engine: ThemeEngines.dynamicTheme,
-        stylesheet: '',
-        darkSchemeBackgroundColor: DEFAULT_COLORS.darkScheme.background,
-        darkSchemeTextColor: DEFAULT_COLORS.darkScheme.text,
-        lightSchemeBackgroundColor: DEFAULT_COLORS.lightScheme.background,
-        lightSchemeTextColor: DEFAULT_COLORS.lightScheme.text,
-        scrollbarColor: isMacOS ? '' : 'auto',
-        selectionColor: 'auto',
-        styleSystemControls: true,
-        lightColorScheme: 'Default',
-        darkColorScheme: 'Default',
-        immediateModify: false
-    };
     const MessageType = {
         UI_GET_DATA: "ui-get-data",
         UI_GET_ACTIVE_TAB_INFO: "ui-get-active-tab-info",
@@ -6127,7 +6088,7 @@
             }
             
         }else if(MessageType.BG_ADD_DYNAMIC_THEME === type){
-            // console.log("data==BG_ADD_DYNAMIC_THEME===",data, stayDarkSettings);
+            console.log("data==BG_ADD_DYNAMIC_THEME===",data, stayDarkSettings);
             if((document.querySelector(".noir") && document.querySelector(".noir-root"))){
                 cleanupDarkmode();
             }else{
