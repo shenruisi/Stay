@@ -1,8 +1,12 @@
 let __storage;
 let __storageChangeListeners = new Map();
 let __extension = window.browser;
+let __resourceUrls;
+let __resourceTexts;
 //Supported GM APIS
 //https://violentmonkey.github.io/api/gm/
+//https://wiki.greasespot.net/Greasemonkey_Manual:API
+//https://www.tampermonkey.net/documentation.php
 const GM_apis = {
     setValue: function(key, value){
         if (typeof key !== "string" || !key.length) {
@@ -29,7 +33,7 @@ const GM_apis = {
             else{
                 const pid = Math.random().toString(36).substring(1, 9);
                 const callback = e => {
-                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "setValue" || e.data.type !== "resp") return;
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "setValue" || e.data.type !== "resp") return;
                     window.removeEventListener("message", callback);
                     resolve();
                 };
@@ -58,7 +62,7 @@ const GM_apis = {
         else{
             const pid = Math.random().toString(36).substring(1, 9);
             const callback = e => {
-                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "setValue" || e.data.type !== "resp") return;
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "setValue" || e.data.type !== "resp") return;
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
@@ -76,13 +80,14 @@ const GM_apis = {
         return new Promise(resolve => {
             const realKey = `_${this.uuid}_${key}`;
             const value = __storage[realKey];
-            if (Object.keys(item).length === 0) {
+            if (value === undefined){
                 if (defaultValue != null) {
                     resolve(defaultValue);
                 } else {
                     resolve(undefined);
                 }
-            } else {
+            }
+            else {
                 resolve(value);
             }
         });
@@ -143,7 +148,7 @@ const GM_apis = {
             else{
                 const pid = Math.random().toString(36).substring(1, 9);
                 const callback = e => {
-                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "deleteValue" || e.data.type !== "resp") return;
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "deleteValue" || e.data.type !== "resp") return;
                     window.removeEventListener("message", callback);
                     resolve();
                 };
@@ -167,7 +172,7 @@ const GM_apis = {
         else{
             const pid = Math.random().toString(36).substring(1, 9);
             const callback = e => {
-                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "deleteValue" || e.data.type !== "resp") return;
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "deleteValue" || e.data.type !== "resp") return;
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
@@ -176,17 +181,17 @@ const GM_apis = {
     },
     addValueChangeListener: function(name, valueChangeCallback){
         const realKey = `_${this.uuid}_${name}`;
+        __storageChangeListeners[realKey] = valueChangeCallback;
         return new Promise(resolve => {
             if (__extension){
-                __storageChangeListeners[realKey] = valueChangeCallback;
                 resolve(realKey);
             }
             else{
                 const pid = Math.random().toString(36).substring(1, 9);
                 const callback = e => {
-                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "addValueChangeListener" || e.data.type !== "resp") return;
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "addValueChangeListener" || e.data.type !== "resp") return;
                     window.removeEventListener("message", callback);
-                    reslove(realKey);
+                    resolve(realKey);
                 };
                 window.addEventListener("message", callback);
                 window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "addValueChangeListener", key: realKey, group: "gm_apis", type: "req"});
@@ -195,15 +200,14 @@ const GM_apis = {
     },
     _addValueChangeListener: function(name, valueChangeCallback){
         const realKey = `_${this.uuid}_${name}`;
+        __storageChangeListeners[realKey] = valueChangeCallback;
         if (__extension){
-            __storageChangeListeners[realKey] = valueChangeCallback;
         }
         else{
             const pid = Math.random().toString(36).substring(1, 9);
             const callback = e => {
-                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "addValueChangeListener" || e.data.type !== "resp") return;
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "addValueChangeListener" || e.data.type !== "resp") return;
                 window.removeEventListener("message", callback);
-                reslove(realKey);
             };
             window.addEventListener("message", callback);
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "addValueChangeListener", key: realKey, group: "gm_apis", type: "req"});
@@ -219,12 +223,12 @@ const GM_apis = {
             else{
                 const pid = Math.random().toString(36).substring(1, 9);
                 const callback = e => {
-                    if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "removeValueChangeListener" || e.data.type !== "resp") return;
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "removeValueChangeListener" || e.data.type !== "resp") return;
                     window.removeEventListener("message", callback);
-                    reslove();
+                    resolve();
                 };
                 window.addEventListener("message", callback);
-                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "removeValueChangeListener", key: realKey, group: "gm_apis", type: "req"});
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "removeValueChangeListener", key: listenerId, group: "gm_apis", type: "req"});
             }
         });
     },
@@ -235,12 +239,24 @@ const GM_apis = {
         else{
             const pid = Math.random().toString(36).substring(1, 9);
             const callback = e => {
-                if (e.data.pid !== pid || e.data.id !== `${this.uuid}` || e.data.operate !== "removeValueChangeListener" || e.data.type !== "resp") return;
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "removeValueChangeListener" || e.data.type !== "resp") return;
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "removeValueChangeListener", key: listenerId, group: "gm_apis", type: "req"});
         }
+    },
+    _getResourceText: function(name){
+        return __resourceTexts[name];
+    },
+    _getResourceURL: function(name){
+        return __resourceUrls[name];
+    },
+    getResourceUrl: function(name){
+        let url = __resourceUrls[name];
+        return new Promise(resolve => {
+            resolve(url);
+        });
     }
 }
 
@@ -263,7 +279,7 @@ const fetchStorage = function fetchStorage(){
                 resolve(items);
             };
             window.addEventListener("message", callback);
-            window.postMessage({ pid: pid, operate: "storage.local.getAll", group: "inject_page", type: "req"});
+            window.postMessage({ pid: pid, operate: "storage.local.getAll", group: "page", type: "req"});
         });
     }
 }
@@ -291,6 +307,8 @@ async function executeScript(userscript){
             const code = `
                 (function(){
                     __storage = storage;
+                    const __resourceUrls = JSON.parse(${userscript.resourceUrls});
+                    const __resourceTexts = JSON.parse(${userscript.resourceTexts});
                     ${userscript.genCode}
                     function main(){
                         const GM_apis = undefined;
@@ -308,24 +326,18 @@ async function executeScript(userscript){
     }
     else{
         console.info(staySays(`Inject %c${userscript.metadata.name}(js) %cto page.`),"color: #B620E0","color: #000000");
-        const GM_apis_code = `
-        {
-           setValue: ${GM_apis.setValue},
-           _setValue: ${GM_apis._setValue},
-           getValue: ${GM_apis.getValue},
-           _getValue: ${GM_apis._getValue},
-        };
-        `;
+        
         const code = `
             (async function(){
                 //env
+                const __storageChangeListeners = {};
                 window.addEventListener("message", ${valueChangeDispatchInPage}, false);
                 const __extension = undefined;
                 ${fetchStorage}
-                console.time();
                 const __storage = await fetchStorage();
-                console.timeEnd();
-                const GM_apis = ${GM_apis_code};
+                const GM_apis = ${userscript.apisInPage};
+//                const __resourceUrls = JSON.parse(${userscript.resourceUrls});
+//                const __resourceTexts = JSON.parse(${userscript.resourceTexts});
                 ${userscript.genCode}
                 function main(){
                     const GM_apis = undefined;
@@ -389,7 +401,8 @@ function cspCallback(e){
 
 function receiveMessage(e){
     const message = e.data;
-    if (message.group === "inject_page"){
+//    console.log("receiveMessage: ",message);
+    if (message.group === "page"){
         const uuid = message.uuid;
         const operate = message.operate;
         
@@ -411,29 +424,43 @@ function receiveMessage(e){
             browser.storage.local.set(item);
             window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
         }
+        else if (operate == "deleteValue"){
+            browser.storage.local.remove(message.key, () => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
+            });
+        }
         else if (operate === "addValueChangeListener"){
-//            __storageChangeListeners[message.key] =
+            __storageChangeListeners[message.key] = message.key;
+            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
+        }
+        else if (operate == "removeValueChangeListener"){
+            delete __storageChangeListeners[message.key];
+            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
         }
     }
 }
 
 function valueChangeDispatchInPage(e){
-//    if (e.data.group === "inject_page"){
-//        const params = JSON.parse(e.data.params);
-//        const realKey =
-//        const callback = __storageChangeListeners[params.key];
-//        if (callback){
-//            callback(params)
-//        }
-//    }
+    const message = e.data;
+    if (message.group === "content"){
+        if (message.operate === "storage.local.onChanged"){
+            const callback = __storageChangeListeners[message.key];
+            if (callback){
+                callback(message.name,message.oldValue,message.newValue,false);
+            }
+        }
+    }
 }
 
 function storageLocalOnChanged(changes){
     const changedItems = Object.keys(changes);
     for (const item of changedItems) {
         const callback = __storageChangeListeners[item];
-        if (callback){
+        if (typeof callback === 'function'){
             callback(item.substring(34),changes[item].oldValue,changes[item].newValue,false);
+        }
+        else{
+            window.postMessage({key: callback, name: item.substring(34), oldValue: changes[item].oldValue, newValue: changes[item].newValue, operate: "storage.local.onChanged" , group: "content"})
         }
     }
 }
@@ -452,6 +479,8 @@ function addListeners(){
  - code:
  - scriptMetaStr:
  - type: js
+ - resourceUrls:
+ - resourceTexts;
  */
 
 let userscripts;
@@ -465,7 +494,10 @@ function injection(){
             let userscript = {
                 genCode:"",
                 code:"",
-                fallback: false
+                fallback: false,
+                apisInPage:""
+                resourceUrls: JSON.stringify(script.resourceUrls),
+                resourceTexts: JSON.stringify(script.resourceTexts)
             };
             const gmApis = [];
             const grants = script.metadata.grants;
@@ -494,32 +526,31 @@ function injection(){
                 script.metadata["inject-into"] = "content";
             }
             
+            let apisInPage = "{\n";
             for (let j = 0; j < grants.length; j++){
                 const grant = grants[j];
                 const apiGroup = (grant.split('.').length > 1 ? grant.split('.')[0] : undefined) || grant.split('_')[0];
                 const apiName = (grant.split('.').length > 1 ? grant.split('.')[1] : undefined) || "_" + grant.split('_')[1];
+                if (!Object.keys(GM_apis).includes(apiName)){
+                    continue;
+                }
+                
+                const sync = apiName.startsWith('_');
+                
                 if (apiGroup == "GM"){
                     let apiStr = `${apiName}: GM_apis.${apiName}`;
-                    switch(apiName){
-                        case "setValue":
-                        case "getValue":
-                        case "deleteValue":
-                        case "listValues":
-                        case "addValueChangeListener":
-                        case "removeValueChangeListener":
-                            gmApis.push(apiStr + `.bind(${context})`);
-                            break;
-                        case "_setValue":
-                        case "_getValue":
-                        case "_deleteValue":
-                        case "_listValues":
-                        case "_addValueChangeListener":
-                        case "_removeValueChangeListener":
-                            userscript.genCode += `const GM${apiName} = GM_apis.${apiName}.bind(${context});`;
-                            break;
+                    let func = GM_apis[apiName];
+                    apisInPage += `${apiName}: ${func},\n`;
+                    if (sync){
+                        userscript.genCode += `const GM${apiName} = GM_apis.${apiName}.bind(${context});`;
+                    }
+                    else{
+                        gmApis.push(apiStr + `.bind(${context})`);
                     }
                 }
             }
+            
+            apisInPage += "\n};\n";
             
             gmApis.push("info: GM_info");
             
@@ -527,6 +558,7 @@ function injection(){
             userscript.genCode += `const GM = {${gmApis.join(",")}};`
             userscript.metadata = script.metadata;
             userscript.code = script.code;
+            userscript.apisInPage = apisInPage;
             userscripts.push(userscript);
             run(userscript);
         }

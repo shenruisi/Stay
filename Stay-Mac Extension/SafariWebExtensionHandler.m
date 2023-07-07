@@ -649,6 +649,8 @@ NSString * const SFExtensionMessageKey = @"message";
             };
             
             NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:scriptMeta];
+            NSDictionary *resourceUrls = data[@"resourceUrls"] != nil ?  data[@"resourceUrls"] : @{};
+            NSDictionary *resourceTexts = [self getResourceByUuid:data[@"uuid"]];
             
             [metadata addEntriesFromDictionary:@{
                 @"grants": data[@"grants"],
@@ -670,7 +672,9 @@ NSString * const SFExtensionMessageKey = @"message";
                 @"requiredScripts": requiredScripts,
                 @"code": info.content[@"content"],
                 @"type": @"js",
-                @"scriptMetaStr": scriptMetaStr ? scriptMetaStr : @""
+                @"scriptMetaStr": scriptMetaStr ? scriptMetaStr : @"",
+                @"resourceUrls": resourceUrls,
+                @"resourceTexts": resourceTexts
             };
             
             [jsFiles addObject:script];
