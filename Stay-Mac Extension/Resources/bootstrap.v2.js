@@ -8,7 +8,7 @@ let __resourceTexts;
 //https://wiki.greasespot.net/Greasemonkey_Manual:API
 //https://www.tampermonkey.net/documentation.php
 const GM_apis = {
-    setValue: function(key, value){
+    setValue: function(key, value){ //greasemonkey
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.setValue invalid key %s",`${this.name}`,key);
             return new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ const GM_apis = {
             
         });
     },
-    _setValue: function(key, value){
+    _setValue: function(key, value){ //violentmonkey & tampermonkey
         if (typeof key !== "string" || !key.length) {
             return console.error("%s GM_setValue invalid key %s",`${this.name}`,key);
         }
@@ -69,7 +69,7 @@ const GM_apis = {
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setValue", key: realKey, value: value, group: "gm_apis", type: "req"});
         }
     },
-    getValue: function(key, defaultValue){
+    getValue: function(key, defaultValue){ //greasemonkey
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.getValue invalid key %s",`{this.name}`,key);
             return new Promise((resolve, reject) => {
@@ -92,7 +92,7 @@ const GM_apis = {
             }
         });
     },
-    _getValue: function(key, defaultValue){
+    _getValue: function(key, defaultValue){ //violentmonkey & tampermonkey
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM_getValue invalid key %s",`{this.name}`,key);
             return;
@@ -101,7 +101,7 @@ const GM_apis = {
         const value = __storage[realKey];
         return value || defaultValue;
     },
-    listValues: function(){
+    listValues: function(){ //greasemonkey
         return new Promise(resolve => {
             const prefix = `_${this.uuid}_`;
             const keys = [];
@@ -116,7 +116,7 @@ const GM_apis = {
             resolve(keys);
         });
     },
-    _listValues: function(){
+    _listValues: function(){ //violentmonkey & tampermonkey
         const prefix = `_${this.uuid}_`;
         const keys = [];
         const allKeys = Object.keys(__storage);
@@ -129,7 +129,7 @@ const GM_apis = {
         }
         return keys;
     },
-    deleteValue: function(key){
+    deleteValue: function(key){ //greasemonkey
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.deleteValue invalid key %s",`{this.name}`,key);
             return new Promise((resolve, reject) => {
@@ -157,7 +157,7 @@ const GM_apis = {
             }
         });
     },
-    _deleteValue: function(key){
+    _deleteValue: function(key){ //violentmonkey & tampermonkey
         if (typeof key !== "string" || !key.length) {
             console.error("%s GM.deleteValue invalid key %s",`{this.name}`,key);
             return;
@@ -198,7 +198,7 @@ const GM_apis = {
             }
         });
     },
-    _addValueChangeListener: function(name, valueChangeCallback){
+    _addValueChangeListener: function(name, valueChangeCallback){ //violentmonkey & tampermonkey
         const realKey = `_${this.uuid}_${name}`;
         __storageChangeListeners[realKey] = valueChangeCallback;
         if (__extension){
@@ -232,7 +232,7 @@ const GM_apis = {
             }
         });
     },
-    _removeValueChangeListener: function(listenerId){
+    _removeValueChangeListener: function(listenerId){ //violentmonkey & tampermonkey
         if (__extension){
             delete __storageChangeListeners[listenerId];
         }
@@ -246,17 +246,23 @@ const GM_apis = {
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "removeValueChangeListener", key: listenerId, group: "gm_apis", type: "req"});
         }
     },
-    _getResourceText: function(name){
+    _getResourceText: function(name){ //violentmonkey & tampermonkey
         return __resourceTexts[name];
     },
-    _getResourceURL: function(name){
+    _getResourceURL: function(name){ //violentmonkey & tampermonkey
         return __resourceUrls[name];
     },
-    getResourceUrl: function(name){
+    getResourceUrl: function(name){ //greasemonkey
         let url = __resourceUrls[name];
         return new Promise(resolve => {
             resolve(url);
         });
+    },
+    _xmlHttpRequest: function(details){ //violentmonkey & tampermonkey
+        
+    },
+    xmlHttpRequest: function(details){ //greasemonkey
+        
     }
 }
 
@@ -307,8 +313,8 @@ async function executeScript(userscript){
             const code = `
                 (function(){
                     __storage = storage;
-                    const __resourceUrls = JSON.parse(${userscript.resourceUrls});
-                    const __resourceTexts = JSON.parse(${userscript.resourceTexts});
+                    const __resourceUrls = ${userscript.resourceUrls};
+                    const __resourceTexts = ${userscript.resourceTexts};
                     ${userscript.genCode}
                     function main(){
                         const GM_apis = undefined;
@@ -336,8 +342,8 @@ async function executeScript(userscript){
                 ${fetchStorage}
                 const __storage = await fetchStorage();
                 const GM_apis = ${userscript.apisInPage};
-//                const __resourceUrls = JSON.parse(${userscript.resourceUrls});
-//                const __resourceTexts = JSON.parse(${userscript.resourceTexts});
+                const __resourceUrls = ${userscript.resourceUrls};
+                const __resourceTexts = ${userscript.resourceTexts};
                 ${userscript.genCode}
                 function main(){
                     const GM_apis = undefined;
@@ -495,7 +501,7 @@ function injection(){
                 genCode:"",
                 code:"",
                 fallback: false,
-                apisInPage:""
+                apisInPage:"",
                 resourceUrls: JSON.stringify(script.resourceUrls),
                 resourceTexts: JSON.stringify(script.resourceTexts)
             };
@@ -532,6 +538,7 @@ function injection(){
                 const apiGroup = (grant.split('.').length > 1 ? grant.split('.')[0] : undefined) || grant.split('_')[0];
                 const apiName = (grant.split('.').length > 1 ? grant.split('.')[1] : undefined) || "_" + grant.split('_')[1];
                 if (!Object.keys(GM_apis).includes(apiName)){
+                    console.warn(staySays(`${script.metadata.name}(js) finds that the api '${grant}' is not supported, which may cause the userscript to fail to run.\n If you are sure that this is the api that the userscript should support, please send an email to feeback@fastclip.app for feedback.`))
                     continue;
                 }
                 
@@ -572,7 +579,7 @@ async function initialize(){
     ___) |_ (_|  /
     `;
     console.log(`%c${stay}`,"color: #B620E0");
-    console.log("Developed by DJ APPS");
+    console.log("%cDeveloped by DJ APPS", "color: #8A8A8A");
     console.time();
     let switches = await browser.storage.local.get('_userscript_switch');
     console.timeEnd();
