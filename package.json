@@ -10,6 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@simonwep/pickr": "^1.8.2",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
