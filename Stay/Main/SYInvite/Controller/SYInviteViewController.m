@@ -142,6 +142,17 @@
                 [self.proLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
             ]];
         }
+        
+        if(FCDeviceTypeMac == DeviceHelper.type) {
+            if(self.sigImageConstraint == nil) {
+                self.sigImageConstraint = [self.sigImageView.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-30];
+                
+            }
+            [NSLayoutConstraint activateConstraints:@[
+                self.sigImageConstraint,
+            ]];
+        }
+        
      
         [NSLayoutConstraint activateConstraints:@[
             [self.extensionLabel.leftAnchor constraintEqualToAnchor:self.sigImageView.leftAnchor constant:-60],
@@ -190,8 +201,7 @@
     self.gradientLayer = nil;
     [self gradientLayer];
     
-    
-    if(self.inviteView.width < 220 && self.inviteView.width > 100 ) {
+    if(self.inviteView.width < 220 && self.inviteView.width > 50 ) {
         if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
         
             if(self.sigImageConstraint == nil) {
@@ -201,9 +211,8 @@
             [NSLayoutConstraint activateConstraints:@[
                 self.sigImageConstraint,
             ]];
-   
         }
-    } else {
+    } else if(self.inviteView.width > 0){
         if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
             if(self.sigImageConstraint != nil) {
                 [NSLayoutConstraint deactivateConstraints:@[
