@@ -191,11 +191,11 @@
     [self gradientLayer];
     
     
-    if(self.inviteView.width < 215 && self.inviteView.width > 100 ) {
+    if(self.inviteView.width < 220 && self.inviteView.width > 100 ) {
         if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
         
             if(self.sigImageConstraint == nil) {
-                self.sigImageConstraint = [self.sigImageView.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-15];
+                self.sigImageConstraint = [self.sigImageView.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-30];
                 
             }
             [NSLayoutConstraint activateConstraints:@[
