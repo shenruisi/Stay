@@ -258,12 +258,13 @@ const GM_apis = {
             resolve(url);
         });
     },
-    _xmlHttpRequest: function(details){ //violentmonkey & tampermonkey
+    _xmlhttpRequest: function(details){ //violentmonkey & tampermonkey
+        if (details == null) return console.error("%s xhr invalid details arg",`{this.name}`);
+        if (!details.url) return console.error("%s xhr details missing url key",`{this.name}`);
+        
         
     },
-    xmlHttpRequest: function(details){ //greasemonkey
-        
-    }
+    xmlHttpRequest: "_xmlhttpRequest", //greasemonkey
 }
 
 function staySays(msg){
