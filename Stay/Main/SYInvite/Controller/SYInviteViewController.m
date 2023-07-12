@@ -108,6 +108,7 @@
     return self;
 }
 - (void)setupUI {
+    self.proLabel = nil;
     self.tipsLabel = nil;
     self.dateLabel = nil;
     self.qrCodeImageView = nil;
@@ -137,9 +138,15 @@
         [self sigImageView];
 
         if(isPro) {
+            
+//            [self proLabel];
+           [self.inviteView addSubview:self.proLabel];
+            
             [NSLayoutConstraint activateConstraints:@[
                 [self.proLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
                 [self.proLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
+                [self.proLabel.heightAnchor constraintEqualToConstant:15],
+                [self.proLabel.widthAnchor constraintEqualToConstant:30],
             ]];
         }
         
@@ -168,13 +175,16 @@
         if(isPro) {
             
             
-            [NSLayoutConstraint activateConstraints:@[
-                [self.proLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
-                [self.proLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
-            ]];
+            
+            [self.inviteView addSubview:self.proLabel];
+             
+             [NSLayoutConstraint activateConstraints:@[
+                 [self.proLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
+                 [self.proLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
+                 [self.proLabel.heightAnchor constraintEqualToConstant:15],
+                 [self.proLabel.widthAnchor constraintEqualToConstant:30],
+             ]];
 
-            
-            
             [NSLayoutConstraint activateConstraints:@[
                 [self.dateLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
                 [self.dateLabel.leftAnchor constraintEqualToAnchor:self.proLabel.rightAnchor constant:5],
@@ -500,12 +510,7 @@
         _proLabel.textColor = FCStyle.fcGolden;
         _proLabel.clipsToBounds = YES;
         _proLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.inviteView addSubview:_proLabel];
-        
-        [NSLayoutConstraint activateConstraints:@[
-            [_proLabel.heightAnchor constraintEqualToConstant:15],
-            [_proLabel.widthAnchor constraintEqualToConstant:30],
-        ]];
+       
     }
     
     return _proLabel;
@@ -1172,7 +1177,7 @@ UITableViewDataSource
             [cell.contentView addSubview:self.proPointLabel];
             
             [NSLayoutConstraint activateConstraints:@[
-                [self.proPointLabel.centerXAnchor constraintEqualToAnchor:cell.contentView.centerXAnchor],
+                [self.proPointLabel.centerXAnchor constraintEqualToAnchor:self.iconImageView.centerXAnchor],
                 [self.proPointLabel.topAnchor constraintEqualToAnchor:self.iconImageView.bottomAnchor constant:16],
                 [self.proPointLabel.heightAnchor constraintEqualToConstant:24]
             ]];
@@ -1187,18 +1192,27 @@ UITableViewDataSource
             
             self.proInviteLeftLabel.attributedText = str;
             
-            
             [cell.contentView addSubview:self.proInviteLeftLabel];
             
-            self.proInviteLeftLabel.centerX = self.proPointLabel.centerX;
-            self.proInviteLeftLabel.top = self.proPointLabel.bottom + 16;
-            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.proInviteLeftLabel.centerXAnchor constraintEqualToAnchor:self.proPointLabel.centerXAnchor],
+                [self.proInviteLeftLabel.topAnchor constraintEqualToAnchor:self.proPointLabel.bottomAnchor constant:16],
+                [self.proPointLabel.heightAnchor constraintEqualToConstant:21]
+            ]];
             [cell.contentView addSubview:self.proGiftTitleLabel];
             
-            self.proGiftTitleLabel.top = self.proInviteLeftLabel.bottom + 19;
-            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.proGiftTitleLabel.topAnchor constraintEqualToAnchor:self.proInviteLeftLabel.bottomAnchor constant:16],
+                [self.proGiftTitleLabel.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.proGiftTitleLabel.heightAnchor constraintEqualToConstant:18]
+            ]];
+                        
             [cell.contentView addSubview:self.inviteRulesView];
-            self.inviteRulesView.top = self.proGiftTitleLabel.bottom + 16;
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteRulesView.topAnchor constraintEqualToAnchor:self.proGiftTitleLabel.bottomAnchor constant:16],
+                [self.inviteRulesView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.inviteRulesView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+            ]];
         }
         [cell.contentView addSubview:self.howToInviteView];
         
@@ -1411,11 +1425,12 @@ UITableViewDataSource
 
 - (UILabel *)proPointLabel {
     if(nil == _proPointLabel) {
-        _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
+        _proPointLabel = [[UILabel alloc] init];
         _proPointLabel.text = [NSString stringWithFormat:@"%@ %@",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description,NSLocalizedString(@"Points",@"")];
         _proPointLabel.font = FCStyle.title3Bold;
         _proPointLabel.textColor = FCStyle.accent;
         _proPointLabel.textAlignment = NSTextAlignmentCenter;
+        _proPointLabel.translatesAutoresizingMaskIntoConstraints = NO;
         
     }
     return _proPointLabel;
@@ -1423,10 +1438,11 @@ UITableViewDataSource
 
 - (UILabel *)proInviteLeftLabel {
     if(nil == _proInviteLeftLabel) {
-        _proInviteLeftLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 21)];
+        _proInviteLeftLabel = [[UILabel alloc] init];
         _proInviteLeftLabel.textAlignment = NSTextAlignmentCenter;
         _proInviteLeftLabel.font = FCStyle.headlineBold;
         _proInviteLeftLabel.textColor = FCStyle.fcBlack;
+        _proInviteLeftLabel.translatesAutoresizingMaskIntoConstraints = NO;
 
     }
     return _proInviteLeftLabel;
@@ -1434,10 +1450,11 @@ UITableViewDataSource
 
 - (UILabel *)proGiftTitleLabel {
     if(nil == _proGiftTitleLabel) {
-        _proGiftTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 200, 18)];
+        _proGiftTitleLabel = [[UILabel alloc] init];
         _proGiftTitleLabel.text = NSLocalizedString(@"GiftYourPoint", @"");
         _proGiftTitleLabel.font = FCStyle.subHeadlineBold;
         _proGiftTitleLabel.textColor = FCStyle.subtitleColor;
+        _proGiftTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _proGiftTitleLabel;
 }
