@@ -16,6 +16,12 @@
 #import "OptionsBlockerAST.h"
 #import "SelectorBlockerAST.h"
 #import "SpecialCommentBlockerAST.h"
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
+
 
 @implementation ContentFilterBlocker
 
@@ -108,7 +114,7 @@
     if (contentBlockerRule.trigger.urlFilter.length > 80){
         return nil;
     }
-
+    
     return contentBlockerRule;
 }
 
