@@ -1652,8 +1652,10 @@ const browser = __b;
           selDom.style.display = 'none';
           return;
         }else{
-          selDom.style.display = 'none';
-          selectedDom.style.display = 'none';
+          let styleStr = selDom.style.cssText;
+          selDom.style.cssText = 'display:none!important;'+styleStr;
+          let selectedDomStyleStr = selectedDom.style.cssText;
+          selectedDom.style.cssText = 'display:none!important;'+selectedDomStyleStr;
           cssSelectorSet.add(uuid);
         }
         
@@ -2101,6 +2103,16 @@ const browser = __b;
       let polygon = `polygon(0 0, 0 ${targetY}px, ${targetX}px ${targetY}px, ${rectRightPointX}px ${targetY}px, ${rectRightPointX}px ${rectBottomPointY}px, ${targetX}px ${rectBottomPointY}px, ${targetX}px ${targetY}px, 0 ${targetY}px, 0 100%,100% 100%, 100% 0)`;
       return polygon;
     }
+
+    function useNthChildPath(){
+      const hostUrl = window.location.href;
+      if(hostUrl.indexOf('.sstv.fun')>-1){
+        return true;
+      }else if(hostUrl.indexOf('.cxbz958.info')>-1){
+        return true;
+      }
+      return false;
+    }
   
     function getSelector(el, useClass) {
       if (!(el instanceof Element)) return;
@@ -2113,7 +2125,7 @@ const browser = __b;
             path.unshift(selector);
             break;
           }
-          if (el.id && checkStaticSelectorId(el.id)) {
+          if (el.id && checkStaticSelectorId(el.id) && !useNthChildPath()) {
             selector += '#' + el.id;
             if(checkDomOfIdSelectorSameToSelectedDom(el)){
               path = [];
@@ -2124,7 +2136,7 @@ const browser = __b;
             path.unshift(selector);
             break;
           }
-          else if(el.className && useClass){
+          else if(el.className && useClass && !useNthChildPath()){
             selector += `.${el.className.replace(/\s+/g, '.')}`
           }
           else {
@@ -2239,17 +2251,43 @@ const browser = __b;
     
     async function checkZindexDom(){
       if(!checkZindexFlag){
+        // console.log('checkZindexDomcheckZindexDomcheckZindexDomcheckZindexDomcheckZindexDom')
         setTimeout(()=>{
-          const zIndexDoms = document.querySelectorAll("[style*='z-index']");
-          const nodeList = Array.from(zIndexDoms);
-          if(nodeList && nodeList.length){
-            nodeList.forEach((node, i)=>{
-              const zIndex = node.style.zIndex;
+          const elements = document.querySelectorAll('*');
+          const nodeList = Array.from(elements);
+          nodeList.forEach((node, i)=>{
+            const classList = node.classList;
+            if('__stay_wrapper' == node.id || classList.contains('__stay_move_wrapper') 
+              || '__stay_close' == node.id || classList.contains('__stay_close_con') 
+              || '__stay_selected_tag' == node.id || classList.contains('__stay_select_target') 
+              || '__stay_alert' == node.id || classList.contains('__stay_alert_wrapper') 
+              || '__stay_tagged' == node.id || classList.contains('__stay_tagged_wrapper') 
+              || '__stay_select_note' == node.id || classList.contains('__stay_select_note_warpper') 
+              || '__stay_makeup_menu' == node.id || classList.contains('__stay_makeup_menu_wrapper') 
+              || '__stay_iframe_toast' == node.id || classList.contains('__stay_iframe_toast_warpper')){
+                console.log('ignore');
+            }else{
+              const zIndex = parseInt(window.getComputedStyle(node).getPropertyValue('z-index'));
               if(zIndex>2147483600){
-                node.style.zIndex = 2147483500;
+                let styleStr = node.style.cssText;
+                // alert("zIndex------"+zIndex+'------'+styleStr)
+                node.style.cssText = 'z-index:2147482400!important;'+styleStr;
               }
-            });
-          }
+            }
+          });
+          checkZindexFlag = true;
+          // const zIndexDoms = document.querySelectorAll("[style*='z-index']");
+          // const styleNodeList = Array.from(zIndexDoms);
+          // if(styleNodeList && styleNodeList.length){
+          //   styleNodeList.forEach((node, i)=>{
+          //     const zIndex = node.style.zIndex;
+          //     if(zIndex>2147483600){
+          //       let styleStr = node.style.cssText;
+          //       // alert("zIndex------"+zIndex+'------'+styleStr)
+          //       node.style.cssText = 'z-index:2147482400!important;'+styleStr;
+          //     }
+          //   });
+          // }
         }, 100)
       }
     }
