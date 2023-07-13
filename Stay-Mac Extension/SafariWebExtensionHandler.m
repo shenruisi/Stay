@@ -155,7 +155,7 @@ NSString * const SFExtensionMessageKey = @"message";
     NSExtensionItem *response = [[NSExtensionItem alloc] init];
     
     id body = [NSNull null];
-    if ([message[@"type"] hasPrefix:@"script.v2."]){
+    if ([message[@"type"] hasPrefix:@"background/v2/"]){
         body = [self scriptV2Handler:message];
     }
     else if ([message[@"type"] isEqualToString:@"fetchScripts"]){
@@ -603,8 +603,8 @@ NSString * const SFExtensionMessageKey = @"message";
 }
 
 - (NSDictionary *)scriptV2Handler:(NSDictionary *)message{
-    NSString *type = message[@"type"];
-    if ([type isEqualToString:@"script.v2.getInjectFiles"]){
+    NSString *type = [message[@"type"] stringByReplacingOccurrencesOfString:@"background/v2/" withString:@""];
+    if ([type isEqualToString:@"getInjectFiles"]){
         NSString *url = message[@"url"];
         BOOL isTop = [message[@"isTop"] boolValue];
         
@@ -674,7 +674,7 @@ NSString * const SFExtensionMessageKey = @"message";
                 @"type": @"js",
                 @"scriptMetaStr": scriptMetaStr ? scriptMetaStr : @"",
                 @"resourceUrls": resourceUrls,
-                @"resourceTexts": resourceTexts
+                @"resourceTexts": resourceTexts ? resourceTexts : @{}
             };
             
             [jsFiles addObject:script];

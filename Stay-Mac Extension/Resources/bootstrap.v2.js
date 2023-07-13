@@ -71,7 +71,7 @@ const GM_apis = {
     },
     getValue: function(key, defaultValue){ //greasemonkey
         if (typeof key !== "string" || !key.length) {
-            console.error("%s GM.getValue invalid key %s",`{this.name}`,key);
+            console.error("%s GM.getValue invalid key %s",`${this.name}`,key);
             return new Promise((resolve, reject) => {
                reject();
             });
@@ -94,7 +94,7 @@ const GM_apis = {
     },
     _getValue: function(key, defaultValue){ //violentmonkey & tampermonkey
         if (typeof key !== "string" || !key.length) {
-            console.error("%s GM_getValue invalid key %s",`{this.name}`,key);
+            console.error("%s GM_getValue invalid key %s",`${this.name}`,key);
             return;
         }
         const realKey = `_${this.uuid}_${key}`;
@@ -131,7 +131,7 @@ const GM_apis = {
     },
     deleteValue: function(key){ //greasemonkey
         if (typeof key !== "string" || !key.length) {
-            console.error("%s GM.deleteValue invalid key %s",`{this.name}`,key);
+            console.error("%s GM.deleteValue invalid key %s",`${this.name}`,key);
             return new Promise((resolve, reject) => {
                reject();
             });
@@ -159,7 +159,7 @@ const GM_apis = {
     },
     _deleteValue: function(key){ //violentmonkey & tampermonkey
         if (typeof key !== "string" || !key.length) {
-            console.error("%s GM.deleteValue invalid key %s",`{this.name}`,key);
+            console.error("%s GM.deleteValue invalid key %s",`${this.name}`,key);
             return;
         }
         
@@ -259,12 +259,101 @@ const GM_apis = {
         });
     },
     _xmlhttpRequest: function(details){ //violentmonkey & tampermonkey
-        if (details == null) return console.error("%s xhr invalid details arg",`{this.name}`);
-        if (!details.url) return console.error("%s xhr details missing url key",`{this.name}`);
+        if (__extension){
+            return xhr(details,this);
+        }
+        else{
+            const detailsParsed = JSON.parse(JSON.stringify(details));
+            const events = [];
+            for (const k in XMLHttpRequest.prototype) {
+                if (k.slice(0, 2) === "on") events.push(k);
+            }
+            for (const e of events) {
+                if (typeof details[e] === "function") detailsParsed[e] = true;
+            }
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "xmlhttpRequest" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "xmlhttpRequest", details: detailsParsed, group: "gm_apis", type: "req"});
+        }
+    }
+}
+
+//Reference https://github.com/quoid/userscripts/blob/main/xcode/Safari-Extension/Resources/content.js
+//#xhr
+//The case of additional handling of Inject Page.
+function xhr(details,context){
+    if (details == null) return console.error("%s xhr invalid details arg",`${context.name}`);
+    if (!details.url) return console.error("%s xhr details missing url key",`${context.name}`);
+    
+    const xhrPortName = Math.random().toString(36).substring(1, 9);
+    const detailsParsed = JSON.parse(JSON.stringify(details));
+    
+    const events = [];
+    for (const k in XMLHttpRequest.prototype) {
+        if (k.slice(0, 2) === "on") events.push(k);
+    }
+    
+    for (const e of events) {
+        if (typeof details[e] === "function") detailsParsed[e] = true;
+    }
+    
+    const response = {
+        abort: () => console.error("%s xhr has not yet been initialized",`${context.name}`)
+    };
+    
+    //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onConnect
+    const listener = port => {
+        if (port.name !== xhrPortName) return;
+        //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage
         
+        port.onMessage.addListener(async message => {
+            if (!events.includes(message.name) || typeof details[message.name] !== "function") return;
+            const r = message.response;
+            if (r.responseType === "arraybuffer") {
+                try {
+                    const buffer = new Uint8Array(r.response).buffer;
+                    r.response = buffer;
+                } catch (err) {
+                    console.error("error parsing xhr arraybuffer", err);
+                }
+            } else if (r.responseType === "blob" && r.response.data) {
+                const resp = await fetch(r.response.data);
+                const b = await resp.blob();
+                r.response = b;
+            }
+            details[message.name](message.response);
+            
+            if (message.name === "onloadend") {
+                port.postMessage({name: "DISCONNECT"});
+            }
+        });
         
-    },
-    xmlHttpRequest: "_xmlhttpRequest", //greasemonkey
+        port.onDisconnect.addListener(p => {
+            if (p?.error) {
+                console.error(`port disconnected due to an error: ${p.error.message}`);
+            }
+            browser.runtime.onConnect.removeListener(listener);
+        });
+        
+        response.abort = () => port.postMessage({name: "ABORT"});
+    };
+
+    browser.runtime.onConnect.addListener(listener);
+    
+    const message = {
+        origin: "bootstrap",
+        operate: "background/v2/xmlhttpRequest",
+        details: detailsParsed,
+        xhrPortName,
+        events,
+    };
+    browser.runtime.sendMessage(message);
+    
+    return response;
 }
 
 function staySays(msg){
@@ -431,7 +520,7 @@ function receiveMessage(e){
             browser.storage.local.set(item);
             window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
         }
-        else if (operate == "deleteValue"){
+        else if (operate === "deleteValue"){
             browser.storage.local.remove(message.key, () => {
                 window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
             });
@@ -440,9 +529,26 @@ function receiveMessage(e){
             __storageChangeListeners[message.key] = message.key;
             window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
         }
-        else if (operate == "removeValueChangeListener"){
+        else if (operate === "removeValueChangeListener"){
             delete __storageChangeListeners[message.key];
             window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
+        }
+        else if (operate === "xmlhttpRequest"){
+            const events = [];
+            for (const k in XMLHttpRequest.prototype) {
+                if (k.slice(0, 2) === "on") events.push(k);
+            }
+            
+            for (const e of events) {
+                if (message.details[e]){
+                    message.details[e] = () =>{
+                        window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp", event: e});
+                    }
+                }
+            }
+            
+            const response = xhr(message.details);
+            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp", response: response});
         }
     }
 }
@@ -492,7 +598,8 @@ function addListeners(){
 
 let userscripts;
 function injection(){
-    browser.runtime.sendMessage({ origin: "bootstrap", operate: "script.v2.getInjectFiles" }, (response) => {
+    browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/getInjectFiles" }, (response) => {
+        console.log("background/v2/getInjectFiles",response);
         const injectFiles = response.body;
         let scripts = injectFiles.jsFiles;
         userscripts = [];
@@ -508,7 +615,7 @@ function injection(){
             };
             const gmApis = [];
             const grants = script.metadata.grants;
-            const context = `{"uuid": "${script.uuid}"}`;
+            const context = `{"uuid": "${script.uuid}","name":"${script.metadata.name}"}`;
             
             //https://wiki.greasespot.net/GM.info
             const GM_info = {
