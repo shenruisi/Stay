@@ -823,9 +823,9 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
             if(isPro) {
 #ifdef FC_MAC
-                [self presentViewController:
-                 [[UINavigationController alloc] initWithRootViewController:[[SYInviteViewController alloc] init]]
-                                   animated:YES completion:^{}];
+                
+                [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
+   
 #else
                 [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #endif

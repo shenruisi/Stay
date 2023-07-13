@@ -1,5 +1,5 @@
 /**
- * 标记tag
+ * 解析页面video标签
  */
 
 let __b; 
@@ -1649,16 +1649,21 @@ const browser = __b;
         // console.log('sendSelectedTagToHandler-----selectedDom----',selectedDom)
         const uuid = Utils.hexMD5(`${url}${selector}`);
         if(cssSelectorSet.has(uuid)){
-          let styleStr = selDom.style.cssText;
-          selDom.style.cssText = styleStr + ';display:none!important';
+          selDom.style.display = 'none';
           return;
         }else{
           let styleStr = selDom.style.cssText;
-          selDom.style.cssText = styleStr + ';display:none!important';
-          let styleV2Str = selectedDom.style.cssText;
-          selectedDom.style.cssText = styleV2Str + ';display:none!important';
+          selDom.style.cssText = 'display:none!important;'+styleStr;
+          let selectedDomStyleStr = selectedDom.style.cssText;
+          selectedDom.style.cssText = 'display:none!important;'+selectedDomStyleStr;
           cssSelectorSet.add(uuid);
         }
+        
+        while(selDom.firstChild){
+          selDom.removeChild(selDom.firstChild)
+        }
+        // selDom.remove();
+        // selectedDom.remove();
       }else{
         // 标记失败，尝试使用expand和narrow
         // console.log('sendSelectedTagToHandler-----selDom is null')
@@ -2103,6 +2108,8 @@ const browser = __b;
       const hostUrl = window.location.href;
       if(hostUrl.indexOf('.sstv.fun')>-1){
         return true;
+      }else if(hostUrl.indexOf('.cxbz958.info')>-1){
+        return true;
       }
       return false;
     }
@@ -2244,31 +2251,44 @@ const browser = __b;
     
     async function checkZindexDom(){
       if(!checkZindexFlag){
+        // console.log('checkZindexDomcheckZindexDomcheckZindexDomcheckZindexDomcheckZindexDom')
         setTimeout(()=>{
           const elements = document.querySelectorAll('*');
           const nodeList = Array.from(elements);
           nodeList.forEach((node, i)=>{
-            const zIndex = parseInt(window.getComputedStyle(node).getPropertyValue('z-index'));
-            if(zIndex>2147483600){
-              let styleStr = node.style.cssText;
-              // alert("zIndex------"+zIndex+'------'+styleStr)
-              node.style.cssText = styleStr + ';z-index:2147482400!important';
+            const classList = node.classList;
+            if('__stay_wrapper' == node.id || classList.contains('__stay_move_wrapper') 
+              || '__stay_close' == node.id || classList.contains('__stay_close_con') 
+              || '__stay_selected_tag' == node.id || classList.contains('__stay_select_target') 
+              || '__stay_alert' == node.id || classList.contains('__stay_alert_wrapper') 
+              || '__stay_tagged' == node.id || classList.contains('__stay_tagged_wrapper') 
+              || '__stay_select_note' == node.id || classList.contains('__stay_select_note_warpper') 
+              || '__stay_makeup_menu' == node.id || classList.contains('__stay_makeup_menu_wrapper') 
+              || '__stay_iframe_toast' == node.id || classList.contains('__stay_iframe_toast_warpper')){
+                console.log('ignore');
+            }else{
+              const zIndex = parseInt(window.getComputedStyle(node).getPropertyValue('z-index'));
+              if(zIndex>2147483600){
+                let styleStr = node.style.cssText;
+                // alert("zIndex------"+zIndex+'------'+styleStr)
+                node.style.cssText = 'z-index:2147482400!important;'+styleStr;
+              }
             }
           });
-          
+          checkZindexFlag = true;
           // const zIndexDoms = document.querySelectorAll("[style*='z-index']");
-          // const nodeList = Array.from(zIndexDoms);
-          // if(nodeList && nodeList.length){
-          //   nodeList.forEach((node, i)=>{
+          // const styleNodeList = Array.from(zIndexDoms);
+          // if(styleNodeList && styleNodeList.length){
+          //   styleNodeList.forEach((node, i)=>{
           //     const zIndex = node.style.zIndex;
           //     if(zIndex>2147483600){
-          //       node.style.zIndex = '2147483500';
+          //       let styleStr = node.style.cssText;
+          //       // alert("zIndex------"+zIndex+'------'+styleStr)
+          //       node.style.cssText = 'z-index:2147482400!important;'+styleStr;
           //     }
           //   });
           // }
         }, 100)
-
-
       }
     }
 

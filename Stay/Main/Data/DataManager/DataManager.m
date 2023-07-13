@@ -131,14 +131,18 @@
     
     
    
-    
+#ifdef DEBUG
 //    [self deleteTable:@"content_filter"];
+#endif
     if (![self existTable:@"content_filter" error:nil]){
         [self createContentFilterTable];
         ContentFilter *basic = [[ContentFilter alloc] init];
         basic.defaultTitle = NSLocalizedString(@"ContentFilterBasic", @"");
         basic.title = NSLocalizedString(@"ContentFilterBasic", @"");
         basic.path = @"Basic.txt";
+#ifdef DEBUG
+//        basic.path = @"EasyList.txt";
+#endif
         basic.rulePath = @"Basic.json";
         basic.defaultUrl = @"https://easylist.to/easylist/easylist.txt";
         basic.downloadUrl = @"https://easylist.to/easylist/easylist.txt";

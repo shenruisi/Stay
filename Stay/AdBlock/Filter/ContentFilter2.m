@@ -12,7 +12,11 @@
 #import "ContentFilterManager.h"
 #import "DataManager.h"
 #import "SYVersionUtils.h"
-
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
 
 
 NSNotificationName const _Nonnull ContentFilterDidUpdateNotification = @"app.notification.ContentFilterDidUpdateNotification";
@@ -310,7 +314,8 @@ NSNotificationName const _Nonnull ContentFilterDidAddOrRemoveNotification = @"ap
             NSArray<TrustedSite *> *trustSites = [[ContentFilterManager shared] trustedSites];
             NSMutableArray *domains = [[NSMutableArray alloc] init];
             for (TrustedSite *trustedSite in trustSites){
-                [domains addObject:trustedSite.domain];
+                NSString *encodeDomain = [IDNA encodeWithInput:[trustedSite.domain lowercaseString]];
+                [domains addObject:encodeDomain];
             }
             
             if (domains.count > 0){
@@ -338,7 +343,7 @@ NSNotificationName const _Nonnull ContentFilterDidAddOrRemoveNotification = @"ap
                 }
                 return;
             }
-
+            
             [[ContentFilterManager shared] writeJSONToFileName:self.rulePath data:data error:&error];
             
             if (error){

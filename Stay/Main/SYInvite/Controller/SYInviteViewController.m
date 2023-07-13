@@ -95,6 +95,8 @@
 @property (nonatomic, strong) UILabel *proLabel;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UINavigationController *nav;
+@property (nonatomic, strong) NSLayoutConstraint *sigImageConstraint;
+
 @end
 
 @implementation InviteImageView
@@ -106,6 +108,7 @@
     return self;
 }
 - (void)setupUI {
+    self.proLabel = nil;
     self.tipsLabel = nil;
     self.dateLabel = nil;
     self.qrCodeImageView = nil;
@@ -131,26 +134,67 @@
         NSRange range = [userStr rangeOfString:_detail.sinceCn];
         [userStrAttr addAttribute:NSFontAttributeName value:FCStyle.footnoteBold range:range];
         self.useLabel.attributedText = userStrAttr;
-        [self.useLabel sizeToFit];
         [self stayLabel];
         [self sigImageView];
 
         if(isPro) {
-            self.proLabel.centerY =  self.useLabel.centerY;
-            self.proLabel.left = self.stayLabel.right + 5;
+            
+//            [self proLabel];
+           [self.inviteView addSubview:self.proLabel];
+            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.proLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
+                [self.proLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
+                [self.proLabel.heightAnchor constraintEqualToConstant:15],
+                [self.proLabel.widthAnchor constraintEqualToConstant:30],
+            ]];
         }
-        self.extensionLabel.right = self.inviteView.width - 21;
+        
+        if(FCDeviceTypeMac == DeviceHelper.type) {
+            if(self.sigImageConstraint == nil) {
+                self.sigImageConstraint = [self.sigImageView.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-30];
+                
+            }
+            [NSLayoutConstraint activateConstraints:@[
+                self.sigImageConstraint,
+            ]];
+        }
+        
+     
+        [NSLayoutConstraint activateConstraints:@[
+            [self.extensionLabel.leftAnchor constraintEqualToAnchor:self.sigImageView.leftAnchor constant:-60],
+        ]];
     } else {
         [self useLabel];
         [self stayLabel];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [self.extensionLabel.leftAnchor constraintEqualToAnchor: self.stayLabel.leftAnchor],
+        ]];
+        
         if(isPro) {
-            self.proLabel.centerY =  self.useLabel.centerY;
-            self.proLabel.left = self.stayLabel.right + 5;
-            self.dateLabel.centerY = self.useLabel.centerY;
-            self.dateLabel.left = self.proLabel.right + 5;
+            
+            
+            
+            [self.inviteView addSubview:self.proLabel];
+             
+             [NSLayoutConstraint activateConstraints:@[
+                 [self.proLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
+                 [self.proLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
+                 [self.proLabel.heightAnchor constraintEqualToConstant:15],
+                 [self.proLabel.widthAnchor constraintEqualToConstant:30],
+             ]];
+
+            [NSLayoutConstraint activateConstraints:@[
+                [self.dateLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
+                [self.dateLabel.leftAnchor constraintEqualToAnchor:self.proLabel.rightAnchor constant:5],
+            ]];
+            
         } else {
-            self.dateLabel.centerY = self.useLabel.centerY;
-            self.dateLabel.left = self.stayLabel.right + 5;
+            [NSLayoutConstraint activateConstraints:@[
+                [self.dateLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
+                [self.dateLabel.leftAnchor constraintEqualToAnchor:self.stayLabel.rightAnchor constant:5],
+            ]];
         }
     }
     
@@ -161,21 +205,65 @@
     [self addBtn];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self.gradientLayer removeFromSuperlayer];
+    self.gradientLayer = nil;
+    [self gradientLayer];
+    
+    if(self.inviteView.width < 220 && self.inviteView.width > 50 ) {
+        if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
+        
+            if(self.sigImageConstraint == nil) {
+                self.sigImageConstraint = [self.sigImageView.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-30];
+                
+            }
+            [NSLayoutConstraint activateConstraints:@[
+                self.sigImageConstraint,
+            ]];
+        }
+    } else if(self.inviteView.width > 0){
+        if ([[UserScript localeCodeLanguageCodeOnly] isEqualToString:@"zh"] && _detail.sinceCn.length > 0) {
+            if(self.sigImageConstraint != nil) {
+                [NSLayoutConstraint deactivateConstraints:@[
+                    self.sigImageConstraint,
+                ]];
+            }
+            
+        }
+    }
+    
+}
+
 - (UIView *)backView {
     if(_backView == nil) {
-        _backView = [[UIView alloc] initWithFrame:CGRectMake(11, 16,  self.width - 11 * 2, 438)];
+        _backView = [[UIView alloc] init];
+        _backView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_backView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_backView.topAnchor constraintEqualToAnchor:self.topAnchor constant:16],
+            [_backView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant:11],
+            [_backView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-11],
+            [_backView.heightAnchor constraintEqualToConstant:438]
+        ]];
     }
     return _backView;
 }
 
 - (UIView *)inviteView {
     if(_inviteView == nil) {
-        _inviteView = [[UIView alloc] initWithFrame:CGRectMake(40, 21, self.width - 11 * 2 - 80, 390)];
+        _inviteView = [[UIView alloc] init];
         _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
         _inviteView.clipsToBounds = YES;
+        _inviteView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.backView addSubview:_inviteView];
+        [NSLayoutConstraint activateConstraints:@[
+            [_inviteView.topAnchor constraintEqualToAnchor:self.backView.topAnchor constant:21],
+            [_inviteView.leadingAnchor constraintEqualToAnchor:self.backView.leadingAnchor constant:40],
+            [_inviteView.trailingAnchor constraintEqualToAnchor:self.backView.trailingAnchor constant:-40],
+            [_inviteView.heightAnchor constraintEqualToConstant:390]
+        ]];
     }
     return _inviteView;
 }
@@ -194,7 +282,7 @@
 
 - (FCImageView *)iconImageView {
     if(nil == _iconImageView) {
-        _iconImageView = [[FCImageView alloc] initWithFrame:CGRectMake(14, 15, self.width - 11 * 2 - 80 - 28, 174)];
+        _iconImageView = [[FCImageView alloc] init];
         if(self.detail.cover.length > 1) {
             [_iconImageView sd_setImageWithURL:self.detail.cover];
         } else {
@@ -204,14 +292,25 @@
         _iconImageView.layer.cornerRadius = 10;
         _iconImageView.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner;
         _iconImageView.clipsToBounds = YES;
+        _iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_iconImageView];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_iconImageView.topAnchor constraintEqualToAnchor:self.inviteView.topAnchor constant:15],
+            [_iconImageView.leadingAnchor constraintEqualToAnchor:self.inviteView.leadingAnchor constant:14],
+            [_iconImageView.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-14],
+            [_iconImageView.heightAnchor constraintEqualToConstant:174]
+        ]];
+        
+        
+        
     }
     return _iconImageView;
 }
 
 - (UILabel *)nameLabel {
     if(_nameLabel == nil) {
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 200, 28)];
+        _nameLabel = [[UILabel alloc] init];
         if(self.detail.color.length > 0 ) {
             _nameLabel.textColor =  UIColorFromRGB(self.detail.color );
         } else {
@@ -219,8 +318,14 @@
         }
         _nameLabel.font = [UIFont boldSystemFontOfSize:24];
         _nameLabel.text = self.detail.name;
-        _nameLabel.top = self.iconImageView.bottom + 12;
+        _nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_nameLabel];
+        [NSLayoutConstraint activateConstraints:@[
+            [_nameLabel.topAnchor constraintEqualToAnchor:self.iconImageView.bottomAnchor constant:12],
+            [_nameLabel.leadingAnchor constraintEqualToAnchor:self.inviteView.leadingAnchor constant:14],
+            [_nameLabel.trailingAnchor constraintEqualToAnchor:self.inviteView.trailingAnchor constant:-14],
+            [_nameLabel.heightAnchor constraintEqualToConstant:28]
+        ]];
 
     }
     return _nameLabel;
@@ -228,7 +333,7 @@
 
 - (UILabel *)useLabel {
     if(nil == _useLabel) {
-        _useLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 0, 300, 22)];
+        _useLabel = [[UILabel alloc] init];
         _useLabel.font = FCStyle.footnote;
         if(self.detail.color.length > 0 ) {
             _useLabel.textColor =  UIColorFromRGB(self.detail.color);
@@ -236,16 +341,22 @@
             _useLabel.textColor = FCStyle.accent;
         }
         _useLabel.text = NSLocalizedString(@"Iuse",@"");
-        [_useLabel sizeToFit];
-        _useLabel.top = self.nameLabel.bottom + 9;
+        _useLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_useLabel];
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_useLabel.topAnchor constraintEqualToAnchor:self.nameLabel.bottomAnchor constant:9],
+            [_useLabel.leadingAnchor constraintEqualToAnchor:self.inviteView.leadingAnchor constant:14],
+            [_useLabel.heightAnchor constraintEqualToConstant:22]
+        ]];
+        
     }
     return _useLabel;
 }
 
 - (UILabel *)stayLabel {
     if(nil == _stayLabel){
-        _stayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 44, 22)];
+        _stayLabel = [[UILabel alloc] init];
         if(self.detail.color.length > 0) {
             _stayLabel.backgroundColor =  UIColorFromRGB(self.detail.color);
         } else {
@@ -257,20 +368,35 @@
         _stayLabel.layer.cornerRadius = 10;
         _stayLabel.clipsToBounds = YES;
         _stayLabel.textAlignment = NSTextAlignmentCenter;
+        _stayLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_stayLabel];
-        _stayLabel.left = self.useLabel.right + 5;
-        _stayLabel.centerY = self.useLabel.centerY;
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_stayLabel.centerYAnchor constraintEqualToAnchor:self.useLabel.centerYAnchor],
+            [_stayLabel.leftAnchor constraintEqualToAnchor: self.useLabel.rightAnchor constant:5],
+            [_stayLabel.heightAnchor constraintEqualToConstant:22],
+            [_stayLabel.widthAnchor constraintEqualToConstant:44]
+        ]];
+    
     }
     return _stayLabel;
 }
 
 - (UIImageView *)sigImageView {
     if(nil == _sigImageView) {
-        _sigImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 19)];
+        _sigImageView = [[UIImageView alloc] init];
         [_sigImageView setImage:[ImageHelper sfNamed:@"arrow.turn.right.down" font:FCStyle.body color:self.detail.color.length > 0?UIColorFromRGB(self.detail.color):FCStyle.accent]];
         [self.inviteView addSubview:_sigImageView];
         _sigImageView.top = self.stayLabel.bottom;
         _sigImageView.left = self.stayLabel.right - 7;
+        _sigImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [_sigImageView.topAnchor constraintEqualToAnchor:self.stayLabel.bottomAnchor],
+            [_sigImageView.leftAnchor constraintEqualToAnchor: self.stayLabel.rightAnchor constant:-7],
+            [_sigImageView.heightAnchor constraintEqualToConstant:19],
+            [_sigImageView.widthAnchor constraintEqualToConstant:16]
+        ]];
+        
 
     }
     return _sigImageView;
@@ -278,7 +404,7 @@
 
 - (UILabel *)extensionLabel {
     if(nil == _extensionLabel) {
-        _extensionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 19)];
+        _extensionLabel = [[UILabel alloc] init];
         _extensionLabel.font = FCStyle.footnoteBold;
         if(self.detail.color.length > 0) {
             _extensionLabel.textColor =  UIColorFromRGB(self.detail.color);
@@ -286,32 +412,42 @@
             _extensionLabel.textColor = FCStyle.accent;
         }
         _extensionLabel.text = NSLocalizedString(@"ASafariExtension",@"");
-        [_extensionLabel sizeToFit];
+        _extensionLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_extensionLabel];
-        _extensionLabel.top = self.sigImageView.bottom;
-        _extensionLabel.sizeToFit;
-        _extensionLabel.left = self.stayLabel.left;
+        [NSLayoutConstraint activateConstraints:@[
+            [_extensionLabel.topAnchor constraintEqualToAnchor:self.sigImageView.bottomAnchor],
+            [_extensionLabel.heightAnchor constraintEqualToConstant:19],
+        ]];
     }
     return _extensionLabel;
 }
 
 - (UIImageView *)qrCodeImageView {
     if(nil == _qrCodeImageView) {
-        _qrCodeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 0, 48, 48)];
+        _qrCodeImageView = [[UIImageView alloc] init];
+        _qrCodeImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_qrCodeImageView];
-        _qrCodeImageView.top = self.extensionLabel.bottom + 32;
         _qrCodeImageView.layer.cornerRadius = 2;
         _qrCodeImageView.layer.masksToBounds = YES;
         if(self.detail.link.length > 0) {
             [self generatingTwoDimensionalCode];
         }
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_qrCodeImageView.bottomAnchor constraintEqualToAnchor:self.inviteView.bottomAnchor constant: -11],
+            [_qrCodeImageView.leadingAnchor constraintEqualToAnchor: self.inviteView.leadingAnchor constant:14],
+            [_qrCodeImageView.heightAnchor constraintEqualToConstant:48],
+            [_qrCodeImageView.widthAnchor constraintEqualToConstant:48],
+
+        ]];
+    
     }
     return _qrCodeImageView;
 }
 
 - (UILabel *)tipsLabel {
     if(nil == _tipsLabel) {
-        _tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 161, 33)];
+        _tipsLabel = [[UILabel alloc] init];
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
         _tipsLabel.font = FCStyle.footnote;
         _tipsLabel.textColor = FCStyle.subtitleColor;
@@ -321,20 +457,23 @@
             [_tipsLabel sizeToFit];
         } else {
             _tipsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"inviteTips",@""),self.detail.name];
-            _tipsLabel.numberOfLines = 2;
+            _tipsLabel.numberOfLines = 0;
         }
-        
+        _tipsLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.inviteView addSubview:_tipsLabel];
-        
-        _tipsLabel.bottom = self.qrCodeImageView.bottom;
-        _tipsLabel.left = self.qrCodeImageView.right + 5;
+        [NSLayoutConstraint activateConstraints:@[
+            [_tipsLabel.bottomAnchor constraintEqualToAnchor:self.inviteView.bottomAnchor constant: -11],
+            [_tipsLabel.leadingAnchor constraintEqualToAnchor: self.inviteView.leadingAnchor constant:66],
+            [_tipsLabel.trailingAnchor constraintEqualToAnchor: self.inviteView.trailingAnchor constant:-14],
+            [_tipsLabel.heightAnchor constraintEqualToConstant:33],
+        ]];
     }
     return _tipsLabel;
 }
 
 - (UIButton *)addBtn {
     if(nil == _addBtn) {
-        _addBtn =  [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 161, 35)];
+        _addBtn =  [[UIButton alloc] init];
         [_addBtn setImage:[ImageHelper sfNamed:@"square.and.arrow.up" font:FCStyle.body color:FCStyle.accent] forState:UIControlStateNormal];
         [_addBtn setTitle:NSLocalizedString(@"ShareCard", @"") forState:UIControlStateNormal];
         [_addBtn setTitleColor:FCStyle.accent forState:UIControlStateNormal];
@@ -344,16 +483,23 @@
         _addBtn.layer.borderWidth = 1;
         _addBtn.layer.borderColor = FCStyle.accent.CGColor;
         [_addBtn addTarget:self action:@selector(shareImage:) forControlEvents:UIControlEventTouchUpInside];
+        _addBtn.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_addBtn];
-        _addBtn.top = self.backView.bottom + 22;
-        _addBtn.centerX = self.backView.centerX;
+        
+        [NSLayoutConstraint activateConstraints:@[
+            [_addBtn.topAnchor constraintEqualToAnchor:self.backView.bottomAnchor constant: 22],
+            [_addBtn.leadingAnchor constraintEqualToAnchor: self.leadingAnchor constant:94],
+            [_addBtn.trailingAnchor constraintEqualToAnchor: self.trailingAnchor constant:-94],
+            [_addBtn.heightAnchor constraintEqualToConstant:33],
+        ]];
+
     }
     return _addBtn;
 }
 
 - (UILabel *)proLabel{
     if (nil == _proLabel){
-        _proLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 30, 15)];
+        _proLabel = [[UILabel alloc] init];
         _proLabel.backgroundColor = FCStyle.backgroundGolden;
         _proLabel.font = [UIFont boldSystemFontOfSize:10];
         _proLabel.text = @"PRO";
@@ -363,8 +509,8 @@
         _proLabel.textAlignment = NSTextAlignmentCenter;
         _proLabel.textColor = FCStyle.fcGolden;
         _proLabel.clipsToBounds = YES;
-        [self.inviteView addSubview:_proLabel];
-
+        _proLabel.translatesAutoresizingMaskIntoConstraints = NO;
+       
     }
     
     return _proLabel;
@@ -372,7 +518,7 @@
 
 - (UILabel *)dateLabel {
     if(nil == _dateLabel) {
-        _dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 18)];
+        _dateLabel = [[UILabel alloc] init];
         if(self.detail.color.length > 0) {
             _dateLabel.textColor =  UIColorFromRGB(self.detail.color);
         } else {
@@ -387,7 +533,10 @@
         [str addAttribute:NSFontAttributeName value:FCStyle.footnote range:NSMakeRange(0, 5)];
         _dateLabel.attributedText = str;
         [self.inviteView addSubview:_dateLabel];
-
+        _dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        [NSLayoutConstraint activateConstraints:@[
+            [_dateLabel.heightAnchor constraintEqualToConstant:18],
+        ]];
     }
     return _dateLabel;
 }
@@ -533,10 +682,12 @@
         shareSigImageView.left = shareStayLabel.right - 7;
         if(isPro) {
             [shareInviteView addSubview:shareProLabel];
-           shareProLabel.centerY =  shareUseLabel.centerY;
-            shareProLabel.left = shareUseLabel.right + 5;
+            shareProLabel.centerY =  shareStayLabel.centerY;
+            shareProLabel.left = shareStayLabel.right + 5;
             shareDateLabel.centerY = shareUseLabel.centerY;
             shareDateLabel.left = shareProLabel.right + 5;
+            
+            
         } else {
             shareDateLabel.centerY = shareUseLabel.centerY;
             shareDateLabel.left = shareStayLabel.right + 5;
@@ -655,99 +806,153 @@
 
 @interface InviteRulesView:UIView
 
+- (void)setupUI;
+
 @end
 
 @implementation InviteRulesView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-    }
-    return self;
-}
+//- (instancetype)initWithFrame:(CGRect)frame {
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        [self setupUI];
+//    }
+//    return self;
+//}
 
 - (void)setupUI {
     Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
 
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 13, 100, 21)];
+    UILabel *titleLab = [[UILabel alloc] init];
     titleLab.text = isPro? NSLocalizedString(@"GiftRule",@"InviteFriend"):NSLocalizedString(@"InviteRule",@"InviteFriend");
     titleLab.font = FCStyle.headlineBold;
     titleLab.textColor = FCStyle.fcBlack;
     titleLab.textAlignment = NSTextAlignmentCenter;
+    titleLab.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:titleLab];
-    titleLab.centerX = self.width / 2;
+    [NSLayoutConstraint activateConstraints:@[
+        [titleLab.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+        [titleLab.topAnchor constraintEqualToAnchor:self.topAnchor constant:13],
+        [titleLab.heightAnchor constraintEqualToConstant:21]
+    ]];
     
-    UILabel *descLab = [[UILabel alloc] initWithFrame:CGRectMake(11, 0, 322, 100)];
+    
+    
+    
+    UILabel *descLab = [[UILabel alloc] init];
     descLab.text = isPro?NSLocalizedString(@"GiftRuleDesc",@"InviteFriend"):NSLocalizedString(@"InviteRuleDesc",@"InviteFriend");
     descLab.font = FCStyle.footnote;
     descLab.numberOfLines = 0;
     descLab.textColor = FCStyle.subtitleColor;
     descLab.textAlignment = NSTextAlignmentCenter;
-    [descLab sizeToFit];
+    descLab.translatesAutoresizingMaskIntoConstraints = NO;
+//    [descLab sizeToFit];
     [self addSubview:descLab];
     
-    descLab.top = titleLab.bottom + 12;
-    descLab.centerX = self.width / 2;
     
-    self.height = descLab.bottom + 27;
     
-
+    [NSLayoutConstraint activateConstraints:@[
+        [descLab.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant: -13],
+        [descLab.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant: 13],
+        [descLab.topAnchor constraintEqualToAnchor:titleLab.bottomAnchor constant:13],
+//        [descLab.heightAnchor constraintEqualToConstant:100]
+    ]];
+    
+    
+    CGRect rect = [descLab.text boundingRectWithSize:CGSizeMake(320, 300)
+                                           options:NSStringDrawingUsesLineFragmentOrigin
+                                        attributes:@{NSFontAttributeName : FCStyle.footnote}
+                                           context:nil];
+    
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [self.heightAnchor  constraintEqualToConstant:rect.size.height + 13 + 21 + 13 + 27]
+    ]];
+    
 }
 
 @end
 
 
 @interface HowToInviteView:UIView
-
 @end
 
 @implementation HowToInviteView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (instancetype)init {
+    self = [super init];
     if (self) {
-        [self setupUI];
+           [self setupUI];
     }
     return self;
 }
 
+//- (instancetype)initWithFrame:(CGRect)frame {
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        [self setupUI];
+//    }
+//    return self;
+//}
+
 - (void)setupUI {
-
-    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
-
     
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 13, 100, 21)];
+    Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
+    
+    
+    UILabel *titleLab = [[UILabel alloc] init];
     titleLab.text = isPro ? NSLocalizedString(@"HowToGift",@""):  NSLocalizedString(@"HowToInvite",@"");
     titleLab.font = FCStyle.headlineBold;
     titleLab.textColor = FCStyle.fcBlack;
     titleLab.textAlignment = NSTextAlignmentLeft;
+    titleLab.translatesAutoresizingMaskIntoConstraints = NO;
     [titleLab sizeToFit];
     [self addSubview:titleLab];
-//    titleLab.centerX = self.width / 2;
     
-    UILabel *descLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 322, 100)];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [titleLab.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant: 10],
+        [titleLab.topAnchor constraintEqualToAnchor:self.topAnchor constant:13],
+        [titleLab.heightAnchor constraintEqualToConstant:21]
+    ]];
+    
+    //    titleLab.centerX = self.width / 2;
+    
+    UILabel *descLab = [[UILabel alloc] init];
     descLab.text = isPro ? NSLocalizedString(@"HowToGiftDesc",@"InviteFriend") : NSLocalizedString(@"HowToInviteDesc",@"InviteFriend");
     descLab.font = FCStyle.footnote;
     descLab.numberOfLines = 0;
     descLab.textColor = FCStyle.subtitleColor;
     descLab.textAlignment = NSTextAlignmentLeft;
+    descLab.translatesAutoresizingMaskIntoConstraints = NO;
     [descLab sizeToFit];
     [self addSubview:descLab];
     
-    descLab.top = titleLab.bottom + 12;
-    self.height = descLab.bottom + 15;
+    [NSLayoutConstraint activateConstraints:@[
+        [descLab.leadingAnchor constraintEqualToAnchor:self.leadingAnchor constant: 10],
+        [descLab.topAnchor constraintEqualToAnchor:titleLab.bottomAnchor constant:13],
+        [descLab.heightAnchor constraintEqualToConstant:21]
+    ]];
     
-    UIImageView *accessor = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 13, 18)];
+    UIImageView *accessor = [[UIImageView alloc] init];
     UIImage *image = [UIImage systemImageNamed:@"chevron.right"
                              withConfiguration:[UIImageSymbolConfiguration configurationWithFont:[UIFont systemFontOfSize:13]]];
     image = [image imageWithTintColor:FCStyle.fcSecondaryBlack renderingMode:UIImageRenderingModeAlwaysOriginal];
     accessor.image = image;
     [self addSubview:accessor];
-    accessor.right = self.width - 18;
-    accessor.centerY = self.height / 2;
+
+    accessor.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [accessor.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+        [accessor.trailingAnchor constraintEqualToAnchor:self.trailingAnchor constant:-18],
+        [accessor.heightAnchor constraintEqualToConstant:18],
+        [accessor.widthAnchor constraintEqualToConstant:13],
+    ]];
     
     
+    [NSLayoutConstraint activateConstraints:@[
+        [self.heightAnchor  constraintEqualToConstant:70]
+    ]];
     
 }
 
@@ -917,21 +1122,66 @@ UITableViewDataSource
         cell.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:self.iconImageView];
         
+        [NSLayoutConstraint activateConstraints:@[
+            [self.iconImageView.centerXAnchor constraintEqualToAnchor:cell.contentView.centerXAnchor],
+            [self.iconImageView.topAnchor constraintEqualToAnchor:cell.contentView.topAnchor constant:25],
+            [self.iconImageView.widthAnchor constraintEqualToConstant:100],
+            [self.iconImageView.heightAnchor constraintEqualToConstant:100],
+        ]];
+        
+        [cell.contentView addSubview:self.inviteBtn];
+
+        [NSLayoutConstraint activateConstraints:@[
+            [self.inviteBtn.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+            [self.inviteBtn.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+            [self.inviteBtn.heightAnchor constraintEqualToConstant:45],
+        ]];
+        
+        
+        
         if(!isPro) {
             [cell.contentView addSubview:self.pointLabel];
+            [NSLayoutConstraint activateConstraints:@[
+                [self.pointLabel.topAnchor constraintEqualToAnchor:self.iconImageView.bottomAnchor constant:24],
+                [self.pointLabel.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.pointLabel.heightAnchor constraintEqualToConstant:18],
+            ]];
             
-            self.pointLabel.top = self.iconImageView.bottom + 24;
             [cell.contentView addSubview:self.inviteView];
-            self.inviteView.top = self.pointLabel.bottom + 11;
+            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteView.topAnchor constraintEqualToAnchor:self.pointLabel.bottomAnchor constant:11],
+                [self.inviteView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.inviteView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+                [self.inviteView.heightAnchor constraintEqualToConstant:69],
+            ]];
+            
             [cell.contentView addSubview:self.inviteLabel];
-            self.inviteLabel.top = self.inviteView.bottom + 21;
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteLabel.topAnchor constraintEqualToAnchor:self.inviteView.bottomAnchor constant:21],
+                [self.inviteLabel.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.inviteLabel.heightAnchor constraintEqualToConstant:18],
+            ]];
+            
             [cell.contentView addSubview:self.inviteRulesView];
-            self.inviteRulesView.top = self.inviteView.bottom + 21;
+            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteRulesView.topAnchor constraintEqualToAnchor:self.inviteLabel.bottomAnchor constant:18],
+                [self.inviteRulesView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.inviteRulesView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+            ]];
+            
+        
+            
         } else {
             [cell.contentView addSubview:self.proPointLabel];
-            self.proPointLabel.centerX = self.view.width / 2;
-            self.proPointLabel.top = self.iconImageView.bottom + 16;
             
+            [NSLayoutConstraint activateConstraints:@[
+                [self.proPointLabel.centerXAnchor constraintEqualToAnchor:self.iconImageView.centerXAnchor],
+                [self.proPointLabel.topAnchor constraintEqualToAnchor:self.iconImageView.bottomAnchor constant:16],
+                [self.proPointLabel.heightAnchor constraintEqualToConstant:24]
+            ]];
+    
             NSString *contentStr =[NSString stringWithFormat:@"%ld/%ld %@",_detail.rest,_detail.total,NSLocalizedString(@"UserLeft", @"")];
 
             NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:contentStr];
@@ -942,29 +1192,51 @@ UITableViewDataSource
             
             self.proInviteLeftLabel.attributedText = str;
             
-            
             [cell.contentView addSubview:self.proInviteLeftLabel];
             
-            self.proInviteLeftLabel.centerX = self.proPointLabel.centerX;
-            self.proInviteLeftLabel.top = self.proPointLabel.bottom + 16;
-            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.proInviteLeftLabel.centerXAnchor constraintEqualToAnchor:self.proPointLabel.centerXAnchor],
+                [self.proInviteLeftLabel.topAnchor constraintEqualToAnchor:self.proPointLabel.bottomAnchor constant:16],
+                [self.proPointLabel.heightAnchor constraintEqualToConstant:21]
+            ]];
             [cell.contentView addSubview:self.proGiftTitleLabel];
             
-            self.proGiftTitleLabel.top = self.proInviteLeftLabel.bottom + 19;
-            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.proGiftTitleLabel.topAnchor constraintEqualToAnchor:self.proInviteLeftLabel.bottomAnchor constant:16],
+                [self.proGiftTitleLabel.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.proGiftTitleLabel.heightAnchor constraintEqualToConstant:18]
+            ]];
+                        
             [cell.contentView addSubview:self.inviteRulesView];
-            self.inviteRulesView.top = self.proGiftTitleLabel.bottom + 16;
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteRulesView.topAnchor constraintEqualToAnchor:self.proGiftTitleLabel.bottomAnchor constant:16],
+                [self.inviteRulesView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.inviteRulesView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+            ]];
         }
         [cell.contentView addSubview:self.howToInviteView];
-        self.howToInviteView.top = self.inviteRulesView.bottom + 15;
         
-        [cell.contentView addSubview:self.inviteBtn];
+        [NSLayoutConstraint activateConstraints:@[
+            [self.howToInviteView.topAnchor constraintEqualToAnchor:self.inviteRulesView.bottomAnchor constant:15],
+            [self.howToInviteView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+            [self.howToInviteView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+        ]];
+        
+        
          
         if(_started) {
             [cell.contentView addSubview:self.inviteImageView];
             self.inviteImageView.detail = _detail;
             [self.inviteImageView setupUI];
             self.inviteImageView.top = self.howToInviteView.bottom + 13;
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteImageView.topAnchor constraintEqualToAnchor:self.howToInviteView.bottomAnchor constant:13],
+                [self.inviteImageView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [self.inviteImageView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+                [self.inviteImageView.heightAnchor constraintEqualToConstant:525],
+            ]];
+            
+            
             ShareLinkView *linkView = [[ShareLinkView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 150)];
             linkView.backgroundColor = FCStyle.secondaryBackground;
             linkView.layer.cornerRadius = 10;
@@ -973,14 +1245,25 @@ UITableViewDataSource
             linkView.linkStr = _detail.link;
             linkView.cer = self;
             [linkView setUpUI];
+            linkView.translatesAutoresizingMaskIntoConstraints = NO;
             [cell.contentView addSubview:linkView];
-
-            linkView.top = self.inviteImageView.bottom + 26;
-            [self.inviteBtn setTitle:NSLocalizedString(@"EditInfo", @"") forState:UIControlStateNormal];
-            self.inviteBtn.top = linkView.bottom + 32;
             
+            [NSLayoutConstraint activateConstraints:@[
+                [linkView.topAnchor constraintEqualToAnchor:self.inviteImageView.bottomAnchor constant:26],
+                [linkView.leadingAnchor constraintEqualToAnchor:cell.contentView.leadingAnchor constant:19],
+                [linkView.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-19],
+                [linkView.heightAnchor constraintEqualToConstant:150],
+            ]];
+            
+            [self.inviteBtn setTitle:NSLocalizedString(@"EditInfo", @"") forState:UIControlStateNormal];
+            
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteBtn.topAnchor constraintEqualToAnchor:linkView.bottomAnchor constant:32],
+            ]];
         } else {
-            self.inviteBtn.top = self.howToInviteView.bottom + 23;
+            [NSLayoutConstraint activateConstraints:@[
+                [self.inviteBtn.topAnchor constraintEqualToAnchor:self.howToInviteView.bottomAnchor constant:23],
+            ]];
         }
         return cell;
     }
@@ -1003,9 +1286,9 @@ UITableViewDataSource
 
 - (UIImageView *)iconImageView {
     if(_iconImageView == nil) {
-        _iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 25, 100, 100)];
-        _iconImageView.centerX = self.view.centerX;
+        _iconImageView = [[UIImageView alloc] init];
         [_iconImageView setImage:[UIImage imageNamed:@"InviteBigIcon"]];
+        _iconImageView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _iconImageView;
 }
@@ -1013,9 +1296,11 @@ UITableViewDataSource
 
 - (InviteProgressView *)inviteView {
     if(_inviteView == nil) {
-        _inviteView = [[InviteProgressView alloc] initWithFrame:CGRectMake(21, 0, 348, 69)];
+        _inviteView = [[InviteProgressView alloc] init];
         _inviteView.backgroundColor = FCStyle.secondaryBackground;
         _inviteView.layer.cornerRadius = 10;
+        _inviteView.translatesAutoresizingMaskIntoConstraints = NO;
+        
     }
     
     return _inviteView;
@@ -1023,51 +1308,54 @@ UITableViewDataSource
 
 - (UILabel *)pointLabel {
     if(_pointLabel == nil) {
-        _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 149, 120, 18)];
+        _pointLabel = [[UILabel alloc] init];
         _pointLabel.font = FCStyle.subHeadlineBold;
         _pointLabel.textColor = FCStyle.subtitleColor;
         _pointLabel.text = NSLocalizedString(@"PointProgress", @"");
-        _pointLabel.top = self.iconImageView.bottom + 24;
+        _pointLabel.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _pointLabel;
 }
 
 - (UILabel *)inviteLabel {
     if(_inviteLabel == nil) {
-        _inviteLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 240, 18)];
+        _inviteLabel = [[UILabel alloc] init];
         _inviteLabel.font = FCStyle.subHeadlineBold;
         _inviteLabel.textColor = FCStyle.subtitleColor;
         _inviteLabel.text = NSLocalizedString(@"InviteToGetPoint", @"");
-        _inviteLabel.top = self.inviteView.bottom + 21;
+        _inviteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _inviteLabel;
 }
 
 - (InviteRulesView *)inviteRulesView {
     if(_inviteRulesView == nil) {
-        _inviteRulesView = [[InviteRulesView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 300)];
+        _inviteRulesView = [[InviteRulesView alloc] init];
         _inviteRulesView.layer.cornerRadius = 10;
         _inviteRulesView.layer.masksToBounds = YES;
         _inviteRulesView.backgroundColor = FCStyle.secondaryBackground;
+        _inviteRulesView.translatesAutoresizingMaskIntoConstraints = NO;
+        [_inviteRulesView setupUI];
     }
     return _inviteRulesView;
 }
 
 - (HowToInviteView *)howToInviteView {
     if(_howToInviteView == nil) {
-        _howToInviteView = [[HowToInviteView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 70)];
+        _howToInviteView = [[HowToInviteView alloc] init];
         _howToInviteView.layer.cornerRadius = 10;
         _howToInviteView.backgroundColor = FCStyle.secondaryBackground;
         UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                   action:@selector(clickHowTo)];
         [_howToInviteView addGestureRecognizer:gesture];
+        _howToInviteView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _howToInviteView;
 }
 
 - (UIButton *)inviteBtn {
     if(_inviteBtn == nil) {
-        _inviteBtn = [[UIButton alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 45)];
+        _inviteBtn = [[UIButton alloc] init];
         [_inviteBtn setTitle:NSLocalizedString(@"StartInviting", @"") forState:UIControlStateNormal];
         Boolean isPro = [[FCStore shared] getPlan:NO] == FCPlan.None?FALSE:TRUE;
         if(isPro) {
@@ -1082,6 +1370,7 @@ UITableViewDataSource
         _inviteBtn.layer.borderColor = FCStyle.accent.CGColor;
         _inviteBtn.layer.borderWidth = 1;
         _inviteBtn.layer.cornerRadius = 10;
+        _inviteBtn.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _inviteBtn;
 }
@@ -1123,11 +1412,12 @@ UITableViewDataSource
 
 - (InviteImageView *)inviteImageView {
     if(nil == _inviteImageView) {
-        _inviteImageView = [[InviteImageView alloc] initWithFrame:CGRectMake(19, 0, self.view.width - 38, 525)];
+        _inviteImageView = [[InviteImageView alloc] init];
         _inviteImageView.backgroundColor = FCStyle.secondaryBackground;
         _inviteImageView.layer.cornerRadius = 10;
         _inviteImageView.layer.masksToBounds = YES;
         _inviteImageView.nav = self.navigationController;
+        _inviteImageView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _inviteImageView;
 }
@@ -1135,11 +1425,12 @@ UITableViewDataSource
 
 - (UILabel *)proPointLabel {
     if(nil == _proPointLabel) {
-        _proPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 24)];
+        _proPointLabel = [[UILabel alloc] init];
         _proPointLabel.text = [NSString stringWithFormat:@"%@ %@",@([SharedStorageManager shared].userDefaultsExRO.availableGiftPoints).description,NSLocalizedString(@"Points",@"")];
         _proPointLabel.font = FCStyle.title3Bold;
         _proPointLabel.textColor = FCStyle.accent;
         _proPointLabel.textAlignment = NSTextAlignmentCenter;
+        _proPointLabel.translatesAutoresizingMaskIntoConstraints = NO;
         
     }
     return _proPointLabel;
@@ -1147,10 +1438,11 @@ UITableViewDataSource
 
 - (UILabel *)proInviteLeftLabel {
     if(nil == _proInviteLeftLabel) {
-        _proInviteLeftLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 21)];
+        _proInviteLeftLabel = [[UILabel alloc] init];
         _proInviteLeftLabel.textAlignment = NSTextAlignmentCenter;
         _proInviteLeftLabel.font = FCStyle.headlineBold;
         _proInviteLeftLabel.textColor = FCStyle.fcBlack;
+        _proInviteLeftLabel.translatesAutoresizingMaskIntoConstraints = NO;
 
     }
     return _proInviteLeftLabel;
@@ -1158,10 +1450,11 @@ UITableViewDataSource
 
 - (UILabel *)proGiftTitleLabel {
     if(nil == _proGiftTitleLabel) {
-        _proGiftTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19, 0, 200, 18)];
+        _proGiftTitleLabel = [[UILabel alloc] init];
         _proGiftTitleLabel.text = NSLocalizedString(@"GiftYourPoint", @"");
         _proGiftTitleLabel.font = FCStyle.subHeadlineBold;
         _proGiftTitleLabel.textColor = FCStyle.subtitleColor;
+        _proGiftTitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _proGiftTitleLabel;
 }
