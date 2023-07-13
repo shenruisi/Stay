@@ -9,7 +9,7 @@
 #import "FCStyle.h"
 #import "FCConfig.h"
 
-static CGFloat MIN_PRIMARY_WIDTH = 310;
+static CGFloat MIN_PRIMARY_WIDTH = 340;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 @interface MacSplitViewController ()

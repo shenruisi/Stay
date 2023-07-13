@@ -6,6 +6,11 @@
 //
 
 #import "TriggerBlockerAST.h"
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
 
 @interface TriggerBlockerAST()
 
@@ -17,6 +22,7 @@
     [super construct:args];
     
     NSString *urlFilter = [self.parser.curToken toString];
+//    NSLog(@"urlFilter: %@",urlFilter);
     if (urlFilter.length >= 2
         && [urlFilter characterAtIndex:0] == '/'
         && [urlFilter characterAtIndex:urlFilter.length - 1] == '/'){
@@ -88,11 +94,12 @@
                             BOOL unless = [self.contentBlockerRule.action.type isEqualToString:@"ignore-previous-rules"];
                             for (NSString *domain in domainList){
                                 if (domain.length > 0){
+                                    NSString *encodeDomain = [IDNA encodeWithInput:[domain lowercaseString]];
                                     if (unless){
-                                        [self.contentBlockerRule.trigger.unlessDomain addObject:domain];
+                                        [self.contentBlockerRule.trigger.unlessDomain addObject:encodeDomain];
                                     }
                                     else{
-                                        [self.contentBlockerRule.trigger.ifDomain addObject:domain];
+                                        [self.contentBlockerRule.trigger.ifDomain addObject:encodeDomain];
                                     }
                                 }
                             }

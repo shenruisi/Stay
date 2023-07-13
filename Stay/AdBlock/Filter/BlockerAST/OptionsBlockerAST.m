@@ -7,6 +7,11 @@
 
 #import "OptionsBlockerAST.h"
 #import "FilterToken.h"
+#if FC_IOS
+#import "Stay-Swift.h"
+#else
+#import "Stay-Swift.h"
+#endif
 
 @implementation OptionsBlockerAST
 
@@ -38,11 +43,12 @@
                 BOOL inverse = domains[0].inverse;
                 for (FilterOptionDomain *domain in domains){
                     if (domain.inverse == inverse){
+                        NSString *encodeDomain = [IDNA encodeWithInput:[domain.value lowercaseString]];
                         if (inverse){
-                            [self.contentBlockerRule.trigger.unlessDomain addObject:domain.value];
+                            [self.contentBlockerRule.trigger.unlessDomain addObject:encodeDomain];
                         }
                         else{
-                            [self.contentBlockerRule.trigger.ifDomain addObject:domain.value];
+                            [self.contentBlockerRule.trigger.ifDomain addObject:encodeDomain];
                         }
                     }
                 }

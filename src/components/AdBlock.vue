@@ -484,8 +484,8 @@ export default {
           height: 30px;
           line-height: 15px;
           display: flex;
-          justify-content: start;
-          align-items: end;
+          justify-content: flex-start;
+          align-items: flex-end;
           position: relative;
           span{
             -webkit-line-clamp: 2;
