@@ -25,7 +25,7 @@
 #import "TimeHelper.h"
 #import "SYAppearanceViewController.h"
 
-static CGFloat MIN_PRIMARY_WIDTH = 310;
+static CGFloat MIN_PRIMARY_WIDTH = 390;
 static CGFloat MAX_PRIMARY_WIDTH = 540;
 
 NSNotificationName const _Nonnull SVCDisplayModeDidChangeNotification = @"app.stay.notification.SVCDisplayModeDidChangeNotification";

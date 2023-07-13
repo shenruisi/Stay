@@ -763,7 +763,7 @@
             [self.nav popToRootViewControllerAnimated:true];
 #ifdef FC_MAC
         if ([QuickAccess primaryController] != nil){
-            [QuickAccess primaryController].selectedIndex = 2;
+            [QuickAccess primaryController].selectedIndex = 3;
         }
 #else
     if (FCDeviceTypeIPhone == [DeviceHelper type]){

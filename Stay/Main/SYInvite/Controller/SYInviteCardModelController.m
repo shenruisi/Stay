@@ -15,7 +15,7 @@
 #import "FCStore.h"
 #import "UserScript.h"
 #import "FCButton.h"
-
+#import "FCApp.h"
 @interface SelectBarView:UIView
 
 @property (nonatomic, strong) UIButton *leftButton;
@@ -659,7 +659,7 @@
 }
 
 - (CGSize)mainViewSize{
-    return CGSizeMake(MIN(kScreenWidth - 30, 450), 765);
+    return CGSizeMake(MIN(FCApp.keyWindow.frame.size.width - 30, 360), 765);
 }
 
 - (void)clear{

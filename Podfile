@@ -12,6 +12,7 @@ target 'Stay' do
  pod 'ffmpeg-kit-ios-full', '~> 5.1'
  pod 'lottie-ios'
  pod  'Ads-CN'
+ pod 'Punycode'
 end
 
 target 'Stay-Mac' do
@@ -21,4 +22,5 @@ target 'Stay-Mac' do
  pod 'SDWebImageSVGKitPlugin'
  pod 'ffmpeg-kit-ios-full', '~> 5.1'
  pod 'lottie-ios'
+ pod 'Punycode'
 end
