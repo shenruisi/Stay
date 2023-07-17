@@ -28,7 +28,8 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "DownloadManager.h"
 #import "SYDownloadSlideController.h"
-
+#import <AdSupport/ASIdentifierManager.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 #ifdef FC_MAC
 #import "Plugin.h"
 #endif
@@ -55,6 +56,8 @@
 #import <SDImageCache.h>
 #import "UIColor+Convert.h"
 #import "SYInviteTaskSlideController.h"
+#import <BUAdSDK/BUAdSDKManager.h>
+#import <BUAdSDK/BuAdSDK.h>
 
 @interface AppDelegate()
 
@@ -74,8 +77,23 @@
     [UMConfigure initWithAppkey:@"62b3dfc705844627b5c26bed" channel:@"App Store"];
     [Bugsnag start];
 #endif
+
     
+    BUAdSDKConfiguration *configuration = [BUAdSDKConfiguration configuration];
+//    configuration.debugLog = BUAdSDKLogLevelDebug;
+//        configuration.territory = BUAdSDKTerritory_CN;
+    configuration.appID = @"5406847";//除appid外，其他参数配置按照项目实际需求配置即可。
+    [BUAdSDKManager startWithAsyncCompletionHandler:^(BOOL success, NSError *error) {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+             //请求广告逻辑处理
+                  
+                });
+            }
+        }];
+
     
+      
 //    NSString *deviceID = [[NSUUID UUID] UUIDString];
     
     //Self point
@@ -314,6 +332,19 @@
 
 - (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
     return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+
+          [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+    
+                  if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+
+                      NSString *idfaString = [[ASIdentifierManager sharedManager] advertisingIdentifier].UUIDString;
+
+                  }
+
+              }];
 }
 
 //递归

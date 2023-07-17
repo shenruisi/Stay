@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>獲取設備信息用以精準推送您喜歡的內容</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

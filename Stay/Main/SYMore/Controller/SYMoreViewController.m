@@ -29,8 +29,6 @@
 #import "DeviceHelper.h"
 #import "SYInviteTaskSlideController.h"
 #import "UserDefaultsExRO.h"
-#import <BUAdSDK/BURewardedVideoModel.h>
-
 NSNotificationName const _Nonnull SYMoreViewReloadCellNotification = @"app.stay.notification.SYMoreViewReloadCellNotification";
 NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.stay.notification.SYMoreViewICloudDidSwitchNotification";
 
@@ -543,8 +541,7 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
 @interface SYMoreViewController ()<
  UITableViewDelegate,
- UITableViewDataSource,
- BUNativeExpressRewardedVideoAdDelegate
+ UITableViewDataSource
 >
 
 @property (nonatomic, strong) UITableView *tableView;
@@ -552,7 +549,6 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 @property (nonatomic, strong) UIBarButtonItem *leftIcon;
 @property (nonatomic, assign) CGFloat leftPointCount;
 @property (nonatomic, strong) SYInviteTaskSlideController *inviteTaskSlideController;
-@property (nonatomic, strong) BUNativeExpressRewardedVideoAd *rewardedAd;
 @end
 
 @implementation SYMoreViewController
@@ -638,17 +634,6 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     else{
         self.leftPointCount = [SharedStorageManager shared].userDefaultsExRO.availablePoints;
     }
-    
-    
-    BURewardedVideoModel *model = [[BURewardedVideoModel alloc] init];
-
-    model.userId = @"tag123";
-
-    self.rewardedAd = [[BUNativeExpressRewardedVideoAd alloc] initWithSlotID:@"952779885" rewardedVideoModel:model];
-
-    self.rewardedAd.delegate = self;
-
-    [self.rewardedAd loadAdData];
     
 }
 
@@ -817,14 +802,11 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
 
             if(isPro) {
 #ifdef FC_MAC
-                
+
                 [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
-   
+
 #else
-//                [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
-          
-                
-             
+                [self.navigationController pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #endif
             } else {
                 self.inviteTaskSlideController = nil;
@@ -984,28 +966,6 @@ NSNotificationName const _Nonnull SYMoreViewICloudDidSwitchNotification = @"app.
     return self.dataSource[section][@"section"];
 }
 
-- (void)showRewardVideoAd {
-    if (self.rewardedAd) {
-        [self.rewardedAd showAdFromRootViewController:self];
-    }
-}
-
-
-- (void)rewardedVideoAdDidLoad:(BURewardedVideoAd *)rewardedVideoAd {
-//    self.tipLabel.text = @"加载中...";
-}
-
-- (void)rewardedVideoAdVideoDidLoad:(BURewardedVideoAd *)rewardedVideoAd {
-//    self.tipLabel.text = @"视频加载完成";
-}
-
-- (void)rewardedVideoAd:(BURewardedVideoAd *)rewardedVideoAd didFailWithError:(NSError *)error {
-//    self.tipLabel.text = @"加载失败";
-}
-
-- (void)rewardedVideoAdDidClose:(BURewardedVideoAd *)rewardedVideoAd {
-//    _tipLabel.text = @"点击左边按钮加载广告。";
-}
 
 
 - (NSArray *)dataSource{

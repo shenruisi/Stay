@@ -21,6 +21,10 @@
 #else
 #import "Stay-Swift.h"
 #endif
+#import <BUAdSDK/BURewardedVideoModel.h>
+#import <BUAdSDK/BUAdSDKManager.h>
+#import <BUAdSDK/BUNativeExpressRewardedVideoAd.h>
+
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -143,7 +147,8 @@
 
 @interface SYInviteTaskController()<
 UITableViewDelegate,
-UITableViewDataSource
+UITableViewDataSource,
+BUNativeExpressRewardedVideoAdDelegate
 >
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *taskArray;
@@ -152,7 +157,7 @@ UITableViewDataSource
 @property (nonatomic, strong) NSMutableDictionary *rewardBlockDic;
 @property (nonatomic, strong) NSMutableDictionary *webRewardBlockDic;
 @property (nonatomic, strong) UILabel *pointRules;
-
+@property (nonatomic, strong) BUNativeExpressRewardedVideoAd *rewardedAd;
 
 @end
 @implementation SYInviteTaskController
@@ -255,8 +260,9 @@ UITableViewDataSource
 #else
             [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #endif
-        
+
         [self.navigationController.slideController dismiss];
+          
     } else if ([@"generic" isEqualToString: dic[@"type"]]) {
         
         
@@ -271,8 +277,6 @@ UITableViewDataSource
         
         if([@"app" isEqualToString:action[@"type"]]) {
             if(self.rewardBlockDic[dic[@"uuid"]] == NULL) {
-                
-       
                 
                 if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:action[@"url"]]]){
                     
@@ -328,6 +332,18 @@ UITableViewDataSource
             [self.nav presentViewController:safariVc animated:YES completion:nil];
 //        }
 #endif
+        } else if([@"csj" isEqualToString:action[@"type"]]) {
+            BURewardedVideoModel *model = [[BURewardedVideoModel alloc] init];
+
+            model.userId = DeviceHelper.uuid;
+
+            model.extra = dic[@"uuid"];
+            
+            self.rewardedAd = [[BUNativeExpressRewardedVideoAd alloc] initWithSlotID:@"952879447" rewardedVideoModel:model];
+            
+            self.rewardedAd.delegate = self;
+
+            [self.rewardedAd loadAdData];
         }
         
     }
@@ -517,6 +533,104 @@ UITableViewDataSource
         }];
     }
 }
+
+
+- (void)showRewardVideoAd {
+    if (self.rewardedAd) {
+        [self.rewardedAd showAdFromRootViewController:self.nav];
+    }
+}
+
+#pragma mark - BUNativeExpressRewardedVideoAdDelegate
+//加载广告的时候，delegate 传的是self，广告事件发生后会自动回调回来，我们只需要重新实现这些方法即可
+- (void)nativeExpressRewardedVideoAdDidLoad:
+(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+    [self showRewardVideoAd]; //记载完毕的回调，在这里做显示
+}
+
+- (void)nativeExpressRewardedVideoAd:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd didFailWithError:(NSError *_Nullable)error {
+    NSLog(@"%s",__func__);
+    NSLog(@"error code : %ld , error message : %@",(long)error.code,error.description);
+}
+
+- (void)nativeExpressRewardedVideoAdCallback:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd withType:(BUNativeExpressRewardedVideoAdType)nativeExpressVideoType{
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdDidDownLoadVideo:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdViewRenderSuccess:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdViewRenderFail:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd error:(NSError *_Nullable)error {
+    NSLog(@"%s",__func__);
+    NSLog(@"视频广告渲染错误");
+//    [CallJS callJsEngineCallBack:@"window.AdMrg.VideoAdFail":@"广告播放错误"];
+}
+
+- (void)nativeExpressRewardedVideoAdWillVisible:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdDidVisible:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdWillClose:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdDidClose:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+    NSLog(@"看完广告返回 发放奖励");
+    
+    [[API shared] queryPath:@"/generic-task/commit"
+                        pro:NO
+                   deviceId:DeviceHelper.uuid
+                        biz:@{@"task_id":self.rewardedAd.rewardedVideoModel.extra}
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        
+    }];
+
+}
+
+- (void)nativeExpressRewardedVideoAdDidClick:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+    NSLog(@"加载激励视频错误");
+}
+
+- (void)nativeExpressRewardedVideoAdDidClickSkip:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdDidPlayFinish:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd didFailWithError:(NSError *_Nullable)error {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdServerRewardDidSucceed:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd verify:(BOOL)verify {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdServerRewardDidFail:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
+    NSLog(@"%s",__func__);
+}
+
+- (void)nativeExpressRewardedVideoAdDidCloseOtherController:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd interactionType:(BUInteractionType)interactionType {
+    NSString *str = nil;
+    if (interactionType == BUInteractionTypePage) {
+        str = @"ladingpage";
+    } else if (interactionType == BUInteractionTypeVideoAdDetail) {
+        str = @"videoDetail";
+    } else {
+        str = @"appstoreInApp";
+    }
+    NSLog(@"%s __ %@",__func__,str);
+}
+
 
 - (void)clear {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
