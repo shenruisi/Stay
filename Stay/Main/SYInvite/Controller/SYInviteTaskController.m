@@ -24,7 +24,8 @@
 #else
 #import "Stay-Swift.h"
 #endif
-
+#import <AdSupport/ASIdentifierManager.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
@@ -347,6 +348,16 @@ UITableViewDataSource
         } else if([@"csj" isEqualToString:action[@"type"]]) {
 #if FC_IOS
 
+              [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+                
+                              if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+
+                                  NSString *idfaString = [[ASIdentifierManager sharedManager] advertisingIdentifier].UUIDString;
+
+                              }
+
+                          }];
+            
             BURewardedVideoModel *model = [[BURewardedVideoModel alloc] init];
 
             model.userId = DeviceHelper.uuid;

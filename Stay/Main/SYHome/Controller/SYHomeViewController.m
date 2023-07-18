@@ -65,8 +65,6 @@
 
 #import "WelcomeSlideController.h"
 #import "UIColor+Convert.h"
-#import <AdSupport/ASIdentifierManager.h>
-#import <AppTrackingTransparency/AppTrackingTransparency.h>
 static CGFloat kMacToolbar = 50.0;
 static NSString *kRateKey = @"rate.2.3.0";
 NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.stay.notification.HomeViewShouldReloadDataNotification";
@@ -823,17 +821,6 @@ NSNotificationName const _Nonnull HomeViewShouldReloadDataNotification = @"app.s
 //后台唤起时处理与插件交互
 - (void)onBecomeActive{
 //    [Bugsnag notifyError:[NSError errorWithDomain:@"com.example" code:408 userInfo:nil]];
-    
-      [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-        
-                      if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
-
-                          NSString *idfaString = [[ASIdentifierManager sharedManager] advertisingIdentifier].UUIDString;
-
-                      }
-
-                  }];
-    
     [self checkShowTips];
     [ToastDebugger log:@"checkShowTips"];
     NSLog(@"onBecomeActive-------");

@@ -28,8 +28,6 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "DownloadManager.h"
 #import "SYDownloadSlideController.h"
-#import <AdSupport/ASIdentifierManager.h>
-#import <AppTrackingTransparency/AppTrackingTransparency.h>
 #ifdef FC_MAC
 #import "Plugin.h"
 #endif
@@ -333,20 +331,6 @@
 - (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
     return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
 }
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-
-          [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-    
-                  if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
-
-                      NSString *idfaString = [[ASIdentifierManager sharedManager] advertisingIdentifier].UUIDString;
-
-                  }
-
-              }];
-}
-
 //递归
 - (UINavigationController *)getCurrentNCFrom:(UIViewController *)vc
 {
