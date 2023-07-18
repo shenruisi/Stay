@@ -415,7 +415,7 @@ Random="Random";
 Reset="Reset";
 
 NameNotNull="Name cannot be empty";
-
+AdLoadFailed="Ad load failed";
 
 
 

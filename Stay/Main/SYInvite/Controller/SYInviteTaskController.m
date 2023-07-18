@@ -616,6 +616,20 @@ UITableViewDataSource
 - (void)nativeExpressRewardedVideoAd:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd didFailWithError:(NSError *_Nullable)error {
     NSLog(@"%s",__func__);
     NSLog(@"error code : %ld , error message : %@",(long)error.code,error.description);
+    
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                       message:NSLocalizedString(@"adLoadFailed", @"")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+            }];
+        [alert addAction:conform];
+        [self.nav presentViewController:alert animated:YES completion:nil];
+    });
+    
 }
 
 - (void)nativeExpressRewardedVideoAdCallback:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd withType:(BUNativeExpressRewardedVideoAdType)nativeExpressVideoType{
@@ -673,6 +687,19 @@ UITableViewDataSource
 
 - (void)nativeExpressRewardedVideoAdDidPlayFinish:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd didFailWithError:(NSError *_Nullable)error {
     NSLog(@"%s",__func__);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                       message:NSLocalizedString(@"AdLoadFailed", @"")
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction * _Nonnull action) {
+            }];
+        [alert addAction:conform];
+        [self.nav presentViewController:alert animated:YES completion:nil];
+    });
+    
 }
 
 - (void)nativeExpressRewardedVideoAdServerRewardDidSucceed:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd verify:(BOOL)verify {
