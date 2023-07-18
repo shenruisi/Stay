@@ -271,6 +271,10 @@ UITableViewDataSource
 #else
             [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #endif
+        
+        
+        [self.navigationController.slideController dismiss];
+        
     } else if ([@"generic" isEqualToString: dic[@"type"]]) {
         
         
@@ -560,7 +564,17 @@ UITableViewDataSource
 - (void)nativeExpressRewardedVideoAdDidLoad:
 (BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
     NSLog(@"%s",__func__);
+    
+    [[API shared] queryPath:@"/generic-task/init"
+                        pro:NO
+                   deviceId:DeviceHelper.uuid
+                        biz:@{@"task_id":self.rewardedAd.rewardedVideoModel.extra}
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+    }];
+    
+    
     [self showRewardVideoAd]; //记载完毕的回调，在这里做显示
+
 }
 
 - (void)nativeExpressRewardedVideoAd:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd didFailWithError:(NSError *_Nullable)error {
@@ -608,8 +622,10 @@ UITableViewDataSource
                         biz:@{@"task_id":self.rewardedAd.rewardedVideoModel.extra}
                  completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
         
+        
+        
     }];
-
+    
 }
 
 - (void)nativeExpressRewardedVideoAdDidClick:(BUNativeExpressRewardedVideoAd *)rewardedVideoAd {
