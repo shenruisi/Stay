@@ -526,6 +526,42 @@ UITableViewDataSource
     }];
 }
 
+- (void)reloadTask {
+    [[API shared] queryPath:@"/tasks"
+                        pro:NO
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+
+        if(statusCode == 200) {
+            _taskArray = biz[@"tasks"];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
+        
+    }];
+    
+    [[API shared] queryPath:@"/self"
+                        pro:[[FCStore shared] getPlan:NO]!= FCPlan.None
+                   deviceId:DeviceHelper.uuid
+                        biz:nil
+                 completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
+        NSLog(@"%@",biz);
+        if(statusCode == 200) {
+            if([[FCStore shared] getPlan:NO]!= FCPlan.None) {
+                NSInteger giftPoints = [biz[@"gift_points"] integerValue];
+                [SharedStorageManager shared].userDefaultsExRO.availableGiftPoints = (CGFloat)giftPoints;
+            } else {
+                NSInteger points = [biz[@"points"] integerValue];
+                [SharedStorageManager shared].userDefaultsExRO.availablePoints = points - DeviceHelper.totalConsumePoints;
+            }
+        }
+    }];
+    
+}
+
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     if(self.rewardBlockDic.count > 0) {
         for (dispatch_block_t rewardBlock in self.rewardBlockDic.allValues) {
@@ -621,9 +657,7 @@ UITableViewDataSource
                    deviceId:DeviceHelper.uuid
                         biz:@{@"task_id":self.rewardedAd.rewardedVideoModel.extra}
                  completion:^(NSInteger statusCode, NSError * _Nonnull error, NSDictionary * _Nonnull server, NSDictionary * _Nonnull biz) {
-        
-        
-        
+        [self reloadTask];
     }];
     
 }
