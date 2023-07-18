@@ -119,6 +119,11 @@ NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.
                       [SharedStorageManager shared].userDefaultsExRO.tagConsumePoints);
                 
                 
+                BOOL rc = [biz[@"rc"] boolValue];
+                if (rc){
+                    
+                }
+                
                 NSDictionary *popup = biz[@"popup"];
                 NSUserDefaults *groupUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.dajiu.stay.pro"];
                 if (popup && !(nil == [groupUserDefaults objectForKey:@"tips"] && nil ==  [groupUserDefaults objectForKey:@"userDefaults.firstGuide"])){
