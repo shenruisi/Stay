@@ -417,3 +417,4 @@ Random="换一个";
 Reset="重置";
 
 NameNotNull="名称不能为空";
+AdLoadFailed="广告加载失败";
