@@ -15,6 +15,7 @@
 #import <Speech/Speech.h>
 #import "ContentFilterManager.h"
 #import "MyAdditions.h"
+#import "DarkModeDataManager.h"
 
 @interface SafariWebExtensionHandler()<SFSpeechRecognizerDelegate,AVSpeechSynthesizerDelegate>
 
@@ -668,6 +669,23 @@
         body = @{
             @"url":domain,
             @"on":@(on)
+        };
+    }
+    else if ([message[@"type"] isEqualToString:@"dm_modifyTheme"]){
+        NSDictionary *theme = message[@"theme"];
+        [[DarkModeDataManager shared] modifyTheme:theme];
+    }
+    else if ([message[@"type"] isEqualToString:@"dm_deleteTheme"]){
+        NSDictionary *theme = message[@"theme"];
+        [[DarkModeDataManager shared] deleteTheme:theme];
+    }
+    else if ([message[@"type"] isEqualToString:@"dm_addTheme"]){
+        NSDictionary *theme = message[@"theme"];
+        [[DarkModeDataManager shared] addTheme:theme];
+    }
+    else if ([message[@"type"] isEqualToString:@"dm_themes"]){
+        body = @{
+            @"themes": [[DarkModeDataManager shared] themes]
         };
     }
 

@@ -208,6 +208,10 @@
 		583B542929DD671E00CB292A /* NSAttributedString+Style.m in Sources */ = {isa = PBXBuildFile; fileRef = 583B542729DD671E00CB292A /* NSAttributedString+Style.m */; };
 		583B545629DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
 		583B545729DEDDE700CB292A /* EasyList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 583B545529DEDDE700CB292A /* EasyList.txt */; };
+		583C1F092A66686F0017897F /* DarkModeDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C1F082A66686F0017897F /* DarkModeDataManager.m */; };
+		583C1F0A2A66686F0017897F /* DarkModeDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C1F082A66686F0017897F /* DarkModeDataManager.m */; };
+		583C1F0B2A666E6F0017897F /* DarkModeDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C1F082A66686F0017897F /* DarkModeDataManager.m */; };
+		583C1F0C2A666E720017897F /* DarkModeDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C1F082A66686F0017897F /* DarkModeDataManager.m */; };
 		583C63272999E6DC00F53B14 /* sniffer.app.js in Resources */ = {isa = PBXBuildFile; fileRef = 15FEBE7B2999E685003A9625 /* sniffer.app.js */; };
 		583C6332299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		583C6333299A0C4000F53B14 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1221,6 +1225,8 @@
 		583B542629DD671E00CB292A /* NSAttributedString+Style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Style.h"; sourceTree = "<group>"; };
 		583B542729DD671E00CB292A /* NSAttributedString+Style.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Style.m"; sourceTree = "<group>"; };
 		583B545529DEDDE700CB292A /* EasyList.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = EasyList.txt; sourceTree = "<group>"; };
+		583C1F072A66686F0017897F /* DarkModeDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DarkModeDataManager.h; sourceTree = "<group>"; };
+		583C1F082A66686F0017897F /* DarkModeDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DarkModeDataManager.m; sourceTree = "<group>"; };
 		583C6330299A0C3500F53B14 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		583C6331299A0C4000F53B14 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		584214392A2DBE790035DCB1 /* FCSpeedTabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCSpeedTabBarItem.h; sourceTree = "<group>"; };
@@ -2270,6 +2276,15 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
+		583C1F032A6668310017897F /* DarkMode */ = {
+			isa = PBXGroup;
+			children = (
+				583C1F072A66686F0017897F /* DarkModeDataManager.h */,
+				583C1F082A66686F0017897F /* DarkModeDataManager.m */,
+			);
+			path = DarkMode;
+			sourceTree = "<group>";
+		};
 		584C05AA286179BB00E07DDF /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -2409,6 +2424,7 @@
 		587688D62719237E00F834A4 /* Stay */ = {
 			isa = PBXGroup;
 			children = (
+				583C1F032A6668310017897F /* DarkMode */,
 				5882259329FF6B7E004CDBF7 /* Welcome */,
 				58ADAE0C29E8F50E00C00332 /* Controls */,
 				58A3617229C020F700080465 /* UXFramework */,
@@ -4650,6 +4666,7 @@
 				3C8388D92933563B007563E6 /* FCTabConfig.m in Sources */,
 				58639CDE2864477D00AA80D5 /* SafariWebExtensionHandler.m in Sources */,
 				58639D1B28644D0000AA80D5 /* UserscriptInfo.m in Sources */,
+				583C1F0B2A666E6F0017897F /* DarkModeDataManager.m in Sources */,
 				58639D1D28644D8800AA80D5 /* FCDisk.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4766,6 +4783,7 @@
 				58F1968E2A11FE3200B88F39 /* CommentHighlighterAST.m in Sources */,
 				582061E0294C4CA400A32D0C /* FCLayoutSwitch.m in Sources */,
 				587688D92719237E00F834A4 /* AppDelegate.m in Sources */,
+				583C1F092A66686F0017897F /* DarkModeDataManager.m in Sources */,
 				84FE3A1D2A209E4A007E9F52 /* SYInviteViewController.m in Sources */,
 				582061D0294C4C0E00A32D0C /* ModalItemViewFactory.m in Sources */,
 				3C8388CA2931ADC5007563E6 /* FCTabManager.m in Sources */,
@@ -4954,6 +4972,7 @@
 				58FEB209283E072C00BC2A92 /* MatchPattern.m in Sources */,
 				58561F5628E6E50400D0913A /* RunsRecord.m in Sources */,
 				58D1B44C2888ED31009BD608 /* UserDefaults.m in Sources */,
+				583C1F0C2A666E720017897F /* DarkModeDataManager.m in Sources */,
 				3C8388D72933562D007563E6 /* FCTabManager.m in Sources */,
 				58724A3328FE77FA00A894D8 /* ExtensionConfig.m in Sources */,
 				587689132719238000F834A4 /* SafariWebExtensionHandler.m in Sources */,
@@ -5034,6 +5053,7 @@
 				84B887072A3838CF00FA8EEF /* SYInviteTaskSlideController.m in Sources */,
 				3C8388CF2931B786007563E6 /* ColorHelper.m in Sources */,
 				584C05AE286179D000E07DDF /* ImageHelper.m in Sources */,
+				583C1F0A2A66686F0017897F /* DarkModeDataManager.m in Sources */,
 				58A3617E29C048CE00080465 /* FCTabBar.m in Sources */,
 				3C0A3D7E2A348027007FF098 /* FaceIDAuth.swift in Sources */,
 				58F196952A11FE3200B88F39 /* ContentFilterHighlighter.m in Sources */,
