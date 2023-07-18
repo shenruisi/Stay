@@ -45,6 +45,8 @@
 
 #ifdef FC_IOS
 #import <Bugsnag/Bugsnag.h>
+#import <BUAdSDK/BUAdSDKManager.h>
+#import <BUAdSDK/BuAdSDK.h>
 #endif
 
 #import "VideoParser.h"
@@ -56,8 +58,7 @@
 #import <SDImageCache.h>
 #import "UIColor+Convert.h"
 #import "SYInviteTaskSlideController.h"
-#import <BUAdSDK/BUAdSDKManager.h>
-#import <BUAdSDK/BuAdSDK.h>
+
 
 @interface AppDelegate()
 
@@ -78,7 +79,7 @@
     [Bugsnag start];
 #endif
 
-    
+#ifdef FC_IOS
     BUAdSDKConfiguration *configuration = [BUAdSDKConfiguration configuration];
 //    configuration.debugLog = BUAdSDKLogLevelDebug;
 //        configuration.territory = BUAdSDKTerritory_CN;
@@ -91,9 +92,8 @@
                 });
             }
         }];
+#endif
 
-    
-      
 //    NSString *deviceID = [[NSUUID UUID] UUIDString];
     
     //Self point

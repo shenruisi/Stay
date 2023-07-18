@@ -18,12 +18,13 @@
 #import "Plugin.h"
 #if FC_IOS
 #import "Stay-Swift.h"
-#else
-#import "Stay-Swift.h"
-#endif
 #import <BUAdSDK/BURewardedVideoModel.h>
 #import <BUAdSDK/BUAdSDKManager.h>
 #import <BUAdSDK/BUNativeExpressRewardedVideoAd.h>
+#else
+#import "Stay-Swift.h"
+#endif
+
 
 @interface InviteTaskCell:UITableViewCell
 @property (nonatomic, strong) UIView *backView;
@@ -145,11 +146,19 @@
 
 @end
 
+#if FC_IOS
 @interface SYInviteTaskController()<
 UITableViewDelegate,
 UITableViewDataSource,
 BUNativeExpressRewardedVideoAdDelegate
 >
+#else
+@interface SYInviteTaskController()<
+UITableViewDelegate,
+UITableViewDataSource
+>
+#endif
+
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *taskArray;
 @property (nonatomic, strong) UIButton *subButton;
@@ -157,7 +166,9 @@ BUNativeExpressRewardedVideoAdDelegate
 @property (nonatomic, strong) NSMutableDictionary *rewardBlockDic;
 @property (nonatomic, strong) NSMutableDictionary *webRewardBlockDic;
 @property (nonatomic, strong) UILabel *pointRules;
+#if FC_IOS
 @property (nonatomic, strong) BUNativeExpressRewardedVideoAd *rewardedAd;
+#endif
 
 @end
 @implementation SYInviteTaskController
@@ -260,9 +271,6 @@ BUNativeExpressRewardedVideoAdDelegate
 #else
             [self.nav pushViewController:[[SYInviteViewController alloc] init] animated:YES];
 #endif
-
-        [self.navigationController.slideController dismiss];
-          
     } else if ([@"generic" isEqualToString: dic[@"type"]]) {
         
         
@@ -333,6 +341,8 @@ BUNativeExpressRewardedVideoAdDelegate
 //        }
 #endif
         } else if([@"csj" isEqualToString:action[@"type"]]) {
+#if FC_IOS
+
             BURewardedVideoModel *model = [[BURewardedVideoModel alloc] init];
 
             model.userId = DeviceHelper.uuid;
@@ -344,6 +354,7 @@ BUNativeExpressRewardedVideoAdDelegate
             self.rewardedAd.delegate = self;
 
             [self.rewardedAd loadAdData];
+#endif
         }
         
     }
@@ -535,6 +546,9 @@ BUNativeExpressRewardedVideoAdDelegate
 }
 
 
+
+#if FC_IOS
+
 - (void)showRewardVideoAd {
     if (self.rewardedAd) {
         [self.rewardedAd showAdFromRootViewController:self.nav];
@@ -630,6 +644,8 @@ BUNativeExpressRewardedVideoAdDelegate
     }
     NSLog(@"%s __ %@",__func__,str);
 }
+
+#endif
 
 
 - (void)clear {
