@@ -620,7 +620,7 @@ UITableViewDataSource
     
     dispatch_async(dispatch_get_main_queue(), ^{
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                       message:NSLocalizedString(@"adLoadFailed", @"")
+                                                                       message:NSLocalizedString(@"AdLoadFailed", @"")
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *conform = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"")
                                                           style:UIAlertActionStyleDefault
