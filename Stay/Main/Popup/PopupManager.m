@@ -17,6 +17,8 @@
 #import "SharedStorageManager.h"
 #import "CommitCodeSlideController.h"
 #import "FCApp.h"
+#import <AdSupport/ASIdentifierManager.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.stay.notification.PopupShouldShowCodeCommitNotification";
 
@@ -121,7 +123,15 @@ NSNotificationName const _Nonnull PopupShouldShowCodeCommitNotification = @"app.
                 
                 BOOL rc = [biz[@"rc"] boolValue];
                 if (rc){
-                    
+                      [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+                        
+                                      if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+
+                                          NSString *idfaString = [[ASIdentifierManager sharedManager] advertisingIdentifier].UUIDString;
+
+                                      }
+
+                                  }];
                 }
                 
                 NSDictionary *popup = biz[@"popup"];

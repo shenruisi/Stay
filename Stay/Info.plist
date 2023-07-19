@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>獲取設備信息用以精準推送您喜歡的內容</string>
+	<string>将用于向您推送个性化广告</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
