@@ -263,6 +263,7 @@ const GM_apis = {
             return xhr(details,this);
         }
         else{
+            
             const detailsParsed = JSON.parse(JSON.stringify(details));
             const events = [];
             for (const k in XMLHttpRequest.prototype) {
@@ -272,12 +273,25 @@ const GM_apis = {
                 if (typeof details[e] === "function") detailsParsed[e] = true;
             }
             const pid = Math.random().toString(36).substring(1, 9);
+            
+            const response = {
+                abort: () => {
+                    window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "xmlhttpRequestAbort", group: "gm_apis", type: "req"});
+                }
+            };
+            
             const callback = e => {
                 if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "xmlhttpRequest" || e.data.type !== "resp") return;
-                window.removeEventListener("message", callback);
+                if (e.data.event){
+                    details[e.data.event](e.data.response);
+                    if (e.data.event === "onloadend") {
+                        window.removeEventListener("message", callback);
+                    }
+                }
             };
             window.addEventListener("message", callback);
-            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "xmlhttpRequest", details: detailsParsed, group: "gm_apis", type: "req"});
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "xmlhttpRequest", details: detailsParsed, group: "gm_apis", type: "req", context: {uuid: `${this.uuid}`,name: `${this.name}`}});
+            return response;
         }
     }
 }
@@ -495,6 +509,7 @@ function cspCallback(e){
     }
 }
 
+let xhrResponse = {};
 function receiveMessage(e){
     const message = e.data;
 //    console.log("receiveMessage: ",message);
@@ -541,14 +556,18 @@ function receiveMessage(e){
             
             for (const e of events) {
                 if (message.details[e]){
-                    message.details[e] = () =>{
-                        window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp", event: e});
+                    message.details[e] = (response) =>{
+                        window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp", event: e, response: response});
                     }
                 }
             }
             
-            const response = xhr(message.details);
-            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp", response: response});
+            const response = xhr(message.details,message.context);
+            xhrResponse[`${message.uuid}`+`${message.pid}`] = response;
+            window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
+        }
+        else if (operate === "xmlhttpRequestAbort"){
+            xhrResponse[`${message.uuid}`+`${message.pid}`].abort();
         }
     }
 }
@@ -599,7 +618,6 @@ function addListeners(){
 let userscripts;
 function injection(){
     browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/getInjectFiles" }, (response) => {
-        console.log("background/v2/getInjectFiles",response);
         const injectFiles = response.body;
         let scripts = injectFiles.jsFiles;
         userscripts = [];

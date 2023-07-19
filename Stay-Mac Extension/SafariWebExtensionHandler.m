@@ -692,6 +692,10 @@ NSString * const SFExtensionMessageKey = @"message";
             @"jsFiles": jsFiles
         };
     }
+    else if ([type isEqualToString:@"xmlhttpRequest"]){
+        NSDictionary *details = message[@"details"];
+        return [self xmlhttpRequestProxy:details];
+    }
     
     return nil;
 }
@@ -732,6 +736,124 @@ NSString * const SFExtensionMessageKey = @"message";
     }];
 }
 
+- (NSDictionary *)xmlhttpRequestProxy:(NSDictionary *)details{
+    NSString *user = details[@"user"];
+    NSString *password = details[@"password"];
+    NSString *method = details[@"method"];
+    method = method.length > 0 ? method : @"GET";
+    NSString *url = details[@"url"];
+    NSDictionary *headers = details[@"headers"];
+    NSString *overrideMimeType = details[@"overrideMimeType"];
+    id body = details[@"body"];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [request setHTTPMethod:method];
+    
+    if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
+        for (NSString *key in headers.allKeys){
+            if ([headers[key] isKindOfClass:[NSNull class]]){
+                continue;
+            }
+            [request setValue:headers[key] forHTTPHeaderField:key];
+        }
+    }
+    
+    if (overrideMimeType.length > 0){
+        [request setValue:overrideMimeType forHTTPHeaderField:@"Content-Type"];
+    }
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    if (user.length > 0 && password.length > 0){
+        NSString *userPasswordString = [NSString stringWithFormat:@"%@:%@",user,password];
+        NSData *userPasswordData = [userPasswordString dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *base64UserPassword = [userPasswordData base64EncodedStringWithOptions:0];
+        NSString *authString = [NSString stringWithFormat:@"Basic %@",base64UserPassword];
+        config.HTTPAdditionalHeaders = @{
+            @"Authorization": authString
+        };
+    }
+    
+//    config.timeoutIntervalForRequest = timeout;
+    
+    NSData *data;
+    if ([body isKindOfClass:[NSData class]]){
+        data = body;
+    }
+    else if ([body isKindOfClass:[NSString class]]){
+        data = [body dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    if (data.length > 0){
+        [request setHTTPBody:data];
+    }
+    
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    __block NSMutableDictionary *x = [[NSMutableDictionary alloc] initWithDictionary:@{
+        @"readyState":@"DONE",
+        @"response":[NSNull null],
+        @"responseHeaders":@{},
+        @"responseType":@"text",
+        @"responseURL":[NSNull null],
+        @"status":@(200),
+        @"statusText":@"OK",
+        @"timeout":@(0),
+        @"withCredentials": @(config.HTTPAdditionalHeaders != nil),
+        @"event":[NSNull null]
+    }];
+    
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data,
+                                                                 NSURLResponse * _Nullable response,
+                                                                 NSError * _Nullable error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        x[@"responseURL"] = [httpResponse.URL absoluteString];
+        x[@"status"] = @(httpResponse.statusCode);
+        x[@"statusText"] = [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode];
+        x[@"responseHeaders"] = [httpResponse allHeaderFields];
+        if (error){
+            if (error.code == NSURLErrorTimedOut){
+                x[@"event"] = @"ontimeout";
+            }
+            else{
+                x[@"event"] = @"onerror";
+            }
+        }
+        else{
+            x[@"event"] = @"onload";
+            NSString * type = [httpResponse allHeaderFields][@"Content-Type"];
+            if ([type hasPrefix:@"image/"]
+                ||[type hasPrefix:@"video/"]){
+                NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
+                x[@"response"] = @{
+                    @"data": [NSString stringWithFormat:@"data:%@;base64,%@",type,base64Encoded],
+                    @"type": @"blob"
+                };
+                x[@"responseType"] = @"blob";
+            }
+            else if ([type hasPrefix:@"text/"]){
+                x[@"responseText"] = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                x[@"response"] = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                x[@"responseType"] = @"text";
+            }
+            else{
+                x[@"response"] = data;
+                x[@"responseText"] = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                x[@"responseType"] = @"arraybuffer";
+            }
+        }
+        
+        dispatch_semaphore_signal(sem);
+        
+    }] resume];
+    
+    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    
+    return x;
+}
+
 - (NSDictionary *)xmlHttpRequestProxy:(NSDictionary *)details{
     if (nil == details) return @{@"status":@(500), @"responseText":@""};
     NSString *method = details[@"method"];
@@ -739,6 +861,7 @@ NSString * const SFExtensionMessageKey = @"message";
     NSDictionary *headers = details[@"headers"];
     NSString *data = details[@"data"];
     NSString *overrideMimeType = details[@"overrideMimeType"];
+    id body = details[@"body"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:method];
     if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){
@@ -768,6 +891,8 @@ NSString * const SFExtensionMessageKey = @"message";
     __block NSString *type = @"";
     __block NSString *responseData = @"";
     __block NSString *responseType = @"";
+    
+   
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:request
                 completionHandler:^(NSData *data,
