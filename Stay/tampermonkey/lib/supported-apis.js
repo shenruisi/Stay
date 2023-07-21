@@ -33,6 +33,8 @@ const GM_APIS = new Set([
     "GM_info",
     "GM.info",
     "window.onurlchange",
+    "window.close",
+    "window.focus",
     "GM_notification",
     "GM.notification",
     "GM_setClipboard",
@@ -49,6 +51,8 @@ const GM_APIS = new Set([
     "GM_getTabs",
     "GM_closeTab",
     "GM.closeTab",
+    "GM_setClipboard",
+    "GM.setClipboard",
 ]);
 
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);

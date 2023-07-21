@@ -87,6 +87,11 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
+        else if (request.operate === "background/v2/setClipboard"){
+            const result = setClipboard(request.data, request.type);
+            sendResponse(result);
+            return true;
+        }
         //https://github.com/quoid/userscripts/blob/main/xcode/Safari-Extension/Resources/background.js
         //#API_XHR
         else if (request.operate === "background/v2/xmlhttpRequest"){
@@ -230,5 +235,33 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
 });
+
+function setClipboard(data, type = "text/plain") {
+    // future enhancement?
+    // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/write
+    // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText
+    const onCopy = e => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        e.clipboardData.setData(type, data);
+        document.removeEventListener("copy", onCopy, true);
+    };
+
+    const textarea = document.createElement("textarea");
+    textarea.textContent = "<empty clipboard>";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.addEventListener("copy", onCopy, true);
+    try {
+        return document.execCommand("copy");
+    } catch (error) {
+        console.warn("setClipboard failed", error);
+        document.removeEventListener("copy", onCopy, true);
+        return false;
+    } finally {
+        document.body.removeChild(textarea);
+    }
+}
+
 
 

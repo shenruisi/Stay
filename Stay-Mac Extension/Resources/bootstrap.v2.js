@@ -259,6 +259,7 @@ const GM_apis = {
             resolve(url);
         });
     },
+    getResourceURL: "getResourceUrl",
     _xmlhttpRequest: function(details){ //violentmonkey & tampermonkey
         if (__extension){
             return xhr(details,this);
@@ -317,7 +318,7 @@ const GM_apis = {
     getTab: "_getTab",
     _saveTab: function(tab){
         if (__extension){
-            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/saveTab", tab:tab });
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/saveTab", tab });
         }
         else{
             const pid = Math.random().toString(36).substring(1, 9);
@@ -326,7 +327,7 @@ const GM_apis = {
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
-            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "saveTab", tab: tab, group: "gm_apis", type: "req"});
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "saveTab", tab, group: "gm_apis", type: "req"});
         }
     },
     saveTab: "_saveTab",
@@ -351,7 +352,7 @@ const GM_apis = {
     _openInTab: function(url, openInBackground = false){
         if (!url) return console.error("openInTab missing url arg");
         if (__extension){
-            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url: url });
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url });
         }
         else{
             const pid = Math.random().toString(36).substring(1, 9);
@@ -360,14 +361,14 @@ const GM_apis = {
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
-            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "openInTab", url: url, group: "gm_apis", type: "req"});
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "openInTab", url, group: "gm_apis", type: "req"});
         }
     },
     openInTab: function(url, openInBackground = false){
         if (!url) return console.error("openInTab missing url arg");
         return new Promise(resolve => {
             if (__extension){
-                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url: url },
+                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url },
                                             response => resolve(response));
             }
             else{
@@ -378,14 +379,14 @@ const GM_apis = {
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
-                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "openInTab", url: url, group: "gm_apis", type: "req"});
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "openInTab", url, group: "gm_apis", type: "req"});
             }
         });
     },
     _closeTab: function(tabId){
         if (!tabId) return console.error("closeTab missing tabId arg");
         if (__extension){
-            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId: tabId });
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId });
         }
         else{
             const pid = Math.random().toString(36).substring(1, 9);
@@ -394,13 +395,13 @@ const GM_apis = {
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
-            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", tabId: tabId, group: "gm_apis", type: "req"});
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", tabId, group: "gm_apis", type: "req"});
         }
     },
     closeTab: function(tabId){
         return new Promise(resolve => {
             if (__extension){
-                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId: tabId },
+                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId },
                                             response => resolve(response));
             }
             else{
@@ -411,7 +412,7 @@ const GM_apis = {
                     window.removeEventListener("message", callback);
                 };
                 window.addEventListener("message", callback);
-                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", tabId: tabId, group: "gm_apis", type: "req"});
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", tabId, group: "gm_apis", type: "req"});
             }
         });
     },
@@ -420,7 +421,19 @@ const GM_apis = {
             return console.error("addStyle invalid css arg");
         }
         return new Promise(resolve => {
-            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/addStyle", css: css }, response => resolve(response));
+            if (__extension){
+                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/addStyle", css }, response => resolve(response));
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "addStyle" || e.data.type !== "resp") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "addStyle", tabId, group: "gm_apis", type: "req"});
+            }
         });
     },
     _registerMenuCommand: function(caption, commandFunc, accessKey){
@@ -434,8 +447,56 @@ const GM_apis = {
                 window.removeEventListener("message", callback);
             };
             window.addEventListener("message", callback);
-            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "registerMenuCommand", tabId: tabId, group: "gm_apis", type: "req"});
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "registerMenuCommand", tabId, group: "gm_apis", type: "req"});
         }
+    },
+    _setClipboard: function(data, type = "text/plain"){
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/setClipboard", data,type });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "setClipboard" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setClipboard", data, type, group: "gm_apis", type: "req"});
+        }
+    },
+    setClipboard: function(data, type = "text/plain"){
+        return new Promise(resolve => {
+            if (__extension){
+                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/setClipboard", data,type }, response => resolve(response));
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "setClipboard" || e.data.type !== "resp") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "setClipboard", data, type, group: "gm_apis", type: "req"});
+            }
+        });
+    },
+    close: function(){
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab" });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "closeTab" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", group: "gm_apis", type: "req"});
+        }
+    }
+    focus: function(){
+        window.focus();
     }
 }
 
@@ -596,7 +657,7 @@ async function executeScript(userscript){
                     const GM_apis = undefined;
                     const browser = undefined;
                     ${userscript.code}
-//                    window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "stay"});
+                    window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "page"});
                 }
                 main();
                 //# sourceURL=${userscript.metadata.name}.replace(/\s/g, "-") + ${sourceTag}
@@ -745,6 +806,13 @@ function receiveMessage(e){
                 });
             });
         }
+        else if (operate === "setClipboard"){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/setClipboard", data: message.data,type: message.type }, response => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp",
+                    response: response
+                });
+            });
+        }
     }
 }
 
@@ -846,21 +914,25 @@ function injection(){
                 
                 const sync = apiName.startsWith('_');
                 
-                if (apiGroup == "GM"){
-                    let apiStr = `${apiName}: GM_apis.${apiName}`;
-                    let func = GM_apis[apiName];
-                    if (typeof func === "string"){
-                        apiStr = `${apiName}: GM_apis.${func}`;
-                        func = GM_apis[func];
-                    }
-                    
-                    apisInPage += `${apiName}: ${func},\n`;
+                let apiStr = `${apiName}: GM_apis.${apiName}`;
+                let func = GM_apis[apiName];
+                if (typeof func === "string"){
+                    apiStr = `${apiName}: GM_apis.${func}`;
+                    func = GM_apis[func];
+                }
+                
+                apisInPage += `${apiName}: ${func},\n`;
+                
+                if (apiGroup === "GM"){
                     if (sync){
                         userscript.genCode += `const GM${apiName} = GM_apis.${apiName}.bind(${context});`;
                     }
                     else{
                         gmApis.push(apiStr + `.bind(${context})`);
                     }
+                }
+                else if (apiGroup === "window"){
+                    userscript.genCode += `window.${apiName} = GM_apis.${apiName}.bind(${context});`;
                 }
             }
             
