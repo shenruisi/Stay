@@ -494,7 +494,7 @@ const GM_apis = {
             window.addEventListener("message", callback);
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", group: "gm_apis", type: "req"});
         }
-    }
+    },
     focus: function(){
         window.focus();
     }
