@@ -692,6 +692,75 @@ NSString * const SFExtensionMessageKey = @"message";
             @"jsFiles": jsFiles
         };
     }
+    else if ([type isEqualToString:@"getPopupFiles"]){
+        NSString *url = message[@"url"];
+        
+        NSMutableArray *activated = [[NSMutableArray alloc] init];
+        NSMutableArray *stopped = [[NSMutableArray alloc] init];
+        NSMutableArray *notMatched = [[NSMutableArray alloc] init];
+        NSMutableArray *disabled = [[NSMutableArray alloc] init];
+        
+        [SharedStorageManager shared].userscriptHeaders = nil;
+        NSMutableArray<NSDictionary *> *datas = [NSMutableArray arrayWithArray:[SharedStorageManager shared].userscriptHeaders.content];
+        
+        for(int i = 0;i < datas.count; i++) {
+            NSDictionary *data = datas[i];
+            
+            NSDictionary *scriptMeta  = @{
+                @"description": data[@"description"],
+                @"excludes": data[@"excludes"],
+                @"includes": data[@"includes"],
+                @"matches": data[@"matches"],
+                @"name": data[@"name"],
+                @"namespace": data[@"namespace"],
+                @"resources": data[@"resourceUrls"],
+                @"run-at": data[@"runAt"],
+                @"version": data[@"version"]
+            };
+            
+            NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithDictionary:scriptMeta];
+            
+            [metadata addEntriesFromDictionary:@{
+                @"grants": data[@"grants"],
+                @"icon": data[@"iconUrl"],
+                @"locales": data[@"locales"],
+                @"inject-into": [data[@"injectInto"] lowercaseString],
+                @"noframes": data[@"noFrames"]
+            }];
+            
+            NSDictionary *script = @{
+                @"uuid": data[@"uuid"],
+                @"metadata": metadata,
+                @"type": @"js"
+            };
+            
+            BOOL active = [data[@"active"] boolValue];
+            if (active){
+                if (![self matchesCheck:data url:url]){
+                    [notMatched addObject:script];
+                }
+                else{
+                    NSString *disabledUrl = nil;
+                    if ((disabledUrl = [self disabledWebsitesCheck:data url:url]) != nil){
+                        [disabled addObject:script];
+                    }
+                    else{
+                        [activated addObject:script];
+                    }
+                }
+            }
+            else{
+                [stopped addObject:script];
+            }
+        }
+        
+        return @{
+            @"activated" : activated,
+            @"stopped": stopped,
+            @"notMatched": notMatched,
+            @"disabled": disabled
+        };
+    }
     else if ([type isEqualToString:@"xmlhttpRequest"]){
         NSDictionary *details = message[@"details"];
         return [self xmlhttpRequestProxy:details];
@@ -791,7 +860,7 @@ NSString * const SFExtensionMessageKey = @"message";
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
     __block NSMutableDictionary *x = [[NSMutableDictionary alloc] initWithDictionary:@{
-        @"readyState":@"DONE",
+        @"readyState":@(4),
         @"response":[NSNull null],
         @"responseHeaders":@{},
         @"responseType":@"text",
@@ -811,8 +880,13 @@ NSString * const SFExtensionMessageKey = @"message";
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         x[@"responseURL"] = [httpResponse.URL absoluteString];
         x[@"status"] = @(httpResponse.statusCode);
-        x[@"statusText"] = [NSHTTPURLResponse localizedStringForStatusCode:httpResponse.statusCode];
-        x[@"responseHeaders"] = [httpResponse allHeaderFields];
+        x[@"statusText"] = [self getStatusTextFromStatusCode:httpResponse.statusCode];
+        NSDictionary *allHeaderFields = [httpResponse allHeaderFields];
+        NSMutableString *rawHeader = [[NSMutableString alloc] init];
+        for (NSString *key in [allHeaderFields allKeys]){
+            [rawHeader appendFormat:@"%@: %@\r\n",key,allHeaderFields[key]];
+        }
+        x[@"responseHeaders"] = rawHeader;
         if (error){
             if (error.code == NSURLErrorTimedOut){
                 x[@"event"] = @"ontimeout";
@@ -823,7 +897,7 @@ NSString * const SFExtensionMessageKey = @"message";
         }
         else{
             x[@"event"] = @"onload";
-            NSString * type = [httpResponse allHeaderFields][@"Content-Type"];
+            NSString * type = allHeaderFields[@"Content-Type"];
             if ([type hasPrefix:@"image/"]
                 ||[type hasPrefix:@"video/"]){
                 NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
@@ -854,6 +928,52 @@ NSString * const SFExtensionMessageKey = @"message";
     return x;
 }
 
+
+- (NSString *)getStatusTextFromStatusCode:(NSInteger)statusCode {
+    NSString *statusText = @"Unknown";
+    
+    switch (statusCode) {
+        case 200:
+            statusText = @"OK";
+            break;
+        case 201:
+            statusText = @"Created";
+            break;
+        case 204:
+            statusText = @"No Content";
+            break;
+        case 400:
+            statusText = @"Bad Request";
+            break;
+        case 401:
+            statusText = @"Unauthorized";
+            break;
+        case 403:
+            statusText = @"Forbidden";
+            break;
+        case 404:
+            statusText = @"Not Found";
+            break;
+        case 500:
+            statusText = @"Internal Server Error";
+            break;
+        case 502:
+            statusText = @"Bad Gateway";
+            break;
+        case 503:
+            statusText = @"Service Unavailable";
+            break;
+        case 504:
+            statusText = @"Gateway Timeout";
+            break;
+        default:
+            break;
+    }
+    
+    return statusText;
+}
+
+
 - (NSDictionary *)xmlHttpRequestProxy:(NSDictionary *)details{
     if (nil == details) return @{@"status":@(500), @"responseText":@""};
     NSString *method = details[@"method"];
@@ -861,7 +981,6 @@ NSString * const SFExtensionMessageKey = @"message";
     NSDictionary *headers = details[@"headers"];
     NSString *data = details[@"data"];
     NSString *overrideMimeType = details[@"overrideMimeType"];
-    id body = details[@"body"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [request setHTTPMethod:method];
     if (headers != nil && [headers isKindOfClass:[NSDictionary class]]){

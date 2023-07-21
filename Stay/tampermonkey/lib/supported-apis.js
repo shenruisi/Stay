@@ -43,7 +43,12 @@ const GM_APIS = new Set([
     "GM_removeValueChangeListener",
     "GM.removeValueChangeListener",
     "GM.cookie",
-    "GM_cookie"
+    "GM_cookie",
+    "GM_getTab",
+    "GM_saveTab",
+    "GM_getTabs",
+    "GM_closeTab",
+    "GM.closeTab",
 ]);
 
 const UserScriptUnsupport_TAGS = new Set(["source","connect"]);

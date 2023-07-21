@@ -1,8 +1,9 @@
 let __storage;
-let __storageChangeListeners = new Map();
+let __storageChangeListeners = {};
 let __extension = window.browser;
 let __resourceUrls;
 let __resourceTexts;
+let __registerMenuContext = {};
 //Supported GM APIS
 //https://violentmonkey.github.io/api/gm/
 //https://wiki.greasespot.net/Greasemonkey_Manual:API
@@ -293,6 +294,148 @@ const GM_apis = {
             window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "xmlhttpRequest", details: detailsParsed, group: "gm_apis", type: "req", context: {uuid: `${this.uuid}`,name: `${this.name}`}});
             return response;
         }
+    },
+    xmlhttpRequest: "_xmlhttpRequest",
+    xmlHttpRequest: "_xmlhttpRequest",
+    _getTab : function(tabCallback){
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/getTab" }, response => {
+                tabCallback(response);
+            });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "getTab" || e.data.type !== "resp") return;
+                tabCallback(e.data.tab);
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "getTab", group: "gm_apis", type: "req"});
+        }
+    },
+    getTab: "_getTab",
+    _saveTab: function(tab){
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/saveTab", tab:tab });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "saveTab" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "saveTab", tab: tab, group: "gm_apis", type: "req"});
+        }
+    },
+    saveTab: "_saveTab",
+    _getTabs: function(tabsCallback){
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/getTabs" }, response => {
+                tabsCallback(response);
+            });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "getTabs" || e.data.type !== "resp") return;
+                tabsCallback(e.data.tabs);
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "getTabs", group: "gm_apis", type: "req"});
+        }
+    },
+    getTabs: "_getTabs",
+    _openInTab: function(url, openInBackground = false){
+        if (!url) return console.error("openInTab missing url arg");
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url: url });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "openInTab" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "openInTab", url: url, group: "gm_apis", type: "req"});
+        }
+    },
+    openInTab: function(url, openInBackground = false){
+        if (!url) return console.error("openInTab missing url arg");
+        return new Promise(resolve => {
+            if (__extension){
+                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url: url },
+                                            response => resolve(response));
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "openInTab" || e.data.type !== "resp") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "openInTab", url: url, group: "gm_apis", type: "req"});
+            }
+        });
+    },
+    _closeTab: function(tabId){
+        if (!tabId) return console.error("closeTab missing tabId arg");
+        if (__extension){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId: tabId });
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "closeTab" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", tabId: tabId, group: "gm_apis", type: "req"});
+        }
+    },
+    closeTab: function(tabId){
+        return new Promise(resolve => {
+            if (__extension){
+                browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId: tabId },
+                                            response => resolve(response));
+            }
+            else{
+                const pid = Math.random().toString(36).substring(1, 9);
+                const callback = e => {
+                    if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "closeTab" || e.data.type !== "resp") return;
+                    resolve(e.data.response);
+                    window.removeEventListener("message", callback);
+                };
+                window.addEventListener("message", callback);
+                window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "closeTab", tabId: tabId, group: "gm_apis", type: "req"});
+            }
+        });
+    },
+    addStyle: function(css) {
+        if (typeof css !== "string") {
+            return console.error("addStyle invalid css arg");
+        }
+        return new Promise(resolve => {
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/addStyle", css: css }, response => resolve(response));
+        });
+    },
+    _registerMenuCommand: function(caption, commandFunc, accessKey){
+        __registerMenuContext[`${this.uuid}`] = {caption,commandFunc,accessKey};
+        if (__extension){
+        }
+        else{
+            const pid = Math.random().toString(36).substring(1, 9);
+            const callback = e => {
+                if (e.data.pid !== pid || e.data.uuid !== `${this.uuid}` || e.data.operate !== "registerMenuCommand" || e.data.type !== "resp") return;
+                window.removeEventListener("message", callback);
+            };
+            window.addEventListener("message", callback);
+            window.postMessage({ uuid: `${this.uuid}`, pid: pid, operate: "registerMenuCommand", tabId: tabId, group: "gm_apis", type: "req"});
+        }
     }
 }
 
@@ -569,6 +712,39 @@ function receiveMessage(e){
         else if (operate === "xmlhttpRequestAbort"){
             xhrResponse[`${message.uuid}`+`${message.pid}`].abort();
         }
+        else if (operate === "getTab"){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/getTab" }, response => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp",
+                    tab: response
+                });
+            });
+        }
+        else if (operate === "saveTab"){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/saveTab", tab: message.tab}, response => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp"});
+            });
+        }
+        else if (operate === "getTabs"){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/getTabs" }, response => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp",
+                    tabs: response
+                });
+            });
+        }
+        else if (operate === "openInTab"){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/openInTab", url: message.url }, response => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp",
+                    response: response
+                });
+            });
+        }
+        else if (operate === "closeTab"){
+            browser.runtime.sendMessage({ origin: "bootstrap", operate: "background/v2/closeTab", tabId: message.tabId }, response => {
+                window.postMessage({ uuid: message.uuid, pid: message.pid, operate: message.operate, type: "resp",
+                    response: response
+                });
+            });
+        }
     }
 }
 
@@ -673,6 +849,11 @@ function injection(){
                 if (apiGroup == "GM"){
                     let apiStr = `${apiName}: GM_apis.${apiName}`;
                     let func = GM_apis[apiName];
+                    if (typeof func === "string"){
+                        apiStr = `${apiName}: GM_apis.${func}`;
+                        func = GM_apis[func];
+                    }
+                    
                     apisInPage += `${apiName}: ${func},\n`;
                     if (sync){
                         userscript.genCode += `const GM${apiName} = GM_apis.${apiName}.bind(${context});`;

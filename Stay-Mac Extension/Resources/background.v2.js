@@ -14,6 +14,79 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
             return true;
         }
+        if (request.operate === "background/v2/getPopupFiles"){
+            const isTop = sender.frameId === 0;
+            browser.runtime.sendNativeMessage("application.id", { type: request.operate, url: sender.url },
+                                              function (response) {
+                sendResponse({body: response.body});
+            });
+            return true;
+        }
+        else if (request.operate === "background/v2/getTab"){
+            let tab = null;
+            if (typeof sender.tab !== "undefined") {
+                const tabsPersistent = JSON.parse(sessionStorage.getItem("__API_TABS__") || "{}");
+                try {
+                    const tabPersistent = tabsPersistent[sender.tab.id];
+                    tab = tabPersistent || sender.tab;
+                } catch (error) {
+                    console.error("failed to parse tab data for getTab");
+                }
+            } else {
+                console.error("unable to deliver tab due to empty tab id");
+            }
+            sendResponse(tab == null ? {} : tab);
+            return true;
+        }
+        else if (request.operate === "background/v2/getTabs"){
+            let tabs = null;
+            if (typeof sender.tab !== "undefined") {
+                const tabsPersistent = JSON.parse(sessionStorage.getItem("__API_TABS__") || "{}");
+                try {
+                    tabs = tabsPersistent;
+                } catch (error) {
+                    console.error("failed to parse tab data for getTab");
+                }
+            } else {
+                console.error("unable to deliver tab due to empty tab id");
+            }
+            sendResponse(tabs == null ? {} : tabs);
+            return true;
+        }
+        else if (request.operate === "background/v2/saveTab"){
+            if (sender.tab != null && sender.tab.id) {
+                const tabsPersistent = JSON.parse(sessionStorage.getItem("__API_TABS__") || "{}");
+                tabsPersistent[sender.tab.id] = request.tab;
+                sessionStorage.setItem("__API_TABS__", JSON.stringify(tabsPersistent));
+                sendResponse({success: true});
+            } else {
+                console.error("unable to save tab, empty tab id");
+                sendResponse({success: false});
+            }
+            return true;
+        }
+        else if (request.operate === "background/v2/openInTab"){
+            const props = {
+                active: request.active,
+                index: sender.tab.index + 1,
+                url: request.url
+            };
+            browser.tabs.create(props, response => sendResponse(response));
+            return true;
+        }
+        else if (request.operate === "background/v2/closeTab"){
+            const tabId = request.tabId || sender.tab.id;
+            browser.tabs.remove(tabId, () => sendResponse({tabId: tabId}));
+            return true;
+        }
+        else if (request.operate === "background/v2/addStyle"){
+            const tabId = sender.tab.id;
+            const details = {code: request.css, cssOrigin: "user"};
+            browser.tabs.insertCSS(tabId, details, () => {
+                sendResponse(request.css);
+            });
+            return true;
+        }
         //https://github.com/quoid/userscripts/blob/main/xcode/Safari-Extension/Resources/background.js
         //#API_XHR
         else if (request.operate === "background/v2/xmlhttpRequest"){
