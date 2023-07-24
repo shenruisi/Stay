@@ -1122,6 +1122,47 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 sendResponse(body)
             });
         }
+        else if('addDarkmodeTheme' == requestOperate){
+            console.log("addDarkmodeTheme-------request=",request);
+            const theme = request.theme
+            browser.runtime.sendNativeMessage("application.id", { type: "dm_addTheme", theme }, function (response) {
+                console.log("addDarkmodeTheme-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
+        else if('getDarkmodeThemeList' == requestOperate){
+            console.log("getDarkmodeThemeList-------request=",request);
+            
+            browser.runtime.sendNativeMessage("application.id", { type: "dm_themes"}, function (response) {
+                console.log("getDarkmodeThemeList-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
+        else if('deleteDarkmodeTheme' == requestOperate){
+            console.log("deleteDarkmodeTheme-------request=",request);
+            const theme = request.theme
+            browser.runtime.sendNativeMessage("application.id", { type: "dm_deleteTheme", theme }, function (response) {
+                console.log("deleteDarkmodeTheme-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }
+        else if('modifyDarkmodeTheme' == requestOperate){
+            console.log("modifyDarkmodeTheme-------request=",request);
+            const theme = request.theme
+            browser.runtime.sendNativeMessage("application.id", { type: "dm_modifyTheme", theme }, function (response) {
+                console.log("modifyDarkmodeTheme-------response=",response);
+                let body = response&&response.body?response.body:{}
+                sendResponse(body)
+            });
+        }else if ("GET_STAY_AROUND" === requestOperate){
+            browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+                // console.log("content_script-------response=",response);
+                sendResponse({ body: response.body })
+            });
+        }
         return true;
     }else if ("content_script" == request.from){
         // console.log("content_script-------request=", request)
@@ -2819,8 +2860,8 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
             this.settings = await this.loadSettingsFromStorage();
             // console.log("loadSettings===",this.settings)
             // let isStayAround = this.settings.isStayAround;
-            let isStayAround = await this.getStayAround();
-            this.settings.isStayAround = isStayAround;
+            // let isStayAround = await this.getStayAround();
+            // this.settings.isStayAround = isStayAround;
             this.writeStayAroundIntoStorage(this.settings);
             return new Promise((resolve, reject) => {
                 resolve(this.settings);
@@ -2828,17 +2869,17 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
         }
 
         // 获取isStayAround
-        async getStayAround(){
-            return new Promise((resolve, reject) => {
-                browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
-                    resolve(response.body);
-                });
-            });
-        }
+        // async getStayAround(){
+        //     return new Promise((resolve, reject) => {
+        //         browser.runtime.sendNativeMessage("application.id", { type: "p" }, function (response) {
+        //             resolve(response.body);
+        //         });
+        //     });
+        // }
 
-        async writeStayAroundIntoStorage(settings){
-            let isStayAround = await this.getStayAround();
-            settings = { ...settings, isStayAround };
+        writeStayAroundIntoStorage(settings){
+            // let isStayAround = await this.getStayAround();
+            // settings = { ...settings, isStayAround };
             this.settings = settings
             // console.log("writeStayAroundIntoStorage=====", settings)
             writeSyncStorage(settings);
@@ -3181,12 +3222,12 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 frameUrl = frameUrl&&frameUrl!=null?frameUrl:settings.frameUrl
                 settings = {...settings, ...{currentTabUrl: url, frameUrl: frameUrl}}
                 this.user.set(settings);
-                const isStayAround = settings.isStayAround;
+                // const isStayAround = settings.isStayAround;
                 const toggleStatus = settings.toggleStatus;
                 let darkSetings = {
                     siteListDisabled: settings.siteListDisabled,
                     toggleStatus: toggleStatus,
-                    isStayAround: isStayAround,
+                    // isStayAround: isStayAround,
                     darkState:"clean_up"
                 }
                 let message = {
@@ -3194,52 +3235,48 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     stayDarkSettings: settings,
                     darkSetings
                 };
-                if(isStayAround && "a" === isStayAround){
-                    // console.log("handleTabMessage---isStayAround=====",isStayAround, this.autoState);
-                    const toggleStatus = settings.toggleStatus;
-                    const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
-                    if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
-                        // console.log("handleTabMessage---toggleStatus=====",toggleStatus, urlIsEnabled);
-                        darkSetings.darkState = "dark_mode";
-                        const custom = settings.stay_customThemes.find(
-                            ({url: urlList}) => isURLInList(url, urlList)
-                        );
-                        const preset = custom
-                            ? null
-                            : settings.stay_presets.find(({urls}) =>
-                                  isURLInList(url, urls)
-                              );
-                        let theme = custom ? custom.theme : preset ? preset.theme : settings.stay_theme;
-                        if ( this.autoState === "scheme-dark" || this.autoState === "scheme-light") {
-                            const mode = this.autoState === "scheme-dark" ? 1 : 0;
-                            theme = {...theme, mode};
-                        }
-                        
-                        const isIFrame = frameUrl != null;
-                        const detectDarkTheme = !isIFrame && settings.stay_detectDarkTheme && !isPDF(url);
-                        const fixes = getDynamicThemeFixesFor(
-                            url,
-                            frameUrl,
-                            this.config.DYNAMIC_THEME_FIXES_RAW,
-                            this.config.DYNAMIC_THEME_FIXES_INDEX,
-                            settings.stay_enableForPDF
-                        );
-                        // console.log("this.user.settings==fixes===",fixes);
-                        message = {
-                            type: "bg-add-dynamic-theme",
-                            data: {
-                                theme,
-                                fixes,
-                                isIFrame,
-                                detectDarkTheme
-                            },
-                            stayDarkSettings: settings,
-                            darkSetings
-                        };
+                // console.log("handleTabMessage---isStayAround=====",isStayAround, this.autoState);
+                // const toggleStatus = settings.toggleStatus;
+                const urlIsEnabled = isEnabledUrlState(url, settings.siteListDisabled);
+                if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
+                    // console.log("handleTabMessage---toggleStatus=====",toggleStatus, urlIsEnabled);
+                    darkSetings.darkState = "dark_mode";
+                    const custom = settings.stay_customThemes.find(
+                        ({url: urlList}) => isURLInList(url, urlList)
+                    );
+                    const preset = custom
+                        ? null
+                        : settings.stay_presets.find(({urls}) =>
+                              isURLInList(url, urls)
+                          );
+                    let theme = custom ? custom.theme : preset ? preset.theme : settings.stay_theme;
+                    if ( this.autoState === "scheme-dark" || this.autoState === "scheme-light") {
+                        const mode = this.autoState === "scheme-dark" ? 1 : 0;
+                        theme = {...theme, mode};
                     }
+                    
+                    const isIFrame = frameUrl != null && frameUrl!='';
+                    const detectDarkTheme = !isIFrame && settings.stay_detectDarkTheme && !isPDF(url);
+                    const fixes = getDynamicThemeFixesFor(
+                        url,
+                        frameUrl,
+                        this.config.DYNAMIC_THEME_FIXES_RAW,
+                        this.config.DYNAMIC_THEME_FIXES_INDEX,
+                        settings.stay_enableForPDF
+                    );
+                    // console.log("this.user.settings==fixes===",fixes);
+                    message = {
+                        type: "bg-add-dynamic-theme",
+                        data: {
+                            theme,
+                            fixes,
+                            isIFrame,
+                            detectDarkTheme
+                        },
+                        stayDarkSettings: settings,
+                        darkSetings
+                    };
                 }
-
-                // return message;
                 // console.log("message======",message);
                 browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                     browser.tabs.sendMessage(
@@ -3247,29 +3284,67 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         message
                     );
                 })
-                
-                // if (message instanceof Promise) {
-                //     message.then(
-                //         (asyncMessage) => {
-                //             console.log("asyncMessage======",asyncMessage);
-                //             asyncMessage && browser.tabs.sendMessage(
-                //                 sender.tab.id,
-                //                 asyncMessage,
-                //                 {frameId: sender.frameId}
-                //             )
-                //         }
-                //     );
-                // } else if (message) {
-                //     console.log("message======",message);
-                //     browser.tabs.sendMessage(
-                //         sender.tab.id,
-                //         message,
-                //         {frameId: sender.frameId}
-                //     );
-                // }
-                
             }
-            
+            this.handleChangeTheme = (bgColor, textColor) => {
+                console.log("this.handleChangeTheme====", bgColor, textColor)
+                let settings = this.user.settings;
+                console.log("handleChangeTheme---this.user.settings=====",settings);
+                let url = settings.currentTabUrl;
+                let frameUrl = settings.frameUrl
+                settings = {...settings, ...{currentTabUrl: url, frameUrl: frameUrl}}
+                const custom = settings.stay_customThemes.find(
+                    ({url: urlList}) => isURLInList(url, urlList)
+                );
+                const preset = custom
+                    ? null
+                    : settings.stay_presets.find(({urls}) =>
+                          isURLInList(url, urls)
+                      );
+                let theme = custom ? custom.theme : preset ? preset.theme : settings.stay_theme;
+                // const isStayAround = settings.isStayAround;
+                let darkSetings = {
+                    siteListDisabled: settings.siteListDisabled,
+                    toggleStatus: 'on',
+                    darkState:"dark_mode"
+                }
+                let message = {
+                    type: "bg-clean-up",
+                    stayDarkSettings: settings,
+                    darkSetings
+                };
+                // let theme = settings.stay_theme;
+                console.log("handleChangeTheme---theme=====",theme);
+                theme.darkSchemeBackgroundColor = bgColor;
+                theme.darkSchemeTextColor = textColor;
+                theme = {...theme, mode: 1, };
+                const isIFrame = frameUrl != null && frameUrl!='';
+                const fixes = getDynamicThemeFixesFor(
+                    url,
+                    frameUrl,
+                    this.config.DYNAMIC_THEME_FIXES_RAW,
+                    this.config.DYNAMIC_THEME_FIXES_INDEX,
+                    settings.stay_enableForPDF
+                );
+                // console.log("this.user.settings==fixes===",fixes);
+                message = {
+                    type: "bg-add-dynamic-theme-change",
+                    data: {
+                        theme,
+                        fixes,
+                        isIFrame,
+                        detectDarkTheme: true
+                    },
+                    stayDarkSettings: settings,
+                    darkSetings
+                };
+                console.log("message======",message);
+                browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                    browser.tabs.sendMessage(
+                        tabs[0].id,
+                        message
+                    );
+                })
+            }
             this.startBarrier = new PromiseBarrier();
             this.stateManager = new StateManager(
                 StayDarkModeExtension.LOCAL_STORAGE_KEY,
@@ -3298,7 +3373,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                     const enabled = isArray(siteListDisabled)&&siteListDisabled.includes(browserDomain)?false:true;
                     browser.runtime.sendMessage({ 
                         from: "background", 
-                        isStayAround: settings["isStayAround"],
+                        // isStayAround: settings["isStayAround"],
                         darkmodeToggleStatus: settings["toggleStatus"], 
                         darkmodeColorTheme: settings.stay_theme.darkColorScheme,
                         enabled: enabled,
@@ -3322,7 +3397,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                             this.updateAutoState();
                             const tabURL = sender.tab.url;
                             const toggleStatus = settings.toggleStatus;
-                            const isStayAround = settings.isStayAround;
+                            // const isStayAround = settings.isStayAround;
                             const urlIsEnabled = isEnabledUrlState(tabURL, settings.siteListDisabled);
                             let darkState = "clean_up";
                             if(("on" === toggleStatus ||  "scheme-dark" === this.autoState ) && urlIsEnabled){
@@ -3331,7 +3406,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                             const darkSetings = {
                                 siteListDisabled: settings.siteListDisabled,
                                 toggleStatus: toggleStatus,
-                                isStayAround: isStayAround,
+                                // isStayAround: isStayAround,
                                 darkState
                             }
                             sendResponse({body: darkSetings})
@@ -3349,9 +3424,9 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         let setting = {...this.user.settings};
                         const toggleStatus = request.status;
                         const darkmodeColorTheme = request.darkmodeColorTheme;
-                        let isStayAround = request.isStayAround;
+                        // let isStayAround = request.isStayAround;
                         setting["toggleStatus"] = toggleStatus
-                        setting["isStayAround"] = isStayAround
+                        // setting["isStayAround"] = isStayAround
                         // if(setting.stay_theme.darkColorScheme != darkmodeColorTheme){
                         //     let theme = setting.stay_theme;
                         //     if(darkmodeColorTheme == "Eco"){
@@ -3368,18 +3443,24 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         //     setting.stay_theme = theme
                         // }
                         let theme = setting.stay_theme;
-                            if(darkmodeColorTheme == "Eco"){
-                                theme.darkSchemeBackgroundColor = ECO_COLORSCHEME.darkScheme.background;
-                                theme.darkSchemeTextColor = ECO_COLORSCHEME.darkScheme.text;
-                                theme.darkColorScheme = "Eco";
-                            }else if(darkmodeColorTheme == "Eyecare"){
-                                theme.darkSchemeBackgroundColor = EYECARE_COLORSCHEME.darkScheme.background;
-                                theme.darkSchemeTextColor = EYECARE_COLORSCHEME.darkScheme.text;
-                                theme.darkColorScheme = "Eyecare"
-                            }else{
-                                theme = {...DEFAULT_THEME};
-                            }
-                            setting.stay_theme = theme
+                        if(darkmodeColorTheme == "Eco"){
+                            theme.darkSchemeBackgroundColor = ECO_COLORSCHEME.darkScheme.background;
+                            theme.darkSchemeTextColor = ECO_COLORSCHEME.darkScheme.text;
+                            theme.darkColorScheme = "Eco";
+                        }else if(darkmodeColorTheme == "Eyecare"){
+                            theme.darkSchemeBackgroundColor = EYECARE_COLORSCHEME.darkScheme.background;
+                            theme.darkSchemeTextColor = EYECARE_COLORSCHEME.darkScheme.text;
+                            theme.darkColorScheme = "Eyecare"
+                        }else if(darkmodeColorTheme == "Default"){
+                            theme = {...DEFAULT_THEME};
+                        }else{
+                            // pro用户自定义主题色
+                            theme.darkSchemeBackgroundColor = request.bgColor;
+                            theme.darkSchemeTextColor = request.textColor;
+                            theme.darkColorScheme = request.darkmodeColorTheme;
+                        }
+                        setting.stay_theme = theme;
+
                         let siteListDisabled = setting["siteListDisabled"];
                         let domain = request.domain;
                         let enabled = request.enabled;
@@ -3400,6 +3481,10 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                         setting.stay_automation="system";
                         this.changeSettings(setting);
                     }
+                    else if("CHANGE_DARKMODE_THEME" === request.operate){
+                        console.log('CHANGE_DARKMODE_THEME-----', request.backgroundColor, request.textColor)
+                        this.handleChangeTheme(request.backgroundColor, request.textColor);
+                    }
                     return true;
                 }
             });
@@ -3411,7 +3496,7 @@ function xhrAddListeners(xhr, tab, id, xhrId, details) {
                 this.autoState === "scheme-dark" ||
                 this.autoState === "scheme-light" ||
                 (this.autoState === "" && "on" === this.user.settings.toggleStatus)
-            ) && "a" === this.user.settings.isStayAround;
+            );
         }
         updateAutoState() {
             const {stay_automation, toggleStatus, auto_location, auto_time, stay_automationBehaviour:behavior} = this.user.settings;

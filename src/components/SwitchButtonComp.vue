@@ -42,7 +42,7 @@ export default ({
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 42px;
+    height: 45px;
     background-color: var(--dm-bg);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5%);
     border: 1px solid var(--dm-bd);

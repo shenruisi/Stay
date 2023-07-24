@@ -1,47 +1,93 @@
 <template>
   <div class="stay-popup-warpper" :class="isMobile?'mobile-bottom':'mac-bottom'">
-    <Header :titleInfo="t(selectedTab.name)">
+    <Header :titleInfo="t(selectedTab.name)" :isStayPro="isStayPro">
       <!-- MatchedScript -->
       <!-- adblock -->
-      <div class="tab-wrapper" :class="selectedTab.id==1?'script':'adblock'" v-if="selectedTab.id==1 || selectedTab.id==4">
+      <div class="tab-wrapper script"  v-if="selectedTab.id==1">
         <div
           class="tab"
           @click="tabActionClick('tab_1',selectedTab.name)"
           :class="{ active: showTab == 'tab_1' }"
         >
-          <div class="tab-text">{{ selectedTab.id==1 ? t("state_actived") :  t("web_tag")}}</div>
+          <div class="tab-text">{{ t("state_actived") }}</div>
         </div>
         <div
           class="tab"
           @click="tabActionClick('tab_2', selectedTab.name)"
           :class="{ active: showTab == 'tab_2' }"
         >
-          <div class="tab-text">{{ selectedTab.id==1 ? t("state_stopped") :  t("tag_rules")}}</div>
+          <div class="tab-text">{{ t("state_stopped") }}</div>
+        </div>
+      </div>
+      <div class="tab-wrapper darkmode" v-if="selectedTab.id==2">
+        <div
+          class="tab"
+          @click="tabActionClick('tab_1',selectedTab.name)"
+          :class="{ active: showTab == 'tab_1' }"
+        >
+          <div class="tab-text">{{ t("dark_set")}}</div>
+        </div>
+        <div
+          class="tab"
+          @click="tabActionClick('tab_2', selectedTab.name)"
+          :class="{ active: showTab == 'tab_2' }"
+        >
+          <div class="tab-text">{{ t("dark_theme")}}</div>
+        </div>
+        
+      </div>
+      <!-- <div class="tab-wrapper sniffer" v-if="selectedTab.id==3">
+        <div
+          class="tab"
+          @click="tabActionClick('tab_1',selectedTab.name)"
+          :class="{ active: showTab == 'tab_1' }"
+        >
+          <div class="tab-text">{{ t("video_tab")}}</div>
+        </div>
+        <div
+          class="tab"
+          @click="tabActionClick('tab_2', selectedTab.name)"
+          :class="{ active: showTab == 'tab_2' }"
+        >
+          <div class="tab-text">{{t("img_tab")}}</div>
+        </div>
+      </div> -->
+      <div class="tab-wrapper adblock" v-if="selectedTab.id==4">
+        <div
+          class="tab"
+          @click="tabActionClick('tab_1',selectedTab.name)"
+          :class="{ active: showTab == 'tab_1' }"
+        >
+          <div class="tab-text">{{t("web_tag")}}</div>
+        </div>
+        <div
+          class="tab"
+          @click="tabActionClick('tab_2', selectedTab.name)"
+          :class="{ active: showTab == 'tab_2' }"
+        >
+          <div class="tab-text">{{t("tag_rules")}}</div>
         </div>
         <div
           class="tab"
           @click="tabActionClick('tab_3', selectedTab.name)"
           :class="{ active: showTab == 'tab_3' }"
-          v-if="selectedTab.id==4"
         >
           <div class="tab-text">{{ t("trusted")}}</div>
         </div>
       </div>
     </Header>
-    <div class="tab-content" :style="{paddingTop: (selectedTab.id == 1 || selectedTab.id == 4)?'32px':'0'}">
+    <div class="tab-content" :style="{paddingTop: (selectedTab.id == 1 || selectedTab.id == 2 || selectedTab.id == 4)?'32px':'0'}">
       <MatchedScript v-if="selectedTab.id==1" ref="matchedScriptRef" :currentTab="showTab"></MatchedScript>
-      <template v-if="selectedTab.id==2">
+      <!-- <template v-if="selectedTab.id==2">
         <template v-if="isStayPro">
           <DarkMode v-if="selectedTab.id==2" :darkmodeToggleStatus="darkmodeToggleStatus" :darkmodeTheme="darkmodeTheme" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
-          
         </template>
-          <!-- <DarkMode v-if="selectedTab.id==2"></DarkMode>
-          <Sniffer v-if="selectedTab.id==3" :browserUrl="browserRunUrl"></Sniffer> -->
         <UpgradePro :tabId="selectedTab.id" v-else>
           <a class="what-it" :href="selectedTab.whatisurl" target="_blank">{{ t(selectedTab.whatistitle) }}</a>
         </UpgradePro>
-      </template>
-      <Sniffer v-if="selectedTab.id==3" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
+      </template> -->
+      <DarkMode v-if="selectedTab.id==2" :currentTab="showTab" :darkmodeToggleStatus="darkmodeToggleStatus" :darkmodeTheme="darkmodeTheme" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
+      <Sniffer v-if="selectedTab.id==3" :currentTab="showTab" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
       <AdBlock v-if="selectedTab.id==4" ref="adBlockRef" :currentTab="showTab"></AdBlock>
     </div>
     <TabMenu :tabId="selectedTab.id" @setTabName="setTabName" ></TabMenu>
@@ -53,7 +99,7 @@ import Header from '../components/Header.vue';
 import TabMenu from '../components/TabMenu.vue';
 import DarkMode from '../components/DarkMode.vue';
 import Sniffer from '../components/Sniffer.vue';
-import UpgradePro from '../components/UpgradePro.vue';
+// import UpgradePro from '../components/UpgradePro.vue';
 import MatchedScript from '../components/MatchedScript.vue';
 import AdBlock from '../components/AdBlock.vue';
 import { useI18n } from 'vue-i18n';
@@ -68,7 +114,7 @@ export default {
     AdBlock,
     Sniffer,
     DarkMode,
-    UpgradePro,
+    // UpgradePro,
     MatchedScript
   },
   setup(props, { emit, attrs, slots }) {
@@ -112,8 +158,6 @@ export default {
       if('background' === from){
         if (operate == 'giveDarkmodeConfig'){
           console.log('giveDarkmodeConfig==res==', request);
-          state.isStayPro = request.isStayAround=='a'?true:false;
-          store.commit('setIsStayPro', state.isStayPro);
           state.darkmodeToggleStatus = request.darkmodeToggleStatus;
           store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
           state.darkmodeTheme = request.darkmodeColorTheme;
@@ -139,6 +183,11 @@ export default {
         console.log('getLongPressStatus====',response);
         let longPressStatus = response.longPressStatus ? response.longPressStatus : 'on';
         state.longPressStatus = longPressStatus;
+      })
+      global.browser.runtime.sendMessage({ from: 'popup', operate: 'GET_STAY_AROUND'}, (response) => {
+        console.log('GET_STAY_AROUND====',response);
+        state.isStayPro = response.body && response.body=='a'?true:false;
+        store.commit('setIsStayPro', state.isStayPro);
       })
     }
 
@@ -176,16 +225,6 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    &.script{
-      .tab-text::after{
-        width: 40px;
-      }
-    }
-    &.adblock{
-      .tab-text::after{
-        width: 50px;
-      }
-    }
     .tab{
       padding: 2px 10px 0 10px;
       text-align: center;
@@ -195,6 +234,7 @@ export default {
       color: var(--dm-font);
       font-weight: 600;
       .tab-text{
+        display: inline-block;
         height: 100%;
         font-size: 16px;
         position: relative;
@@ -205,6 +245,7 @@ export default {
         // border-radius: 8px;
         .tab-text::after{
           content: '';
+          width: 65%;
           height: 2px;
           background-color: var(--s-main);
           position: absolute;

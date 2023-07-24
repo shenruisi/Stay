@@ -63,6 +63,7 @@
         BG_ADD_STATIC_THEME: "bg-add-static-theme",
         BG_ADD_SVG_FILTER: "bg-add-svg-filter",
         BG_ADD_DYNAMIC_THEME: "bg-add-dynamic-theme",
+        BG_ADD_DYNAMIC_THEME_CHANGE: "bg-add-dynamic-theme-change",
         BG_EXPORT_CSS: "bg-export-css",
         BG_UNSUPPORTED_SENDER: "bg-unsupported-sender",
         BG_CLEAN_UP: "bg-clean-up",
@@ -6095,6 +6096,13 @@
                 setupDarkmode(data);
             }
             handleDarkSettingsForStorage(darkSetings);
+        }else if(MessageType.BG_ADD_DYNAMIC_THEME_CHANGE === type){
+            console.log("data==BG_ADD_DYNAMIC_THEME_CHANGE===",data, stayDarkSettings);
+            if((document.querySelector(".noir") && document.querySelector(".noir-root"))){
+                cleanupDarkmode();
+            }else{
+                setupDarkmode(data);
+            }
         }else if(MessageType.BG_CLEAN_UP === type){
             // console.log("data==BG_CLEAN_UP===",stayDarkSettings);
             cleanupDarkmode();
