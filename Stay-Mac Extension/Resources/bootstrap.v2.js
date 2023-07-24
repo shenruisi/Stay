@@ -657,7 +657,7 @@ async function executeScript(userscript){
                     const GM_apis = undefined;
                     const browser = undefined;
                     ${userscript.code}
-                    window.postMessage({uuid: ${userscript.uuid}, operate: "remove_tag", group: "page"});
+                    window.postMessage({uuid: ${userscript.uuid}, operate: "removeTag", group: "page"});
                 }
                 main();
                 //# sourceURL=${userscript.metadata.name}.replace(/\s/g, "-") + ${sourceTag}
@@ -721,7 +721,7 @@ function receiveMessage(e){
         const uuid = message.uuid;
         const operate = message.operate;
         
-        if (operate === "remove_tag"){
+        if (operate === "removeTag"){
             document.getElementById(uuid).remove();
         }
         else if (operate === "storage.local.getAll"){
