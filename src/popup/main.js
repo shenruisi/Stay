@@ -23,13 +23,31 @@ const openUrlInSafariPopup = (openUrl, target='') => {
   })
   window.close();
 }
+const getCurrentTabId = (callback) => {
+  browser.tabs.query({active: true, currentWindow: true}, function(tabs){
+    if(callback) callback(tabs.length ? tabs[0].id: null);
+  });   
+}
+
+const getCurrentTabUrl = (callback) => {
+  browser.tabs.getSelected(null, (tab) => {
+    console.log('getCurrentTabUrl----tab-----', tab);
+    store.commit('setBrowserUrl', tab.url);
+    if(callback){
+      callback(tab?tab.url:'');
+    }
+  });
+}
+
 // 配置全局变量 页面中使用 inject 接收
 app.provide('global', {
   store,
   browser,
   toast,
   globalClick,
-  openUrlInSafariPopup
+  openUrlInSafariPopup,
+  getCurrentTabId,
+  getCurrentTabUrl
 });
 
 app.use(i18n).use(store).mount('#app');

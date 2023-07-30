@@ -21,7 +21,7 @@
 
     "content_scripts": [
         {
-            "js": [ "convert2RegExp.js", "MatchPattern.js", "bootstrap2.js"],
+            "js": [ "convert2RegExp.js", "MatchPattern.js", "bootstrap.js"],
             "matches": [ "*://*/*" ],
             "all_frames": true,
             "run_at": "document_start"
@@ -33,7 +33,7 @@
             "run_at": "document_end"
         },
         {
-            "js": ["popup/js/fallback.js", "popup/js/darkmode.js"],
+            "js": ["popup/js/fallback.js","popup/js/darkconfig.js", "popup/js/darkmode.js"],
             "matches": [ "*://*/*" ],
             "all_frames": false,
             "run_at": "document_start"

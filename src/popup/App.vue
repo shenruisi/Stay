@@ -34,7 +34,7 @@
         >
           <div class="tab-text">{{ t("dark_theme")}}</div>
         </div>
-        
+
       </div>
       <!-- <div class="tab-wrapper sniffer" v-if="selectedTab.id==3">
         <div
@@ -86,7 +86,13 @@
           <a class="what-it" :href="selectedTab.whatisurl" target="_blank">{{ t(selectedTab.whatistitle) }}</a>
         </UpgradePro>
       </template> -->
-      <DarkMode v-if="selectedTab.id==2" :currentTab="showTab" :darkmodeToggleStatus="darkmodeToggleStatus" :darkmodeTheme="darkmodeTheme" :siteEnabled="siteEnabled" :browserUrl="browserUrl"></DarkMode>
+      <DarkMode v-if="selectedTab.id==2"
+        @postMessageToDarkConfig = 'postMessageToDarkConfig'
+        :currentTab="showTab"
+        :darkmodeToggleStatus="darkmodeToggleStatus"
+        :darkmodeTheme="darkmodeTheme"
+        :siteEnabled="siteEnabled"
+        :browserUrl="browserUrl" />
       <Sniffer v-if="selectedTab.id==3" :currentTab="showTab" :browserUrl="browserUrl" :longPressStatus="longPressStatus"></Sniffer>
       <AdBlock v-if="selectedTab.id==4" ref="adBlockRef" :currentTab="showTab"></AdBlock>
     </div>
@@ -136,7 +142,8 @@ export default {
       siteEnabled: store.state.siteEnabled,
       longPressStatus: store.state.longPressStatus,
       isMobile: isMobile(),
-      showTab:  store.state.tabAction[store.state.selectedTab.name] || 'tab_1'
+      showTab:  store.state.tabAction[store.state.selectedTab.name] || 'tab_1',
+      browserConnect: null
     })
 
     const tabActionClick = (tabId, menuName) => {
@@ -146,39 +153,60 @@ export default {
 
       store.commit('setTabAction', tabAction);
     }
-    
+
     const setTabName = (selectedTab) => {
       state.selectedTab = selectedTab;
       store.commit('setSelectedTab', state.selectedTab);
     }
 
-    global.browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      const from = request.from;
-      const operate = request.operate;
-      if('background' === from){
-        if (operate == 'giveDarkmodeConfig'){
-          console.log('giveDarkmodeConfig==res==', request);
-          state.darkmodeToggleStatus = request.darkmodeToggleStatus;
-          store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
-          state.darkmodeTheme = request.darkmodeColorTheme;
-          store.commit('setDarkmodeTheme', state.darkmodeTheme);
-          state.siteEnabled = request.enabled;
-          store.commit('setSiteEnabled', state.siteEnabled);
-        }
-      }
-      return true;
-    });
+    // global.browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    //   const from = request.from;
+    //   const operate = request.operate;
+    //   if('background' === from){
+    //     if (operate == 'giveDarkmodeConfig'){
+    //       console.log('giveDarkmodeConfig==res==', request);
+    //       state.darkmodeToggleStatus = request.darkmodeToggleStatus;
+    //       store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
+    //       state.darkmodeTheme = request.darkmodeColorTheme;
+    //       store.commit('setDarkmodeTheme', state.darkmodeTheme);
+    //       state.siteEnabled = request.enabled;
+    //       store.commit('setSiteEnabled', state.siteEnabled);
+    //     }
+    //   }
+    //   return true;
+    // });
 
     const fetchStayProConfig = () => {
       console.log('fetchStayProConfig----start-----');
-      global.browser.tabs.getSelected(null, (tab) => {
-        console.log('fetchStayProConfig----tab-----', tab);
-        state.browserUrl = tab.url;
-        console.log('state.browserUrl----tab-----', state.browserUrl);
-        store.commit('setBrowserUrl', tab.url);
-        console.log('store.state.browserUrl====',store.state.browserUrl);
+      // global.browser.tabs.getSelected(null, (tab) => {
+      //   console.log('fetchStayProConfig----tab-----', tab);
+      //   state.browserUrl = tab.url;
+      //   console.log('state.browserUrl----tab-----', state.browserUrl);
+      //   store.commit('setBrowserUrl', tab.url);
+      //   console.log('store.state.browserUrl====',store.state.browserUrl);
+      // });
+      global.getCurrentTabUrl((tabUrl)=>{
+        state.browserUrl = tabUrl;
+        store.commit('setBrowserUrl', tabUrl);
       })
-      global.browser.runtime.sendMessage({ type: 'popup', operate: 'FETCH_DARKMODE_CONFIG'}, (response) => {})
+
+      global.getCurrentTabId((tabId) => {
+        // console.log('global.getCurrentTabId--------',tabId);
+        state.browserConnect = global.browser.tabs.connect(tabId, {name: 'POPUP_DARK_CONFIG_CONNECT'});
+        state.browserConnect.postMessage({operate: 'FETCH_DARKMODE_CONFIG'});
+        state.browserConnect.onMessage.addListener(function(res) {
+          // console.log('收到消息：----------------' + res);
+          if(res && res.operate == 'FETCH_DARKMODE_CONFIG_RESP'){
+            state.darkmodeToggleStatus = res.darkmodeToggleStatus;
+            store.commit('setDarkmodeToggleStatus', state.darkmodeToggleStatus);
+            state.darkmodeTheme = res.darkmodeColorTheme;
+            store.commit('setDarkmodeTheme', state.darkmodeTheme);
+            state.siteEnabled = res.enabled;
+            store.commit('setSiteEnabled', state.siteEnabled);
+          }
+        });
+      });
+
       global.browser.runtime.sendMessage({ from: 'popup', operate: 'getLongPressStatus'}, (response) => {
         console.log('getLongPressStatus====',response);
         let longPressStatus = response.longPressStatus ? response.longPressStatus : 'on';
@@ -191,6 +219,11 @@ export default {
       })
     }
 
+    const postMessageToDarkConfig = (message) => {
+      state.browserConnect.postMessage(message);
+    }
+
+
     fetchStayProConfig();
 
     return {
@@ -198,7 +231,8 @@ export default {
       t,
       tm,
       setTabName,
-      tabActionClick
+      tabActionClick,
+      postMessageToDarkConfig
     };
   }
 };
@@ -255,7 +289,7 @@ export default {
         }
       }
     }
-    
+
   }
   .tab-content{
     width: 100%;
@@ -274,10 +308,10 @@ export default {
 }
 @supports (bottom: constant(safe-area-inset-bottom)) or (bottom: env(safe-area-inset-bottom)) {
   .stay-popup-warpper{
-   
+
     // padding-bottom: calc(52px + env(safe-area-inset-bottom));
     // margin-bottom: constant(safe-area-inset-bottom);
-    // margin-bottom: env(safe-area-inset-bottom);  
+    // margin-bottom: env(safe-area-inset-bottom);
 	}
   .mac-bottom{
     padding-bottom: 60px;

@@ -31,6 +31,7 @@ let matchAppScriptConsole = [];
 let gm_console = {};
 let closeableTabs = {};
 let xhrs = [];
+const isFetchSupported = typeof fetch === 'function';
 const userAgent =
     typeof navigator === "undefined"
         ? "some useragent"

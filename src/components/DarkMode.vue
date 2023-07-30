@@ -1,6 +1,6 @@
 <template>
   <div class="popup-darkmode-wrapper">
-    
+
     <div class="settings-box" v-if="showTab == 'settings'">
       <div class="darkmode-switch-box">
         <div class="title">{{ t('dark_in_safari') }}</div>
@@ -127,7 +127,7 @@ export default {
         state.siteEnabled = newProps.siteEnabled;
         state.hostSwitchStatus = newProps.siteEnabled?'on':'off';
         state.darkmodeSwitchStatus = newProps.darkmodeToggleStatus;
-        
+
         state.switchList = [
           {value:'on', name: t('darkmode_on'), isSelected: newProps.darkmodeToggleStatus==='on'},
           {value:'auto', name: t('darkmode_auto'), isSelected: newProps.darkmodeToggleStatus==='auto'},
@@ -168,41 +168,37 @@ export default {
       }
       return selectedTheme;
     }
-    
+
     state.selectedDarkmodeTheme = handleSelectedDarkmodeTheme();
 
     const handleDarkmodeProSetting = () => {
       console.log('handleDarkmodeProSetting request----------', state.darkmodeSwitchStatus, state.selectedDarkmodeTheme);
-      let message = { 
-        type: 'popup', 
-        operate: 'DARKMODE_SETTING', 
-        isStayAround: state.isStayPro?'a':'b', 
-        status: state.darkmodeSwitchStatus, 
-        darkmodeColorTheme: state.selectedDarkmodeTheme.value, 
+      let message = {
+        type: 'popup',
+        operate: 'DARKMODE_SETTING',
+        isStayAround: state.isStayPro?'a':'b',
+        status: state.darkmodeSwitchStatus,
+        darkmodeColorTheme: state.selectedDarkmodeTheme.value,
         backgroundColor: state.selectedDarkmodeTheme.bgColor,
         textColor: state.selectedDarkmodeTheme.textColor,
-        domain: state.hostName, 
-        enabled: state.siteEnabled 
+        domain: state.hostName,
+        enabled: state.siteEnabled
       }
-      global.browser.runtime.sendMessage(message, (response) => {
-        // console.log("DARKMODE_SETTING response----", response);
-      })
+      emit('postMessageToDarkConfig', message);
     }
 
     const changeThemeToDarkmode = (bgColor, textColor) => {
       console.log('changeThemeToDarkmode-------', bgColor, textColor)
-      let message = { 
-        type: 'popup', 
-        operate: 'CHANGE_DARKMODE_THEME', 
-        darkmodeColorTheme: state.selectedDarkmodeTheme.value, 
+      let message = {
+        type: 'popup',
+        operate: 'CHANGE_DARKMODE_THEME',
+        darkmodeColorTheme: state.selectedDarkmodeTheme.value,
         backgroundColor: bgColor,
         textColor: textColor,
       }
-      global.browser.runtime.sendMessage(message, (response) => {
-        // console.log("DARKMODE_SETTING response----", response);
-      })
+      emit('postMessageToDarkConfig', message);
     }
-    
+
 
     const allowEnabledAction = (hostSwitchStatus) => {
       state.hostSwitchStatus = hostSwitchStatus
@@ -238,14 +234,14 @@ export default {
       }else if(flag == 'clear'){
         handleDarkmodeProSetting();
       }
-      
-      
+
+
     }
 
     const changeSelectTheme = (event) => {
       const selectOpt = event.target;
       const index = selectOpt.selectedIndex
-      console.log(index, selectOpt); 
+      console.log(index, selectOpt);
       state.themeList.forEach((item, i)=>{
         if(item.value == selectOpt.value){
           state.selectedDarkmodeTheme = item;
@@ -269,7 +265,7 @@ export default {
     }
 
     fetchDarkmodeThemeList();
-    
+
     return {
       ...toRefs(state),
       t,
@@ -295,7 +291,7 @@ export default {
     width: 100%;
 
   }
-  
+
   .darkmode-switch-box, .darkmode-theme-box, .darkmode-host-box{
     width: 100%;
     .title{
@@ -409,7 +405,7 @@ export default {
             right: 0px;
             top: 2px;
           }
-          
+
         }
         .select-container{
           width: 50%;
@@ -423,7 +419,7 @@ export default {
       }
     }
   }
-  
+
   .themes-box{
     width: 100%;
     height: 100%;

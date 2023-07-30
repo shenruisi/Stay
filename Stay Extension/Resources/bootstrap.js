@@ -371,8 +371,12 @@ let injectedContentVendor = new Set();
                 }
                 targetGun.click();
             }
+            // else if('POPUP_BOOTSTRAP_CONNECT' == operate){
+            //     console.log('POPUP_BOOTSTRAP_CONNECT_-request--------', request);
+            //     sendResponse({body: 8484848848484})
+            // }
               
-          }
+        }
         return true;
     });
     
@@ -731,4 +735,20 @@ let injectedContentVendor = new Set();
     //     console.log('bootstrap---GET_STAY_AROUND-----',response)
     //     window.postMessage({name: "GET_STAY_AROUND_RESP", response: response });
     // });
+
+    browser.runtime.onConnect.addListener(function(port) {
+        console.log("browser.runtime.onConnect-------",port);
+        if(port.name == 'POPUP_BOOTSTRAP_CONNECT') {
+            port.onMessage.addListener(function(res) {
+                console.log('收到长连接消息：', res);
+                if(!res){
+                    return;
+                }
+                const operator = res.operate;
+                if(operator == "FETCH_DARKMODE_CONFIG"){
+                    port.postMessage({operate: 'FETCH_DARKMODE_CONFIG_RESP', body: {message: "hello"}});
+                }
+            });
+        }
+    });
 })();

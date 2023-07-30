@@ -12,10 +12,10 @@
                 return url.split("/")[0].toLowerCase();
             }
         }
-        
+
         let browserDomain = getDomain(window.location.href);
         let darkmodeSettingStr = window.localStorage.getItem("FETCH_DARK_SETTING");
-        if(darkmodeSettingStr && darkmodeSettingStr!=="" && darkmodeSettingStr !== "null" && darkmodeSettingStr !== "undefined" 
+        if(darkmodeSettingStr && darkmodeSettingStr!=="" && darkmodeSettingStr !== "null" && darkmodeSettingStr !== "undefined"
             && darkmodeSettingStr != "clean_up" && darkmodeSettingStr != "dark_mode"){
             let darkmodeSettingStorage = JSON.parse(darkmodeSettingStr);
             let darkmodeSetting = {...darkmodeSettingStorage}
@@ -23,30 +23,27 @@
             // console.log("cleanupDarkmode---1-", (startTime - new Date().getTime()), ",darkStayAround=");
         }
         else{
-            browser.runtime.sendMessage({from: "darkmode", operate: "FETCH_DARK_SETTING"}, (response) => {
-                if(response.body && JSON.stringify(response.body)!="{}"){
-                    darkmodeSetting = response.body;
-                    window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
-                }
-                // console.log("cleanupDarkmode---2-", (startTime - new Date().getTime()), ",darkStayAround=");
-                darkModeInit(darkmodeSetting);
-            });
+          darkconfigJS.handleDarkmodeSettingListenerFromUserJS({from: "darkmode", operate: "FETCH_DARK_SETTING"}, (darkmodeSetting) => {
+            darkModeInit(darkmodeSetting);
+            window.localStorage.setItem("FETCH_DARK_SETTING", JSON.stringify(darkmodeSetting));
+          })
+
         }
 
         function matchesMediaQuery(query){
             return Boolean(window.matchMedia(query).matches);
         }
-        
+
         function matchesDarkTheme () {
             return matchesMediaQuery("(prefers-color-scheme: dark)");
-        } 
+        }
 
         function checkDarkState(darkmodeSetting){
             // console.log("darkmodeSetting.siteListDisabled ====", darkmodeSetting.siteListDisabled , !darkmodeSetting.siteListDisabled.includes(browserDomain))
             if(typeof darkmodeSetting.darkState != "undefined" && darkmodeSetting.darkState !== "" && darkmodeSetting.darkState === "dark_mode"){
                 return true;
             }else{
-                if((matchesDarkTheme() && darkmodeSetting.toggleStatus!="off" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled!=="[]" && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain)) 
+                if((matchesDarkTheme() && darkmodeSetting.toggleStatus!="off" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled!=="[]" && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain))
                     || (!matchesDarkTheme() && darkmodeSetting.toggleStatus ==="on" && darkmodeSetting.siteListDisabled && darkmodeSetting.siteListDisabled!=="[]" && darkmodeSetting.siteListDisabled.length>0 && !darkmodeSetting.siteListDisabled.includes(browserDomain))){
                     return true;
                 }

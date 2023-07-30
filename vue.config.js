@@ -70,6 +70,7 @@ module.exports = defineConfig({
     entry: {
       darkmode: './src/darkmode/dark.user.js',
       fallback: './src/darkmode/fallback.js',
+      darkconfig: './src/darkmode/dark.config.js',
 	    sniffer: './src/sniffer/sniffer.user.js',
       transfer: './src/sniffer/transfer.user.js',
       adblock: './src/adblock/adblock.user.js',
